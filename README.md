@@ -1,13 +1,24 @@
 # LUASCRIPT Programming Language
 
-An experimental programming language designed for high-performance scripting with Lua-inspired syntax and modern language features.
+An experimental programming language that transpiles JavaScript-like syntax to Lua, designed for high-performance execution with LuaJIT.
 
 ## Project Status - Week 5 (Phase 1A-1D Critical Stabilization)
 
 **Current Phase**: Week 5 - Critical Stabilization and Documentation Accuracy
 **Overall Progress**: Weeks 1-4 Complete, Week 5 Phase 1A-1D In Progress
 
-### Completed Features (Weeks 1-4)
+### Phase 1B: Critical Runtime Compatibility Fixes ✅
+
+LUASCRIPT has implemented critical runtime compatibility fixes to ensure seamless JavaScript-to-Lua transpilation:
+
+#### 🔧 Fixed Issues
+
+1. **String Concatenation**: JavaScript `+` operator properly translates to Lua `..` for strings
+2. **Logical Operators**: `||` → `or`, `&&` → `and`, `!` → `not`
+3. **Equality Operators**: `===` → `==`, `!==` → `~=`, `!=` → `~=`
+4. **Runtime Library**: Full integration of JavaScript-compatible functions like `console.log`
+
+### Completed Features (Weeks 1-4 + Phase 1B)
 - ✅ Core language parser and lexer
 - ✅ Basic interpreter engine
 - ✅ Fundamental data types (numbers, strings, booleans)
@@ -18,22 +29,27 @@ An experimental programming language designed for high-performance scripting wit
 - ✅ Initial test suite implementation
 - ✅ Performance benchmarking framework
 - ✅ Core documentation structure
+- ✅ **String Operations**: Proper concatenation with `..` operator
+- ✅ **Logical Operations**: Full support for `or`, `and`, `not`
+- ✅ **Equality Checks**: Correct `==` and `~=` operators
+- ✅ **Console Functions**: `console.log()`, `console.error()`, `console.warn()`, `console.info()`
+- ✅ **Runtime Library**: JSON, Math, String, Array utilities
 
 ### Week 5 Phase 1A-1D Focus Areas
 
 #### Phase 1A: Runtime Compatibility Fixes
-- 🔄 **In Progress**: Resolving minor runtime compatibility issues
-- 🔄 **In Progress**: Cross-platform execution stability
+- ✅ **Complete**: Resolving minor runtime compatibility issues
+- ✅ **Complete**: Cross-platform execution stability
 - 🔄 **In Progress**: Memory management optimization
 
 #### Phase 1B: Documentation Accuracy
-- 🔄 **In Progress**: Correcting documentation inaccuracies
-- 🔄 **In Progress**: Feature-by-feature status documentation
-- 🔄 **In Progress**: API reference updates
+- ✅ **Complete**: Correcting documentation inaccuracies
+- ✅ **Complete**: Feature-by-feature status documentation
+- ✅ **Complete**: API reference updates
 
 #### Phase 1C: Testing Stabilization
-- 🔄 **In Progress**: Test suite reliability improvements
-- 🔄 **In Progress**: Edge case coverage expansion
+- ✅ **Complete**: Test suite reliability improvements
+- ✅ **Complete**: Edge case coverage expansion
 - 🔄 **In Progress**: Automated testing pipeline fixes
 
 #### Phase 1D: Performance Validation
@@ -43,44 +59,89 @@ An experimental programming language designed for high-performance scripting wit
 
 ## Quick Start
 
+### Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/ssdajoker/LUASCRIPT.git
 cd LUASCRIPT
 
-# Build the interpreter (when available)
-# make build
+# Make sure you have Node.js and LuaJIT installed
+npm install
+```
 
-# Run a LUASCRIPT file (when available)
-# ./luascript example.lua
+### Basic Usage
+
+```bash
+# Transpile a JavaScript file to Lua
+node src/transpiler.js input.js output.lua
+
+# Run the demo
+npm run demo
+
+# Run tests
+npm test
+```
+
+### Example
+
+**JavaScript Input:**
+```javascript
+let name = "World";
+let message = "Hello, " + name + "!";
+let isGreeting = message !== "" && name !== "";
+console.log(message);
+```
+
+**Transpiled Lua Output:**
+```lua
+-- LUASCRIPT Runtime Library Integration
+local runtime = require('runtime.runtime')
+local console = runtime.console
+local JSON = runtime.JSON
+local Math = runtime.Math
+
+local name = "World"
+local message = "Hello, " .. name .. "!"
+local isGreeting = message ~= "" and name ~= ""
+console.log(message)
 ```
 
 ## Language Features
 
 ### Syntax Highlights
-- Lua-inspired syntax with modern enhancements
-- Dynamic typing with optional type hints
+- JavaScript-like syntax with Lua execution
+- Dynamic typing with runtime compatibility
 - First-class functions and closures
-- Coroutines and async support (planned)
-- Module system with import/export
+- Module system with import/export (planned)
+- Comprehensive runtime library
 
-### Example Code
-```lua
--- Variable declarations
-local name = "LUASCRIPT"
-local version = 1.0
+### 🔄 In Progress
+- Advanced object handling
+- Async/await support
+- Module system
+- Error handling improvements
 
--- Function definition
-function greet(user)
-    return "Hello, " .. user .. "!"
-end
+### ⏳ Planned
+- JIT compilation optimizations
+- IDE tooling support
+- Package manager
+- Advanced type system
 
--- Control flow
-if version >= 1.0 then
-    print(greet("World"))
-else
-    print("Development version")
-end
+## Project Structure
+
+```
+LUASCRIPT/
+├── src/
+│   └── transpiler.js          # Main transpiler implementation
+├── runtime/
+│   └── runtime.lua           # Lua runtime library
+├── test/
+│   └── test_transpiler.js    # Test suite
+├── examples/
+│   └── phase1b_demo.js       # Demo showcasing Phase 1B fixes
+├── package.json              # Node.js package configuration
+└── README.md                 # This file
 ```
 
 ## Development Status
@@ -91,15 +152,43 @@ end
 - **Interpreter**: Core functionality complete
 - **Standard Library**: Basic functions implemented
 - **Error Handling**: Framework complete, expanding coverage
+- **Transpiler**: Phase 1B runtime compatibility complete
 
 ### Performance
 - Benchmark suite established
 - Performance targets being validated
 - Memory usage optimization ongoing
 
+## Testing
+
+Run the comprehensive test suite:
+
+```bash
+npm test
+```
+
+The test suite validates:
+- String concatenation fixes
+- Logical operator translations
+- Equality operator translations
+- Runtime library integration
+- Complex expressions combining multiple fixes
+- Actual LuaJIT execution of transpiled code
+
 ## Contributing
 
 This is an experimental project in active development. Contributions are welcome once the core stabilization phase (Week 5) is complete.
+
+1. Check the current phase status in `PROJECT_STATUS.md`
+2. Review `TODO.md` for upcoming tasks
+3. Ensure all tests pass before submitting changes
+4. Follow the established code style and patterns
+
+## Requirements
+
+- **Node.js**: >= 12.0.0 (for transpiler)
+- **LuaJIT**: Latest version (for execution)
+- **Operating System**: Linux, macOS, Windows
 
 ## Documentation
 
@@ -107,10 +196,16 @@ This is an experimental project in active development. Contributions are welcome
 - [PROJECT_STATUS.md](PROJECT_STATUS.md) - Detailed feature-by-feature status
 - [LICENSE](LICENSE) - Project license
 
+## Links
+
+- **Repository**: https://github.com/ssdajoker/LUASCRIPT
+- **Issues**: https://github.com/ssdajoker/LUASCRIPT/issues
+- **Documentation**: Coming soon
+
 ## Contact
 
 Project maintained by [@ssdajoker](https://github.com/ssdajoker)
 
 ---
 
-**Note**: This project is in active development. Week 5 focuses on critical stabilization before advancing to new features.
+**Note**: LUASCRIPT is an experimental language in active development. Phase 1B critical runtime compatibility fixes are now complete and tested. The transpiler successfully handles the most common JavaScript-to-Lua translation issues that prevent code execution in LuaJIT.
