@@ -25,50 +25,13 @@
  */
 
 
-{
-  "name": "LUASCRIPT",
-  "version": "1.0.0-phase1d",
-  "description": "LUASCRIPT Programming Language - JavaScript to Lua transpiler with Phase 1D features",
-  "main": "src/transpiler.js",
-  "bin": {
-    "LUASCRIPT": "src/transpiler.js"
-  },
-  "scripts": {
-    "test": "node test/test_transpiler.js && node tests/test_arrow_functions.js && node tests/test_memory_management.js",
-    "test:transpiler": "node test/test_transpiler.js",
-    "test:arrow": "node tests/test_arrow_functions.js",
-    "test:memory": "node tests/test_memory_management.js",
-    "demo": "node src/transpiler.js examples/phase1b_demo.js examples/phase1b_demo.lua && luajit examples/phase1b_demo.lua",
-    "transpile": "node src/transpiler.js",
-    "lint": "echo 'Linting not configured yet'",
-    "start": "node -e \"console.log('LUASCRIPT Phase 1D - Use require() to import modules')\""
-  },
-  "keywords": [
-    "programming-language",
-    "transpiler",
-    "javascript",
-    "lua",
-    "luajit",
-    "parser",
-    "interpreter",
-    "arrow-functions",
-    "memory-management",
-    "accessibility",
-    "compiler"
-  ],
-  "author": "LUASCRIPT Development Team",
-  "license": "MIT",
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ssdajoker/LUASCRIPT.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ssdajoker/LUASCRIPT/issues"
-  },
-  "homepage": "https://github.com/ssdajoker/LUASCRIPT#readme",
-  "devDependencies": {},
-  "dependencies": {}
+// Simple benchmark test for LUASCRIPT
+let start = Date.now();
+let sum = 0;
+for (let i = 0; i < 100000; i++) {
+    sum += i;
 }
+let message = "Sum: " + sum;
+console.log(message);
+let end = Date.now();
+console.log("Time: " + (end - start) + "ms");
