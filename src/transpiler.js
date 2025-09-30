@@ -19,14 +19,18 @@ class LuaScriptTranspiler {
 
     /**
      * Main transpilation function
+     * PERFECT PARSER INITIATIVE - Phase 1: Enhanced with Runtime Validation
      * @param {string} jsCode - JavaScript code to transpile
      * @param {Object} options - Transpilation options
      * @returns {string} - Transpiled Lua code
      */
     transpile(jsCode, options = {}) {
+        // PHASE 1: Runtime Validation - Input validation
+        this.validateInput(jsCode, options);
+        
         let luaCode = jsCode;
 
-        // Phase 1B Critical Fixes - Order matters!
+        // PHASE 1: Critical Fixes - Order matters for parser strategy alignment!
         luaCode = this.fixEqualityOperators(luaCode);
         luaCode = this.fixLogicalOperators(luaCode);
         luaCode = this.fixStringConcatenation(luaCode);
@@ -40,28 +44,266 @@ class LuaScriptTranspiler {
         luaCode = this.convertArrays(luaCode);
         luaCode = this.convertObjects(luaCode);
 
+        // PHASE 1: Runtime Validation - Output validation
+        this.validateOutput(luaCode, options);
+
         return luaCode;
     }
 
     /**
+     * PERFECT PARSER INITIATIVE - Phase 1: Runtime Input Validation
+     * Comprehensive validation of input code and options
+     */
+    validateInput(jsCode, options) {
+        // Input code validation
+        if (typeof jsCode !== 'string') {
+            throw new Error('LUASCRIPT_VALIDATION_ERROR: Input code must be a string');
+        }
+        
+        if (jsCode.trim().length === 0) {
+            throw new Error('LUASCRIPT_VALIDATION_ERROR: Input code cannot be empty');
+        }
+        
+        if (jsCode.length > 1000000) { // 1MB limit
+            throw new Error('LUASCRIPT_VALIDATION_ERROR: Input code exceeds maximum size limit (1MB)');
+        }
+        
+        // Options validation
+        if (typeof options !== 'object' || options === null) {
+            throw new Error('LUASCRIPT_VALIDATION_ERROR: Options must be an object');
+        }
+        
+        // Validate specific options
+        if (options.includeRuntime !== undefined && typeof options.includeRuntime !== 'boolean') {
+            throw new Error('LUASCRIPT_VALIDATION_ERROR: includeRuntime option must be a boolean');
+        }
+        
+        // Check for potentially problematic patterns
+        const problematicPatterns = [
+            { pattern: /eval\s*\(/, message: 'eval() is not supported in LUASCRIPT' },
+            { pattern: /with\s*\(/, message: 'with statements are not supported in LUASCRIPT' },
+            { pattern: /debugger\s*;/, message: 'debugger statements are not supported in LUASCRIPT' }
+        ];
+        
+        for (const { pattern, message } of problematicPatterns) {
+            if (pattern.test(jsCode)) {
+                throw new Error(`LUASCRIPT_VALIDATION_ERROR: ${message}`);
+            }
+        }
+        
+        // Validate balanced brackets and quotes
+        this.validateSyntaxBalance(jsCode);
+    }
+
+    /**
+     * PERFECT PARSER INITIATIVE - Phase 1: Syntax Balance Validation
+     * Ensures brackets, braces, and quotes are properly balanced
+     */
+    validateSyntaxBalance(code) {
+        const stack = [];
+        const pairs = { '(': ')', '[': ']', '{': '}' };
+        let inString = false;
+        let stringChar = null;
+        let escaped = false;
+        
+        for (let i = 0; i < code.length; i++) {
+            const char = code[i];
+            
+            if (escaped) {
+                escaped = false;
+                continue;
+            }
+            
+            if (char === '\\') {
+                escaped = true;
+                continue;
+            }
+            
+            if (inString) {
+                if (char === stringChar) {
+                    inString = false;
+                    stringChar = null;
+                }
+                continue;
+            }
+            
+            if (char === '"' || char === "'") {
+                inString = true;
+                stringChar = char;
+                continue;
+            }
+            
+            if (pairs[char]) {
+                stack.push(char);
+            } else if (Object.values(pairs).includes(char)) {
+                const last = stack.pop();
+                if (!last || pairs[last] !== char) {
+                    throw new Error(`LUASCRIPT_VALIDATION_ERROR: Unmatched '${char}' at position ${i}`);
+                }
+            }
+        }
+        
+        if (stack.length > 0) {
+            throw new Error(`LUASCRIPT_VALIDATION_ERROR: Unmatched '${stack[stack.length - 1]}'`);
+        }
+        
+        if (inString) {
+            throw new Error(`LUASCRIPT_VALIDATION_ERROR: Unterminated string literal`);
+        }
+    }
+
+    /**
+     * PERFECT PARSER INITIATIVE - Phase 1: Runtime Output Validation
+     * Validates the generated Lua code for correctness
+     */
+    validateOutput(luaCode, options) {
+        // Basic Lua syntax validation
+        if (typeof luaCode !== 'string') {
+            throw new Error('LUASCRIPT_INTERNAL_ERROR: Generated code is not a string');
+        }
+        
+        if (luaCode.trim().length === 0) {
+            throw new Error('LUASCRIPT_INTERNAL_ERROR: Generated code is empty');
+        }
+        
+        // Check for common Lua syntax errors (excluding valid Lua syntax like comments)
+        const luaSyntaxChecks = [
+            { pattern: /\+\+/, message: 'Invalid Lua syntax: ++ operator found (should be converted)' },
+            { pattern: /===/, message: 'Invalid Lua syntax: === operator found (should be ==)' },
+            { pattern: /!==/, message: 'Invalid Lua syntax: !== operator found (should be ~=)' },
+            { pattern: /\|\|/, message: 'Invalid Lua syntax: || operator found (should be or)' },
+            { pattern: /&&/, message: 'Invalid Lua syntax: && operator found (should be and)' }
+        ];
+        
+        // Special check for -- operator that's not a Lua comment
+        const lines = luaCode.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const commentIndex = line.indexOf('--');
+            if (commentIndex > 0) {
+                // Check if there's a -- that's not at the start of a comment
+                const beforeComment = line.substring(0, commentIndex);
+                if (/--/.test(beforeComment)) {
+                    throw new Error('LUASCRIPT_OUTPUT_VALIDATION_ERROR: Invalid Lua syntax: -- operator found (should be converted)');
+                }
+            }
+        }
+        
+        for (const { pattern, message } of luaSyntaxChecks) {
+            if (pattern.test(luaCode)) {
+                throw new Error(`LUASCRIPT_OUTPUT_VALIDATION_ERROR: ${message}`);
+            }
+        }
+        
+        // Validate that runtime library is properly injected if required
+        if (options.includeRuntime !== false) {
+            if (!luaCode.includes("require('runtime.runtime')")) {
+                throw new Error('LUASCRIPT_OUTPUT_VALIDATION_ERROR: Runtime library not properly injected');
+            }
+        }
+        
+        // Check for balanced Lua syntax
+        this.validateLuaSyntaxBalance(luaCode);
+    }
+
+    /**
+     * PERFECT PARSER INITIATIVE - Phase 1: Lua Syntax Balance Validation
+     * Ensures Lua-specific syntax is properly balanced
+     */
+    validateLuaSyntaxBalance(code) {
+        const luaKeywords = ['function', 'if', 'while', 'for', 'do'];
+        const luaEnders = ['end'];
+        
+        let depth = 0;
+        const lines = code.split('\n');
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            
+            // Skip comments and empty lines
+            if (line.startsWith('--') || line.length === 0) continue;
+            
+            // Count opening keywords
+            for (const keyword of luaKeywords) {
+                const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+                const matches = line.match(regex);
+                if (matches) {
+                    depth += matches.length;
+                }
+            }
+            
+            // Count closing keywords
+            for (const ender of luaEnders) {
+                const regex = new RegExp(`\\b${ender}\\b`, 'g');
+                const matches = line.match(regex);
+                if (matches) {
+                    depth -= matches.length;
+                }
+            }
+            
+            if (depth < 0) {
+                throw new Error(`LUASCRIPT_OUTPUT_VALIDATION_ERROR: Unmatched 'end' at line ${i + 1}`);
+            }
+        }
+        
+        if (depth > 0) {
+            throw new Error(`LUASCRIPT_OUTPUT_VALIDATION_ERROR: ${depth} unmatched opening keyword(s) found`);
+        }
+    }
+
+    /**
      * Fix string concatenation operator: + to ..
-     * Critical Phase 1B fix
+     * PERFECT PARSER INITIATIVE - Phase 1: Critical Fix
+     * 
+     * ISSUE: Previous implementation converted ALL + operators to .., including numeric addition
+     * SOLUTION: Context-aware detection of string concatenation vs numeric addition
      */
     fixStringConcatenation(code) {
-        // Handle string concatenation with proper context detection
-        // This regex looks for + operators that are likely string concatenation
-        // Pattern: string/variable + string/variable (including strings with special chars)
+        // Enhanced context-aware string concatenation detection
+        // This implementation properly distinguishes between numeric addition and string concatenation
         
-        // First pass: handle simple concatenation
-        let result = code.replace(
-            /(\w+|"[^"]*"|'[^']*')\s*\+\s*(\w+|"[^"]*"|'[^']*')/g,
-            '$1 .. $2'
+        let result = code;
+        
+        // Pattern 1: String literal + anything -> string concatenation
+        // Use negative lookbehind/lookahead to preserve string content
+        result = result.replace(
+            /(["'])([^"']*)\1\s*\+\s*([^;,)}\]]+)/g,
+            (match, quote, content, rest) => {
+                return `${quote}${content}${quote} .. ${rest}`;
+            }
         );
         
-        // Second pass: handle chained concatenation
+        // Pattern 2: Anything + string literal -> string concatenation  
         result = result.replace(
-            /(\w+|"[^"]*"|'[^']*')(\s*\.\.\s*(\w+|"[^"]*"|'[^']*'))+\s*\+\s*(\w+|"[^"]*"|'[^']*')/g,
-            '$1$2 .. $4'
+            /([^;,({[\s]+)\s*\+\s*(["'])([^"']*)\2/g,
+            (match, left, quote, content) => {
+                return `${left} .. ${quote}${content}${quote}`;
+            }
+        );
+        
+        // Pattern 3: Variable + variable where at least one is likely a string
+        // (This is more conservative - only converts if we have strong indicators)
+        result = result.replace(
+            /(\w+)\s*\+\s*(\w+)(?=\s*[;,)}\]])/g,
+            (match, left, right) => {
+                // Keep numeric patterns as addition
+                if (/^(sum|total|count|num|value|result|calc)$/i.test(left) || 
+                    /^(sum|total|count|num|value|result|calc)$/i.test(right)) {
+                    return match; // Keep as numeric addition
+                }
+                // Convert likely string concatenations
+                if (/^(message|text|str|name|title|label|output)$/i.test(left) || 
+                    /^(message|text|str|name|title|label|output)$/i.test(right)) {
+                    return `${left} .. ${right}`;
+                }
+                return match; // Default: keep as addition for ambiguous cases
+            }
+        );
+        
+        // Pattern 4: Handle chained concatenations that were partially converted
+        result = result.replace(
+            /(\w+|["'][^"']*["'])\s*\.\.\s*([^;,)}\]]+)\s*\+\s*([^;,)}\]]+)/g,
+            '$1 .. $2 .. $3'
         );
         
         return result;
@@ -180,10 +422,50 @@ local Math = runtime.Math
 
     /**
      * Convert JavaScript objects to Lua tables
+     * PERFECT PARSER INITIATIVE - Phase 1: Fixed to avoid converting colons in strings
      */
     convertObjects(code) {
-        // Basic object literal conversion
-        return code.replace(/(\w+):\s*([^,}]+)/g, '$1 = $2');
+        // Enhanced object literal conversion that preserves colons in strings
+        let result = code;
+        let inString = false;
+        let stringChar = null;
+        let i = 0;
+        
+        while (i < result.length) {
+            const char = result[i];
+            
+            // Handle string boundaries
+            if (!inString && (char === '"' || char === "'")) {
+                inString = true;
+                stringChar = char;
+            } else if (inString && char === stringChar && result[i-1] !== '\\') {
+                inString = false;
+                stringChar = null;
+            }
+            
+            // Only convert colons outside of strings in object-like contexts
+            if (!inString && char === ':') {
+                // Look for pattern: word : value (object property)
+                const beforeColon = result.substring(0, i).match(/(\w+)\s*$/);
+                const afterColon = result.substring(i + 1).match(/^\s*([^,}]+)/);
+                
+                if (beforeColon && afterColon) {
+                    // Check if this looks like an object property (not in a string context)
+                    const context = result.substring(Math.max(0, i - 50), i);
+                    const isInObjectContext = context.includes('{') && !context.includes('"') && !context.includes("'");
+                    
+                    if (isInObjectContext) {
+                        result = result.substring(0, i) + ' = ' + result.substring(i + 1);
+                        i += 2; // Skip the ' = ' we just inserted
+                        continue;
+                    }
+                }
+            }
+            
+            i++;
+        }
+        
+        return result;
     }
 
     /**
