@@ -1,33 +1,47 @@
-
 {
   "name": "luascript",
   "version": "1.0.0-phase1d",
-  "description": "LUASCRIPT Programming Language - Phase 1D Implementation",
-  "main": "src/parser.js",
+  "description": "LUASCRIPT Programming Language - JavaScript to Lua transpiler with Phase 1D features",
+  "main": "src/transpiler.js",
+  "bin": {
+    "luascript": "src/transpiler.js"
+  },
   "scripts": {
-    "test": "node tests/test_arrow_functions.js && node tests/test_memory_management.js",
+    "test": "node test/test_transpiler.js && node tests/test_arrow_functions.js && node tests/test_memory_management.js",
+    "test:transpiler": "node test/test_transpiler.js",
     "test:arrow": "node tests/test_arrow_functions.js",
     "test:memory": "node tests/test_memory_management.js",
+    "demo": "node src/transpiler.js examples/phase1b_demo.js examples/phase1b_demo.lua && luajit examples/phase1b_demo.lua",
+    "transpile": "node src/transpiler.js",
     "lint": "echo 'Linting not configured yet'",
     "start": "node -e \"console.log('LUASCRIPT Phase 1D - Use require() to import modules')\""
   },
   "keywords": [
     "programming-language",
+    "transpiler",
+    "javascript",
+    "lua",
+    "luajit",
     "parser",
     "interpreter",
     "arrow-functions",
     "memory-management",
-    "accessibility"
+    "accessibility",
+    "compiler"
   ],
   "author": "LUASCRIPT Development Team",
   "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ssdajoker/LUASCRIPT.git"
   },
-  "engines": {
-    "node": ">=14.0.0"
+  "bugs": {
+    "url": "https://github.com/ssdajoker/LUASCRIPT/issues"
   },
+  "homepage": "https://github.com/ssdajoker/LUASCRIPT#readme",
   "devDependencies": {},
   "dependencies": {}
 }
