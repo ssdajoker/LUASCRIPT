@@ -1,0 +1,270 @@
+Checking src/phase3_advanced_features.lua         24 warnings
+
+    src/phase3_advanced_features.lua:15:1: line contains only whitespace
+    src/phase3_advanced_features.lua:40:1: line contains only whitespace
+    src/phase3_advanced_features.lua:45:1: line contains only whitespace
+    src/phase3_advanced_features.lua:52:1: line contains only whitespace
+    src/phase3_advanced_features.lua:56:1: line contains only whitespace
+    src/phase3_advanced_features.lua:75:1: line contains only whitespace
+    src/phase3_advanced_features.lua:80:1: line contains only whitespace
+    src/phase3_advanced_features.lua:88:1: line contains only whitespace
+    src/phase3_advanced_features.lua:92:1: line contains only whitespace
+    src/phase3_advanced_features.lua:98:1: line contains only whitespace
+    src/phase3_advanced_features.lua:117:1: line contains only whitespace
+    src/phase3_advanced_features.lua:125:1: line contains only whitespace
+    src/phase3_advanced_features.lua:134:1: line contains only whitespace
+    src/phase3_advanced_features.lua:172:1: line contains only whitespace
+    src/phase3_advanced_features.lua:175:1: line contains only whitespace
+    src/phase3_advanced_features.lua:191:1: line contains only whitespace
+    src/phase3_advanced_features.lua:197:1: line contains only whitespace
+    src/phase3_advanced_features.lua:212:1: line contains only whitespace
+    src/phase3_advanced_features.lua:216:1: line contains only whitespace
+    src/phase3_advanced_features.lua:224:1: line contains only whitespace
+    src/phase3_advanced_features.lua:231:1: line contains only whitespace
+    src/phase3_advanced_features.lua:239:1: line contains only whitespace
+    src/phase3_advanced_features.lua:242:75: line contains trailing whitespace
+    src/phase3_advanced_features.lua:245:1: line contains only whitespace
+
+Checking src/phase3_compiler_optimizations.lua    24 warnings
+
+    src/phase3_compiler_optimizations.lua:11:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:24:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:29:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:40:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:50:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:62:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:67:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:70:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:73:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:78:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:87:81: line contains trailing whitespace
+    src/phase3_compiler_optimizations.lua:89:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:93:121: line is too long (126 > 120)
+    src/phase3_compiler_optimizations.lua:97:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:101:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:104:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:109:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:124:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:139:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:147:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:164:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:174:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:187:1: line contains only whitespace
+    src/phase3_compiler_optimizations.lua:196:1: line contains only whitespace
+
+Checking src/phase4_debugging_profiling.lua       57 warnings
+
+    src/phase4_debugging_profiling.lua:26:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:44:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:79:30: unused argument 'self'
+    src/phase4_debugging_profiling.lua:84:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:89:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:102:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:112:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:116:30: unused argument 'self'
+    src/phase4_debugging_profiling.lua:119:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:123:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:132:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:140:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:143:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:161:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:163:35: unused argument 'line'
+    src/phase4_debugging_profiling.lua:165:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:169:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:178:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:181:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:191:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:198:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:201:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:211:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:223:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:227:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:232:30: unused argument 'self'
+    src/phase4_debugging_profiling.lua:239:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:242:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:247:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:267:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:269:11: unused variable 'registry'
+    src/phase4_debugging_profiling.lua:270:9: unused loop variable 'k'
+    src/phase4_debugging_profiling.lua:275:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:283:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:288:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:292:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:298:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:303:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:309:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:313:37: unused argument 'self'
+    src/phase4_debugging_profiling.lua:318:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:338:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:341:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:348:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:352:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:359:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:363:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:364:9: unused loop variable 'file'
+    src/phase4_debugging_profiling.lua:365:13: unused loop variable 'line'
+    src/phase4_debugging_profiling.lua:372:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:379:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:388:30: unused argument 'self'
+    src/phase4_debugging_profiling.lua:393:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:398:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:399:13: unused loop variable 'line'
+    src/phase4_debugging_profiling.lua:405:1: line contains only whitespace
+    src/phase4_debugging_profiling.lua:407:121: line is too long (130 > 120)
+
+Checking src/phase4_ecosystem_integration.lua     57 warnings
+
+    src/phase4_ecosystem_integration.lua:24:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:26:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:34:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:40:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:43:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:50:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:60:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:65:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:69:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:73:32: unused argument 'self'
+    src/phase4_ecosystem_integration.lua:73:62: unused argument 'version'
+    src/phase4_ecosystem_integration.lua:104:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:112:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:125:32: unused argument 'self'
+    src/phase4_ecosystem_integration.lua:136:32: unused argument 'self'
+    src/phase4_ecosystem_integration.lua:169:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:176:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:182:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:186:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:190:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:195:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:200:32: unused argument 'self'
+    src/phase4_ecosystem_integration.lua:212:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:220:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:224:32: unused argument 'self'
+    src/phase4_ecosystem_integration.lua:234:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:243:32: unused argument 'self'
+    src/phase4_ecosystem_integration.lua:254:32: unused argument 'self'
+    src/phase4_ecosystem_integration.lua:257:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:263:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:276:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:288:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:324:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:328:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:331:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:338:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:346:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:351:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:354:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:359:29: unused argument 'self'
+    src/phase4_ecosystem_integration.lua:361:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:372:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:400:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:409:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:415:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:418:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:427:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:430:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:433:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:438:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:441:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:446:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:449:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:461:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:467:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:473:1: line contains only whitespace
+    src/phase4_ecosystem_integration.lua:476:1: line contains only whitespace
+
+Checking test/temp/test_1759233219218.lua         2 warnings
+
+    test/temp/test_1759233219218.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759233219218.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759233219227.lua         2 warnings
+
+    test/temp/test_1759233219227.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759233219227.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759233219236.lua         2 warnings
+
+    test/temp/test_1759233219236.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759233219236.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759233219244.lua         2 warnings
+
+    test/temp/test_1759233219244.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759233219244.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759233219251.lua         2 warnings
+
+    test/temp/test_1759233219251.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759233219251.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759233219259.lua         2 warnings
+
+    test/temp/test_1759233219259.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759233219259.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759249489058.lua         2 warnings
+
+    test/temp/test_1759249489058.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759249489058.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759249489077.lua         2 warnings
+
+    test/temp/test_1759249489077.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759249489077.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759249489093.lua         2 warnings
+
+    test/temp/test_1759249489093.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759249489093.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759249489105.lua         2 warnings
+
+    test/temp/test_1759249489105.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759249489105.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759249489117.lua         2 warnings
+
+    test/temp/test_1759249489117.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759249489117.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759249489129.lua         2 warnings
+
+    test/temp/test_1759249489129.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759249489129.lua:5:7: unused variable 'Math'
+
+Checking test/temp/test_1759249530265.lua         2 warnings
+
+    test/temp/test_1759249530265.lua:4:7: unused variable 'JSON'
+    test/temp/test_1759249530265.lua:5:7: unused variable 'Math'
+
+Checking test/test_phase3_implementation.lua      9 warnings
+
+    test/test_phase3_implementation.lua:15:1: line contains only whitespace
+    test/test_phase3_implementation.lua:19:1: line contains only whitespace
+    test/test_phase3_implementation.lua:34:39: line contains trailing whitespace
+    test/test_phase3_implementation.lua:59:1: line contains only whitespace
+    test/test_phase3_implementation.lua:97:9: unused loop variable 'i'
+    test/test_phase3_implementation.lua:105:5: unused loop variable 'i'
+    test/test_phase3_implementation.lua:121:1: line contains only whitespace
+    test/test_phase3_implementation.lua:125:1: line contains only whitespace
+    test/test_phase3_implementation.lua:129:1: line contains only whitespace
+
+Checking test/test_phase4_debugging.lua           2 warnings
+
+    test/test_phase4_debugging.lua:18:7: variable 'test_data' is mutated but never accessed
+    test/test_phase4_debugging.lua:123:7: unused variable 'test_var'
+
+Checking test/test_phase4_implementation.lua      10 warnings
+
+    test/test_phase4_implementation.lua:86:32: unused argument 'ctx'
+    test/test_phase4_implementation.lua:123:1: line contains only whitespace
+    test/test_phase4_implementation.lua:128:1: line contains only whitespace
+    test/test_phase4_implementation.lua:133:1: line contains only whitespace
+    test/test_phase4_implementation.lua:138:1: line contains only whitespace
+    test/test_phase4_implementation.lua:149:1: line contains only whitespace
+    test/test_phase4_implementation.lua:154:1: line contains only whitespace
+    test/test_phase4_implementation.lua:165:1: line contains only whitespace
+    test/test_phase4_implementation.lua:169:1: line contains only whitespace
+    test/test_phase4_implementation.lua:181:28: line contains trailing whitespace
+
+Total: 209 warnings / 0 errors in 20 files
