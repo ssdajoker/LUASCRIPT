@@ -1,0 +1,241 @@
+
+-- GSS Grammar Definition using LPEG
+-- Gaussian Sprite Sheets - CSS-like DSL for Gaussian field rendering
+
+local lpeg = require("lpeg")
+local P, R, S, V, C, Ct, Cc, Cg, Cf = lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.C, lpeg.Ct, lpeg.Cc, lpeg.Cg, lpeg.Cf
+
+-- Whitespace and comments
+local space = S(" \t\n\r")
+local comment = P("//") * (1 - P("\n"))^0
+local ws = (space + comment)^0
+
+-- Helper to consume whitespace after pattern
+local function token(p)
+    return p * ws
+end
+
+-- Keywords
+local keywords = {
+    "gss", "field", "ramp", "iso", "blend", "bind", "animate", "layer", "size",
+    "gaussian", "mix", "sum", "custom", "normal", "multiply", "screen", 
+    "softlight", "overlay", "var"
+}
+
+local keyword = P(false)
+for _, kw in ipairs(keywords) do
+    keyword = keyword + P(kw)
+end
+
+-- Identifiers
+local alpha = R("az", "AZ") + P("_")
+local alnum = alpha + R("09")
+local identifier = token(C(alpha * alnum^0 - keyword))
+
+-- Numbers
+local digit = R("09")
+local sign = S("+-")^-1
+local decimal = digit^1 * (P(".") * digit^1)^-1
+local number = token(C(sign * decimal))
+
+-- Units
+local unit = token(C(P("px") + P("em") + P("rem") + P("%") + P("deg")))
+local length = Ct(number * unit^-1) / function(t) 
+    return {value = tonumber(t[1]), unit = t[2] or "px"} 
+end
+
+-- Percentages
+local percent = token(C(number * P("%"))) / function(s)
+    return {value = tonumber(s:match("([%d%.]+)")), unit = "%"}
+end
+
+-- Colors
+local hex_digit = R("09", "af", "AF")
+local hex_color = token(P("#") * C(hex_digit^6 + hex_digit^3))
+local rgb_color = token(P("rgb(") * ws * number * ws * P(",") * ws * number * ws * P(",") * ws * number * ws * P(")"))
+local rgba_color = token(P("rgba(") * ws * number * ws * P(",") * ws * number * ws * P(",") * ws * number * ws * P(",") * ws * number * ws * P(")"))
+local color = hex_color + rgba_color + rgb_color
+
+-- CSS Variables
+local css_var = token(P("var(") * ws * P("--") * identifier * (ws * P(",") * ws * (number + length))^-1 * ws * P(")"))
+
+-- Expressions
+local expr = V("Expr")
+local primary = V("Primary")
+local term = V("Term")
+local factor = V("Factor")
+
+-- Grammar definition
+local grammar = P({
+    "Stylesheet",
+    
+    Stylesheet = ws * Ct(V("Block")^0) * -1,
+    
+    Block = Ct(
+        Cc("block") *
+        token(P("gss")) *
+        Cg(identifier^-1, "name") *
+        token(P("{")) *
+        Cg(Ct(V("Stmt")^0), "statements") *
+        token(P("}"))
+    ),
+    
+    Stmt = V("FieldStmt") + V("RampStmt") + V("IsoStmt") + V("BlendStmt") +
+           V("BindStmt") + V("AnimateStmt") + V("LayerStmt") + V("SizeStmt"),
+    
+    FieldStmt = Ct(
+        Cc("field") *
+        token(P("field:")) *
+        Cg(V("FieldExpr"), "expr") *
+        token(P(";"))
+    ),
+    
+    FieldExpr = V("GaussianExpr") + V("MixExpr") + V("SumExpr"),
+    
+    GaussianExpr = Ct(
+        Cc("gaussian") *
+        token(P("gaussian(")) *
+        Cg(V("ArgList"), "args") *
+        token(P(")"))
+    ),
+    
+    MixExpr = Ct(
+        Cc("mix") *
+        token(P("mix(")) *
+        Cg(V("FieldExpr"), "input1") *
+        token(P(",")) *
+        Cg(V("FieldExpr"), "input2") *
+        token(P(",")) *
+        Cg(expr, "weight") *
+        token(P(")"))
+    ),
+    
+    SumExpr = Ct(
+        Cc("sum") *
+        token(P("sum(")) *
+        Cg(Ct(V("FieldExpr") * (token(P(",")) * V("FieldExpr"))^0), "inputs") *
+        token(P(")"))
+    ),
+    
+    RampStmt = Ct(
+        Cc("ramp") *
+        token(P("ramp:")) *
+        Cg(identifier + V("CustomRamp"), "palette") *
+        token(P(";"))
+    ),
+    
+    CustomRamp = Ct(
+        Cc("custom") *
+        token(P("custom(")) *
+        Cg(V("ColorStops"), "stops") *
+        token(P(")"))
+    ),
+    
+    ColorStops = Ct(V("ColorStop") * (token(P(",")) * V("ColorStop"))^0),
+    
+    ColorStop = Ct(
+        Cg(color, "color") *
+        token(P("@")) *
+        Cg(percent, "position")
+    ),
+    
+    IsoStmt = Ct(
+        Cc("iso") *
+        token(P("iso:")) *
+        Cg((percent + number), "threshold") *
+        (token(P(",")) * Cg((percent + number), "width"))^-1 *
+        token(P(";"))
+    ),
+    
+    BlendStmt = Ct(
+        Cc("blend") *
+        token(P("blend:")) *
+        Cg(token(C(P("normal") + P("multiply") + P("screen") + P("softlight") + P("overlay"))), "mode") *
+        token(P(";"))
+    ),
+    
+    BindStmt = Ct(
+        Cc("bind") *
+        token(P("bind:")) *
+        Cg(Ct(identifier * (token(P(",")) * identifier)^0), "vars") *
+        token(P(";"))
+    ),
+    
+    AnimateStmt = Ct(
+        Cc("animate") *
+        token(P("animate:")) *
+        Cg(identifier, "property") *
+        token(P("(")) *
+        Cg(V("ArgList"), "args") *
+        token(P(")")) *
+        token(P(";"))
+    ),
+    
+    LayerStmt = Ct(
+        Cc("layer") *
+        token(P("layer")) *
+        Cg(identifier, "name") *
+        token(P("{")) *
+        Cg(Ct(V("Stmt")^0), "statements") *
+        token(P("}"))
+    ),
+    
+    SizeStmt = Ct(
+        Cc("size") *
+        token(P("size:")) *
+        Cg(length, "width") *
+        token(P("x")) *
+        Cg(length, "height") *
+        token(P(";"))
+    ),
+    
+    ArgList = Ct(expr * (token(P(",")) * expr)^0),
+    
+    Expr = Ct(term * (Cg(token(C(S("+-"))), "op") * Cg(term, "right"))^0),
+    
+    Term = Ct(factor * (Cg(token(C(S("*/%"))), "op") * Cg(factor, "right"))^0),
+    
+    Factor = token(P("(")) * expr * token(P(")")) + 
+             css_var + 
+             length + 
+             number + 
+             identifier,
+    
+    Primary = css_var + length + number + identifier
+})
+
+-- Module exports
+local M = {}
+
+M.grammar = grammar
+
+function M.parse(input)
+    local result = grammar:match(input)
+    if not result then
+        return nil, "Parse error: invalid GSS syntax"
+    end
+    return result
+end
+
+function M.test()
+    local test_input = [[
+        gss myGaussian {
+            size: 640px x 480px;
+            field: gaussian(var(--muX, 0), var(--muY, 0), var(--sigma, 20));
+            ramp: viridis;
+            iso: 50%, 2px;
+            blend: normal;
+        }
+    ]]
+    
+    local result, err = M.parse(test_input)
+    if result then
+        print("Parse successful!")
+        return result
+    else
+        print("Parse failed:", err)
+        return nil
+    end
+end
+
+return M
