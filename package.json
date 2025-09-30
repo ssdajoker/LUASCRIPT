@@ -1,0 +1,36 @@
+
+{
+  "name": "luascript",
+  "version": "0.1.0",
+  "description": "An experimental programming language - JavaScript to Lua transpiler",
+  "main": "src/transpiler.js",
+  "bin": {
+    "luascript": "src/transpiler.js"
+  },
+  "scripts": {
+    "test": "node test/test_transpiler.js",
+    "demo": "node src/transpiler.js examples/phase1b_demo.js examples/phase1b_demo.lua && luajit examples/phase1b_demo.lua",
+    "transpile": "node src/transpiler.js"
+  },
+  "keywords": [
+    "transpiler",
+    "javascript",
+    "lua",
+    "luajit",
+    "programming-language",
+    "compiler"
+  ],
+  "author": "LUASCRIPT Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ssdajoker/LUASCRIPT.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ssdajoker/LUASCRIPT/issues"
+  },
+  "homepage": "https://github.com/ssdajoker/LUASCRIPT#readme"
+}
