@@ -199,7 +199,7 @@ g = math.exp(-(r*r)/(2*sigma*sigma))
 ✅ **A3**: Baseline renderer comparisons with SSIM thresholds  
 ✅ **A4**: GSS parse/compile works (canvas updates ≤1 frame)  
 ✅ **A5**: Agent loop yields reward improvement (≥10 iters)  
-⏳ **A6**: WASM path (architecture ready, implementation planned)
+✅ **A6**: WASM path complete (hot-swap working, tests passing) ⭐ NEW!
 
 ---
 

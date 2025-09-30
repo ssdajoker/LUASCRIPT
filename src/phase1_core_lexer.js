@@ -28,7 +28,8 @@ class LuaScriptLexer {
             ['~', 'BITWISE_NOT'], ['<<', 'LEFT_SHIFT'], ['>>', 'RIGHT_SHIFT'],
             ['++', 'INCREMENT'], ['--', 'DECREMENT'], ['+=', 'PLUS_ASSIGN'],
             ['-=', 'MINUS_ASSIGN'], ['*=', 'MULTIPLY_ASSIGN'], ['/=', 'DIVIDE_ASSIGN'],
-            ['=>', 'ARROW'], ['...', 'SPREAD'], ['?.', 'OPTIONAL_CHAINING']
+            ['=>', 'ARROW'], ['...', 'SPREAD'], ['?.', 'OPTIONAL_CHAINING'],
+            ['??', 'NULLISH_COALESCING'], ['??=', 'NULLISH_ASSIGN']
         ]);
         this.errorRecovery = options.errorRecovery !== false;
         this.strictMode = options.strictMode || false;
