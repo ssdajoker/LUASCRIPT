@@ -1,0 +1,209 @@
+
+-- AGSS Grammar Extension
+-- Agentic Gaussian Sprite Sheets - AI-powered parameter optimization
+
+local lpeg = require("lpeg")
+local P, R, S, V, C, Ct, Cc, Cg = lpeg.P, lpeg.R, lpeg.S, lpeg.V, lpeg.C, lpeg.Ct, lpeg.Cc, lpeg.Cg
+
+-- Import base GSS grammar
+local gss = require("gss.grammar.gss")
+
+-- Whitespace
+local space = S(" \t\n\r")
+local comment = P("//") * (1 - P("\n"))^0
+local ws = (space + comment)^0
+
+local function token(p)
+    return p * ws
+end
+
+-- Identifiers and numbers (reuse from GSS)
+local alpha = R("az", "AZ") + P("_")
+local alnum = alpha + R("09")
+local identifier = token(C(alpha * alnum^0))
+
+local digit = R("09")
+local sign = S("+-")^-1
+local decimal = digit^1 * (P(".") * digit^1)^-1
+local number = token(C(sign * decimal))
+
+-- Unicode set membership operator
+local set_member = token(P("∈") + P("in"))
+
+-- Duration
+local duration = Ct(
+    Cg(number, "value") *
+    Cg(token(C(P("ms") + P("s") + P("m") + P("h"))), "unit")
+)
+
+-- AGSS Grammar Extension
+local agss_grammar = P({
+    "AgentBlock",
+    
+    AgentBlock = Ct(
+        Cc("agent") *
+        token(P("@agent")) *
+        Cg(identifier, "name") *
+        token(P("{")) *
+        Cg(V("OptimizeBlock"), "optimize") *
+        token(P("}"))
+    ),
+    
+    OptimizeBlock = Ct(
+        token(P("optimize")) *
+        token(P("{")) *
+        Cg(Ct(V("AgentStmt")^1), "statements") *
+        token(P("}"))
+    ),
+    
+    AgentStmt = V("TargetStmt") + V("VaryStmt") + V("BudgetStmt") + 
+                V("StrategyStmt") + V("RecordStmt"),
+    
+    TargetStmt = Ct(
+        Cc("target") *
+        token(P("target:")) *
+        Cg(V("Metric"), "metric") *
+        token(P(":")) *
+        Cg(number, "value") *
+        token(P(";"))
+    ),
+    
+    Metric = token(C(P("fps") + P("latency") + P("ssim") + P("quality"))),
+    
+    VaryStmt = Ct(
+        Cc("vary") *
+        token(P("vary:")) *
+        Cg(Ct(V("ParamRange") * (token(P(",")) * V("ParamRange"))^0), "ranges") *
+        token(P(";"))
+    ),
+    
+    ParamRange = Ct(
+        Cg(identifier, "param") *
+        set_member *
+        token(P("[")) *
+        Cg(number, "min") *
+        token(P(",")) *
+        Cg(number, "max") *
+        token(P("]")) *
+        (token(P("step")) * Cg(number, "step"))^-1
+    ),
+    
+    BudgetStmt = Ct(
+        Cc("budget") *
+        token(P("budget:")) *
+        (V("TrialsBudget") + V("TimeBudget")) *
+        token(P(";"))
+    ),
+    
+    TrialsBudget = Ct(
+        Cc("trials") *
+        token(P("trials:")) *
+        Cg(number, "count")
+    ),
+    
+    TimeBudget = Ct(
+        Cc("time") *
+        token(P("time:")) *
+        Cg(duration, "duration")
+    ),
+    
+    StrategyStmt = Ct(
+        Cc("strategy") *
+        token(P("strategy:")) *
+        Cg(V("Strategy"), "name") *
+        token(P(";"))
+    ),
+    
+    Strategy = token(C(P("grid") + P("random") + P("bayes") + P("anneal"))),
+    
+    RecordStmt = Ct(
+        Cc("record") *
+        token(P("record:")) *
+        Cg(Ct(identifier * (token(P(",")) * identifier)^0), "fields") *
+        token(P(";"))
+    )
+})
+
+-- Module exports
+local M = {}
+
+M.grammar = agss_grammar
+
+function M.parse(input)
+    local result = agss_grammar:match(input)
+    if not result then
+        return nil, "Parse error: invalid AGSS syntax"
+    end
+    return result
+end
+
+function M.parse_full(input)
+    -- Parse both GSS and AGSS blocks
+    local gss_result, err = gss.parse(input)
+    if not gss_result then
+        return nil, err
+    end
+    
+    -- Extract @agent blocks
+    local agent_blocks = {}
+    local remaining = input
+    
+    while true do
+        local agent_start = remaining:find("@agent")
+        if not agent_start then break end
+        
+        local agent_input = remaining:sub(agent_start)
+        local agent_result = agss_grammar:match(agent_input)
+        
+        if agent_result then
+            table.insert(agent_blocks, agent_result)
+            -- Find end of agent block
+            local depth = 0
+            local i = agent_start
+            while i <= #remaining do
+                if remaining:sub(i, i) == "{" then
+                    depth = depth + 1
+                elseif remaining:sub(i, i) == "}" then
+                    depth = depth - 1
+                    if depth == 0 then
+                        remaining = remaining:sub(1, agent_start - 1) .. remaining:sub(i + 1)
+                        break
+                    end
+                end
+                i = i + 1
+            end
+        else
+            break
+        end
+    end
+    
+    return {
+        gss = gss_result,
+        agents = agent_blocks
+    }
+end
+
+function M.test()
+    local test_input = [[
+        @agent tuner {
+            optimize {
+                target: fps: 60;
+                vary: sigma ∈ [8, 40] step 4, muX ∈ [-120, 120] step 20;
+                budget: trials: 64;
+                strategy: grid;
+                record: fps, sigma, muX, checksum;
+            }
+        }
+    ]]
+    
+    local result, err = M.parse(test_input)
+    if result then
+        print("AGSS parse successful!")
+        return result
+    else
+        print("AGSS parse failed:", err)
+        return nil
+    end
+end
+
+return M
