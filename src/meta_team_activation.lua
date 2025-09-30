@@ -1,9 +1,6 @@
-
 -- 🔥 META-TEAM LEADERSHIP ACTIVATION SCRIPT 🔥
 -- POST-NAP ENERGY SURGE - BOSS DIRECTIVE: "PUSH EM HARD, GUIDE EM GOOD!"
-
 local MetaTeamActivation = {}
-
 -- 🚨 HIGH ENERGY ACTIVATION SEQUENCE 🚨
 function MetaTeamActivation.displayActivation()
     print("=" .. string.rep("=", 78) .. "=")
@@ -11,46 +8,37 @@ function MetaTeamActivation.displayActivation()
     print("🚨 BOSS DIRECTIVE EXECUTED: 'PUSH EM HARD, GUIDE EM GOOD!' 🚨")
     print("=" .. string.rep("=", 78) .. "=")
     print()
-    
     -- 👑 META-TEAM LEADERS IN ACTION
     MetaTeamActivation.displayMetaTeamLeadership()
-    
     -- 🎯 21-MEMBER AUDIT TEAM STATUS
     MetaTeamActivation.display21MemberTeam()
-    
     -- ⚡ RIGOROUS TESTING ACCELERATION
     MetaTeamActivation.displayTestingAcceleration()
-    
     -- 🏆 VICTORY STATUS
     MetaTeamActivation.displayVictoryStatus()
 end
-
 -- 👑 META-TEAM LEADERSHIP DISPLAY
 function MetaTeamActivation.displayMetaTeamLeadership()
     print("👑 META-TEAM LEADERSHIP IN FULL FORCE! 👑")
     print()
-    
     -- Steve Jobs - Product Vision Commander
     print("🍎 STEVE JOBS - PRODUCT VISION COMMANDER:")
     print("   'TEAM! That nap was EXACTLY what we needed!'")
     print("   'Every line of code must serve our users!'")
     print("   'NO COMPROMISES! We're building something REVOLUTIONARY!'")
     print()
-    
-    -- Donald Knuth - Algorithm Perfectionist  
+    -- Donald Knuth - Algorithm Perfectionist
     print("🧮 DONALD KNUTH - ALGORITHM PERFECTIONIST:")
     print("   'That rest has cleared our minds for PERFECT algorithmic thinking!'")
     print("   'I want to see PROOFS, not just code!'")
     print("   'Every algorithm must be ELEGANT and OPTIMAL!'")
     print()
-    
     -- Linus Torvalds - Code Quality Enforcer
     print("🐧 LINUS TORVALDS - CODE QUALITY ENFORCER:")
     print("   'That nap recharged our coding batteries!'")
     print("   'I don't want to see ANY sloppy commits!'")
     print("   'Talk is cheap - SHOW ME THE CODE! And make it PERFECT!'")
     print()
-    
     -- Ada Lovelace - Analytical Testing Master
     print("🔬 ADA LOVELACE - ANALYTICAL TESTING MASTER:")
     print("   'Our minds are sharp and ready for DEEP ANALYTICAL WORK!'")
@@ -58,12 +46,10 @@ function MetaTeamActivation.displayMetaTeamLeadership()
     print("   'Every edge case identified! ANALYTICAL PERFECTION!'")
     print()
 end
-
 -- 🎯 21-MEMBER AUDIT TEAM DISPLAY
 function MetaTeamActivation.display21MemberTeam()
     print("🎯 21-MEMBER AUDIT TEAM - CODING WITH DEVOTION! 🎯")
     print()
-    
     local teams = {
         {
             name = "🔥 PHASE 1 TEAM - FOUNDATION MASTERS",
@@ -107,7 +93,6 @@ function MetaTeamActivation.display21MemberTeam()
             }
         }
     }
-    
     for _, team in ipairs(teams) do
         print(team.name .. " (" .. #team.members .. " Members)")
         for _, member in ipairs(team.members) do
@@ -117,7 +102,6 @@ function MetaTeamActivation.display21MemberTeam()
         print()
     end
 end
-
 -- ⚡ RIGOROUS TESTING ACCELERATION DISPLAY
 function MetaTeamActivation.displayTestingAcceleration()
     print("⚡ RIGOROUS TESTING ACCELERATION WITH DEVOTION! ⚡")
@@ -134,7 +118,6 @@ function MetaTeamActivation.displayTestingAcceleration()
     print("   'RIGOROUS TESTING IS OUR PATH TO VICTORY!'")
     print()
 end
-
 -- 🏆 VICTORY STATUS DISPLAY
 function MetaTeamActivation.displayVictoryStatus()
     print("🏆 VICTORY STATUS - ENERGY IS INFECTIOUS! 🏆")
@@ -165,22 +148,17 @@ function MetaTeamActivation.displayVictoryStatus()
     print("🔥 THE ENERGY IS UNSTOPPABLE! VICTORY AWAITS! 🔥")
     print("=" .. string.rep("=", 78) .. "=")
 end
-
 -- 🎯 MAIN ACTIVATION FUNCTION
 function MetaTeamActivation.activate()
     print("\n🚨 INITIATING META-TEAM LEADERSHIP ACTIVATION SEQUENCE... 🚨\n")
-    
     -- Simulate the energy building up
     for i = 1, 3 do
         print("⚡ ENERGY LEVEL " .. i .. "/3 - CHARGING... ⚡")
         -- In a real environment, you might add a small delay here
     end
-    
     print("🔥 MAXIMUM ENERGY ACHIEVED! ACTIVATION COMPLETE! 🔥\n")
-    
     -- Display the full activation
     MetaTeamActivation.displayActivation()
 end
-
 -- Export the module
 return MetaTeamActivation

@@ -1,9 +1,6 @@
-
 -- PHASE 4: ECOSYSTEM INTEGRATION & TOOLING - REAL IMPLEMENTATION
 -- Team B: Innovators - ACTUAL CODE NOW!
-
 local phase4 = {}
-
 -- Package Manager System
 phase4.package_manager = {
     installed_packages = {},
@@ -18,12 +15,9 @@ phase4.package_manager = {
         max_download_size = 50 * 1024 * 1024 -- 50MB
     }
 }
-
 function phase4.package_manager:install(package_name, version)
     version = version or "latest"
-    
     print("Installing package: " .. package_name .. " (" .. version .. ")")
-    
     -- Check if already installed
     if self.installed_packages[package_name] then
         if self.installed_packages[package_name].version == version then
@@ -31,23 +25,19 @@ function phase4.package_manager:install(package_name, version)
             return true
         end
     end
-    
     -- Download package metadata
     local metadata = self:fetch_metadata(package_name, version)
     if not metadata then
         error("Package not found: " .. package_name)
     end
-    
     -- Resolve dependencies
     local dependencies = self:resolve_dependencies(metadata.dependencies or {})
-    
     -- Install dependencies first
     for _, dep in ipairs(dependencies) do
         if not self.installed_packages[dep.name] then
             self:install(dep.name, dep.version)
         end
     end
-    
     -- Download and install package
     local package_data = self:download_package(package_name, version, metadata.download_url)
     if package_data then
@@ -57,20 +47,16 @@ function phase4.package_manager:install(package_name, version)
             install_time = os.time(),
             dependencies = dependencies
         }
-        
         -- Execute post-install scripts
         if metadata.post_install then
             self:execute_script(metadata.post_install)
         end
-        
         print("Successfully installed: " .. package_name)
         return true
     end
-    
     return false
 end
-
-function phase4.package_manager:fetch_metadata(package_name, version)
+function phase4.package_manager.fetch_metadata(_, package_name, _)
     -- Simulate fetching metadata from repository
     local mock_metadata = {
         ["http-client"] = {
@@ -101,15 +87,12 @@ function phase4.package_manager:fetch_metadata(package_name, version)
             download_url = "https://packages.org/url-utils-1.0.5.tar.gz"
         }
     }
-    
     return mock_metadata[package_name]
 end
-
 function phase4.package_manager:resolve_dependencies(deps)
     local resolved = {}
     for _, dep in ipairs(deps) do
         table.insert(resolved, dep)
-        
         -- Recursively resolve sub-dependencies
         local sub_metadata = self:fetch_metadata(dep.name, dep.version)
         if sub_metadata and sub_metadata.dependencies then
@@ -121,8 +104,7 @@ function phase4.package_manager:resolve_dependencies(deps)
     end
     return resolved
 end
-
-function phase4.package_manager:download_package(name, version, url)
+function phase4.package_manager.download_package(_, name, version, url)
     -- Simulate package download
     print("Downloading from: " .. url)
     return {
@@ -132,8 +114,7 @@ function phase4.package_manager:download_package(name, version, url)
         size = math.random(1000, 50000)
     }
 end
-
-function phase4.package_manager:execute_script(script)
+function phase4.package_manager.execute_script(_, script)
     if type(script) == "string" then
         local func, err = loadstring(script)
         if func then
@@ -145,7 +126,6 @@ function phase4.package_manager:execute_script(script)
         script()
     end
 end
-
 -- IDE Integration System
 phase4.ide_integration = {
     language_server = {
@@ -163,41 +143,33 @@ phase4.ide_integration = {
     syntax_highlighting = {},
     code_completion = {}
 }
-
 function phase4.ide_integration:start_language_server()
     print("Starting LuaScript Language Server on port " .. self.language_server.port)
-    
     -- Simulate server startup
     local server = {
         running = true,
         clients = {},
         documents = {}
     }
-    
     -- Register message handlers
     server.handlers = {
         ["textDocument/completion"] = function(params)
             return phase4.ide_integration:provide_completions(params)
         end,
-        
         ["textDocument/hover"] = function(params)
             return phase4.ide_integration:provide_hover(params)
         end,
-        
         ["textDocument/definition"] = function(params)
             return phase4.ide_integration:find_definition(params)
         end,
-        
         ["textDocument/diagnostics"] = function(params)
             return phase4.ide_integration:analyze_diagnostics(params)
         end
     }
-    
     print("Language Server started successfully")
     return server
 end
-
-function phase4.ide_integration:provide_completions(params)
+function phase4.ide_integration.provide_completions(_, params)
     local completions = {
         {label = "function", kind = 3, detail = "Function declaration"},
         {label = "local", kind = 14, detail = "Local variable"},
@@ -209,7 +181,6 @@ function phase4.ide_integration:provide_completions(params)
         {label = "string", kind = 9, detail = "String module"},
         {label = "math", kind = 9, detail = "Math module"}
     }
-    
     -- Add context-aware completions
     local line = params.textDocument.line or ""
     if string.match(line, "table%.") then
@@ -217,11 +188,9 @@ function phase4.ide_integration:provide_completions(params)
         table.insert(completions, {label = "remove", kind = 2, detail = "table.remove()"})
         table.insert(completions, {label = "concat", kind = 2, detail = "table.concat()"})
     end
-    
     return {items = completions}
 end
-
-function phase4.ide_integration:provide_hover(params)
+function phase4.ide_integration.provide_hover(_, params)
     local word = params.word or ""
     local hover_info = {
         ["print"] = "print(...) - Prints values to stdout",
@@ -231,7 +200,6 @@ function phase4.ide_integration:provide_hover(params)
         ["function"] = "function - Declares a function",
         ["local"] = "local - Declares a local variable"
     }
-    
     return {
         contents = {
             kind = "markdown",
@@ -239,8 +207,7 @@ function phase4.ide_integration:provide_hover(params)
         }
     }
 end
-
-function phase4.ide_integration:find_definition(params)
+function phase4.ide_integration.find_definition(_, params)
     -- Simulate finding definition
     return {
         uri = params.textDocument.uri,
@@ -250,17 +217,14 @@ function phase4.ide_integration:find_definition(params)
         }
     }
 end
-
-function phase4.ide_integration:analyze_diagnostics(params)
+function phase4.ide_integration.analyze_diagnostics(_, params)
     local diagnostics = {}
     local content = params.textDocument.content or ""
-    
     -- Simple syntax checking
     local lines = {}
     for line in content:gmatch("[^\r\n]+") do
         table.insert(lines, line)
     end
-    
     for i, line in ipairs(lines) do
         -- Check for common issues
         if string.match(line, "function%s+%w+%(.*%)%s*$") then
@@ -273,7 +237,6 @@ function phase4.ide_integration:analyze_diagnostics(params)
                 message = "Function body is empty"
             })
         end
-        
         if string.match(line, "local%s+%w+%s*$") then
             table.insert(diagnostics, {
                 range = {
@@ -285,10 +248,8 @@ function phase4.ide_integration:analyze_diagnostics(params)
             })
         end
     end
-    
     return diagnostics
 end
-
 -- Build System
 phase4.build_system = {
     targets = {},
@@ -306,7 +267,6 @@ phase4.build_system = {
         }
     }
 }
-
 function phase4.build_system:add_target(name, config)
     self.targets[name] = {
         name = name,
@@ -317,25 +277,20 @@ function phase4.build_system:add_target(name, config)
         build_steps = config.build_steps or {}
     }
 end
-
 function phase4.build_system:build(target_name, configuration)
     configuration = configuration or "debug"
     local target = self.targets[target_name]
-    
     if not target then
         error("Target not found: " .. target_name)
     end
-    
     local config = self.configurations[configuration]
     print("Building target: " .. target_name .. " (" .. configuration .. ")")
-    
     -- Build dependencies first
     for _, dep in ipairs(target.dependencies) do
         if self.targets[dep] then
             self:build(dep, configuration)
         end
     end
-    
     -- Execute build steps
     local build_context = {
         target = target,
@@ -343,22 +298,17 @@ function phase4.build_system:build(target_name, configuration)
         source_files = target.source_files,
         output_file = target.output_file
     }
-    
     for _, step in ipairs(target.build_steps) do
         print("Executing build step: " .. step.name)
         step.execute(build_context)
     end
-    
     -- Final compilation
     self:compile_sources(target.source_files, target.output_file, config)
-    
     print("Build completed: " .. target.output_file)
     return true
 end
-
-function phase4.build_system:compile_sources(sources, output, config)
+function phase4.build_system.compile_sources(_, sources, output, config)
     print("Compiling " .. #sources .. " source files...")
-    
     for _, source in ipairs(sources) do
         print("  Compiling: " .. source)
         -- Simulate compilation
@@ -369,11 +319,9 @@ function phase4.build_system:compile_sources(sources, output, config)
             print("    Minifying code")
         end
     end
-    
     print("  Linking to: " .. output)
     return true
 end
-
 -- Testing Framework
 phase4.testing_framework = {
     test_suites = {},
@@ -387,7 +335,6 @@ phase4.testing_framework = {
         threshold = 80
     }
 }
-
 function phase4.testing_framework:describe(name, tests)
     local suite = {
         name = name,
@@ -397,7 +344,6 @@ function phase4.testing_framework:describe(name, tests)
         before_each = nil,
         after_each = nil
     }
-    
     local context = {
         it = function(test_name, test_func)
             table.insert(suite.tests, {
@@ -406,47 +352,36 @@ function phase4.testing_framework:describe(name, tests)
                 status = "pending"
             })
         end,
-        
         setup = function(func) suite.setup = func end,
         teardown = function(func) suite.teardown = func end,
         before_each = function(func) suite.before_each = func end,
         after_each = function(func) suite.after_each = func end
     }
-    
     -- Execute test definition
     tests(context)
-    
     table.insert(self.test_suites, suite)
     return suite
 end
-
 function phase4.testing_framework:run_tests()
     local total_tests = 0
     local passed_tests = 0
     local failed_tests = 0
-    
     print("Running LuaScript Test Suite")
     print("============================")
-    
     for _, suite in ipairs(self.test_suites) do
         print("\n" .. suite.name)
-        
         -- Run setup
         if suite.setup then
             suite.setup()
         end
-        
         for _, test in ipairs(suite.tests) do
             total_tests = total_tests + 1
-            
             -- Run before_each
             if suite.before_each then
                 suite.before_each()
             end
-            
             -- Run test
             local success, error_msg = pcall(test.func)
-            
             if success then
                 test.status = "passed"
                 passed_tests = passed_tests + 1
@@ -458,22 +393,18 @@ function phase4.testing_framework:run_tests()
                 print("  ✗ " .. test.name)
                 print("    Error: " .. tostring(error_msg))
             end
-            
             -- Run after_each
             if suite.after_each then
                 suite.after_each()
             end
         end
-        
         -- Run teardown
         if suite.teardown then
             suite.teardown()
         end
     end
-    
     print("\n============================")
     print("Tests: " .. total_tests .. ", Passed: " .. passed_tests .. ", Failed: " .. failed_tests)
-    
     if failed_tests == 0 then
         print("All tests passed! ✓")
         return true
@@ -482,44 +413,36 @@ function phase4.testing_framework:run_tests()
         return false
     end
 end
-
 -- Assertion library for testing
 phase4.assert = {}
-
 function phase4.assert.equals(actual, expected, message)
     if actual ~= expected then
         error(message or string.format("Expected %s, got %s", tostring(expected), tostring(actual)))
     end
 end
-
 function phase4.assert.not_equals(actual, expected, message)
     if actual == expected then
         error(message or string.format("Expected not %s, got %s", tostring(expected), tostring(actual)))
     end
 end
-
 function phase4.assert.is_true(value, message)
     if value ~= true then
         error(message or string.format("Expected true, got %s", tostring(value)))
     end
 end
-
 function phase4.assert.is_false(value, message)
     if value ~= false then
         error(message or string.format("Expected false, got %s", tostring(value)))
     end
 end
-
 function phase4.assert.is_nil(value, message)
     if value ~= nil then
         error(message or string.format("Expected nil, got %s", tostring(value)))
     end
 end
-
 function phase4.assert.not_nil(value, message)
     if value == nil then
         error(message or "Expected non-nil value")
     end
 end
-
 return phase4

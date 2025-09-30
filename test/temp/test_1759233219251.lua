@@ -1,9 +1,6 @@
 -- LUASCRIPT Runtime Library Integration
 local runtime = require('runtime.runtime')
 local console = runtime.console
-local JSON = runtime.JSON
-local Math = runtime.Math
-
 local name = "John";
 local age = 25;
 local message = "Name = " .. name .. ", Age = " .. age;
