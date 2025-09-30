@@ -1,0 +1,46 @@
+
+# LUASCRIPT Code Owners - META-TEAM Oversight
+# These owners will be requested for review when anyone opens a pull request.
+
+# Global owners - META-TEAM has final authority on all changes
+* @ssdajoker
+
+# Core language implementation - Team A responsibility, META-TEAM oversight
+/src/ @ssdajoker
+/parser/ @ssdajoker
+/compiler/ @ssdajoker
+/runtime/ @ssdajoker
+
+# Advanced features and integrations - Team B responsibility, META-TEAM oversight  
+/features/ @ssdajoker
+/integrations/ @ssdajoker
+/tools/ @ssdajoker
+/ide/ @ssdajoker
+
+# Documentation - Donald Knuth standards required
+/docs/ @ssdajoker
+*.md @ssdajoker
+*.pdf @ssdajoker
+
+# Testing - Ada Lovelace analytical rigor required
+/test/ @ssdajoker
+/tests/ @ssdajoker
+*test* @ssdajoker
+
+# Build and deployment - Linus Torvalds oversight
+/build/ @ssdajoker
+/.github/ @ssdajoker
+/scripts/ @ssdajoker
+Dockerfile @ssdajoker
+package.json @ssdajoker
+
+# Configuration and environment
+/.env* @ssdajoker
+/config/ @ssdajoker
+*.config.* @ssdajoker
+
+# META-TEAM organizational documents - Requires unanimous approval
+/TEAMS.md @ssdajoker
+/META_TEAM.md @ssdajoker
+/PHASE_PLAN.md @ssdajoker
+/AUDIT_GUIDE.md @ssdajoker
