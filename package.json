@@ -1,0 +1,33 @@
+
+{
+  "name": "luascript",
+  "version": "1.0.0-phase1d",
+  "description": "LUASCRIPT Programming Language - Phase 1D Implementation",
+  "main": "src/parser.js",
+  "scripts": {
+    "test": "node tests/test_arrow_functions.js && node tests/test_memory_management.js",
+    "test:arrow": "node tests/test_arrow_functions.js",
+    "test:memory": "node tests/test_memory_management.js",
+    "lint": "echo 'Linting not configured yet'",
+    "start": "node -e \"console.log('LUASCRIPT Phase 1D - Use require() to import modules')\""
+  },
+  "keywords": [
+    "programming-language",
+    "parser",
+    "interpreter",
+    "arrow-functions",
+    "memory-management",
+    "accessibility"
+  ],
+  "author": "LUASCRIPT Development Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ssdajoker/LUASCRIPT.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
