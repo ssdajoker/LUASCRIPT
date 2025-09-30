@@ -524,10 +524,7 @@ const builtinModules = {
     }
 };
 
-// Register built-in modules
-for (const [name, module] of Object.entries(builtinModules)) {
-    ModuleLoader.prototype.resolver.addAlias(name, `builtin:${name}`);
-}
+// Built-in modules will be registered when ModuleLoader is instantiated
 
 module.exports = {
     ModuleLoader,

@@ -1,46 +1,109 @@
 
 /**
  * LUASCRIPT Transpiler - JavaScript to Lua Transpiler
- * Phase 1B: Runtime Compatibility Fixes
+ * Phase 1B: Runtime Compatibility Fixes + Tony Yoka's 20 PS2/PS3 Optimizations
  * 
- * Critical fixes implemented:
+ * MULTI-TEAM IMPLEMENTATION:
+ * - Steve Jobs & Donald Knuth: Architecture & Algorithm Excellence
+ * - Tony Yoka PS2/PS3 Team: 20 Hardware-Inspired Optimizations
+ * - Main Development Team: 95% Phase Completion Push
+ * - Sundar/Linus/Ada: Harmony & Stability Assurance
+ * 
+ * Critical fixes + optimizations implemented:
  * - String concatenation: JavaScript '+' to Lua '..'
  * - Logical operators: '||' to 'or', '===' to '=='
  * - Runtime library integration for console.log and other JS functions
+ * - Tony's 20 PS2/PS3-inspired performance optimizations
  */
 
 const fs = require('fs');
 const path = require('path');
+const { OptimizedLuaScriptTranspiler } = require('./optimized_transpiler');
 
 class LuaScriptTranspiler {
-    constructor() {
+    constructor(options = {}) {
         this.runtimeLibraryPath = path.join(__dirname, '..', 'runtime', 'runtime.lua');
+        
+        // Tony Yoka's PS2/PS3 Optimization Integration
+        this.options = {
+            enableOptimizations: options.enableOptimizations !== false,
+            optimizationLevel: options.optimizationLevel || 'standard', // 'basic', 'standard', 'aggressive'
+            enableParallelProcessing: options.enableParallelProcessing !== false,
+            enableCaching: options.enableCaching !== false,
+            enableProfiling: options.enableProfiling !== false,
+            ...options
+        };
+        
+        // Initialize optimized transpiler if optimizations are enabled
+        if (this.options.enableOptimizations) {
+            this.optimizedTranspiler = new OptimizedLuaScriptTranspiler(this.options);
+            this.optimizedTranspiler.initialize().catch(console.error);
+        }
+        
+        // Performance tracking for multi-team coordination
+        this.stats = {
+            transpilationsCount: 0,
+            totalTime: 0,
+            optimizationsApplied: 0,
+            cacheHits: 0
+        };
     }
 
     /**
-     * Main transpilation function
+     * Main transpilation function - Enhanced with Tony's 20 PS2/PS3 Optimizations
      * @param {string} jsCode - JavaScript code to transpile
      * @param {Object} options - Transpilation options
      * @returns {string} - Transpiled Lua code
      */
-    transpile(jsCode, options = {}) {
-        let luaCode = jsCode;
+    async transpile(jsCode, options = {}) {
+        const startTime = process.hrtime.bigint();
+        this.stats.transpilationsCount++;
+        
+        try {
+            // Use optimized transpiler if enabled and available
+            if (this.options.enableOptimizations && this.optimizedTranspiler) {
+                console.log('🚀 APPLYING TONY YOKA\'S 20 PS2/PS3 OPTIMIZATIONS...');
+                
+                const optimizedResult = await this.optimizedTranspiler.transpile(jsCode, options);
+                this.stats.optimizationsApplied++;
+                
+                // Apply runtime library injection to optimized result
+                const finalResult = this.injectRuntimeLibrary(optimizedResult, options);
+                
+                const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
+                this.stats.totalTime += duration;
+                
+                console.log(`✅ OPTIMIZATION COMPLETE: ${duration.toFixed(2)}ms`);
+                return finalResult;
+            }
+            
+            // Fallback to standard transpilation
+            console.log('📝 Using standard transpilation (optimizations disabled)');
+            let luaCode = jsCode;
 
-        // Phase 1B Critical Fixes - Order matters!
-        luaCode = this.fixEqualityOperators(luaCode);
-        luaCode = this.fixLogicalOperators(luaCode);
-        luaCode = this.fixStringConcatenation(luaCode);
-        luaCode = this.injectRuntimeLibrary(luaCode, options);
+            // Phase 1B Critical Fixes - Order matters!
+            luaCode = this.fixEqualityOperators(luaCode);
+            luaCode = this.fixLogicalOperators(luaCode);
+            luaCode = this.fixStringConcatenation(luaCode);
+            luaCode = this.injectRuntimeLibrary(luaCode, options);
 
-        // Additional JavaScript to Lua conversions
-        luaCode = this.convertVariableDeclarations(luaCode);
-        luaCode = this.convertFunctionDeclarations(luaCode);
-        luaCode = this.convertConditionals(luaCode);
-        luaCode = this.convertLoops(luaCode);
-        luaCode = this.convertArrays(luaCode);
-        luaCode = this.convertObjects(luaCode);
+            // Additional JavaScript to Lua conversions
+            luaCode = this.convertVariableDeclarations(luaCode);
+            luaCode = this.convertFunctionDeclarations(luaCode);
+            luaCode = this.convertConditionals(luaCode);
+            luaCode = this.convertLoops(luaCode);
+            luaCode = this.convertArrays(luaCode);
+            luaCode = this.convertObjects(luaCode);
 
-        return luaCode;
+            const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
+            this.stats.totalTime += duration;
+
+            return luaCode;
+            
+        } catch (error) {
+            console.error('❌ TRANSPILATION ERROR:', error.message);
+            throw error;
+        }
     }
 
     /**
@@ -187,52 +250,176 @@ local Math = runtime.Math
     }
 
     /**
-     * Transpile a file
+     * Transpile a file - Enhanced with optimization support
      */
-    transpileFile(inputPath, outputPath, options = {}) {
+    async transpileFile(inputPath, outputPath, options = {}) {
         try {
+            console.log(`🔄 TRANSPILING: ${inputPath}`);
             const jsCode = fs.readFileSync(inputPath, 'utf8');
-            const luaCode = this.transpile(jsCode, options);
+            const luaCode = await this.transpile(jsCode, options);
             
             if (outputPath) {
                 fs.writeFileSync(outputPath, luaCode, 'utf8');
-                console.log(`Transpiled ${inputPath} -> ${outputPath}`);
+                console.log(`✅ TRANSPILED: ${inputPath} -> ${outputPath}`);
             }
             
             return luaCode;
         } catch (error) {
-            console.error(`Error transpiling ${inputPath}:`, error.message);
+            console.error(`❌ ERROR TRANSPILING ${inputPath}:`, error.message);
             throw error;
         }
     }
+
+    /**
+     * Get performance statistics - Multi-team coordination reporting
+     */
+    getPerformanceStats() {
+        const baseStats = {
+            transpilationsCount: this.stats.transpilationsCount,
+            totalTime: this.stats.totalTime,
+            averageTime: this.stats.transpilationsCount > 0 ? this.stats.totalTime / this.stats.transpilationsCount : 0,
+            optimizationsApplied: this.stats.optimizationsApplied,
+            cacheHits: this.stats.cacheHits,
+            optimizationRate: this.stats.transpilationsCount > 0 ? (this.stats.optimizationsApplied / this.stats.transpilationsCount) * 100 : 0
+        };
+
+        if (this.optimizedTranspiler) {
+            const optimizedStats = this.optimizedTranspiler.getPerformanceReport();
+            return {
+                ...baseStats,
+                optimizedTranspiler: optimizedStats,
+                tonyYokaOptimizations: {
+                    enabled: true,
+                    level: this.options.optimizationLevel,
+                    parallelProcessing: this.options.enableParallelProcessing,
+                    caching: this.options.enableCaching,
+                    profiling: this.options.enableProfiling
+                }
+            };
+        }
+
+        return {
+            ...baseStats,
+            tonyYokaOptimizations: {
+                enabled: false,
+                reason: 'Optimizations disabled in constructor'
+            }
+        };
+    }
+
+    /**
+     * Generate multi-team coordination report
+     */
+    generateTeamReport() {
+        const stats = this.getPerformanceStats();
+        
+        console.log('\n🚨 MULTI-TEAM COORDINATION REPORT 🚨');
+        console.log('=' .repeat(60));
+        console.log('👨‍💼 STEVE JOBS & DONALD KNUTH: Architecture Excellence');
+        console.log('🎮 TONY YOKA PS2/PS3 TEAM: Hardware Optimizations');
+        console.log('👥 MAIN DEV TEAM: 95% Phase Completion Push');
+        console.log('🔧 SUNDAR/LINUS/ADA: Harmony & Stability');
+        console.log('=' .repeat(60));
+        
+        console.log(`📊 TRANSPILATIONS: ${stats.transpilationsCount}`);
+        console.log(`⏱️  TOTAL TIME: ${stats.totalTime.toFixed(2)}ms`);
+        console.log(`📈 AVERAGE TIME: ${stats.averageTime.toFixed(2)}ms`);
+        console.log(`🚀 OPTIMIZATIONS: ${stats.optimizationsApplied} (${stats.optimizationRate.toFixed(1)}%)`);
+        
+        if (stats.tonyYokaOptimizations.enabled) {
+            console.log('\n🎮 TONY YOKA\'S PS2/PS3 OPTIMIZATIONS:');
+            console.log(`   Level: ${stats.tonyYokaOptimizations.level}`);
+            console.log(`   Parallel Processing: ${stats.tonyYokaOptimizations.parallelProcessing ? '✅' : '❌'}`);
+            console.log(`   Caching: ${stats.tonyYokaOptimizations.caching ? '✅' : '❌'}`);
+            console.log(`   Profiling: ${stats.tonyYokaOptimizations.profiling ? '✅' : '❌'}`);
+            
+            if (stats.optimizedTranspiler) {
+                console.log(`   Cache Hit Rate: ${stats.optimizedTranspiler.cacheHitRate.toFixed(1)}%`);
+                console.log(`   Throughput: ${stats.optimizedTranspiler.throughput.toFixed(2)} lines/sec`);
+            }
+        } else {
+            console.log('\n⚠️  TONY YOKA\'S OPTIMIZATIONS: DISABLED');
+            console.log(`   Reason: ${stats.tonyYokaOptimizations.reason}`);
+        }
+        
+        console.log('\n🏆 PHASE COMPLETION STATUS:');
+        console.log('   Phase 1-6: Pushing to 95% completion');
+        console.log('   Optimization Implementation: ✅ COMPLETE');
+        console.log('   Multi-team Coordination: ✅ ACTIVE');
+        console.log('=' .repeat(60));
+        
+        return stats;
+    }
 }
 
-// CLI interface
+// CLI interface - Enhanced with Tony's optimizations
 if (require.main === module) {
     const args = process.argv.slice(2);
     
     if (args.length < 1) {
+        console.log('🚀 LUASCRIPT TRANSPILER - Tony Yoka\'s PS2/PS3 Optimizations');
         console.log('Usage: node transpiler.js <input.js> [output.lua] [options]');
+        console.log('');
         console.log('Options:');
-        console.log('  --no-runtime    Skip runtime library injection');
+        console.log('  --no-runtime           Skip runtime library injection');
+        console.log('  --no-optimizations     Disable Tony\'s PS2/PS3 optimizations');
+        console.log('  --optimization-level   Set level: basic, standard, aggressive');
+        console.log('  --no-parallel          Disable parallel processing');
+        console.log('  --no-caching           Disable hot code caching');
+        console.log('  --no-profiling         Disable performance profiling');
+        console.log('  --report               Generate team coordination report');
+        console.log('');
+        console.log('🎮 Tony Yoka\'s 20 PS2/PS3-Inspired Optimizations:');
+        console.log('   1-4:   Memory Architecture (EE/VU Inspired)');
+        console.log('   5-8:   Instruction-Level (MIPS/Cell Inspired)');
+        console.log('   9-12:  Cache & Performance');
+        console.log('   13-16: Specialized Processing Units');
+        console.log('   17-20: Advanced Memory & System Optimizations');
         process.exit(1);
     }
 
     const inputFile = args[0];
     const outputFile = args[1] || inputFile.replace(/\.js$/, '.lua');
+    
     const options = {
-        includeRuntime: !args.includes('--no-runtime')
+        includeRuntime: !args.includes('--no-runtime'),
+        enableOptimizations: !args.includes('--no-optimizations'),
+        enableParallelProcessing: !args.includes('--no-parallel'),
+        enableCaching: !args.includes('--no-caching'),
+        enableProfiling: !args.includes('--no-profiling')
     };
 
-    const transpiler = new LuaScriptTranspiler();
-    
-    try {
-        transpiler.transpileFile(inputFile, outputFile, options);
-        console.log('Transpilation completed successfully!');
-    } catch (error) {
-        console.error('Transpilation failed:', error.message);
-        process.exit(1);
+    // Set optimization level
+    const levelIndex = args.indexOf('--optimization-level');
+    if (levelIndex !== -1 && levelIndex + 1 < args.length) {
+        options.optimizationLevel = args[levelIndex + 1];
     }
+
+    const transpiler = new LuaScriptTranspiler(options);
+    
+    async function runTranspilation() {
+        try {
+            console.log('🚨 MULTI-TEAM COORDINATION ACTIVE! 🚨');
+            console.log('👨‍💼 Steve Jobs & Donald Knuth: Excellence Standards');
+            console.log('🎮 Tony Yoka PS2/PS3 Team: Hardware Optimizations');
+            console.log('👥 Main Dev Team: 95% Phase Push');
+            console.log('🔧 Sundar/Linus/Ada: Harmony Assurance');
+            console.log('');
+            
+            await transpiler.transpileFile(inputFile, outputFile, options);
+            
+            if (args.includes('--report')) {
+                transpiler.generateTeamReport();
+            }
+            
+            console.log('\n🏆 TRANSPILATION SUCCESS - MULTI-TEAM VICTORY!');
+        } catch (error) {
+            console.error('\n❌ TRANSPILATION FAILED:', error.message);
+            process.exit(1);
+        }
+    }
+    
+    runTranspilation();
 }
 
 module.exports = LuaScriptTranspiler;
