@@ -372,14 +372,29 @@ Ready to prototype! Click PLAY to run your GSS code.
             const blobs = [];
             let blendMode = 'source-over';
             
-            // Simple parser for GSS syntax
-            const blobMatches = code.matchAll(/gaussian_blob\s*{([^}]+)}/g);
-            for (const match of blobMatches) {
-                const blobCode = match[1];
+            // Extract blob blocks by finding matching braces
+            let pos = 0;
+            while (true) {
+                const startIdx = code.indexOf('gaussian_blob', pos);
+                if (startIdx === -1) break;
+                
+                const openBrace = code.indexOf('{', startIdx);
+                if (openBrace === -1) break;
+                
+                // Find matching closing brace
+                let braceCount = 1;
+                let closeBrace = openBrace + 1;
+                while (closeBrace < code.length && braceCount > 0) {
+                    if (code[closeBrace] === '{') braceCount++;
+                    if (code[closeBrace] === '}') braceCount--;
+                    closeBrace++;
+                }
+                
+                const blobCode = code.substring(openBrace + 1, closeBrace - 1);
                 const blob = {};
                 
-                // Parse center
-                const centerMatch = blobCode.match(/center\s*=\s*{x\s*=\s*(\d+),\s*y\s*=\s*(\d+)}/);
+                // Parse center - flexible whitespace
+                const centerMatch = blobCode.match(/center\s*=\s*\{\s*x\s*=\s*(\d+)\s*,\s*y\s*=\s*(\d+)\s*\}/);
                 if (centerMatch) {
                     blob.center = { x: parseInt(centerMatch[1]), y: parseInt(centerMatch[2]) };
                 }
@@ -396,8 +411,8 @@ Ready to prototype! Click PLAY to run your GSS code.
                     blob.smoothness = parseFloat(smoothnessMatch[1]);
                 }
                 
-                // Parse color
-                const colorMatch = blobCode.match(/color\s*=\s*{r\s*=\s*(\d+),\s*g\s*=\s*(\d+),\s*b\s*=\s*(\d+)}/);
+                // Parse color - flexible whitespace
+                const colorMatch = blobCode.match(/color\s*=\s*\{\s*r\s*=\s*(\d+)\s*,\s*g\s*=\s*(\d+)\s*,\s*b\s*=\s*(\d+)\s*\}/);
                 if (colorMatch) {
                     blob.color = {
                         r: parseInt(colorMatch[1]),
@@ -407,6 +422,7 @@ Ready to prototype! Click PLAY to run your GSS code.
                 }
                 
                 blobs.push(blob);
+                pos = closeBrace;
             }
             
             // Parse blend mode
