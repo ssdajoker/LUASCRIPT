@@ -13,6 +13,20 @@
 - 🎉 **TRUE 100% AT 100%**: ACHIEVED!
 - 💰 **$1,000,000 Prize**: UNLOCKED!
 
+## 📚 Documentation
+
+**Complete documentation is now available in our [Wiki](https://github.com/ssdajoker/LUASCRIPT/wiki)!**
+
+The wiki includes:
+- 📖 **Getting Started Guides** - Installation, quick start, and contributing
+- 🔧 **Technical Documentation** - Architecture, GSS/AGSS design, and implementation details
+- 📊 **Project Management** - Phase plans, audit guides, and quality gates
+- 👥 **Team & Community** - Team structure, roles, and community guidelines
+- 🎯 **Development Phases** - Complete documentation of all 9 phases
+- 📈 **Status & Planning** - Current status, TODO lists, and achievement tracking
+
+**[→ Visit the Wiki](https://github.com/ssdajoker/LUASCRIPT/wiki)** for comprehensive documentation organized into 30+ pages across 6 major sections.
+
 ## 🌟 Core Features
 
 ### 🔧 Core Transpiler
