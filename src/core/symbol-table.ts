@@ -12,15 +12,29 @@
  * - `unknown`: The type is completely unknown.
  */
 export type InferredType = 'number' | 'string' | 'boolean' | 'ambiguous' | 'unknown';
+/**
+ * Additional metadata about where and how a symbol was observed.
+ */
+export interface SymbolSourceContext {
+  nodeType?: string;
+  sourceText?: string;
+  location?: { line: number; column: number };
+}
 
 /**
- * Represents a symbol in the symbol table.
+ * A single observation of a symbol's inferred type and optional source context.
  */
+export interface SymbolObservation {
+  inferredType: InferredType;
+  timestamp: number;
+  source?: SymbolSourceContext;
+}
 export interface Symbol {
   /** The name of the symbol. */
   name: string;
   /** The inferred type of the symbol. */
   inferredType: InferredType;
+  history: SymbolObservation[];
 }
 
 /**
@@ -28,17 +42,30 @@ export interface Symbol {
  * This table stores information about variables, functions, and other identifiers.
  */
 export class SymbolTable {
-  private symbols: Map<string, Symbol> = new Map();
-
+  private readonly symbols: Map<string, Symbol> = new Map();
   /**
-   * Defines a new symbol in the table.
-   * If a symbol with the same name already exists, it will be overwritten.
-   * @param name - The name of the symbol to define.
+   * Defines or updates a symbol in the table.
+   * If a symbol with the same name already exists, a new observation is appended
+   * and the current inferred type is updated.
+   * @param name - The name of the symbol to define/update.
    * @param inferredType - The inferred type of the symbol.
+   * @param source - Optional metadata about the symbol's source context.
    */
-  public define(name: string, inferredType: InferredType): void {
-    const symbol: Symbol = { name, inferredType };
-    this.symbols.set(name, symbol);
+  public define(name: string, inferredType: InferredType, source?: SymbolSourceContext): void {
+    const observation: SymbolObservation = { inferredType, source, timestamp: Date.now() };
+    const existing = this.symbols.get(name);
+
+    if (!existing) {
+      this.symbols.set(name, {
+        name,
+        inferredType,
+        history: [observation],
+      });
+      return;
+    }
+
+    existing.history.push(observation);
+    existing.inferredType = inferredType;
   }
 
   /**
@@ -47,6 +74,23 @@ export class SymbolTable {
    * @returns The found symbol, or `undefined` if the symbol does not exist.
    */
   public lookup(name: string): Symbol | undefined {
-    return this.symbols.get(name);
+    const symbol = this.symbols.get(name);
+    return symbol ? { ...symbol, history: [...symbol.history] } : undefined;
+  }
+
+  public getHistory(name: string): SymbolObservation[] {
+    const symbol = this.symbols.get(name);
+    return symbol ? [...symbol.history] : [];
+  }
+
+  public getAllSymbols(): Symbol[] {
+    return Array.from(this.symbols.values()).map(symbol => ({
+      ...symbol,
+      history: [...symbol.history],
+    }));
+  }
+
+  public clear(): void {
+    this.symbols.clear();
   }
 }
