@@ -3,14 +3,33 @@
  * @author ssdajoker (Visionary)
  */
 
+import type { InferredType } from '../core/symbol-table';
+
 // Note: You will need to create or import these types from your existing files.
 // This is a placeholder structure.
+export interface NodeSemanticInfo {
+  symbolName?: string;
+  inferredType?: InferredType;
+}
+
+export interface SourcePosition {
+  line: number;
+  column: number;
+}
+
+export interface SourceRange {
+  start: SourcePosition;
+  end: SourcePosition;
+}
+
 export interface TernaryASTNode {
   type: string;
   state: number; // 0 for ambiguous, 1 for certain, -1 for contradiction
   source_text: string;
   potential_interpretations: { type: string; confidence: number }[];
-  children: TernaryASTNode[];
+  children?: TernaryASTNode[];
+  semantic?: NodeSemanticInfo;
+  range?: SourceRange;
 }
 
 export interface ResolutionProposition {
@@ -33,7 +52,7 @@ export class ResolverAgent {
     if (node.state === 0 && node.potential_interpretations.length > 0) {
       report.push(this.createProposition(node));
     }
-    for (const child of node.children) {
+    for (const child of node.children ?? []) {
       this.traverse(child, report);
     }
   }

@@ -5,7 +5,7 @@
   "main": "src/unified_luascript.js",
   "scripts": {
     "test": "node test/test_unified_system.js",
-    "test:analysis": "tsx --test src/agents/**/*.test.ts src/core/**/*.test.ts",
+  "test:analysis": "tsx --test src/agents/resolver-agent.test.ts src/agents/auditor-agent.test.ts src/core/symbol-table.test.ts src/ide/resolution-diagnostics.test.ts src/language/parser.test.ts",
     "test:core": "node -e \"const {UnifiedSystemTests} = require('./test/test_unified_system.js'); const suite = new UnifiedSystemTests(); suite.testBasicTranspilation().then(() => suite.testRuntimeExecution()).then(() => console.log('Core tests complete'));\"",
     "test:performance": "node -e \"const {UnifiedSystemTests} = require('./test/test_unified_system.js'); const suite = new UnifiedSystemTests(); suite.testPerformanceTools().then(() => console.log('Performance tests complete'));\"",
     "test:integration": "node -e \"const {UnifiedSystemTests} = require('./test/test_unified_system.js'); const suite = new UnifiedSystemTests(); suite.testFullPipeline().then(() => console.log('Integration tests complete'));\"",
@@ -41,6 +41,7 @@
     "node": ">=14.0.0"
   },
   "devDependencies": {
+    "@types/node": "^20.11.19",
     "husky": "^8.0.0",
     "tsx": "^4.7.0",
     "typescript": "^5.4.0"

@@ -1,62 +1,62 @@
 /**
  * @file Test suite for the ResolverAgent.
- * @author ssdajoker (Visionary)
  */
+
+import test from 'node:test';
+import assert from 'node:assert/strict';
 
 import { ResolverAgent, TernaryASTNode } from './resolver-agent';
 
-// Mocking a simplified PatternProber for test isolation.
 const mockProber = {
   probe: (source: string): TernaryASTNode => {
-    // This mock simulates finding an ambiguous node.
     if (source === 'ambiguous_code') {
       return {
-        type: 'Program', state: 1, source_text: '', children: [
+        type: 'Program',
+        state: 1,
+        source_text: '',
+        potential_interpretations: [],
+        children: [
           {
-            type: 'BinaryExpression', state: 0, source_text: 'a + b',
+            type: 'BinaryExpression',
+            state: 0,
+            source_text: 'a + b',
             potential_interpretations: [
               { type: 'NumericAddition', confidence: 0.5 },
               { type: 'StringConcatenation', confidence: 0.5 },
             ],
-            children: [],
-          }
+          },
         ],
-        potential_interpretations: [],
       };
     }
-    // This mock simulates finding no ambiguous nodes.
-    return { type: 'Program', state: 1, source_text: '', children: [], potential_interpretations: [] };
-  }
+
+    return {
+      type: 'Program',
+      state: 1,
+      source_text: '',
+      potential_interpretations: [],
+      children: [],
+    };
+  },
 };
 
+test('ResolverAgent surfaces ambiguity nodes', () => {
+  const agent = new ResolverAgent();
+  const ambiguousAST = mockProber.probe('ambiguous_code');
 
-describe('ResolverAgent', () => {
+  const report = agent.analyze(ambiguousAST);
 
-  it('should find an ambiguous node and return a ResolutionProposition for it', () => {
-    // ARRANGE
-    const agent = new ResolverAgent();
-    const ambiguousAST = mockProber.probe('ambiguous_code');
+  assert.equal(report.length, 1);
+  const proposition = report[0];
+  assert.match(proposition.message, /is ambiguous/);
+  assert.equal(proposition.resolutions.length, 2);
+  assert.equal(proposition.ambiguousNode.type, 'BinaryExpression');
+});
 
-    // ACT
-    const report = agent.analyze(ambiguousAST);
+test('ResolverAgent returns empty report when nothing is ambiguous', () => {
+  const agent = new ResolverAgent();
+  const resolvedAST = mockProber.probe('resolved_code');
 
-    // ASSERT
-    expect(report).toHaveLength(1);
-    const proposition = report[0];
-    expect(proposition.message).toContain('is ambiguous');
-    expect(proposition.resolutions).toHaveLength(2);
-    expect(proposition.ambiguousNode.type).toBe('BinaryExpression');
-  });
+  const report = agent.analyze(resolvedAST);
 
-  it('should return an empty report for a fully resolved T-AST', () => {
-    // ARRANGE
-    const agent = new ResolverAgent();
-    const resolvedAST = mockProber.probe('resolved_code');
-
-    // ACT
-    const report = agent.analyze(resolvedAST);
-
-    // ASSERT
-    expect(report).toHaveLength(0);
-  });
+  assert.equal(report.length, 0);
 });

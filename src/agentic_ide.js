@@ -9,6 +9,7 @@
 const { EventEmitter } = require('events');
 const fs = require('fs').promises;
 const path = require('path');
+const { mapPropositionsToDiagnostics } = require('./ide/resolution-diagnostics');
 
 /**
  * The main class for the Agentic IDE, a revolutionary development environment
@@ -187,6 +188,16 @@ class AgenticIDE extends EventEmitter {
         return this.optimizer.optimize(file);
     }
 
+    surfaceResolverDiagnostics(filePath, propositions) {
+        if (!Array.isArray(propositions)) {
+            throw new TypeError('Expected propositions to be an array');
+        }
+
+        const diagnostics = mapPropositionsToDiagnostics(filePath, propositions);
+        this.emit('diagnostics', { filePath, diagnostics });
+        return diagnostics;
+    }
+    
     /**
      * Detects the programming language of a file based on its extension.
      * @param {string} filePath - The path to the file.
