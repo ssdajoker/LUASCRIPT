@@ -28,4 +28,4 @@ describe('SymbolTable', () => {
     const foundSymbol = table.lookup('non_existent_variable');
     expect(foundSymbol).toBeUndefined();
   });
-});/**
+}
