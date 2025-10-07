@@ -96,14 +96,20 @@ class RuntimeSystem extends EventEmitter {
             }
             
             // Execute code
-            const result = await this.executeCode(compiledCode, execContext);
+            const executionResult = await this.executeCode(compiledCode, execContext);
             
             // Update statistics
             const executionTime = Number(process.hrtime.bigint() - startTime) / 1e6;
             this.updateStats(executionTime);
-            
-            this.emit('executionComplete', { time: executionTime, result });
-            return { result };
+
+            const payload = {
+                result: executionResult,
+                context: execContext,
+                executionTime,
+            };
+
+            this.emit('executionComplete', payload);
+            return payload;
             
         } catch (error) {
             const executionTime = Number(process.hrtime.bigint() - startTime) / 1e6;
@@ -442,8 +448,12 @@ class JITCompiler {
      * @private
      */
     inlineFunctions(code) {
-        // Simple function inlining simulation
-        return code.replace(/function\s+(\w+)\(\)\s*return\s+(\w+)\s+end/g, '$2');
+        // Disabled overly-aggressive inlining that broke local function declarations
+        // The previous implementation replaced entire function definitions with their
+        // return values, which corrupted valid Lua code like
+        // "local function test() return 42 end; return test()". Until we have a
+        // semantics-aware optimizer, leave the input untouched here.
+        return code;
     }
 
     /**
@@ -594,13 +604,18 @@ class LuaInterpreter {
      */
     execute(code) {
         // Simplified Lua code execution
-        const lines = code.split('\n').filter(line => line.trim());
+        const statements = code
+            .split('\n')
+            .flatMap(line => line.split(';'))
+            .map(statement => statement.trim())
+            .filter(Boolean);
+
         let result = null;
-        
-        for (const line of lines) {
-            result = this.executeLine(line.trim());
+
+        for (const statement of statements) {
+            result = this.executeLine(statement);
         }
-        
+
         return result;
     }
 
@@ -611,24 +626,26 @@ class LuaInterpreter {
      * @private
      */
     executeLine(line) {
-        // Variable assignment
-        if (line.match(/^local\s+(\w+)\s*=\s*(.+)$/)) {
-            const [, name, value] = line.match(/^local\s+(\w+)\s*=\s*(.+)$/);
-            this.variables.set(name, this.evaluateExpression(value));
-            return this.variables.get(name);
-        }
-        
-        // Function call
-        if (line.match(/^(\w+)\s*\(/)) {
-            return this.executeFunction(line);
-        }
-        
         // Return statement
         if (line.startsWith('return ')) {
             return this.evaluateExpression(line.substring(7));
         }
-        
-        return null;
+
+        // Function definition (local)
+        if (line.startsWith('local function ')) {
+            return this.defineFunction(line);
+        }
+
+        // Variable assignment
+        const assignmentMatch = line.match(/^local\s+(\w+)\s*=\s*(.+)$/);
+        if (assignmentMatch) {
+            const [, name, value] = assignmentMatch;
+            this.variables.set(name, this.evaluateExpression(value));
+            return this.variables.get(name);
+        }
+
+            // Function call or expression evaluation
+            return this.evaluateExpression(line);
     }
 
     /**
@@ -649,6 +666,13 @@ class LuaInterpreter {
         if (/^["'].*["']$/.test(expr)) {
             return expr.slice(1, -1);
         }
+
+        // Function call expression
+        const callMatch = expr.match(/^(\w+)\s*\((.*)\)$/);
+        if (callMatch) {
+            const [, name, args] = callMatch;
+            return this.invokeFunction(name, this.parseArguments(args));
+        }
         
         // Variables
         if (this.variables.has(expr)) {
@@ -660,25 +684,62 @@ class LuaInterpreter {
             const [left, right] = expr.split('+').map(s => s.trim());
             return this.evaluateExpression(left) + this.evaluateExpression(right);
         }
-        
-        return expr;
+            return expr;
     }
 
-    /**
-     * Executes a function call.
-     * @param {string} line - The line containing the function call.
-     * @returns {*} The result of the function call.
-     * @private
-     */
-    executeFunction(line) {
-        // Simulate function execution
-        if (line.startsWith('print(')) {
-            const args = line.slice(6, -1);
-            const value = this.evaluateExpression(args);
-            console.log(value);
-            return value;
+    defineFunction(line) {
+        const funcMatch = line.match(/^local\s+function\s+(\w+)\s*\(([^)]*)\)\s*(.*)$/);
+        if (!funcMatch) {
+            return null;
         }
-        
+
+        const [, name, paramsRaw, body] = funcMatch;
+        const params = paramsRaw
+            .split(',')
+            .map(param => param.trim())
+            .filter(Boolean);
+
+        const returnMatch = body.match(/return\s+(.+?)\s*end$/);
+        const returnExpression = returnMatch ? returnMatch[1].trim() : null;
+
+        this.functions.set(name, (...args) => {
+            const previousVariables = this.variables;
+            const localScope = new Map(previousVariables);
+            params.forEach((param, index) => {
+                localScope.set(param, args[index]);
+            });
+
+            this.variables = localScope;
+            const value = returnExpression !== null ? this.evaluateExpression(returnExpression) : null;
+            this.variables = previousVariables;
+            return value;
+        });
+
+        return this.functions.get(name);
+    }
+
+    parseArguments(args) {
+        if (!args || !args.trim()) {
+            return [];
+        }
+
+        return args
+            .split(',')
+            .map(arg => arg.trim())
+            .filter(Boolean)
+            .map(arg => this.evaluateExpression(arg));
+    }
+
+    invokeFunction(name, args) {
+        if (name === 'print') {
+            console.log(...args);
+            return args.length > 0 ? args[0] : null;
+        }
+
+        if (this.functions.has(name)) {
+            return this.functions.get(name)(...args);
+        }
+
         return null;
     }
 }
