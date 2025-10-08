@@ -70,6 +70,16 @@ class UnifiedSystemTests {
             return result.code.includes('function(a, b)');
         });
         
+        // Test 4: Object literal
+        await this.runTest('Object Literal', async () => {
+            const jsCode = 'let my_obj = {key: "value"};';
+            const result = await system.transpile(jsCode);
+            // The expected output should be a valid Lua table.
+            // Note: Lua allows an optional semicolon at the end.
+            const expectedRegex = /local my_obj = {\s*key = "value"\s*};?/;
+            return expectedRegex.test(result.code);
+        });
+
         system.shutdown();
     }
 
