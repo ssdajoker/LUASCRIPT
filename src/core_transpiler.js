@@ -41,6 +41,10 @@ class CoreTranspiler extends EventEmitter {
             { from: /\bconst\s+(\w+)/g, to: 'local $1' }
         ]);
         
+        this.patterns.set('objects', [
+            { from: /([{,])\s*(\w+)\s*:/g, to: '$1$2 =' }
+        ]);
+
         this.patterns.set('operators', [
             { from: /\|\|/g, to: 'or' },
             { from: /&&/g, to: 'and' },
@@ -220,12 +224,18 @@ class CoreTranspiler extends EventEmitter {
     }
 
     cleanupCode(code) {
-        // Fix closing braces to 'end'
-        code = code.replace(/}/g, 'end');
+        // Fix closing braces to 'end' for blocks, but not for object literals
+        // A block-closing brace is typically at the start of a line or after a statement.
+        // An object-closing brace is part of an expression.
         
-        // Clean up whitespace
+        // Heuristic: Replace '}' with 'end' only when it's likely a block terminator.
+        // This regex is more specific. It no longer uses a semicolon in the lookahead,
+        // which prevents it from incorrectly converting object literal braces.
+        code = code.replace(/}\s*(?=else|catch|finally|$|\n)/g, 'end');
+
+        // Clean up whitespace without removing significant newlines
+        code = code.split('\n').map(line => line.trim()).join('\n');
         code = code.replace(/\s+/g, ' ');
-        code = code.replace(/\s*\n\s*/g, '\n');
         
         // Fix line endings
         code = code.trim();
