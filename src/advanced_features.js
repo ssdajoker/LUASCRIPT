@@ -6,7 +6,19 @@
  * Advanced language features for modern JavaScript to Lua transpilation
  */
 
+/**
+ * A class that manages and applies advanced language features to the transpiled code.
+ * This includes features like OOP, pattern matching, a type system, and macros.
+ */
 class AdvancedFeatures {
+    /**
+     * Creates an instance of the AdvancedFeatures manager.
+     * @param {object} [options={}] - Configuration options for advanced features.
+     * @param {boolean} [options.enableOOP=true] - Whether to enable Object-Oriented Programming features.
+     * @param {boolean} [options.enablePatternMatching=true] - Whether to enable pattern matching features.
+     * @param {boolean} [options.enableTypeSystem=true] - Whether to enable the type system.
+     * @param {boolean} [options.enableMacros=true] - Whether to enable macro processing.
+     */
     constructor(options = {}) {
         this.options = {
             enableOOP: options.enableOOP !== false,
@@ -22,6 +34,12 @@ class AdvancedFeatures {
         this.macroProcessor = new MacroProcessor();
     }
 
+    /**
+     * Transforms the code by applying the enabled advanced features.
+     * @param {string} code - The code to transform.
+     * @param {string[]} [features=[]] - A list of specific features to apply, overriding the default options.
+     * @returns {string} The transformed code.
+     */
     transform(code, features = []) {
         let result = code;
         
@@ -45,6 +63,9 @@ class AdvancedFeatures {
     }
 }
 
+/**
+ * A class that handles the transformation of TypeScript-style type annotations into Lua-compatible code.
+ */
 class TypeSystem {
     constructor() {
         this.types = new Map();
@@ -52,6 +73,11 @@ class TypeSystem {
         this.generics = new Map();
     }
 
+    /**
+     * Transforms the code by applying all type-related transformations.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transform(code) {
         // Transform TypeScript-style type annotations
         code = this.transformTypeAnnotations(code);
@@ -62,6 +88,12 @@ class TypeSystem {
         return code;
     }
 
+    /**
+     * Transforms type annotations on variables and functions.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformTypeAnnotations(code) {
         // Function parameter types: function add(a: number, b: number): number
         code = code.replace(
@@ -78,6 +110,12 @@ class TypeSystem {
         return code;
     }
 
+    /**
+     * Transforms interface declarations.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformInterfaces(code) {
         // Interface declarations
         code = code.replace(
@@ -90,6 +128,12 @@ class TypeSystem {
         return code;
     }
 
+    /**
+     * Transforms generic type parameters in functions.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformGenerics(code) {
         // Generic functions: function identity<T>(arg: T): T
         code = code.replace(
@@ -100,6 +144,12 @@ class TypeSystem {
         return code;
     }
 
+    /**
+     * Transforms `typeof` checks into Lua's `type()` function.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformTypeGuards(code) {
         // Type guards: if (typeof x === 'string')
         code = code.replace(
@@ -111,11 +161,19 @@ class TypeSystem {
     }
 }
 
+/**
+ * A class for transforming advanced pattern matching constructs into standard Lua code.
+ */
 class PatternMatcher {
     constructor() {
         this.patterns = new Map();
     }
 
+    /**
+     * Transforms the code by applying all pattern matching transformations.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transform(code) {
         code = this.transformSwitchStatements(code);
         code = this.transformDestructuring(code);
@@ -124,6 +182,12 @@ class PatternMatcher {
         return code;
     }
 
+    /**
+     * Transforms switch statements with pattern matching capabilities.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformSwitchStatements(code) {
         // Enhanced switch with pattern matching
         code = code.replace(
@@ -137,6 +201,12 @@ class PatternMatcher {
         return code;
     }
 
+    /**
+     * Transforms destructuring assignments with pattern matching.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformDestructuring(code) {
         // Array destructuring with patterns
         code = code.replace(
@@ -153,6 +223,12 @@ class PatternMatcher {
         return code;
     }
 
+    /**
+     * Transforms custom `match` expressions into Lua if-elseif chains.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformMatchExpressions(code) {
         // Custom match expressions
         code = code.replace(
@@ -166,6 +242,12 @@ class PatternMatcher {
         return code;
     }
 
+    /**
+     * Parses the cases of a switch statement.
+     * @param {string} body - The body of the switch statement.
+     * @returns {object[]} An array of case objects.
+     * @private
+     */
     parseCases(body) {
         const cases = [];
         const caseRegex = /case\s+([^:]+):\s*([^;]*);?/g;
@@ -178,6 +260,12 @@ class PatternMatcher {
         return cases;
     }
 
+    /**
+     * Parses the patterns of a `match` expression.
+     * @param {string} body - The body of the `match` expression.
+     * @returns {object[]} An array of pattern objects.
+     * @private
+     */
     parseMatchPatterns(body) {
         const patterns = [];
         const lines = body.split('\n').filter(line => line.trim());
@@ -192,6 +280,13 @@ class PatternMatcher {
         return patterns;
     }
 
+    /**
+     * Generates a Lua if-elseif chain from switch cases.
+     * @param {string} expr - The expression of the switch statement.
+     * @param {object[]} cases - The cases of the switch statement.
+     * @returns {string} The generated Lua code.
+     * @private
+     */
     generateLuaMatch(expr, cases) {
         let lua = `local _match_value = ${expr}\n`;
         
@@ -205,6 +300,13 @@ class PatternMatcher {
         return lua;
     }
 
+    /**
+     * Generates a Lua if-elseif chain from `match` expression patterns.
+     * @param {string} expr - The expression of the `match` statement.
+     * @param {object[]} patterns - The patterns of the `match` statement.
+     * @returns {string} The generated Lua code.
+     * @private
+     */
     generateLuaPatternMatch(expr, patterns) {
         let lua = `local _match_expr = ${expr}\n`;
         
@@ -218,6 +320,12 @@ class PatternMatcher {
         return lua;
     }
 
+    /**
+     * Generates a Lua condition from a pattern string.
+     * @param {string} pattern - The pattern string.
+     * @returns {string} The Lua condition.
+     * @private
+     */
     generatePatternCondition(pattern) {
         // Simple pattern matching conditions
         if (pattern.includes('|')) {
@@ -229,12 +337,20 @@ class PatternMatcher {
     }
 }
 
+/**
+ * A class for transforming JavaScript's class-based OOP features into Lua's prototype-based system.
+ */
 class OOPTransformer {
     constructor() {
         this.classes = new Map();
         this.inheritance = new Map();
     }
 
+    /**
+     * Transforms the code by applying all OOP-related transformations.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transform(code) {
         code = this.transformClasses(code);
         code = this.transformInheritance(code);
@@ -245,6 +361,12 @@ class OOPTransformer {
         return code;
     }
 
+    /**
+     * Transforms class declarations into Lua tables with metatables.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformClasses(code) {
         // Class declarations with full OOP support
         code = code.replace(
@@ -267,6 +389,13 @@ class OOPTransformer {
         return code;
     }
 
+    /**
+     * Transforms the body of a class.
+     * @param {string} className - The name of the class.
+     * @param {string} body - The body of the class.
+     * @returns {string} The transformed class body.
+     * @private
+     */
     transformClassBody(className, body) {
         let lua = '';
         const lines = body.split('\n').filter(line => line.trim());
@@ -291,11 +420,25 @@ class OOPTransformer {
         return lua;
     }
 
+    /**
+     * Transforms a class constructor into a `new` method in Lua.
+     * @param {string} className - The name of the class.
+     * @param {string} line - The line containing the constructor.
+     * @returns {string} The transformed constructor.
+     * @private
+     */
     transformConstructor(className, line) {
         const params = line.match(/constructor\(([^)]*)\)/)[1];
         return `function ${className}:new(${params})\n  local obj = setmetatable({}, self)\n  return obj\nend\n`;
     }
 
+    /**
+     * Transforms a class method.
+     * @param {string} className - The name of the class.
+     * @param {string} line - The line containing the method.
+     * @returns {string} The transformed method.
+     * @private
+     */
     transformMethod(className, line) {
         const match = line.match(/(\w+)\s*\(([^)]*)\)/);
         if (match) {
@@ -305,6 +448,13 @@ class OOPTransformer {
         return '';
     }
 
+    /**
+     * Transforms a class property.
+     * @param {string} className - The name of the class.
+     * @param {string} line - The line containing the property.
+     * @returns {string} The transformed property.
+     * @private
+     */
     transformProperty(className, line) {
         const match = line.match(/(\w+)\s*[=:]\s*([^;]+)/);
         if (match) {
@@ -314,6 +464,12 @@ class OOPTransformer {
         return '';
     }
 
+    /**
+     * Transforms `super` calls for inheritance.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformInheritance(code) {
         // Super calls
         code = code.replace(/super\./g, 'self.__index.');
@@ -322,6 +478,12 @@ class OOPTransformer {
         return code;
     }
 
+    /**
+     * Transforms method calls from dot notation to colon notation.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformMethods(code) {
         // Method calls
         code = code.replace(/(\w+)\.(\w+)\(/g, '$1:$2(');
@@ -329,6 +491,12 @@ class OOPTransformer {
         return code;
     }
 
+    /**
+     * Transforms `this` property access to `self`.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformProperties(code) {
         // Property access
         code = code.replace(/this\.(\w+)/g, 'self.$1');
@@ -336,6 +504,12 @@ class OOPTransformer {
         return code;
     }
 
+    /**
+     * Transforms static methods.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
+     */
     transformStatic(code) {
         // Static methods
         code = code.replace(/static\s+(\w+)\s*\(/g, 'function $1(');
@@ -344,6 +518,9 @@ class OOPTransformer {
     }
 }
 
+/**
+ * A preprocessor for handling C-style macros and conditional compilation.
+ */
 class MacroProcessor {
     constructor() {
         this.macros = new Map();
@@ -354,6 +531,11 @@ class MacroProcessor {
         ]);
     }
 
+    /**
+     * Transforms the code by processing macro definitions, expanding macros, and handling conditional compilation.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transform(code) {
         code = this.processMacroDefinitions(code);
         code = this.expandMacros(code);
@@ -362,6 +544,12 @@ class MacroProcessor {
         return code;
     }
 
+    /**
+     * Processes macro definitions (`#define`).
+     * @param {string} code - The code to process.
+     * @returns {string} The processed code.
+     * @private
+     */
     processMacroDefinitions(code) {
         // Macro definitions: #define MACRO_NAME replacement
         code = code.replace(
@@ -375,6 +563,12 @@ class MacroProcessor {
         return code;
     }
 
+    /**
+     * Expands all defined macros in the code.
+     * @param {string} code - The code to process.
+     * @returns {string} The processed code.
+     * @private
+     */
     expandMacros(code) {
         // Expand user-defined macros
         for (const [name, replacement] of this.macros) {
@@ -391,6 +585,12 @@ class MacroProcessor {
         return code;
     }
 
+    /**
+     * Processes conditional compilation directives (`#ifdef`, `#ifndef`).
+     * @param {string} code - The code to process.
+     * @returns {string} The processed code.
+     * @private
+     */
     processConditionalCompilation(code) {
         // Conditional compilation: #ifdef, #ifndef, #endif
         code = code.replace(

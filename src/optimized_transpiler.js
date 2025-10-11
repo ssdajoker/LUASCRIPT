@@ -14,7 +14,10 @@ const fs = require('fs');
 const path = require('path');
 const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
-// Insight #4: Memory Pool Allocation Strategy
+/**
+ * Manages memory pools to reduce allocation overhead, inspired by PS2 memory architecture.
+ * This class pre-allocates buffers of various sizes to be used during transpilation.
+ */
 class MemoryPoolManager {
     constructor() {
         this.pools = {
@@ -25,6 +28,10 @@ class MemoryPoolManager {
         this.initializePools();
     }
 
+    /**
+     * Initializes the memory pools by pre-allocating a set of buffers.
+     * @private
+     */
     initializePools() {
         // Pre-allocate buffers for each pool
         for (const [poolName, pool] of Object.entries(this.pools)) {
@@ -38,6 +45,11 @@ class MemoryPoolManager {
         }
     }
 
+    /**
+     * Allocates a buffer of a given size from the appropriate memory pool.
+     * @param {number} size - The size of the buffer to allocate.
+     * @returns {Buffer} An allocated buffer.
+     */
     allocate(size) {
         let poolName;
         if (size <= 64 * 1024) poolName = 'small';
@@ -58,6 +70,10 @@ class MemoryPoolManager {
         return Buffer.allocUnsafe(size);
     }
 
+    /**
+     * Releases a buffer back to its memory pool.
+     * @param {Buffer} buffer - The buffer to release.
+     */
     release(buffer) {
         for (const pool of Object.values(this.pools)) {
             const bufferObj = pool.buffers.find(b => b.buffer === buffer);
@@ -69,6 +85,10 @@ class MemoryPoolManager {
         }
     }
 
+    /**
+     * Retrieves statistics about the memory pools.
+     * @returns {object[]} An array of objects containing statistics for each pool.
+     */
     getStats() {
         return Object.entries(this.pools).map(([name, pool]) => ({
             pool: name,
@@ -79,7 +99,10 @@ class MemoryPoolManager {
     }
 }
 
-// Insight #2: Scratchpad Memory Simulation
+/**
+ * A cache for frequently used code patterns, simulating the PS2's scratchpad memory.
+ * This helps to speed up the transpilation of common code structures.
+ */
 class HotCodeCache {
     constructor(maxSize = 16 * 1024) { // 16KB like PS2 scratchpad
         this.cache = new Map();
@@ -88,6 +111,11 @@ class HotCodeCache {
         this.accessCount = new Map();
     }
 
+    /**
+     * Retrieves a transpiled result from the cache.
+     * @param {string} pattern - The original code pattern to look up.
+     * @returns {string|null} The cached transpiled code, or null if not found.
+     */
     get(pattern) {
         const cached = this.cache.get(pattern);
         if (cached) {
@@ -97,6 +125,11 @@ class HotCodeCache {
         return null;
     }
 
+    /**
+     * Stores a transpiled result in the cache.
+     * @param {string} pattern - The original code pattern.
+     * @param {string} result - The transpiled code to cache.
+     */
     set(pattern, result) {
         const size = pattern.length + result.length;
         
@@ -109,6 +142,10 @@ class HotCodeCache {
         this.accessCount.set(pattern, 1);
     }
 
+    /**
+     * Evicts the least recently used item from the cache to make space.
+     * @private
+     */
     evictLRU() {
         // Find least recently used item
         let lruPattern = null;
@@ -130,13 +167,21 @@ class HotCodeCache {
     }
 }
 
-// Insight #6: Branch Prediction for Transpilation Paths
+/**
+ * A class that predicts the most likely transpilation outcome for a given code pattern.
+ * This is inspired by CPU branch prediction and helps to optimize the transpilation process.
+ */
 class BranchPredictor {
     constructor() {
         this.patterns = new Map();
         this.predictions = new Map();
     }
 
+    /**
+     * Records a successful transpilation to train the predictor.
+     * @param {string} jsPattern - The original JavaScript pattern.
+     * @param {string} luaResult - The resulting Lua code.
+     */
     recordPattern(jsPattern, luaResult) {
         if (!this.patterns.has(jsPattern)) {
             this.patterns.set(jsPattern, []);
@@ -157,12 +202,19 @@ class BranchPredictor {
         this.predictions.set(jsPattern, mostFrequent);
     }
 
+    /**
+     * Predicts the most likely Lua output for a given JavaScript pattern.
+     * @param {string} jsPattern - The JavaScript pattern to predict.
+     * @returns {string|undefined} The predicted Lua code, or undefined if no prediction is available.
+     */
     predict(jsPattern) {
         return this.predictions.get(jsPattern);
     }
 }
 
-// Insight #7: SIMD-Style Pattern Matching
+/**
+ * Applies multiple regex patterns to the code in a parallel-like fashion, inspired by SIMD processing.
+ */
 class SIMDPatternMatcher {
     constructor() {
         this.patterns = [
@@ -173,6 +225,11 @@ class SIMDPatternMatcher {
         ];
     }
 
+    /**
+     * Processes the code by applying multiple regex patterns.
+     * @param {string} code - The code to process.
+     * @returns {string} The processed code.
+     */
     processParallel(code) {
         // Process multiple patterns simultaneously using typed arrays for performance
         const codeBuffer = Buffer.from(code, 'utf8');
@@ -187,7 +244,9 @@ class SIMDPatternMatcher {
     }
 }
 
-// Insight #13: Vector Unit-Style Specialized Transpilers
+/**
+ * A manager for specialized transpilers that handle specific JavaScript features, inspired by vector processing units.
+ */
 class SpecializedTranspilers {
     constructor() {
         this.arrowFunctionTranspiler = new ArrowFunctionTranspiler();
@@ -195,19 +254,37 @@ class SpecializedTranspilers {
         this.asyncAwaitTranspiler = new AsyncAwaitTranspiler();
     }
 
+    /**
+     * Transpiles arrow functions using a specialized transpiler.
+     * @param {string} code - The code containing arrow functions.
+     * @returns {string} The transpiled code.
+     */
     transpileArrowFunction(code) {
         return this.arrowFunctionTranspiler.transpile(code);
     }
 
+    /**
+     * Transpiles destructuring assignments using a specialized transpiler.
+     * @param {string} code - The code containing destructuring assignments.
+     * @returns {string} The transpiled code.
+     */
     transpileDestructuring(code) {
         return this.destructuringTranspiler.transpile(code);
     }
 
+    /**
+     * Transpiles async/await syntax using a specialized transpiler.
+     * @param {string} code - The code containing async/await syntax.
+     * @returns {string} The transpiled code.
+     */
     transpileAsyncAwait(code) {
         return this.asyncAwaitTranspiler.transpile(code);
     }
 }
 
+/**
+ * A specialized transpiler for arrow functions.
+ */
 class ArrowFunctionTranspiler {
     transpile(code) {
         // Highly optimized arrow function transpilation
@@ -221,6 +298,9 @@ class ArrowFunctionTranspiler {
     }
 }
 
+/**
+ * A specialized transpiler for destructuring assignments.
+ */
 class DestructuringTranspiler {
     transpile(code) {
         // Convert destructuring assignments
@@ -231,6 +311,9 @@ class DestructuringTranspiler {
     }
 }
 
+/**
+ * A specialized transpiler for async/await syntax.
+ */
 class AsyncAwaitTranspiler {
     transpile(code) {
         // Convert async/await to coroutine-based Lua
@@ -244,7 +327,10 @@ class AsyncAwaitTranspiler {
     }
 }
 
-// Insight #14: SPU-Style Distributed Processing
+/**
+ * A class for distributing transpilation tasks across multiple worker threads,
+ * inspired by the SPU architecture of the Cell processor.
+ */
 class DistributedTranspiler {
     constructor(workerCount = 4) {
         this.workerCount = workerCount;
@@ -253,6 +339,9 @@ class DistributedTranspiler {
         this.results = new Map();
     }
 
+    /**
+     * Initializes the worker threads for parallel processing.
+     */
     async initializeWorkers() {
         if (isMainThread) {
             for (let i = 0; i < this.workerCount; i++) {
@@ -269,6 +358,11 @@ class DistributedTranspiler {
         }
     }
 
+    /**
+     * Transpiles a set of code modules in parallel using worker threads.
+     * @param {object[]} modules - An array of modules to transpile, each with `code` and `filename` properties.
+     * @returns {Promise<object[]>} A promise that resolves to an array of transpiled module results.
+     */
     async transpileParallel(modules) {
         const tasks = modules.map((module, index) => ({
             id: index,
@@ -284,6 +378,12 @@ class DistributedTranspiler {
         return Promise.all(promises);
     }
 
+    /**
+     * Processes a single transpilation task on a worker thread.
+     * @param {object} task - The task to process.
+     * @returns {Promise<object>} A promise that resolves with the result of the task.
+     * @private
+     */
     async processTask(task) {
         return new Promise((resolve) => {
             const worker = this.workers[task.id % this.workerCount];
@@ -301,7 +401,9 @@ class DistributedTranspiler {
     }
 }
 
-// Insight #11: Prefetch-Style Lookahead Parsing
+/**
+ * A tokenizer that prefetches tokens to speed up parsing, inspired by CPU prefetching.
+ */
 class LookaheadTokenizer {
     constructor(code) {
         this.code = code;
@@ -310,6 +412,10 @@ class LookaheadTokenizer {
         this.prefetchSize = 64; // Prefetch 64 tokens ahead
     }
 
+    /**
+     * Prefetches a batch of tokens from the code.
+     * @returns {object[]} The array of prefetched tokens.
+     */
     prefetchTokens() {
         const tokens = [];
         let pos = this.position;
@@ -328,6 +434,12 @@ class LookaheadTokenizer {
         return tokens;
     }
 
+    /**
+     * Extracts a single token from the code at a given position.
+     * @param {number} startPos - The starting position to extract the token from.
+     * @returns {object|null} The extracted token, or null if at the end of the code.
+     * @private
+     */
     extractToken(startPos) {
         // Simplified token extraction
         const char = this.code[startPos];
@@ -350,7 +462,9 @@ class LookaheadTokenizer {
     }
 }
 
-// Insight #20: Real-Time Performance Monitoring
+/**
+ * A class for monitoring the real-time performance of the transpiler.
+ */
 class PerformanceMonitor {
     constructor() {
         this.metrics = {
@@ -362,10 +476,17 @@ class PerformanceMonitor {
         this.startTime = process.hrtime.bigint();
     }
 
+    /**
+     * Records the duration of a transpilation operation.
+     * @param {number} duration - The duration in milliseconds.
+     */
     recordTranspilationTime(duration) {
         this.metrics.transpilationTime.push(duration);
     }
 
+    /**
+     * Records the current memory usage of the process.
+     */
     recordMemoryUsage() {
         const usage = process.memoryUsage();
         this.metrics.memoryUsage.push({
@@ -376,15 +497,28 @@ class PerformanceMonitor {
         });
     }
 
+    /**
+     * Updates the cache hit rate metric.
+     * @param {number} hits - The number of cache hits.
+     * @param {number} total - The total number of cache lookups.
+     */
     updateCacheHitRate(hits, total) {
         this.metrics.cacheHitRate = total > 0 ? (hits / total) * 100 : 0;
     }
 
+    /**
+     * Calculates the transpilation throughput in lines per second.
+     * @param {number} linesProcessed - The number of lines processed.
+     */
     calculateThroughput(linesProcessed) {
         const elapsed = Number(process.hrtime.bigint() - this.startTime) / 1e9;
         this.metrics.throughput = linesProcessed / elapsed;
     }
 
+    /**
+     * Generates a report of the current performance metrics.
+     * @returns {object} The performance report.
+     */
     getReport() {
         const avgTranspilationTime = this.metrics.transpilationTime.length > 0 
             ? this.metrics.transpilationTime.reduce((a, b) => a + b, 0) / this.metrics.transpilationTime.length
@@ -400,8 +534,19 @@ class PerformanceMonitor {
     }
 }
 
-// Main Optimized Transpiler Class
+/**
+ * The main class for the optimized transpiler, integrating various optimization techniques
+ * inspired by high-performance computing and console hardware architecture.
+ */
 class OptimizedLuaScriptTranspiler {
+    /**
+     * Creates an instance of the OptimizedLuaScriptTranspiler.
+     * @param {object} [options={}] - Configuration options for the transpiler.
+     * @param {boolean} [options.enableParallelProcessing=true] - Whether to use worker threads for parallel transpilation.
+     * @param {boolean} [options.enableCaching=true] - Whether to enable the hot code cache.
+     * @param {boolean} [options.enableProfiling=false] - Whether to enable performance monitoring.
+     * @param {number} [options.workerCount=4] - The number of worker threads to use for parallel processing.
+     */
     constructor(options = {}) {
         this.options = {
             enableParallelProcessing: options.enableParallelProcessing !== false,
@@ -431,13 +576,21 @@ class OptimizedLuaScriptTranspiler {
         ]);
     }
 
+    /**
+     * Initializes the transpiler, including its worker threads if parallel processing is enabled.
+     */
     async initialize() {
         if (this.distributedTranspiler) {
             await this.distributedTranspiler.initializeWorkers();
         }
     }
 
-    // Main transpilation method with all 20 optimizations
+    /**
+     * The main transpilation method, applying a pipeline of optimizations.
+     * @param {string} jsCode - The JavaScript code to transpile.
+     * @param {object} [options={}] - Options for this specific transpilation.
+     * @returns {Promise<string>} A promise that resolves to the optimized Lua code.
+     */
     async transpile(jsCode, options = {}) {
         const startTime = process.hrtime.bigint();
         
@@ -500,7 +653,12 @@ class OptimizedLuaScriptTranspiler {
         }
     }
 
-    // Insight #1: Dual-Pipeline Implementation
+    /**
+     * Simulates the AST parsing phase of a dual-pipeline architecture.
+     * @param {string} code - The code to parse.
+     * @returns {Promise<object>} A promise that resolves to a simulated AST.
+     * @private
+     */
     async parseAST(code) {
         return new Promise(resolve => {
             // Simulate AST parsing in parallel
@@ -508,6 +666,12 @@ class OptimizedLuaScriptTranspiler {
         });
     }
 
+    /**
+     * Simulates the Lua code generation phase of a dual-pipeline architecture.
+     * @param {string} code - The code to transpile.
+     * @returns {Promise<string>} A promise that resolves to the generated Lua code.
+     * @private
+     */
     async generateLuaCode(code) {
         return new Promise(resolve => {
             // Simulate Lua code generation in parallel
@@ -515,7 +679,12 @@ class OptimizedLuaScriptTranspiler {
         });
     }
 
-    // Insight #3: DMA-Style Batch Processing
+    /**
+     * Processes the code in batches, inspired by DMA (Direct Memory Access) transfers.
+     * @param {string} code - The code to process.
+     * @returns {string} The processed code.
+     * @private
+     */
     batchProcess(code) {
         const lines = code.split('\n');
         const batchSize = 50; // Process 50 lines at a time
@@ -530,6 +699,12 @@ class OptimizedLuaScriptTranspiler {
         return result.trim();
     }
 
+    /**
+     * Processes a single batch of code.
+     * @param {string} batchCode - The code batch to process.
+     * @returns {string} The processed batch.
+     * @private
+     */
     processBatch(batchCode) {
         // Apply basic transformations to the batch
         return batchCode
@@ -542,7 +717,12 @@ class OptimizedLuaScriptTranspiler {
             .replace(/!==/g, '~=');
     }
 
-    // Insight #5: Micro-Operation Fusion
+    /**
+     * Applies fused-operation optimizations, combining multiple simple operations into a single one.
+     * @param {string} code - The code to optimize.
+     * @returns {string} The optimized code.
+     * @private
+     */
     applyFusedOperations(code) {
         let result = code;
         
@@ -561,7 +741,12 @@ class OptimizedLuaScriptTranspiler {
         return result;
     }
 
-    // Insight #13-15: Apply Specialized Transpilation
+    /**
+     * Applies specialized transpilers for specific, complex JavaScript features.
+     * @param {string} code - The code to process.
+     * @returns {string} The processed code.
+     * @private
+     */
     applySpecializedTranspilation(code) {
         let result = code;
         
@@ -583,7 +768,12 @@ class OptimizedLuaScriptTranspiler {
         return result;
     }
 
-    // Insight #8: Pipeline Hazard Avoidance
+    /**
+     * Reorders operations to avoid pipeline hazards, such as using a variable before its declaration.
+     * @param {string} code - The code to reorder.
+     * @returns {string} The reordered code.
+     * @private
+     */
     reorderOperations(code) {
         const lines = code.split('\n');
         const declarations = [];
@@ -601,7 +791,12 @@ class OptimizedLuaScriptTranspiler {
         return [...declarations, ...usages].join('\n');
     }
 
-    // Insight #12: Write-Combining Buffer Simulation
+    /**
+     * Optimizes the final output by buffering it and writing it in chunks, simulating write-combining buffers.
+     * @param {string} code - The code to optimize.
+     * @returns {string} The optimized output code.
+     * @private
+     */
     optimizeOutput(code) {
         // Buffer output and flush in optimal chunks
         const buffer = Buffer.from(code, 'utf8');
@@ -616,7 +811,12 @@ class OptimizedLuaScriptTranspiler {
         return optimized;
     }
 
-    // Basic transpilation logic (enhanced from original)
+    /**
+     * A basic, non-optimized transpilation function used as a fallback and for parallel processing simulation.
+     * @param {string} jsCode - The JavaScript code to transpile.
+     * @returns {string} The transpiled Lua code.
+     * @private
+     */
     basicTranspile(jsCode) {
         let luaCode = jsCode;
 
@@ -661,7 +861,10 @@ class OptimizedLuaScriptTranspiler {
         return luaCode;
     }
 
-    // Utility methods
+    /**
+     * Retrieves a detailed performance report from the performance monitor.
+     * @returns {object} The performance report.
+     */
     getPerformanceReport() {
         return {
             ...this.performanceMonitor.getReport(),
@@ -674,6 +877,11 @@ class OptimizedLuaScriptTranspiler {
         };
     }
 
+    /**
+     * Transpiles multiple files, using parallel processing if enabled.
+     * @param {object[]} files - An array of file objects, each with `code` and `filename` properties.
+     * @returns {Promise<object[]>} A promise that resolves to an array of transpiled file results.
+     */
     async transpileMultipleFiles(files) {
         if (this.distributedTranspiler && files.length > 1) {
             return this.distributedTranspiler.transpileParallel(files);

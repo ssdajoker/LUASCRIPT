@@ -10,56 +10,113 @@ const path = require('path');
 const { LuaScriptParser } = require('./phase1_core_parser');
 const { LuaScriptInterpreter, Environment, LuaScriptObject } = require('./phase2_core_interpreter');
 
+/**
+ * A cache for storing loaded modules to avoid redundant loading and handle circular dependencies.
+ */
 class ModuleCache {
     constructor() {
         this.cache = new Map();
         this.loading = new Set();
     }
 
+    /**
+     * Checks if a module is present in the cache.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {boolean} True if the module is cached.
+     */
     has(modulePath) {
         return this.cache.has(modulePath);
     }
 
+    /**
+     * Gets a module from the cache.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {*} The cached module exports.
+     */
     get(modulePath) {
         return this.cache.get(modulePath);
     }
 
+    /**
+     * Sets a module's exports in the cache.
+     * @param {string} modulePath - The absolute path of the module.
+     * @param {*} moduleExports - The exports of the module.
+     */
     set(modulePath, moduleExports) {
         this.cache.set(modulePath, moduleExports);
     }
 
+    /**
+     * Checks if a module is currently being loaded.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {boolean} True if the module is being loaded.
+     */
     isLoading(modulePath) {
         return this.loading.has(modulePath);
     }
 
+    /**
+     * Marks a module as currently being loaded.
+     * @param {string} modulePath - The absolute path of the module.
+     */
     startLoading(modulePath) {
         this.loading.add(modulePath);
     }
 
+    /**
+     * Marks a module as finished loading.
+     * @param {string} modulePath - The absolute path of the module.
+     */
     finishLoading(modulePath) {
         this.loading.delete(modulePath);
     }
 
+    /**
+     * Clears the entire module cache.
+     */
     clear() {
         this.cache.clear();
         this.loading.clear();
     }
 
+    /**
+     * Deletes a module from the cache.
+     * @param {string} modulePath - The absolute path of the module.
+     */
     delete(modulePath) {
         this.cache.delete(modulePath);
         this.loading.delete(modulePath);
     }
 
+    /**
+     * Gets an array of all cached module paths.
+     * @returns {string[]} The array of module paths.
+     */
     keys() {
         return Array.from(this.cache.keys());
     }
 
+    /**
+     * Gets the number of modules in the cache.
+     * @returns {number} The size of the cache.
+     */
     size() {
         return this.cache.size;
     }
 }
 
+/**
+ * Resolves module specifiers to absolute file paths.
+ */
 class ModuleResolver {
+    /**
+     * Creates an instance of ModuleResolver.
+     * @param {object} [options={}] - Configuration options for the resolver.
+     * @param {string} [options.basePath=process.cwd()] - The base path for resolving modules.
+     * @param {string[]} [options.extensions=['.js', '.luascript', '.ls']] - The file extensions to try.
+     * @param {string[]} [options.moduleDirectories=['node_modules', 'luascript_modules']] - The directories to search for modules.
+     * @param {object} [options.aliases={}] - A map of module aliases.
+     */
     constructor(options = {}) {
         this.basePath = options.basePath || process.cwd();
         this.extensions = options.extensions || ['.js', '.luascript', '.ls'];
@@ -67,6 +124,13 @@ class ModuleResolver {
         this.aliases = new Map(Object.entries(options.aliases || {}));
     }
 
+    /**
+     * Resolves a module specifier to an absolute file path.
+     * @param {string} specifier - The module specifier to resolve.
+     * @param {string} [fromPath=this.basePath] - The path of the file importing the module.
+     * @returns {string} The resolved absolute path.
+     * @throws {Error} If the module cannot be resolved.
+     */
     resolve(specifier, fromPath = this.basePath) {
         // Handle aliases
         if (this.aliases.has(specifier)) {
@@ -88,6 +152,12 @@ class ModuleResolver {
         return this.resolveModule(specifier, fromPath);
     }
 
+    /**
+     * Resolves a file path, trying different extensions and directory index files.
+     * @param {string} filePath - The file path to resolve.
+     * @returns {string} The resolved absolute file path.
+     * @private
+     */
     resolveFile(filePath) {
         // Try exact path first
         if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
@@ -129,6 +199,13 @@ class ModuleResolver {
         throw new Error(`Cannot resolve module: ${filePath}`);
     }
 
+    /**
+     * Resolves a module name by searching in `node_modules` directories.
+     * @param {string} moduleName - The name of the module to resolve.
+     * @param {string} fromPath - The path of the file importing the module.
+     * @returns {string} The resolved absolute file path.
+     * @private
+     */
     resolveModule(moduleName, fromPath) {
         let currentPath = path.dirname(fromPath);
 
@@ -158,6 +235,11 @@ class ModuleResolver {
         throw new Error(`Cannot resolve module: ${moduleName}`);
     }
 
+    /**
+     * Gets the global search paths for modules.
+     * @returns {string[]} An array of global paths.
+     * @private
+     */
     getGlobalPaths() {
         const paths = [];
         
@@ -174,20 +256,42 @@ class ModuleResolver {
         return paths;
     }
 
+    /**
+     * Adds a new module alias.
+     * @param {string} alias - The alias name.
+     * @param {string} target - The target path for the alias.
+     */
     addAlias(alias, target) {
         this.aliases.set(alias, target);
     }
 
+    /**
+     * Removes a module alias.
+     * @param {string} alias - The alias to remove.
+     */
     removeAlias(alias) {
         this.aliases.delete(alias);
     }
 
+    /**
+     * Gets the current module aliases.
+     * @returns {object} An object containing the aliases.
+     */
     getAliases() {
         return Object.fromEntries(this.aliases);
     }
 }
 
+/**
+ * Loads and executes modules, supporting both CommonJS and ES module formats.
+ */
 class ModuleLoader {
+    /**
+     * Creates an instance of ModuleLoader.
+     * @param {object} [options={}] - Configuration options for the loader.
+     * @param {boolean} [options.allowNativeModules=true] - Whether to allow loading of native Node.js modules.
+     * @param {boolean} [options.strictMode=false] - Whether to enforce strict mode in loaded modules.
+     */
     constructor(options = {}) {
         this.resolver = new ModuleResolver(options);
         this.cache = new ModuleCache();
@@ -199,6 +303,13 @@ class ModuleLoader {
         };
     }
 
+    /**
+     * Implements the `require` function for loading CommonJS modules.
+     * @param {string} specifier - The module specifier.
+     * @param {string} fromPath - The path of the calling module.
+     * @returns {*} The exports of the loaded module.
+     * @throws {Error} If a circular dependency is detected or if the module fails to load.
+     */
     require(specifier, fromPath) {
         const resolvedPath = this.resolver.resolve(specifier, fromPath);
         
@@ -223,6 +334,12 @@ class ModuleLoader {
         }
     }
 
+    /**
+     * Loads a module based on its file extension.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {*} The exports of the loaded module.
+     * @private
+     */
     loadModule(modulePath) {
         const ext = path.extname(modulePath);
         
@@ -240,6 +357,12 @@ class ModuleLoader {
         }
     }
 
+    /**
+     * Loads a native JavaScript module.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {*} The exports of the loaded module.
+     * @private
+     */
     loadJavaScriptModule(modulePath) {
         if (!this.options.allowNativeModules) {
             throw new Error('Native JavaScript modules are not allowed');
@@ -255,6 +378,12 @@ class ModuleLoader {
         }
     }
 
+    /**
+     * Loads and executes a LuaScript module.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {*} The exports of the loaded module.
+     * @private
+     */
     loadLuaScriptModule(modulePath) {
         try {
             const source = fs.readFileSync(modulePath, 'utf8');
@@ -264,6 +393,12 @@ class ModuleLoader {
         }
     }
 
+    /**
+     * Loads and parses a JSON module.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {object} The parsed JSON object.
+     * @private
+     */
     loadJsonModule(modulePath) {
         try {
             const source = fs.readFileSync(modulePath, 'utf8');
@@ -273,6 +408,13 @@ class ModuleLoader {
         }
     }
 
+    /**
+     * Executes the source code of a module in a new environment.
+     * @param {string} source - The source code of the module.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {*} The exports of the executed module.
+     * @private
+     */
     executeModule(source, modulePath) {
         // Parse the module source
         const parser = new LuaScriptParser(source, {
@@ -341,33 +483,63 @@ class ModuleLoader {
         }
     }
 
+    /**
+     * Clears the module cache.
+     */
     clearCache() {
         this.cache.clear();
     }
 
+    /**
+     * Gets the module cache instance.
+     * @returns {ModuleCache} The module cache.
+     */
     getCache() {
         return this.cache;
     }
 
+    /**
+     * Gets the module resolver instance.
+     * @returns {ModuleResolver} The module resolver.
+     */
     getResolver() {
         return this.resolver;
     }
 
+    /**
+     * Adds a module alias.
+     * @param {string} alias - The alias name.
+     * @param {string} target - The target path.
+     */
     addAlias(alias, target) {
         this.resolver.addAlias(alias, target);
     }
 
+    /**
+     * Removes a module alias.
+     * @param {string} alias - The alias to remove.
+     */
     removeAlias(alias) {
         this.resolver.removeAlias(alias);
     }
 }
 
+/**
+ * A module loader specifically for ES modules, supporting dynamic `import()`.
+ * @extends ModuleLoader
+ */
 class ESModuleLoader extends ModuleLoader {
     constructor(options = {}) {
         super(options);
         this.importMap = new Map();
     }
 
+    /**
+     * Asynchronously imports an ES module.
+     * @param {string} specifier - The module specifier.
+     * @param {string} fromPath - The path of the calling module.
+     * @returns {Promise<*>} A promise that resolves with the module's exports.
+     */
     async import(specifier, fromPath) {
         const resolvedPath = this.resolver.resolve(specifier, fromPath);
         
@@ -392,6 +564,12 @@ class ESModuleLoader extends ModuleLoader {
         }
     }
 
+    /**
+     * Loads an ES module based on its file extension.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {Promise<*>} A promise that resolves with the module's exports.
+     * @private
+     */
     async loadESModule(modulePath) {
         const ext = path.extname(modulePath);
         
@@ -408,6 +586,12 @@ class ESModuleLoader extends ModuleLoader {
         }
     }
 
+    /**
+     * Loads a native ES JavaScript module.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {Promise<*>} A promise that resolves with the module's exports.
+     * @private
+     */
     async loadESJavaScriptModule(modulePath) {
         if (!this.options.allowNativeModules) {
             throw new Error('Native JavaScript modules are not allowed');
@@ -422,6 +606,12 @@ class ESModuleLoader extends ModuleLoader {
         }
     }
 
+    /**
+     * Loads and executes an ES LuaScript module.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {Promise<*>} A promise that resolves with the module's exports.
+     * @private
+     */
     async loadESLuaScriptModule(modulePath) {
         try {
             const source = fs.readFileSync(modulePath, 'utf8');
@@ -431,6 +621,13 @@ class ESModuleLoader extends ModuleLoader {
         }
     }
 
+    /**
+     * Executes the source code of an ES module.
+     * @param {string} source - The source code of the module.
+     * @param {string} modulePath - The absolute path of the module.
+     * @returns {Promise<*>} A promise that resolves with the module's exports.
+     * @private
+     */
     async executeESModule(source, modulePath) {
         // Parse the module source
         const parser = new LuaScriptParser(source, {
@@ -474,6 +671,10 @@ class ESModuleLoader extends ModuleLoader {
         }
     }
 
+    /**
+     * Sets the import map for the ES module loader.
+     * @param {object} importMap - An object representing the import map.
+     */
     setImportMap(importMap) {
         this.importMap = new Map(Object.entries(importMap));
         
@@ -483,6 +684,10 @@ class ESModuleLoader extends ModuleLoader {
         }
     }
 
+    /**
+     * Gets the current import map.
+     * @returns {object} The import map object.
+     */
     getImportMap() {
         return Object.fromEntries(this.importMap);
     }

@@ -15,7 +15,16 @@
  * - Performance monitoring integration
  */
 
+/**
+ * Manages memory allocation for AST nodes, incorporating optimizations inspired by PS2/PS3 architecture.
+ * This includes memory pooling and performance tracking to ensure efficient parsing.
+ */
 class MemoryManager {
+    /**
+     * Creates an instance of the MemoryManager.
+     * @param {number} [maxNodes=10000] - The maximum number of nodes that can be allocated.
+     * @param {number} [maxDepth=100] - The maximum recursion depth for parsing.
+     */
     constructor(maxNodes = 10000, maxDepth = 100) {
         this.maxNodes = maxNodes;
         this.maxDepth = maxDepth;
@@ -43,6 +52,10 @@ class MemoryManager {
         };
     }
 
+    /**
+     * Initializes the node pools for memory management.
+     * @private
+     */
     initializeNodePools() {
         // Pre-allocate nodes in pools to avoid runtime allocation overhead
         for (const [poolName, pool] of Object.entries(this.memoryPools)) {
@@ -57,6 +70,13 @@ class MemoryManager {
         }
     }
 
+    /**
+     * Allocates a new AST node, using a memory pool if available.
+     * @param {string} type - The type of the node to allocate.
+     * @param {object} [data={}] - The data to store in the node.
+     * @returns {object} The allocated node.
+     * @throws {Error} If the memory or depth limit is exceeded.
+     */
     allocateNode(type, data = {}) {
         if (this.nodeCount >= this.maxNodes) {
             throw new Error(`Memory limit exceeded: maximum ${this.maxNodes} nodes allowed`);
@@ -108,6 +128,13 @@ class MemoryManager {
         return node;
     }
 
+    /**
+     * Estimates the memory size of a node.
+     * @param {string} type - The node type.
+     * @param {object} data - The node data.
+     * @returns {number} The estimated size in bytes.
+     * @private
+     */
     estimateNodeSize(type, data) {
         // Estimate node size based on type and data
         const baseSize = 32; // Base node overhead
@@ -116,12 +143,22 @@ class MemoryManager {
         return baseSize + typeSize + dataSize;
     }
 
+    /**
+     * Selects the appropriate memory pool for a given node size.
+     * @param {number} estimatedSize - The estimated size of the node.
+     * @returns {string} The name of the selected pool.
+     * @private
+     */
     selectPool(estimatedSize) {
         if (estimatedSize <= 64) return 'small';
         if (estimatedSize <= 256) return 'medium';
         return 'large';
     }
 
+    /**
+     * Enters a new scope, incrementing the depth counter.
+     * @throws {Error} If the maximum depth is exceeded.
+     */
     enterScope() {
         this.currentDepth++;
         if (this.currentDepth > this.maxDepth) {
@@ -129,10 +166,16 @@ class MemoryManager {
         }
     }
 
+    /**
+     * Exits the current scope, decrementing the depth counter.
+     */
     exitScope() {
         this.currentDepth = Math.max(0, this.currentDepth - 1);
     }
 
+    /**
+     * Cleans up allocated nodes and resets the memory manager's state.
+     */
     cleanup() {
         this.stats.deallocations += this.allocatedNodes.size;
         
@@ -159,6 +202,10 @@ class MemoryManager {
         this.currentDepth = 0;
     }
 
+    /**
+     * Retrieves statistics about memory usage and performance.
+     * @returns {object} An object containing detailed statistics.
+     */
     getStats() {
         const poolStats = {};
         for (const [poolName, pool] of Object.entries(this.memoryPools)) {
@@ -190,7 +237,17 @@ class MemoryManager {
     }
 }
 
+/**
+ * Represents a token in the source code.
+ */
 class Token {
+    /**
+     * Creates an instance of a Token.
+     * @param {string} type - The type of the token (e.g., 'IDENTIFIER', 'NUMBER').
+     * @param {*} value - The value of the token.
+     * @param {number} [line=1] - The line number where the token appears.
+     * @param {number} [column=1] - The column number where the token appears.
+     */
     constructor(type, value, line = 1, column = 1) {
         this.type = type;
         this.value = value;
@@ -199,7 +256,14 @@ class Token {
     }
 }
 
+/**
+ * The Lexer class is responsible for breaking the input code string into a sequence of tokens.
+ */
 class Lexer {
+    /**
+     * Creates an instance of the Lexer.
+     * @param {string} input - The source code to tokenize.
+     */
     constructor(input) {
         this.input = input;
         this.position = 0;
@@ -208,6 +272,11 @@ class Lexer {
         this.tokens = [];
     }
 
+    /**
+     * Tokenizes the input string into an array of tokens.
+     * @returns {Token[]} The array of tokens.
+     * @throws {Error} If an unexpected character is encountered.
+     */
     tokenize() {
         while (this.position < this.input.length) {
             this.skipWhitespace();
@@ -308,6 +377,11 @@ class Lexer {
         return this.tokens;
     }
 
+    /**
+     * Advances the lexer's position in the input string.
+     * @param {number} [count=1] - The number of characters to advance.
+     * @private
+     */
     advance(count = 1) {
         for (let i = 0; i < count; i++) {
             if (this.position < this.input.length) {
@@ -322,29 +396,61 @@ class Lexer {
         }
     }
 
+    /**
+     * Peeks at a character in the input string without advancing the position.
+     * @param {number} [offset=1] - The offset from the current position to peek.
+     * @returns {string|null} The character at the given offset, or null if out of bounds.
+     * @private
+     */
     peek(offset = 1) {
         const pos = this.position + offset;
         return pos < this.input.length ? this.input[pos] : null;
     }
 
+    /**
+     * Skips whitespace characters in the input string.
+     * @private
+     */
     skipWhitespace() {
         while (this.position < this.input.length && /\s/.test(this.input[this.position])) {
             this.advance();
         }
     }
 
+    /**
+     * Checks if a character is alphabetic.
+     * @param {string} char - The character to check.
+     * @returns {boolean} True if the character is alphabetic.
+     * @private
+     */
     isAlpha(char) {
         return /[a-zA-Z_]/.test(char);
     }
 
+    /**
+     * Checks if a character is a digit.
+     * @param {string} char - The character to check.
+     * @returns {boolean} True if the character is a digit.
+     * @private
+     */
     isDigit(char) {
         return /[0-9]/.test(char);
     }
 
+    /**
+     * Checks if a character is alphanumeric.
+     * @param {string} char - The character to check.
+     * @returns {boolean} True if the character is alphanumeric.
+     * @private
+     */
     isAlphaNumeric(char) {
         return this.isAlpha(char) || this.isDigit(char);
     }
 
+    /**
+     * Tokenizes an identifier or a keyword.
+     * @private
+     */
     tokenizeIdentifier() {
         const start = this.position;
         while (this.position < this.input.length && this.isAlphaNumeric(this.input[this.position])) {
@@ -371,6 +477,10 @@ class Lexer {
         this.tokens.push(new Token(type, value, this.line, this.column - value.length));
     }
 
+    /**
+     * Tokenizes a number literal.
+     * @private
+     */
     tokenizeNumber() {
         const start = this.position;
         while (this.position < this.input.length && (this.isDigit(this.input[this.position]) || this.input[this.position] === '.')) {
@@ -381,6 +491,11 @@ class Lexer {
         this.tokens.push(new Token('NUMBER', parseFloat(value), this.line, this.column - value.length));
     }
 
+    /**
+     * Tokenizes a string literal.
+     * @private
+     * @throws {Error} If the string is unterminated.
+     */
     tokenizeString() {
         const quote = this.input[this.position];
         this.advance(); // Skip opening quote
@@ -403,13 +518,25 @@ class Lexer {
     }
 }
 
+/**
+ * The Parser class constructs an Abstract Syntax Tree (AST) from a sequence of tokens.
+ */
 class Parser {
+    /**
+     * Creates an instance of the Parser.
+     * @param {Token[]} tokens - The array of tokens from the lexer.
+     * @param {MemoryManager} [memoryManager] - The memory manager to use for AST node allocation.
+     */
     constructor(tokens, memoryManager = new MemoryManager()) {
         this.tokens = tokens;
         this.position = 0;
         this.memoryManager = memoryManager;
     }
 
+    /**
+     * Parses the tokens into an AST.
+     * @returns {object} The root node of the AST.
+     */
     parse() {
         try {
             this.memoryManager.enterScope();
@@ -430,6 +557,11 @@ class Parser {
         }
     }
 
+    /**
+     * Parses a single statement.
+     * @returns {object} The AST node for the statement.
+     * @private
+     */
     parseStatement() {
         this.memoryManager.enterScope();
         try {
@@ -459,11 +591,20 @@ class Parser {
         }
     }
 
+    /**
+     * Parses an expression.
+     * @returns {object} The AST node for the expression.
+     * @private
+     */
     parseExpression() {
         return this.parseArrowFunction();
     }
 
-    // New: Arrow function parsing
+    /**
+     * Parses an arrow function expression.
+     * @returns {object} The AST node for the arrow function or a lower-precedence expression.
+     * @private
+     */
     parseArrowFunction() {
         const checkpoint = this.position;
         
@@ -529,6 +670,11 @@ class Parser {
         return this.parseAssignment();
     }
 
+    /**
+     * Parses an assignment expression.
+     * @returns {object} The AST node for the assignment or a lower-precedence expression.
+     * @private
+     */
     parseAssignment() {
         let expr = this.parseLogicalOr();
         
@@ -544,6 +690,11 @@ class Parser {
         return expr;
     }
 
+    /**
+     * Parses a logical OR expression.
+     * @returns {object} The AST node for the logical OR or a lower-precedence expression.
+     * @private
+     */
     parseLogicalOr() {
         let expr = this.parseLogicalAnd();
         
@@ -560,6 +711,11 @@ class Parser {
         return expr;
     }
 
+    /**
+     * Parses a logical AND expression.
+     * @returns {object} The AST node for the logical AND or a lower-precedence expression.
+     * @private
+     */
     parseLogicalAnd() {
         let expr = this.parseEquality();
         
@@ -576,6 +732,11 @@ class Parser {
         return expr;
     }
 
+    /**
+     * Parses an equality expression.
+     * @returns {object} The AST node for the equality expression or a lower-precedence expression.
+     * @private
+     */
     parseEquality() {
         let expr = this.parseComparison();
         
@@ -592,6 +753,11 @@ class Parser {
         return expr;
     }
 
+    /**
+     * Parses a comparison expression.
+     * @returns {object} The AST node for the comparison or a lower-precedence expression.
+     * @private
+     */
     parseComparison() {
         let expr = this.parseTerm();
         
@@ -608,6 +774,11 @@ class Parser {
         return expr;
     }
 
+    /**
+     * Parses a term (addition/subtraction).
+     * @returns {object} The AST node for the term or a lower-precedence expression.
+     * @private
+     */
     parseTerm() {
         let expr = this.parseFactor();
         
@@ -624,6 +795,11 @@ class Parser {
         return expr;
     }
 
+    /**
+     * Parses a factor (multiplication/division).
+     * @returns {object} The AST node for the factor or a lower-precedence expression.
+     * @private
+     */
     parseFactor() {
         let expr = this.parseUnary();
         
@@ -640,6 +816,11 @@ class Parser {
         return expr;
     }
 
+    /**
+     * Parses a unary expression.
+     * @returns {object} The AST node for the unary expression or a lower-precedence expression.
+     * @private
+     */
     parseUnary() {
         if (this.match('NOT', 'MINUS')) {
             const operator = this.previous();
@@ -653,6 +834,11 @@ class Parser {
         return this.parseCall();
     }
 
+    /**
+     * Parses a call expression.
+     * @returns {object} The AST node for the call expression or a lower-precedence expression.
+     * @private
+     */
     parseCall() {
         let expr = this.parsePrimary();
         
@@ -667,6 +853,12 @@ class Parser {
         return expr;
     }
 
+    /**
+     * Finishes parsing a call expression after the callee has been parsed.
+     * @param {object} callee - The callee node.
+     * @returns {object} The AST node for the call expression.
+     * @private
+     */
     finishCall(callee) {
         const args = [];
         
@@ -686,6 +878,12 @@ class Parser {
         });
     }
 
+    /**
+     * Parses a primary expression (literals, identifiers, grouped expressions).
+     * @returns {object} The AST node for the primary expression.
+     * @private
+     * @throws {Error} If an unexpected token is found.
+     */
     parsePrimary() {
         if (this.match('TRUE')) {
             return this.memoryManager.allocateNode('Literal', {
@@ -739,6 +937,11 @@ class Parser {
         throw new Error(`Unexpected token ${this.peek().type}`);
     }
 
+    /**
+     * Parses a variable declaration statement.
+     * @returns {object} The AST node for the variable declaration.
+     * @private
+     */
     parseVariableDeclaration() {
         const kind = this.previous().value;
         const name = this.consume('IDENTIFIER', 'Expected variable name').value;
@@ -759,6 +962,11 @@ class Parser {
         });
     }
 
+    /**
+     * Parses a function declaration statement.
+     * @returns {object} The AST node for the function declaration.
+     * @private
+     */
     parseFunctionDeclaration() {
         const name = this.consume('IDENTIFIER', 'Expected function name').value;
         
@@ -783,6 +991,11 @@ class Parser {
         });
     }
 
+    /**
+     * Parses a block statement.
+     * @returns {object} The AST node for the block statement.
+     * @private
+     */
     parseBlockStatement() {
         this.consume('LBRACE', 'Expected "{"');
         
@@ -798,6 +1011,11 @@ class Parser {
         });
     }
 
+    /**
+     * Parses an if statement.
+     * @returns {object} The AST node for the if statement.
+     * @private
+     */
     parseIfStatement() {
         this.consume('LPAREN', 'Expected "(" after "if"');
         const test = this.parseExpression();
@@ -817,6 +1035,11 @@ class Parser {
         });
     }
 
+    /**
+     * Parses a while statement.
+     * @returns {object} The AST node for the while statement.
+     * @private
+     */
     parseWhileStatement() {
         this.consume('LPAREN', 'Expected "(" after "while"');
         const test = this.parseExpression();
@@ -830,6 +1053,11 @@ class Parser {
         });
     }
 
+    /**
+     * Parses a return statement.
+     * @returns {object} The AST node for the return statement.
+     * @private
+     */
     parseReturnStatement() {
         let argument = null;
         if (!this.check('SEMICOLON')) {
@@ -843,6 +1071,11 @@ class Parser {
         });
     }
 
+    /**
+     * Parses an expression statement.
+     * @returns {object} The AST node for the expression statement.
+     * @private
+     */
     parseExpressionStatement() {
         const expr = this.parseExpression();
         this.consume('SEMICOLON', 'Expected ";" after expression');
@@ -852,7 +1085,12 @@ class Parser {
         });
     }
 
-    // Helper methods
+    /**
+     * Checks if the current token matches any of the given types and advances if it does.
+     * @param {...string} types - The token types to match.
+     * @returns {boolean} True if a match is found.
+     * @private
+     */
     match(...types) {
         for (const type of types) {
             if (this.check(type)) {
@@ -863,33 +1101,72 @@ class Parser {
         return false;
     }
 
+    /**
+     * Checks if the current token is of the given type without advancing.
+     * @param {string} type - The token type to check.
+     * @returns {boolean} True if the current token matches the type.
+     * @private
+     */
     check(type) {
         if (this.isAtEnd()) return false;
         return this.peek().type === type;
     }
 
+    /**
+     * Advances the parser to the next token.
+     * @returns {Token} The previous token.
+     * @private
+     */
     advance() {
         if (!this.isAtEnd()) this.position++;
         return this.previous();
     }
 
+    /**
+     * Checks if the parser is at the end of the token stream.
+     * @returns {boolean} True if at the end.
+     * @private
+     */
     isAtEnd() {
         return this.peek().type === 'EOF';
     }
 
+    /**
+     * Gets the current token without advancing.
+     * @returns {Token} The current token.
+     * @private
+     */
     peek() {
         return this.tokens[this.position];
     }
 
+    /**
+     * Gets the next token without advancing.
+     * @returns {Token|null} The next token, or null if at the end.
+     * @private
+     */
     peekNext() {
         if (this.position + 1 >= this.tokens.length) return null;
         return this.tokens[this.position + 1];
     }
 
+    /**
+     * Gets the previous token.
+     * @returns {Token} The previous token.
+     * @private
+     */
     previous() {
         return this.tokens[this.position - 1];
     }
 
+    /**
+     * Consumes the current token if it matches the expected type, otherwise throws an error.
+     * @param {string} type - The expected token type.
+     * @param {string} message - The error message to throw if the token doesn't match.
+     * @returns {Token} The consumed token.
+     * @private
+     * @throws {Error} If the token does not match the expected type.
+     */
     consume(type, message) {
         if (this.check(type)) return this.advance();
         

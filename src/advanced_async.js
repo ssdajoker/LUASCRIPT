@@ -4,6 +4,10 @@
  * Promise.all, Promise.race, async/await - 100% Support
  */
 
+/**
+ * A class that provides advanced asynchronous programming patterns for LuaScript,
+ * including support for async/await and various Promise methods.
+ */
 class AdvancedAsyncPatterns {
     constructor() {
         this.asyncSupport = {
@@ -17,7 +21,10 @@ class AdvancedAsyncPatterns {
     }
 
     /**
-     * Transpile async function to Lua coroutine
+     * Transpiles an async function AST node into a Lua function that returns a coroutine-wrapped execution.
+     * @param {object} node - The AST node for the async function.
+     * @param {object} transpiler - The transpiler instance.
+     * @returns {string} The transpiled Lua code for the async function.
      */
     transpileAsyncFunction(node, transpiler) {
         const params = node.params.map(p => p.name).join(', ');
@@ -31,7 +38,10 @@ end`;
     }
 
     /**
-     * Transpile await expression to coroutine.yield
+     * Transpiles an await expression AST node into a Lua construct that yields and resumes a coroutine.
+     * @param {object} node - The AST node for the await expression.
+     * @param {object} transpiler - The transpiler instance.
+     * @returns {string} The transpiled Lua code for the await expression.
      */
     transpileAwaitExpression(node, transpiler) {
         const argument = transpiler.transpile(node.argument);
@@ -55,7 +65,8 @@ end)()`;
     }
 
     /**
-     * Implement Promise.all in Lua
+     * Generates the Lua implementation of Promise.all.
+     * @returns {string} The Lua code for Promise.all.
      */
     generatePromiseAll() {
         return `
@@ -111,7 +122,8 @@ end
     }
 
     /**
-     * Implement Promise.race in Lua
+     * Generates the Lua implementation of Promise.race.
+     * @returns {string} The Lua code for Promise.race.
      */
     generatePromiseRace() {
         return `
@@ -158,7 +170,8 @@ end
     }
 
     /**
-     * Implement Promise.allSettled in Lua
+     * Generates the Lua implementation of Promise.allSettled.
+     * @returns {string} The Lua code for Promise.allSettled.
      */
     generatePromiseAllSettled() {
         return `
@@ -210,7 +223,8 @@ end
     }
 
     /**
-     * Implement Promise.any in Lua
+     * Generates the Lua implementation of Promise.any.
+     * @returns {string} The Lua code for Promise.any.
      */
     generatePromiseAny() {
         return `
@@ -268,7 +282,8 @@ end
     }
 
     /**
-     * Generate complete async runtime
+     * Generates the complete Lua runtime code for all asynchronous features, including a Promise implementation.
+     * @returns {string} The complete async runtime code.
      */
     generateAsyncRuntime() {
         return `
@@ -412,7 +427,8 @@ return {
     }
 
     /**
-     * Test async patterns
+     * Provides a set of test cases for the advanced async patterns.
+     * @returns {object[]} An array of test case objects.
      */
     testAsyncPatterns() {
         return [
@@ -473,7 +489,8 @@ return {
     }
 
     /**
-     * Get async support status
+     * Gets the current support status for all advanced async features.
+     * @returns {object} An object detailing the support status of each feature.
      */
     getStatus() {
         return {
