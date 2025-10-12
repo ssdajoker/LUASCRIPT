@@ -8,6 +8,9 @@
 const { LuaScriptInterpreter } = require('./phase2_core_interpreter');
 const { ModuleLoader } = require('./phase2_core_modules');
 
+/**
+ * A profiler for collecting performance metrics, such as execution time and memory usage.
+ */
 class PerformanceProfiler {
     constructor() {
         this.metrics = new Map();
@@ -17,11 +20,19 @@ class PerformanceProfiler {
         this.enabled = true;
     }
 
+    /**
+     * Starts a timer for a given label.
+     * @param {string} label - The label for the timer.
+     */
     startTimer(label) {
         if (!this.enabled) return;
         this.startTimes.set(label, process.hrtime.bigint());
     }
 
+    /**
+     * Ends a timer and records the duration.
+     * @param {string} label - The label for the timer.
+     */
     endTimer(label) {
         if (!this.enabled) return;
         const startTime = this.startTimes.get(label);
@@ -49,12 +60,19 @@ class PerformanceProfiler {
         }
     }
 
+    /**
+     * Records a function call.
+     * @param {string} functionName - The name of the function that was called.
+     */
     recordFunctionCall(functionName) {
         if (!this.enabled) return;
         const count = this.callCounts.get(functionName) || 0;
         this.callCounts.set(functionName, count + 1);
     }
 
+    /**
+     * Takes a snapshot of the current memory usage.
+     */
     takeMemorySnapshot() {
         if (!this.enabled) return;
         const memUsage = process.memoryUsage();
@@ -69,6 +87,10 @@ class PerformanceProfiler {
         }
     }
 
+    /**
+     * Gets the collected performance metrics.
+     * @returns {object} The performance metrics.
+     */
     getMetrics() {
         return {
             timings: Object.fromEntries(this.metrics),
@@ -78,6 +100,11 @@ class PerformanceProfiler {
         };
     }
 
+    /**
+     * Generates a summary of the performance metrics.
+     * @returns {object} The performance summary.
+     * @private
+     */
     generateSummary() {
         const totalFunctions = this.callCounts.size;
         const totalCalls = Array.from(this.callCounts.values()).reduce((a, b) => a + b, 0);
@@ -101,6 +128,11 @@ class PerformanceProfiler {
         };
     }
 
+    /**
+     * Analyzes the memory trend from the collected snapshots.
+     * @returns {object|string} The memory trend analysis.
+     * @private
+     */
     getMemoryTrend() {
         if (this.memorySnapshots.length < 2) return 'insufficient_data';
         
@@ -117,6 +149,9 @@ class PerformanceProfiler {
         };
     }
 
+    /**
+     * Resets all collected metrics.
+     */
     reset() {
         this.metrics.clear();
         this.startTimes.clear();
@@ -124,16 +159,33 @@ class PerformanceProfiler {
         this.callCounts.clear();
     }
 
+    /**
+     * Enables the profiler.
+     */
     enable() {
         this.enabled = true;
     }
 
+    /**
+     * Disables the profiler.
+     */
     disable() {
         this.enabled = false;
     }
 }
 
+/**
+ * An optimizer for managing and reducing memory usage.
+ */
 class MemoryOptimizer {
+    /**
+     * Creates an instance of MemoryOptimizer.
+     * @param {object} [options={}] - Configuration options for the optimizer.
+     * @param {number} [options.maxHeapSize=536870912] - The maximum heap size in bytes.
+     * @param {number} [options.gcThreshold=0.8] - The heap usage threshold to trigger garbage collection.
+     * @param {number} [options.objectPoolSize=1000] - The maximum size of object pools.
+     * @param {number} [options.stringInternThreshold=100] - The usage count threshold for string interning.
+     */
     constructor(options = {}) {
         this.options = {
             maxHeapSize: options.maxHeapSize || 512 * 1024 * 1024, // 512MB
@@ -150,6 +202,13 @@ class MemoryOptimizer {
         this.memoryUsage = 0;
     }
 
+    /**
+     * Creates a new object pool.
+     * @param {string} type - The type of objects to pool.
+     * @param {function(): object} factory - A function that creates new objects.
+     * @param {function(object): void} resetFn - A function that resets an object before returning it to the pool.
+     * @returns {object} The created pool.
+     */
     createObjectPool(type, factory, resetFn) {
         const pool = {
             objects: [],
@@ -163,6 +222,11 @@ class MemoryOptimizer {
         return pool;
     }
 
+    /**
+     * Gets an object from a pool.
+     * @param {string} type - The type of object to get.
+     * @returns {object|null} The pooled object, or null if the pool doesn't exist.
+     */
     getPooledObject(type) {
         const pool = this.objectPools.get(type);
         if (!pool) return null;
@@ -178,6 +242,12 @@ class MemoryOptimizer {
         return obj;
     }
 
+    /**
+     * Returns an object to its pool.
+     * @param {string} type - The type of the object.
+     * @param {object} obj - The object to return.
+     * @returns {boolean} True if the object was returned to the pool.
+     */
     returnToPool(type, obj) {
         const pool = this.objectPools.get(type);
         if (!pool || pool.objects.length >= this.options.objectPoolSize) {
@@ -192,6 +262,11 @@ class MemoryOptimizer {
         return true;
     }
 
+    /**
+     * Interns a string to save memory.
+     * @param {string} str - The string to intern.
+     * @returns {string} The interned string.
+     */
     internString(str) {
         if (typeof str !== 'string') return str;
         
@@ -210,6 +285,12 @@ class MemoryOptimizer {
         return str;
     }
 
+    /**
+     * Creates a weak reference to an object.
+     * @param {object} obj - The object to reference weakly.
+     * @param {function} [cleanup] - An optional cleanup function.
+     * @returns {WeakRef} The weak reference.
+     */
     createWeakRef(obj, cleanup) {
         const ref = new WeakRef(obj);
         if (cleanup) {
@@ -220,6 +301,9 @@ class MemoryOptimizer {
         return ref;
     }
 
+    /**
+     * Triggers garbage collection and other cleanup tasks.
+     */
     triggerGC() {
         // Clean up weak references
         for (const ref of this.weakRefs) {
@@ -243,6 +327,10 @@ class MemoryOptimizer {
         }
     }
 
+    /**
+     * Gets statistics about memory usage.
+     * @returns {object} The memory statistics.
+     */
     getMemoryStats() {
         const poolStats = {};
         for (const [type, pool] of this.objectPools) {
@@ -263,6 +351,10 @@ class MemoryOptimizer {
         };
     }
 
+    /**
+     * Runs memory optimization tasks.
+     * @returns {object} The memory statistics after optimization.
+     */
     optimize() {
         this.triggerGC();
         
@@ -277,7 +369,21 @@ class MemoryOptimizer {
     }
 }
 
+/**
+ * Manages security policies and monitors for violations.
+ */
 class SecurityManager {
+    /**
+     * Creates an instance of SecurityManager.
+     * @param {object} [options={}] - Configuration options for the security manager.
+     * @param {boolean} [options.allowFileSystem=false] - Whether to allow file system access.
+     * @param {boolean} [options.allowNetwork=false] - Whether to allow network access.
+     * @param {boolean} [options.allowProcess=false] - Whether to allow process creation.
+     * @param {boolean} [options.allowEval=false] - Whether to allow dynamic code execution.
+     * @param {number} [options.maxExecutionTime=30000] - The maximum execution time in milliseconds.
+     * @param {number} [options.maxMemoryUsage=268435456] - The maximum memory usage in bytes.
+     * @param {string[]} [options.trustedModules=[]] - A list of trusted modules.
+     */
     constructor(options = {}) {
         this.options = {
             allowFileSystem: options.allowFileSystem || false,
@@ -294,6 +400,13 @@ class SecurityManager {
         this.blockedOperations = new Set();
     }
 
+    /**
+     * Checks if a file system operation is allowed.
+     * @param {string} operation - The file system operation being performed.
+     * @param {string} path - The path being accessed.
+     * @returns {boolean} True if the operation is allowed.
+     * @throws {SecurityError} If the operation is not allowed.
+     */
     checkFileSystemAccess(operation, path) {
         if (!this.options.allowFileSystem) {
             this.recordViolation('filesystem', operation, path);
@@ -309,6 +422,13 @@ class SecurityManager {
         return true;
     }
 
+    /**
+     * Checks if a network operation is allowed.
+     * @param {string} operation - The network operation.
+     * @param {string} url - The URL being accessed.
+     * @returns {boolean} True if the operation is allowed.
+     * @throws {SecurityError} If the operation is not allowed.
+     */
     checkNetworkAccess(operation, url) {
         if (!this.options.allowNetwork) {
             this.recordViolation('network', operation, url);
@@ -318,6 +438,13 @@ class SecurityManager {
         return true;
     }
 
+    /**
+     * Checks if a process operation is allowed.
+     * @param {string} operation - The process operation.
+     * @param {string} command - The command being executed.
+     * @returns {boolean} True if the operation is allowed.
+     * @throws {SecurityError} If the operation is not allowed.
+     */
     checkProcessAccess(operation, command) {
         if (!this.options.allowProcess) {
             this.recordViolation('process', operation, command);
@@ -327,6 +454,12 @@ class SecurityManager {
         return true;
     }
 
+    /**
+     * Checks if dynamic code execution is allowed.
+     * @param {string} code - The code being executed.
+     * @returns {boolean} True if the operation is allowed.
+     * @throws {SecurityError} If the operation is not allowed.
+     */
     checkEvalAccess(code) {
         if (!this.options.allowEval) {
             this.recordViolation('eval', 'execute', code.substring(0, 100));
@@ -336,6 +469,12 @@ class SecurityManager {
         return true;
     }
 
+    /**
+     * Checks if a module is allowed to be loaded.
+     * @param {string} moduleName - The name of the module.
+     * @returns {boolean} True if the module is allowed.
+     * @throws {SecurityError} If the module is not allowed.
+     */
     checkModuleAccess(moduleName) {
         if (!this.options.trustedModules.has(moduleName)) {
             // Check for potentially dangerous modules
@@ -349,6 +488,13 @@ class SecurityManager {
         return true;
     }
 
+    /**
+     * Checks if resource usage is within limits.
+     * @param {number} memoryUsage - The current memory usage.
+     * @param {number} executionTime - The current execution time.
+     * @returns {boolean} True if resource usage is within limits.
+     * @throws {SecurityError} If a resource limit is exceeded.
+     */
     checkResourceUsage(memoryUsage, executionTime) {
         if (memoryUsage > this.options.maxMemoryUsage) {
             this.recordViolation('resource', 'memory', memoryUsage);
@@ -363,6 +509,13 @@ class SecurityManager {
         return true;
     }
 
+    /**
+     * Records a security violation.
+     * @param {string} type - The type of violation.
+     * @param {string} operation - The operation that caused the violation.
+     * @param {string} details - Details about the violation.
+     * @private
+     */
     recordViolation(type, operation, details) {
         const violation = {
             timestamp: Date.now(),
@@ -382,6 +535,10 @@ class SecurityManager {
         this.blockedOperations.add(`${type}:${operation}`);
     }
 
+    /**
+     * Gets a report of all security violations.
+     * @returns {object} The security report.
+     */
     getSecurityReport() {
         const violationsByType = {};
         for (const violation of this.violations) {
@@ -400,6 +557,11 @@ class SecurityManager {
         };
     }
 
+    /**
+     * Calculates the current security level based on the configuration.
+     * @returns {string} The security level.
+     * @private
+     */
     calculateSecurityLevel() {
         const restrictions = [
             !this.options.allowFileSystem,
@@ -412,12 +574,18 @@ class SecurityManager {
         return levels[restrictions] || 'custom';
     }
 
+    /**
+     * Resets the security manager's state.
+     */
     reset() {
         this.violations = [];
         this.blockedOperations.clear();
     }
 }
 
+/**
+ * A custom error class for security-related errors.
+ */
 class SecurityError extends Error {
     constructor(message) {
         super(message);
@@ -425,7 +593,15 @@ class SecurityError extends Error {
     }
 }
 
+/**
+ * An interpreter with enterprise-grade features, including performance profiling, memory optimization, and security management.
+ * @extends LuaScriptInterpreter
+ */
 class EnterpriseInterpreter extends LuaScriptInterpreter {
+    /**
+     * Creates an instance of the EnterpriseInterpreter.
+     * @param {object} [options={}] - Configuration options.
+     */
     constructor(options = {}) {
         super(options);
         
@@ -445,6 +621,10 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         this.setupEnterpriseFeatures();
     }
 
+    /**
+     * Sets up the enterprise features by overriding methods from the base interpreter.
+     * @private
+     */
     setupEnterpriseFeatures() {
         // Override execute method to add profiling
         const originalExecute = this.execute.bind(this);
@@ -505,6 +685,12 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         }
     }
 
+    /**
+     * Gets the name of a function from a callee node.
+     * @param {object} calleeNode - The callee AST node.
+     * @returns {string} The name of the function.
+     * @private
+     */
     getFunctionName(calleeNode) {
         if (calleeNode.type === 'Identifier') {
             return calleeNode.name;
@@ -516,6 +702,11 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         return 'anonymous';
     }
 
+    /**
+     * Interprets an AST with added security and performance checks.
+     * @param {object} ast - The AST to interpret.
+     * @returns {*} The result of the interpretation.
+     */
     interpret(ast) {
         // Security check
         if (this.enterpriseOptions.enableSecurity) {
@@ -551,6 +742,11 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         }
     }
 
+    /**
+     * Performs a security audit on the AST before execution.
+     * @param {object} ast - The AST to audit.
+     * @private
+     */
     performSecurityAudit(ast) {
         // Traverse AST to check for security violations
         const traverse = (node) => {
@@ -589,6 +785,10 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         traverse(ast);
     }
 
+    /**
+     * Gets a comprehensive performance report.
+     * @returns {object} The performance report.
+     */
     getPerformanceReport() {
         return {
             profiling: this.profiler.getMetrics(),
@@ -598,6 +798,10 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         };
     }
 
+    /**
+     * Runs performance optimization tasks.
+     * @returns {object} A report of the optimizations performed.
+     */
     optimizePerformance() {
         const memoryStats = this.memoryOptimizer.optimize();
         const securityReport = this.securityManager.getSecurityReport();
@@ -609,6 +813,11 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         };
     }
 
+    /**
+     * Generates optimization recommendations based on the collected metrics.
+     * @returns {object[]} An array of recommendation objects.
+     * @private
+     */
     generateOptimizationRecommendations() {
         const recommendations = [];
         const metrics = this.profiler.getMetrics();
@@ -649,6 +858,9 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         return recommendations;
     }
 
+    /**
+     * Resets the state of the enterprise features.
+     */
     reset() {
         this.profiler.reset();
         this.memoryOptimizer = new MemoryOptimizer(this.enterpriseOptions.memory);

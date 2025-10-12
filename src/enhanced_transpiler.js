@@ -15,7 +15,18 @@
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * An enhanced version of the LuaScript transpiler with more comprehensive JavaScript feature support.
+ * This class provides more robust transformations and better error handling.
+ */
 class EnhancedLuaScriptTranspiler {
+    /**
+     * Creates an instance of the EnhancedLuaScriptTranspiler.
+     * @param {object} [options={}] - Configuration options for the transpiler.
+     * @param {boolean} [options.includeRuntime=true] - Whether to inject the Lua runtime library.
+     * @param {boolean} [options.strictMode=true] - Whether to enable strict mode checks.
+     * @param {boolean} [options.preserveComments=false] - Whether to preserve comments from the original code.
+     */
     constructor(options = {}) {
         this.options = {
             includeRuntime: options.includeRuntime !== false,
@@ -33,10 +44,13 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Main transpilation function with comprehensive JavaScript support
-     * @param {string} jsCode - JavaScript code to transpile
-     * @param {Object} options - Transpilation options
-     * @returns {string} - Transpiled Lua code
+     * The main transpilation function, which converts JavaScript code to Lua with enhanced feature support.
+     * The transpilation process is divided into multiple phases to ensure correct transformation ordering.
+     * @param {string} jsCode - The JavaScript code to transpile.
+     * @param {object} [options={}] - Transpilation options for this specific call.
+     * @param {boolean} [options.includeRuntime] - Overrides the default runtime inclusion setting.
+     * @returns {string} The transpiled Lua code.
+     * @throws {Error} If transpilation fails due to invalid input or a processing error.
      */
     transpile(jsCode, options = {}) {
         const startTime = Date.now();
@@ -108,7 +122,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Validate input code
+     * Validates the input JavaScript code before processing.
+     * @param {string} code - The code to validate.
+     * @throws {Error} If the input is not a string, is empty, or exceeds the size limit.
+     * @private
      */
     validateInput(code) {
         if (typeof code !== 'string') {
@@ -125,7 +142,9 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Validate output code
+     * Validates the output Lua code for common transpilation artifacts.
+     * @param {string} code - The code to validate.
+     * @private
      */
     validateOutput(code) {
         // Check for common transpilation errors
@@ -144,8 +163,11 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Protect string literals from transformation
-     * Returns code with placeholders and array of original strings
+     * Replaces string literals in the code with placeholders to prevent them from being modified by other transformations.
+     * This is a crucial step to ensure that strings are preserved correctly.
+     * @param {string} code - The code to process.
+     * @returns {{code: string, strings: string[]}} An object containing the code with placeholders and an array of the original strings.
+     * @private
      */
     protectStringLiterals(code) {
         const strings = [];
@@ -195,7 +217,11 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Restore string literals from placeholders
+     * Restores the original string literals from their placeholders.
+     * @param {string} code - The code containing placeholders.
+     * @param {string[]} strings - The array of original string literals.
+     * @returns {string} The code with string literals restored.
+     * @private
      */
     restoreStringLiterals(code, strings) {
         let result = code;
@@ -207,8 +233,11 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Fix string concatenation: + to .. (ENHANCED from PR #7)
-     * Context-aware detection to distinguish string concatenation from numeric addition
+     * Converts the JavaScript string concatenation operator `+` to Lua's `..`.
+     * This version is context-aware to avoid incorrectly converting numeric addition.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     fixStringConcatenation(code) {
         let result = code;
@@ -239,7 +268,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Fix equality operators: === to ==, !== to ~=
+     * Converts JavaScript equality operators to their Lua equivalents.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     fixEqualityOperators(code) {
         return code
@@ -249,7 +281,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Fix logical operators: || to or, && to and, ! to not
+     * Converts JavaScript logical operators to their Lua equivalents.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     fixLogicalOperators(code) {
         let result = code;
@@ -267,7 +302,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Fix unary operators
+     * Converts JavaScript unary operators like `typeof` and `void` to Lua equivalents.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     fixUnaryOperators(code) {
         // typeof operator
@@ -280,7 +318,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Fix increment/decrement operators: ++ and --
+     * Converts increment (`++`) and decrement (`--`) operators to their Lua equivalents (`var = var + 1`).
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     fixIncrementDecrementOperators(code) {
         let result = code;
@@ -301,7 +342,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Fix comparison operators
+     * Placeholder for fixing comparison operators. Most are compatible between JS and Lua.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     fixComparisonOperators(code) {
         // All comparison operators are already compatible between JS and Lua
@@ -310,7 +354,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Fix assignment operators: +=, -=, *=, /=, %=
+     * Converts compound assignment operators (e.g., `+=`, `-=`) to their expanded Lua form (`var = var + value`).
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     fixAssignmentOperators(code) {
         let result = code;
@@ -334,7 +381,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Convert variable declarations: var, let, const to local
+     * Converts JavaScript variable declarations (`var`, `let`, `const`) to Lua `local` declarations.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     convertVariableDeclarations(code) {
         let result = code;
@@ -355,7 +405,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Convert function declarations
+     * Converts JavaScript function declarations (named and anonymous) to Lua function syntax.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     convertFunctionDeclarations(code) {
         let result = code;
@@ -376,7 +429,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Convert arrow functions to Lua functions
+     * Converts JavaScript arrow functions to Lua anonymous functions.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     convertArrowFunctions(code) {
         let result = code;
@@ -403,7 +459,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Convert if/else/elseif conditionals
+     * Converts JavaScript conditional statements (`if`, `else if`, `else`) to Lua's `if/then/elseif/else/end` syntax.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     convertConditionals(code) {
         let result = code;
@@ -423,7 +482,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Convert ternary operator: condition ? true : false
+     * Converts the JavaScript ternary operator (`condition ? expr1 : expr2`) into a Lua `(condition and expr1 or expr2)` expression.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     convertTernaryOperator(code) {
         // Convert ternary to if-then-else expression
@@ -434,7 +496,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Convert loops: for, while, do-while
+     * Converts various JavaScript loop types (`for`, `while`, `do-while`, `for-in`, `for-of`) to their Lua equivalents.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     convertLoops(code) {
         let result = code;
@@ -487,7 +552,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Convert switch statements to if-elseif chains
+     * Converts JavaScript `switch` statements into equivalent Lua `if/elseif/else` chains.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     convertSwitchStatements(code) {
         let result = code;
@@ -516,7 +584,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Convert arrays to Lua tables
+     * Converts JavaScript array literals to Lua table literals.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     convertArrays(code) {
         // Convert array literals: [1, 2, 3] to {1, 2, 3}
@@ -531,8 +602,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Convert objects to Lua tables (ENHANCED from PR #7)
-     * Preserves colons in strings, only converts object property syntax
+     * Converts JavaScript object literals to Lua tables, preserving colons within strings.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     * @private
      */
     convertObjects(code) {
         let result = code;
@@ -556,7 +629,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Clean up code formatting
+     * Cleans up the generated Lua code by fixing brace-to-end conversions and normalizing whitespace.
+     * @param {string} code - The code to clean up.
+     * @returns {string} The cleaned-up code.
+     * @private
      */
     cleanupCode(code) {
         let result = code;
@@ -608,7 +684,10 @@ class EnhancedLuaScriptTranspiler {
     }
 
     /**
-     * Inject runtime library
+     * Injects the Lua runtime library to provide standard JavaScript APIs.
+     * @param {string} code - The transpiled Lua code.
+     * @returns {string} The code with the runtime library injected.
+     * @private
      */
     injectRuntimeLibrary(code) {
         const runtimeRequire = `-- LUASCRIPT Runtime Library Integration
@@ -622,7 +701,12 @@ local Math = runtime.Math
     }
 
     /**
-     * Transpile a file
+     * Reads a JavaScript file, transpiles it, and optionally writes the output to a file.
+     * @param {string} inputPath - The path to the input JavaScript file.
+     * @param {string} [outputPath] - The path to the output Lua file.
+     * @param {object} [options={}] - Transpilation options.
+     * @returns {string} The transpiled Lua code.
+     * @throws {Error} If the file cannot be read or written.
      */
     transpileFile(inputPath, outputPath, options = {}) {
         try {
@@ -640,7 +724,8 @@ local Math = runtime.Math
     }
 
     /**
-     * Get transpilation statistics
+     * Retrieves the current transpilation statistics.
+     * @returns {object} An object containing statistics like transpilations count, total time, and error/warning logs.
      */
     getStats() {
         return {

@@ -5,7 +5,16 @@
  * 32+ Developer Team Implementation
  */
 
+/**
+ * The base class for all nodes in the Abstract Syntax Tree (AST).
+ * It provides common properties and methods for tree traversal and manipulation.
+ */
 class ASTNode {
+    /**
+     * Creates an instance of an ASTNode.
+     * @param {string} type - The type of the AST node.
+     * @param {object} [properties={}] - Additional properties for the node.
+     */
     constructor(type, properties = {}) {
         this.type = type;
         this.line = properties.line || 0;
@@ -15,6 +24,11 @@ class ASTNode {
         Object.assign(this, properties);
     }
 
+    /**
+     * Adds a child node to this node.
+     * @param {ASTNode} child - The child node to add.
+     * @returns {this} The current node for chaining.
+     */
     addChild(child) {
         if (child instanceof ASTNode) {
             child.parent = this;
@@ -23,6 +37,11 @@ class ASTNode {
         return this;
     }
 
+    /**
+     * Removes a child node from this node.
+     * @param {ASTNode} child - The child node to remove.
+     * @returns {this} The current node for chaining.
+     */
     removeChild(child) {
         const index = this.children.indexOf(child);
         if (index !== -1) {
@@ -32,6 +51,10 @@ class ASTNode {
         return this;
     }
 
+    /**
+     * Traverses the AST starting from this node.
+     * @param {function(ASTNode): void} callback - The function to call for each node.
+     */
     traverse(callback) {
         callback(this);
         for (const child of this.children) {
@@ -39,6 +62,11 @@ class ASTNode {
         }
     }
 
+    /**
+     * Finds the first node in the subtree that satisfies the predicate.
+     * @param {function(ASTNode): boolean} predicate - The predicate function.
+     * @returns {ASTNode|null} The found node, or null if not found.
+     */
     find(predicate) {
         if (predicate(this)) return this;
         for (const child of this.children) {
@@ -48,6 +76,11 @@ class ASTNode {
         return null;
     }
 
+    /**
+     * Finds all nodes in the subtree that satisfy the predicate.
+     * @param {function(ASTNode): boolean} predicate - The predicate function.
+     * @returns {ASTNode[]} An array of found nodes.
+     */
     findAll(predicate) {
         const results = [];
         this.traverse(node => {
@@ -56,6 +89,10 @@ class ASTNode {
         return results;
     }
 
+    /**
+     * Creates a deep clone of the node.
+     * @returns {ASTNode} The cloned node.
+     */
     clone() {
         const cloned = new this.constructor(this.type, { ...this });
         cloned.children = this.children.map(child => child.clone());
@@ -63,6 +100,10 @@ class ASTNode {
         return cloned;
     }
 
+    /**
+     * Converts the node to a JSON-serializable object.
+     * @returns {object} The JSON representation of the node.
+     */
     toJSON() {
         return {
             type: this.type,
@@ -73,6 +114,11 @@ class ASTNode {
         };
     }
 
+    /**
+     * Gets the properties of the node that should be serialized to JSON.
+     * @returns {object} The serializable properties.
+     * @private
+     */
     getSerializableProperties() {
         const props = { ...this };
         delete props.type;
@@ -84,7 +130,7 @@ class ASTNode {
     }
 }
 
-// Program and Statement Nodes
+/** Represents the root of the AST. */
 class ProgramNode extends ASTNode {
     constructor(body = [], properties = {}) {
         super('Program', properties);
@@ -93,6 +139,7 @@ class ProgramNode extends ASTNode {
     }
 }
 
+/** Represents a block of statements enclosed in braces. */
 class BlockStatementNode extends ASTNode {
     constructor(body = [], properties = {}) {
         super('BlockStatement', properties);
@@ -101,6 +148,7 @@ class BlockStatementNode extends ASTNode {
     }
 }
 
+/** Represents an expression used as a statement. */
 class ExpressionStatementNode extends ASTNode {
     constructor(expression, properties = {}) {
         super('ExpressionStatement', properties);
@@ -109,6 +157,7 @@ class ExpressionStatementNode extends ASTNode {
     }
 }
 
+/** Represents a variable declaration (e.g., let, const, var). */
 class VariableDeclarationNode extends ASTNode {
     constructor(declarations, kind = 'let', properties = {}) {
         super('VariableDeclaration', properties);
@@ -118,6 +167,7 @@ class VariableDeclarationNode extends ASTNode {
     }
 }
 
+/** Represents a single variable declarator within a declaration. */
 class VariableDeclaratorNode extends ASTNode {
     constructor(id, init = null, properties = {}) {
         super('VariableDeclarator', properties);
@@ -128,6 +178,7 @@ class VariableDeclaratorNode extends ASTNode {
     }
 }
 
+/** Represents a function declaration. */
 class FunctionDeclarationNode extends ASTNode {
     constructor(id, params, body, properties = {}) {
         super('FunctionDeclaration', properties);
@@ -143,6 +194,7 @@ class FunctionDeclarationNode extends ASTNode {
     }
 }
 
+/** Represents a return statement. */
 class ReturnStatementNode extends ASTNode {
     constructor(argument = null, properties = {}) {
         super('ReturnStatement', properties);
@@ -151,6 +203,7 @@ class ReturnStatementNode extends ASTNode {
     }
 }
 
+/** Represents an if statement. */
 class IfStatementNode extends ASTNode {
     constructor(test, consequent, alternate = null, properties = {}) {
         super('IfStatement', properties);
@@ -164,6 +217,7 @@ class IfStatementNode extends ASTNode {
     }
 }
 
+/** Represents a while loop. */
 class WhileStatementNode extends ASTNode {
     constructor(test, body, properties = {}) {
         super('WhileStatement', properties);
@@ -174,6 +228,7 @@ class WhileStatementNode extends ASTNode {
     }
 }
 
+/** Represents a for loop. */
 class ForStatementNode extends ASTNode {
     constructor(init, test, update, body, properties = {}) {
         super('ForStatement', properties);
@@ -189,6 +244,7 @@ class ForStatementNode extends ASTNode {
     }
 }
 
+/** Represents a break statement. */
 class BreakStatementNode extends ASTNode {
     constructor(label = null, properties = {}) {
         super('BreakStatement', properties);
@@ -197,6 +253,7 @@ class BreakStatementNode extends ASTNode {
     }
 }
 
+/** Represents a continue statement. */
 class ContinueStatementNode extends ASTNode {
     constructor(label = null, properties = {}) {
         super('ContinueStatement', properties);
@@ -205,7 +262,7 @@ class ContinueStatementNode extends ASTNode {
     }
 }
 
-// Expression Nodes
+/** Represents a binary expression (e.g., a + b). */
 class BinaryExpressionNode extends ASTNode {
     constructor(operator, left, right, properties = {}) {
         super('BinaryExpression', properties);
@@ -217,6 +274,7 @@ class BinaryExpressionNode extends ASTNode {
     }
 }
 
+/** Represents a unary expression (e.g., !a, -b). */
 class UnaryExpressionNode extends ASTNode {
     constructor(operator, argument, prefix = true, properties = {}) {
         super('UnaryExpression', properties);
@@ -227,6 +285,7 @@ class UnaryExpressionNode extends ASTNode {
     }
 }
 
+/** Represents an assignment expression (e.g., a = b). */
 class AssignmentExpressionNode extends ASTNode {
     constructor(operator, left, right, properties = {}) {
         super('AssignmentExpression', properties);
@@ -238,6 +297,7 @@ class AssignmentExpressionNode extends ASTNode {
     }
 }
 
+/** Represents an update expression (e.g., a++, --b). */
 class UpdateExpressionNode extends ASTNode {
     constructor(operator, argument, prefix = true, properties = {}) {
         super('UpdateExpression', properties);
@@ -248,6 +308,7 @@ class UpdateExpressionNode extends ASTNode {
     }
 }
 
+/** Represents a logical expression (e.g., a && b, c || d). */
 class LogicalExpressionNode extends ASTNode {
     constructor(operator, left, right, properties = {}) {
         super('LogicalExpression', properties);
@@ -259,6 +320,7 @@ class LogicalExpressionNode extends ASTNode {
     }
 }
 
+/** Represents a conditional (ternary) expression (e.g., a ? b : c). */
 class ConditionalExpressionNode extends ASTNode {
     constructor(test, consequent, alternate, properties = {}) {
         super('ConditionalExpression', properties);
@@ -271,6 +333,7 @@ class ConditionalExpressionNode extends ASTNode {
     }
 }
 
+/** Represents a function call expression. */
 class CallExpressionNode extends ASTNode {
     constructor(callee, args, properties = {}) {
         super('CallExpression', properties);
@@ -281,6 +344,7 @@ class CallExpressionNode extends ASTNode {
     }
 }
 
+/** Represents a member access expression (e.g., obj.prop, arr[0]). */
 class MemberExpressionNode extends ASTNode {
     constructor(object, property, computed = false, properties = {}) {
         super('MemberExpression', properties);
@@ -292,6 +356,7 @@ class MemberExpressionNode extends ASTNode {
     }
 }
 
+/** Represents an array literal. */
 class ArrayExpressionNode extends ASTNode {
     constructor(elements = [], properties = {}) {
         super('ArrayExpression', properties);
@@ -302,6 +367,7 @@ class ArrayExpressionNode extends ASTNode {
     }
 }
 
+/** Represents an object literal. */
 class ObjectExpressionNode extends ASTNode {
     constructor(properties = [], nodeProperties = {}) {
         super('ObjectExpression', nodeProperties);
@@ -310,6 +376,7 @@ class ObjectExpressionNode extends ASTNode {
     }
 }
 
+/** Represents a property in an object literal. */
 class PropertyNode extends ASTNode {
     constructor(key, value, kind = 'init', properties = {}) {
         super('Property', properties);
@@ -325,6 +392,7 @@ class PropertyNode extends ASTNode {
     }
 }
 
+/** Represents an arrow function expression. */
 class ArrowFunctionExpressionNode extends ASTNode {
     constructor(params, body, properties = {}) {
         super('ArrowFunctionExpression', properties);
@@ -338,6 +406,7 @@ class ArrowFunctionExpressionNode extends ASTNode {
     }
 }
 
+/** Represents a standard function expression. */
 class FunctionExpressionNode extends ASTNode {
     constructor(id, params, body, properties = {}) {
         super('FunctionExpression', properties);
@@ -353,7 +422,7 @@ class FunctionExpressionNode extends ASTNode {
     }
 }
 
-// Literal Nodes
+/** Represents a literal value (e.g., string, number, boolean, null). */
 class LiteralNode extends ASTNode {
     constructor(value, raw = null, properties = {}) {
         super('Literal', properties);
@@ -362,6 +431,7 @@ class LiteralNode extends ASTNode {
     }
 }
 
+/** Represents an identifier (e.g., a variable name). */
 class IdentifierNode extends ASTNode {
     constructor(name, properties = {}) {
         super('Identifier', properties);
@@ -369,13 +439,14 @@ class IdentifierNode extends ASTNode {
     }
 }
 
+/** Represents the `this` keyword. */
 class ThisExpressionNode extends ASTNode {
     constructor(properties = {}) {
         super('ThisExpression', properties);
     }
 }
 
-// Template Literal Nodes
+/** Represents a template literal (e.g., `hello ${world}`). */
 class TemplateLiteralNode extends ASTNode {
     constructor(quasis, expressions, properties = {}) {
         super('TemplateLiteral', properties);
@@ -387,6 +458,7 @@ class TemplateLiteralNode extends ASTNode {
     }
 }
 
+/** Represents a part of a template literal. */
 class TemplateElementNode extends ASTNode {
     constructor(value, tail = false, properties = {}) {
         super('TemplateElement', properties);
@@ -395,7 +467,7 @@ class TemplateElementNode extends ASTNode {
     }
 }
 
-// Error Recovery Node
+/** Represents an error encountered during parsing. */
 class ErrorNode extends ASTNode {
     constructor(message, token = null, properties = {}) {
         super('Error', properties);
@@ -404,8 +476,13 @@ class ErrorNode extends ASTNode {
     }
 }
 
-// AST Utilities
+/** A utility class for working with the AST. */
 class ASTUtils {
+    /**
+     * Checks if a node is an expression.
+     * @param {ASTNode} node - The node to check.
+     * @returns {boolean} True if the node is an expression.
+     */
     static isExpression(node) {
         const expressionTypes = [
             'BinaryExpression', 'UnaryExpression', 'AssignmentExpression',
@@ -417,6 +494,11 @@ class ASTUtils {
         return expressionTypes.includes(node.type);
     }
 
+    /**
+     * Checks if a node is a statement.
+     * @param {ASTNode} node - The node to check.
+     * @returns {boolean} True if the node is a statement.
+     */
     static isStatement(node) {
         const statementTypes = [
             'ExpressionStatement', 'VariableDeclaration', 'FunctionDeclaration',
@@ -426,11 +508,21 @@ class ASTUtils {
         return statementTypes.includes(node.type);
     }
 
+    /**
+     * Checks if a node is a declaration.
+     * @param {ASTNode} node - The node to check.
+     * @returns {boolean} True if the node is a declaration.
+     */
     static isDeclaration(node) {
         const declarationTypes = ['VariableDeclaration', 'FunctionDeclaration'];
         return declarationTypes.includes(node.type);
     }
 
+    /**
+     * Gets the name of a node if it has one.
+     * @param {ASTNode} node - The node to get the name from.
+     * @returns {string|null} The name of the node, or null if it doesn't have one.
+     */
     static getNodeName(node) {
         if (node.type === 'Identifier') return node.name;
         if (node.type === 'FunctionDeclaration' && node.id) return node.id.name;
@@ -438,22 +530,54 @@ class ASTUtils {
         return null;
     }
 
+    /**
+     * Creates a new ProgramNode.
+     * @param {ASTNode[]} [body=[]] - The body of the program.
+     * @returns {ProgramNode} The new program node.
+     */
     static createProgram(body = []) {
         return new ProgramNode(body);
     }
 
+    /**
+     * Creates a new IdentifierNode.
+     * @param {string} name - The name of the identifier.
+     * @param {object} [properties={}] - Additional properties.
+     * @returns {IdentifierNode} The new identifier node.
+     */
     static createIdentifier(name, properties = {}) {
         return new IdentifierNode(name, properties);
     }
 
+    /**
+     * Creates a new LiteralNode.
+     * @param {*} value - The value of the literal.
+     * @param {object} [properties={}] - Additional properties.
+     * @returns {LiteralNode} The new literal node.
+     */
     static createLiteral(value, properties = {}) {
         return new LiteralNode(value, null, properties);
     }
 
+    /**
+     * Creates a new BinaryExpressionNode.
+     * @param {string} operator - The binary operator.
+     * @param {ASTNode} left - The left-hand side expression.
+     * @param {ASTNode} right - The right-hand side expression.
+     * @param {object} [properties={}] - Additional properties.
+     * @returns {BinaryExpressionNode} The new binary expression node.
+     */
     static createBinaryExpression(operator, left, right, properties = {}) {
         return new BinaryExpressionNode(operator, left, right, properties);
     }
 
+    /**
+     * Creates a new CallExpressionNode.
+     * @param {ASTNode} callee - The callee expression.
+     * @param {ASTNode[]} [args=[]] - The arguments for the call.
+     * @param {object} [properties={}] - Additional properties.
+     * @returns {CallExpressionNode} The new call expression node.
+     */
     static createCallExpression(callee, args = [], properties = {}) {
         return new CallExpressionNode(callee, args, properties);
     }

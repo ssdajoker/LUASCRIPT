@@ -20,7 +20,21 @@ const fs = require('fs');
 const path = require('path');
 const { OptimizedLuaScriptTranspiler } = require('./optimized_transpiler');
 
+/**
+ * The main transpiler class that orchestrates the conversion of JavaScript to Lua.
+ * It integrates multiple layers of transpilation, including core transformations and advanced optimizations.
+ * This class also manages performance statistics and reporting.
+ */
 class LuaScriptTranspiler {
+    /**
+     * Creates an instance of the LuaScriptTranspiler.
+     * @param {object} [options={}] - The configuration options for the transpiler.
+     * @param {boolean} [options.enableOptimizations=true] - Whether to use the optimized transpiler.
+     * @param {string} [options.optimizationLevel='standard'] - The level of optimization to apply ('basic', 'standard', 'aggressive').
+     * @param {boolean} [options.enableParallelProcessing=true] - Whether to enable parallel processing for optimizations.
+     * @param {boolean} [options.enableCaching=true] - Whether to cache transpilation results.
+     * @param {boolean} [options.enableProfiling=false] - Whether to enable performance profiling.
+     */
     constructor(options = {}) {
         this.runtimeLibraryPath = path.join(__dirname, '..', 'runtime', 'runtime.lua');
         
@@ -50,10 +64,12 @@ class LuaScriptTranspiler {
     }
 
     /**
-     * Main transpilation function - Enhanced with Tony's 20 PS2/PS3 Optimizations
-     * @param {string} jsCode - JavaScript code to transpile
-     * @param {Object} options - Transpilation options
-     * @returns {string} - Transpiled Lua code
+     * The main transpilation function, enhanced with optional optimizations.
+     * It processes JavaScript code through either the standard or the optimized transpilation pipeline.
+     * @param {string} jsCode - The JavaScript code to transpile.
+     * @param {object} [options={}] - Transpilation options.
+     * @param {boolean} [options.includeRuntime=true] - Whether to inject the Lua runtime library.
+     * @returns {Promise<string>} A promise that resolves to the transpiled Lua code.
      */
     async transpile(jsCode, options = {}) {
         const startTime = process.hrtime.bigint();
@@ -107,8 +123,10 @@ class LuaScriptTranspiler {
     }
 
     /**
-     * Fix string concatenation operator: + to ..
-     * Critical Phase 1B fix
+     * Converts the JavaScript string concatenation operator `+` to the Lua equivalent `..`.
+     * This is a critical transformation for ensuring correct runtime behavior.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
      */
     fixStringConcatenation(code) {
         // Handle string concatenation with proper context detection
@@ -131,8 +149,9 @@ class LuaScriptTranspiler {
     }
 
     /**
-     * Fix logical operators: || to or, && to and
-     * Critical Phase 1B fix
+     * Converts JavaScript logical operators (`||`, `&&`, `!`) to their Lua equivalents (`or`, `and`, `not`).
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
      */
     fixLogicalOperators(code) {
         return code
@@ -142,8 +161,9 @@ class LuaScriptTranspiler {
     }
 
     /**
-     * Fix equality operators: === to ==, !== to ~=
-     * Critical Phase 1B fix
+     * Converts JavaScript equality operators (`===`, `!==`, `!=`) to their Lua equivalents (`==`, `~=`).
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
      */
     fixEqualityOperators(code) {
         return code
@@ -153,8 +173,12 @@ class LuaScriptTranspiler {
     }
 
     /**
-     * Inject runtime library for console.log and other JS functions
-     * Critical Phase 1B fix
+     * Injects the Lua runtime library to provide standard JavaScript APIs like `console.log`.
+     * This ensures that common JavaScript functions are available in the Lua environment.
+     * @param {string} code - The transpiled Lua code.
+     * @param {object} [options={}] - Options for runtime injection.
+     * @param {boolean} [options.includeRuntime=true] - Whether to include the runtime library.
+     * @returns {string} The code with the runtime library injected.
      */
     injectRuntimeLibrary(code, options = {}) {
         const requireRuntime = options.includeRuntime !== false;
@@ -174,7 +198,9 @@ local Math = runtime.Math
     }
 
     /**
-     * Convert JavaScript variable declarations to Lua
+     * Converts JavaScript variable declarations (`var`, `let`, `const`) to Lua `local` variables.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
      */
     convertVariableDeclarations(code) {
         return code
@@ -184,7 +210,9 @@ local Math = runtime.Math
     }
 
     /**
-     * Convert JavaScript function declarations to Lua
+     * Converts JavaScript function declarations and basic arrow functions to Lua function syntax.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
      */
     convertFunctionDeclarations(code) {
         // Convert function declarations
@@ -206,7 +234,9 @@ local Math = runtime.Math
     }
 
     /**
-     * Convert JavaScript conditionals to Lua
+     * Converts JavaScript conditional statements (`if`, `else if`, `else`) to Lua's `if/then/elseif/else/end` syntax.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
      */
     convertConditionals(code) {
         return code
@@ -218,7 +248,9 @@ local Math = runtime.Math
     }
 
     /**
-     * Convert JavaScript loops to Lua
+     * Converts JavaScript `while` and basic `for` loops to their Lua equivalents.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
      */
     convertLoops(code) {
         // Convert while loops
@@ -234,7 +266,9 @@ local Math = runtime.Math
     }
 
     /**
-     * Convert JavaScript arrays to Lua tables
+     * Converts JavaScript array literals to Lua table literals.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
      */
     convertArrays(code) {
         // Convert array literals
@@ -242,7 +276,9 @@ local Math = runtime.Math
     }
 
     /**
-     * Convert JavaScript objects to Lua tables
+     * Converts JavaScript object literals to Lua table literals.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
      */
     convertObjects(code) {
         // Basic object literal conversion
@@ -250,7 +286,11 @@ local Math = runtime.Math
     }
 
     /**
-     * Transpile a file - Enhanced with optimization support
+     * Reads a JavaScript file, transpiles it to Lua, and optionally writes the output to a file.
+     * @param {string} inputPath - The path to the input JavaScript file.
+     * @param {string} [outputPath] - The path to the output Lua file. If not provided, the output is not written to disk.
+     * @param {object} [options={}] - Transpilation options.
+     * @returns {Promise<string>} A promise that resolves to the transpiled Lua code.
      */
     async transpileFile(inputPath, outputPath, options = {}) {
         try {
@@ -271,7 +311,9 @@ local Math = runtime.Math
     }
 
     /**
-     * Get performance statistics - Multi-team coordination reporting
+     * Retrieves detailed performance statistics for the transpilation process.
+     * This includes data from both the main transpiler and the integrated optimized transpiler.
+     * @returns {object} An object containing performance metrics.
      */
     getPerformanceStats() {
         const baseStats = {
@@ -308,7 +350,9 @@ local Math = runtime.Math
     }
 
     /**
-     * Generate multi-team coordination report
+     * Generates and prints a formatted report on transpilation performance and team coordination.
+     * This report provides a high-level overview of the transpiler's status and efficiency.
+     * @returns {object} The performance statistics object.
      */
     generateTeamReport() {
         const stats = this.getPerformanceStats();

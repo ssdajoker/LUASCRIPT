@@ -4,6 +4,10 @@
  * Optional Chaining (?.) and Nullish Coalescing (??) - 100% Support
  */
 
+/**
+ * A class that handles the parsing and transpilation of enhanced operators like
+ * optional chaining (`?.`) and nullish coalescing (`??`).
+ */
 class EnhancedOperators {
     constructor() {
         this.supportedOperators = {
@@ -14,8 +18,9 @@ class EnhancedOperators {
     }
 
     /**
-     * Parse optional chaining expression
-     * Example: obj?.prop?.method?.()
+     * Parses an optional chaining expression from a stream of tokens.
+     * @param {object} parser - The parser instance.
+     * @returns {object} The AST node for the optional chaining expression.
      */
     parseOptionalChaining(parser) {
         let object = parser.parsePrimary();
@@ -71,8 +76,10 @@ class EnhancedOperators {
     }
 
     /**
-     * Parse nullish coalescing expression
-     * Example: value ?? defaultValue
+     * Parses a nullish coalescing expression from a stream of tokens.
+     * @param {object} parser - The parser instance.
+     * @param {object} left - The left-hand side expression node.
+     * @returns {object} The AST node for the logical expression.
      */
     parseNullishCoalescing(parser, left) {
         const operator = parser.previous();
@@ -87,7 +94,10 @@ class EnhancedOperators {
     }
 
     /**
-     * Transpile optional chaining to Lua
+     * Transpiles an optional chaining AST node into a Lua-compatible equivalent.
+     * @param {object} node - The optional chaining AST node.
+     * @param {object} transpiler - The transpiler instance.
+     * @returns {string} The transpiled Lua code.
      */
     transpileOptionalChaining(node, transpiler) {
         if (node.type === 'OptionalMemberExpression') {
@@ -121,7 +131,10 @@ class EnhancedOperators {
     }
 
     /**
-     * Transpile nullish coalescing to Lua
+     * Transpiles a nullish coalescing AST node into a Lua-compatible equivalent.
+     * @param {object} node - The logical expression AST node for nullish coalescing.
+     * @param {object} transpiler - The transpiler instance.
+     * @returns {string} The transpiled Lua code.
      */
     transpileNullishCoalescing(node, transpiler) {
         const left = transpiler.transpile(node.left);
@@ -138,7 +151,9 @@ class EnhancedOperators {
     }
 
     /**
-     * Optimize optional chaining chains
+     * Optimizes a chain of optional chaining expressions by flattening them into a single structure.
+     * @param {object} node - The top-level optional chaining AST node.
+     * @returns {object} An object containing the base object and the chain of properties.
      */
     optimizeOptionalChain(node) {
         // Flatten nested optional chains
@@ -161,7 +176,11 @@ class EnhancedOperators {
     }
 
     /**
-     * Generate optimized Lua code for optional chain
+     * Generates optimized Lua code for a flattened optional chain.
+     * @param {object} base - The base object of the chain.
+     * @param {object[]} chain - The array of property accessors in the chain.
+     * @param {object} transpiler - The transpiler instance.
+     * @returns {string} The optimized Lua code.
      */
     generateOptimizedChain(base, chain, transpiler) {
         let code = transpiler.transpile(base);
@@ -184,7 +203,9 @@ class EnhancedOperators {
     }
 
     /**
-     * Validate optional chaining syntax
+     * Validates the syntax of an optional chaining expression.
+     * @param {object} node - The optional chaining AST node to validate.
+     * @returns {string[]} An array of error messages, or an empty array if valid.
      */
     validateOptionalChaining(node) {
         // Check for invalid patterns
@@ -206,7 +227,8 @@ class EnhancedOperators {
     }
 
     /**
-     * Test optional chaining support
+     * Provides a set of test cases for optional chaining.
+     * @returns {object[]} An array of test case objects.
      */
     testOptionalChaining() {
         const tests = [
@@ -241,7 +263,8 @@ class EnhancedOperators {
     }
 
     /**
-     * Test nullish coalescing support
+     * Provides a set of test cases for nullish coalescing.
+     * @returns {object[]} An array of test case objects.
      */
     testNullishCoalescing() {
         const tests = [
@@ -271,7 +294,8 @@ class EnhancedOperators {
     }
 
     /**
-     * Get operator support status
+     * Gets the current support status for the enhanced operators.
+     * @returns {object} An object detailing the support status of each operator.
      */
     getStatus() {
         return {

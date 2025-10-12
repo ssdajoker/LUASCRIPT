@@ -19,7 +19,19 @@ const {
     TemplateElementNode, ErrorNode, ASTUtils
 } = require('./phase1_core_ast');
 
+/**
+ * The core parser for LUASCRIPT, responsible for constructing an Abstract Syntax Tree (AST) from a stream of tokens.
+ * It includes features like error recovery and configurable parsing options.
+ */
 class LuaScriptParser {
+    /**
+     * Creates an instance of the LuaScriptParser.
+     * @param {string} source - The source code to parse.
+     * @param {object} [options={}] - Configuration options for the parser.
+     * @param {boolean} [options.errorRecovery=true] - Whether to enable error recovery.
+     * @param {boolean} [options.strictMode=false] - Whether to enforce strict mode rules.
+     * @param {boolean} [options.allowReturnOutsideFunction=false] - Whether to allow return statements outside of functions.
+     */
     constructor(source, options = {}) {
         this.lexer = new LuaScriptLexer(source, options);
         this.tokens = [];
@@ -35,6 +47,10 @@ class LuaScriptParser {
         this.loopDepth = 0;
     }
 
+    /**
+     * Parses the source code and returns the AST.
+     * @returns {object} The program node of the AST, along with any errors.
+     */
     parse() {
         try {
             this.tokens = this.lexer.tokenize();
@@ -74,6 +90,11 @@ class LuaScriptParser {
         }
     }
 
+    /**
+     * Parses the main program body.
+     * @returns {ProgramNode} The root ProgramNode of the AST.
+     * @private
+     */
     parseProgram() {
         const body = [];
         
@@ -94,6 +115,11 @@ class LuaScriptParser {
         return new ProgramNode(body);
     }
 
+    /**
+     * Parses a single statement.
+     * @returns {ASTNode} The AST node for the parsed statement.
+     * @private
+     */
     parseStatement() {
         try {
             if (this.match('KEYWORD')) {
@@ -140,6 +166,12 @@ class LuaScriptParser {
         }
     }
 
+    /**
+     * Parses a variable declaration statement.
+     * @param {string} kind - The type of declaration ('let', 'const', 'var').
+     * @returns {VariableDeclarationNode} The AST node for the variable declaration.
+     * @private
+     */
     parseVariableDeclaration(kind) {
         const declarations = [];
         
@@ -168,6 +200,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses a function declaration.
+     * @returns {FunctionDeclarationNode} The AST node for the function declaration.
+     * @private
+     */
     parseFunctionDeclaration() {
         this.functionDepth++;
         
@@ -187,6 +224,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses a return statement.
+     * @returns {ReturnStatementNode} The AST node for the return statement.
+     * @private
+     */
     parseReturnStatement() {
         const token = this.previous();
         
@@ -207,6 +249,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses an if statement.
+     * @returns {IfStatementNode} The AST node for the if statement.
+     * @private
+     */
     parseIfStatement() {
         const token = this.previous();
         
@@ -229,6 +276,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses a while statement.
+     * @returns {WhileStatementNode} The AST node for the while statement.
+     * @private
+     */
     parseWhileStatement() {
         const token = this.previous();
         this.loopDepth++;
@@ -247,6 +299,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses a for statement.
+     * @returns {ForStatementNode} The AST node for the for statement.
+     * @private
+     */
     parseForStatement() {
         const token = this.previous();
         this.loopDepth++;
@@ -288,6 +345,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses a break statement.
+     * @returns {BreakStatementNode} The AST node for the break statement.
+     * @private
+     */
     parseBreakStatement() {
         const token = this.previous();
         
@@ -303,6 +365,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses a continue statement.
+     * @returns {ContinueStatementNode} The AST node for the continue statement.
+     * @private
+     */
     parseContinueStatement() {
         const token = this.previous();
         
@@ -318,6 +385,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses a block statement.
+     * @returns {BlockStatementNode} The AST node for the block statement.
+     * @private
+     */
     parseBlockStatement() {
         const token = this.peek();
         this.consume('LEFT_BRACE', "Expected '{'");
@@ -336,6 +408,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses an expression statement.
+     * @returns {ExpressionStatementNode} The AST node for the expression statement.
+     * @private
+     */
     parseExpressionStatement() {
         const expr = this.parseExpression();
         this.consume('SEMICOLON', "Expected ';' after expression");
@@ -346,10 +423,20 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses an expression.
+     * @returns {ASTNode} The AST node for the expression.
+     * @private
+     */
     parseExpression() {
         return this.parseAssignmentExpression();
     }
 
+    /**
+     * Parses an assignment expression.
+     * @returns {ASTNode} The AST node for the assignment expression.
+     * @private
+     */
     parseAssignmentExpression() {
         const expr = this.parseConditionalExpression();
         
@@ -366,6 +453,11 @@ class LuaScriptParser {
         return expr;
     }
 
+    /**
+     * Parses a conditional (ternary) expression.
+     * @returns {ASTNode} The AST node for the conditional expression.
+     * @private
+     */
     parseConditionalExpression() {
         const expr = this.parseLogicalOrExpression();
         
@@ -383,6 +475,11 @@ class LuaScriptParser {
         return expr;
     }
 
+    /**
+     * Parses a logical OR expression.
+     * @returns {ASTNode} The AST node for the logical OR expression.
+     * @private
+     */
     parseLogicalOrExpression() {
         let expr = this.parseLogicalAndExpression();
         
@@ -398,6 +495,11 @@ class LuaScriptParser {
         return expr;
     }
 
+    /**
+     * Parses a logical AND expression.
+     * @returns {ASTNode} The AST node for the logical AND expression.
+     * @private
+     */
     parseLogicalAndExpression() {
         let expr = this.parseEqualityExpression();
         
@@ -413,6 +515,11 @@ class LuaScriptParser {
         return expr;
     }
 
+    /**
+     * Parses an equality expression.
+     * @returns {ASTNode} The AST node for the equality expression.
+     * @private
+     */
     parseEqualityExpression() {
         let expr = this.parseRelationalExpression();
         
@@ -428,6 +535,11 @@ class LuaScriptParser {
         return expr;
     }
 
+    /**
+     * Parses a relational expression.
+     * @returns {ASTNode} The AST node for the relational expression.
+     * @private
+     */
     parseRelationalExpression() {
         let expr = this.parseAdditiveExpression();
         
@@ -443,6 +555,11 @@ class LuaScriptParser {
         return expr;
     }
 
+    /**
+     * Parses an additive expression.
+     * @returns {ASTNode} The AST node for the additive expression.
+     * @private
+     */
     parseAdditiveExpression() {
         let expr = this.parseMultiplicativeExpression();
         
@@ -458,6 +575,11 @@ class LuaScriptParser {
         return expr;
     }
 
+    /**
+     * Parses a multiplicative expression.
+     * @returns {ASTNode} The AST node for the multiplicative expression.
+     * @private
+     */
     parseMultiplicativeExpression() {
         let expr = this.parseUnaryExpression();
         
@@ -473,6 +595,11 @@ class LuaScriptParser {
         return expr;
     }
 
+    /**
+     * Parses a unary expression.
+     * @returns {ASTNode} The AST node for the unary expression.
+     * @private
+     */
     parseUnaryExpression() {
         if (this.match('LOGICAL_NOT', 'MINUS', 'PLUS', 'BITWISE_NOT')) {
             const operator = this.previous().value;
@@ -486,6 +613,11 @@ class LuaScriptParser {
         return this.parseUpdateExpression();
     }
 
+    /**
+     * Parses an update expression (e.g., ++a, a--).
+     * @returns {ASTNode} The AST node for the update expression.
+     * @private
+     */
     parseUpdateExpression() {
         // Prefix increment/decrement
         if (this.match('INCREMENT', 'DECREMENT')) {
@@ -511,6 +643,11 @@ class LuaScriptParser {
         return expr;
     }
 
+    /**
+     * Parses a postfix expression (e.g., a(), a[]).
+     * @returns {ASTNode} The AST node for the postfix expression.
+     * @private
+     */
     parsePostfixExpression() {
         let expr = this.parsePrimaryExpression();
         
@@ -546,6 +683,11 @@ class LuaScriptParser {
         return expr;
     }
 
+    /**
+     * Parses a primary expression (e.g., literals, identifiers, this, function expressions, grouped expressions).
+     * @returns {ASTNode} The AST node for the primary expression.
+     * @private
+     */
     parsePrimaryExpression() {
         if (this.match('KEYWORD')) {
             const keyword = this.previous().value;
@@ -641,6 +783,11 @@ class LuaScriptParser {
         throw new SyntaxError(`Unexpected token '${this.peek().value}' at line ${this.peek().line}`);
     }
 
+    /**
+     * Parses an arrow function expression.
+     * @returns {ArrowFunctionExpressionNode} The AST node for the arrow function.
+     * @private
+     */
     parseArrowFunction() {
         const startToken = this.peek();
         let params = [];
@@ -684,6 +831,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses a function expression.
+     * @returns {FunctionExpressionNode} The AST node for the function expression.
+     * @private
+     */
     parseFunctionExpression() {
         let id = null;
         if (this.check('IDENTIFIER')) {
@@ -702,6 +854,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses an array expression.
+     * @returns {ArrayExpressionNode} The AST node for the array expression.
+     * @private
+     */
     parseArrayExpression() {
         const elements = [];
         
@@ -724,6 +881,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses an object expression.
+     * @returns {ObjectExpressionNode} The AST node for the object expression.
+     * @private
+     */
     parseObjectExpression() {
         const properties = [];
         
@@ -742,6 +904,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses a property in an object literal.
+     * @returns {PropertyNode} The AST node for the property.
+     * @private
+     */
     parseProperty() {
         let key;
         let computed = false;
@@ -773,6 +940,11 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Parses a list of parameters for a function.
+     * @returns {IdentifierNode[]} An array of identifier nodes for the parameters.
+     * @private
+     */
     parseParameterList() {
         const params = [];
         
@@ -785,6 +957,11 @@ class LuaScriptParser {
         return params;
     }
 
+    /**
+     * Parses a list of arguments for a function call.
+     * @returns {ASTNode[]} An array of expression nodes for the arguments.
+     * @private
+     */
     parseArgumentList() {
         const args = [];
         
@@ -797,6 +974,12 @@ class LuaScriptParser {
         return args;
     }
 
+    /**
+     * Parses an identifier.
+     * @returns {IdentifierNode} The AST node for the identifier.
+     * @private
+     * @throws {SyntaxError} If an identifier is not found.
+     */
     parseIdentifier() {
         if (this.match('IDENTIFIER')) {
             const token = this.previous();
@@ -809,7 +992,12 @@ class LuaScriptParser {
         throw new SyntaxError(`Expected identifier at line ${this.peek().line}`);
     }
 
-    // Utility methods
+    /**
+     * Checks if the current token matches any of the given types, and advances if so.
+     * @param {...string} types - The token types to match against.
+     * @returns {boolean} True if a match was found.
+     * @private
+     */
     match(...types) {
         for (const type of types) {
             if (this.check(type)) {
@@ -820,20 +1008,41 @@ class LuaScriptParser {
         return false;
     }
 
+    /**
+     * Checks the type of the current token without consuming it.
+     * @param {string} type - The token type to check for.
+     * @returns {boolean} True if the current token matches the type.
+     * @private
+     */
     check(type) {
         if (this.isAtEnd()) return false;
         return this.peek().type === type;
     }
 
+    /**
+     * Consumes the current token and advances to the next one.
+     * @returns {object} The consumed token.
+     * @private
+     */
     advance() {
         if (!this.isAtEnd()) this.current++;
         return this.previous();
     }
 
+    /**
+     * Checks if the parser has reached the end of the token stream.
+     * @returns {boolean} True if at the end.
+     * @private
+     */
     isAtEnd() {
         return this.current >= this.tokens.length || this.peek().type === 'EOF';
     }
 
+    /**
+     * Gets the current token without consuming it.
+     * @returns {object} The current token.
+     * @private
+     */
     peek() {
         if (this.current >= this.tokens.length) {
             return { type: 'EOF', value: null, line: 0, column: 0 };
@@ -841,10 +1050,23 @@ class LuaScriptParser {
         return this.tokens[this.current];
     }
 
+    /**
+     * Gets the previously consumed token.
+     * @returns {object} The previous token.
+     * @private
+     */
     previous() {
         return this.tokens[this.current - 1];
     }
 
+    /**
+     * Consumes a token of a specific type, or throws an error if the type does not match.
+     * @param {string} type - The expected token type.
+     * @param {string} message - The error message to throw on failure.
+     * @returns {object} The consumed token.
+     * @private
+     * @throws {SyntaxError} If the token type does not match.
+     */
     consume(type, message) {
         if (this.check(type)) return this.advance();
         
@@ -852,6 +1074,10 @@ class LuaScriptParser {
         throw new SyntaxError(`${message} at line ${token.line}, column ${token.column}. Got '${token.value}'`);
     }
 
+    /**
+     * Synchronizes the parser after an error to continue parsing.
+     * @private
+     */
     synchronize() {
         this.advance();
         
@@ -869,6 +1095,11 @@ class LuaScriptParser {
         }
     }
 
+    /**
+     * Adds a syntax error to the list of errors.
+     * @param {string} message - The error message.
+     * @private
+     */
     addError(message) {
         const token = this.peek();
         this.errors.push({
@@ -880,10 +1111,18 @@ class LuaScriptParser {
         });
     }
 
+    /**
+     * Checks if any errors have been recorded.
+     * @returns {boolean} True if there are errors.
+     */
     hasErrors() {
         return this.errors.length > 0;
     }
 
+    /**
+     * Gets the list of recorded errors.
+     * @returns {object[]} The array of error objects.
+     */
     getErrors() {
         return this.errors;
     }

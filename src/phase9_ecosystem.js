@@ -14,8 +14,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 /**
- * Phase 9 Ecosystem Manager
- * Coordinates all ecosystem components
+ * Manages the entire Phase 9 ecosystem, including community tools, plugins, documentation, and deployment.
  */
 class EcosystemManager {
     constructor() {
@@ -37,7 +36,8 @@ class EcosystemManager {
     }
 
     /**
-     * Initialize all ecosystem components
+     * Initializes all components of the ecosystem.
+     * @returns {Promise<object>} A promise that resolves with the status of the ecosystem.
      */
     async initialize() {
         console.log('🚀 Initializing Phase 9 Ecosystem...');
@@ -59,7 +59,8 @@ class EcosystemManager {
     }
 
     /**
-     * Get ecosystem status
+     * Gets the current status of the ecosystem.
+     * @returns {object} The ecosystem status.
      */
     getStatus() {
         return {
@@ -75,7 +76,8 @@ class EcosystemManager {
     }
 
     /**
-     * Validate Phase 9 completion
+     * Validates the completion of Phase 9 by checking all components.
+     * @returns {object} The validation results.
      */
     validate() {
         const results = {
@@ -102,7 +104,7 @@ class EcosystemManager {
 }
 
 /**
- * Component 1: Community Engagement Tools
+ * Manages community engagement tools, such as forums, chat, and events.
  */
 class CommunityEngagement {
     constructor() {
@@ -115,6 +117,10 @@ class CommunityEngagement {
         };
     }
 
+    /**
+     * Initializes the community engagement tools.
+     * @returns {Promise<boolean>} A promise that resolves to true upon successful initialization.
+     */
     async initialize() {
         // Initialize forum system
         this.features.forum = {
@@ -161,6 +167,10 @@ class CommunityEngagement {
         return true;
     }
 
+    /**
+     * Gets the status of the community engagement tools.
+     * @returns {object} The status object.
+     */
     getStatus() {
         return {
             ready: Object.values(this.features).every(f => f.enabled),
@@ -168,6 +178,10 @@ class CommunityEngagement {
         };
     }
 
+    /**
+     * Validates the community engagement component.
+     * @returns {object} The validation result.
+     */
     validate() {
         const allEnabled = Object.values(this.features).every(f => f.enabled);
         return {
@@ -183,7 +197,12 @@ class CommunityEngagement {
     }
 
     /**
-     * Create a new forum post
+     * Creates a new forum post.
+     * @param {string} title - The title of the post.
+     * @param {string} content - The content of the post.
+     * @param {string} author - The author of the post.
+     * @param {string} category - The category of the post.
+     * @returns {object} The new post object.
      */
     createForumPost(title, content, author, category) {
         const post = {
@@ -202,7 +221,12 @@ class CommunityEngagement {
     }
 
     /**
-     * Schedule a community event
+     * Schedules a new community event.
+     * @param {string} name - The name of the event.
+     * @param {string} type - The type of the event.
+     * @param {Date} date - The date of the event.
+     * @param {string} description - The description of the event.
+     * @returns {object} The new event object.
      */
     scheduleEvent(name, type, date, description) {
         const event = {
@@ -220,7 +244,7 @@ class CommunityEngagement {
 }
 
 /**
- * Component 2: Plugin Marketplace
+ * Manages the plugin marketplace, allowing users to publish, search, and install plugins.
  */
 class PluginMarketplace {
     constructor() {
@@ -233,6 +257,10 @@ class PluginMarketplace {
         };
     }
 
+    /**
+     * Initializes the plugin marketplace.
+     * @returns {Promise<boolean>} A promise that resolves to true upon successful initialization.
+     */
     async initialize() {
         // Initialize marketplace infrastructure
         this.api = {
@@ -249,6 +277,10 @@ class PluginMarketplace {
         return true;
     }
 
+    /**
+     * Adds sample plugins to the marketplace.
+     * @private
+     */
     addSamplePlugins() {
         const samples = [
             {
@@ -280,6 +312,11 @@ class PluginMarketplace {
         samples.forEach(plugin => this.publishPlugin(plugin));
     }
 
+    /**
+     * Publishes a new plugin to the marketplace.
+     * @param {object} pluginData - The data for the plugin.
+     * @returns {object} The published plugin object.
+     */
     publishPlugin(pluginData) {
         const plugin = {
             id: crypto.randomUUID(),
@@ -296,6 +333,12 @@ class PluginMarketplace {
         return plugin;
     }
 
+    /**
+     * Searches for plugins in the marketplace.
+     * @param {string} query - The search query.
+     * @param {string|null} [category=null] - The category to filter by.
+     * @returns {object[]} An array of matching plugins.
+     */
     searchPlugins(query, category = null) {
         let results = Array.from(this.plugins.values());
         
@@ -313,6 +356,12 @@ class PluginMarketplace {
         return results;
     }
 
+    /**
+     * Installs a plugin.
+     * @param {string} pluginId - The ID of the plugin to install.
+     * @returns {object} The result of the installation.
+     * @throws {Error} If the plugin is not found.
+     */
     installPlugin(pluginId) {
         const plugin = this.plugins.get(pluginId);
         if (!plugin) {
@@ -330,6 +379,13 @@ class PluginMarketplace {
         };
     }
 
+    /**
+     * Updates an installed plugin.
+     * @param {string} pluginId - The ID of the plugin to update.
+     * @param {string} newVersion - The new version of the plugin.
+     * @returns {object} The updated plugin object.
+     * @throws {Error} If the plugin is not found.
+     */
     updatePlugin(pluginId, newVersion) {
         const plugin = this.plugins.get(pluginId);
         if (!plugin) {
@@ -342,10 +398,19 @@ class PluginMarketplace {
         return plugin;
     }
 
+    /**
+     * Removes a plugin from the marketplace.
+     * @param {string} pluginId - The ID of the plugin to remove.
+     * @returns {boolean} True if the plugin was removed.
+     */
     removePlugin(pluginId) {
         return this.plugins.delete(pluginId);
     }
 
+    /**
+     * Gets the status of the plugin marketplace.
+     * @returns {object} The status object.
+     */
     getStatus() {
         return {
             ready: true,
@@ -355,6 +420,10 @@ class PluginMarketplace {
         };
     }
 
+    /**
+     * Validates the plugin marketplace component.
+     * @returns {object} The validation result.
+     */
     validate() {
         return {
             passed: this.plugins.size >= 3 && this.api !== null,
@@ -368,7 +437,7 @@ class PluginMarketplace {
 }
 
 /**
- * Component 3: Documentation Portal
+ * Manages the documentation portal, including content and search functionality.
  */
 class DocumentationPortal {
     constructor() {
@@ -377,6 +446,10 @@ class DocumentationPortal {
         this.searchIndex = new Map();
     }
 
+    /**
+     * Initializes the documentation portal.
+     * @returns {Promise<boolean>} A promise that resolves to true upon successful initialization.
+     */
     async initialize() {
         // Initialize documentation structure
         this.createDocumentationStructure();
@@ -387,6 +460,10 @@ class DocumentationPortal {
         return true;
     }
 
+    /**
+     * Creates the initial documentation structure.
+     * @private
+     */
     createDocumentationStructure() {
         const docStructure = [
             {
@@ -446,6 +523,10 @@ class DocumentationPortal {
         });
     }
 
+    /**
+     * Builds the search index for the documentation.
+     * @private
+     */
     buildSearchIndex() {
         this.docs.forEach((doc, id) => {
             const keywords = [
@@ -462,6 +543,11 @@ class DocumentationPortal {
         });
     }
 
+    /**
+     * Searches the documentation.
+     * @param {string} query - The search query.
+     * @returns {object[]} An array of matching documents.
+     */
     searchDocs(query) {
         const keywords = query.toLowerCase().split(' ');
         const results = new Set();
@@ -474,6 +560,11 @@ class DocumentationPortal {
         return Array.from(results).map(id => this.docs.get(id));
     }
 
+    /**
+     * Gets a specific document by its ID.
+     * @param {string} docId - The ID of the document.
+     * @returns {object|undefined} The document object, or undefined if not found.
+     */
     getDoc(docId) {
         const doc = this.docs.get(docId);
         if (doc) {
@@ -482,6 +573,10 @@ class DocumentationPortal {
         return doc;
     }
 
+    /**
+     * Gets the status of the documentation portal.
+     * @returns {object} The status object.
+     */
     getStatus() {
         return {
             ready: true,
@@ -491,6 +586,10 @@ class DocumentationPortal {
         };
     }
 
+    /**
+     * Validates the documentation portal component.
+     * @returns {object} The validation result.
+     */
     validate() {
         return {
             passed: this.docs.size >= 15 && this.searchIndex.size > 0,
@@ -504,7 +603,7 @@ class DocumentationPortal {
 }
 
 /**
- * Component 4: Tutorial System
+ * Manages interactive tutorials for learning LuaScript.
  */
 class TutorialSystem {
     constructor() {
@@ -513,11 +612,19 @@ class TutorialSystem {
         this.levels = ['Beginner', 'Intermediate', 'Advanced'];
     }
 
+    /**
+     * Initializes the tutorial system.
+     * @returns {Promise<boolean>} A promise that resolves to true upon successful initialization.
+     */
     async initialize() {
         this.createTutorials();
         return true;
     }
 
+    /**
+     * Creates the initial set of tutorials.
+     * @private
+     */
     createTutorials() {
         const tutorials = [
             {
@@ -567,6 +674,12 @@ class TutorialSystem {
         });
     }
 
+    /**
+     * Enrolls a user in a tutorial.
+     * @param {string} tutorialId - The ID of the tutorial.
+     * @param {string} userId - The ID of the user.
+     * @returns {object} The progress object for the user and tutorial.
+     */
     enrollInTutorial(tutorialId, userId) {
         const tutorial = this.tutorials.get(tutorialId);
         if (!tutorial) {
@@ -587,6 +700,13 @@ class TutorialSystem {
         return this.progress.get(`${userId}:${tutorialId}`);
     }
 
+    /**
+     * Marks a lesson as complete for a user.
+     * @param {string} tutorialId - The ID of the tutorial.
+     * @param {string} userId - The ID of the user.
+     * @param {number} lessonIndex - The index of the lesson.
+     * @returns {object} The updated progress object.
+     */
     completeLesson(tutorialId, userId, lessonIndex) {
         const progressKey = `${userId}:${tutorialId}`;
         const progress = this.progress.get(progressKey);
@@ -611,10 +731,19 @@ class TutorialSystem {
         return progress;
     }
 
+    /**
+     * Gets all tutorials for a specific level.
+     * @param {string} level - The level of the tutorials to retrieve.
+     * @returns {object[]} An array of tutorial objects.
+     */
     getTutorialsByLevel(level) {
         return Array.from(this.tutorials.values()).filter(t => t.level === level);
     }
 
+    /**
+     * Gets the status of the tutorial system.
+     * @returns {object} The status object.
+     */
     getStatus() {
         return {
             ready: true,
@@ -624,6 +753,10 @@ class TutorialSystem {
         };
     }
 
+    /**
+     * Validates the tutorial system component.
+     * @returns {object} The validation result.
+     */
     validate() {
         return {
             passed: this.tutorials.size >= 3,
@@ -637,7 +770,7 @@ class TutorialSystem {
 }
 
 /**
- * Component 5: Example Gallery
+ * Manages a gallery of code examples.
  */
 class ExampleGallery {
     constructor() {
@@ -646,11 +779,19 @@ class ExampleGallery {
         this.tags = new Set();
     }
 
+    /**
+     * Initializes the example gallery.
+     * @returns {Promise<boolean>} A promise that resolves to true upon successful initialization.
+     */
     async initialize() {
         this.createExamples();
         return true;
     }
 
+    /**
+     * Creates the initial set of examples.
+     * @private
+     */
     createExamples() {
         const examples = [
             {
@@ -726,6 +867,13 @@ console.log(result);`,
         });
     }
 
+    /**
+     * Searches for examples.
+     * @param {string} query - The search query.
+     * @param {string|null} [category=null] - The category to filter by.
+     * @param {string[]} [tags=[]] - An array of tags to filter by.
+     * @returns {object[]} An array of matching examples.
+     */
     searchExamples(query, category = null, tags = []) {
         let results = Array.from(this.examples.values());
         
@@ -749,6 +897,11 @@ console.log(result);`,
         return results;
     }
 
+    /**
+     * Gets a specific example by its ID.
+     * @param {string} exampleId - The ID of the example.
+     * @returns {object|undefined} The example object, or undefined if not found.
+     */
     getExample(exampleId) {
         const example = this.examples.get(exampleId);
         if (example) {
@@ -757,6 +910,11 @@ console.log(result);`,
         return example;
     }
 
+    /**
+     * "Likes" an example, incrementing its like count.
+     * @param {string} exampleId - The ID of the example.
+     * @returns {object|undefined} The updated example object.
+     */
     likeExample(exampleId) {
         const example = this.examples.get(exampleId);
         if (example) {
@@ -765,6 +923,13 @@ console.log(result);`,
         return example;
     }
 
+    /**
+     * "Forks" an example, creating a copy for a user.
+     * @param {string} exampleId - The ID of the example to fork.
+     * @param {string} userId - The ID of the user forking the example.
+     * @returns {object} The forked example object.
+     * @throws {Error} If the example is not found.
+     */
     forkExample(exampleId, userId) {
         const original = this.examples.get(exampleId);
         if (!original) {
@@ -788,6 +953,10 @@ console.log(result);`,
         return fork;
     }
 
+    /**
+     * Gets the status of the example gallery.
+     * @returns {object} The status object.
+     */
     getStatus() {
         return {
             ready: true,
@@ -797,6 +966,10 @@ console.log(result);`,
         };
     }
 
+    /**
+     * Validates the example gallery component.
+     * @returns {object} The validation result.
+     */
     validate() {
         return {
             passed: this.examples.size >= 5,
@@ -810,7 +983,7 @@ console.log(result);`,
 }
 
 /**
- * Component 6: Package Registry
+ * Manages the package registry for LuaScript modules.
  */
 class PackageRegistry {
     constructor() {
@@ -819,6 +992,10 @@ class PackageRegistry {
         this.dependencies = new Map();
     }
 
+    /**
+     * Initializes the package registry.
+     * @returns {Promise<boolean>} A promise that resolves to true upon successful initialization.
+     */
     async initialize() {
         this.api = {
             publish: this.publishPackage.bind(this),
@@ -832,6 +1009,10 @@ class PackageRegistry {
         return true;
     }
 
+    /**
+     * Creates sample packages in the registry.
+     * @private
+     */
     createSamplePackages() {
         const packages = [
             {
@@ -860,6 +1041,11 @@ class PackageRegistry {
         packages.forEach(pkg => this.publishPackage(pkg));
     }
 
+    /**
+     * Publishes a package to the registry.
+     * @param {object} packageData - The data for the package.
+     * @returns {object} The published package object.
+     */
     publishPackage(packageData) {
         const pkg = {
             id: crypto.randomUUID(),
@@ -880,6 +1066,13 @@ class PackageRegistry {
         return pkg;
     }
 
+    /**
+     * Installs a package from the registry.
+     * @param {string} name - The name of the package to install.
+     * @param {string} [version='latest'] - The version of the package to install.
+     * @returns {object} The result of the installation.
+     * @throws {Error} If the package is not found.
+     */
     installPackage(name, version = 'latest') {
         const pkg = this.packages.get(name);
         if (!pkg) {
@@ -899,6 +1092,13 @@ class PackageRegistry {
         };
     }
 
+    /**
+     * Resolves the dependencies for a given package.
+     * @param {string} name - The name of the package.
+     * @param {string} version - The version of the package.
+     * @returns {object} The resolved dependencies.
+     * @private
+     */
     resolveDependencies(name, version) {
         const versionKey = `${name}@${version}`;
         const deps = this.dependencies.get(versionKey) || {};
@@ -914,6 +1114,11 @@ class PackageRegistry {
         return resolved;
     }
 
+    /**
+     * Searches for packages in the registry.
+     * @param {string} query - The search query.
+     * @returns {object[]} An array of matching packages.
+     */
     searchPackages(query) {
         return Array.from(this.packages.values()).filter(pkg =>
             pkg.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -921,10 +1126,19 @@ class PackageRegistry {
         );
     }
 
+    /**
+     * Gets information for a specific package.
+     * @param {string} name - The name of the package.
+     * @returns {object|undefined} The package information, or undefined if not found.
+     */
     getPackageInfo(name) {
         return this.packages.get(name);
     }
 
+    /**
+     * Gets the status of the package registry.
+     * @returns {object} The status object.
+     */
     getStatus() {
         return {
             ready: true,
@@ -933,6 +1147,10 @@ class PackageRegistry {
         };
     }
 
+    /**
+     * Validates the package registry component.
+     * @returns {object} The validation result.
+     */
     validate() {
         return {
             passed: this.packages.size >= 3 && this.api !== null,
@@ -946,7 +1164,7 @@ class PackageRegistry {
 }
 
 /**
- * Component 7: CI/CD Integration
+ * Manages CI/CD integration, including pipeline templates and build execution.
  */
 class CICDIntegration {
     constructor() {
@@ -955,11 +1173,19 @@ class CICDIntegration {
         this.providers = ['GitHub Actions', 'GitLab CI', 'Jenkins', 'CircleCI'];
     }
 
+    /**
+     * Initializes the CI/CD integration component.
+     * @returns {Promise<boolean>} A promise that resolves to true upon successful initialization.
+     */
     async initialize() {
         this.createPipelineTemplates();
         return true;
     }
 
+    /**
+     * Creates default pipeline templates.
+     * @private
+     */
     createPipelineTemplates() {
         const templates = [
             {
@@ -1036,6 +1262,14 @@ class CICDIntegration {
         });
     }
 
+    /**
+     * Creates a new build from a pipeline.
+     * @param {string} pipelineId - The ID of the pipeline.
+     * @param {string} branch - The branch for the build.
+     * @param {string} commit - The commit hash for the build.
+     * @returns {object} The new build object.
+     * @throws {Error} If the pipeline is not found.
+     */
     createBuild(pipelineId, branch, commit) {
         const pipeline = this.pipelines.get(pipelineId);
         if (!pipeline) {
@@ -1063,6 +1297,12 @@ class CICDIntegration {
         return build;
     }
 
+    /**
+     * Executes a build.
+     * @param {string} buildId - The ID of the build to execute.
+     * @returns {Promise<void>}
+     * @private
+     */
     async executeBuild(buildId) {
         const build = this.builds.get(buildId);
         if (!build) return;
@@ -1085,14 +1325,27 @@ class CICDIntegration {
         build.duration = build.steps.reduce((sum, s) => sum + s.duration, 0);
     }
 
+    /**
+     * Gets a build by its ID.
+     * @param {string} buildId - The ID of the build.
+     * @returns {object|undefined} The build object, or undefined if not found.
+     */
     getBuild(buildId) {
         return this.builds.get(buildId);
     }
 
+    /**
+     * Gets all available pipeline templates.
+     * @returns {object[]} An array of pipeline templates.
+     */
     getPipelineTemplates() {
         return Array.from(this.pipelines.values());
     }
 
+    /**
+     * Gets the status of the CI/CD integration component.
+     * @returns {object} The status object.
+     */
     getStatus() {
         return {
             ready: true,
@@ -1102,6 +1355,10 @@ class CICDIntegration {
         };
     }
 
+    /**
+     * Validates the CI/CD integration component.
+     * @returns {object} The validation result.
+     */
     validate() {
         return {
             passed: this.pipelines.size >= 2,
@@ -1115,7 +1372,7 @@ class CICDIntegration {
 }
 
 /**
- * Component 8: Deployment Automation
+ * Manages deployment automation, including different deployment strategies.
  */
 class DeploymentAutomation {
     constructor() {
@@ -1124,6 +1381,10 @@ class DeploymentAutomation {
         this.platforms = ['AWS', 'Azure', 'GCP', 'Heroku', 'Vercel', 'Netlify'];
     }
 
+    /**
+     * Initializes the deployment automation component.
+     * @returns {Promise<boolean>} A promise that resolves to true upon successful initialization.
+     */
     async initialize() {
         this.strategies = {
             blueGreen: this.blueGreenDeploy.bind(this),
@@ -1136,6 +1397,10 @@ class DeploymentAutomation {
         return true;
     }
 
+    /**
+     * Creates default deployment configurations.
+     * @private
+     */
     createDeploymentConfigs() {
         const configs = [
             {
@@ -1176,6 +1441,14 @@ class DeploymentAutomation {
         });
     }
 
+    /**
+     * Deploys a new version of an application.
+     * @param {string} deploymentId - The ID of the deployment configuration.
+     * @param {string} version - The version to deploy.
+     * @param {object} [options={}] - Deployment options.
+     * @returns {object} The deployment object.
+     * @throws {Error} If the deployment configuration is not found.
+     */
     deploy(deploymentId, version, options = {}) {
         const config = this.deployments.get(deploymentId);
         if (!config) {
@@ -1207,6 +1480,11 @@ class DeploymentAutomation {
         return deployment;
     }
 
+    /**
+     * Simulates a blue-green deployment.
+     * @param {object} deployment - The deployment object.
+     * @private
+     */
     blueGreenDeploy(deployment) {
         deployment.steps = [
             { name: 'Prepare green environment', status: 'success', duration: 30 },
@@ -1219,6 +1497,11 @@ class DeploymentAutomation {
         deployment.completedAt = new Date().toISOString();
     }
 
+    /**
+     * Simulates a canary deployment.
+     * @param {object} deployment - The deployment object.
+     * @private
+     */
     canaryDeploy(deployment) {
         deployment.steps = [
             { name: 'Deploy canary (10%)', status: 'success', duration: 30 },
@@ -1231,6 +1514,11 @@ class DeploymentAutomation {
         deployment.completedAt = new Date().toISOString();
     }
 
+    /**
+     * Simulates a rolling deployment.
+     * @param {object} deployment - The deployment object.
+     * @private
+     */
     rollingDeploy(deployment) {
         deployment.steps = [
             { name: 'Update instance 1', status: 'success', duration: 45 },
@@ -1242,6 +1530,11 @@ class DeploymentAutomation {
         deployment.completedAt = new Date().toISOString();
     }
 
+    /**
+     * Simulates a recreate deployment.
+     * @param {object} deployment - The deployment object.
+     * @private
+     */
     recreateDeploy(deployment) {
         deployment.steps = [
             { name: 'Stop old version', status: 'success', duration: 15 },
@@ -1253,6 +1546,12 @@ class DeploymentAutomation {
         deployment.completedAt = new Date().toISOString();
     }
 
+    /**
+     * Rolls back a deployment to the previous version.
+     * @param {string} deploymentId - The ID of the deployment configuration.
+     * @returns {object} The rollback information.
+     * @throws {Error} If there is no deployment to roll back.
+     */
     rollback(deploymentId) {
         const config = this.deployments.get(deploymentId);
         if (!config || !config.lastDeployment) {
@@ -1277,6 +1576,11 @@ class DeploymentAutomation {
         return rollback;
     }
 
+    /**
+     * Gets the deployment history for a configuration.
+     * @param {string} deploymentId - The ID of the deployment configuration.
+     * @returns {object|null} The deployment history, or null if not found.
+     */
     getDeploymentHistory(deploymentId) {
         const config = this.deployments.get(deploymentId);
         return config ? {
@@ -1286,6 +1590,10 @@ class DeploymentAutomation {
         } : null;
     }
 
+    /**
+     * Gets the status of the deployment automation component.
+     * @returns {object} The status object.
+     */
     getStatus() {
         return {
             ready: true,
@@ -1296,6 +1604,10 @@ class DeploymentAutomation {
         };
     }
 
+    /**
+     * Validates the deployment automation component.
+     * @returns {object} The validation result.
+     */
     validate() {
         return {
             passed: this.deployments.size >= 3 && Object.keys(this.strategies).length >= 4,

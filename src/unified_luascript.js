@@ -14,7 +14,22 @@ const { PerformanceTools } = require('./performance_tools');
 const { AgenticIDE } = require('./agentic_ide');
 const { EventEmitter } = require('events');
 
+/**
+ * A unified system that integrates all LUASCRIPT components into a single, powerful interface.
+ * @extends EventEmitter
+ */
 class UnifiedLuaScript extends EventEmitter {
+    /**
+     * Creates an instance of the UnifiedLuaScript system.
+     * @param {object} [options={}] - Configuration options for the system.
+     * @param {string} [options.mode='production'] - The operating mode ('development', 'production', 'enterprise').
+     * @param {boolean} [options.enableAll=true] - Whether to enable all components.
+     * @param {boolean} [options.enableTranspiler=true] - Whether to enable the transpiler.
+     * @param {boolean} [options.enableRuntime=true] - Whether to enable the runtime system.
+     * @param {boolean} [options.enableAdvanced=true] - Whether to enable advanced language features.
+     * @param {boolean} [options.enablePerformance=true] - Whether to enable performance tools.
+     * @param {boolean} [options.enableIDE=true] - Whether to enable the agentic IDE.
+     */
     constructor(options = {}) {
         super();
         
@@ -41,6 +56,10 @@ class UnifiedLuaScript extends EventEmitter {
         this.initializeComponents();
     }
 
+    /**
+     * Initializes all the components of the unified system.
+     * @returns {Promise<void>}
+     */
     async initializeComponents() {
         this.emit('initStart');
         
@@ -92,8 +111,12 @@ class UnifiedLuaScript extends EventEmitter {
         }
     }
 
-    // Main API Methods - Complete Implementation
-
+    /**
+     * Transpiles JavaScript code to Lua, with optional advanced features and optimizations.
+     * @param {string} jsCode - The JavaScript code to transpile.
+     * @param {object} [options={}] - Transpilation options.
+     * @returns {Promise<object>} A promise that resolves with the transpilation result.
+     */
     async transpile(jsCode, options = {}) {
         const transpiler = this.components.get('transpiler');
         if (!transpiler) throw new Error('Transpiler not enabled');
@@ -127,6 +150,12 @@ class UnifiedLuaScript extends EventEmitter {
         }
     }
 
+    /**
+     * Executes Lua code in the runtime environment.
+     * @param {string} luaCode - The Lua code to execute.
+     * @param {object} [context={}] - The execution context.
+     * @returns {Promise<*>} A promise that resolves with the execution result.
+     */
     async execute(luaCode, context = {}) {
         const runtime = this.components.get('runtime');
         if (!runtime) throw new Error('Runtime not enabled');
@@ -144,6 +173,12 @@ class UnifiedLuaScript extends EventEmitter {
         }
     }
 
+    /**
+     * Transpiles and executes JavaScript code.
+     * @param {string} jsCode - The JavaScript code to process.
+     * @param {object} [options={}] - Transpilation and execution options.
+     * @returns {Promise<object>} A promise that resolves with the combined result.
+     */
     async transpileAndExecute(jsCode, options = {}) {
         this.emit('fullProcessStart');
         
@@ -169,6 +204,12 @@ class UnifiedLuaScript extends EventEmitter {
         }
     }
 
+    /**
+     * Profiles a piece of code.
+     * @param {string} code - The code to profile.
+     * @param {object} [options={}] - Profiling options.
+     * @returns {Promise<object>} A promise that resolves with the profiling report.
+     */
     async profile(code, options = {}) {
         const performance = this.components.get('performance');
         if (!performance) throw new Error('Performance tools not enabled');
@@ -176,6 +217,12 @@ class UnifiedLuaScript extends EventEmitter {
         return performance.profile(code, options);
     }
 
+    /**
+     * Benchmarks a piece of code.
+     * @param {string} code - The code to benchmark.
+     * @param {number} [iterations=1000] - The number of iterations to run.
+     * @returns {Promise<object>} A promise that resolves with the benchmark results.
+     */
     async benchmark(code, iterations = 1000) {
         const performance = this.components.get('performance');
         if (!performance) throw new Error('Performance tools not enabled');
@@ -183,6 +230,12 @@ class UnifiedLuaScript extends EventEmitter {
         return performance.benchmark(code, iterations);
     }
 
+    /**
+     * Optimizes a piece of code.
+     * @param {string} code - The code to optimize.
+     * @param {object} [options={}] - Optimization options.
+     * @returns {Promise<object>} A promise that resolves with the optimization results.
+     */
     async optimize(code, options = {}) {
         const performance = this.components.get('performance');
         if (!performance) throw new Error('Performance tools not enabled');
@@ -190,8 +243,12 @@ class UnifiedLuaScript extends EventEmitter {
         return performance.optimize(code, options);
     }
 
-    // IDE Integration Methods
-
+    /**
+     * Creates a new project in the IDE.
+     * @param {string} name - The name of the project.
+     * @param {string} [template='basic'] - The project template.
+     * @returns {Promise<object>} A promise that resolves with the project object.
+     */
     async createProject(name, template = 'basic') {
         const ide = this.components.get('ide');
         if (!ide) throw new Error('IDE not enabled');
@@ -199,6 +256,11 @@ class UnifiedLuaScript extends EventEmitter {
         return ide.createProject(name, template);
     }
 
+    /**
+     * Opens a file in the IDE.
+     * @param {string} filePath - The path to the file.
+     * @returns {Promise<object>} A promise that resolves with the file object.
+     */
     async openFile(filePath) {
         const ide = this.components.get('ide');
         if (!ide) throw new Error('IDE not enabled');
@@ -206,6 +268,12 @@ class UnifiedLuaScript extends EventEmitter {
         return ide.openFile(filePath);
     }
 
+    /**
+     * Gets code completions from the IDE.
+     * @param {string} filePath - The path to the file.
+     * @param {object} position - The position in the file.
+     * @returns {Promise<object[]>} A promise that resolves with an array of completions.
+     */
     async getCodeCompletion(filePath, position) {
         const ide = this.components.get('ide');
         if (!ide) throw new Error('IDE not enabled');
@@ -213,6 +281,12 @@ class UnifiedLuaScript extends EventEmitter {
         return ide.getCodeCompletion(filePath, position);
     }
 
+    /**
+     * Starts a debugging session in the IDE.
+     * @param {string} filePath - The path to the file.
+     * @param {object} [config={}] - Debugger configuration.
+     * @returns {Promise<object>} A promise that resolves with the debugger session object.
+     */
     async startDebugging(filePath, config = {}) {
         const ide = this.components.get('ide');
         if (!ide) throw new Error('IDE not enabled');
@@ -220,8 +294,11 @@ class UnifiedLuaScript extends EventEmitter {
         return ide.startDebugging(filePath, config);
     }
 
-    // Advanced Features Methods
-
+    /**
+     * Transforms code with OOP features.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transformWithOOP(code) {
         const advanced = this.components.get('advanced');
         if (!advanced) throw new Error('Advanced features not enabled');
@@ -229,6 +306,11 @@ class UnifiedLuaScript extends EventEmitter {
         return advanced.transform(code, ['oop']);
     }
 
+    /**
+     * Transforms code with pattern matching features.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transformWithPatterns(code) {
         const advanced = this.components.get('advanced');
         if (!advanced) throw new Error('Advanced features not enabled');
@@ -236,6 +318,11 @@ class UnifiedLuaScript extends EventEmitter {
         return advanced.transform(code, ['patterns']);
     }
 
+    /**
+     * Transforms code with type system features.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transformWithTypes(code) {
         const advanced = this.components.get('advanced');
         if (!advanced) throw new Error('Advanced features not enabled');
@@ -243,8 +330,10 @@ class UnifiedLuaScript extends EventEmitter {
         return advanced.transform(code, ['types']);
     }
 
-    // System Status and Reporting
-
+    /**
+     * Gets the current status of the system.
+     * @returns {object} The system status.
+     */
     getSystemStatus() {
         return {
             ...this.stats,
@@ -255,6 +344,10 @@ class UnifiedLuaScript extends EventEmitter {
         };
     }
 
+    /**
+     * Gets a comprehensive performance report from all components.
+     * @returns {object} The performance report.
+     */
     getPerformanceReport() {
         const reports = {};
         
@@ -273,6 +366,10 @@ class UnifiedLuaScript extends EventEmitter {
         };
     }
 
+    /**
+     * Validates all phases of the project to determine if victory conditions are met.
+     * @returns {Promise<object>} A promise that resolves with the validation results.
+     */
     async validateVictory() {
         console.log('🚨 LUASCRIPT UNIFIED VICTORY VALIDATION 🚨');
         console.log('=' .repeat(80));
@@ -420,8 +517,9 @@ class UnifiedLuaScript extends EventEmitter {
         return score;
     }
 
-    // Utility Methods
-
+    /**
+     * Clears the caches of all components.
+     */
     clearCaches() {
         for (const component of this.components.values()) {
             if (component.clearCache) {
@@ -430,6 +528,9 @@ class UnifiedLuaScript extends EventEmitter {
         }
     }
 
+    /**
+     * Shuts down the unified system and all its components.
+     */
     shutdown() {
         this.emit('shutdownStart');
         
@@ -445,19 +546,37 @@ class UnifiedLuaScript extends EventEmitter {
         this.emit('shutdownComplete');
     }
 
-    // Static factory methods
+    /**
+     * Creates a new UnifiedLuaScript instance in development mode.
+     * @param {object} [options={}] - Configuration options.
+     * @returns {UnifiedLuaScript} A new instance in development mode.
+     */
     static createDevelopment(options = {}) {
         return new UnifiedLuaScript({ ...options, mode: 'development' });
     }
 
+    /**
+     * Creates a new UnifiedLuaScript instance in production mode.
+     * @param {object} [options={}] - Configuration options.
+     * @returns {UnifiedLuaScript} A new instance in production mode.
+     */
     static createProduction(options = {}) {
         return new UnifiedLuaScript({ ...options, mode: 'production' });
     }
 
+    /**
+     * Creates a new UnifiedLuaScript instance in enterprise mode.
+     * @param {object} [options={}] - Configuration options.
+     * @returns {UnifiedLuaScript} A new instance in enterprise mode.
+     */
     static createEnterprise(options = {}) {
         return new UnifiedLuaScript({ ...options, mode: 'enterprise' });
     }
 
+    /**
+     * A static method to validate the victory conditions.
+     * @returns {Promise<object>} A promise that resolves with the validation results.
+     */
     static async validateVictoryStatic() {
         const system = new UnifiedLuaScript();
         await system.initializeComponents();

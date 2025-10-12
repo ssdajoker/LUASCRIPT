@@ -59,45 +59,82 @@ The wiki includes:
 - **Real-time optimization** suggestions
 - **Collaborative development** environment
 
-## 🚀 Quick Start
+## 🚀 Getting Started
+
+This guide will walk you through the process of installing and using LuaScript to transpile your JavaScript code to Lua.
+
+### Prerequisites
+
+- Node.js (v14 or later)
+- npm
 
 ### Installation
+
+To install LuaScript, open your terminal and run the following command:
 
 ```bash
 npm install luascript
 ```
 
+This will install the `luascript` package and its dependencies in your project.
+
 ### Basic Usage
+
+Here's a simple example of how to use LuaScript to transpile a string of JavaScript code:
 
 ```javascript
 const { UnifiedLuaScript } = require('luascript');
 
-// Create a production-ready instance
-const luascript = UnifiedLuaScript.createProduction();
-await luascript.initializeComponents();
+async function main() {
+    // Create a production-ready instance of LuaScript
+    const luascript = UnifiedLuaScript.createProduction();
+    await luascript.initializeComponents();
 
-// Transpile JavaScript to Lua
-const result = await luascript.transpile(`
-    let x = 5;
-    let y = 10;
-    function add(a, b) {
-        return a + b;
-    }
-    console.log(add(x, y));
-`);
+    // Your JavaScript code
+    const jsCode = `
+        let x = 5;
+        let y = 10;
+        function add(a, b) {
+            return a + b;
+        }
+        console.log(add(x, y));
+    `;
 
-console.log(result.code);
-// Output: 
-// local x = 5
-// local y = 10
-// local function add(a, b)
-//   return a + b
-// end
-// print(add(x, y))
+    // Transpile the JavaScript code to Lua
+    const result = await luascript.transpile(jsCode);
+    console.log("--- Transpiled Lua Code ---");
+    console.log(result.code);
 
-// Execute the transpiled code
-const execution = await luascript.execute(result.code);
-console.log(execution.result); // 15
+    // Execute the transpiled Lua code
+    const execution = await luascript.execute(result.code);
+    console.log("\n--- Execution Result ---");
+    console.log(execution.result); // Expected output: 15
+}
+
+main();
+```
+
+### Transpiling Files
+
+You can also transpile an entire JavaScript file to Lua:
+
+```javascript
+const { UnifiedLuaScript } = require('luascript');
+const fs = require('fs').promises;
+const path = require('path');
+
+async function transpileFile(inputPath, outputPath) {
+    const luascript = UnifiedLuaScript.createProduction();
+    await luascript.initializeComponents();
+
+    const jsCode = await fs.readFile(inputPath, 'utf8');
+    const result = await luascript.transpile(jsCode, { filename: path.basename(inputPath) });
+
+    await fs.writeFile(outputPath, result.code, 'utf8');
+    console.log(`Successfully transpiled ${inputPath} to ${outputPath}`);
+}
+
+transpileFile('my_script.js', 'my_script.lua');
 ```
 
 ### Advanced Features
@@ -182,92 +219,92 @@ const debugSession = await luascript.startDebugging('./src/main.js', {
 
 ## 📋 API Reference
 
-### UnifiedLuaScript Class
+The `UnifiedLuaScript` class is the main entry point for using the LuaScript transpiler and runtime.
 
-#### Constructor Options
-```javascript
-const options = {
-    mode: 'production',           // 'development', 'production', 'enterprise'
-    enableTranspiler: true,       // Enable core transpiler
-    enableRuntime: true,          // Enable runtime system
-    enableAdvanced: true,         // Enable advanced features
-    enablePerformance: true,      // Enable performance tools
-    enableIDE: true,              // Enable agentic IDE
-    
-    // Component-specific options
-    transpiler: {
-        target: 'lua5.4',
-        optimize: true,
-        sourceMap: true
-    },
-    runtime: {
-        enableGPU: true,
-        enableJIT: true,
-        maxMemory: 512 * 1024 * 1024
-    },
-    performance: {
-        enableProfiling: true,
-        enableOptimization: true
-    }
-};
-```
+### `new UnifiedLuaScript(options)`
 
-#### Core Methods
+Creates a new instance of the LuaScript system.
 
-##### `transpile(jsCode, options)`
-Transpiles JavaScript code to Lua.
+- **`options`** (object): Configuration options.
+  - **`mode`** (string): The operating mode. Can be `'development'`, `'production'`, or `'enterprise'`. Default: `'production'`.
+  - **`enableAll`** (boolean): Enables all components. Default: `true`.
+  - **`enableTranspiler`** (boolean): Enables the transpiler component. Default: `true`.
+  - **`enableRuntime`** (boolean): Enables the runtime component. Default: `true`.
+  - **`enableAdvanced`** (boolean): Enables advanced features. Default: `true`.
+  - **`enablePerformance`** (boolean): Enables performance tools. Default: `true`.
+  - **`enableIDE`** (boolean): Enables the Agentic IDE. Default: `true`.
 
-**Parameters:**
-- `jsCode` (string): JavaScript source code
-- `options` (object): Transpilation options
-  - `filename` (string): Source filename
-  - `features` (array): Advanced features to enable
-  - `optimize` (boolean): Enable optimizations
+### `async initializeComponents()`
 
-**Returns:** Promise<TranspileResult>
+Initializes all enabled components of the LuaScript system. This method must be called before using any other methods.
 
-##### `execute(luaCode, context)`
-Executes Lua code in the runtime environment.
+### `async transpile(jsCode, options)`
 
-**Parameters:**
-- `luaCode` (string): Lua source code
-- `context` (object): Execution context variables
+Transpiles a string of JavaScript code to Lua.
 
-**Returns:** Promise<ExecutionResult>
+- **`jsCode`** (string): The JavaScript code to transpile.
+- **`options`** (object): Transpilation options.
+  - **`filename`** (string): The name of the file being transpiled.
+  - **`features`** (string[]): An array of advanced features to enable (e.g., `['oop', 'types']`).
+  - **`optimize`** (boolean): Whether to apply optimizations.
+- **Returns**: `Promise<object>` - A promise that resolves to an object containing the transpiled `code`, `sourceMap`, and `stats`.
 
-##### `transpileAndExecute(jsCode, options)`
-Complete pipeline: transpile and execute JavaScript code.
+### `async execute(luaCode, context)`
 
-**Parameters:**
-- `jsCode` (string): JavaScript source code
-- `options` (object): Combined transpilation and execution options
+Executes a string of Lua code.
 
-**Returns:** Promise<FullResult>
+- **`luaCode`** (string): The Lua code to execute.
+- **`context`** (object): A context object to be made available to the Lua code.
+- **Returns**: `Promise<object>` - A promise that resolves to the result of the execution.
 
-#### Performance Methods
+### `async transpileAndExecute(jsCode, options)`
 
-##### `profile(code, options)`
-Profiles code execution with detailed metrics.
+A convenience method that transpiles and then executes the code.
 
-##### `benchmark(code, iterations)`
-Benchmarks code performance over multiple iterations.
+- **`jsCode`** (string): The JavaScript code to process.
+- **`options`** (object): Combined transpilation and execution options.
+- **Returns**: `Promise<object>` - A promise that resolves to an object containing both the transpilation and execution results.
 
-##### `optimize(code, options)`
-Optimizes code for better performance.
+### `async profile(code, options)`
 
-#### IDE Methods
+Profiles a piece of code to gather performance metrics.
 
-##### `createProject(name, template)`
-Creates a new project with the specified template.
+- **`code`** (string): The code to profile.
+- **`options`** (object): Profiling options.
+- **Returns**: `Promise<object>` - A promise that resolves with the performance report.
 
-##### `openFile(filePath)`
-Opens a file for editing in the IDE.
+### `async benchmark(code, iterations)`
 
-##### `getCodeCompletion(filePath, position)`
-Gets AI-powered code completion suggestions.
+Benchmarks a piece of code by running it multiple times.
 
-##### `startDebugging(filePath, config)`
-Starts a debugging session for the specified file.
+- **`code`** (string): The code to benchmark.
+- **`iterations`** (number): The number of times to run the code. Default: `1000`.
+- **Returns**: `Promise<object>` - A promise that resolves with the benchmark results.
+
+### `async optimize(code, options)`
+
+Optimizes a piece of code for performance.
+
+- **`code`** (string): The code to optimize.
+- **`options`** (object): Optimization options.
+- **Returns**: `Promise<object>` - A promise that resolves with the optimized code.
+
+## 📁 Project Structure
+
+The LuaScript repository is organized into the following directories:
+
+- **`src/`**: Contains the core source code for the transpiler, runtime, and all related features.
+  - **`core/`**: Core components like the symbol table.
+  - **`agents/`**: Files related to the Agentic IDE.
+  - **`*.js`**: The main JavaScript source files for different components.
+  - **`*.lua`**: Lua scripts used for runtime features and optimizations.
+- **`dist/`**: Stores the distributable, compiled versions of the LuaScript library.
+- **`docs/`**: Contains markdown files for documentation.
+- **`examples/`**: Includes example LuaScript and JavaScript files demonstrating various features.
+- **`gss/`**: Related to the GSS/AGSS design and implementation.
+- **`runtime/`**: The Lua runtime environment.
+- **`scripts/`**: Utility scripts for development, building, and testing.
+- **`test/`**: Contains the test suite for the project.
 
 ## 🏗️ Architecture
 

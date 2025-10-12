@@ -4,7 +4,15 @@
  * Enhanced runtime with memory management and arrow function support
  */
 
+/**
+ * Manages the runtime memory, including the call stack and heap, to prevent memory leaks and stack overflows.
+ */
 class RuntimeMemoryManager {
+    /**
+     * Creates an instance of the RuntimeMemoryManager.
+     * @param {number} [maxCallStack=1000] - The maximum depth of the call stack.
+     * @param {number} [maxHeapSize=52428800] - The maximum size of the heap in bytes (defaults to 50MB).
+     */
     constructor(maxCallStack = 1000, maxHeapSize = 50 * 1024 * 1024) { // 50MB default
         this.maxCallStack = maxCallStack;
         this.maxHeapSize = maxHeapSize;
@@ -14,6 +22,12 @@ class RuntimeMemoryManager {
         this.gcThreshold = maxHeapSize * 0.8; // Trigger GC at 80% capacity
     }
 
+    /**
+     * Pushes a new function call onto the call stack.
+     * @param {string} functionName - The name of the function being called.
+     * @param {any[]} [args=[]] - The arguments passed to the function.
+     * @throws {Error} If the call stack exceeds its maximum size.
+     */
     enterFunction(functionName, args = []) {
         if (this.callStack.length >= this.maxCallStack) {
             throw new Error(`Stack overflow: maximum call stack size ${this.maxCallStack} exceeded in function '${functionName}'`);
@@ -26,12 +40,22 @@ class RuntimeMemoryManager {
         });
     }
 
+    /**
+     * Pops a function call from the call stack.
+     */
     exitFunction() {
         if (this.callStack.length > 0) {
             this.callStack.pop();
         }
     }
 
+    /**
+     * Allocates an object on the heap, triggering garbage collection if necessary.
+     * @param {object} obj - The object to allocate.
+     * @param {number} [estimatedSize=64] - The estimated size of the object in bytes.
+     * @returns {object} The allocated object.
+     * @throws {Error} If the heap size limit is exceeded.
+     */
     allocateObject(obj, estimatedSize = 64) {
         if (this.heapSize + estimatedSize > this.maxHeapSize) {
             this.triggerGarbageCollection();
@@ -51,6 +75,10 @@ class RuntimeMemoryManager {
         return obj;
     }
 
+    /**
+     * Simulates garbage collection, freeing up a portion of the heap.
+     * @private
+     */
     triggerGarbageCollection() {
         // Simulate garbage collection by reducing heap size
         const beforeSize = this.heapSize;
@@ -59,6 +87,10 @@ class RuntimeMemoryManager {
         console.log(`GC: Freed ${beforeSize - this.heapSize} bytes, heap size now ${this.heapSize} bytes`);
     }
 
+    /**
+     * Retrieves statistics about the current memory usage.
+     * @returns {object} An object containing memory statistics.
+     */
     getStats() {
         return {
             callStackDepth: this.callStack.length,
@@ -70,6 +102,9 @@ class RuntimeMemoryManager {
         };
     }
 
+    /**
+     * Cleans up the memory manager's state.
+     */
     cleanup() {
         this.callStack = [];
         this.heapSize = 0;
@@ -77,16 +112,35 @@ class RuntimeMemoryManager {
     }
 }
 
+/**
+ * Represents a lexical environment for storing variables and their values.
+ * Environments can be nested to create scopes.
+ */
 class Environment {
+    /**
+     * Creates an instance of an Environment.
+     * @param {Environment|null} [parent=null] - The parent environment.
+     */
     constructor(parent = null) {
         this.parent = parent;
         this.variables = new Map();
     }
 
+    /**
+     * Defines a new variable in the current environment.
+     * @param {string} name - The name of the variable.
+     * @param {*} value - The value of the variable.
+     */
     define(name, value) {
         this.variables.set(name, value);
     }
 
+    /**
+     * Retrieves the value of a variable from the environment or its ancestors.
+     * @param {string} name - The name of the variable to retrieve.
+     * @returns {*} The value of the variable.
+     * @throws {Error} If the variable is not defined.
+     */
     get(name) {
         if (this.variables.has(name)) {
             return this.variables.get(name);
@@ -99,6 +153,12 @@ class Environment {
         throw new Error(`Undefined variable '${name}'`);
     }
 
+    /**
+     * Sets the value of an existing variable in the environment or its ancestors.
+     * @param {string} name - The name of the variable to set.
+     * @param {*} value - The new value for the variable.
+     * @throws {Error} If the variable is not defined.
+     */
     set(name, value) {
         if (this.variables.has(name)) {
             this.variables.set(name, value);
@@ -114,7 +174,16 @@ class Environment {
     }
 }
 
+/**
+ * Represents a function in the LuaScript runtime.
+ */
 class LuaScriptFunction {
+    /**
+     * Creates an instance of a LuaScriptFunction.
+     * @param {object} declaration - The AST node for the function declaration or expression.
+     * @param {Environment} closure - The environment in which the function was created.
+     * @param {boolean} [isArrow=false] - Whether the function is an arrow function.
+     */
     constructor(declaration, closure, isArrow = false) {
         this.declaration = declaration;
         this.closure = closure;
@@ -122,6 +191,12 @@ class LuaScriptFunction {
         this.name = isArrow ? '<arrow>' : (declaration.id ? declaration.id.name : '<anonymous>');
     }
 
+    /**
+     * Calls the function with the given arguments.
+     * @param {Interpreter} interpreter - The interpreter instance.
+     * @param {any[]} args - The arguments to pass to the function.
+     * @returns {*} The return value of the function.
+     */
     call(interpreter, args) {
         const environment = new Environment(this.closure);
         
@@ -156,6 +231,10 @@ class LuaScriptFunction {
     }
 }
 
+/**
+ * A custom error class used for handling return values during interpretation.
+ * This allows for unwinding the call stack without using actual exceptions for control flow.
+ */
 class ReturnValue extends Error {
     constructor(value) {
         super();
@@ -163,6 +242,9 @@ class ReturnValue extends Error {
     }
 }
 
+/**
+ * The main interpreter class that executes the AST.
+ */
 class Interpreter {
     constructor() {
         this.globals = new Environment();
@@ -173,6 +255,10 @@ class Interpreter {
         this.defineBuiltins();
     }
 
+    /**
+     * Defines built-in functions available in the global environment.
+     * @private
+     */
     defineBuiltins() {
         this.globals.define('print', {
             call: (interpreter, args) => {
@@ -216,6 +302,11 @@ class Interpreter {
         });
     }
 
+    /**
+     * Interprets an array of statements.
+     * @param {object[]} statements - The array of AST statement nodes to interpret.
+     * @returns {*} The result of the interpretation.
+     */
     interpret(statements) {
         try {
             for (const statement of statements) {
@@ -233,6 +324,12 @@ class Interpreter {
         }
     }
 
+    /**
+     * Executes a single statement.
+     * @param {object} statement - The statement node to execute.
+     * @returns {*} The result of the execution.
+     * @private
+     */
     execute(statement) {
         switch (statement.type) {
             case 'Program':
@@ -264,6 +361,13 @@ class Interpreter {
         }
     }
 
+    /**
+     * Evaluates a single expression.
+     * @param {object} expression - The expression node to evaluate.
+     * @param {Environment} [env=this.environment] - The environment in which to evaluate the expression.
+     * @returns {*} The result of the evaluation.
+     * @private
+     */
     evaluate(expression, env = this.environment) {
         const previousEnv = this.environment;
         this.environment = env;
@@ -299,6 +403,12 @@ class Interpreter {
         }
     }
 
+    /**
+     * Evaluates a binary expression.
+     * @param {object} expression - The binary expression node.
+     * @returns {*} The result of the binary operation.
+     * @private
+     */
     evaluateBinaryExpression(expression) {
         const left = this.evaluate(expression.left);
         const right = this.evaluate(expression.right);
@@ -337,6 +447,12 @@ class Interpreter {
         }
     }
 
+    /**
+     * Evaluates a unary expression.
+     * @param {object} expression - The unary expression node.
+     * @returns {*} The result of the unary operation.
+     * @private
+     */
     evaluateUnaryExpression(expression) {
         const operand = this.evaluate(expression.argument);
         
@@ -350,6 +466,12 @@ class Interpreter {
         }
     }
 
+    /**
+     * Evaluates an assignment expression.
+     * @param {object} expression - The assignment expression node.
+     * @returns {*} The assigned value.
+     * @private
+     */
     evaluateAssignmentExpression(expression) {
         const value = this.evaluate(expression.right);
         
@@ -361,6 +483,12 @@ class Interpreter {
         throw new Error('Invalid assignment target');
     }
 
+    /**
+     * Evaluates a call expression.
+     * @param {object} expression - The call expression node.
+     * @returns {*} The result of the function call.
+     * @private
+     */
     evaluateCallExpression(expression) {
         const callee = this.evaluate(expression.callee);
         const args = expression.arguments.map(arg => this.evaluate(arg));
@@ -372,6 +500,12 @@ class Interpreter {
         return callee.call(this, args);
     }
 
+    /**
+     * Evaluates an arrow function expression.
+     * @param {object} expression - The arrow function expression node.
+     * @returns {object} A callable function object.
+     * @private
+     */
     evaluateArrowFunction(expression) {
         const func = this.runtimeMemory.allocateObject(
             new LuaScriptFunction(expression, this.environment, true)
@@ -382,6 +516,11 @@ class Interpreter {
         };
     }
 
+    /**
+     * Executes a variable declaration statement.
+     * @param {object} statement - The variable declaration node.
+     * @private
+     */
     executeVariableDeclaration(statement) {
         for (const declaration of statement.declarations) {
             const value = declaration.init ? this.evaluate(declaration.init) : null;
@@ -389,6 +528,11 @@ class Interpreter {
         }
     }
 
+    /**
+     * Executes a function declaration statement.
+     * @param {object} statement - The function declaration node.
+     * @private
+     */
     executeFunctionDeclaration(statement) {
         const func = this.runtimeMemory.allocateObject(
             new LuaScriptFunction(statement, this.environment, false)
@@ -399,10 +543,21 @@ class Interpreter {
         });
     }
 
+    /**
+     * Executes a block statement.
+     * @param {object} statement - The block statement node.
+     * @private
+     */
     executeBlockStatement(statement) {
         this.executeBlock(statement.body, new Environment(this.environment));
     }
 
+    /**
+     * Executes a block of statements in a new environment.
+     * @param {object[]} statements - The array of statements to execute.
+     * @param {Environment} environment - The environment for the block.
+     * @private
+     */
     executeBlock(statements, environment) {
         const previous = this.environment;
         
@@ -417,6 +572,11 @@ class Interpreter {
         }
     }
 
+    /**
+     * Executes an if statement.
+     * @param {object} statement - The if statement node.
+     * @private
+     */
     executeIfStatement(statement) {
         const condition = this.evaluate(statement.test);
         
@@ -427,23 +587,46 @@ class Interpreter {
         }
     }
 
+    /**
+     * Executes a while statement.
+     * @param {object} statement - The while statement node.
+     * @private
+     */
     executeWhileStatement(statement) {
         while (this.isTruthy(this.evaluate(statement.test))) {
             this.execute(statement.body);
         }
     }
 
+    /**
+     * Executes a return statement.
+     * @param {object} statement - The return statement node.
+     * @private
+     * @throws {ReturnValue} Throws a ReturnValue to unwind the stack.
+     */
     executeReturnStatement(statement) {
         const value = statement.argument ? this.evaluate(statement.argument) : null;
         throw new ReturnValue(value);
     }
 
+    /**
+     * Checks if a value is truthy according to JavaScript rules.
+     * @param {*} value - The value to check.
+     * @returns {boolean} True if the value is truthy.
+     * @private
+     */
     isTruthy(value) {
         if (value === null || value === undefined) return false;
         if (typeof value === 'boolean') return value;
         return true;
     }
 
+    /**
+     * Converts a value to its string representation.
+     * @param {*} value - The value to stringify.
+     * @returns {string} The string representation of the value.
+     * @private
+     */
     stringify(value) {
         if (value === null || value === undefined) return 'nil';
         if (typeof value === 'string') return value;
@@ -451,6 +634,10 @@ class Interpreter {
         return String(value);
     }
 
+    /**
+     * Gets the current memory statistics from the memory manager.
+     * @returns {object} The memory statistics.
+     */
     getMemoryStats() {
         return this.runtimeMemory.getStats();
     }

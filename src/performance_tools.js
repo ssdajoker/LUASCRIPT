@@ -9,7 +9,19 @@
 const { EventEmitter } = require('events');
 const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
+/**
+ * A comprehensive suite of performance tools for profiling, optimizing, and monitoring LuaScript code.
+ * @extends EventEmitter
+ */
 class PerformanceTools extends EventEmitter {
+    /**
+     * Creates an instance of the PerformanceTools suite.
+     * @param {object} [options={}] - Configuration options for the performance tools.
+     * @param {boolean} [options.enableGPU=true] - Whether to enable GPU acceleration.
+     * @param {boolean} [options.enableProfiling=false] - Whether to enable detailed profiling.
+     * @param {boolean} [options.enableOptimization=true] - Whether to enable code optimization.
+     * @param {boolean} [options.enableMonitoring=false] - Whether to enable real-time monitoring.
+     */
     constructor(options = {}) {
         super();
         
@@ -30,6 +42,10 @@ class PerformanceTools extends EventEmitter {
         this.benchmarks = new Map();
     }
 
+    /**
+     * Initializes the performance tools, including the GPU accelerator and real-time monitor.
+     * @returns {Promise<void>}
+     */
     async initialize() {
         this.emit('initStart');
         
@@ -44,14 +60,32 @@ class PerformanceTools extends EventEmitter {
         this.emit('initComplete');
     }
 
+    /**
+     * Profiles a given piece of code to analyze its performance.
+     * @param {string} code - The code to profile.
+     * @param {object} [options={}] - Profiling options.
+     * @returns {Promise<object>} A promise that resolves with the profiling report.
+     */
     async profile(code, options = {}) {
         return this.profiler.profile(code, options);
     }
 
+    /**
+     * Optimizes a given piece of code.
+     * @param {string} code - The code to optimize.
+     * @param {object} [options={}] - Optimization options.
+     * @returns {Promise<object>} A promise that resolves with the optimization results.
+     */
     async optimize(code, options = {}) {
         return this.optimizer.optimize(code, options);
     }
 
+    /**
+     * Benchmarks a given piece of code by running it multiple times.
+     * @param {string} code - The code to benchmark.
+     * @param {number} [iterations=1000] - The number of iterations to run.
+     * @returns {Promise<object>} A promise that resolves with the benchmark analysis.
+     */
     async benchmark(code, iterations = 1000) {
         const results = [];
         
@@ -66,6 +100,12 @@ class PerformanceTools extends EventEmitter {
         return this.analyzeBenchmarkResults(results);
     }
 
+    /**
+     * Simulates the execution of a piece of code for benchmarking purposes.
+     * @param {string} code - The code to execute.
+     * @returns {Promise<number>} A promise that resolves with a random number.
+     * @private
+     */
     async executeCode(code) {
         // Simulate code execution
         return new Promise(resolve => {
@@ -73,6 +113,12 @@ class PerformanceTools extends EventEmitter {
         });
     }
 
+    /**
+     * Analyzes the results of a benchmark run.
+     * @param {number[]} results - An array of execution times in milliseconds.
+     * @returns {object} An object containing the analysis of the benchmark results.
+     * @private
+     */
     analyzeBenchmarkResults(results) {
         const sorted = results.sort((a, b) => a - b);
         const mean = results.reduce((a, b) => a + b, 0) / results.length;
@@ -93,6 +139,10 @@ class PerformanceTools extends EventEmitter {
         };
     }
 
+    /**
+     * Generates a comprehensive performance report from all tools.
+     * @returns {object} The performance report.
+     */
     getPerformanceReport() {
         return {
             profiler: this.profiler.getReport(),
@@ -105,6 +155,9 @@ class PerformanceTools extends EventEmitter {
     }
 }
 
+/**
+ * An advanced profiler that collects detailed information about code execution, including memory usage and CPU samples.
+ */
 class AdvancedProfiler {
     constructor() {
         this.profiles = new Map();
@@ -113,6 +166,12 @@ class AdvancedProfiler {
         this.cpuSamples = [];
     }
 
+    /**
+     * Profiles a given piece of code.
+     * @param {string} code - The code to profile.
+     * @param {object} [options={}] - Profiling options.
+     * @returns {Promise<object>} A promise that resolves with the detailed profile report.
+     */
     async profile(code, options = {}) {
         const profileId = this.generateProfileId();
         const startTime = process.hrtime.bigint();
@@ -156,6 +215,12 @@ class AdvancedProfiler {
         }
     }
 
+    /**
+     * Simulates the execution of code with profiling hooks.
+     * @param {string} code - The code to execute.
+     * @returns {Promise<object>} A promise that resolves with the execution result.
+     * @private
+     */
     async executeWithProfiling(code) {
         // Simulate code execution with profiling hooks
         this.recordFunctionCall('main', 0);
@@ -171,14 +236,30 @@ class AdvancedProfiler {
         return { success: true, executedLines: 100 };
     }
 
+    /**
+     * Records a function call event.
+     * @param {string} name - The name of the function.
+     * @param {number} timestamp - The timestamp of the call.
+     * @private
+     */
     recordFunctionCall(name, timestamp) {
         this.callStack.push({ name, timestamp, type: 'call' });
     }
 
+    /**
+     * Records a function return event.
+     * @param {string} name - The name of the function.
+     * @param {number} timestamp - The timestamp of the return.
+     * @private
+     */
     recordFunctionReturn(name, timestamp) {
         this.callStack.push({ name, timestamp, type: 'return' });
     }
 
+    /**
+     * Starts CPU sampling.
+     * @private
+     */
     startCPUSampling() {
         this.cpuSamples = [];
         this.samplingInterval = setInterval(() => {
@@ -189,20 +270,39 @@ class AdvancedProfiler {
         }, 10);
     }
 
+    /**
+     * Stops CPU sampling.
+     * @private
+     */
     stopCPUSampling() {
         if (this.samplingInterval) {
             clearInterval(this.samplingInterval);
         }
     }
 
+    /**
+     * Gets the peak memory usage during profiling.
+     * @returns {number} The peak memory usage in bytes.
+     * @private
+     */
     getPeakMemory() {
         return Math.max(...this.memorySnapshots.map(s => s.heapUsed));
     }
 
+    /**
+     * Gets the total number of memory allocations.
+     * @returns {number} The number of allocations.
+     * @private
+     */
     getAllocations() {
         return this.memorySnapshots.length;
     }
 
+    /**
+     * Identifies the "hot" functions that are called most frequently.
+     * @returns {[string, number][]} An array of hot functions and their call counts.
+     * @private
+     */
     getHotFunctions() {
         const functionCounts = new Map();
         
@@ -217,6 +317,11 @@ class AdvancedProfiler {
             .slice(0, 10);
     }
 
+    /**
+     * Builds a call graph from the recorded call stack.
+     * @returns {object} The call graph.
+     * @private
+     */
     buildCallGraph() {
         const graph = new Map();
         const stack = [];
@@ -239,10 +344,19 @@ class AdvancedProfiler {
         );
     }
 
+    /**
+     * Generates a unique ID for a profile session.
+     * @returns {string} The unique profile ID.
+     * @private
+     */
     generateProfileId() {
         return `profile_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     }
 
+    /**
+     * Gets a summary report of all profiling sessions.
+     * @returns {object} The profiling report.
+     */
     getReport() {
         return {
             totalProfiles: this.profiles.size,
@@ -252,12 +366,22 @@ class AdvancedProfiler {
         };
     }
 
+    /**
+     * Calculates the average duration of all profiling sessions.
+     * @returns {number} The average duration in milliseconds.
+     * @private
+     */
     calculateAverageDuration() {
         const profiles = Array.from(this.profiles.values());
         if (profiles.length === 0) return 0;
         return profiles.reduce((sum, p) => sum + p.duration, 0) / profiles.length;
     }
 
+    /**
+     * Gets the recent memory usage trend.
+     * @returns {object[]} An array of recent memory snapshots.
+     * @private
+     */
     getMemoryTrend() {
         return this.memorySnapshots.slice(-10);
     }

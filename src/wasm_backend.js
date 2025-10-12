@@ -7,7 +7,19 @@
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * A backend for compiling Lua code to WebAssembly (WASM).
+ */
 class WASMBackend {
+    /**
+     * Creates an instance of the WASMBackend.
+     * @param {object} [options={}] - Configuration options for the WASM backend.
+     * @param {boolean} [options.optimize=true] - Whether to apply optimizations.
+     * @param {boolean} [options.debug=false] - Whether to include debug information.
+     * @param {object} [options.memory={ initial: 256, maximum: 512 }] - The memory configuration for the WASM module.
+     * @param {boolean} [options.enableSIMD=false] - Whether to enable SIMD support.
+     * @param {boolean} [options.enableThreads=false] - Whether to enable threading support.
+     */
     constructor(options = {}) {
         this.options = {
             optimize: options.optimize !== false,
@@ -25,7 +37,8 @@ class WASMBackend {
     }
 
     /**
-     * Initialize WASM backend
+     * Initializes the WASM backend, checking for WebAssembly support.
+     * @returns {Promise<boolean>} A promise that resolves to true if initialization is successful.
      */
     async initialize() {
         if (this.initialized) return true;
@@ -45,9 +58,9 @@ class WASMBackend {
     }
 
     /**
-     * Compile Lua code to WASM
-     * @param {string} luaCode - Lua source code
-     * @returns {Promise<Object>} Compiled WASM module info
+     * Compiles Lua code to a WebAssembly module.
+     * @param {string} luaCode - The Lua source code to compile.
+     * @returns {Promise<object>} A promise that resolves with the compilation result.
      */
     async compileLuaToWASM(luaCode) {
         if (!this.initialized) {
@@ -83,7 +96,10 @@ class WASMBackend {
     }
 
     /**
-     * Parse Lua code to intermediate representation
+     * Parses Lua code into an intermediate representation (IR).
+     * @param {string} luaCode - The Lua source code.
+     * @returns {object} The intermediate representation.
+     * @private
      */
     parseLuaToIR(luaCode) {
         // Simplified IR generation for demonstration
@@ -97,7 +113,10 @@ class WASMBackend {
     }
 
     /**
-     * Optimize intermediate representation
+     * Optimizes the intermediate representation.
+     * @param {object} ir - The intermediate representation to optimize.
+     * @returns {object} The optimized IR.
+     * @private
      */
     optimizeIR(ir) {
         // Apply optimization passes
@@ -116,7 +135,10 @@ class WASMBackend {
     }
 
     /**
-     * Generate WASM bytecode from IR
+     * Generates WebAssembly bytecode from the intermediate representation.
+     * @param {object} ir - The intermediate representation.
+     * @returns {Uint8Array} The generated WASM bytecode.
+     * @private
      */
     generateWASMBytecode(ir) {
         // WASM module structure
@@ -145,7 +167,9 @@ class WASMBackend {
     }
 
     /**
-     * Generate WASM type section
+     * Generates the WASM type section.
+     * @returns {object} The type section.
+     * @private
      */
     generateTypeSection() {
         return {
@@ -159,7 +183,10 @@ class WASMBackend {
     }
 
     /**
-     * Generate WASM function section
+     * Generates the WASM function section.
+     * @param {object} ir - The intermediate representation.
+     * @returns {object} The function section.
+     * @private
      */
     generateFunctionSection(ir) {
         return {
@@ -169,7 +196,9 @@ class WASMBackend {
     }
 
     /**
-     * Generate WASM memory section
+     * Generates the WASM memory section.
+     * @returns {object} The memory section.
+     * @private
      */
     generateMemorySection() {
         return {
@@ -182,7 +211,9 @@ class WASMBackend {
     }
 
     /**
-     * Generate WASM export section
+     * Generates the WASM export section.
+     * @returns {object} The export section.
+     * @private
      */
     generateExportSection() {
         return {
@@ -195,7 +226,10 @@ class WASMBackend {
     }
 
     /**
-     * Generate WASM code section
+     * Generates the WASM code section.
+     * @param {object} ir - The intermediate representation.
+     * @returns {object} The code section.
+     * @private
      */
     generateCodeSection(ir) {
         return {
@@ -213,7 +247,10 @@ class WASMBackend {
     }
 
     /**
-     * Encode WASM module to binary
+     * Encodes a WASM module object into a binary format.
+     * @param {object} module - The WASM module object.
+     * @returns {Uint8Array} The encoded WASM module.
+     * @private
      */
     encodeWASMModule(module) {
         const buffer = [];
@@ -233,7 +270,10 @@ class WASMBackend {
     }
 
     /**
-     * Encode a WASM section
+     * Encodes a single WASM section.
+     * @param {object} section - The section to encode.
+     * @returns {number[]} The encoded section as an array of bytes.
+     * @private
      */
     encodeSection(section) {
         const sectionData = this.encodeSectionData(section);
@@ -245,7 +285,10 @@ class WASMBackend {
     }
 
     /**
-     * Encode section data
+     * Encodes the data of a WASM section.
+     * @param {object} section - The section to encode.
+     * @returns {number[]} The encoded section data.
+     * @private
      */
     encodeSectionData(section) {
         switch (section.id) {
@@ -258,9 +301,7 @@ class WASMBackend {
         }
     }
 
-    /**
-     * Encode type section data
-     */
+    /** @private */
     encodeTypeSection(section) {
         const data = [];
         data.push(...this.encodeU32(section.types.length));
@@ -280,9 +321,7 @@ class WASMBackend {
         return data;
     }
 
-    /**
-     * Encode function section data
-     */
+    /** @private */
     encodeFunctionSection(section) {
         const data = [];
         data.push(...this.encodeU32(section.functions.length));
@@ -294,9 +333,7 @@ class WASMBackend {
         return data;
     }
 
-    /**
-     * Encode memory section data
-     */
+    /** @private */
     encodeMemorySection(section) {
         const data = [];
         data.push(...this.encodeU32(section.memories.length));
@@ -315,9 +352,7 @@ class WASMBackend {
         return data;
     }
 
-    /**
-     * Encode export section data
-     */
+    /** @private */
     encodeExportSection(section) {
         const data = [];
         data.push(...this.encodeU32(section.exports.length));
@@ -331,9 +366,7 @@ class WASMBackend {
         return data;
     }
 
-    /**
-     * Encode code section data
-     */
+    /** @private */
     encodeCodeSection(section) {
         const data = [];
         data.push(...this.encodeU32(section.code.length));
@@ -355,7 +388,10 @@ class WASMBackend {
     }
 
     /**
-     * Encode unsigned 32-bit integer (LEB128)
+     * Encodes an unsigned 32-bit integer to LEB128 format.
+     * @param {number} value - The integer to encode.
+     * @returns {number[]} The encoded integer as an array of bytes.
+     * @private
      */
     encodeU32(value) {
         const result = [];
@@ -371,7 +407,10 @@ class WASMBackend {
     }
 
     /**
-     * Encode string
+     * Encodes a string to a byte array.
+     * @param {string} str - The string to encode.
+     * @returns {number[]} The encoded string as an array of bytes.
+     * @private
      */
     encodeString(str) {
         const bytes = Array.from(Buffer.from(str, 'utf8'));
@@ -379,7 +418,10 @@ class WASMBackend {
     }
 
     /**
-     * Encode value type
+     * Encodes a value type to its binary representation.
+     * @param {string} type - The value type string.
+     * @returns {number} The byte representation of the value type.
+     * @private
      */
     encodeValueType(type) {
         const types = {
@@ -392,7 +434,10 @@ class WASMBackend {
     }
 
     /**
-     * Encode export kind
+     * Encodes an export kind to its binary representation.
+     * @param {string} kind - The export kind string.
+     * @returns {number} The byte representation of the export kind.
+     * @private
      */
     encodeExportKind(kind) {
         const kinds = {
@@ -404,26 +449,30 @@ class WASMBackend {
         return kinds[kind] || 0x00;
     }
 
-    /**
-     * Optimization passes
-     */
+    /** @private */
     eliminateDeadCode(ir) {
         // Remove unreachable code
         return ir;
     }
 
+    /** @private */
     foldConstants(ir) {
         // Fold constant expressions
         return ir;
     }
 
+    /** @private */
     inlineFunctions(ir) {
         // Inline small functions
         return ir;
     }
 
     /**
-     * Execute WASM module
+     * Executes a compiled WebAssembly module.
+     * @param {WebAssembly.Module} wasmModule - The WASM module to execute.
+     * @param {string} [functionName='main'] - The name of the function to execute.
+     * @param {any[]} [args=[]] - The arguments to pass to the function.
+     * @returns {Promise<object>} A promise that resolves with the execution result.
      */
     async executeWASM(wasmModule, functionName = 'main', args = []) {
         try {
@@ -454,7 +503,10 @@ class WASMBackend {
     }
 
     /**
-     * Benchmark WASM execution
+     * Benchmarks the execution of a piece of Lua code compiled to WebAssembly.
+     * @param {string} luaCode - The Lua code to benchmark.
+     * @param {number} [iterations=1000] - The number of iterations to run.
+     * @returns {Promise<object>} A promise that resolves with the benchmark results.
      */
     async benchmark(luaCode, iterations = 1000) {
         const compileResult = await this.compileLuaToWASM(luaCode);
@@ -485,7 +537,8 @@ class WASMBackend {
     }
 
     /**
-     * Get WASM backend status
+     * Gets the current status of the WASM backend.
+     * @returns {object} The status object.
      */
     getStatus() {
         return {

@@ -9,7 +9,21 @@
 const { EventEmitter } = require('events');
 const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
+/**
+ * The main class for the LUASCRIPT Runtime System, providing a complete execution environment
+ * with features like GPU acceleration, JIT compilation, and performance profiling.
+ * @extends EventEmitter
+ */
 class RuntimeSystem extends EventEmitter {
+    /**
+     * Creates an instance of the RuntimeSystem.
+     * @param {object} [options={}] - Configuration options for the runtime system.
+     * @param {boolean} [options.enableGPU=true] - Whether to enable GPU acceleration.
+     * @param {boolean} [options.enableJIT=true] - Whether to enable the Just-In-Time (JIT) compiler.
+     * @param {boolean} [options.enableProfiling=false] - Whether to enable performance profiling.
+     * @param {number} [options.maxMemory=536870912] - The maximum memory allocation for the runtime (in bytes).
+     * @param {number} [options.workerCount=4] - The number of worker threads for parallel execution.
+     */
     constructor(options = {}) {
         super();
         
@@ -40,6 +54,10 @@ class RuntimeSystem extends EventEmitter {
         };
     }
 
+    /**
+     * Initializes the runtime system, including GPU and worker threads.
+     * @returns {Promise<void>}
+     */
     async initialize() {
         this.emit('runtimeInit');
         
@@ -56,6 +74,12 @@ class RuntimeSystem extends EventEmitter {
         this.emit('runtimeReady');
     }
 
+    /**
+     * Executes a string of Lua code in the runtime environment.
+     * @param {string} luaCode - The Lua code to execute.
+     * @param {object} [context={}] - An object representing the global context for the execution.
+     * @returns {Promise<*>} A promise that resolves with the result of the execution.
+     */
     async execute(luaCode, context = {}) {
         const startTime = process.hrtime.bigint();
         
@@ -79,7 +103,7 @@ class RuntimeSystem extends EventEmitter {
             this.updateStats(executionTime);
             
             this.emit('executionComplete', { time: executionTime, result });
-            return result;
+            return { result };
             
         } catch (error) {
             const executionTime = Number(process.hrtime.bigint() - startTime) / 1e6;
@@ -89,12 +113,25 @@ class RuntimeSystem extends EventEmitter {
         }
     }
 
+    /**
+     * Executes the compiled code using a simulated Lua interpreter.
+     * @param {string} code - The code to execute.
+     * @param {object} context - The execution context.
+     * @returns {Promise<*>} The result of the execution.
+     * @private
+     */
     async executeCode(code, context) {
         // Simulate Lua execution with JavaScript
         const interpreter = new LuaInterpreter(context);
         return interpreter.execute(code);
     }
 
+    /**
+     * Creates an execution context with standard library functions.
+     * @param {object} [userContext={}] - The user-provided global context.
+     * @returns {object} The full execution context.
+     * @private
+     */
     createExecutionContext(userContext = {}) {
         return {
             ...userContext,
@@ -108,6 +145,12 @@ class RuntimeSystem extends EventEmitter {
         };
     }
 
+    /**
+     * Loads a module, using a cache if available.
+     * @param {string} moduleName - The name of the module to load.
+     * @returns {object} The loaded module.
+     * @private
+     */
     loadModule(moduleName) {
         if (this.moduleCache.has(moduleName)) {
             return this.moduleCache.get(moduleName);
@@ -119,6 +162,10 @@ class RuntimeSystem extends EventEmitter {
         return module;
     }
 
+    /**
+     * Initializes the worker threads for parallel execution.
+     * @private
+     */
     async initializeWorkers() {
         for (let i = 0; i < this.options.workerCount; i++) {
             const worker = new Worker(__filename, {
@@ -133,12 +180,23 @@ class RuntimeSystem extends EventEmitter {
         }
     }
 
+    /**
+     * Updates the runtime statistics after an execution.
+     * @param {number} executionTime - The time taken for the execution in milliseconds.
+     * @private
+     */
     updateStats(executionTime) {
         this.stats.executions++;
         this.stats.averageTime = (this.stats.averageTime * (this.stats.executions - 1) + executionTime) / this.stats.executions;
         this.stats.memoryUsage = this.memory.getUsage();
     }
 
+    /**
+     * Records an error that occurred during execution.
+     * @param {Error} error - The error object.
+     * @param {number} executionTime - The time taken before the error occurred.
+     * @private
+     */
     recordError(error, executionTime) {
         this.stats.errors.push({
             timestamp: Date.now(),
@@ -153,6 +211,10 @@ class RuntimeSystem extends EventEmitter {
         }
     }
 
+    /**
+     * Generates a comprehensive performance report.
+     * @returns {object} The performance report.
+     */
     getPerformanceReport() {
         return {
             stats: this.stats,
@@ -163,6 +225,9 @@ class RuntimeSystem extends EventEmitter {
         };
     }
 
+    /**
+     * Shuts down the runtime system, terminating worker threads and cleaning up memory.
+     */
     shutdown() {
         this.workers.forEach(worker => worker.terminate());
         this.memory.cleanup();
@@ -170,7 +235,14 @@ class RuntimeSystem extends EventEmitter {
     }
 }
 
+/**
+ * Manages memory allocation and garbage collection for the runtime.
+ */
 class MemoryManager {
+    /**
+     * Creates an instance of MemoryManager.
+     * @param {number} maxMemory - The maximum memory size in bytes.
+     */
     constructor(maxMemory) {
         this.maxMemory = maxMemory;
         this.allocated = 0;
@@ -178,6 +250,12 @@ class MemoryManager {
         this.gcThreshold = maxMemory * 0.8;
     }
 
+    /**
+     * Allocates a block of memory.
+     * @param {number} size - The size of the memory to allocate in bytes.
+     * @returns {Buffer} The allocated buffer.
+     * @throws {Error} If out of memory.
+     */
     allocate(size) {
         if (this.allocated + size > this.maxMemory) {
             this.gc();
@@ -190,10 +268,19 @@ class MemoryManager {
         return Buffer.allocUnsafe(size);
     }
 
+    /**
+     * Deallocates a block of memory.
+     * @param {number} size - The size of the memory to deallocate.
+     */
     deallocate(size) {
         this.allocated = Math.max(0, this.allocated - size);
     }
 
+    /**
+     * Simulates garbage collection.
+     * @returns {number} The amount of memory freed.
+     * @private
+     */
     gc() {
         // Simulate garbage collection
         const freed = this.allocated * 0.3;
@@ -201,6 +288,10 @@ class MemoryManager {
         return freed;
     }
 
+    /**
+     * Gets the current memory usage.
+     * @returns {object} An object containing memory usage statistics.
+     */
     getUsage() {
         return {
             allocated: this.allocated,
@@ -209,6 +300,10 @@ class MemoryManager {
         };
     }
 
+    /**
+     * Gets a detailed memory report.
+     * @returns {object} The memory report.
+     */
     getReport() {
         return {
             ...this.getUsage(),
@@ -217,18 +312,28 @@ class MemoryManager {
         };
     }
 
+    /**
+     * Cleans up all allocated memory.
+     */
     cleanup() {
         this.allocated = 0;
         this.pools.clear();
     }
 }
 
+/**
+ * A profiler for monitoring the performance of code execution.
+ */
 class PerformanceProfiler {
     constructor() {
         this.profiles = new Map();
         this.currentProfile = null;
     }
 
+    /**
+     * Starts a new profiling session.
+     * @param {string} name - The name of the profile.
+     */
     start(name) {
         this.currentProfile = {
             name,
@@ -237,6 +342,10 @@ class PerformanceProfiler {
         };
     }
 
+    /**
+     * Ends the current profiling session.
+     * @returns {object|null} The completed profile object, or null if no profile was active.
+     */
     end() {
         if (!this.currentProfile) return null;
         
@@ -256,6 +365,10 @@ class PerformanceProfiler {
         return profile;
     }
 
+    /**
+     * Gets a report of all completed profiling sessions.
+     * @returns {object} The profiling report.
+     */
     getReport() {
         return {
             profiles: Array.from(this.profiles.values()),
@@ -264,6 +377,9 @@ class PerformanceProfiler {
     }
 }
 
+/**
+ * A Just-In-Time (JIT) compiler that optimizes Lua code at runtime.
+ */
 class JITCompiler {
     constructor() {
         this.compiledCache = new Map();
@@ -276,6 +392,11 @@ class JITCompiler {
         };
     }
 
+    /**
+     * Compiles and optimizes a string of Lua code.
+     * @param {string} code - The code to compile.
+     * @returns {Promise<string>} A promise that resolves to the compiled code.
+     */
     async compile(code) {
         const hash = this.getCodeHash(code);
         
@@ -292,6 +413,12 @@ class JITCompiler {
         return optimizedCode;
     }
 
+    /**
+     * Applies various optimizations to the code.
+     * @param {string} code - The code to optimize.
+     * @returns {string} The optimized code.
+     * @private
+     */
     optimize(code) {
         let optimized = code;
         
@@ -308,30 +435,61 @@ class JITCompiler {
         return optimized;
     }
 
+    /**
+     * Inlines small functions.
+     * @param {string} code - The code to process.
+     * @returns {string} The processed code.
+     * @private
+     */
     inlineFunctions(code) {
         // Simple function inlining simulation
         return code.replace(/function\s+(\w+)\(\)\s*return\s+(\w+)\s+end/g, '$2');
     }
 
+    /**
+     * Folds constant expressions.
+     * @param {string} code - The code to process.
+     * @returns {string} The processed code.
+     * @private
+     */
     foldConstants(code) {
         // Constant folding simulation
         return code.replace(/(\d+)\s*\+\s*(\d+)/g, (match, a, b) => String(parseInt(a) + parseInt(b)));
     }
 
+    /**
+     * Eliminates dead code.
+     * @param {string} code - The code to process.
+     * @returns {string} The processed code.
+     * @private
+     */
     eliminateDeadCode(code) {
         // Dead code elimination simulation
         return code.replace(/local\s+\w+\s*=\s*[^;]+;\s*--\s*unused/g, '');
     }
 
+    /**
+     * Generates a hash for a string of code.
+     * @param {string} code - The code to hash.
+     * @returns {string} The MD5 hash of the code.
+     * @private
+     */
     getCodeHash(code) {
         return require('crypto').createHash('md5').update(code).digest('hex');
     }
 
+    /**
+     * Gets the JIT compiler's statistics.
+     * @returns {object} The statistics object.
+     */
     getStats() {
         return { ...this.stats };
     }
 }
 
+/**
+ * A class for accelerating computations using the GPU.
+ */
 class GPUAccelerator {
     constructor() {
         this.available = false;
@@ -343,6 +501,10 @@ class GPUAccelerator {
         };
     }
 
+    /**
+     * Initializes the GPU accelerator.
+     * @returns {Promise<void>}
+     */
     async initialize() {
         try {
             // Simulate GPU initialization
@@ -353,6 +515,12 @@ class GPUAccelerator {
         }
     }
 
+    /**
+     * Accelerates a given operation using the GPU if available.
+     * @param {string} operation - The name of the operation to accelerate.
+     * @param {*} data - The data to process.
+     * @returns {Promise<*>} A promise that resolves with the result of the operation.
+     */
     async accelerate(operation, data) {
         this.stats.operations++;
         
@@ -365,6 +533,13 @@ class GPUAccelerator {
         return this.gpuOperation(operation, data);
     }
 
+    /**
+     * Performs a GPU-accelerated operation.
+     * @param {string} operation - The operation to perform.
+     * @param {*} data - The data for the operation.
+     * @returns {*} The result of the operation.
+     * @private
+     */
     gpuOperation(operation, data) {
         // Simulate GPU-accelerated operation
         switch (operation) {
@@ -377,11 +552,22 @@ class GPUAccelerator {
         }
     }
 
+    /**
+     * Performs a fallback operation on the CPU.
+     * @param {string} operation - The operation to perform.
+     * @param {*} data - The data for the operation.
+     * @returns {*} The result of the operation.
+     * @private
+     */
     fallbackOperation(operation, data) {
         // CPU fallback
         return this.gpuOperation(operation, data);
     }
 
+    /**
+     * Gets the GPU accelerator's statistics.
+     * @returns {object} The statistics object.
+     */
     getStats() {
         return {
             ...this.stats,
@@ -391,6 +577,9 @@ class GPUAccelerator {
     }
 }
 
+/**
+ * A simplified interpreter for executing Lua code.
+ */
 class LuaInterpreter {
     constructor(context) {
         this.context = context;
@@ -398,6 +587,11 @@ class LuaInterpreter {
         this.functions = new Map();
     }
 
+    /**
+     * Executes a block of Lua code.
+     * @param {string} code - The code to execute.
+     * @returns {*} The result of the execution.
+     */
     execute(code) {
         // Simplified Lua code execution
         const lines = code.split('\n').filter(line => line.trim());
@@ -410,6 +604,12 @@ class LuaInterpreter {
         return result;
     }
 
+    /**
+     * Executes a single line of Lua code.
+     * @param {string} line - The line to execute.
+     * @returns {*} The result of the line's execution.
+     * @private
+     */
     executeLine(line) {
         // Variable assignment
         if (line.match(/^local\s+(\w+)\s*=\s*(.+)$/)) {
@@ -431,6 +631,12 @@ class LuaInterpreter {
         return null;
     }
 
+    /**
+     * Evaluates a Lua expression.
+     * @param {string} expr - The expression to evaluate.
+     * @returns {*} The result of the expression.
+     * @private
+     */
     evaluateExpression(expr) {
         expr = expr.trim();
         
@@ -458,6 +664,12 @@ class LuaInterpreter {
         return expr;
     }
 
+    /**
+     * Executes a function call.
+     * @param {string} line - The line containing the function call.
+     * @returns {*} The result of the function call.
+     * @private
+     */
     executeFunction(line) {
         // Simulate function execution
         if (line.startsWith('print(')) {
@@ -471,19 +683,21 @@ class LuaInterpreter {
     }
 }
 
-// Helper classes for Lua standard library simulation
+/** Helper class for simulating Lua's coroutine library. */
 class CoroutineManager {
     create(func) { return { func, status: 'suspended' }; }
     resume(co) { return co.func(); }
     yield(value) { return value; }
 }
 
+/** Helper class for simulating Lua's table library. */
 class TableManager {
     insert(table, value) { table.push(value); }
     remove(table, index) { return table.splice(index - 1, 1)[0]; }
     concat(table, sep = '') { return table.join(sep); }
 }
 
+/** Helper class for simulating Lua's string library. */
 class StringManager {
     len(str) { return str.length; }
     sub(str, start, end) { return str.substring(start - 1, end); }
@@ -491,6 +705,7 @@ class StringManager {
     lower(str) { return str.toLowerCase(); }
 }
 
+/** Helper class for simulating Lua's math library. */
 class MathManager {
     abs(x) { return Math.abs(x); }
     ceil(x) { return Math.ceil(x); }
@@ -500,6 +715,7 @@ class MathManager {
     random() { return Math.random(); }
 }
 
+/** Helper class for simulating Lua's I/O library. */
 class IOManager {
     write(...args) { process.stdout.write(args.join('')); }
     read() { return ''; } // Simplified
