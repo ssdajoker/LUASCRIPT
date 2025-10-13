@@ -160,6 +160,8 @@ class LuaScriptParser {
         } catch (error) {
             if (this.options.errorRecovery) {
                 this.addError(error.message);
+                // Advance to a synchronization point to avoid infinite loops
+                this.synchronize();
                 return new ErrorNode(error.message, this.peek());
             }
             throw error;

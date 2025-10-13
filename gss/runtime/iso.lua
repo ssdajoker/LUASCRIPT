@@ -35,7 +35,7 @@ M.EDGE_COORDS = {
 -- Extract iso contours using marching squares
 function M.marching_squares(field, w, h, threshold)
     local contours = {}
-    
+
     for y = 0, h - 2 do
         for x = 0, w - 2 do
             -- Sample 2x2 cell
@@ -43,30 +43,30 @@ function M.marching_squares(field, w, h, threshold)
             local v10 = field[y * w + x + 1]
             local v01 = field[(y + 1) * w + x]
             local v11 = field[(y + 1) * w + x + 1]
-            
+
             -- Build case mask (binary: v11 v01 v10 v00)
             local mask = 0
             if v00 >= threshold then mask = mask + 1 end
             if v10 >= threshold then mask = mask + 2 end
             if v01 >= threshold then mask = mask + 4 end
             if v11 >= threshold then mask = mask + 8 end
-            
+
             -- Lookup edges for this case
             local edges = M.EDGE_TABLE[mask]
-            
+
             for _, edge_pair in ipairs(edges) do
                 local e1 = edge_pair[1]
                 local e2 = edge_pair[2]
-                
+
                 -- Interpolate edge positions
                 local p1 = M.interpolate_edge(e1, x, y, v00, v10, v01, v11, threshold)
                 local p2 = M.interpolate_edge(e2, x, y, v00, v10, v01, v11, threshold)
-                
+
                 table.insert(contours, {p1, p2})
             end
         end
     end
-    
+
     return contours
 end
 
@@ -75,10 +75,10 @@ function M.interpolate_edge(edge, x, y, v00, v10, v01, v11, threshold)
     local coords = M.EDGE_COORDS[edge]
     local base_x = x + coords[1]
     local base_y = y + coords[2]
-    
+
     -- Linear interpolation along edge
     local t = 0.5  -- default to midpoint
-    
+
     if edge == 0 then  -- bottom edge
         if math.abs(v10 - v00) > 1e-6 then
             t = (threshold - v00) / (v10 - v00)
@@ -100,7 +100,7 @@ function M.interpolate_edge(edge, x, y, v00, v10, v01, v11, threshold)
         end
         return {x, y + t}
     end
-    
+
     return {base_x, base_y}
 end
 
@@ -108,11 +108,11 @@ end
 function M.render_contours(contours, buf, w, h, color, line_width)
     color = color or {r = 255, g = 255, b = 255, a = 255}
     line_width = line_width or 1
-    
+
     for _, contour in ipairs(contours) do
         local p1 = contour[1]
         local p2 = contour[2]
-        
+
         M.draw_line(buf, w, h, p1[1], p1[2], p2[1], p2[2], color, line_width)
     end
 end
@@ -123,20 +123,20 @@ function M.draw_line(buf, w, h, x1, y1, x2, y2, color, width)
     y1 = math.floor(y1)
     x2 = math.floor(x2)
     y2 = math.floor(y2)
-    
+
     local dx = math.abs(x2 - x1)
     local dy = math.abs(y2 - y1)
     local sx = x1 < x2 and 1 or -1
     local sy = y1 < y2 and 1 or -1
     local err = dx - dy
-    
+
     while true do
         -- Draw pixel with width
         for wy = -width, width do
             for wx = -width, width do
                 local px = x1 + wx
                 local py = y1 + wy
-                
+
                 if px >= 0 and px < w and py >= 0 and py < h then
                     local offset = (py * w + px) * 4
                     buf[offset + 0] = color.r
@@ -146,9 +146,9 @@ function M.draw_line(buf, w, h, x1, y1, x2, y2, color, width)
                 end
             end
         end
-        
+
         if x1 == x2 and y1 == y2 then break end
-        
+
         local e2 = 2 * err
         if e2 > -dy then
             err = err - dy
@@ -167,28 +167,28 @@ function M.downsample_field(field, w, h, factor)
     local new_w = math.ceil(w / factor)
     local new_h = math.ceil(h / factor)
     local downsampled = {}
-    
+
     for y = 0, new_h - 1 do
         for x = 0, new_w - 1 do
             local sum = 0
             local count = 0
-            
+
             for dy = 0, factor - 1 do
                 for dx = 0, factor - 1 do
                     local sx = x * factor + dx
                     local sy = y * factor + dy
-                    
+
                     if sx < w and sy < h then
                         sum = sum + field[sy * w + sx]
                         count = count + 1
                     end
                 end
             end
-            
+
             downsampled[y * new_w + x] = count > 0 and sum / count or 0
         end
     end
-    
+
     return downsampled, new_w, new_h
 end
 

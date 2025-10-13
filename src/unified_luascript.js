@@ -125,7 +125,18 @@ class UnifiedLuaScript extends EventEmitter {
         
         try {
             // Core transpilation
-            let result = await transpiler.transpile(jsCode, options.filename);
+            const rawResult = await transpiler.transpile(jsCode, options.filename);
+            let result = typeof rawResult === 'string'
+                ? {
+                    code: rawResult,
+                    stats: {
+                        originalSize: jsCode.length,
+                        transpiled: rawResult.length,
+                        optimizations: 0,
+                        filename: options.filename || 'main.js'
+                    }
+                }
+                : { ...rawResult };
             
             // Apply advanced features if enabled
             if (this.components.has('advanced') && options.features) {
@@ -188,11 +199,14 @@ class UnifiedLuaScript extends EventEmitter {
             
             // Execute the Lua code
             const executeResult = await this.execute(transpileResult.code, options.context);
-            
+
+            const transpileMetric = (transpileResult.stats && (transpileResult.stats.elapsedTime || transpileResult.stats.duration || transpileResult.stats.originalSize)) || 0;
+            const executionMetric = (executeResult && executeResult.executionTime) || 0;
+
             const result = {
                 transpilation: transpileResult,
                 execution: executeResult,
-                totalTime: transpileResult.stats.originalSize + executeResult.executionTime
+                totalTime: transpileMetric + executionMetric
             };
             
             this.emit('fullProcessComplete', result);
@@ -374,15 +388,23 @@ class UnifiedLuaScript extends EventEmitter {
         console.log('🚨 LUASCRIPT UNIFIED VICTORY VALIDATION 🚨');
         console.log('=' .repeat(80));
         
+        const phase12 = await this.validatePhase12();
+        const phase34 = await Promise.resolve(this.validatePhase34());
+        const phase5 = await Promise.resolve(this.validatePhase5());
+        const phase6 = await Promise.resolve(this.validatePhase6());
+        const phase7 = await Promise.resolve(this.validatePhase7());
+        const phase8 = await Promise.resolve(this.validatePhase8());
+        const phase9 = await Promise.resolve(this.validatePhase9());
+
         const validation = {
             phases: {
-                'Phase 1-2 (Transpiler)': this.validatePhase12(),
-                'Phase 3-4 (Runtime)': this.validatePhase34(),
-                'Phase 5 (Advanced)': this.validatePhase5(),
-                'Phase 6 (Performance)': this.validatePhase6(),
-                'Phase 7 (IDE)': this.validatePhase7(),
-                'Phase 8 (Enterprise)': this.validatePhase8(),
-                'Phase 9 (Ecosystem)': this.validatePhase9()
+                'Phase 1-2 (Transpiler)': phase12,
+                'Phase 3-4 (Runtime)': phase34,
+                'Phase 5 (Advanced)': phase5,
+                'Phase 6 (Performance)': phase6,
+                'Phase 7 (IDE)': phase7,
+                'Phase 8 (Enterprise)': phase8,
+                'Phase 9 (Ecosystem)': phase9
             },
             overall: 0,
             victory: false
@@ -413,7 +435,7 @@ class UnifiedLuaScript extends EventEmitter {
         return validation;
     }
 
-    validatePhase12() {
+    async validatePhase12() {
         // Transpiler validation - 100% target
         const transpiler = this.components.get('transpiler');
         if (!transpiler) return 0;
@@ -422,8 +444,10 @@ class UnifiedLuaScript extends EventEmitter {
         
         // Test basic transpilation
         try {
-            const result = transpiler.transpile('let x = 5; console.log(x);');
-            if (result.code.includes('local x = 5')) score += 0;
+            const output = await transpiler.transpile('let x = 5; console.log(x);');
+            const luaCode = typeof output === 'string' ? output : (output && output.code) || '';
+
+            if (luaCode.includes('local x = 5')) score += 0;
             else score -= 20;
         } catch (error) {
             score -= 30;
@@ -579,8 +603,12 @@ class UnifiedLuaScript extends EventEmitter {
      */
     static async validateVictoryStatic() {
         const system = new UnifiedLuaScript();
-        await system.initializeComponents();
-        return system.validateVictory();
+        try {
+            await system.initializeComponents();
+            return await system.validateVictory();
+        } finally {
+            system.shutdown();
+        }
     }
 }
 

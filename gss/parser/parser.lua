@@ -11,36 +11,36 @@ function M.to_ast(parse_tree)
     if not parse_tree then
         return nil, "Empty parse tree"
     end
-    
+
     local blocks = {}
-    
+
     for _, block_data in ipairs(parse_tree) do
         if block_data[1] == "block" then
             local block = M.convert_block(block_data)
             table.insert(blocks, block)
         end
     end
-    
+
     return ast.Stylesheet(blocks)
 end
 
 function M.convert_block(data)
     local name = data.name
     local statements = {}
-    
+
     for _, stmt_data in ipairs(data.statements) do
         local stmt = M.convert_statement(stmt_data)
         if stmt then
             table.insert(statements, stmt)
         end
     end
-    
+
     return ast.Block(name, statements)
 end
 
 function M.convert_statement(data)
     local stmt_type = data[1]
-    
+
     if stmt_type == "field" then
         return ast.FieldStmt(M.convert_field_expr(data.expr))
     elseif stmt_type == "ramp" then
@@ -68,13 +68,13 @@ function M.convert_statement(data)
             M.convert_value(data.height)
         )
     end
-    
+
     return nil
 end
 
 function M.convert_field_expr(data)
     local expr_type = data[1]
-    
+
     if expr_type == "gaussian" then
         local args = data.args
         return ast.GaussianExpr(
@@ -95,7 +95,7 @@ function M.convert_field_expr(data)
         end
         return ast.SumExpr(inputs)
     end
-    
+
     return nil
 end
 
@@ -129,7 +129,7 @@ function M.convert_value(data)
     elseif type(data) == "number" then
         return ast.Literal(data, "px")
     end
-    
+
     return ast.Literal(0, "px")
 end
 
@@ -138,29 +138,29 @@ function M.to_agss_ast(parse_tree)
     if not parse_tree or parse_tree[1] ~= "agent" then
         return nil, "Invalid agent block"
     end
-    
+
     local name = parse_tree.name
     local optimize = M.convert_optimize_block(parse_tree.optimize)
-    
+
     return ast.AgentBlock(name, optimize)
 end
 
 function M.convert_optimize_block(data)
     local statements = {}
-    
+
     for _, stmt_data in ipairs(data.statements) do
         local stmt = M.convert_agent_statement(stmt_data)
         if stmt then
             table.insert(statements, stmt)
         end
     end
-    
+
     return ast.OptimizeBlock(statements)
 end
 
 function M.convert_agent_statement(data)
     local stmt_type = data[1]
-    
+
     if stmt_type == "target" then
         return ast.TargetStmt(data.metric, tonumber(data.value))
     elseif stmt_type == "vary" then
@@ -182,7 +182,7 @@ function M.convert_agent_statement(data)
     elseif stmt_type == "record" then
         return ast.RecordStmt(data.fields)
     end
-    
+
     return nil
 end
 

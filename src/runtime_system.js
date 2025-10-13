@@ -31,12 +31,13 @@ class RuntimeSystem extends EventEmitter {
             enableGPU: options.enableGPU !== false,
             enableJIT: options.enableJIT !== false,
             enableProfiling: options.enableProfiling !== false,
-            maxMemory: options.maxMemory || 512 * 1024 * 1024, // 512MB
-            workerCount: options.workerCount || 4,
+            maxMemory: options.maxMemory ?? 512 * 1024 * 1024, // 512MB
+            workerCount: options.workerCount ?? 4,
+            memory: options.memory || {},
             ...options
         };
         
-        this.memory = new MemoryManager(this.options.maxMemory);
+        this.memory = new MemoryManager(this.options.maxMemory, this.options.memory);
         this.profiler = new PerformanceProfiler();
         this.jitCompiler = new JITCompiler();
         this.gpuAccelerator = new GPUAccelerator();
@@ -82,17 +83,20 @@ class RuntimeSystem extends EventEmitter {
      */
     async execute(luaCode, context = {}) {
         const startTime = process.hrtime.bigint();
+        const normalizedCode = typeof luaCode === 'string'
+            ? luaCode.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+            : luaCode;
         
         try {
-            this.emit('executionStart', { size: luaCode.length });
+            this.emit('executionStart', { size: normalizedCode.length });
             
             // Create execution context
             const execContext = this.createExecutionContext(context);
             
             // JIT compilation if enabled
-            let compiledCode = luaCode;
+            let compiledCode = normalizedCode;
             if (this.options.enableJIT) {
-                compiledCode = await this.jitCompiler.compile(luaCode);
+                compiledCode = await this.jitCompiler.compile(normalizedCode);
             }
             
             // Execute code
@@ -158,13 +162,14 @@ class RuntimeSystem extends EventEmitter {
      * @private
      */
     loadModule(moduleName) {
-        if (this.moduleCache.has(moduleName)) {
-            return this.moduleCache.get(moduleName);
+        const normalizedName = moduleName.replace(/\\/g, '/');
+        if (this.moduleCache.has(normalizedName)) {
+            return this.moduleCache.get(normalizedName);
         }
         
         // Simulate module loading
         const module = { name: moduleName, exports: {} };
-        this.moduleCache.set(moduleName, module);
+        this.moduleCache.set(normalizedName, module);
         return module;
     }
 
@@ -245,15 +250,24 @@ class RuntimeSystem extends EventEmitter {
  * Manages memory allocation and garbage collection for the runtime.
  */
 class MemoryManager {
+<<<<<<< Updated upstream
     /**
      * Creates an instance of MemoryManager.
      * @param {number} maxMemory - The maximum memory size in bytes.
      */
     constructor(maxMemory) {
+=======
+    constructor(maxMemory, gcOptions = {}) {
+>>>>>>> Stashed changes
         this.maxMemory = maxMemory;
         this.allocated = 0;
         this.pools = new Map();
-        this.gcThreshold = maxMemory * 0.8;
+        this.gcTargetRatio = Math.min(Math.max(gcOptions.targetRatio ?? 0.62, 0.4), 0.9);
+        this.gcHardRatio = Math.min(Math.max(gcOptions.hardLimitRatio ?? 0.85, this.gcTargetRatio + 0.05), 0.98);
+        this.gcMinIntervalMs = Math.max(gcOptions.minIntervalMs ?? 200, 0);
+        this.gcThreshold = maxMemory * this.gcTargetRatio;
+        this.gcHardLimit = maxMemory * this.gcHardRatio;
+        this.lastGcTimestamp = 0;
     }
 
     /**
@@ -264,13 +278,18 @@ class MemoryManager {
      */
     allocate(size) {
         if (this.allocated + size > this.maxMemory) {
-            this.gc();
+            this.gc(true);
             if (this.allocated + size > this.maxMemory) {
                 throw new Error('Out of memory');
             }
         }
         
         this.allocated += size;
+        if (this.allocated > this.gcHardLimit) {
+            this.gc(true);
+        } else if (this.allocated > this.gcThreshold) {
+            this.maybeTriggerGc();
+        }
         return Buffer.allocUnsafe(size);
     }
 
@@ -282,6 +301,7 @@ class MemoryManager {
         this.allocated = Math.max(0, this.allocated - size);
     }
 
+<<<<<<< Updated upstream
     /**
      * Simulates garbage collection.
      * @returns {number} The amount of memory freed.
@@ -291,6 +311,30 @@ class MemoryManager {
         // Simulate garbage collection
         const freed = this.allocated * 0.3;
         this.allocated -= freed;
+=======
+    maybeTriggerGc() {
+        const now = Date.now();
+        if (now - this.lastGcTimestamp < this.gcMinIntervalMs) {
+            return;
+        }
+        this.gc(false);
+    }
+
+    gc(aggressive = false) {
+        const before = this.allocated;
+        const reductionFactor = aggressive ? 0.5 : 0.7;
+        const freed = before * (1 - reductionFactor);
+        this.allocated = Math.max(0, before * reductionFactor);
+        this.lastGcTimestamp = Date.now();
+
+        if (freed < this.maxMemory * 0.05) {
+            this.gcThreshold = Math.max(this.maxMemory * this.gcTargetRatio, this.gcThreshold * 0.95);
+        } else {
+            const ceiling = this.gcHardLimit * 0.95;
+            this.gcThreshold = Math.min(ceiling, this.gcThreshold * 1.05);
+        }
+
+>>>>>>> Stashed changes
         return freed;
     }
 
@@ -322,6 +366,7 @@ class MemoryManager {
      * Cleans up all allocated memory.
      */
     cleanup() {
+        this.gc(true);
         this.allocated = 0;
         this.pools.clear();
     }
@@ -595,6 +640,8 @@ class LuaInterpreter {
         this.context = context;
         this.variables = new Map();
         this.functions = new Map();
+        this.callStackDepth = 0;
+        this.maxCallDepth = (context && context.__maxCallDepth) || 1000;
     }
 
     /**
@@ -737,7 +784,16 @@ class LuaInterpreter {
         }
 
         if (this.functions.has(name)) {
-            return this.functions.get(name)(...args);
+            if (this.callStackDepth >= this.maxCallDepth) {
+                throw new Error(`Recursion depth exceeded (${this.maxCallDepth})`);
+            }
+
+            this.callStackDepth++;
+            try {
+                return this.functions.get(name)(...args);
+            } finally {
+                this.callStackDepth--;
+            }
         }
 
         return null;

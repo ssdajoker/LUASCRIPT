@@ -60,12 +60,33 @@ class PerformanceTools extends EventEmitter {
         this.emit('initComplete');
     }
 
+<<<<<<< Updated upstream
     /**
      * Profiles a given piece of code to analyze its performance.
      * @param {string} code - The code to profile.
      * @param {object} [options={}] - Profiling options.
      * @returns {Promise<object>} A promise that resolves with the profiling report.
      */
+=======
+    shutdown() {
+        if (this.monitor && typeof this.monitor.stop === 'function') {
+            this.monitor.stop();
+        }
+
+        if (this.gpuAccelerator && typeof this.gpuAccelerator.shutdown === 'function') {
+            this.gpuAccelerator.shutdown();
+        }
+
+        if (this.profiler && typeof this.profiler.shutdown === 'function') {
+            this.profiler.shutdown();
+        }
+
+        if (this.optimizer && typeof this.optimizer.shutdown === 'function') {
+            this.optimizer.shutdown();
+        }
+    }
+
+>>>>>>> Stashed changes
     async profile(code, options = {}) {
         return this.profiler.profile(code, options);
     }
@@ -166,12 +187,22 @@ class AdvancedProfiler {
         this.cpuSamples = [];
     }
 
+<<<<<<< Updated upstream
     /**
      * Profiles a given piece of code.
      * @param {string} code - The code to profile.
      * @param {object} [options={}] - Profiling options.
      * @returns {Promise<object>} A promise that resolves with the detailed profile report.
      */
+=======
+    shutdown() {
+        this.stopCPUSampling();
+        this.callStack = [];
+        this.memorySnapshots = [];
+        this.cpuSamples = [];
+    }
+
+>>>>>>> Stashed changes
     async profile(code, options = {}) {
         const profileId = this.generateProfileId();
         const startTime = process.hrtime.bigint();
@@ -658,6 +689,13 @@ class GPUAccelerator {
             default:
                 return data;
         }
+    }
+
+    shutdown() {
+        this.computeShaders.clear();
+        this.buffers.clear();
+        this.available = false;
+        this.initialized = false;
     }
 
     createVectorAddShader() {

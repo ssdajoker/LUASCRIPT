@@ -4,8 +4,16 @@
   "description": "Complete JavaScript-to-Lua transpiler with advanced runtime optimization - Tony Yoka's Unified Team Implementation",
   "main": "src/unified_luascript.js",
   "scripts": {
-    "test": "node test/test_unified_system.js",
-  "test:analysis": "tsx --test src/agents/resolver-agent.test.ts src/agents/auditor-agent.test.ts src/core/symbol-table.test.ts src/ide/resolution-diagnostics.test.ts src/language/parser.test.ts",
+    "test": "npm run test:core && npm run test:phase1 && node tests/test_memory_management.js",
+    "test:enhanced": "node test/test_enhanced_transpiler.js",
+    "test:all": "npm test && npm run test:enhanced && npm run test:legacy",
+    "test:phase1": "node test/test_perfect_parser_phase1.js && node test/test_perfect_parser_phase1_negative.js",
+    "test:smoke": "node scripts/smoke_ci.js",
+    "test:legacy": "node test/test_unified_system.js all",
+    "test:legacy:parser": "node test/legacy/parser.suite.js",
+    "test:legacy:runtime": "node test/legacy/runtime.suite.js",
+    "test:legacy:transpiler": "node test/legacy/transpiler.suite.js",
+    "test:analysis": "tsx --test src/agents/resolver-agent.test.ts src/agents/auditor-agent.test.ts src/core/symbol-table.test.ts src/ide/resolution-diagnostics.test.ts src/language/parser.test.ts",
     "test:core": "node -e \"const {UnifiedSystemTests} = require('./test/test_unified_system.js'); const suite = new UnifiedSystemTests(); suite.testBasicTranspilation().then(() => suite.testRuntimeExecution()).then(() => console.log('Core tests complete'));\"",
     "test:performance": "node -e \"const {UnifiedSystemTests} = require('./test/test_unified_system.js'); const suite = new UnifiedSystemTests(); suite.testPerformanceTools().then(() => console.log('Performance tests complete'));\"",
     "test:integration": "node -e \"const {UnifiedSystemTests} = require('./test/test_unified_system.js'); const suite = new UnifiedSystemTests(); suite.testFullPipeline().then(() => console.log('Integration tests complete'));\"",
@@ -15,6 +23,7 @@
     "start": "node src/unified_luascript.js",
     "benchmark": "node -e \"const {UnifiedLuaScript} = require('./src/unified_luascript.js'); const system = UnifiedLuaScript.createProduction(); system.initializeComponents().then(() => system.benchmark('let x = 5;', 100)).then(result => console.log('Benchmark:', result));\"",
     "validate": "npm run test:victory && echo 'LUASCRIPT VALIDATION COMPLETE - VICTORY ACHIEVED!'",
+    "ir:validate": "node tests/ir/run_ir_validate.js",
     "prepare": "husky install"
   },
   "keywords": [

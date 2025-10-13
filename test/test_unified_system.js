@@ -32,8 +32,7 @@ class UnifiedSystemTests {
             await this.testFullPipeline();
             await this.testVictoryValidation();
             
-            this.printResults();
-            
+            return this.printResults();
         } catch (error) {
             console.error('❌ Test suite failed:', error.message);
             throw error;
@@ -307,16 +306,62 @@ class UnifiedSystemTests {
         }
         
         console.log('=' .repeat(70));
+        return this.failedTests === 0;
     }
 }
 
+async function runParserSuite() {
+    console.log('\n🧩 Running Legacy Parser Suite...');
+    const testSuite = new UnifiedSystemTests();
+    await testSuite.testBasicTranspilation();
+    await testSuite.testAdvancedFeatures();
+    return testSuite.printResults();
+}
+
+async function runRuntimeSuite() {
+    console.log('\n⚙️  Running Legacy Runtime Suite...');
+    const testSuite = new UnifiedSystemTests();
+    await testSuite.testRuntimeExecution();
+    await testSuite.testPerformanceTools();
+    return testSuite.printResults();
+}
+
+async function runTranspilerSuite() {
+    console.log('\n🚚 Running Legacy Transpiler Suite...');
+    const testSuite = new UnifiedSystemTests();
+    await testSuite.testFullPipeline();
+    await testSuite.testVictoryValidation();
+    return testSuite.printResults();
+}
+
+const SUITE_RUNNERS = {
+    parser: runParserSuite,
+    runtime: runRuntimeSuite,
+    transpiler: runTranspilerSuite,
+    all: async () => {
+        const testSuite = new UnifiedSystemTests();
+        return testSuite.runAllTests();
+    }
+};
+
 // Run tests if this file is executed directly
 if (require.main === module) {
-    const testSuite = new UnifiedSystemTests();
-    testSuite.runAllTests().catch(error => {
+    const selection = (process.argv[2] || 'all').toLowerCase();
+    const runner = SUITE_RUNNERS[selection];
+
+    if (!runner) {
+        console.error(`Unknown suite "${selection}". Available suites: ${Object.keys(SUITE_RUNNERS).join(', ')}`);
+        process.exit(1);
+    }
+
+    runner().then(success => {
+        if (!success) {
+            process.exit(1);
+        }
+    }).catch(error => {
         console.error('Test suite failed:', error);
         process.exit(1);
     });
 }
 
-module.exports = { UnifiedSystemTests };
+module.exports = { UnifiedSystemTests, runParserSuite, runRuntimeSuite, runTranspilerSuite };

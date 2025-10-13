@@ -96,6 +96,15 @@ class MemoryManager {
             pooledNode.inUse = true;
             pooledNode.type = type;
             pooledNode.data = { ...data };
+            if (pooledNode.__dataKeys) {
+                for (const key of pooledNode.__dataKeys) {
+                    delete pooledNode[key];
+                }
+            }
+            pooledNode.__dataKeys = Object.keys(data);
+            for (const key of pooledNode.__dataKeys) {
+                pooledNode[key] = data[key];
+            }
             pooledNode.lastUsed = Date.now();
             pooledNode._allocated = true;
             
@@ -114,7 +123,8 @@ class MemoryManager {
             type,
             ...data,
             _allocated: true,
-            _pooled: false
+            _pooled: false,
+            __dataKeys: Object.keys(data)
         };
         
         this.nodeCount++;
@@ -191,6 +201,12 @@ class MemoryManager {
                     if (pool) {
                         node.inUse = false;
                         node.data = {};
+                        if (node.__dataKeys) {
+                            for (const key of node.__dataKeys) {
+                                delete node[key];
+                            }
+                            node.__dataKeys = [];
+                        }
                         pool.allocated--;
                     }
                 }

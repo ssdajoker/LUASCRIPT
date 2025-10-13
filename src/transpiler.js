@@ -19,6 +19,8 @@
 const fs = require('fs');
 const path = require('path');
 const { OptimizedLuaScriptTranspiler } = require('./optimized_transpiler');
+const { parseAndLower } = require('./ir/pipeline');
+const { emitLuaFromIR } = require('./ir/emitter');
 
 /**
  * The main transpiler class that orchestrates the conversion of JavaScript to Lua.
@@ -45,6 +47,8 @@ class LuaScriptTranspiler {
             enableParallelProcessing: options.enableParallelProcessing !== false,
             enableCaching: options.enableCaching !== false,
             enableProfiling: options.enableProfiling !== false,
+            useCanonicalIR: options.useCanonicalIR !== false,
+            validateLuaBalance: options.validateLuaBalance !== false,
             ...options
         };
         
@@ -76,34 +80,50 @@ class LuaScriptTranspiler {
         this.stats.transpilationsCount++;
         
         try {
-            // Use optimized transpiler if enabled and available
-            if (this.options.enableOptimizations && this.optimizedTranspiler) {
-                console.log('🚀 APPLYING TONY YOKA\'S 20 PS2/PS3 OPTIMIZATIONS...');
-                
-                const optimizedResult = await this.optimizedTranspiler.transpile(jsCode, options);
-                this.stats.optimizationsApplied++;
-                
-                // Apply runtime library injection to optimized result
-                const finalResult = this.injectRuntimeLibrary(optimizedResult, options);
-                
+            if (this.shouldUseCanonicalPipeline(options)) {
+                const canonicalResult = this.transpileWithCanonicalIR(jsCode, options);
                 const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
                 this.stats.totalTime += duration;
-                
-                console.log(`✅ OPTIMIZATION COMPLETE: ${duration.toFixed(2)}ms`);
-                return finalResult;
+                return canonicalResult;
             }
-            
-            // Fallback to standard transpilation
-            console.log('📝 Using standard transpilation (optimizations disabled)');
+
+            // Legacy optimized path retained as fallback
+            if (this.options.enableOptimizations && this.optimizedTranspiler) {
+                console.log('🚀 APPLYING TONY YOKA\'S 20 PS2/PS3 OPTIMIZATIONS...');
+
+                const optimizedResult = await this.optimizedTranspiler.transpile(jsCode, options);
+                this.stats.optimizationsApplied++;
+
+                // Ensure string concatenation is correct even on optimized path
+                let optimizedCode = optimizedResult.code || optimizedResult;
+                optimizedCode = this.fixStringConcatenation(optimizedCode);
+                if (this.options.validateLuaBalance !== false) {
+                    this.validateLuaBalanceOrThrow(optimizedCode, { phase: 'optimized' });
+                }
+
+                const finalCode = this.injectRuntimeLibrary(optimizedCode, options);
+                const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
+                this.stats.totalTime += duration;
+
+                console.log(`✅ OPTIMIZATION COMPLETE: ${duration.toFixed(2)}ms`);
+                return {
+                    code: finalCode,
+                    ir: null,
+                    stats: {
+                        duration,
+                        optimizations: this.stats.optimizationsApplied,
+                        originalSize: jsCode.length,
+                        filename: options && options.filename ? options.filename : null,
+                    },
+                };
+            }
+
+            console.log('📝 Using legacy string-rewrite transpilation');
             let luaCode = jsCode;
 
-            // Phase 1B Critical Fixes - Order matters!
             luaCode = this.fixEqualityOperators(luaCode);
             luaCode = this.fixLogicalOperators(luaCode);
             luaCode = this.fixStringConcatenation(luaCode);
-            luaCode = this.injectRuntimeLibrary(luaCode, options);
-
-            // Additional JavaScript to Lua conversions
             luaCode = this.convertVariableDeclarations(luaCode);
             luaCode = this.convertFunctionDeclarations(luaCode);
             luaCode = this.convertConditionals(luaCode);
@@ -111,15 +131,217 @@ class LuaScriptTranspiler {
             luaCode = this.convertArrays(luaCode);
             luaCode = this.convertObjects(luaCode);
 
+            if (this.options.validateLuaBalance !== false) {
+                this.validateLuaBalanceOrThrow(luaCode, { phase: 'legacy' });
+            }
+
+            luaCode = this.injectRuntimeLibrary(luaCode, options);
+
             const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
             this.stats.totalTime += duration;
 
-            return luaCode;
+            return {
+                code: luaCode,
+                ir: null,
+                stats: {
+                    duration,
+                    optimizations: 0,
+                    originalSize: jsCode.length,
+                    filename: options && options.filename ? options.filename : null,
+                },
+            };
             
         } catch (error) {
             console.error('❌ TRANSPILATION ERROR:', error.message);
             throw error;
         }
+    }
+
+    shouldUseCanonicalPipeline(options = {}) {
+        if (options.useCanonicalIR === false) {
+            return false;
+        }
+        return this.options.useCanonicalIR !== false;
+    }
+
+    transpileWithCanonicalIR(jsCode, options = {}) {
+        const ir = parseAndLower(jsCode, {
+            sourcePath: options.filename || null,
+            metadata: { authoredBy: 'LuaScriptTranspiler' },
+        });
+
+        let luaCode = emitLuaFromIR(ir, {
+            indent: '  ',
+        });
+
+        // Apply post-emission heuristics to retain legacy Lua expectations
+        luaCode = this.fixStringConcatenation(luaCode);
+
+        if (this.options.validateLuaBalance !== false) {
+            this.validateLuaBalanceOrThrow(luaCode, { phase: 'canonical-ir' });
+        }
+
+        const finalCode = this.injectRuntimeLibrary(luaCode, options);
+
+        const stats = {
+            originalSize: jsCode.length,
+            luaSize: finalCode.length,
+            optimizations: this.stats.optimizationsApplied,
+            filename: options && options.filename ? options.filename : null,
+            pipeline: 'canonical-ir',
+        };
+
+        return {
+            code: finalCode,
+            ir,
+            stats,
+        };
+    }
+
+    /**
+     * Validate balanced delimiters in Lua code: (), {}, []
+     * Throws on mismatch/imbalance. Ignores characters inside string literals.
+     */
+    validateLuaBalanceOrThrow(code, ctx = {}) {
+        // Comment- and string-aware scanner. Handles:
+        // - Single/double quoted strings with escapes
+        // - Lua long strings [=*[ ... ]=*]
+        // - Line comments -- ... EOL
+        // - Block comments --[[ ... ]] and with equal signs --[=[ ... ]=]
+        const stack = [];
+        const matchPair = (o, c) => (o === '(' && c === ')') || (o === '{' && c === '}') || (o === '[' && c === ']');
+
+        let i = 0;
+        const n = code.length;
+
+        // helpers to detect long brackets [=*[ and ]=*]
+        const matchLongOpen = (pos) => {
+            if (code[pos] !== '[') return 0;
+            let j = pos + 1;
+            let eqs = 0;
+            while (j < n && code[j] === '=') { eqs++; j++; }
+            if (code[j] === '[') return eqs + 1; // levels = eqs + 1 (non-zero indicates open)
+            return 0;
+        };
+        const matchLongClose = (pos, levels) => {
+            if (code[pos] !== ']') return false;
+            let j = pos + 1;
+            let eqs = 0;
+            while (j < n && code[j] === '=') { eqs++; j++; }
+            return (eqs === (levels - 1)) && code[j] === ']';
+        };
+
+        let inLineComment = false;
+        let inBlockComment = false;
+        let blockLevels = 0; // for --[=[ ... ]=] and long strings
+        let inString = false;
+        let stringQuote = '';
+        let inLongString = false; // [=*[ ... ]=*]
+        let longLevels = 0;
+
+        while (i < n) {
+            const ch = code[i];
+            const next = i + 1 < n ? code[i + 1] : '';
+
+            // Handle line comment
+            if (inLineComment) {
+                if (ch === '\n') inLineComment = false;
+                i++;
+                continue;
+            }
+
+            // Handle block comment
+            if (inBlockComment) {
+                if (matchLongClose(i, blockLevels)) {
+                    // skip ]=*]
+                    i += 2 + (blockLevels - 1);
+                    inBlockComment = false;
+                    continue;
+                }
+                i++;
+                continue;
+            }
+
+            // Handle long string
+            if (inLongString) {
+                if (matchLongClose(i, longLevels)) {
+                    i += 2 + (longLevels - 1);
+                    inLongString = false;
+                    continue;
+                }
+                i++;
+                continue;
+            }
+
+            // Handle quoted strings
+            if (inString) {
+                if (ch === '\\') { i += 2; continue; }
+                if (ch === stringQuote) { inString = false; stringQuote = ''; i++; continue; }
+                i++;
+                continue;
+            }
+
+            // Start of comment?
+            if (ch === '-' && next === '-') {
+                // Check for block comment start --[=*[ ...
+                const levels = matchLongOpen(i + 2);
+                if (levels) {
+                    inBlockComment = true;
+                    blockLevels = levels;
+                    // advance past --[=*[ (which is 2 + 1 + (levels-1) + 1)
+                    i += 2 + 1 + (levels - 1) + 1;
+                    continue;
+                }
+                // Else line comment
+                inLineComment = true;
+                i += 2;
+                continue;
+            }
+
+            // Start of long string?
+            const longOpen = matchLongOpen(i);
+            if (longOpen) {
+                inLongString = true;
+                longLevels = longOpen;
+                // jump past [=*[ (1 + (levels-1) + 1)
+                i += 1 + (longOpen - 1) + 1;
+                continue;
+            }
+
+            // Start of quoted string?
+            if (ch === '"' || ch === '\'') {
+                inString = true;
+                stringQuote = ch;
+                i++;
+                continue;
+            }
+
+            // Delimiter balancing (outside strings/comments)
+            if (ch === '(' || ch === '{' || ch === '[') {
+                stack.push(ch);
+                i++;
+                continue;
+            }
+            if (ch === ')' || ch === '}' || ch === ']') {
+                const open = stack.pop();
+                if (!open || !matchPair(open, ch)) {
+                    throw new Error(`Lua delimiter imbalance at index ${i} (phase=${ctx.phase || 'n/a'})`);
+                }
+                i++;
+                continue;
+            }
+
+            i++;
+        }
+
+        if (stack.length) {
+            throw new Error(`Lua delimiter imbalance: ${stack.length} unclosed delimiters (phase=${ctx.phase || 'n/a'})`);
+        }
+        return true;
+    }
+
+    isMatchingPair(open, close) {
+        return (open === '(' && close === ')') || (open === '{' && close === '}') || (open === '[' && close === ']');
     }
 
     /**
@@ -129,22 +351,31 @@ class LuaScriptTranspiler {
      * @returns {string} The transformed code.
      */
     fixStringConcatenation(code) {
-        // Handle string concatenation with proper context detection
-        // This regex looks for + operators that are likely string concatenation
-        // Pattern: string/variable + string/variable (including strings with special chars)
-        
-        // First pass: handle simple concatenation
-        let result = code.replace(
-            /(\w+|"[^"]*"|'[^']*')\s*\+\s*(\w+|"[^"]*"|'[^']*')/g,
-            '$1 .. $2'
-        );
-        
-        // Second pass: handle chained concatenation
-        result = result.replace(
-            /(\w+|"[^"]*"|'[^']*')(\s*\.\.\s*(\w+|"[^"]*"|'[^']*'))+\s*\+\s*(\w+|"[^"]*"|'[^']*')/g,
-            '$1$2 .. $4'
-        );
-        
+        // Only convert + to .. when at least one operand is a string literal.
+        // This avoids changing numeric addition like 5 + 3.
+        const str = `\"(?:[^\"\\\\]|\\\\.)*\"|'(?:[^'\\\\]|\\\\.)*'`;
+        const ident = `[A-Za-z_][A-Za-z0-9_\.\[\]]*`;
+
+        let result = code;
+        const patterns = [
+            // string + identifier/property
+            new RegExp(`(${str})\\s*\\+\\s*(${ident})`, 'g'),
+            // identifier/property + string
+            new RegExp(`(${ident})\\s*\\+\\s*(${str})`, 'g'),
+            // string + string
+            new RegExp(`(${str})\\s*\\+\\s*(${str})`, 'g'),
+        ];
+
+        let replaced;
+        do {
+            replaced = false;
+            for (const re of patterns) {
+                const before = result;
+                result = result.replace(re, '$1 .. $2');
+                if (result !== before) replaced = true;
+            }
+        } while (replaced);
+
         return result;
     }
 
@@ -296,14 +527,14 @@ local Math = runtime.Math
         try {
             console.log(`🔄 TRANSPILING: ${inputPath}`);
             const jsCode = fs.readFileSync(inputPath, 'utf8');
-            const luaCode = await this.transpile(jsCode, options);
+            const result = await this.transpile(jsCode, options);
             
             if (outputPath) {
-                fs.writeFileSync(outputPath, luaCode, 'utf8');
+                fs.writeFileSync(outputPath, result.code, 'utf8');
                 console.log(`✅ TRANSPILED: ${inputPath} -> ${outputPath}`);
             }
             
-            return luaCode;
+            return result;
         } catch (error) {
             console.error(`❌ ERROR TRANSPILING ${inputPath}:`, error.message);
             throw error;

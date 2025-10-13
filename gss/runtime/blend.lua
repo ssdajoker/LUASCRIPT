@@ -49,7 +49,7 @@ function M.blend_overlay(src, dst)
             return 255 - (2 * (255 - s) * (255 - d)) / 255
         end
     end
-    
+
     return {
         r = clamp(overlay_channel(src.r, dst.r)),
         g = clamp(overlay_channel(src.g, dst.g)),
@@ -63,7 +63,7 @@ function M.blend_softlight(src, dst)
     local function softlight_channel(s, d)
         s = s / 255
         d = d / 255
-        
+
         if s < 0.5 then
             return 255 * (d - (1 - 2 * s) * d * (1 - d))
         else
@@ -71,7 +71,7 @@ function M.blend_softlight(src, dst)
             return 255 * (d + (2 * s - 1) * (g - d))
         end
     end
-    
+
     return {
         r = clamp(softlight_channel(src.r, dst.r)),
         g = clamp(softlight_channel(src.g, dst.g)),
@@ -84,34 +84,34 @@ end
 function M.composite_buffers(src_buf, dst_buf, w, h, blend_mode)
     blend_mode = blend_mode or "normal"
     local result = {}
-    
+
     local blend_fn = M["blend_" .. blend_mode] or M.blend_normal
-    
+
     for i = 0, w * h - 1 do
         local offset = i * 4
-        
+
         local src = {
             r = src_buf[offset + 0],
             g = src_buf[offset + 1],
             b = src_buf[offset + 2],
             a = src_buf[offset + 3]
         }
-        
+
         local dst = {
             r = dst_buf[offset + 0] or 0,
             g = dst_buf[offset + 1] or 0,
             b = dst_buf[offset + 2] or 0,
             a = dst_buf[offset + 3] or 0
         }
-        
+
         local blended = blend_fn(src, dst, src.a)
-        
+
         result[offset + 0] = blended.r
         result[offset + 1] = blended.g
         result[offset + 2] = blended.b
         result[offset + 3] = blended.a
     end
-    
+
     return result
 end
 
@@ -120,14 +120,14 @@ function M.composite_layers(layers, w, h, blend_modes)
     if #layers == 0 then
         return {}
     end
-    
+
     local result = layers[1]
-    
+
     for i = 2, #layers do
         local blend_mode = blend_modes and blend_modes[i] or "normal"
         result = M.composite_buffers(layers[i], result, w, h, blend_mode)
     end
-    
+
     return result
 end
 

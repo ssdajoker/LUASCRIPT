@@ -8,18 +8,31 @@
  * Manages the runtime memory, including the call stack and heap, to prevent memory leaks and stack overflows.
  */
 class RuntimeMemoryManager {
+<<<<<<< Updated upstream
     /**
      * Creates an instance of the RuntimeMemoryManager.
      * @param {number} [maxCallStack=1000] - The maximum depth of the call stack.
      * @param {number} [maxHeapSize=52428800] - The maximum size of the heap in bytes (defaults to 50MB).
      */
     constructor(maxCallStack = 1000, maxHeapSize = 50 * 1024 * 1024) { // 50MB default
+=======
+    constructor(maxCallStack = 1000, maxHeapSize = 50 * 1024 * 1024, gcOptions = {}) { // 50MB default
+>>>>>>> Stashed changes
         this.maxCallStack = maxCallStack;
         this.maxHeapSize = maxHeapSize;
         this.callStack = [];
         this.heapSize = 0;
         this.allocatedObjects = new WeakSet();
-        this.gcThreshold = maxHeapSize * 0.8; // Trigger GC at 80% capacity
+
+        this.gcTargetRatio = Math.min(Math.max(gcOptions.targetRatio ?? 0.62, 0.4), 0.9);
+        this.gcHardRatio = Math.min(Math.max(gcOptions.hardLimitRatio ?? 0.85, this.gcTargetRatio + 0.05), 0.98);
+        this.gcMinIntervalMs = Math.max(gcOptions.minIntervalMs ?? 200, 0);
+        this.gcSmoothingWindow = Math.max(gcOptions.smoothingWindow ?? 5, 1);
+        this.lastGcTimestamp = 0;
+        this.recentHeapPeaks = [];
+
+        this.gcThreshold = this.maxHeapSize * this.gcTargetRatio;
+        this.gcHardLimit = this.maxHeapSize * this.gcHardRatio;
     }
 
     /**
@@ -49,6 +62,7 @@ class RuntimeMemoryManager {
         }
     }
 
+<<<<<<< Updated upstream
     /**
      * Allocates an object on the heap, triggering garbage collection if necessary.
      * @param {object} obj - The object to allocate.
@@ -62,29 +76,86 @@ class RuntimeMemoryManager {
             
             if (this.heapSize + estimatedSize > this.maxHeapSize) {
                 throw new Error(`Out of memory: heap size limit ${this.maxHeapSize} bytes exceeded`);
+=======
+    adjustHeap(bytes) {
+        if (bytes === 0) {
+            return;
+        }
+
+        if (bytes > 0) {
+            if (this.heapSize + bytes > this.maxHeapSize) {
+                this.triggerGarbageCollection({ reason: 'hard-limit-precheck', aggressive: true });
+
+                if (this.heapSize + bytes > this.maxHeapSize) {
+                    throw new Error(`Out of memory: heap size limit ${this.maxHeapSize} bytes exceeded`);
+                }
+>>>>>>> Stashed changes
             }
+
+            this.heapSize += bytes;
+            this.recentHeapPeaks.push(this.heapSize);
+            if (this.recentHeapPeaks.length > this.gcSmoothingWindow) {
+                this.recentHeapPeaks.shift();
+            }
+
+            if (this.heapSize > this.gcHardLimit) {
+                this.triggerGarbageCollection({ reason: 'hard-limit', aggressive: true });
+            } else if (this.heapSize > this.gcThreshold) {
+                this.maybeTriggerAdaptiveGC();
+            }
+        } else {
+            this.heapSize = Math.max(0, this.heapSize + bytes);
         }
-        
-        this.heapSize += estimatedSize;
+    }
+
+    allocateObject(obj, estimatedSize = 64) {
+        this.adjustHeap(estimatedSize);
         this.allocatedObjects.add(obj);
-        
-        if (this.heapSize > this.gcThreshold) {
-            this.triggerGarbageCollection();
-        }
-        
         return obj;
     }
 
+<<<<<<< Updated upstream
     /**
      * Simulates garbage collection, freeing up a portion of the heap.
      * @private
      */
     triggerGarbageCollection() {
+=======
+    maybeTriggerAdaptiveGC() {
+        const now = Date.now();
+        if (now - this.lastGcTimestamp < this.gcMinIntervalMs) {
+            return;
+        }
+
+        const averagePeak = this.recentHeapPeaks.length
+            ? this.recentHeapPeaks.reduce((sum, value) => sum + value, 0) / this.recentHeapPeaks.length
+            : this.heapSize;
+
+        if (averagePeak >= this.gcThreshold) {
+            this.triggerGarbageCollection({ reason: 'threshold' });
+        }
+    }
+
+    triggerGarbageCollection(options = {}) {
+        const { reason = 'manual', aggressive = false } = options;
+
+>>>>>>> Stashed changes
         // Simulate garbage collection by reducing heap size
         const beforeSize = this.heapSize;
-        this.heapSize = Math.max(0, this.heapSize * 0.7); // Assume 30% can be collected
-        
-        console.log(`GC: Freed ${beforeSize - this.heapSize} bytes, heap size now ${this.heapSize} bytes`);
+        const reductionFactor = aggressive ? 0.5 : 0.7;
+        this.heapSize = Math.max(0, this.heapSize * reductionFactor); // Assume collection based on aggressiveness
+        this.lastGcTimestamp = Date.now();
+
+        const freed = beforeSize - this.heapSize;
+
+        if (freed < this.maxHeapSize * 0.05) {
+            this.gcThreshold = Math.max(this.maxHeapSize * this.gcTargetRatio, this.gcThreshold * 0.95);
+        } else {
+            const ceiling = this.gcHardLimit * 0.95;
+            this.gcThreshold = Math.min(ceiling, this.gcThreshold * 1.05);
+        }
+
+        console.log(`GC: Freed ${freed} bytes (reason=${reason}, aggressive=${aggressive}), heap size now ${this.heapSize} bytes, next threshold ${(this.gcThreshold / this.maxHeapSize * 100).toFixed(1)}%`);
     }
 
     /**
@@ -108,7 +179,7 @@ class RuntimeMemoryManager {
     cleanup() {
         this.callStack = [];
         this.heapSize = 0;
-        this.triggerGarbageCollection();
+        this.triggerGarbageCollection({ reason: 'cleanup', aggressive: true });
     }
 }
 
@@ -172,6 +243,18 @@ class Environment {
         
         throw new Error(`Undefined variable '${name}'`);
     }
+
+    resolve(name) {
+        if (this.variables.has(name)) {
+            return this;
+        }
+
+        if (this.parent) {
+            return this.parent.resolve(name);
+        }
+
+        return null;
+    }
 }
 
 /**
@@ -206,6 +289,7 @@ class LuaScriptFunction {
             const param = params[i];
             const value = i < args.length ? args[i] : null;
             environment.define(param.name, value);
+            interpreter.trackStringAllocation(environment, param.name, value);
         }
         
         try {
@@ -225,6 +309,7 @@ class LuaScriptFunction {
             throw error;
         } finally {
             interpreter.runtimeMemory.exitFunction();
+            interpreter.cleanupEnvironmentStrings(environment);
         }
         
         return null;
@@ -250,6 +335,7 @@ class Interpreter {
         this.globals = new Environment();
         this.environment = this.globals;
         this.runtimeMemory = new RuntimeMemoryManager();
+        this.stringAllocations = new WeakMap();
         
         // Define built-in functions
         this.defineBuiltins();
@@ -321,6 +407,7 @@ class Interpreter {
         } finally {
             // Cleanup memory
             this.runtimeMemory.cleanup();
+            this.stringAllocations = new WeakMap();
         }
     }
 
@@ -476,7 +563,12 @@ class Interpreter {
         const value = this.evaluate(expression.right);
         
         if (expression.left.type === 'Identifier') {
-            this.environment.set(expression.left.name, value);
+            const targetEnv = this.environment.resolve(expression.left.name);
+            if (!targetEnv) {
+                throw new Error(`Undefined variable '${expression.left.name}'`);
+            }
+            targetEnv.set(expression.left.name, value);
+            this.trackStringAllocation(targetEnv, expression.left.name, value);
             return value;
         }
         
@@ -525,6 +617,7 @@ class Interpreter {
         for (const declaration of statement.declarations) {
             const value = declaration.init ? this.evaluate(declaration.init) : null;
             this.environment.define(declaration.id.name, value);
+            this.trackStringAllocation(this.environment, declaration.id.name, value);
         }
     }
 
@@ -569,6 +662,7 @@ class Interpreter {
             }
         } finally {
             this.environment = previous;
+            this.cleanupEnvironmentStrings(environment);
         }
     }
 
@@ -640,6 +734,55 @@ class Interpreter {
      */
     getMemoryStats() {
         return this.runtimeMemory.getStats();
+    }
+
+    trackStringAllocation(environment, name, value) {
+        if (!environment) {
+            return;
+        }
+
+        const allocations = this.stringAllocations.get(environment) || new Map();
+        const previousSize = allocations.get(name) || 0;
+        const newSize = typeof value === 'string' ? Buffer.byteLength(value, 'utf8') : 0;
+        const delta = newSize - previousSize;
+
+        if (delta !== 0) {
+            this.runtimeMemory.adjustHeap(delta);
+        }
+
+        if (newSize > 0) {
+            allocations.set(name, newSize);
+            this.stringAllocations.set(environment, allocations);
+        } else if (previousSize > 0) {
+            allocations.delete(name);
+            if (allocations.size === 0) {
+                this.stringAllocations.delete(environment);
+            } else {
+                this.stringAllocations.set(environment, allocations);
+            }
+        }
+    }
+
+    cleanupEnvironmentStrings(environment) {
+        if (!environment) {
+            return;
+        }
+
+        const allocations = this.stringAllocations.get(environment);
+        if (!allocations || allocations.size === 0) {
+            return;
+        }
+
+        let totalSize = 0;
+        for (const size of allocations.values()) {
+            totalSize += size;
+        }
+
+        if (totalSize !== 0) {
+            this.runtimeMemory.adjustHeap(-totalSize);
+        }
+
+        this.stringAllocations.delete(environment);
     }
 }
 

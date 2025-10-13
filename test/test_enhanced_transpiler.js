@@ -253,8 +253,24 @@ class EnhancedTranspilerTester {
         this.runTest(
             '2.9 - switch statement',
             'switch (x) { case 1: console.log("one"); break; case 2: console.log("two"); break; default: console.log("other"); }',
-            ['__switch_expr', 'elseif', 'else'],
+            ['__selector_expr', 'elseif', 'else'],
             ['switch', 'case', 'break']
+        );
+
+        // Test 2.10: for loop with array length
+        this.runTest(
+            '2.10 - for loop with array length',
+            'for (let i = 0; i <= items.length; i++) { total += items[i]; }',
+            ['for i = 0, #items do', 'total = total + items[i]'],
+            ['items.length', '++']
+        );
+
+        // Test 2.11: for loop with array length step
+        this.runTest(
+            '2.11 - for loop with array length step',
+            'for (let i = 0; i < values.length; i += 2) { pairs += values[i]; }',
+            ['for i = 0, #values - 1, 2 do', 'pairs = pairs + values[i]'],
+            ['values.length', '+=']
         );
     }
 
@@ -409,7 +425,7 @@ class EnhancedTranspilerTester {
             '5.1 - Function declaration',
             'function greet(name) { console.log("Hello " + name); }',
             ['local function greet(name)', 'console.log("Hello " .. name)', 'end'],
-            ['function greet', ') {', '}']
+            ['function greet(name) {', ') {', '}', 'local local']
         );
         
         // Test 5.2: Function expression
@@ -417,7 +433,7 @@ class EnhancedTranspilerTester {
             '5.2 - Function expression',
             'const add = function(a, b) { return a + b; };',
             ['local add = function(a, b)', 'return a + b', 'end'],
-            ['const', '= function', ') {']
+            ['const', ') {', 'local local']
         );
         
         // Test 5.3: Arrow function with block
@@ -425,7 +441,7 @@ class EnhancedTranspilerTester {
             '5.3 - Arrow function with block',
             'const multiply = (a, b) => { return a * b; };',
             ['local multiply = function(a, b)', 'return a * b', 'end'],
-            ['=>', ') {']
+            ['=>', ') {', 'local local']
         );
         
         // Test 5.4: Arrow function with expression
@@ -433,7 +449,7 @@ class EnhancedTranspilerTester {
             '5.4 - Arrow function with expression',
             'const square = (x) => x * x;',
             ['local square = function(x) return x * x end'],
-            ['=>']
+            ['=>', 'local local']
         );
         
         // Test 5.5: Function with multiple parameters
@@ -442,6 +458,14 @@ class EnhancedTranspilerTester {
             'function calculate(a, b, c, d) { return a + b + c + d; }',
             ['local function calculate(a, b, c, d)', 'return a + b + c + d', 'end'],
             []
+        );
+
+        // Test 5.6: Arrow function without parentheses
+        this.runTest(
+            '5.6 - Arrow function single param',
+            'const increment = x => { return x + 1; };',
+            ['local increment = function(x)', 'return x + 1', 'end'],
+            ['=>', 'local local']
         );
     }
 
@@ -522,8 +546,8 @@ class EnhancedTranspilerTester {
             for (let i = 0; i < arr.length; i++) {
                 sum += arr[i];
             }`,
-            ['local sum = 0', 'for i = 0', 'sum = sum + arr{i}'],
-            ['++', '+=']
+            ['local sum = 0', 'for i = 0, #arr - 1 do', 'sum = sum + arr[i]'],
+            ['++', '+=', 'arr.length']
         );
         
         // Test 7.3: Conditional with logical operators

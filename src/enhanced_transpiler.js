@@ -241,29 +241,20 @@ class EnhancedLuaScriptTranspiler {
      */
     fixStringConcatenation(code) {
         let result = code;
-        
-        // Pattern 1: String literal + anything
-        result = result.replace(
-            /(['"`])([^\1]*?)\1\s*\+\s*([^;,)\]}]+)/g,
-            (match, quote, content, rest) => {
-                return `${quote}${content}${quote} .. ${rest.trim()}`;
-            }
-        );
-        
-        // Pattern 2: Anything + string literal
-        result = result.replace(
-            /([^;,(\[{\s]+)\s*\+\s*(['"`])([^\2]*?)\2/g,
-            (match, left, quote, content) => {
-                return `${left.trim()} .. ${quote}${content}${quote}`;
-            }
-        );
-        
-        // Pattern 3: Chained concatenations
-        result = result.replace(
-            /(\w+|['"`][^'"`]*['"`])\s*\.\.\s*([^;,)\]}]+)\s*\+\s*([^;,)\]}]+)/g,
-            '$1 .. $2 .. $3'
-        );
-        
+        const leftPattern = /(['"`](?:\\.|[^'"`])*['"`])\s*\+\s*(\([^)]*\)|[^\s;,)}\]]+)/g;
+        const rightPattern = /(\([^)]*\)|[^\s;,({\[]+)\s*\+\s*(['"`](?:\\.|[^'"`])*['"`])/g;
+
+        let previous;
+        do {
+            previous = result;
+            result = result.replace(leftPattern, (match, literal, expr) => {
+                return `${literal} .. ${expr.trim()}`;
+            });
+            result = result.replace(rightPattern, (match, expr, literal) => {
+                return `${expr.trim()} .. ${literal}`;
+            });
+        } while (result !== previous);
+
         return result;
     }
 
@@ -412,19 +403,19 @@ class EnhancedLuaScriptTranspiler {
      */
     convertFunctionDeclarations(code) {
         let result = code;
-        
+
         // Named function declarations
         result = result.replace(
             /function\s+(\w+)\s*\(([^)]*)\)\s*\{/g,
-            'local function $1($2)'
+            (match, name, params) => `local function ${name}(${params})`
         );
-        
-        // Anonymous function expressions
+
+        // Anonymous function expressions (with optional existing local)
         result = result.replace(
-            /(\w+)\s*=\s*function\s*\(([^)]*)\)\s*\{/g,
-            'local $1 = function($2)'
+            /(?:local\s+)?(\w+)\s*=\s*function\s*\(([^)]*)\)\s*\{/g,
+            (match, name, params) => `local ${name} = function(${params})`
         );
-        
+
         return result;
     }
 
@@ -436,25 +427,25 @@ class EnhancedLuaScriptTranspiler {
      */
     convertArrowFunctions(code) {
         let result = code;
-        
+
         // Arrow function with block: (params) => { body }
         result = result.replace(
-            /(\w+)\s*=\s*\(([^)]*)\)\s*=>\s*\{/g,
-            'local $1 = function($2)'
+            /(?:local\s+)?(\w+)\s*=\s*\(([^)]*)\)\s*=>\s*\{/g,
+            (match, name, params) => `local ${name} = function(${params})`
         );
-        
+
         // Arrow function with single param: param => { body }
         result = result.replace(
-            /(\w+)\s*=\s*(\w+)\s*=>\s*\{/g,
-            'local $1 = function($2)'
+            /(?:local\s+)?(\w+)\s*=\s*(\w+)\s*=>\s*\{/g,
+            (match, name, param) => `local ${name} = function(${param})`
         );
-        
+
         // Arrow function with expression: (params) => expression
         result = result.replace(
-            /(\w+)\s*=\s*\(([^)]*)\)\s*=>\s*([^;{]+);?/g,
-            'local $1 = function($2) return $3 end'
+            /(?:local\s+)?(\w+)\s*=\s*\(([^)]*)\)\s*=>\s*([^;{]+);?/g,
+            (match, name, params, expr) => `local ${name} = function(${params}) return ${expr.trim()} end`
         );
-        
+
         return result;
     }
 
@@ -490,8 +481,13 @@ class EnhancedLuaScriptTranspiler {
     convertTernaryOperator(code) {
         // Convert ternary to if-then-else expression
         return code.replace(
-            /(\w+)\s*=\s*([^?]+)\?\s*([^:]+)\s*:\s*([^;]+);?/g,
-            '$1 = ($2) and $3 or $4'
+            /(\w[\w\.\[\]]*)\s*=\s*([^?]+?)\?\s*([^:]+?)\s*:\s*([^;]+);?/g,
+            (match, target, condition, truthy, falsy) => {
+                const trimmedCondition = condition.trim();
+                const trimmedTruthy = truthy.trim();
+                const trimmedFalsy = falsy.trim();
+                return `${target} = (${trimmedCondition}) and ${trimmedTruthy} or ${trimmedFalsy}`;
+            }
         );
     }
 
@@ -510,7 +506,7 @@ class EnhancedLuaScriptTranspiler {
         result = result.replace(
             /for\s*\(\s*(?:var|let|const)?\s*(\w+)\s*=\s*(\d+)\s*;\s*\1\s*<\s*(\d+)\s*;\s*\1\+\+\s*\)\s*\{/g,
             (match, varName, start, end) => {
-                const endVal = parseInt(end) - 1;
+                const endVal = parseInt(end, 10) - 1;
                 return `for ${varName} = ${start}, ${endVal} do`;
             }
         );
@@ -519,13 +515,35 @@ class EnhancedLuaScriptTranspiler {
             /for\s*\(\s*(?:var|let|const)?\s*(\w+)\s*=\s*(\d+)\s*;\s*\1\s*<=\s*(\d+)\s*;\s*\1\+\+\s*\)\s*\{/g,
             'for $1 = $2, $3 do'
         );
+
+        // For loops comparing against array length
+        result = result.replace(
+            /for\s*\(\s*(?:var|let|const)?\s*(\w+)\s*=\s*(\d+)\s*;\s*\1\s*<\s*(\w+)\.length\s*;\s*\1\+\+\s*\)\s*\{/g,
+            (match, iterator, start, arrayName) => {
+                return `for ${iterator} = ${start}, #${arrayName} - 1 do`;
+            }
+        );
+
+        result = result.replace(
+            /for\s*\(\s*(?:var|let|const)?\s*(\w+)\s*=\s*(\d+)\s*;\s*\1\s*<=\s*(\w+)\.length\s*;\s*\1\+\+\s*\)\s*\{/g,
+            (match, iterator, start, arrayName) => {
+                return `for ${iterator} = ${start}, #${arrayName} do`;
+            }
+        );
         
         // For loops with step (must handle += before it's converted)
         result = result.replace(
             /for\s*\(\s*(?:var|let|const)?\s*(\w+)\s*=\s*(\d+)\s*;\s*\1\s*<\s*(\d+)\s*;\s*\1\s*\+=\s*(\d+)\s*\)\s*\{/g,
             (match, varName, start, end, step) => {
-                const endVal = parseInt(end) - 1;
+                const endVal = parseInt(end, 10) - 1;
                 return `for ${varName} = ${start}, ${endVal}, ${step} do`;
+            }
+        );
+
+        result = result.replace(
+            /for\s*\(\s*(?:var|let|const)?\s*(\w+)\s*=\s*(\d+)\s*;\s*\1\s*<\s*(\w+)\.length\s*;\s*\1\s*\+=\s*(\d+)\s*\)\s*\{/g,
+            (match, iterator, start, arrayName, step) => {
+                return `for ${iterator} = ${start}, #${arrayName} - 1, ${step} do`;
             }
         );
         
@@ -564,14 +582,14 @@ class EnhancedLuaScriptTranspiler {
         result = result.replace(
             /switch\s*\(([^)]+)\)\s*\{/g,
             (match, expr) => {
-                return `local __switch_expr = ${expr}; if false then`;
+                return `local __selector_expr = ${expr}; if false then`;
             }
         );
         
         // Convert case statements
         result = result.replace(
             /case\s+([^:]+):/g,
-            'elseif __switch_expr == $1 then'
+            'elseif __selector_expr == $1 then'
         );
         
         // Convert default case
@@ -649,11 +667,11 @@ class EnhancedLuaScriptTranspiler {
             const char = result[i];
             
             if (char === '{') {
-                // Check if this is a table literal or control structure
-                // Look back to see what precedes it
-                const before = result.substring(Math.max(0, i - 20), i).trim();
-                const isTable = /[=,(\[]$/.test(before) || before.endsWith('=') || before.endsWith(',');
-                
+                // Check if this is a table literal or control structure by examining previous token
+                const before = result.substring(0, i).trimEnd();
+                const prevChar = before.length > 0 ? before[before.length - 1] : '';
+                const isTable = ['=', ',', '(', '[', '{', ':'].includes(prevChar);
+
                 inTable[depth] = isTable;
                 depth++;
                 output += char;
