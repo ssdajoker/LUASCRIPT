@@ -1,0 +1,176 @@
+# Unified Grand Master Plan (UGMP) — LuaScript Canonical IR & Parser
+
+## 1. Executive Summary
+
+This Unified Grand Master Plan consolidates findings from the local Phase‑A audit and the upstream audit into an actionable blueprint to deliver a canonical Intermediate Representation (IR) and a production‑grade parser for LuaScript. The end‑state vision is a single, deterministic pipeline: JavaScript → ESTree‑like AST → Canonical IR → Target back‑ends (Lua, WASM, C/LLVM), with provable correctness, stable performance, and consistent developer experience. The audits highlight strong upstream momentum (100% pass on a 16‑test suite; see ../luascript_upstream/audit_upstream/tests_report.md) and identify local documentation depth with numerous idea/plan markers but incomplete implementation coverage (42%; see audit/local_summary.md). Two accepted ADRs formalize a modular transpiler architecture and runtime memory management strategy (audit/adr_index.csv), but these are missing upstream, indicating divergence risk that must be addressed.
+
+This plan unifies both codebases around a versioned IR schema with explicit invariants and trace metadata. We will implement an IR builder/validator, deterministic lowering from the parser, and differential tests across back‑ends. Performance objectives focus on predictable compile time, emit parity, and portable optimizations. Balanced‑ternary innovations will be used for compact, collision‑resistant identifiers and deterministic ordering. The first 90 days focus on schema, parser integration, and Lua/WASM emit parity; the 6‑month horizon adds ML/AI optimization passes and optional LLVM/MLIR interop. Success is measured by reproducible builds, coverage, performance KPIs, and closure of high‑impact dangling ideas. Evidence links are embedded throughout to keep this document verifiable against audit artifacts.
+
+## 2. Current State Snapshot
+
+- SLOC: Local cloc unavailable (audit/cloc.json reports tool missing). Upstream cloc present (../luascript_upstream/audit_upstream/cloc.json).
+- Tests: Upstream 16/16 passed (../luascript_upstream/audit_upstream/tests_report.md). Local test capture present (audit/tests_report.md).
+- ADRs: 2 accepted locally (audit/adr_index.csv); upstream lacks these ADR files (see audit/diff_upstream_report.md → ADR — REMOVED).
+- Ideas & Coverage: 363 ideation markers, 42% implementation coverage; top dangling ideas include IDEA_2, IDEA_3, IDEA_4, IDEA_5 (audit/local_summary.md, audit/implementation_map.json).
+- Active Modules (last 30d, local): README.md, package.json, src/core/symbol-table.test.ts, src/agentic_ide.js, multiple test/temp/*.lua (audit/local_summary.md).
+- Linters/Security: ESLint warnings present; Semgrep executed (audit/quality_report.md). Upstream quality also captured (../luascript_upstream/audit_upstream/quality_report.md).
+- Differential: Many upstream temp tests absent locally; numerous local docs absent upstream (audit/diff_upstream_report.md).
+
+## 3. Problem Statement & Goals
+
+Problem: Divergent documentation and test assets plus partial implementation coverage impede reliability and back‑end parity. A canonical IR and a solid parser contract are necessary to formalize the pipeline, reduce ambiguity, and enable deterministic optimizations and validation.
+
+Goals:
+
+- Define and adopt a versioned Canonical IR with explicit invariants and trace metadata.
+- Establish parser → IR lowering contract with deterministic output.
+- Achieve emit parity across Lua and WASM; enable future C/LLVM targets.
+- Increase coverage of ideation markers; reduce dangling ideas by 80% in 90 days.
+
+## 4. Requirements
+
+- Functional:
+
+  - Parse ES2015+ subset (aligned to current feature usage) into ESTree‑like AST.
+  - Lower to Canonical IR with full coverage of statements/expressions used by LuaScript.
+  - Emit code for Lua and WASM from the same IR; maintain feature parity.
+
+- Non‑Functional:
+
+  - Performance: p95 compile < 300ms for typical modules; emission within 1.2× of current runtime.
+  - Stability: deterministic IR serialization; reproducible builds across platforms.
+  - Tooling: JSON Schema for IR; validator in CI; golden snapshot tests.
+  - Interop: FFI strategy for host interop; minimal, documented surface.
+
+## 5. Canonical IR Specification (Draft)
+
+This section embeds the draft; for full details, see docs/canonical_ir_spec.md.
+
+Key elements:
+- Versioned schema with Base Node Contract (id, kind, span, flags, meta) and module container.
+- Node Families covering module/statement/expression/pattern nodes.
+- Control‑Flow Graph (CFG) embedding for function‑like entities.
+- Validation strategy: JSON Schema, golden snapshots, differential back‑end checks, proof hooks.
+
+Evidence: docs/canonical_ir_spec.md, audit/diff_upstream_report.md (files referencing IR/TS removed upstream), audit/local_summary.md (ideas coverage).
+
+## 6. Parser Specification (Draft)
+
+- Input: JavaScript (current subset used by LuaScript). Output: ESTree‑like AST.
+- Phases:
+
+  1) Parse → AST (src/parser.js or TypeScript variant).
+  2) Normalize scopes/identifiers and comments.
+  3) Lower to Canonical IR (deterministic, stable ids, ordered lists).
+  4) Validate IR (schema + invariants) and produce golden JSON.
+- Error model: recoverable parse errors reported with spans; lowering fails fast on unsupported constructs.
+- Determinism: identical source yields byte‑identical IR JSON.
+- Traceability: every IR node carries span + origin; CFG references IR ids.
+
+Evidence: docs/canonical_ir_spec.md (Lowering Contract), audit/quality_report.md (lint signals), audit/tests_report.md.
+
+## 7. Optimization & ML/AI Strategy
+
+- Pipeline passes: constant folding, dead‑code elimination, inlining thresholding, loop unrolling (opt‑in), SSA normalization for analysis.
+- ML/AI hooks: heuristic tuning for pass ordering; optional model‑assisted cost estimation; ensure guardrails for determinism.
+- Lowering: graph‑based representation enables selective region lowering for back‑ends; quantization of numeric literals where safe.
+
+Evidence: src/performance_tools.js (upstream), audit/local_summary.md (active modules), docs/STRATEGIC_PLAN.md.
+
+## 8. Balanced‑Ternary Innovations
+
+- Use balanced‑ternary ids for IR node identifiers to ensure compact, sortable, and deterministic ordering; leverage encoding/decoding utilities in tests (e.g., tests/ir/builder.test.js).
+- Expected wins: reduced collision risk, consistent ordering across platforms, faster diffing in golden tests.
+
+Evidence: tests/ir/builder.test.js (balanced‑ternary references), docs/canonical_ir_spec.md (auditTags & builder requirements).
+
+## 9. Back‑Ends & Interop
+
+- Targets: Lua (primary), WASM (../luascript_upstream/src/wasm_backend.js), future C/LLVM/MLIR.
+- FFI strategy: minimal shim layer with stable ABI; document in docs/interop.md (to be authored in M2).
+- Parity testing: differential checks on emitted outputs from the same IR.
+
+Evidence: audit/diff_upstream_report.md (WASM backend present upstream), docs/canonical_ir_spec.md (differential back‑ends).
+
+## 10. Roadmap & Milestones
+
+- M0 (Weeks 0–2):
+
+  - Finalize IR schema v1.0; publish JSON Schema; scaffold validator.
+  - Parser normalization prototype; golden IR snapshots for 3 sample programs.
+  - Owners: Parser Lead (TBD), IR Lead (TBD).
+
+- M1 (Weeks 3–4):
+
+  - Deterministic lowering end‑to‑end; CI job `ir:validate` green.
+  - Lua emitter consumes IR; parity on sample suite; >90% golden stability.
+
+- M2 (Weeks 5–8):
+
+  - WASM emitter consumes IR; parity tests; FFI shim doc.
+  - Optimization passes: const‑fold, DCE, inline thresholds; performance benchmarks.
+
+- M3 (Weeks 9–12):
+
+  - Expand language features; formalize SSA option; doc parity.
+  - Close 80% of dangling ideas tied to parser/IR (see audit/implementation_map.json).
+
+- 6‑month outlook:
+
+  - Optional MLIR/LLVM bridge; ML/AI cost models; cross‑platform distribution.
+
+## 11. Work Breakdown
+
+- Epic A: Canonical IR
+
+  - Story A1: JSON Schema + validator (Owner: IR Lead)
+    - Task: Author schema; integrate AJV; add CI gate.
+  - Story A2: IR Builder API (Owner: IR Lead)
+    - Task: ID generation (balanced‑ternary); span propagation; immutable nodes.
+
+- Epic B: Parser → IR Lowering
+
+  - Story B1: ESTree AST generation (Owner: Parser Lead)
+    - Task: Parser normalization; comments/locations.
+  - Story B2: Deterministic lowering (Owner: Parser Lead)
+    - Task: Ordering rules; link CFG.
+
+- Epic C: Emitters & Parity
+
+  - Story C1: Lua emitter consumption (Owner: Runtime Lead)
+  - Story C2: WASM emitter consumption (Owner: Systems Lead)
+
+- Epic D: Optimization & QA
+
+  - Story D1: Core passes (Owner: Perf Lead)
+  - Story D2: Golden snapshots + diff harness (Owner: QA Lead)
+
+## 12. ADR Index & Open Questions
+
+- Decisions (local):
+  - ADR 0001: Transpiler Architecture Choice — Accepted (audit/adr_index.csv)
+  - ADR 0002: Runtime Memory Management Strategy — Accepted (audit/adr_index.csv)
+- Open Questions:
+  - Type system alignment (TS annotations optional?); decorators and Stage‑3 features.
+  - Macro hooks placement (pre‑lowering vs dedicated IR nodes).
+  - SSA form storage vs computed on demand (see docs/canonical_ir_spec.md, Open Questions).
+
+## 13. Acceptance Criteria & KPIs
+
+- Perf: p95 compile < 300ms for median module; emission within 1.2× baseline.
+- Correctness: golden IR diffs stable across platforms; 0 nondeterministic deltas over 200 sample cases.
+- Coverage: >95% lowering + emitter coverage; close 80% targeted dangling ideas.
+- Size: emitted Lua/WASM binary sizes within ±10% of baseline for target samples.
+
+## 14. Risk Register & Mitigations
+
+- Divergence of repos (local vs upstream) → Mitigation: treat UGMP as the source of truth; mirror key docs upstream; add CI checks (see audit/diff_upstream_report.md).
+- Determinism regression → Mitigation: golden snapshots; sorted stable ids; reproducibility job.
+- Performance regressions → Mitigation: perf gates in CI; budget‑based pass selection.
+- Licensing risks for dependencies → Mitigation: review audit/deps_report.md; add license scanning.
+
+References & Evidence Links
+
+- Local audit: audit/local_summary.md, audit/quality_report.md, audit/tests_report.md, audit/implementation_map.json, audit/adr_index.csv, audit/diff_upstream_report.md
+- Upstream audit: ../luascript_upstream/audit_upstream/FILE_TREE.md, ../luascript_upstream/audit_upstream/quality_report.md, ../luascript_upstream/audit_upstream/tests_report.md, ../luascript_upstream/audit_upstream/cloc.json
+- IR Draft: docs/canonical_ir_spec.md
