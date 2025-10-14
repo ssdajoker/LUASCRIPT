@@ -28,6 +28,9 @@ jobs:
       - name: Run IR report
         run: npm run -s ir:report
 
+      - name: Validate IR against JSON Schema
+        run: npm run -s ir:validate:schema
+
       - name: Upload IR status artifact
         if: always()
         uses: actions/upload-artifact@v4

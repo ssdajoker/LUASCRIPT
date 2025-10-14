@@ -1,6 +1,7 @@
 # Canonical Intermediate Representation (IR) Specification
 
-**Status:** Draft (October 12, 2025)
+**Status:** v1.0.0 (October 13, 2025)
+Schema: docs/canonical_ir.schema.json
 
 ## 🎯 Purpose
 
