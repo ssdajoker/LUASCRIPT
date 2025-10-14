@@ -8,6 +8,7 @@ Main documents:
 - Team Roles: docs/TEAM_ROLES.md
 - Phase 3 Integration Plan: docs/phase3_integration_plan.md
 - Community: docs/COMMUNITY.md
+- PR-first Workflow: docs/PR_WORKFLOW.md
 
 Audit Evidence (local):
 

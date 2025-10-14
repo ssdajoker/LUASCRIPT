@@ -61,3 +61,27 @@ static_warnings*.txt
 
 # PDF documentation (generated from markdown)
 *.pdf
+
+# Node & TypeScript caches
+.eslintcache
+*.tsbuildinfo
+
+# pnpm/yarn extras
+pnpm-lock.yaml
+.pnpm-store/
+
+# direnv
+.envrc
+.direnv/
+
+# Test temp outputs
+test/temp/
+tests/tmp/
+
+# Reports and tmp (do not untrack existing committed files)
+reports/**/tmp/
+reports/**/cache/
+
+# OS/editor histories
+.history/
+.vscode/**.history/

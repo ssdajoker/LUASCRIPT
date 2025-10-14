@@ -24,7 +24,8 @@
     "benchmark": "node -e \"const {UnifiedLuaScript} = require('./src/unified_luascript.js'); const system = UnifiedLuaScript.createProduction(); system.initializeComponents().then(() => system.benchmark('let x = 5;', 100)).then(result => console.log('Benchmark:', result));\"",
     "validate": "npm run test:victory && echo 'LUASCRIPT VALIDATION COMPLETE - VICTORY ACHIEVED!'",
     "ir:validate": "node tests/ir/run_ir_validate.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "pr": "bash scripts/pr.sh"
   },
   "keywords": [
     "luascript",
@@ -57,12 +58,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/LUASCRIPT.git"
+    "url": "https://github.com/ssdajoker/LUASCRIPT.git"
   },
   "bugs": {
-    "url": "https://github.com/your-org/LUASCRIPT/issues"
+    "url": "https://github.com/ssdajoker/LUASCRIPT/issues"
   },
-  "homepage": "https://github.com/your-org/LUASCRIPT#readme",
+  "homepage": "https://github.com/ssdajoker/LUASCRIPT#readme",
   "files": [
     "src/",
     "test/",
