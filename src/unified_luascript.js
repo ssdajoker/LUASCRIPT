@@ -13,6 +13,7 @@ const { AdvancedFeatures } = require('./advanced_features');
 const { PerformanceTools } = require('./performance_tools');
 const { AgenticIDE } = require('./agentic_ide');
 const { EventEmitter } = require('events');
+const metrics = require('./utils/metrics');
 
 /**
  * A unified system that integrates all LUASCRIPT components into a single, powerful interface.
@@ -104,6 +105,9 @@ class UnifiedLuaScript extends EventEmitter {
             
             this.stats.initialized = true;
             this.emit('initComplete', this.stats);
+            if (metrics.PERF_ENABLE) {
+                metrics.recordEvent('system.initComplete', { components: Array.from(this.components.keys()) });
+            }
             
         } catch (error) {
             this.emit('initError', { error: error.message });
@@ -122,6 +126,7 @@ class UnifiedLuaScript extends EventEmitter {
         if (!transpiler) throw new Error('Transpiler not enabled');
         
         this.emit('transpileStart', { size: jsCode.length });
+        const t = metrics.timeBlock('transpile');
         
         try {
             // Core transpilation
@@ -152,10 +157,16 @@ class UnifiedLuaScript extends EventEmitter {
                 result.optimizations = optimized.appliedOptimizations;
             }
             
+            const timing = t.end({ sizeIn: jsCode.length, sizeOut: (result && result.code && result.code.length) || 0 });
             this.emit('transpileComplete', result);
+            if (metrics.PERF_ENABLE) {
+                metrics.incrementCounter('transpiles');
+                metrics.recordEvent('transpile.complete', timing);
+            }
             return result;
             
         } catch (error) {
+            t.end({ error: true });
             this.emit('transpileError', { error: error.message });
             throw error;
         }
@@ -172,13 +183,20 @@ class UnifiedLuaScript extends EventEmitter {
         if (!runtime) throw new Error('Runtime not enabled');
         
         this.emit('executeStart', { size: luaCode.length });
+        const t = metrics.timeBlock('execute');
         
         try {
             const result = await runtime.execute(luaCode, context);
+            const timing = t.end({ size: luaCode.length, executionTime: result && result.executionTime });
             this.emit('executeComplete', result);
+            if (metrics.PERF_ENABLE) {
+                metrics.incrementCounter('executes');
+                metrics.recordEvent('execute.complete', timing);
+            }
             return result;
             
         } catch (error) {
+            t.end({ error: true });
             this.emit('executeError', { error: error.message });
             throw error;
         }
@@ -192,6 +210,7 @@ class UnifiedLuaScript extends EventEmitter {
      */
     async transpileAndExecute(jsCode, options = {}) {
         this.emit('fullProcessStart');
+        const t = metrics.timeBlock('transpileAndExecute');
         
         try {
             // Transpile JavaScript to Lua
@@ -210,9 +229,15 @@ class UnifiedLuaScript extends EventEmitter {
             };
             
             this.emit('fullProcessComplete', result);
+            const timing = t.end({ sizeIn: jsCode.length, totalTime: result.totalTime });
+            if (metrics.PERF_ENABLE) {
+                metrics.incrementCounter('fullPipelines');
+                metrics.recordEvent('pipeline.complete', timing);
+            }
             return result;
             
         } catch (error) {
+            t.end({ error: true });
             this.emit('fullProcessError', { error: error.message });
             throw error;
         }
@@ -566,6 +591,9 @@ class UnifiedLuaScript extends EventEmitter {
         
         this.components.clear();
         this.stats.initialized = false;
+        if (metrics.PERF_ENABLE) {
+            try { metrics.snapshot('unified'); } catch {}
+        }
         
         this.emit('shutdownComplete');
     }

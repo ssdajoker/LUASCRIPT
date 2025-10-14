@@ -45,16 +45,87 @@ function validateIR(ir) {
     }
   });
 
+  // Allowed node kinds (keep permissive; extend as spec evolves)
+  const allowedKinds = new Set([
+    "Identifier",
+    "Literal",
+    "BinaryExpression",
+    "LogicalExpression",
+    "AssignmentExpression",
+    "VariableDeclaration",
+    "BlockStatement",
+    "ExpressionStatement",
+    "ReturnStatement",
+    "IfStatement",
+    "WhileStatement",
+    "ArrowFunctionExpression",
+    "CallExpression",
+    "UnaryExpression",
+    "FunctionDeclaration"
+  ]);
+
+  // Validate nodes
   Object.entries(nodes).forEach(([nodeId, node]) => {
     if (!isBalancedTernaryIdentifier(nodeId)) {
       errors.push(`Node id ${nodeId} is not balanced-ternary encoded`);
     }
-    if (!node.kind) {
+    if (!node.kind || typeof node.kind !== "string") {
       errors.push(`Node ${nodeId} missing kind`);
+    } else if (!allowedKinds.has(node.kind)) {
+      // Do not hard-fail unknown kinds yet; record a soft error
+      errors.push(`Node ${nodeId} has unknown kind ${node.kind}`);
+    }
+
+    // Basic span shape validation (if present)
+    if (node.span != null) {
+      const s = node.span;
+      if (!s.start || !s.end) {
+        errors.push(`Node ${nodeId} has malformed span (missing start/end)`);
+      } else if (!isFiniteNumber(s.start.line) || !isFiniteNumber(s.start.column) || !isFiniteNumber(s.start.offset) ||
+                 !isFiniteNumber(s.end.line)   || !isFiniteNumber(s.end.column)   || !isFiniteNumber(s.end.offset)) {
+        errors.push(`Node ${nodeId} has invalid span numbers`);
+      }
+    }
+
+    // Validate FunctionDeclaration meta.cfg shape when present
+    if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg != null && typeof node.meta.cfg !== "object") {
+      errors.push(`Node ${nodeId} FunctionDeclaration meta.cfg must be an object when present`);
     }
   });
 
+  // Optional: validate metaPerf if present
+  if (ir.module && ir.module.metadata && ir.module.metadata.metaPerf) {
+    const mp = ir.module.metadata.metaPerf;
+    ["parseMs", "normalizeMs", "lowerMs", "totalMs", "nodeCount"].forEach((k) => {
+      if (typeof mp[k] !== "number") {
+        errors.push(`module.metadata.metaPerf.${k} must be a number`);
+      }
+    });
+  }
+
+  // Optional: Validate CFG linkage if controlFlowGraphs present
+  const cfgs = ir.controlFlowGraphs || null;
+  if (cfgs) {
+    Object.entries(nodes).forEach(([nodeId, node]) => {
+      if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg) {
+        const { id: cfgId, entry, exit } = node.meta.cfg;
+        if (!cfgId || !cfgs[cfgId]) {
+          errors.push(`Function ${nodeId} references missing CFG ${cfgId}`);
+        } else {
+          const graph = cfgs[cfgId];
+          const blockIds = new Set((graph.blocks || []).map((b) => b.id));
+          if (entry && !blockIds.has(entry)) errors.push(`Function ${nodeId} cfg.entry ${entry} not in CFG`);
+          if (exit && !blockIds.has(exit)) errors.push(`Function ${nodeId} cfg.exit ${exit} not in CFG`);
+        }
+      }
+    });
+  }
+
   return { ok: errors.length === 0, errors };
+}
+
+function isFiniteNumber(v) {
+  return typeof v === "number" && Number.isFinite(v);
 }
 
 /**

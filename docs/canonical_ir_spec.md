@@ -307,6 +307,124 @@ export function add(a, b) {
 }
 ```
 
+### Additional examples
+
+Arrow function (single-expression):
+
+```json
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_arrow",
+    "body": ["id_fn", "id_ret"],
+    "metadata": { "authoredBy": "example" }
+  },
+  "nodes": {
+    "id_fn": {
+      "id": "id_fn",
+      "kind": "ArrowFunctionExpression",
+      "params": ["id_a"],
+      "body": "id_add"
+    },
+    "id_a": { "id": "id_a", "kind": "Identifier", "name": "a" },
+    "id_b": { "id": "id_b", "kind": "Identifier", "name": "b" },
+    "id_add": { "id": "id_add", "kind": "BinaryExpression", "operator": "+", "left": "id_a", "right": "id_b" },
+    "id_ret": { "id": "id_ret", "kind": "ReturnStatement", "argument": "id_add" }
+  }
+}
+```
+
+Switch statement lowering (conceptual, represented as IfStatement chain):
+
+```json
+{
+  "schemaVersion": "1.0.0",
+  "module": { "id": "mod_switch", "body": ["id_if"] },
+  "nodes": {
+    "id_disc": { "id": "id_disc", "kind": "Identifier", "name": "x" },
+    "id_lit1": { "id": "id_lit1", "kind": "Literal", "value": 1 },
+    "id_test": { "id": "id_test", "kind": "BinaryExpression", "operator": "==", "left": "id_disc", "right": "id_lit1" },
+    "id_if": { "id": "id_if", "kind": "IfStatement", "test": "id_test", "consequent": null, "alternate": null }
+  }
+}
+```
+
+### Additional Example: Conditional and Loop with Spans
+
+```json
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_ctrl",
+    "source": { "path": "control.js", "hash": "sha256:…" },
+    "body": ["id_1", "id_2"],
+    "directives": [],
+    "exports": { "type": "named", "entries": [] }
+  },
+  "nodes": {
+    "id_1": {
+      "id": "id_1",
+      "kind": "IfStatement",
+      "test": "id_3",
+      "consequent": "id_4",
+      "alternate": null,
+      "span": { "start": {"line":1,"column":0,"offset":0}, "end": {"line":3,"column":1,"offset":42} }
+    },
+    "id_2": {
+      "id": "id_2",
+      "kind": "WhileStatement",
+      "test": "id_5",
+      "body": "id_6",
+      "span": { "start": {"line":4,"column":0,"offset":43}, "end": {"line":6,"column":1,"offset":88} }
+    }
+  }
+}
+```
+
+Span fields must include start/end with numeric line, column, and offset fields. Validators should ensure shape-correct spans when present, and function nodes’ `meta.cfg` entries must reference CFGs that exist with valid entry/exit blocks.
+
+### Additional Example: Function with CFG and meta.perf
+
+```json
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_cfg",
+    "source": { "path": "cfg.js", "hash": "sha256:…" },
+    "body": ["id_fn"],
+    "metadata": { "metaPerf": { "parseMs": 0.22, "normalizeMs": 0.11, "lowerMs": 0.35, "totalMs": 0.68, "nodeCount": 12 } }
+  },
+  "nodes": {
+    "id_fn": {
+      "id": "id_fn",
+      "kind": "FunctionDeclaration",
+      "name": "f",
+      "params": [],
+      "body": "id_blk",
+      "meta": { "cfg": { "id": "cfg_f", "entry": "bb_1", "exit": "bb_exit" } }
+    },
+    "id_blk": { "id": "id_blk", "kind": "BlockStatement", "statements": [] }
+  },
+  "controlFlowGraphs": {
+    "cfg_f": {
+      "id": "cfg_f",
+      "blocks": [
+        { "id": "bb_1", "kind": "entry", "statements": [] },
+        { "id": "bb_exit", "kind": "exit", "statements": [] }
+      ]
+    }
+  }
+}
+```
+
+Validator invariants (non-exhaustive):
+
+- All `module.body` entries must reference existing `nodes` by id.
+- All `nodes` ids must match the balanced-ternary id format.
+- If a `span` is present, it must include numeric `start` and `end` with `line`, `column`, `offset`.
+- `FunctionDeclaration.meta.cfg` must reference an existing CFG; `entry` and `exit` must exist in that CFG’s `blocks`.
+- Node `kind` must be one of the allowed enumerations in this draft; unknown kinds should fail validation.
+
 ---
 
 ## 📍 Open Questions

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run test:core && npm run test:phase1 && node tests/test_memory_management.js",
     "test:enhanced": "node test/test_enhanced_transpiler.js",
-    "test:all": "npm test && npm run test:enhanced && npm run test:legacy",
+    "test:all": "npm test && npm run test:enhanced && npm run test:legacy && npm run test:parity",
     "test:phase1": "node test/test_perfect_parser_phase1.js && node test/test_perfect_parser_phase1_negative.js",
     "test:smoke": "node scripts/smoke_ci.js",
     "test:legacy": "node test/test_unified_system.js all",
@@ -24,8 +24,12 @@
     "benchmark": "node -e \"const {UnifiedLuaScript} = require('./src/unified_luascript.js'); const system = UnifiedLuaScript.createProduction(); system.initializeComponents().then(() => system.benchmark('let x = 5;', 100)).then(result => console.log('Benchmark:', result));\"",
     "validate": "npm run test:victory && echo 'LUASCRIPT VALIDATION COMPLETE - VICTORY ACHIEVED!'",
     "ir:validate": "node tests/ir/run_ir_validate.js",
+    "ir:report": "node scripts/generate_ir_status.js",
+    "perf:demo": "PERF_ENABLE=1 node test/test_unified_system.js all",
     "prepare": "husky install",
-    "pr": "bash scripts/pr.sh"
+    "pr": "bash scripts/pr.sh",
+    "test:parity": "node tests/parity/run_parity_tests.js",
+    "test:quick-ugmp": "npm run -s test:core && npm run -s test:parity && npm run -s ir:report"
   },
   "keywords": [
     "luascript",

@@ -250,15 +250,7 @@ class RuntimeSystem extends EventEmitter {
  * Manages memory allocation and garbage collection for the runtime.
  */
 class MemoryManager {
-<<<<<<< Updated upstream
-    /**
-     * Creates an instance of MemoryManager.
-     * @param {number} maxMemory - The maximum memory size in bytes.
-     */
-    constructor(maxMemory) {
-=======
     constructor(maxMemory, gcOptions = {}) {
->>>>>>> Stashed changes
         this.maxMemory = maxMemory;
         this.allocated = 0;
         this.pools = new Map();
@@ -301,17 +293,6 @@ class MemoryManager {
         this.allocated = Math.max(0, this.allocated - size);
     }
 
-<<<<<<< Updated upstream
-    /**
-     * Simulates garbage collection.
-     * @returns {number} The amount of memory freed.
-     * @private
-     */
-    gc() {
-        // Simulate garbage collection
-        const freed = this.allocated * 0.3;
-        this.allocated -= freed;
-=======
     maybeTriggerGc() {
         const now = Date.now();
         if (now - this.lastGcTimestamp < this.gcMinIntervalMs) {
@@ -333,8 +314,6 @@ class MemoryManager {
             const ceiling = this.gcHardLimit * 0.95;
             this.gcThreshold = Math.min(ceiling, this.gcThreshold * 1.05);
         }
-
->>>>>>> Stashed changes
         return freed;
     }
 

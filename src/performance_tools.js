@@ -60,14 +60,9 @@ class PerformanceTools extends EventEmitter {
         this.emit('initComplete');
     }
 
-<<<<<<< Updated upstream
     /**
-     * Profiles a given piece of code to analyze its performance.
-     * @param {string} code - The code to profile.
-     * @param {object} [options={}] - Profiling options.
-     * @returns {Promise<object>} A promise that resolves with the profiling report.
+     * Cleanly shuts down all performance tooling subsystems.
      */
-=======
     shutdown() {
         if (this.monitor && typeof this.monitor.stop === 'function') {
             this.monitor.stop();
@@ -86,7 +81,12 @@ class PerformanceTools extends EventEmitter {
         }
     }
 
->>>>>>> Stashed changes
+    /**
+     * Profiles a given piece of code to analyze its performance.
+     * @param {string} code - The code to profile.
+     * @param {object} [options={}] - Profiling options.
+     * @returns {Promise<object>} A promise that resolves with the profiling report.
+     */
     async profile(code, options = {}) {
         return this.profiler.profile(code, options);
     }
@@ -187,14 +187,9 @@ class AdvancedProfiler {
         this.cpuSamples = [];
     }
 
-<<<<<<< Updated upstream
     /**
-     * Profiles a given piece of code.
-     * @param {string} code - The code to profile.
-     * @param {object} [options={}] - Profiling options.
-     * @returns {Promise<object>} A promise that resolves with the detailed profile report.
+     * Cleanly shuts down profiler resources and clears collected state.
      */
-=======
     shutdown() {
         this.stopCPUSampling();
         this.callStack = [];
@@ -202,7 +197,12 @@ class AdvancedProfiler {
         this.cpuSamples = [];
     }
 
->>>>>>> Stashed changes
+    /**
+     * Profiles a given piece of code.
+     * @param {string} code - The code to profile.
+     * @param {object} [options={}] - Profiling options.
+     * @returns {Promise<object>} A promise that resolves with the detailed profile report.
+     */
     async profile(code, options = {}) {
         const profileId = this.generateProfileId();
         const startTime = process.hrtime.bigint();
