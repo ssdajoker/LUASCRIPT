@@ -31,6 +31,9 @@ jobs:
       - name: Validate IR against JSON Schema
         run: npm run -s ir:validate:schema
 
+      - name: Validate golden IR snapshots
+        run: npm run -s ir:golden:check
+
       - name: Upload IR status artifact
         if: always()
         uses: actions/upload-artifact@v4
