@@ -93,4 +93,42 @@ export class SymbolTable {
   public clear(): void {
     this.symbols.clear();
   }
+
+  /** Returns true if a symbol by this name exists. */
+  public has(name: string): boolean {
+    return this.symbols.has(name);
+  }
+
+  /** Deletes a symbol by name; returns true if it existed. */
+  public remove(name: string): boolean {
+    return this.symbols.delete(name);
+  }
+
+  /**
+   * Renames an existing symbol while preserving its observation history.
+   * If the new name already exists, the histories are concatenated and the
+   * inferredType of the destination takes precedence.
+   * Returns true when a rename occurred.
+   */
+  public rename(oldName: string, newName: string): boolean {
+    if (oldName === newName) return this.symbols.has(oldName);
+    const from = this.symbols.get(oldName);
+    if (!from) return false;
+    const to = this.symbols.get(newName);
+    if (!to) {
+      this.symbols.set(newName, { ...from, name: newName, history: [...from.history] });
+      this.symbols.delete(oldName);
+      return true;
+    }
+    // Merge histories, keep destination inferredType
+    const mergedHistory = [...to.history, ...from.history];
+    this.symbols.set(newName, { ...to, history: mergedHistory });
+    this.symbols.delete(oldName);
+    return true;
+  }
+
+  /** Number of symbols tracked. */
+  public size(): number {
+    return this.symbols.size;
+  }
 }

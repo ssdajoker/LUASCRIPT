@@ -19,12 +19,14 @@ function parseAndLower(jsSource, options = {}) {
   }
 
   // Use Phase 1 Core: Lexer + Parser to align with Perfect Parser Initiative
+  const t0 = process.hrtime.bigint();
   const lexer = new LuaScriptLexer(jsSource, options.lexer || {});
   const parser = new LuaScriptParser(jsSource, options.parser || {});
-
   const ast = parser.parse();
+  const t1 = process.hrtime.bigint();
 
   const normalized = normalizeProgram(ast, options.normalizer || {});
+  const t2 = process.hrtime.bigint();
 
   const lowerer = new IRLowerer({
     sourcePath: options.sourcePath || null,
@@ -40,8 +42,23 @@ function parseAndLower(jsSource, options = {}) {
     validate: options.validate !== false,
     functionMeta: options.functionMeta || {},
   });
+  const t3 = process.hrtime.bigint();
+  const ir = lowerer.lowerProgram(normalized);
+  const t4 = process.hrtime.bigint();
 
-  return lowerer.lowerProgram(normalized);
+  // Attach meta.perf metrics as per spec’s guidance
+  const toMs = (a, b) => Number(b - a) / 1e6;
+  const nodeCount = ir.nodes ? Object.keys(ir.nodes).length : 0;
+  ir.module.metadata = ir.module.metadata || {};
+  ir.module.metadata.metaPerf = {
+    parseMs: toMs(t0, t1),
+    normalizeMs: toMs(t1, t2),
+    lowerMs: toMs(t3, t4),
+    totalMs: toMs(t0, t4),
+    nodeCount,
+  };
+
+  return ir;
 }
 
 module.exports = {
