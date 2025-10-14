@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_1",
+    "source": { "path": "try.js", "hash": null },
+    "directives": [],
+  "body": ["id_T"],
+    "exports": { "type": "named", "entries": [] },
+    "metadata": { "authoredBy": "golden", "createdAt": "2025-10-13T00:00:00.000Z", "toolchain": {} }
+  },
+  "nodes": {
+    "id_T": { "id": "id_T", "kind": "TryStatement", "block": "id_0", "handler": "id_1", "finalizer": "id_T0" },
+    "id_0": { "id": "id_0", "kind": "BlockStatement", "statements": [] },
+    "id_1": { "id": "id_1", "kind": "BlockStatement", "statements": [] },
+    "id_T0": { "id": "id_T0", "kind": "BlockStatement", "statements": [] }
+  }
+}
