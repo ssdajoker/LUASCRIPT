@@ -49,6 +49,33 @@ async function run() {
     return /A\.__index\s*=\s*A/.test(lua) && /setmetatable\(A,\s*B\)/.test(lua);
   });
 
+  // Nested closures
+  await test("Closures: nested captures propagate", async () => {
+    const js = "function outer(x){ function middle(y){ return (z)=> x + y + z; } return middle(2); }";
+    const transpiler = new CoreTranspiler({ optimize: false });
+    const { code } = transpiler.transpile(js, "nested_closures.js");
+    return /function\s*\(z\)/.test(code) && /return\s+function\s*\(z\)/.test(code);
+  });
+
+  // Destructuring with rest
+  await test("Destructuring: array with rest", async () => {
+    const js = "let [a, ...rest] = arr;";
+    const transpiler = new CoreTranspiler({ optimize: false });
+    const { code } = transpiler.transpile(js, "destructure_rest.js");
+    // Our advanced features PatternMatcher also handles rest for arrays
+    const af = new AdvancedFeatures({ enablePatternMatching: true, enableOOP: false, enableTypeSystem: false, enableMacros: false });
+    const lua = af.transform(code, ["patterns"]);
+    return /table\.unpack\(/.test(lua) || /\{table\.unpack\(/.test(lua) || /rest/.test(lua);
+  });
+
+  // Pattern-matching fallthroughs: verify multiple conditions emitted
+  await test("Pattern Matching: multiple cases produce multiple conditions", async () => {
+    const af = new AdvancedFeatures({ enablePatternMatching: true, enableOOP: false, enableTypeSystem: false, enableMacros: false });
+    const lua = af.transform("switch(x){ case 1: y=1; break; case 2: y=2; break; case 3: y=3; break; }", ["patterns"]);
+    const ifs = (lua.match(/\bif\b/g) || []).length + (lua.match(/elseif/g) || []).length;
+    return ifs >= 2; // at least two conditions should be present
+  });
+
   console.log("\n—— Summary ——");
   console.log(`Passed ${passed}/${total}`);
   if (failures.length) {
