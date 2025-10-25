@@ -766,10 +766,27 @@ class LuaInterpreter {
         let inBacktick = false;
         let isEscaped = false;
 
+        if (!this.stats) {
+            this.stats = {
+                executions: 0,
+                compilations: 0,
+                memoryUsage: 0,
+                averageTime: 0,
+                errors: []
+            };
+        } else if (!Array.isArray(this.stats.errors)) {
+            this.stats.errors = [];
+        }
+
         const pushError = (message) => {
-            if (this.stats && Array.isArray(this.stats.errors)) {
-                this.stats.errors.push(message);
+            // Ensure stats and errors are initialized before pushing
+            if (!this.stats) {
+                this.stats = { errors: [] };
             }
+            if (!Array.isArray(this.stats.errors)) {
+                this.stats.errors = [];
+            }
+            this.stats.errors.push(message);
             return message;
         };
 
