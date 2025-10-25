@@ -474,6 +474,164 @@ end
 
 -- Math object for JavaScript compatibility
 runtime.Math = {}
+
+local function normalize_step(start_value, end_value, step)
+    if step == nil then
+        return start_value <= end_value and 1 or -1
+    end
+    if step == 0 then
+        error("math range step cannot be zero")
+    end
+    return step
+end
+
+local function iterate_range(start_value, end_value, step, handler)
+    local index = 0
+    for value = start_value, end_value, step do
+        handler(value, index)
+        index = index + 1
+    end
+end
+
+local function summation_impl(collection_or_start, finish, step_or_mapper, maybe_mapper)
+    local total = 0
+    if type(collection_or_start) == "table" then
+        local mapper = step_or_mapper
+        if mapper ~= nil and type(mapper) ~= "function" then
+            error("math.summation mapper must be a function")
+        end
+        for index, value in ipairs(collection_or_start) do
+            if mapper then
+                local mapped = mapper(value, index - 1, collection_or_start)
+                if mapped then
+                    total = total + mapped
+                end
+            else
+                total = total + (value or 0)
+            end
+        end
+        return total
+    elseif type(collection_or_start) == "number" and type(finish) == "number" then
+        local step, mapper
+        if type(step_or_mapper) == "number" then
+            step = normalize_step(collection_or_start, finish, step_or_mapper)
+            mapper = maybe_mapper
+        else
+            step = normalize_step(collection_or_start, finish)
+            mapper = step_or_mapper
+        end
+        if mapper ~= nil and type(mapper) ~= "function" then
+            error("math.summation mapper must be a function")
+        end
+        mapper = mapper or function(value)
+            return value
+        end
+        if step > 0 and collection_or_start > finish then
+            return 0
+        end
+        if step < 0 and collection_or_start < finish then
+            return 0
+        end
+        iterate_range(collection_or_start, finish, step, function(value, index)
+            local mapped = mapper(value, index)
+            if mapped then
+                total = total + mapped
+            end
+        end)
+        return total
+    end
+    error("math.summation expects a table or numeric range")
+end
+
+local function product_impl(collection_or_start, finish, step_or_mapper, maybe_mapper)
+    local result = 1
+    if type(collection_or_start) == "table" then
+        local mapper = step_or_mapper
+        if mapper ~= nil and type(mapper) ~= "function" then
+            error("math.product mapper must be a function")
+        end
+        for index, value in ipairs(collection_or_start) do
+            local mapped
+            if mapper then
+                mapped = mapper(value, index - 1, collection_or_start)
+            else
+                mapped = value
+            end
+            if mapped ~= nil then
+                result = result * mapped
+            end
+        end
+        return result
+    elseif type(collection_or_start) == "number" and type(finish) == "number" then
+        local step, mapper
+        if type(step_or_mapper) == "number" then
+            step = normalize_step(collection_or_start, finish, step_or_mapper)
+            mapper = maybe_mapper
+        else
+            step = normalize_step(collection_or_start, finish)
+            mapper = step_or_mapper
+        end
+        if mapper ~= nil and type(mapper) ~= "function" then
+            error("math.product mapper must be a function")
+        end
+        mapper = mapper or function(value)
+            return value
+        end
+        if step > 0 and collection_or_start > finish then
+            return 1
+        end
+        if step < 0 and collection_or_start < finish then
+            return 1
+        end
+        iterate_range(collection_or_start, finish, step, function(value, index)
+            local mapped = mapper(value, index)
+            if mapped ~= nil then
+                result = result * mapped
+            end
+        end)
+        return result
+    end
+    error("math.product expects a table or numeric range")
+end
+
+local function integral_impl(fn, a, b, steps)
+    if type(fn) ~= "function" then
+        error("math.integral requires a function as the first argument")
+    end
+    if type(a) ~= "number" or type(b) ~= "number" then
+        error("math.integral requires numeric bounds")
+    end
+    steps = steps or 1000
+    if steps <= 0 then
+        return 0
+    end
+    local direction = 1
+    if b < a then
+        a, b = b, a
+        direction = -1
+    end
+    local step = (b - a) / steps
+    local total = 0.5 * (fn(a) + fn(b))
+    for i = 1, steps - 1 do
+        local x = a + step * i
+        total = total + fn(x)
+    end
+    return total * step * direction
+end
+
+if not math.summation then
+    math.summation = summation_impl
+end
+if not math.product then
+    math.product = product_impl
+end
+if not math.integral then
+    math.integral = integral_impl
+end
+
+runtime.Math.summation = summation_impl
+runtime.Math.product = product_impl
+runtime.Math.integral = integral_impl
 runtime.Math.PI = math.pi
 runtime.Math.E = math.exp(1)
 runtime.Math.summation = math.summation
@@ -505,6 +663,126 @@ function runtime.Math.round(x)
 end
 function runtime.Math.sqrt(x)
     return math.sqrt(x)
+end
+
+-- Extended Lua math helpers for Unicode operators
+local function ensure_callback(callback, name)
+    if type(callback) ~= "function" then
+        error(name .. " expects a function as the first argument", 2)
+    end
+    return callback
+end
+
+local function normalize_step(lower, upper, step)
+    if step == nil then
+        if lower <= upper then
+            return 1
+        else
+            return -1
+        end
+    end
+    if step == 0 then
+        error("step must not be zero", 2)
+    end
+    return step
+end
+
+if type(math.product) ~= "function" then
+    function math.product(callback, lower, upper, step)
+        callback = ensure_callback(callback, "math.product")
+        if type(lower) ~= "number" or type(upper) ~= "number" then
+            error("math.product expects numeric bounds", 2)
+        end
+
+        step = normalize_step(lower, upper, step)
+        local result = 1
+
+        if (step > 0 and lower > upper) or (step < 0 and lower < upper) then
+            return result
+        end
+
+        for value = lower, upper, step do
+            local term = callback(value)
+            if type(term) ~= "number" then
+                error("math.product callback must return a number", 2)
+            end
+            result = result * term
+        end
+
+        return result
+    end
+end
+
+if type(math.summation) ~= "function" then
+    function math.summation(callback, lower, upper, step)
+        callback = ensure_callback(callback, "math.summation")
+        if type(lower) ~= "number" or type(upper) ~= "number" then
+            error("math.summation expects numeric bounds", 2)
+        end
+
+        step = normalize_step(lower, upper, step)
+        local result = 0
+
+        if (step > 0 and lower > upper) or (step < 0 and lower < upper) then
+            return result
+        end
+
+        for value = lower, upper, step do
+            local term = callback(value)
+            if type(term) ~= "number" then
+                error("math.summation callback must return a number", 2)
+            end
+            result = result + term
+        end
+
+        return result
+    end
+end
+
+if type(math.integral) ~= "function" then
+    function math.integral(callback, lower, upper, steps)
+        callback = ensure_callback(callback, "math.integral")
+        if type(lower) ~= "number" or type(upper) ~= "number" then
+            error("math.integral expects numeric bounds", 2)
+        end
+
+        steps = steps or 1000
+        if type(steps) ~= "number" or steps <= 0 then
+            error("math.integral expects a positive number of steps", 2)
+        end
+
+        if lower == upper then
+            return 0
+        end
+
+        local start = lower
+        local finish = upper
+        local direction = 1
+        if upper < lower then
+            start = upper
+            finish = lower
+            direction = -1
+        end
+
+        local step_size = (finish - start) / steps
+
+        local function evaluate(point)
+            local value = callback(point)
+            if type(value) ~= "number" then
+                error("math.integral callback must return a number", 2)
+            end
+            return value
+        end
+
+        local sum = 0.5 * (evaluate(start) + evaluate(finish))
+
+        for i = 1, steps - 1 do
+            local x = start + step_size * i
+            sum = sum + evaluate(x)
+        end
+
+        return sum * step_size * direction
+    end
 end
 -- String prototype methods
 runtime.String = {}

@@ -8,16 +8,13 @@
  * Manages the runtime memory, including the call stack and heap, to prevent memory leaks and stack overflows.
  */
 class RuntimeMemoryManager {
-<<<<<<< Updated upstream
     /**
      * Creates an instance of the RuntimeMemoryManager.
      * @param {number} [maxCallStack=1000] - The maximum depth of the call stack.
-     * @param {number} [maxHeapSize=52428800] - The maximum size of the heap in bytes (defaults to 50MB).
+     * @param {number} [maxHeapSize=50*1024*1024] - The maximum size of the heap in bytes (defaults to 50MB).
+     * @param {object} [gcOptions={}] - Adaptive garbage collection configuration options.
      */
-    constructor(maxCallStack = 1000, maxHeapSize = 50 * 1024 * 1024) { // 50MB default
-=======
-    constructor(maxCallStack = 1000, maxHeapSize = 50 * 1024 * 1024, gcOptions = {}) { // 50MB default
->>>>>>> Stashed changes
+    constructor(maxCallStack = 1000, maxHeapSize = 50 * 1024 * 1024, gcOptions = {}) {
         this.maxCallStack = maxCallStack;
         this.maxHeapSize = maxHeapSize;
         this.callStack = [];
@@ -35,17 +32,11 @@ class RuntimeMemoryManager {
         this.gcHardLimit = this.maxHeapSize * this.gcHardRatio;
     }
 
-    /**
-     * Pushes a new function call onto the call stack.
-     * @param {string} functionName - The name of the function being called.
-     * @param {any[]} [args=[]] - The arguments passed to the function.
-     * @throws {Error} If the call stack exceeds its maximum size.
-     */
     enterFunction(functionName, args = []) {
         if (this.callStack.length >= this.maxCallStack) {
             throw new Error(`Stack overflow: maximum call stack size ${this.maxCallStack} exceeded in function '${functionName}'`);
         }
-        
+
         this.callStack.push({
             function: functionName,
             arguments: args,
@@ -53,30 +44,12 @@ class RuntimeMemoryManager {
         });
     }
 
-    /**
-     * Pops a function call from the call stack.
-     */
     exitFunction() {
         if (this.callStack.length > 0) {
             this.callStack.pop();
         }
     }
 
-<<<<<<< Updated upstream
-    /**
-     * Allocates an object on the heap, triggering garbage collection if necessary.
-     * @param {object} obj - The object to allocate.
-     * @param {number} [estimatedSize=64] - The estimated size of the object in bytes.
-     * @returns {object} The allocated object.
-     * @throws {Error} If the heap size limit is exceeded.
-     */
-    allocateObject(obj, estimatedSize = 64) {
-        if (this.heapSize + estimatedSize > this.maxHeapSize) {
-            this.triggerGarbageCollection();
-            
-            if (this.heapSize + estimatedSize > this.maxHeapSize) {
-                throw new Error(`Out of memory: heap size limit ${this.maxHeapSize} bytes exceeded`);
-=======
     adjustHeap(bytes) {
         if (bytes === 0) {
             return;
@@ -89,7 +62,6 @@ class RuntimeMemoryManager {
                 if (this.heapSize + bytes > this.maxHeapSize) {
                     throw new Error(`Out of memory: heap size limit ${this.maxHeapSize} bytes exceeded`);
                 }
->>>>>>> Stashed changes
             }
 
             this.heapSize += bytes;
@@ -114,13 +86,6 @@ class RuntimeMemoryManager {
         return obj;
     }
 
-<<<<<<< Updated upstream
-    /**
-     * Simulates garbage collection, freeing up a portion of the heap.
-     * @private
-     */
-    triggerGarbageCollection() {
-=======
     maybeTriggerAdaptiveGC() {
         const now = Date.now();
         if (now - this.lastGcTimestamp < this.gcMinIntervalMs) {
@@ -139,11 +104,9 @@ class RuntimeMemoryManager {
     triggerGarbageCollection(options = {}) {
         const { reason = 'manual', aggressive = false } = options;
 
->>>>>>> Stashed changes
-        // Simulate garbage collection by reducing heap size
         const beforeSize = this.heapSize;
         const reductionFactor = aggressive ? 0.5 : 0.7;
-        this.heapSize = Math.max(0, this.heapSize * reductionFactor); // Assume collection based on aggressiveness
+        this.heapSize = Math.max(0, this.heapSize * reductionFactor);
         this.lastGcTimestamp = Date.now();
 
         const freed = beforeSize - this.heapSize;
