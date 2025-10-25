@@ -168,11 +168,11 @@ class LuaScriptTranspiler {
             return { filename: options };
         }
 
-        if (typeof options !== 'object') {
+        if (Array.isArray(options)) {
             return {};
         }
 
-        if (Array.isArray(options)) {
+        if (typeof options !== 'object') {
             return {};
         }
 
