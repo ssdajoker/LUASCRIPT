@@ -74,6 +74,17 @@ class LuaScriptTranspiler {
      * @param {Object} options - Transpilation options
      * @returns {string} - Transpiled Lua code
      */
+    transpile(jsCode, options = {}) {
+        options = this.normalizeOptions(options);
+
+        // PHASE 1: Runtime Validation - Input validation
+        this.validateInput(jsCode, options);
+        
+        let luaCode = jsCode;
+
+        // PHASE 1: Critical Fixes - Order matters for parser strategy alignment!
+        luaCode = this.fixEqualityOperators(luaCode);
+        luaCode = this.fixLogicalOperators(luaCode);
     /**
      * The main transpilation function, enhanced with optional optimizations.
      * It processes JavaScript code through either the standard or the optimized transpilation pipeline.
@@ -82,6 +93,10 @@ class LuaScriptTranspiler {
      * @param {boolean} [options.includeRuntime=true] - Whether to inject the Lua runtime library.
      * @returns {object|string} The transpilation result or code, depending on pipeline used.
      */
+    async transpile(jsCode, options = {}) {
+        options = this.normalizeOptions(options);
+        this.validateInput(jsCode, options);
+
     transpile(jsCode, options = {}) {
         this.validateInput(jsCode, options);
         const startTime = process.hrtime.bigint();
@@ -320,6 +335,28 @@ class LuaScriptTranspiler {
             throw new Error(`Lua delimiter imbalance: ${stack.length} unclosed delimiters (phase=${ctx.phase || 'n/a'})`);
         }
         return true;
+    }
+
+    /**
+     * Normalizes legacy options argument forms to the current object shape.
+     * Supports historical string inputs that represented filenames.
+     * @param {object|string|undefined|null} options
+     * @returns {object}
+     */
+    normalizeOptions(options) {
+        if (options === undefined || options === null) {
+            return {};
+        }
+
+        if (typeof options === 'string') {
+            return { filename: options };
+        }
+
+        if (typeof options !== 'object' || Array.isArray(options)) {
+            return {};
+        }
+
+        return options;
     }
 
     /**
