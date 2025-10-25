@@ -1,0 +1,122 @@
+# Merge Candidates (from Upstream)
+
+## Prioritized Items
+
+- [Idea] IDEA_12 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_13 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_16 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_21 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_22 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_23 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_24 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_25 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_26 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_27 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_28 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_29 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: README.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Idea] IDEA_183 — New plan/idea detected; evaluate for roadmap inclusion or rejection.
+  - Upstream: PROJECT_STATUS.md
+  - Integration path: Create issue with scope, acceptance criteria, and link to upstream context.
+- [Doc] audit_upstream/FILE_TREE.md — Documentation/plan present upstream; sync to ensure developer guidance parity.
+  - Upstream: audit_upstream/FILE_TREE.md
+  - Integration path: Mirror document under docs/ with attribution; reconcile overlaps.
+- [File] test/temp/test_1759249530265.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759249530265.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759233219251.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759233219251.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759249489093.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759249489093.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759249489058.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759249489058.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759233219259.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759233219259.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759233219227.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759233219227.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759249489117.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759249489117.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759233219236.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759233219236.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759233219218.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759233219218.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759249489129.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759249489129.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759233219244.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759233219244.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759249489105.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759249489105.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] test/temp/test_1759249489077.lua — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: test/temp/test_1759249489077.lua
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] audit_upstream/FILE_TREE.md — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: audit_upstream/FILE_TREE.md
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] audit_upstream/.gitkeep — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: audit_upstream/.gitkeep
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] audit_upstream/files_all.txt — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: audit_upstream/files_all.txt
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] audit/synthesize_phaseA.js — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: audit/synthesize_phaseA.js
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] audit/merge_candidates.md — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: audit/merge_candidates.md
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] audit/diff_upstream.json — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: audit/diff_upstream.json
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] audit/synthesis_phaseA.md — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: audit/synthesis_phaseA.md
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] audit/diff_upstream.js — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: audit/diff_upstream.js
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] audit/diff_upstream_report.md — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: audit/diff_upstream_report.md
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] audit/run_all_upstream.sh — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: audit/run_all_upstream.sh
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+- [File] audit/merge_candidates.js — Module present upstream but missing locally; consider porting or documenting rationale for omission.
+  - Upstream: audit/merge_candidates.js
+  - Integration path: Assess dependencies; cherry-pick or reimplement; add tests.
+
+## Next Steps
+
+- Triage with owners, create issues, and schedule integration sprints.

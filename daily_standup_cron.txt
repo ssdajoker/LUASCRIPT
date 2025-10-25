@@ -1,0 +1,11 @@
+# Daily Standup Generation - 09:00 UTC
+0 9 * * * cd /home/ubuntu/github_repos/LUASCRIPT && lua scripts/daily_standup_monitor.lua >> logs/standup_generation.log 2>&1
+
+# Midday Interface Check - 12:00 UTC  
+0 12 * * * cd /home/ubuntu/github_repos/LUASCRIPT && echo "$(date): Midday interface validation check" >> logs/interface_checks.log
+
+# Evening Progress Review - 18:00 UTC
+0 18 * * * cd /home/ubuntu/github_repos/LUASCRIPT && echo "$(date): Evening progress review" >> logs/progress_reviews.log
+
+# Weekly Comprehensive Review - Friday 15:00 UTC
+0 15 * * 5 cd /home/ubuntu/github_repos/LUASCRIPT && echo "$(date): Weekly comprehensive review" >> logs/weekly_reviews.log

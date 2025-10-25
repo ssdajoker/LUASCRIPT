@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_0",
+    "source": {
+      "path": "-",
+      "hash": null
+    },
+    "directives": [],
+    "body": [
+      "node_111"
+    ],
+    "exports": {
+      "type": "named",
+      "entries": []
+    },
+    "metadata": {
+      "authoredBy": "ir-builder",
+      "createdAt": "2025-10-14T03:58:17.064Z",
+      "toolchain": {
+        "parser": "phase1_core_parser@1.0.0",
+        "normalizer": "ir-normalizer@1.0.0",
+        "lowerer": "ir-lowerer@1.0.0"
+      },
+      "metaPerf": {
+        "parseMs": 21.708945,
+        "normalizeMs": 2.420614,
+        "lowerMs": 16.498524,
+        "totalMs": 43.465346,
+        "nodeCount": 10
+      }
+    }
+  },
+  "nodes": {
+    "node_1": {
+      "id": "node_1",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "h",
+      "binding": "h"
+    },
+    "node_1T": {
+      "id": "node_1T",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "x",
+      "binding": "x"
+    },
+    "node_10": {
+      "id": "node_10",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "n",
+      "binding": "n"
+    },
+    "node_11": {
+      "id": "node_11",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "m",
+      "binding": "m"
+    },
+    "node_1TT": {
+      "id": "node_1TT",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "x",
+      "binding": "x"
+    },
+    "node_1T0": {
+      "id": "node_1T0",
+      "kind": "CallExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "callee": "node_11",
+      "arguments": [
+        "node_1TT"
+      ]
+    },
+    "node_1T1": {
+      "id": "node_1T1",
+      "kind": "CallExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "callee": "node_10",
+      "arguments": [
+        "node_1T0"
+      ]
+    },
+    "node_10T": {
+      "id": "node_10T",
+      "kind": "ReturnStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "argument": "node_1T1"
+    },
+    "node_100": {
+      "id": "node_100",
+      "kind": "BlockStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "statements": [
+        "node_10T"
+      ]
+    },
+    "node_111": {
+      "id": "node_111",
+      "kind": "FunctionDeclaration",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {
+        "cfg": {
+          "id": "cfg_101",
+          "entry": "bb_11T",
+          "exit": "bb_110"
+        },
+        "auditTags": [
+          "knuth:awaiting-proof"
+        ]
+      },
+      "name": "h",
+      "params": [
+        "node_1T"
+      ],
+      "body": "node_100",
+      "async": false,
+      "generator": false,
+      "returnType": null
+    }
+  },
+  "controlFlowGraphs": {
+    "cfg_101": {
+      "id": "cfg_101",
+      "blocks": [
+        {
+          "id": "bb_11T",
+          "kind": "entry",
+          "statements": [
+            "node_10T"
+          ]
+        },
+        {
+          "id": "bb_110",
+          "kind": "exit",
+          "statements": []
+        }
+      ],
+      "successors": {
+        "bb_11T": [
+          "bb_110"
+        ],
+        "bb_110": []
+      },
+      "predecessors": {
+        "bb_11T": [],
+        "bb_110": [
+          "bb_11T"
+        ]
+      }
+    }
+  }
+}

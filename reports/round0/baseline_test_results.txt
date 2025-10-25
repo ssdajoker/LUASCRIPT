@@ -1,0 +1,232 @@
+
+> LUASCRIPT@1.0.0-phase1d test
+> node test/test_transpiler.js && node tests/test_arrow_functions.js && node tests/test_memory_management.js
+
+🎯 Running Phase 1B Critical Runtime Compatibility Tests
+
+
+🧪 Testing: String Concatenation (+ to ..)
+📝 JavaScript Input:
+let message = "Hello" + " " + "World";
+console.log(message);
+
+🔄 Transpiled Lua:
+-- LUASCRIPT Runtime Library Integration
+local runtime = require('runtime.runtime')
+local console = runtime.console
+local JSON = runtime.JSON
+local Math = runtime.Math
+
+local message = "Hello" .. " " .. "World";
+console.log(message);
+✅ Pattern found: "local message = "Hello" .. " " .. "World""
+✅ Pattern found: "console.log(message)"
+🚀 Execution Output:
+Hello World
+
+✅ Test "String Concatenation (+ to ..)" PASSED
+
+🧪 Testing: Logical Operators (|| to or, && to and)
+📝 JavaScript Input:
+let result = true || false;
+let result2 = true && false;
+console.log(result, result2);
+
+🔄 Transpiled Lua:
+-- LUASCRIPT Runtime Library Integration
+local runtime = require('runtime.runtime')
+local console = runtime.console
+local JSON = runtime.JSON
+local Math = runtime.Math
+
+local result = true or false;
+local result2 = true and false;
+console.log(result, result2);
+✅ Pattern found: "true or false"
+✅ Pattern found: "true and false"
+✅ Pattern found: "console.log(result, result2)"
+🚀 Execution Output:
+true false
+
+✅ Test "Logical Operators (|| to or, && to and)" PASSED
+
+🧪 Testing: Equality Operators (=== to ==, !== to ~=)
+📝 JavaScript Input:
+let isEqual = (5 === 5);
+let isNotEqual = (5 !== 3);
+console.log(isEqual, isNotEqual);
+
+🔄 Transpiled Lua:
+-- LUASCRIPT Runtime Library Integration
+local runtime = require('runtime.runtime')
+local console = runtime.console
+local JSON = runtime.JSON
+local Math = runtime.Math
+
+local isEqual = (5 == 5);
+local isNotEqual = (5 ~= 3);
+console.log(isEqual, isNotEqual);
+✅ Pattern found: "5 == 5"
+✅ Pattern found: "5 ~= 3"
+✅ Pattern found: "console.log(isEqual, isNotEqual)"
+🚀 Execution Output:
+true true
+
+✅ Test "Equality Operators (=== to ==, !== to ~=)" PASSED
+
+🧪 Testing: Runtime Library Integration (console.log)
+📝 JavaScript Input:
+console.log("Testing console.log");
+console.error("Testing console.error");
+console.warn("Testing console.warn");
+
+🔄 Transpiled Lua:
+-- LUASCRIPT Runtime Library Integration
+local runtime = require('runtime.runtime')
+local console = runtime.console
+local JSON = runtime.JSON
+local Math = runtime.Math
+
+console.log("Testing console.log");
+console.error("Testing console.error");
+console.warn("Testing console.warn");
+✅ Pattern found: "require('runtime.runtime')"
+✅ Pattern found: "local console = runtime.console"
+✅ Pattern found: "console.log("Testing console.log")"
+✅ Pattern found: "console.error("Testing console.error")"
+✅ Pattern found: "console.warn("Testing console.warn")"
+ERROR: WARNING: 🚀 Execution Output:
+Testing console.log
+Testing console.error
+Testing console.warn
+
+✅ Test "Runtime Library Integration (console.log)" PASSED
+
+🧪 Testing: Complex Expression (Multiple Fixes)
+📝 JavaScript Input:
+let name = "John";
+let age = 25;
+let message = "Name: " + name + ", Age: " + age;
+let isAdult = age >= 18 && name !== "";
+console.log(message);
+console.log("Is adult:", isAdult);
+
+🔄 Transpiled Lua:
+-- LUASCRIPT Runtime Library Integration
+local runtime = require('runtime.runtime')
+local console = runtime.console
+local JSON = runtime.JSON
+local Math = runtime.Math
+
+local name = "John";
+local age = 25;
+local message = "Name = " .. name .. ", Age = " .. age;
+local isAdult = age >= 18 and name ~= "";
+console.log(message);
+console.log("Is adult:", isAdult);
+✅ Pattern found: ""Name = " .. name .. ", Age = " .. age"
+✅ Pattern found: "age >= 18 and name ~= """
+✅ Pattern found: "console.log(message)"
+✅ Pattern found: "console.log("Is adult:", isAdult)"
+🚀 Execution Output:
+Name = John, Age = 25
+Is adult: true
+
+✅ Test "Complex Expression (Multiple Fixes)" PASSED
+
+🧪 Testing: Function with String Operations
+📝 JavaScript Input:
+function greet(name) {
+    let greeting = "Hello, " + name + "!";
+    console.log(greeting);
+    return greeting;
+}
+greet("World");
+
+🔄 Transpiled Lua:
+-- LUASCRIPT Runtime Library Integration
+local runtime = require('runtime.runtime')
+local console = runtime.console
+local JSON = runtime.JSON
+local Math = runtime.Math
+
+local function greet(name)
+    local greeting = "Hello, " .. name .. "!";
+    console.log(greeting);
+    return greeting;
+end
+greet("World");
+✅ Pattern found: "local function greet(name)"
+✅ Pattern found: ""Hello, " .. name .. "!""
+✅ Pattern found: "console.log(greeting)"
+✅ Pattern found: "greet("World")"
+🚀 Execution Output:
+Hello, World!
+
+✅ Test "Function with String Operations" PASSED
+
+📊 TEST REPORT
+==================================================
+Total Tests: 6
+Passed: 6
+Failed: 0
+Success Rate: 100.0%
+
+🎯 Phase 1B Critical Fixes Status:
+  ✅ PASS String Concatenation (+ to ..)
+  ✅ PASS Logical Operators (|| to or, && to and)
+  ✅ PASS Equality Operators (=== to ==, !== to ~=)
+  ✅ PASS Runtime Library Integration (console.log)
+
+==================================================
+🎉 ALL PHASE 1B TESTS PASSED!
+✅ Critical runtime compatibility fixes are working correctly.
+Running Arrow Functions Test Suite...
+
+✅ Parse simple arrow function
+✅ Parse arrow function with parentheses
+✅ Parse arrow function with multiple parameters
+✅ Parse arrow function with block body
+✅ Execute simple arrow function
+✅ Execute arrow function with multiple parameters
+✅ Execute arrow function with block body
+✅ Arrow function closure test
+✅ Memory manager limits node allocation
+✅ Memory manager limits recursion depth
+✅ Memory manager cleanup works
+GC: Freed 0 bytes, heap size now 0 bytes
+✅ Runtime memory management prevents stack overflow
+✅ Invalid arrow function syntax throws error
+✅ Arrow function with invalid parameter throws error
+✅ Arrow functions work with built-in functions
+✅ Complex arrow function expression
+
+Test Results: 16 passed, 0 failed
+Running Memory Management Test Suite...
+
+✅ MemoryManager initializes with correct defaults
+✅ MemoryManager allocates nodes correctly
+✅ MemoryManager enforces node limit
+✅ MemoryManager tracks scope depth
+✅ MemoryManager enforces depth limit
+✅ MemoryManager cleanup works
+✅ MemoryManager provides accurate stats
+✅ RuntimeMemoryManager initializes correctly
+✅ RuntimeMemoryManager tracks function calls
+✅ RuntimeMemoryManager enforces call stack limit
+✅ RuntimeMemoryManager tracks heap allocation
+GC: Freed 27.000000000000007 bytes, heap size now 62.99999999999999 bytes
+GC: Freed 18.9 bytes, heap size now 44.099999999999994 bytes
+✅ RuntimeMemoryManager enforces heap limit
+GC: Freed 255 bytes, heap size now 595 bytes
+✅ RuntimeMemoryManager triggers garbage collection
+GC: Freed 0 bytes, heap size now 0 bytes
+✅ RuntimeMemoryManager cleanup works
+✅ RuntimeMemoryManager provides accurate stats
+✅ Parser with memory limits handles complex code
+GC: Freed 0 bytes, heap size now 0 bytes
+✅ Runtime with memory limits prevents infinite recursion
+GC: Freed 0 bytes, heap size now 0 bytes
+✅ Memory stats are accessible during execution
+
+Test Results: 18 passed, 0 failed

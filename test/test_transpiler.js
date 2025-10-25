@@ -26,12 +26,13 @@ class TranspilerTester {
     /**
      * Run a single test case
      */
-    runTest(name, jsCode, expectedLuaPatterns = [], shouldExecute = false) {
+    async runTest(name, jsCode, expectedLuaPatterns = [], shouldExecute = false) {
         console.log(`\n🧪 Testing: ${name}`);
         
         try {
             // Transpile the code
-            const luaCode = this.transpiler.transpile(jsCode, { includeRuntime: true });
+            const result = await this.transpiler.transpile(jsCode, { includeRuntime: true });
+            const luaCode = typeof result === 'string' ? result : result.code;
             
             console.log('📝 JavaScript Input:');
             console.log(jsCode);
@@ -103,11 +104,11 @@ class TranspilerTester {
     /**
      * Run all Phase 1B critical compatibility tests
      */
-    runPhase1BTests() {
+    async runPhase1BTests() {
         console.log('🎯 Running Phase 1B Critical Runtime Compatibility Tests\n');
         
         // Test 1: String Concatenation Fix
-        this.runTest(
+        await this.runTest(
             'String Concatenation (+ to ..)',
             `let message = "Hello" + " " + "World";
 console.log(message);`,
@@ -119,7 +120,7 @@ console.log(message);`,
         );
 
         // Test 2: Logical Operators Fix
-        this.runTest(
+        await this.runTest(
             'Logical Operators (|| to or, && to and)',
             `let result = true || false;
 let result2 = true && false;
@@ -133,7 +134,7 @@ console.log(result, result2);`,
         );
 
         // Test 3: Equality Operators Fix
-        this.runTest(
+        await this.runTest(
             'Equality Operators (=== to ==, !== to ~=)',
             `let isEqual = (5 === 5);
 let isNotEqual = (5 !== 3);
@@ -147,7 +148,7 @@ console.log(isEqual, isNotEqual);`,
         );
 
         // Test 4: Runtime Library Integration
-        this.runTest(
+        await this.runTest(
             'Runtime Library Integration (console.log)',
             `console.log("Testing console.log");
 console.error("Testing console.error");
@@ -163,7 +164,7 @@ console.warn("Testing console.warn");`,
         );
 
         // Test 5: Complex Expression with Multiple Fixes
-        this.runTest(
+        await this.runTest(
             'Complex Expression (Multiple Fixes)',
             `let name = "John";
 let age = 25;
@@ -172,7 +173,7 @@ let isAdult = age >= 18 && name !== "";
 console.log(message);
 console.log("Is adult:", isAdult);`,
             [
-                '"Name = " .. name .. ", Age = " .. age',
+                '"Name: " .. name .. ", Age: " .. age',
                 'age >= 18 and name ~= ""',
                 'console.log(message)',
                 'console.log("Is adult:", isAdult)'
@@ -181,7 +182,7 @@ console.log("Is adult:", isAdult);`,
         );
 
         // Test 6: Function with String Concatenation
-        this.runTest(
+        await this.runTest(
             'Function with String Operations',
             `function greet(name) {
     let greeting = "Hello, " + name + "!";
@@ -265,24 +266,32 @@ greet("World");`,
 // Run tests if this file is executed directly
 if (require.main === module) {
     const tester = new TranspilerTester();
-    
-    try {
-        tester.runPhase1BTests();
-        const allPassed = tester.generateReport();
-        
-        console.log('\n' + '='.repeat(50));
-        if (allPassed) {
-            console.log('🎉 ALL PHASE 1B TESTS PASSED!');
-            console.log('✅ Critical runtime compatibility fixes are working correctly.');
-        } else {
-            console.log('⚠️  SOME TESTS FAILED');
-            console.log('❌ Phase 1B fixes need attention.');
+
+    async function main() {
+        try {
+            await tester.runPhase1BTests();
+            const allPassed = tester.generateReport();
+
+            console.log('\n' + '='.repeat(50));
+            if (allPassed) {
+                console.log('🎉 ALL PHASE 1B TESTS PASSED!');
+                console.log('✅ Critical runtime compatibility fixes are working correctly.');
+            } else {
+                console.log('⚠️  SOME TESTS FAILED');
+                console.log('❌ Phase 1B fixes need attention.');
+            }
+
+            process.exit(allPassed ? 0 : 1);
+        } finally {
+            tester.cleanup();
         }
-        
-        process.exit(allPassed ? 0 : 1);
-    } finally {
-        tester.cleanup();
     }
+
+    main().catch((error) => {
+        console.error('💥 Test suite crashed:', error);
+        tester.cleanup();
+        process.exit(1);
+    });
 }
 
 module.exports = TranspilerTester;

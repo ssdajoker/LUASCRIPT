@@ -1,0 +1,1680 @@
+[
+  {
+    "path": "PHASE8_A6_COMPLETE.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 122180,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "PHASE_PLAN.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 9014,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "QUALITY_GATES_ENFORCEMENT.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 10614,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_after_all_self.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 2015,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "AUDIT_PROTOCOL.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 4882,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "CHECKLIST_PHASES.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 28843,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "AUDIT_GUIDE.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 9929,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "DAILY_EXECUTION_MONITORING.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 31156,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "ide/README.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 5740,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "ide/TUTORIAL.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 9747,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "ide/TUTORIAL.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 134785,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "ide/gaussian-blobs-demo.html",
+    "kind": "other",
+    "lang": "",
+    "size": 18061,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "TODO.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 19866,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test_report.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 12766,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "tests/test_arrow_functions.js",
+    "kind": "tests",
+    "lang": "JavaScript",
+    "size": 9584,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "tests/test_memory_management.js",
+    "kind": "tests",
+    "lang": "JavaScript",
+    "size": 11117,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "package.json",
+    "kind": "config",
+    "lang": "JSON",
+    "size": 4535,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "TODO.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 3989,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/test_phase4_implementation.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 5048,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/test_unified_system.js",
+    "kind": "tests",
+    "lang": "JavaScript",
+    "size": 11141,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759249530265.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 304,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759233219251.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 307,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759249489093.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 204,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759249489058.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 180,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759233219259.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 257,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759233219227.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 207,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759249489117.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 304,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759233219236.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 204,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759233219218.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 180,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759249489129.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 257,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759233219244.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 229,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759249489105.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 229,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/temp/test_1759249489077.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 207,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/test_transpiler.js",
+    "kind": "tests",
+    "lang": "JavaScript",
+    "size": 9251,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/test_phase3_implementation.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 3738,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/test_wasm_backend.js",
+    "kind": "tests",
+    "lang": "JavaScript",
+    "size": 9608,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/test_phase9_ecosystem.js",
+    "kind": "tests",
+    "lang": "JavaScript",
+    "size": 17312,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/test_phase1_6_comprehensive.js",
+    "kind": "tests",
+    "lang": "JavaScript",
+    "size": 24272,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/test_phase4_debugging.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 3929,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test/test_enhanced_transpiler.js",
+    "kind": "tests",
+    "lang": "JavaScript",
+    "size": 20031,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "PROJECT_STATUS.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 46274,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "audit_upstream/FILE_TREE.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 12066,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "audit_upstream/.gitkeep",
+    "kind": "other",
+    "lang": "",
+    "size": 0,
+    "mtime": 1760370810,
+    "tags": [
+      "dotfile"
+    ]
+  },
+  {
+    "path": "audit_upstream/files_all.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 6216,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": ".mailmap",
+    "kind": "other",
+    "lang": "",
+    "size": 243,
+    "mtime": 1760370810,
+    "tags": [
+      "dotfile"
+    ]
+  },
+  {
+    "path": "PHASE5_6_PLAN.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 108338,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "BOSS_RESTRUCTURING_SUMMARY.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 4413,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_after_variables.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 31623,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "LICENSE",
+    "kind": "other",
+    "lang": "",
+    "size": 11357,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/tests/test_kernels.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 5751,
+    "mtime": 1760370810,
+    "tags": [
+      "test-dir"
+    ]
+  },
+  {
+    "path": "gss/tests/test_parser.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 4709,
+    "mtime": 1760370810,
+    "tags": [
+      "test-dir"
+    ]
+  },
+  {
+    "path": "gss/tests/test_agss.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 6200,
+    "mtime": 1760370810,
+    "tags": [
+      "test-dir"
+    ]
+  },
+  {
+    "path": "gss/tests/test_integration.lua",
+    "kind": "tests",
+    "lang": "Lua",
+    "size": 3708,
+    "mtime": 1760370810,
+    "tags": [
+      "test-dir"
+    ]
+  },
+  {
+    "path": "gss/ir/lowering.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 10202,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/ir/graph.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 5186,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/ir/nodes.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 4351,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/parser/ast.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 4560,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/parser/parser.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 5277,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/parser/semantic.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 7770,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/README.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 7548,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/agss/metrics.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 4638,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/agss/strategies.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 6890,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/agss/agent.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 9377,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/grammar/agss.lpeg",
+    "kind": "other",
+    "lang": "",
+    "size": 5157,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/grammar/gss.lpeg",
+    "kind": "other",
+    "lang": "",
+    "size": 6217,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/benchmarks/bench_gss.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 5668,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/benchmarks/bench_agss.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 6174,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/runtime/ramp.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 2965,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/runtime/iso.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 5975,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/runtime/gaussian.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 4841,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/runtime/wasm.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 8202,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/runtime/engine.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 6781,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/runtime/cache.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 2104,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "gss/runtime/blend.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 3389,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "TODO_GSS_AGSS.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 6892,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "CODE_OF_CONDUCT.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 4662,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "runtime_runtime.json",
+    "kind": "config",
+    "lang": "JSON",
+    "size": 15045,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "PHASE5_6_PLAN.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 3736,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 85991,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "DESIGN_GSS.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 72901,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_after_manual.txt",
+    "kind": "docs",
+    "lang": "",
+    "size": 2400,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "META_OVERSIGHT.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 127086,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_after_unused.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 3564,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_after_loops.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 3087,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "IMPLEMENTATION_SUMMARY.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 5606,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "README.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 15909,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "package.json.backup",
+    "kind": "other",
+    "lang": "",
+    "size": 3291,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_clean.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 5039,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "AUDIT_GUIDE.pdf",
+    "kind": "docs",
+    "lang": "",
+    "size": 27834,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_after_variables_final.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 1676,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "reports/phase7_feasibility_report.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 151444,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "reports/phase7_feasibility_report.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 51509,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "reports/round1/final/audit_report.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 5461,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "reports/round1/integration/cross_phase.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 97,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "reports/round1/unit/full_suite.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 7290,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "reports/round1/static/luacheck.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 16933,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "reports/round0/static_analysis.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 16933,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "reports/round0/baseline_test_results.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 7290,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "reports/round0/phase4_test_results.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 2821,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "reports/round0/lua_test_results.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 1046,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "README_PHASE_1D.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 8772,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src_transpiler.json",
+    "kind": "config",
+    "lang": "JSON",
+    "size": 10614,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "META_TEAM_LEADERSHIP_ACTIVATION.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 8728,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "TRUE_100_AT_100_ACHIEVED.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 122581,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "CONTRIBUTING.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 6636,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "DEPLOYMENT_COMPLETE.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 10451,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": ".gitignore",
+    "kind": "config",
+    "lang": "",
+    "size": 661,
+    "mtime": 1760370810,
+    "tags": [
+      "dotfile"
+    ]
+  },
+  {
+    "path": "META_TEAM.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 7822,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "DESIGN_GSS.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 15615,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": ".github/PULL_REQUEST_TEMPLATE.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 14649,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": ".github/CODEOWNERS",
+    "kind": "other",
+    "lang": "",
+    "size": 1155,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": ".github/PULL_REQUEST_TEMPLATE.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 1686,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": ".github/ISSUE_TEMPLATE/feature_request.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 1062,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": ".github/ISSUE_TEMPLATE/bug_report.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 21712,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": ".github/ISSUE_TEMPLATE/feature_request.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 20292,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": ".github/ISSUE_TEMPLATE/bug_report.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 1127,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "DEPLOYMENT_COMPLETE.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 160979,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "PHASE_PLAN.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 30636,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "AUDIT_PROTOCOL.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 96877,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_after_whitespace.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 5039,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test_optimizations.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 11826,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "INCENTIVE_TRACKING.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 1858,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "DAILY_EXECUTION_MONITORING.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 8050,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "INCENTIVE_TRACKING.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 114504,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "test_transpiler.json",
+    "kind": "config",
+    "lang": "JSON",
+    "size": 13797,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "META_TEAM.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 27792,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase2_core_modules.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 23598,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase4_debugging_profiling.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 14136,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/parser.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 37754,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/optimized_transpiler.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 31096,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/runtime.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 21176,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/core_transpiler.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 12678,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase2_core_interpreter.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 42941,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/meta_team_activation.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 7440,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/transpiler.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 19721,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase1_core_ast.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 19511,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase3_advanced_features.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 8798,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/runtime_system.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 21420,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/agents/resolver-agent.test.ts",
+    "kind": "tests",
+    "lang": "TypeScript",
+    "size": 1860,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/agents/resolver-agent.ts",
+    "kind": "code",
+    "lang": "TypeScript",
+    "size": 1537,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/agentic_ide.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 53653,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/core/symbol-table.test.ts",
+    "kind": "tests",
+    "lang": "TypeScript",
+    "size": 863,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/core/symbol-table.ts",
+    "kind": "code",
+    "lang": "TypeScript",
+    "size": 1599,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase8_complete.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 13078,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/advanced_async.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 16137,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase9_ecosystem.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 52405,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/enhanced_operators.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 11121,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/unified_luascript.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 21437,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase1_core_parser.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 36134,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/index.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 16172,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/performance_tools.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 27832,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/wasm_backend.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 16838,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase1_core_lexer.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 18711,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase6_production_deployment.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 39766,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase3_compiler_optimizations.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 7796,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/advanced_features.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 19478,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/enhanced_transpiler.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 26675,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase5_enterprise_optimization.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 29064,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "src/phase4_ecosystem_integration.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 18640,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "QUALITY_GATES_ENFORCEMENT.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 34176,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "examples/phase1b_demo.js",
+    "kind": "code",
+    "lang": "JavaScript",
+    "size": 1583,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "TODO_GSS_AGSS.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 45694,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "PHASE9_COMPLETE.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 13535,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "PHASE4_LAUNCH_AUDIT_CHECKLIST.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 93265,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "META_TEAM_LEADERSHIP_ACTIVATION.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 193915,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "TEAMS.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 7942,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "phase5/README.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 7457,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "docs/COMMUNITY.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 5373,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "docs/STRATEGIC_PLAN.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 25171,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "docs/tony_yoka_optimization_report.pdf",
+    "kind": "docs",
+    "lang": "",
+    "size": 46165,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "docs/TEAM_ROLES.pdf",
+    "kind": "docs",
+    "lang": "",
+    "size": 55194,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "docs/tony_yoka_optimization_report.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 17274,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "docs/phase3_integration_plan.pdf",
+    "kind": "docs",
+    "lang": "",
+    "size": 82643,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "docs/TEAM_ROLES.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 5143,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "docs/phase3_integration_plan.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 7131,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "docs/COMMUNITY.pdf",
+    "kind": "docs",
+    "lang": "",
+    "size": 88960,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_near_final.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 1347,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "scripts/validate_quality_gates.sh",
+    "kind": "code",
+    "lang": "Shell",
+    "size": 998,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "scripts/run_gss_tests.sh",
+    "kind": "code",
+    "lang": "Shell",
+    "size": 911,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "scripts/run_audit_round.sh",
+    "kind": "code",
+    "lang": "Shell",
+    "size": 8253,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "scripts/build_wasm.sh",
+    "kind": "code",
+    "lang": "Shell",
+    "size": 2715,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "scripts/daily_standup_monitor.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 6832,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "scripts/setup_daily_monitoring.sh",
+    "kind": "code",
+    "lang": "Shell",
+    "size": 4769,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "scripts/kickoff_phase3_parallel.sh",
+    "kind": "code",
+    "lang": "Shell",
+    "size": 1480,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "scripts/bonus_tracker.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 9099,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "scripts/leadership_activation_runner.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 1368,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_syntax_fixed.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 1674,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "ENHANCED_TRANSPILER_README.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 10498,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "TEAM_ASSIGNMENTS.csv",
+    "kind": "assets",
+    "lang": "",
+    "size": 2810,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "TEAMS.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 29738,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "BOSS_RESTRUCTURING_SUMMARY.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 26540,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "PHASE9_COMPLETE.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 138227,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 25471,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "templates/ide.html",
+    "kind": "other",
+    "lang": "",
+    "size": 27270,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "templates/documentation.html",
+    "kind": "other",
+    "lang": "",
+    "size": 32036,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "AUDIT_PLAN.pdf",
+    "kind": "assets",
+    "lang": "",
+    "size": 28322,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_line_fixed.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 1408,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "META_OVERSIGHT.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 6926,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "AUDIT_PLAN.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 5800,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "CHECKLIST_PHASES.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 6304,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_variables_done.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 1407,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "runtime/runtime.lua",
+    "kind": "code",
+    "lang": "Lua",
+    "size": 9928,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "PROJECT_STATUS.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 7723,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "PHASE8_A6_COMPLETE.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 9685,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "TRUE_100_AT_100_ACHIEVED.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 9748,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "daily_standup_cron.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 672,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+    "kind": "docs",
+    "lang": "Markdown",
+    "size": 11449,
+    "mtime": 1760370810,
+    "tags": []
+  },
+  {
+    "path": "static_warnings_after_self.txt",
+    "kind": "other",
+    "lang": "",
+    "size": 2760,
+    "mtime": 1760370810,
+    "tags": []
+  }
+]

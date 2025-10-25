@@ -1,0 +1,87 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+dist/
+build/
+*.min.js
+*.bundle.js
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Cache
+.cache/
+.pytest_cache/
+__pycache__/
+*.pyc
+
+# IDE specific
+.vscode/
+.idea/
+*.sublime-*
+
+# OS specific
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Backup files
+*.backup
+*.bak
+
+# Runtime generated files
+runtime_runtime.json
+src_transpiler.json
+test_transpiler.json
+
+# Static analysis output
+static_warnings*.txt
+
+# PDF documentation (generated from markdown)
+*.pdf
+
+# Node & TypeScript caches
+.eslintcache
+*.tsbuildinfo
+
+# pnpm/yarn extras
+pnpm-lock.yaml
+.pnpm-store/
+
+# direnv
+.envrc
+.direnv/
+
+# Test temp outputs
+test/temp/
+tests/tmp/
+
+# Reports and tmp (do not untrack existing committed files)
+reports/**/tmp/
+reports/**/cache/
+
+# OS/editor histories
+.history/
+.vscode/**.history/
