@@ -11,7 +11,7 @@ class RuntimeMemoryManager {
     /**
      * Creates an instance of the RuntimeMemoryManager.
      * @param {number} [maxCallStack=1000] - The maximum depth of the call stack.
-     * @param {number} [maxHeapSize=52428800] - The maximum size of the heap in bytes (defaults to 50MB).
+     * @param {number} [maxHeapSize=50*1024*1024] - The maximum size of the heap in bytes (defaults to 50MB).
      * @param {object} [gcOptions={}] - Adaptive garbage collection configuration options.
      */
     constructor(maxCallStack = 1000, maxHeapSize = 50 * 1024 * 1024, gcOptions = {}) {
