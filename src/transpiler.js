@@ -130,7 +130,7 @@ class LuaScriptTranspiler {
                     duration,
                     optimizations: 0,
                     originalSize: jsCode.length,
-                    filename: normalizedOptions && normalizedOptions.filename ? normalizedOptions.filename : null,
+                    filename: normalizedOptions.filename || null,
                 },
             };
 
