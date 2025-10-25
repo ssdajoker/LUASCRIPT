@@ -846,9 +846,11 @@ class LuaInterpreter {
                 const expected = stack[stack.length - 1];
                 if (char === expected) {
                     stack.pop();
+                    current += char;
+                    continue;
+                } else {
+                    throw new Error(`Mismatched closing delimiter: expected '${expected}', got '${char}' at position ${i}`);
                 }
-                current += char;
-                continue;
             }
 
             if (char === delimiter && stack.length === 0) {
