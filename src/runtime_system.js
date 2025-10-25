@@ -779,6 +779,13 @@ class LuaInterpreter {
         }
 
         const pushError = (message) => {
+            // Ensure stats and errors are initialized before pushing
+            if (!this.stats) {
+                this.stats = { errors: [] };
+            }
+            if (!Array.isArray(this.stats.errors)) {
+                this.stats.errors = [];
+            }
             this.stats.errors.push(message);
             return message;
         };
