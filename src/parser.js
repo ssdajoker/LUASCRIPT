@@ -153,7 +153,7 @@ class MemoryManager {
             ...data,
             _allocated: true,
             _createdAt: Date.now(),
-            _depth: this.currentDepth
+            _depth: this.currentDepth,
             _pooled: false,
             __dataKeys: Object.keys(data)
         };
@@ -167,6 +167,7 @@ class MemoryManager {
         
         if (this.allocationHistory.length < 1000) { // Keep last 1000 allocations
             this.allocationHistory.push({ type, timestamp: Date.now(), depth: this.currentDepth });
+        }
         // Track peak memory usage
         if (this.nodeCount > this.stats.peakMemory) {
             this.stats.peakMemory = this.nodeCount;
@@ -327,24 +328,46 @@ class MemoryManager {
             .sort((a, b) => b[1] - a[1])
             .slice(0, 5)
             .map(([type, count]) => `${type}(${count})`);
-        
+
+        const poolStats = {};
+        for (const [poolName, pool] of Object.entries(this.memoryPools)) {
+            poolStats[poolName] = {
+                total: pool.nodes.length,
+                allocated: pool.allocated,
+                available: pool.nodes.length - pool.allocated,
+                utilization: pool.nodes.length > 0 ? (pool.allocated / pool.nodes.length * 100).toFixed(1) + '%' : '0%',
+            };
+        }
+
+        const allocationRate = this.allocationHistory.length > 1
+            ? `${(
+                this.allocationHistory.length /
+                ((Date.now() - this.allocationHistory[0].timestamp) / 1000)
+            ).toFixed(2)} nodes/sec`
+            : 'N/A';
+
+        const poolHitRate = this.stats.allocations > 0
+            ? `${((this.stats.poolHits / this.stats.allocations) * 100).toFixed(1)}%`
+            : '0%';
+
         return {
             ...this.getStats(),
             topNodeTypes,
             nodeTypeBreakdown: Object.fromEntries(this.nodeTypeStats),
             allocationRate: this.allocationHistory.length > 1 ? 
                 (this.allocationHistory.length / ((Date.now() - this.allocationHistory[0].timestamp) / 1000)).toFixed(2) + ' nodes/sec' : 
-                'N/A'
+                'N/A',
+            allocationRate,
             peakMemory: this.stats.peakMemory,
             allocations: this.stats.allocations,
             deallocations: this.stats.deallocations,
-            poolHitRate: this.stats.allocations > 0 ? ((this.stats.poolHits / this.stats.allocations) * 100).toFixed(1) + '%' : '0%',
-            poolStats: poolStats,
+            poolHitRate,
+            poolStats,
             tonyYokaOptimizations: {
                 memoryPools: 'Active',
                 poolAllocation: 'Enabled',
-                performanceTracking: 'Enabled'
-            }
+                performanceTracking: 'Enabled',
+            },
         };
     }
 }
@@ -816,6 +839,7 @@ class Parser {
         }
     }
 
+    /**
      * Parses a single statement.
      * @returns {object} The AST node for the statement.
      * @private

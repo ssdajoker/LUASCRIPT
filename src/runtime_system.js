@@ -663,7 +663,7 @@ class LuaInterpreter {
         }
 
         // Variable assignment
-        const assignmentMatch = line.match(/^local\s+(\w+)\s*=\s*(.+)$/);
+        const assignmentMatch = line.match(/^local\s+([^\s=]+)\s*=\s*(.+)$/);
         if (assignmentMatch) {
             const [, name, value] = assignmentMatch;
             this.variables.set(name, this.evaluateExpression(value));
@@ -694,7 +694,7 @@ class LuaInterpreter {
         }
 
         // Function call expression
-        const callMatch = expr.match(/^(\w+)\s*\((.*)\)$/);
+        const callMatch = expr.match(/^([^\s(]+)\s*\((.*)\)$/);
         if (callMatch) {
             const [, name, args] = callMatch;
             return this.invokeFunction(name, this.parseArguments(args));
@@ -714,14 +714,13 @@ class LuaInterpreter {
     }
 
     defineFunction(line) {
-        const funcMatch = line.match(/^local\s+function\s+(\w+)\s*\(([^)]*)\)\s*(.*)$/);
+        const funcMatch = line.match(/^local\s+function\s+([^\s(]+)\s*\(([^)]*)\)\s*(.*)$/);
         if (!funcMatch) {
             return null;
         }
 
         const [, name, paramsRaw, body] = funcMatch;
-        const params = paramsRaw
-            .split(',')
+        const params = this.splitTopLevel(paramsRaw)
             .map(param => param.trim())
             .filter(Boolean);
 
@@ -745,15 +744,203 @@ class LuaInterpreter {
     }
 
     parseArguments(args) {
-        if (!args || !args.trim()) {
+        const normalized = (args ?? '').trim();
+        if (!normalized) {
             return [];
         }
 
-        return args
-            .split(',')
+        return this.splitTopLevel(normalized)
+            .map(arg => this.evaluateExpression(arg));
+    }
+
+    splitTopLevel(input, delimiter = ',') {
+        const result = [];
+        let current = '';
+        const stack = [];
+        let inString = false;
+        let stringChar = '';
+        let escapeNext = false;
+
+        for (let i = 0; i < input.length; i++) {
+            const char = input[i];
+
+            if (inString) {
+                current += char;
+
+                if (escapeNext) {
+                    escapeNext = false;
+                    continue;
+                }
+
+                if (char === '\\') {
+                    escapeNext = true;
+                    continue;
+                }
+
+                if (char === stringChar) {
+                    inString = false;
+                    stringChar = '';
+                }
+
+                continue;
+            }
+
+            if (char === "\"" || char === "'") {
+                inString = true;
+                stringChar = char;
+        return this.splitTopLevel(args)
             .map(arg => arg.trim())
             .filter(Boolean)
             .map(arg => this.evaluateExpression(arg));
+    }
+
+    splitTopLevel(value, delimiter = ',') {
+        if (!value) {
+            return [];
+        }
+
+        const result = [];
+        let current = '';
+        const stack = [];
+        let inSingleQuote = false;
+        let inDoubleQuote = false;
+        let inBacktick = false;
+        let isEscaped = false;
+
+        for (let i = 0; i < value.length; i++) {
+            const char = value[i];
+
+            if (isEscaped) {
+                current += char;
+                isEscaped = false;
+                continue;
+            }
+
+            if (char === '\\') {
+                current += char;
+                isEscaped = true;
+                continue;
+            }
+
+            if (inSingleQuote) {
+                current += char;
+                if (char === '\'') {
+                    inSingleQuote = false;
+                }
+                continue;
+            }
+
+            if (inDoubleQuote) {
+                current += char;
+                if (char === '"') {
+                    inDoubleQuote = false;
+                }
+                continue;
+            }
+
+            if (inBacktick) {
+                current += char;
+                if (char === '`') {
+                    inBacktick = false;
+                }
+                continue;
+            }
+
+            if (char === '\'') {
+                inSingleQuote = true;
+                current += char;
+                continue;
+            }
+
+            if (char === '"') {
+                inDoubleQuote = true;
+                current += char;
+                continue;
+            }
+
+            if (char === '(') {
+                stack.push(')');
+            if (char === '`') {
+                inBacktick = true;
+                current += char;
+                continue;
+            }
+
+            if (char === '{') {
+                stack.push('}');
+            if (char === '(') {
+                stack.push(')');
+                current += char;
+                continue;
+            }
+
+            if (char === '[') {
+                stack.push(']');
+                current += char;
+                continue;
+            }
+
+            if ((char === ')' || char === '}' || char === ']') && stack.length) {
+            if (char === '{') {
+                stack.push('}');
+                current += char;
+                continue;
+            }
+
+            if ((char === ')' || char === ']' || char === '}') && stack.length > 0) {
+                const expected = stack[stack.length - 1];
+                if (char === expected) {
+                    stack.pop();
+                    current += char;
+                } else {
+                    // Report mismatched delimiter error
+                    this.stats.errors.push(
+                        `Mismatched closing delimiter: expected '${expected}', got '${char}' at position ${i}`
+                    );
+                    // Optionally, do not add the mismatched delimiter to current
+                    // continue; // skip adding char
+                }
+                continue;
+            }
+
+            if (char === delimiter && stack.length === 0) {
+                const trimmed = current.trim();
+                if (trimmed) {
+                    result.push(trimmed);
+                    continue;
+                } else {
+                    throw new Error(`Mismatched closing delimiter: expected '${expected}', got '${char}' at position ${i}`);
+                }
+            }
+
+            if (char === delimiter && stack.length === 0) {
+                if (current.trim()) {
+                    result.push(current.trim());
+                }
+                current = '';
+                continue;
+            }
+
+            current += char;
+        }
+
+        const trimmed = current.trim();
+        if (trimmed) {
+            result.push(trimmed);
+        }
+
+        // Check for unclosed delimiters or strings
+        if (stack.length > 0) {
+            throw new Error("Unclosed delimiter(s) at end of input: " + stack.join(', '));
+        }
+        if (inString) {
+            throw new Error("Unclosed string at end of input");
+        }
+        if (current.trim()) {
+            result.push(current.trim());
+        }
+
+        return result;
     }
 
     invokeFunction(name, args) {

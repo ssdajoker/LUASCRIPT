@@ -386,6 +386,126 @@ end
 function runtime.Math.sqrt(x)
     return math.sqrt(x)
 end
+
+-- Extended Lua math helpers for Unicode operators
+local function ensure_callback(callback, name)
+    if type(callback) ~= "function" then
+        error(name .. " expects a function as the first argument", 2)
+    end
+    return callback
+end
+
+local function normalize_step(lower, upper, step)
+    if step == nil then
+        if lower <= upper then
+            return 1
+        else
+            return -1
+        end
+    end
+    if step == 0 then
+        error("step must not be zero", 2)
+    end
+    return step
+end
+
+if type(math.product) ~= "function" then
+    function math.product(callback, lower, upper, step)
+        callback = ensure_callback(callback, "math.product")
+        if type(lower) ~= "number" or type(upper) ~= "number" then
+            error("math.product expects numeric bounds", 2)
+        end
+
+        step = normalize_step(lower, upper, step)
+        local result = 1
+
+        if (step > 0 and lower > upper) or (step < 0 and lower < upper) then
+            return result
+        end
+
+        for value = lower, upper, step do
+            local term = callback(value)
+            if type(term) ~= "number" then
+                error("math.product callback must return a number", 2)
+            end
+            result = result * term
+        end
+
+        return result
+    end
+end
+
+if type(math.summation) ~= "function" then
+    function math.summation(callback, lower, upper, step)
+        callback = ensure_callback(callback, "math.summation")
+        if type(lower) ~= "number" or type(upper) ~= "number" then
+            error("math.summation expects numeric bounds", 2)
+        end
+
+        step = normalize_step(lower, upper, step)
+        local result = 0
+
+        if (step > 0 and lower > upper) or (step < 0 and lower < upper) then
+            return result
+        end
+
+        for value = lower, upper, step do
+            local term = callback(value)
+            if type(term) ~= "number" then
+                error("math.summation callback must return a number", 2)
+            end
+            result = result + term
+        end
+
+        return result
+    end
+end
+
+if type(math.integral) ~= "function" then
+    function math.integral(callback, lower, upper, steps)
+        callback = ensure_callback(callback, "math.integral")
+        if type(lower) ~= "number" or type(upper) ~= "number" then
+            error("math.integral expects numeric bounds", 2)
+        end
+
+        steps = steps or 1000
+        if type(steps) ~= "number" or steps <= 0 then
+            error("math.integral expects a positive number of steps", 2)
+        end
+
+        if lower == upper then
+            return 0
+        end
+
+        local start = lower
+        local finish = upper
+        local direction = 1
+        if upper < lower then
+            start = upper
+            finish = lower
+            direction = -1
+        end
+
+        local step_size = (finish - start) / steps
+
+        local function evaluate(point)
+            local value = callback(point)
+            if type(value) ~= "number" then
+                error("math.integral callback must return a number", 2)
+            end
+            return value
+        end
+
+        local sum = 0.5 * (evaluate(start) + evaluate(finish))
+
+        for i = 1, steps - 1 do
+            local x = start + step_size * i
+            sum = sum + evaluate(x)
+        end
+
+        return sum * step_size * direction
+    end
+end
 -- String prototype methods
 runtime.String = {}
 function runtime.String.charAt(str, index)

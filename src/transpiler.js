@@ -85,20 +85,23 @@ class LuaScriptTranspiler {
         // PHASE 1: Critical Fixes - Order matters for parser strategy alignment!
         luaCode = this.fixEqualityOperators(luaCode);
         luaCode = this.fixLogicalOperators(luaCode);
+    /**
      * The main transpilation function, enhanced with optional optimizations.
      * It processes JavaScript code through either the standard or the optimized transpilation pipeline.
      * @param {string} jsCode - The JavaScript code to transpile.
      * @param {object} [options={}] - Transpilation options.
      * @param {boolean} [options.includeRuntime=true] - Whether to inject the Lua runtime library.
-     * @returns {Promise<string>} A promise that resolves to the transpiled Lua code.
+     * @returns {object|string} The transpilation result or code, depending on pipeline used.
      */
     async transpile(jsCode, options = {}) {
         options = this.normalizeOptions(options);
         this.validateInput(jsCode, options);
 
+    transpile(jsCode, options = {}) {
+        this.validateInput(jsCode, options);
         const startTime = process.hrtime.bigint();
         this.stats.transpilationsCount++;
-        
+
         try {
             if (this.shouldUseCanonicalPipeline(options)) {
                 const canonicalResult = this.transpileWithCanonicalIR(jsCode, options);
@@ -107,35 +110,8 @@ class LuaScriptTranspiler {
                 return canonicalResult;
             }
 
-            // Legacy optimized path retained as fallback
             if (this.options.enableOptimizations && this.optimizedTranspiler) {
-                console.log('🚀 APPLYING TONY YOKA\'S 20 PS2/PS3 OPTIMIZATIONS...');
-
-                const optimizedResult = await this.optimizedTranspiler.transpile(jsCode, options);
-                this.stats.optimizationsApplied++;
-
-                // Ensure string concatenation is correct even on optimized path
-                let optimizedCode = optimizedResult.code || optimizedResult;
-                optimizedCode = this.fixStringConcatenation(optimizedCode);
-                if (this.options.validateLuaBalance !== false) {
-                    this.validateLuaBalanceOrThrow(optimizedCode, { phase: 'optimized' });
-                }
-
-                const finalCode = this.injectRuntimeLibrary(optimizedCode, options);
-                const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
-                this.stats.totalTime += duration;
-
-                console.log(`✅ OPTIMIZATION COMPLETE: ${duration.toFixed(2)}ms`);
-                return {
-                    code: finalCode,
-                    ir: null,
-                    stats: {
-                        duration,
-                        optimizations: this.stats.optimizationsApplied,
-                        originalSize: jsCode.length,
-                        filename: options && options.filename ? options.filename : null,
-                    },
-                };
+                console.warn('⚠️ Optimized transpilation requires async support; falling back to legacy pipeline.');
             }
 
             console.log('📝 Using legacy string-rewrite transpilation');
@@ -156,6 +132,7 @@ class LuaScriptTranspiler {
             }
 
             luaCode = this.injectRuntimeLibrary(luaCode, options);
+            this.validateOutput(luaCode, options);
 
             const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
             this.stats.totalTime += duration;
@@ -170,7 +147,7 @@ class LuaScriptTranspiler {
                     filename: options && options.filename ? options.filename : null,
                 },
             };
-            
+
         } catch (error) {
             console.error('❌ TRANSPILATION ERROR:', error.message);
             throw error;
@@ -358,12 +335,6 @@ class LuaScriptTranspiler {
             throw new Error(`Lua delimiter imbalance: ${stack.length} unclosed delimiters (phase=${ctx.phase || 'n/a'})`);
         }
         return true;
-    }
-
-        // PHASE 1: Runtime Validation - Output validation
-        this.validateOutput(luaCode, options);
-
-        return luaCode;
     }
 
     /**
@@ -644,8 +615,6 @@ class LuaScriptTranspiler {
             '$1 .. $2 .. $3'
         );
         
-    isMatchingPair(open, close) {
-        return (open === '(' && close === ')') || (open === '{' && close === '}') || (open === '[' && close === ']');
     }
 
     /**
