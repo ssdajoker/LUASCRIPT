@@ -500,9 +500,6 @@ if type(math.integral) ~= "function" then
 
         for i = 1, steps - 1 do
             local x = start + step_size * i
-            if x >= finish then
-                break
-            end
             sum = sum + evaluate(x)
         end
 
