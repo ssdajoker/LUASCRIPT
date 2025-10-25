@@ -63,22 +63,187 @@ _LS.math = {
     intersection = function(set1, set2)
         local result = {}
         local set2_lookup = {}
-        
+
         -- Create lookup table for set2
         for i = 1, #set2 do
             set2_lookup[set2[i]] = true
         end
-        
+
         -- Find intersection
         for i = 1, #set1 do
             if set2_lookup[set1[i]] then
                 table.insert(result, set1[i])
             end
         end
-        
+
         return _LS.array(result)
     end,
 }
+
+local function normalize_step(start_value, end_value, step)
+    if step == nil then
+        return start_value <= end_value and 1 or -1
+    end
+    if step == 0 then
+        error("math range step cannot be zero")
+    end
+    return step
+end
+
+local function iterate_range(start_value, end_value, step, handler)
+    local index = 0
+    if step > 0 then
+        for value = start_value, end_value, step do
+            handler(value, index)
+            index = index + 1
+        end
+    else
+        for value = start_value, end_value, step do
+            handler(value, index)
+            index = index + 1
+        end
+    end
+end
+
+local function summation_impl(collection_or_start, finish, step_or_mapper, maybe_mapper)
+    local total = 0
+    if type(collection_or_start) == "table" then
+        local mapper = step_or_mapper
+        if mapper ~= nil and type(mapper) ~= "function" then
+            error("math.summation mapper must be a function")
+        end
+        for index, value in ipairs(collection_or_start) do
+            if mapper then
+                local mapped = mapper(value, index - 1, collection_or_start)
+                if mapped then
+                    total = total + mapped
+                end
+            else
+                total = total + (value or 0)
+            end
+        end
+        return total
+    elseif type(collection_or_start) == "number" and type(finish) == "number" then
+        local step, mapper
+        if type(step_or_mapper) == "number" then
+            step = normalize_step(collection_or_start, finish, step_or_mapper)
+            mapper = maybe_mapper
+        else
+            step = normalize_step(collection_or_start, finish)
+            mapper = step_or_mapper
+        end
+        if mapper ~= nil and type(mapper) ~= "function" then
+            error("math.summation mapper must be a function")
+        end
+        mapper = mapper or function(value)
+            return value
+        end
+        if step > 0 and collection_or_start > finish then
+            return 0
+        end
+        if step < 0 and collection_or_start < finish then
+            return 0
+        end
+        iterate_range(collection_or_start, finish, step, function(value, index)
+            local mapped = mapper(value, index)
+            if mapped then
+                total = total + mapped
+            end
+        end)
+        return total
+    end
+    error("math.summation expects a table or numeric range")
+end
+
+local function product_impl(collection_or_start, finish, step_or_mapper, maybe_mapper)
+    local result = 1
+    if type(collection_or_start) == "table" then
+        local mapper = step_or_mapper
+        if mapper ~= nil and type(mapper) ~= "function" then
+            error("math.product mapper must be a function")
+        end
+        for index, value in ipairs(collection_or_start) do
+            local mapped
+            if mapper then
+                mapped = mapper(value, index - 1, collection_or_start)
+            else
+                mapped = value
+            end
+            if mapped ~= nil then
+                result = result * mapped
+            end
+        end
+        return result
+    elseif type(collection_or_start) == "number" and type(finish) == "number" then
+        local step, mapper
+        if type(step_or_mapper) == "number" then
+            step = normalize_step(collection_or_start, finish, step_or_mapper)
+            mapper = maybe_mapper
+        else
+            step = normalize_step(collection_or_start, finish)
+            mapper = step_or_mapper
+        end
+        if mapper ~= nil and type(mapper) ~= "function" then
+            error("math.product mapper must be a function")
+        end
+        mapper = mapper or function(value)
+            return value
+        end
+        if step > 0 and collection_or_start > finish then
+            return 1
+        end
+        if step < 0 and collection_or_start < finish then
+            return 1
+        end
+        iterate_range(collection_or_start, finish, step, function(value, index)
+            local mapped = mapper(value, index)
+            if mapped ~= nil then
+                result = result * mapped
+            end
+        end)
+        return result
+    end
+    error("math.product expects a table or numeric range")
+end
+
+local function integral_impl(fn, a, b, steps)
+    if type(fn) ~= "function" then
+        error("math.integral requires a function as the first argument")
+    end
+    if type(a) ~= "number" or type(b) ~= "number" then
+        error("math.integral requires numeric bounds")
+    end
+    steps = steps or 1000
+    if steps <= 0 then
+        return 0
+    end
+    local direction = 1
+    if b < a then
+        a, b = b, a
+        direction = -1
+    end
+    local step = (b - a) / steps
+    local total = 0.5 * (fn(a) + fn(b))
+    for i = 1, steps - 1 do
+        local x = a + step * i
+        total = total + fn(x)
+    end
+    return total * step * direction
+end
+
+_LS.math.summation = summation_impl
+_LS.math.product = product_impl
+_LS.math.integral = integral_impl
+
+if not math.summation then
+    math.summation = summation_impl
+end
+if not math.product then
+    math.product = product_impl
+end
+if not math.integral then
+    math.integral = integral_impl
+end
 
 -- ============================================================================
 -- ARRAY OPERATIONS (FIXED: Properly Connected)
