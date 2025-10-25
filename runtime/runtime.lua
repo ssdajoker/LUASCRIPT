@@ -223,8 +223,8 @@ local function create_summation_impl()
 
         local first = args[1]
 
-        -- Summation over a collection
         if type(first) == "table" then
+            -- Summation over a collection
             local callback = type(args[2]) == "function" and args[2] or nil
             local total = 0
 
