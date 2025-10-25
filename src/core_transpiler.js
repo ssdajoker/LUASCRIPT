@@ -99,9 +99,18 @@ class CoreTranspiler extends EventEmitter {
         ]);
 
         this.patterns.set('math_operators', [
-            { from: /∏\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g, to: 'math.product($1, $2, $3, $4)' },
-            { from: /∑\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g, to: 'math.summation($1, $2, $3, $4)' },
-            { from: /∫\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g, to: 'math.integral($1, $2, $3, $4)' }
+            {
+                from: /∏\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g,
+                to: 'math.product(function($1) return ($4) end, $2, $3)'
+            },
+            {
+                from: /∑\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g,
+                to: 'math.summation(function($1) return ($4) end, $2, $3)'
+            },
+            {
+                from: /∫\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g,
+                to: 'math.integral(function($1) return ($4) end, $2, $3)'
+            }
         ]);
     }
 
