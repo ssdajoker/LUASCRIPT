@@ -753,47 +753,6 @@ class LuaInterpreter {
             .map(arg => this.evaluateExpression(arg));
     }
 
-    splitTopLevel(input, delimiter = ',') {
-        const result = [];
-        let current = '';
-        const stack = [];
-        let inString = false;
-        let stringChar = '';
-        let escapeNext = false;
-
-        for (let i = 0; i < input.length; i++) {
-            const char = input[i];
-
-            if (inString) {
-                current += char;
-
-                if (escapeNext) {
-                    escapeNext = false;
-                    continue;
-                }
-
-                if (char === '\\') {
-                    escapeNext = true;
-                    continue;
-                }
-
-                if (char === stringChar) {
-                    inString = false;
-                    stringChar = '';
-                }
-
-                continue;
-            }
-
-            if (char === "\"" || char === "'") {
-                inString = true;
-                stringChar = char;
-        return this.splitTopLevel(args)
-            .map(arg => arg.trim())
-            .filter(Boolean)
-            .map(arg => this.evaluateExpression(arg));
-    }
-
     splitTopLevel(value, delimiter = ',') {
         if (!value) {
             return [];
@@ -806,6 +765,13 @@ class LuaInterpreter {
         let inDoubleQuote = false;
         let inBacktick = false;
         let isEscaped = false;
+
+        const pushError = (message) => {
+            if (this.stats && Array.isArray(this.stats.errors)) {
+                this.stats.errors.push(message);
+            }
+            return message;
+        };
 
         for (let i = 0; i < value.length; i++) {
             const char = value[i];
@@ -858,18 +824,20 @@ class LuaInterpreter {
                 continue;
             }
 
-            if (char === '(') {
-                stack.push(')');
             if (char === '`') {
                 inBacktick = true;
                 current += char;
                 continue;
             }
 
-            if (char === '{') {
-                stack.push('}');
             if (char === '(') {
                 stack.push(')');
+                current += char;
+                continue;
+            }
+
+            if (char === '{') {
+                stack.push('}');
                 current += char;
                 continue;
             }
@@ -880,26 +848,21 @@ class LuaInterpreter {
                 continue;
             }
 
-            if ((char === ')' || char === '}' || char === ']') && stack.length) {
-            if (char === '{') {
-                stack.push('}');
-                current += char;
-                continue;
-            }
-
-            if ((char === ')' || char === ']' || char === '}') && stack.length > 0) {
-                const expected = stack[stack.length - 1];
-                if (char === expected) {
-                    stack.pop();
-                    current += char;
-                } else {
-                    // Report mismatched delimiter error
-                    this.stats.errors.push(
-                        `Mismatched closing delimiter: expected '${expected}', got '${char}' at position ${i}`
-                    );
-                    // Optionally, do not add the mismatched delimiter to current
-                    // continue; // skip adding char
+            if (char === ')' || char === '}' || char === ']') {
+                if (stack.length === 0) {
+                    const msg = `Unmatched closing delimiter '${char}' at position ${i}`;
+                    pushError(msg);
+                    throw new Error(msg);
                 }
+
+                const expected = stack.pop();
+                if (char !== expected) {
+                    const msg = `Mismatched closing delimiter: expected '${expected}', got '${char}' at position ${i}`;
+                    pushError(msg);
+                    throw new Error(msg);
+                }
+
+                current += char;
                 continue;
             }
 
@@ -907,15 +870,6 @@ class LuaInterpreter {
                 const trimmed = current.trim();
                 if (trimmed) {
                     result.push(trimmed);
-                    continue;
-                } else {
-                    throw new Error(`Mismatched closing delimiter: expected '${expected}', got '${char}' at position ${i}`);
-                }
-            }
-
-            if (char === delimiter && stack.length === 0) {
-                if (current.trim()) {
-                    result.push(current.trim());
                 }
                 current = '';
                 continue;
@@ -929,15 +883,12 @@ class LuaInterpreter {
             result.push(trimmed);
         }
 
-        // Check for unclosed delimiters or strings
         if (stack.length > 0) {
-            throw new Error("Unclosed delimiter(s) at end of input: " + stack.join(', '));
+            throw new Error(pushError(`Unclosed delimiter(s) at end of input: ${stack.join(', ')}`));
         }
-        if (inString) {
-            throw new Error("Unclosed string at end of input");
-        }
-        if (current.trim()) {
-            result.push(current.trim());
+
+        if (inSingleQuote || inDoubleQuote || inBacktick) {
+            throw new Error(pushError('Unclosed string at end of input'));
         }
 
         return result;
