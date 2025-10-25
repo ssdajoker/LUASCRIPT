@@ -113,7 +113,7 @@ class CoreTranspiler extends EventEmitter {
      * @returns {object} An object containing the transpiled Lua code, source map, and statistics.
      * @throws {Error} If a fatal error occurs during transpilation.
      */
-    generateLuaFromAST(node) {
+                return `${init}\nwhile ${test} do\n  ${body}\n  ${update}\nend`;
         switch (node.type) {
             case 'Program':
                 return node.body.map(this.generateLuaFromAST.bind(this)).join('\n');
