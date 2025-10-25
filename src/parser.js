@@ -354,6 +354,9 @@ class MemoryManager {
             ...this.getStats(),
             topNodeTypes,
             nodeTypeBreakdown: Object.fromEntries(this.nodeTypeStats),
+            allocationRate: this.allocationHistory.length > 1 ? 
+                (this.allocationHistory.length / ((Date.now() - this.allocationHistory[0].timestamp) / 1000)).toFixed(2) + ' nodes/sec' : 
+                'N/A',
             allocationRate,
             peakMemory: this.stats.peakMemory,
             allocations: this.stats.allocations,
