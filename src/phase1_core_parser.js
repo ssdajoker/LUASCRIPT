@@ -102,9 +102,11 @@ class LuaScriptParser {
         while (!this.isAtEnd()) {
             try {
                 const stmt = this.parseStatement();
-                if (stmt) body.push(stmt);
-                // If after parsing a statement we're at EOF, break to avoid spurious errors
-                if (this.isAtEnd()) break;
+                if (stmt) {
+                    body.push(stmt);
+                    // Only break on EOF after a successful statement parse to avoid masking genuine parsing errors
+                    if (this.isAtEnd()) break;
+                }
             } catch (error) {
                 if (this.options.errorRecovery) {
                     this.addError(error.message);
