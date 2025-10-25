@@ -354,9 +354,9 @@ if not math.integral then
     math.integral = integral_impl
 end
 
-runtime.Math.summation = math.summation
-runtime.Math.product = math.product
-runtime.Math.integral = math.integral
+runtime.Math.summation = summation_impl
+runtime.Math.product = product_impl
+runtime.Math.integral = integral_impl
 runtime.Math.PI = math.pi
 runtime.Math.E = math.exp(1)
 function runtime.Math.abs(x)
