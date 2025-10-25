@@ -11,12 +11,29 @@ function normalizeProgram(programNode, options = {}) {
     throw new Error("normalizeProgram expects a Program node");
   }
 
-  return normalizeNode(programNode, options);
+  // Initialize a WeakSet to guard against self-referential cycles
+  const seen = options.seen || new WeakSet();
+  const opts = { ...options, seen };
+  return normalizeNode(programNode, opts);
 }
 
 function normalizeNode(node, options = {}) {
   if (!node) {
     return null;
+  }
+
+  // Handle nested arrays (unexpected but guardrail): flatten one level and normalize entries
+  if (Array.isArray(node)) {
+    return normalizeArray(node, options);
+  }
+
+  // Cycle guard: if this exact node object was already visited, avoid infinite recursion
+  if (options && options.seen && typeof node === "object") {
+    if (options.seen.has(node)) {
+      // Return a shallow, type-only stub to preserve shape without recursing
+      return node && node.type ? { type: node.type } : null;
+    }
+    options.seen.add(node);
   }
 
   switch (node.type) {
@@ -83,11 +100,56 @@ function normalizeNode(node, options = {}) {
         prefix: true,
       };
 
+    case "UpdateExpression":
+      return {
+        type: "UpdateExpression",
+        operator: node.operator,
+        argument: normalizeNode(node.argument, options),
+        prefix: Boolean(node.prefix),
+      };
+
     case "CallExpression":
       return {
         type: "CallExpression",
         callee: normalizeNode(node.callee, options),
         arguments: normalizeArray(node.arguments, options),
+      };
+
+    case "NewExpression":
+      return {
+        type: "NewExpression",
+        callee: normalizeNode(node.callee, options),
+        arguments: normalizeArray(node.arguments, options),
+      };
+
+    case "MemberExpression":
+      return {
+        type: "MemberExpression",
+        object: normalizeNode(node.object, options),
+        property: normalizeNode(node.property, options),
+        computed: Boolean(node.computed),
+      };
+
+    case "ArrayExpression":
+      return {
+        type: "ArrayExpression",
+        elements: normalizeArray(node.elements, options),
+      };
+
+    case "ObjectExpression":
+      return {
+        type: "ObjectExpression",
+        properties: normalizeArray(node.properties, options),
+      };
+
+    case "Property":
+      return {
+        type: "Property",
+        key: normalizeNode(node.key, options),
+        value: normalizeNode(node.value, options),
+        kind: node.kind || "init",
+        computed: Boolean(node.computed),
+        shorthand: Boolean(node.shorthand),
       };
 
     case "ExpressionStatement":
@@ -115,6 +177,54 @@ function normalizeNode(node, options = {}) {
         type: "WhileStatement",
         test: normalizeNode(node.test, options),
         body: normalizeNode(node.body, options),
+      };
+
+    case "ForStatement":
+      return {
+        type: "ForStatement",
+        init: normalizeNode(node.init, options),
+        test: normalizeNode(node.test, options),
+        update: normalizeNode(node.update, options),
+        body: normalizeNode(node.body, options),
+      };
+
+    case "SwitchStatement": {
+      // Represent switch as a synthetic node that will be lowered later to If/ElseIf/Else
+      return {
+        type: "SwitchStatement",
+        discriminant: normalizeNode(node.discriminant, options),
+        cases: normalizeArray(node.cases, options).map((c) => ({
+          type: "SwitchCase",
+          test: normalizeNode(c.test, options),
+          consequent: normalizeArray(c.consequent, options),
+        })),
+      };
+    }
+
+    case "ClassDeclaration": {
+      // Normalize to a minimal ClassDeclaration shape; lowerer will translate to prototype-like constructs
+      const methods = (node.body || []).filter((m) => m && m.type === "MethodDefinition").map((m) => ({
+        type: "MethodDefinition",
+        key: normalizeNode(m.key, options),
+        params: normalizeArray(m.params, options),
+        body: normalizeNode(m.body, options),
+        kind: m.kind || "method",
+        static: Boolean(m.static),
+      }));
+      return {
+        type: "ClassDeclaration",
+        id: normalizeNode(node.id, options),
+        superClass: normalizeNode(node.superClass, options),
+        body: methods,
+      };
+    }
+
+    case "ConditionalExpression":
+      return {
+        type: "ConditionalExpression",
+        test: normalizeNode(node.test, options),
+        consequent: normalizeNode(node.consequent, options),
+        alternate: normalizeNode(node.alternate, options),
       };
 
     case "BlockStatement":
@@ -156,6 +266,25 @@ function normalizeNode(node, options = {}) {
       };
     }
 
+    case "TryStatement": {
+      const block = normalizeNode(node.block, options);
+      let handler = null;
+      if (node.handler) {
+        handler = {
+          type: "CatchClause",
+          param: normalizeNode(node.handler.param, options),
+          body: normalizeNode(node.handler.body, options),
+        };
+      }
+      const finalizer = normalizeNode(node.finalizer, options);
+      return {
+        type: "TryStatement",
+        block,
+        handler,
+        finalizer,
+      };
+    }
+
     default:
       // Fallback: perform a shallow clone to avoid mutating original nodes
       return cloneShallow(node, options);
@@ -166,7 +295,18 @@ function normalizeArray(items, options) {
   if (!Array.isArray(items)) {
     return [];
   }
-  return items.map((item) => normalizeNode(item, options)).filter(Boolean);
+  // Map and flatten a single level to handle nested arrays gracefully
+  const out = [];
+  for (const item of items) {
+    if (Array.isArray(item)) {
+      const nested = normalizeArray(item, options);
+      for (const n of nested) out.push(n);
+    } else {
+      const n = normalizeNode(item, options);
+      if (n) out.push(n);
+    }
+  }
+  return out;
 }
 
 function cloneShallow(object, options) {
@@ -176,6 +316,8 @@ function cloneShallow(object, options) {
   const copy = { type: object.type };
   for (const [key, value] of Object.entries(object)) {
     if (key === "type") continue;
+    // Skip back-references commonly used by some parsers to link parent nodes
+    if (key === "parent" || key === "_parent") continue;
     if (Array.isArray(value)) {
       copy[key] = value.map((item) => normalizeNode(item, options));
     } else if (value && typeof value === "object" && value.type) {

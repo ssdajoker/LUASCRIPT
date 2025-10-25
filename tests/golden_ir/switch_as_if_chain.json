@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_T",
+    "source": { "path": "switch.js", "hash": null },
+    "directives": [],
+    "body": ["id_1"],
+    "exports": { "type": "named", "entries": [] },
+    "metadata": { "authoredBy": "golden", "createdAt": "2025-10-13T00:00:00.000Z", "toolchain": {} }
+  },
+  "nodes": {
+    "id_T": { "id": "id_T", "kind": "Identifier", "name": "x" },
+    "id_0": { "id": "id_0", "kind": "Literal", "value": 1, "raw": "1", "literalKind": "number" },
+    "id_1": { "id": "id_1", "kind": "BinaryExpression", "operator": "==", "left": "id_T", "right": "id_0" },
+    "id_10": { "id": "id_10", "kind": "IfStatement", "test": "id_1", "consequent": null, "alternate": null }
+  }
+}

@@ -1,6 +1,9 @@
 # Canonical Intermediate Representation (IR) Specification
 
-**Status:** Draft (October 12, 2025)
+**Status:** v1.0.0 (October 13, 2025)
+Schema (latest v1): docs/canonical_ir.schema.json
+Schema (frozen 1.0.0): docs/schema/1.0.0/canonical_ir.schema.json
+Versioning policy: docs/VERSIONING.md
 
 ## 🎯 Purpose
 
@@ -208,6 +211,28 @@ Consistent with Knuth’s request for provable control-flow reasoning, each func
 3. **Differential Backends**: Compare Lua emitter vs WASM backend outputs from the same IR to guarantee backend parity.  
 4. **Proof Hooks**: `meta.auditTags` drive dashboards surfaced during Knuth’s weekly gates.  
 5. **Performance Traces**: Embed `meta.perf` metrics (lowerer duration, node counts) for Linus’ system health checks.
+
+### How to validate (CLI)
+
+- JSON Schema only:
+  - npm run -s ir:validate:schema
+- Invariants + parsing path:
+  - npm run -s ir:validate
+- All IR checks (schema + invariants):
+  - npm run -s ir:validate:all
+- Check committed goldens:
+  - npm run -s ir:golden:check
+- Compare pipeline output to a subset of goldens (shape parity):
+  - npm run -s ir:golden:parity
+- Generate IR status report (used by CI reproducibility):
+  - npm run -s ir:report
+- Determinism guard (run report twice and diff):
+  - npm run -s ir:repro
+
+Schema URLs:
+
+- Latest v1: docs/canonical_ir.schema.json
+- Frozen v1.0.0: docs/schema/1.0.0/canonical_ir.schema.json
 
 ---
 

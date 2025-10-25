@@ -17,7 +17,7 @@ class IRNodeFactory {
   createBaseNode(kind, fields = {}) {
     const {
       id = this.idGenerator.next("node"),
-      span = null,
+      span = fields.span !== undefined && fields.span !== null ? fields.span : { start: { line: 1, column: 1 }, end: { line: 1, column: 1 } },
       flags = {},
       doc = { leadingComments: [], trailingComments: [] },
       meta = {},
@@ -45,7 +45,7 @@ class IRNodeFactory {
     return this.createNode("Identifier", {
       name,
       binding: options.binding || null,
-      span: options.span || null,
+  span: options.span || { start: { line: 1, column: 1, offset: 0 }, end: { line: 1, column: 1, offset: 0 } },
       meta: options.meta || {},
     });
   }
@@ -56,7 +56,7 @@ class IRNodeFactory {
       value,
       raw: options.raw || JSON.stringify(value),
       literalKind,
-      span: options.span || null,
+  span: options.span || { start: { line: 1, column: 1, offset: 0 }, end: { line: 1, column: 1, offset: 0 } },
       meta: options.meta || {},
     });
   }
@@ -133,6 +133,20 @@ class IRNodeFactory {
     });
   }
 
+  createBreakStatement(options = {}) {
+    return this.createNode("BreakStatement", {
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
+  createContinueStatement(options = {}) {
+    return this.createNode("ContinueStatement", {
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
   createIfStatement(testRef, consequentRef, alternateRef, options = {}) {
     return this.createNode("IfStatement", {
       test: testRef,
@@ -171,11 +185,78 @@ class IRNodeFactory {
     });
   }
 
+  createMemberExpression(objectRef, propertyRef, options = {}) {
+    return this.createNode("MemberExpression", {
+      object: objectRef,
+      property: propertyRef,
+      computed: Boolean(options.computed),
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
   createUnaryExpression(operator, argumentRef, options = {}) {
     return this.createNode("UnaryExpression", {
       operator,
       argument: argumentRef,
       prefix: options.prefix !== false,
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
+  createUpdateExpression(operator, argumentRef, options = {}) {
+    return this.createNode("UpdateExpression", {
+      operator,
+      argument: argumentRef,
+      prefix: options.prefix === true, // default false for post-fix unless explicitly set
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
+  createConditionalExpression(testRef, consequentRef, alternateRef, options = {}) {
+    return this.createNode("ConditionalExpression", {
+      test: testRef,
+      consequent: consequentRef,
+      alternate: alternateRef,
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
+  createNewExpression(calleeRef, argumentRefs, options = {}) {
+    return this.createNode("NewExpression", {
+      callee: calleeRef,
+      arguments: argumentRefs,
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
+  createArrayExpression(elementRefs, options = {}) {
+    return this.createNode("ArrayExpression", {
+      elements: elementRefs,
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
+  createProperty(keyRef, valueRef, options = {}) {
+    return this.createNode("Property", {
+      key: keyRef,
+      value: valueRef,
+      propertyKind: options.propertyKind || options.kind || "init",
+      computed: Boolean(options.computed),
+      shorthand: Boolean(options.shorthand),
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
+  createObjectExpression(propertyRefs, options = {}) {
+    return this.createNode("ObjectExpression", {
+      properties: propertyRefs,
       span: options.span || null,
       meta: options.meta || {},
     });
@@ -191,6 +272,16 @@ class IRNodeFactory {
       returnType: options.returnType || null,
       span: options.span || null,
       meta: Object.assign({ cfg: options.cfg || null }, options.meta || {}),
+    });
+  }
+
+  createTryStatement(blockRef, handler, finalizerRef, options = {}) {
+    return this.createNode("TryStatement", {
+      block: blockRef,
+      handler: handler || null,
+      finalizer: finalizerRef || null,
+      span: options.span || null,
+      meta: options.meta || {},
     });
   }
 }

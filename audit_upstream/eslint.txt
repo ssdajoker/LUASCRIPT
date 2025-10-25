@@ -1,0 +1,157 @@
+
+/home/mrjenkins/luascript_upstream/examples/phase1b_demo.js
+   8:5   warning  'firstName' is never reassigned. Use 'const' instead        prefer-const
+   9:5   warning  'lastName' is never reassigned. Use 'const' instead         prefer-const
+  10:5   warning  'fullName' is never reassigned. Use 'const' instead         prefer-const
+  14:5   warning  'age' is never reassigned. Use 'const' instead              prefer-const
+  15:5   warning  'hasLicense' is never reassigned. Use 'const' instead       prefer-const
+  16:5   warning  'canDrive' is never reassigned. Use 'const' instead         prefer-const
+  17:5   warning  'needsPermission' is never reassigned. Use 'const' instead  prefer-const
+  23:5   warning  'score' is never reassigned. Use 'const' instead            prefer-const
+  24:5   warning  'isPerfect' is never reassigned. Use 'const' instead        prefer-const
+  25:5   warning  'isNotZero' is never reassigned. Use 'const' instead        prefer-const
+  38:9   warning  'greeting' is never reassigned. Use 'const' instead         prefer-const
+  39:9   warning  'ageInfo' is never reassigned. Use 'const' instead          prefer-const
+  42:13  warning  'message' is never reassigned. Use 'const' instead          prefer-const
+  46:13  warning  'message' is never reassigned. Use 'const' instead          prefer-const
+
+/home/mrjenkins/luascript_upstream/src/core_transpiler.js
+  123:25  warning  'category' is assigned a value but never used  no-unused-vars
+
+/home/mrjenkins/luascript_upstream/src/enhanced_operators.js
+  29:19  warning  'operator' is assigned a value but never used  no-unused-vars
+  85:15  warning  'operator' is assigned a value but never used  no-unused-vars
+
+/home/mrjenkins/luascript_upstream/src/enhanced_transpiler.js
+   16:7   warning  'path' is assigned a value but never used           no-unused-vars
+  645:13  warning  'inTable' is never reassigned. Use 'const' instead  prefer-const
+
+/home/mrjenkins/luascript_upstream/src/index.js
+  301:15  warning  'report' is assigned a value but never used  no-unused-vars
+
+/home/mrjenkins/luascript_upstream/src/optimized_transpiler.js
+   13:7   warning  'fs' is assigned a value but never used            no-unused-vars
+   14:7   warning  'path' is assigned a value but never used          no-unused-vars
+   37:21  warning  'poolName' is assigned a value but never used      no-unused-vars
+  235:15  warning  'codeBuffer' is assigned a value but never used    no-unused-vars
+  612:20  warning  'astResult' is assigned a value but never used     no-unused-vars
+  612:31  warning  'luaGenResult' is assigned a value but never used  no-unused-vars
+
+/home/mrjenkins/luascript_upstream/src/parser.js
+  665:18  warning  'error' is defined but never used                no-unused-vars
+  679:13  warning  'expr' is never reassigned. Use 'const' instead  prefer-const
+
+/home/mrjenkins/luascript_upstream/src/performance_tools.js
+   10:9   warning  'Worker' is assigned a value but never used                      no-unused-vars
+   10:17  warning  'isMainThread' is assigned a value but never used                no-unused-vars
+   10:31  warning  'parentPort' is assigned a value but never used                  no-unused-vars
+   10:43  warning  'workerData' is assigned a value but never used                  no-unused-vars
+  414:13  warning  'appliedOptimizations' is never reassigned. Use 'const' instead  prefer-const
+  587:18  warning  'error' is defined but never used                                no-unused-vars
+  626:18  warning  'error' is defined but never used                                no-unused-vars
+
+/home/mrjenkins/luascript_upstream/src/phase1_core_lexer.js
+  224:15  warning  'start' is assigned a value but never used  no-unused-vars
+  333:15  warning  'start' is assigned a value but never used  no-unused-vars
+
+/home/mrjenkins/luascript_upstream/src/phase1_core_parser.js
+   18:54  warning  'TemplateLiteralNode' is assigned a value but never used  no-unused-vars
+   19:5   warning  'TemplateElementNode' is assigned a value but never used  no-unused-vars
+   19:37  warning  'ASTUtils' is assigned a value but never used             no-unused-vars
+  766:22  warning  'error' is defined but never used                         no-unused-vars
+
+/home/mrjenkins/luascript_upstream/src/phase2_core_interpreter.js
+     9:5   warning  'ProgramNode' is assigned a value but never used                  no-unused-vars
+     9:18  warning  'BlockStatementNode' is assigned a value but never used           no-unused-vars
+     9:38  warning  'ExpressionStatementNode' is assigned a value but never used      no-unused-vars
+    10:5   warning  'VariableDeclarationNode' is assigned a value but never used      no-unused-vars
+    10:30  warning  'VariableDeclaratorNode' is assigned a value but never used       no-unused-vars
+    10:54  warning  'FunctionDeclarationNode' is assigned a value but never used      no-unused-vars
+    11:5   warning  'ReturnStatementNode' is assigned a value but never used          no-unused-vars
+    11:26  warning  'IfStatementNode' is assigned a value but never used              no-unused-vars
+    11:43  warning  'WhileStatementNode' is assigned a value but never used           no-unused-vars
+    11:63  warning  'ForStatementNode' is assigned a value but never used             no-unused-vars
+    12:5   warning  'BreakStatementNode' is assigned a value but never used           no-unused-vars
+    12:25  warning  'ContinueStatementNode' is assigned a value but never used        no-unused-vars
+    12:48  warning  'BinaryExpressionNode' is assigned a value but never used         no-unused-vars
+    13:5   warning  'UnaryExpressionNode' is assigned a value but never used          no-unused-vars
+    13:26  warning  'AssignmentExpressionNode' is assigned a value but never used     no-unused-vars
+    13:52  warning  'UpdateExpressionNode' is assigned a value but never used         no-unused-vars
+    14:5   warning  'LogicalExpressionNode' is assigned a value but never used        no-unused-vars
+    14:28  warning  'ConditionalExpressionNode' is assigned a value but never used    no-unused-vars
+    14:55  warning  'CallExpressionNode' is assigned a value but never used           no-unused-vars
+    15:5   warning  'MemberExpressionNode' is assigned a value but never used         no-unused-vars
+    15:27  warning  'ArrayExpressionNode' is assigned a value but never used          no-unused-vars
+    15:48  warning  'ObjectExpressionNode' is assigned a value but never used         no-unused-vars
+    16:5   warning  'PropertyNode' is assigned a value but never used                 no-unused-vars
+    16:19  warning  'ArrowFunctionExpressionNode' is assigned a value but never used  no-unused-vars
+    16:48  warning  'FunctionExpressionNode' is assigned a value but never used       no-unused-vars
+    17:5   warning  'LiteralNode' is assigned a value but never used                  no-unused-vars
+    17:18  warning  'IdentifierNode' is assigned a value but never used               no-unused-vars
+    17:34  warning  'ThisExpressionNode' is assigned a value but never used           no-unused-vars
+   628:23  warning  Expected '===' and instead saw '=='                               eqeqeq
+   955:36  warning  Expected '===' and instead saw '=='                               eqeqeq
+   956:36  warning  Expected '!==' and instead saw '!='                               eqeqeq
+  1209:27  warning  Expected '!==' and instead saw '!='                               eqeqeq
+  1232:27  warning  Expected '!==' and instead saw '!='                               eqeqeq
+
+/home/mrjenkins/luascript_upstream/src/phase2_core_modules.js
+  193:26  warning  'error' is defined but never used  no-unused-vars
+  217:26  warning  'error' is defined but never used  no-unused-vars
+  230:22  warning  'error' is defined but never used  no-unused-vars
+
+/home/mrjenkins/luascript_upstream/src/phase5_enterprise_optimization.js
+  362:21  warning  'type' is assigned a value but never used         no-unused-vars
+  717:15  warning  'startMemory' is assigned a value but never used  no-unused-vars
+
+/home/mrjenkins/luascript_upstream/src/phase6_production_deployment.js
+    9:7   warning  'path' is assigned a value but never used  no-unused-vars
+  162:56  warning  Expected '===' and instead saw '=='        eqeqeq
+  164:56  warning  Expected '!==' and instead saw '!='        eqeqeq
+
+/home/mrjenkins/luascript_upstream/src/phase9_ecosystem.js
+    12:7   warning  'fs' is assigned a value but never used          no-unused-vars
+    13:7   warning  'path' is assigned a value but never used        no-unused-vars
+  1107:30  warning  'depVersion' is assigned a value but never used  no-unused-vars
+
+/home/mrjenkins/luascript_upstream/src/runtime_system.js
+   10:31  warning  'parentPort' is assigned a value but never used  no-unused-vars
+   10:43  warning  'workerData' is assigned a value but never used  no-unused-vars
+  513:18  warning  'error' is defined but never used                no-unused-vars
+
+/home/mrjenkins/luascript_upstream/src/unified_luascript.js
+  128:17  warning  'result' is never reassigned. Use 'const' instead  prefer-const
+  428:18  warning  'error' is defined but never used                  no-unused-vars
+  446:18  warning  'error' is defined but never used                  no-unused-vars
+  465:18  warning  'error' is defined but never used                  no-unused-vars
+  477:13  warning  'score' is never reassigned. Use 'const' instead   prefer-const
+  488:13  warning  'score' is never reassigned. Use 'const' instead   prefer-const
+  496:13  warning  'score' is never reassigned. Use 'const' instead   prefer-const
+  510:13  warning  'score' is never reassigned. Use 'const' instead   prefer-const
+
+/home/mrjenkins/luascript_upstream/src/wasm_backend.js
+  7:7  warning  'fs' is assigned a value but never used    no-unused-vars
+  8:7  warning  'path' is assigned a value but never used  no-unused-vars
+
+/home/mrjenkins/luascript_upstream/test/test_enhanced_transpiler.js
+  14:7  warning  'fs' is assigned a value but never used    no-unused-vars
+  15:7  warning  'path' is assigned a value but never used  no-unused-vars
+
+/home/mrjenkins/luascript_upstream/test/test_phase1_6_comprehensive.js
+   12:9   warning  'ModuleLoader' is assigned a value but never used  no-unused-vars
+  394:19  warning  'result' is assigned a value but never used        no-unused-vars
+
+/home/mrjenkins/luascript_upstream/test/test_unified_system.js
+  274:13  warning  'global' is not defined  no-undef
+  275:13  warning  'global' is not defined  no-undef
+
+/home/mrjenkins/luascript_upstream/test_optimizations.js
+  237:15  warning  'result' is assigned a value but never used  no-unused-vars
+
+/home/mrjenkins/luascript_upstream/tests/test_memory_management.js
+  213:11  warning  'obj1' is assigned a value but never used  no-unused-vars
+  216:11  warning  'obj2' is assigned a value but never used  no-unused-vars
+
+✖ 107 problems (0 errors, 107 warnings)
+  0 errors and 22 warnings potentially fixable with the `--fix` option.
+

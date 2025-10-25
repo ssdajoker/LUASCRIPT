@@ -27,7 +27,8 @@ class LuaScriptLexer {
             'let', 'const', 'var', 'function', 'return', 'if', 'else', 'for', 
             'while', 'do', 'break', 'continue', 'true', 'false', 'null', 
             'undefined', 'class', 'extends', 'super', 'this', 'new', 'try', 
-            'catch', 'finally', 'throw', 'async', 'await', 'import', 'export'
+            'catch', 'finally', 'throw', 'async', 'await', 'import', 'export',
+            'switch', 'case', 'default', 'static'
         ]);
         this.operators = new Map([
             ['+', 'PLUS'], ['-', 'MINUS'], ['*', 'MULTIPLY'], ['/', 'DIVIDE'],
@@ -482,7 +483,8 @@ class LuaScriptLexer {
      * @private
      */
     isOperatorStart(char) {
-        return '+-*/%=<>!&|^~?:'.includes(char);
+    // Treat ':' and '?' as punctuation (COLON/QUESTION); exclude them here
+    return '+-*/%=<>!&|^~'.includes(char);
     }
 
     /**

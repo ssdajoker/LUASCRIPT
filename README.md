@@ -74,7 +74,7 @@ To install LuaScript, open your terminal and run the following command:
 
 ```bash
 npm install luascript
-```
+```text
 
 This will install the `luascript` package and its dependencies in your project.
 
@@ -454,3 +454,30 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **Built with ❤️ by Tony Yoka's Unified Team**  
 *Pushing the boundaries of transpiler technology*
+
+## 📦 Canonical IR Schema & Validation
+
+External tools can validate Canonical IR using our published JSON Schema and CLI.
+
+- Latest v1 schema (moving):
+    - Raw URL: [docs/schema/1.x/canonical_ir.schema.json](https://raw.githubusercontent.com/ssdajoker/LUASCRIPT/refs/heads/main/docs/schema/1.x/canonical_ir.schema.json)
+    - Repo path: `docs/canonical_ir.schema.json` (kept in sync with latest v1)
+- Frozen release schemas:
+    - v1.0.0 raw URL: [docs/schema/1.0.0/canonical_ir.schema.json](https://raw.githubusercontent.com/ssdajoker/LUASCRIPT/refs/heads/main/docs/schema/1.0.0/canonical_ir.schema.json)
+    - Repo path: `docs/schema/1.0.0/canonical_ir.schema.json`
+
+CLI usage:
+
+- Validate an IR JSON file:
+    - npm run -s ir:cli -- path/to/ir.json --as ir
+- Validate a JS file end-to-end (parse → lower → validate):
+    - npm run -s ir:cli -- path/to/file.js --as js
+
+Programmatic (Node + AJV):
+
+- Load schema from the raw URL (draft-07) or local path and compile with AJV.
+- Optionally run invariant checks via `src/ir/validator.js` for extra invariants and CFG linkage.
+
+Latest v1 alias:
+
+- For 1.x releases, `docs/schema/1.x/canonical_ir.schema.json` will keep pointing to the latest compatible 1.x schema.

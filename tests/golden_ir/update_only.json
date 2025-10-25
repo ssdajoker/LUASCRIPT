@@ -1,0 +1,164 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_0",
+    "source": {
+      "path": "-",
+      "hash": null
+    },
+    "directives": [],
+    "body": [
+      "node_11",
+      "node_1T1",
+      "node_101"
+    ],
+    "exports": {
+      "type": "named",
+      "entries": []
+    },
+    "metadata": {
+      "authoredBy": "ir-builder",
+      "createdAt": "2025-10-14T04:41:24.151Z",
+      "toolchain": {
+        "parser": "phase1_core_parser@1.0.0",
+        "normalizer": "ir-normalizer@1.0.0",
+        "lowerer": "ir-lowerer@1.0.0"
+      },
+      "metaPerf": {
+        "parseMs": 23.615582,
+        "normalizeMs": 2.902387,
+        "lowerMs": 14.161391,
+        "totalMs": 43.003241,
+        "nodeCount": 9
+      }
+    }
+  },
+  "nodes": {
+    "node_1": {
+      "id": "node_1",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_1T": {
+      "id": "node_1T",
+      "kind": "Literal",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "value": 0,
+      "raw": "0",
+      "literalKind": "number"
+    },
+    "node_11": {
+      "id": "node_11",
+      "kind": "VariableDeclaration",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "declarations": [
+        {
+          "id": "decl_10",
+          "pattern": "node_1",
+          "init": "node_1T",
+          "kind": "let"
+        }
+      ],
+      "declarationKind": "let"
+    },
+    "node_1TT": {
+      "id": "node_1TT",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_1T0": {
+      "id": "node_1T0",
+      "kind": "UpdateExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "operator": "++",
+      "argument": "node_1TT",
+      "prefix": false
+    },
+    "node_1T1": {
+      "id": "node_1T1",
+      "kind": "ExpressionStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "expression": "node_1T0"
+    },
+    "node_10T": {
+      "id": "node_10T",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_100": {
+      "id": "node_100",
+      "kind": "UpdateExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "operator": "++",
+      "argument": "node_10T",
+      "prefix": true
+    },
+    "node_101": {
+      "id": "node_101",
+      "kind": "ExpressionStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "expression": "node_100"
+    }
+  },
+  "controlFlowGraphs": {}
+}
