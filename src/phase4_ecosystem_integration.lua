@@ -1,7 +1,17 @@
 -- PHASE 4: ECOSYSTEM INTEGRATION & TOOLING - REAL IMPLEMENTATION
--- Team B: Innovators - ACTUAL CODE NOW!
+--[[
+-- phase4_ecosystem_integration.lua
+--
+-- Implements ecosystem integration and tooling for LuaScript, including a package manager,
+-- IDE integration, build system, and testing framework.
+--
+-- @author Ada Lovelace's Unified Team
+-- @version 1.0
+--]]
+
 local phase4 = {}
--- Package Manager System
+
+--- The package manager for LuaScript.
 phase4.package_manager = {
     installed_packages = {},
     repositories = {
@@ -15,6 +25,11 @@ phase4.package_manager = {
         max_download_size = 50 * 1024 * 1024 -- 50MB
     }
 }
+
+--- Installs a package.
+-- @param package_name The name of the package to install.
+-- @param version The version of the package to install.
+-- @return True if the installation was successful, false otherwise.
 function phase4.package_manager:install(package_name, version)
     version = version or "latest"
     print("Installing package: " .. package_name .. " (" .. version .. ")")
@@ -56,6 +71,10 @@ function phase4.package_manager:install(package_name, version)
     end
     return false
 end
+--- Fetches package metadata from a repository.
+-- @param package_name The name of the package.
+-- @param version The version of the package.
+-- @return A table containing the package metadata.
 function phase4.package_manager.fetch_metadata(_, package_name, _)
     -- Simulate fetching metadata from repository
     local mock_metadata = {
@@ -89,6 +108,10 @@ function phase4.package_manager.fetch_metadata(_, package_name, _)
     }
     return mock_metadata[package_name]
 end
+
+--- Resolves all dependencies for a given set of dependencies.
+-- @param deps A table of dependencies.
+-- @return A table of resolved dependencies.
 function phase4.package_manager:resolve_dependencies(deps)
     local resolved = {}
     for _, dep in ipairs(deps) do
@@ -104,6 +127,12 @@ function phase4.package_manager:resolve_dependencies(deps)
     end
     return resolved
 end
+
+--- Downloads a package from a URL.
+-- @param name The name of the package.
+-- @param version The version of the package.
+-- @param url The URL to download the package from.
+-- @return A table representing the downloaded package.
 function phase4.package_manager.download_package(_, name, version, url)
     -- Simulate package download
     print("Downloading from: " .. url)
@@ -114,6 +143,9 @@ function phase4.package_manager.download_package(_, name, version, url)
         size = math.random(1000, 50000)
     }
 end
+
+--- Executes a post-install script.
+-- @param script The script to execute.
 function phase4.package_manager.execute_script(_, script)
     if type(script) == "string" then
         local func, err = loadstring(script)
@@ -127,6 +159,7 @@ function phase4.package_manager.execute_script(_, script)
     end
 end
 -- IDE Integration System
+--- The IDE integration module.
 phase4.ide_integration = {
     language_server = {
         port = 8080,
@@ -143,6 +176,9 @@ phase4.ide_integration = {
     syntax_highlighting = {},
     code_completion = {}
 }
+
+--- Starts the Language Server Protocol (LSP) server.
+-- @return The server object.
 function phase4.ide_integration:start_language_server()
     print("Starting LuaScript Language Server on port " .. self.language_server.port)
     -- Simulate server startup
@@ -169,6 +205,9 @@ function phase4.ide_integration:start_language_server()
     print("Language Server started successfully")
     return server
 end
+--- Provides code completions for a given position.
+-- @param params The completion parameters.
+-- @return A list of completion items.
 function phase4.ide_integration.provide_completions(_, params)
     local completions = {
         {label = "function", kind = 3, detail = "Function declaration"},
@@ -190,6 +229,10 @@ function phase4.ide_integration.provide_completions(_, params)
     end
     return {items = completions}
 end
+
+--- Provides hover information for a given position.
+-- @param params The hover parameters.
+-- @return The hover information.
 function phase4.ide_integration.provide_hover(_, params)
     local word = params.word or ""
     local hover_info = {
@@ -207,6 +250,10 @@ function phase4.ide_integration.provide_hover(_, params)
         }
     }
 end
+
+--- Finds the definition of a symbol.
+-- @param params The definition parameters.
+-- @return The location of the definition.
 function phase4.ide_integration.find_definition(_, params)
     -- Simulate finding definition
     return {
@@ -217,6 +264,10 @@ function phase4.ide_integration.find_definition(_, params)
         }
     }
 end
+
+--- Analyzes the code for diagnostics (errors and warnings).
+-- @param params The diagnostics parameters.
+-- @return A list of diagnostics.
 function phase4.ide_integration.analyze_diagnostics(_, params)
     local diagnostics = {}
     local content = params.textDocument.content or ""
@@ -251,6 +302,7 @@ function phase4.ide_integration.analyze_diagnostics(_, params)
     return diagnostics
 end
 -- Build System
+--- The build system module.
 phase4.build_system = {
     targets = {},
     configurations = {
@@ -267,6 +319,10 @@ phase4.build_system = {
         }
     }
 }
+
+--- Adds a new build target.
+-- @param name The name of the target.
+-- @param config The configuration for the target.
 function phase4.build_system:add_target(name, config)
     self.targets[name] = {
         name = name,
@@ -277,6 +333,11 @@ function phase4.build_system:add_target(name, config)
         build_steps = config.build_steps or {}
     }
 end
+
+--- Builds a specific target.
+-- @param target_name The name of the target to build.
+-- @param configuration The build configuration to use (e.g., 'debug', 'release').
+-- @return True if the build was successful.
 function phase4.build_system:build(target_name, configuration)
     configuration = configuration or "debug"
     local target = self.targets[target_name]
@@ -307,6 +368,11 @@ function phase4.build_system:build(target_name, configuration)
     print("Build completed: " .. target.output_file)
     return true
 end
+--- Compiles the source files for a target.
+-- @param sources A list of source files.
+-- @param output The output file path.
+-- @param config The build configuration.
+-- @return True if compilation is successful.
 function phase4.build_system.compile_sources(_, sources, output, config)
     print("Compiling " .. #sources .. " source files...")
     for _, source in ipairs(sources) do
@@ -322,7 +388,8 @@ function phase4.build_system.compile_sources(_, sources, output, config)
     print("  Linking to: " .. output)
     return true
 end
--- Testing Framework
+
+--- The testing framework module.
 phase4.testing_framework = {
     test_suites = {},
     reporters = {
@@ -335,6 +402,11 @@ phase4.testing_framework = {
         threshold = 80
     }
 }
+
+--- Describes a new test suite.
+-- @param name The name of the test suite.
+-- @param tests A function containing the tests.
+-- @return The new test suite object.
 function phase4.testing_framework:describe(name, tests)
     local suite = {
         name = name,
@@ -362,6 +434,9 @@ function phase4.testing_framework:describe(name, tests)
     table.insert(self.test_suites, suite)
     return suite
 end
+
+--- Runs all defined test suites.
+-- @return True if all tests passed, false otherwise.
 function phase4.testing_framework:run_tests()
     local total_tests = 0
     local passed_tests = 0
@@ -414,32 +489,59 @@ function phase4.testing_framework:run_tests()
     end
 end
 -- Assertion library for testing
+--- An assertion library for the testing framework.
 phase4.assert = {}
+
+--- Asserts that two values are equal.
+-- @param actual The actual value.
+-- @param expected The expected value.
+-- @param message An optional error message.
 function phase4.assert.equals(actual, expected, message)
     if actual ~= expected then
         error(message or string.format("Expected %s, got %s", tostring(expected), tostring(actual)))
     end
 end
+
+--- Asserts that two values are not equal.
+-- @param actual The actual value.
+-- @param expected The expected value.
+-- @param message An optional error message.
 function phase4.assert.not_equals(actual, expected, message)
     if actual == expected then
         error(message or string.format("Expected not %s, got %s", tostring(expected), tostring(actual)))
     end
 end
+
+--- Asserts that a value is true.
+-- @param value The value to check.
+-- @param message An optional error message.
 function phase4.assert.is_true(value, message)
     if value ~= true then
         error(message or string.format("Expected true, got %s", tostring(value)))
     end
 end
+
+--- Asserts that a value is false.
+-- @param value The value to check.
+-- @param message An optional error message.
 function phase4.assert.is_false(value, message)
     if value ~= false then
         error(message or string.format("Expected false, got %s", tostring(value)))
     end
 end
+
+--- Asserts that a value is nil.
+-- @param value The value to check.
+-- @param message An optional error message.
 function phase4.assert.is_nil(value, message)
     if value ~= nil then
         error(message or string.format("Expected nil, got %s", tostring(value)))
     end
 end
+
+--- Asserts that a value is not nil.
+-- @param value The value to check.
+-- @param message An optional error message.
 function phase4.assert.not_nil(value, message)
     if value == nil then
         error(message or "Expected non-nil value")

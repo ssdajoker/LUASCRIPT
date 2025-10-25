@@ -171,11 +171,11 @@ local file = io.open(csv_file, "w")
 
 if file then
     file:write("strategy,trials,total_time_s,time_per_trial_ms,best_reward\n")
-    file:write(string.format("grid,%d,%.3f,%.2f,%.2f\n", 
+    file:write(string.format("grid,%d,%.3f,%.2f,%.2f\n",
         grid_agent.trial, elapsed1, (elapsed1 / grid_agent.trial) * 1000, grid_agent.best_reward))
-    file:write(string.format("random,%d,%.3f,%.2f,%.2f\n", 
+    file:write(string.format("random,%d,%.3f,%.2f,%.2f\n",
         random_agent.trial, elapsed2, (elapsed2 / random_agent.trial) * 1000, random_agent.best_reward))
-    file:write(string.format("bayes,%d,%.3f,%.2f,%.2f\n", 
+    file:write(string.format("bayes,%d,%.3f,%.2f,%.2f\n",
         bayes_agent.trial, elapsed3, (elapsed3 / bayes_agent.trial) * 1000, bayes_agent.best_reward))
     file:close()
     print("\n✓ Results exported to:", csv_file)

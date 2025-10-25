@@ -1,0 +1,36 @@
+name: Parity and IR Gates
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  parity-ir:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm i; fi
+
+      - name: Run parity tests
+        run: npm run -s test:parity
+
+      - name: Run IR report
+        run: npm run -s ir:report
+
+      - name: Upload IR status artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical_ir_status
+          path: reports/canonical_ir_status.md

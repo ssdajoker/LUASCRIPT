@@ -106,9 +106,9 @@ end
 function M.print_node(node, indent)
     indent = indent or 0
     local prefix = string.rep("  ", indent)
-    
+
     print(prefix .. "Node #" .. node.id .. " [" .. node.type .. "]")
-    
+
     for k, v in pairs(node) do
         if k ~= "type" and k ~= "id" then
             if type(v) == "table" and v.type then
@@ -130,7 +130,7 @@ end
 -- Utility: Get node dependencies
 function M.get_dependencies(node)
     local deps = {}
-    
+
     if node.type == "mix" then
         table.insert(deps, node.input1)
         table.insert(deps, node.input2)
@@ -148,7 +148,7 @@ function M.get_dependencies(node)
         table.insert(deps, node.left)
         table.insert(deps, node.right)
     end
-    
+
     return deps
 end
 
@@ -157,32 +157,32 @@ function M.topological_sort(nodes)
     local sorted = {}
     local visited = {}
     local temp_mark = {}
-    
+
     local function visit(node)
         if temp_mark[node.id] then
             error("Circular dependency detected in kernel graph")
         end
-        
+
         if not visited[node.id] then
             temp_mark[node.id] = true
-            
+
             local deps = M.get_dependencies(node)
             for _, dep in ipairs(deps) do
                 visit(dep)
             end
-            
+
             temp_mark[node.id] = false
             visited[node.id] = true
             table.insert(sorted, node)
         end
     end
-    
+
     for _, node in ipairs(nodes) do
         if not visited[node.id] then
             visit(node)
         end
     end
-    
+
     return sorted
 end
 

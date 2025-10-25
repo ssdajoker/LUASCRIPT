@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+docs/** linguist-documentation
+*.md linguist-language=Markdown
+*.lua linguist-language=Lua
+*.ts linguist-language=TypeScript
+*.js linguist-language=JavaScript

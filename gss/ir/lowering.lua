@@ -11,15 +11,15 @@ local M = {}
 -- Lower AST to kernel graph
 function M.lower(ast, context)
     context = context or semantic.Context()
-    
+
     local g = graph.Graph()
-    
+
     if ast.type == "Stylesheet" then
         for _, block in ipairs(ast.blocks) do
             M.lower_block(block, g, context)
         end
     end
-    
+
     return g
 end
 
@@ -29,7 +29,7 @@ function M.lower_block(block, g, context)
     local ramp_node = nil
     local iso_node = nil
     local blend_mode = "normal"
-    
+
     for _, stmt in ipairs(block.statements) do
         if stmt.type == "FieldStmt" then
             field_node = M.lower_field_expr(stmt.expr, g, context)
@@ -47,7 +47,7 @@ function M.lower_block(block, g, context)
             M.lower_block(stmt, g, context)
         end
     end
-    
+
     -- Create composite node as root
     local layers = {}
     if ramp_node then
@@ -56,7 +56,7 @@ function M.lower_block(block, g, context)
     if iso_node then
         table.insert(layers, iso_node)
     end
-    
+
     if #layers > 0 then
         local composite = nodes.CompositeNode(layers, blend_mode)
         graph.add_node(g, composite)
@@ -72,31 +72,31 @@ function M.lower_field_expr(expr, g, context)
         local muX = M.lower_value(expr.muX, g, context)
         local muY = M.lower_value(expr.muY, g, context)
         local sigma = M.lower_value(expr.sigma, g, context)
-        
+
         local node = nodes.GaussianNode(muX, muY, sigma)
         graph.add_node(g, node)
         return node
-        
+
     elseif expr.type == "MixExpr" then
         local input1 = M.lower_field_expr(expr.input1, g, context)
         local input2 = M.lower_field_expr(expr.input2, g, context)
         local weight = M.lower_value(expr.weight, g, context)
-        
+
         local node = nodes.MixNode(input1, input2, weight)
         graph.add_node(g, node)
         return node
-        
+
     elseif expr.type == "SumExpr" then
         local inputs = {}
         for _, input_expr in ipairs(expr.inputs) do
             table.insert(inputs, M.lower_field_expr(input_expr, g, context))
         end
-        
+
         local node = nodes.SumNode(inputs, expr.normalize)
         graph.add_node(g, node)
         return node
     end
-    
+
     return nil
 end
 
@@ -112,7 +112,7 @@ end
 function M.lower_iso_stmt(stmt, field_node, g, context)
     local threshold = M.lower_value(stmt.threshold, g, context)
     local width = M.lower_value(stmt.width, g, context)
-    
+
     local node = nodes.IsoNode(field_node, threshold, width)
     graph.add_node(g, node)
     return node
@@ -122,27 +122,27 @@ end
 function M.lower_value(value, g, context)
     if value.type == "Literal" then
         return nodes.ConstantNode(value.value)
-        
+
     elseif value.type == "CSSVar" then
         local param_name = value.name
         local param = graph.get_param(g, param_name)
-        
+
         if not param then
             local default = semantic.defaults[param_name] or {value = 0, unit = "px"}
             local range = semantic.ranges[param_name]
             param = graph.add_param(g, param_name, default.value, range)
         end
-        
+
         return param
-        
+
     elseif value.type == "BinaryExpr" then
         local left = M.lower_value(value.left, g, context)
         local right = M.lower_value(value.right, g, context)
-        
+
         local node = nodes.BinaryOpNode(value.op, left, right)
         graph.add_node(g, node)
         return node
-        
+
     elseif value.type == "Identifier" then
         -- Try to resolve as parameter
         local param = graph.get_param(g, "--" .. value.name)
@@ -151,7 +151,7 @@ function M.lower_value(value, g, context)
         end
         return nodes.ConstantNode(0)
     end
-    
+
     return nodes.ConstantNode(0)
 end
 
@@ -197,15 +197,15 @@ function M.viridis_lut()
         {0.741388, 0.873449, 0.149561},
         {0.993248, 0.906157, 0.143936}
     }
-    
+
     for i = 0, 255 do
         local t = i / 255
         local idx = math.floor(t * (#colors - 1)) + 1
         local frac = (t * (#colors - 1)) - (idx - 1)
-        
+
         local c1 = colors[math.min(idx, #colors)]
         local c2 = colors[math.min(idx + 1, #colors)]
-        
+
         lut[i] = {
             r = math.floor((c1[1] + (c2[1] - c1[1]) * frac) * 255),
             g = math.floor((c1[2] + (c2[2] - c1[2]) * frac) * 255),
@@ -213,7 +213,7 @@ function M.viridis_lut()
             a = 255
         }
     end
-    
+
     return lut
 end
 
@@ -233,15 +233,15 @@ function M.plasma_lut()
         {0.987622, 0.570197, 0.059556},
         {0.987053, 0.734090, 0.099702}
     }
-    
+
     for i = 0, 255 do
         local t = i / 255
         local idx = math.floor(t * (#colors - 1)) + 1
         local frac = (t * (#colors - 1)) - (idx - 1)
-        
+
         local c1 = colors[math.min(idx, #colors)]
         local c2 = colors[math.min(idx + 1, #colors)]
-        
+
         lut[i] = {
             r = math.floor((c1[1] + (c2[1] - c1[1]) * frac) * 255),
             g = math.floor((c1[2] + (c2[2] - c1[2]) * frac) * 255),
@@ -249,7 +249,7 @@ function M.plasma_lut()
             a = 255
         }
     end
-    
+
     return lut
 end
 
@@ -286,15 +286,15 @@ end
 -- Custom LUT from color stops
 function M.custom_lut(stops)
     local lut = {}
-    
+
     -- Sort stops by position
     table.sort(stops, function(a, b)
         return a.position.value < b.position.value
     end)
-    
+
     for i = 0, 255 do
         local t = i / 255
-        
+
         -- Find surrounding stops
         local stop1, stop2
         for j = 1, #stops - 1 do
@@ -304,20 +304,20 @@ function M.custom_lut(stops)
                 break
             end
         end
-        
+
         if not stop1 then
             stop1 = stops[1]
             stop2 = stops[1]
         end
-        
+
         -- Interpolate color
         local pos1 = stop1.position.value / 100
         local pos2 = stop2.position.value / 100
         local frac = pos2 > pos1 and (t - pos1) / (pos2 - pos1) or 0
-        
+
         local c1 = M.parse_color(stop1.color)
         local c2 = M.parse_color(stop2.color)
-        
+
         lut[i] = {
             r = math.floor(c1.r + (c2.r - c1.r) * frac),
             g = math.floor(c1.g + (c2.g - c1.g) * frac),
@@ -325,7 +325,7 @@ function M.custom_lut(stops)
             a = 255
         }
     end
-    
+
     return lut
 end
 

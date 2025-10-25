@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_0",
+    "source": { "path": "arrow.js", "hash": null },
+    "directives": [],
+  "body": ["id_T"],
+    "exports": { "type": "named", "entries": [] },
+    "metadata": { "authoredBy": "golden", "createdAt": "2025-10-13T00:00:00.000Z", "toolchain": {} }
+  },
+  "nodes": {
+    "id_T": { "id": "id_T", "kind": "ArrowFunctionExpression", "params": ["id_0"], "body": "id_10", "async": false },
+    "id_0": { "id": "id_0", "kind": "Identifier", "name": "a" },
+    "id_1": { "id": "id_1", "kind": "Identifier", "name": "b" },
+    "id_T0": { "id": "id_T0", "kind": "BinaryExpression", "operator": "+", "left": "id_0", "right": "id_1" },
+    "id_10": { "id": "id_10", "kind": "BlockStatement", "statements": ["id_11"] },
+    "id_11": { "id": "id_11", "kind": "ReturnStatement", "argument": "id_T0" }
+  }
+}

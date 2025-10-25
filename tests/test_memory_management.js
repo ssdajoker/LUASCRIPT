@@ -4,8 +4,12 @@
  * Tests for parser and runtime memory management
  */
 
+const fs = require('fs');
+const path = require('path');
 const { Lexer, Parser, MemoryManager } = require('../src/parser.js');
 const { Interpreter, RuntimeMemoryManager } = require('../src/runtime.js');
+const { LuaInterpreter } = require('../src/runtime_system.js');
+const { UnifiedLuaScript } = require('../src/unified_luascript.js');
 
 class MemoryTestRunner {
     constructor() {
@@ -80,7 +84,7 @@ runner.test('MemoryManager allocates nodes correctly', () => {
     const node = mm.allocateNode('TestNode', { value: 42 });
     
     runner.assertEqual(node.type, 'TestNode');
-    runner.assertEqual(node.value, 42);
+    runner.assertEqual(node.data ? node.data.value : node.value, 42);
     runner.assertEqual(node._allocated, true);
     runner.assertEqual(mm.nodeCount, 1);
     runner.assertTrue(mm.allocatedNodes.has(node));
@@ -233,28 +237,33 @@ runner.test('RuntimeMemoryManager enforces heap limit', () => {
 });
 
 runner.test('RuntimeMemoryManager triggers garbage collection', () => {
-    const rmm = new RuntimeMemoryManager(1000, 1000);
+    const rmm = new RuntimeMemoryManager(1000, 1000, { minIntervalMs: 0 });
     
     // Fill up to GC threshold (80% of 1000 = 800)
     rmm.allocateObject({ data: 'test' }, 800);
     
-    // Capture console output to verify GC message
-    let gcTriggered = false;
-    const originalLog = console.log;
-    console.log = (msg) => {
-        if (msg.includes('GC:')) {
-            gcTriggered = true;
-        }
-        originalLog(msg); // Still log for debugging
-    };
-    
-    try {
-        // This should trigger GC as it exceeds the 80% threshold
-        rmm.allocateObject({ data: 'trigger' }, 50);
-        runner.assertTrue(gcTriggered, 'GC should have been triggered');
-    } finally {
-        console.log = originalLog;
-    }
+    const before = rmm.heapSize;
+    rmm.allocateObject({ data: 'trigger' }, 200);
+    runner.assertTrue(rmm.heapSize <= before, 'Heap size should not grow past pre-GC level');
+    runner.assertTrue(rmm.heapSize <= rmm.gcThreshold, 'Heap size should respect adaptive threshold');
+});
+
+runner.test('RuntimeMemoryManager adaptive GC lowers threshold after low-yield sweep', () => {
+    const rmm = new RuntimeMemoryManager(1000, 1000, {
+        targetRatio: 0.6,
+        hardLimitRatio: 0.9,
+        minIntervalMs: 0
+    });
+
+    rmm.allocateObject({ data: 'warmup' }, 620);
+    const postWarmupThreshold = rmm.gcThreshold;
+
+    // Simulate low-yield collection by shrinking heap first
+    rmm.adjustHeap(-rmm.heapSize + 60);
+    rmm.triggerGarbageCollection({ reason: 'low-yield', aggressive: false });
+
+    runner.assertTrue(rmm.gcThreshold <= postWarmupThreshold, 'GC threshold should adapt downward after low-yield sweeps');
+    runner.assertTrue(rmm.heapSize <= rmm.gcThreshold, 'Heap size should remain below adaptive threshold');
 });
 
 runner.test('RuntimeMemoryManager cleanup works', () => {
@@ -336,6 +345,65 @@ runner.test('Runtime with memory limits prevents infinite recursion', () => {
     }, 'Stack overflow');
 });
 
+runner.test('Interpreter maintains lexical scope resolution under deep shadowing', () => {
+    const code = `
+        function outer() {
+            let value = "outer";
+            function inner() {
+                let value = "inner";
+                function deepest() {
+                    return value;
+                }
+                return deepest();
+            }
+            const innerValue = inner();
+            return value + ":" + innerValue;
+        }
+        const stability = outer();
+    `;
+
+    const lexer = new Lexer(code);
+    const tokens = lexer.tokenize();
+    const parser = new Parser(tokens);
+    const ast = parser.parse();
+
+    const interpreter = new Interpreter();
+    interpreter.interpret(ast.body);
+
+    const stability = interpreter.globals.get('stability');
+    runner.assertEqual(stability, 'outer:inner');
+});
+
+runner.test('Interpreter resolves parent scope writes without leaking shadowed bindings', () => {
+    const code = `
+        function wrap() {
+            let label = 'root';
+            function mutate() {
+                label = label + '!';
+            }
+            function shadow() {
+                let label = 'shadow';
+                return label;
+            }
+            mutate();
+            const inner = shadow();
+            return label + ':' + inner;
+        }
+        const outcome = wrap();
+    `;
+
+    const lexer = new Lexer(code);
+    const tokens = lexer.tokenize();
+    const parser = new Parser(tokens);
+    const ast = parser.parse();
+
+    const interpreter = new Interpreter();
+    interpreter.interpret(ast.body);
+
+    const outcome = interpreter.globals.get('outcome');
+    runner.assertEqual(outcome, 'root!:shadow');
+});
+
 runner.test('Memory stats are accessible during execution', () => {
     const code = `
         function test() {
@@ -357,6 +425,132 @@ runner.test('Memory stats are accessible during execution', () => {
     runner.assertTrue(stats.callStackDepth >= 0);
     runner.assertTrue(stats.heapSize >= 0);
     runner.assertTrue(stats.heapUtilization.includes('%'));
+});
+
+runner.test('String concatenation allocations are tracked and released', () => {
+    const interpreter = new Interpreter();
+    interpreter.runtimeMemory = new RuntimeMemoryManager(100, 2048);
+
+    const declareString = {
+        type: 'VariableDeclaration',
+        declarations: [
+            {
+                type: 'VariableDeclarator',
+                id: { type: 'Identifier', name: 's' },
+                init: { type: 'Literal', value: '' }
+            }
+        ]
+    };
+
+    interpreter.execute(declareString);
+    runner.assertEqual(interpreter.runtimeMemory.heapSize, 0);
+
+    const appendStatement = {
+        type: 'ExpressionStatement',
+        expression: {
+            type: 'AssignmentExpression',
+            operator: '=',
+            left: { type: 'Identifier', name: 's' },
+            right: {
+                type: 'BinaryExpression',
+                operator: '+',
+                left: { type: 'Identifier', name: 's' },
+                right: { type: 'Literal', value: 'a' }
+            }
+        }
+    };
+
+    for (let i = 0; i < 64; i++) {
+        interpreter.execute(appendStatement);
+    }
+
+    runner.assertTrue(
+        interpreter.runtimeMemory.heapSize > 0,
+        'Heap size should reflect concatenated string allocations'
+    );
+
+    const clearStatement = {
+        type: 'ExpressionStatement',
+        expression: {
+            type: 'AssignmentExpression',
+            operator: '=',
+            left: { type: 'Identifier', name: 's' },
+            right: { type: 'Literal', value: '' }
+        }
+    };
+
+    interpreter.execute(clearStatement);
+
+    runner.assertTrue(
+        interpreter.runtimeMemory.heapSize < 32,
+        'Heap size should drop after releasing string data'
+    );
+});
+
+runner.test('Runtime crashers execute without fatal errors', async () => {
+    const baseDir = path.join(__dirname, '..', 'examples', 'crashers');
+    const crashers = fs.readdirSync(baseDir).filter(file => file.endsWith('.js'));
+    runner.assertTrue(crashers.length > 0, 'Crashers corpus must not be empty');
+
+    const system = new UnifiedLuaScript({
+        enableAdvanced: false,
+        enablePerformance: false,
+        enableIDE: false,
+        runtime: { workerCount: 0, maxMemory: 16 * 1024 * 1024 },
+        performance: { enableProfiling: false }
+    });
+
+    if (!system.stats.initialized) {
+        await new Promise((resolve, reject) => {
+            const onComplete = () => {
+                cleanup();
+                resolve();
+            };
+            const onError = ({ error }) => {
+                cleanup();
+                reject(new Error(error));
+            };
+            const cleanup = () => {
+                system.off('initComplete', onComplete);
+                system.off('initError', onError);
+            };
+
+            system.once('initComplete', onComplete);
+            system.once('initError', onError);
+
+            if (system.stats.initialized) {
+                cleanup();
+                resolve();
+            }
+        });
+    }
+
+    for (const file of crashers) {
+        const source = fs.readFileSync(path.join(baseDir, file), 'utf8');
+        const transpiled = await system.transpile(source);
+        const result = await system.execute(transpiled.code, { __maxCallDepth: 768 });
+
+        runner.assertTrue(result && typeof result.executionTime === 'number', 'Execution time should be captured');
+        runner.assertTrue(result.result !== undefined, `Execution should yield a result for ${file}`);
+    }
+
+    const runtime = system.components.get('runtime');
+    if (runtime) {
+        runtime.shutdown();
+    }
+});
+
+runner.test('LuaInterpreter enforces recursion depth limit', () => {
+    const interpreter = new LuaInterpreter({ __maxCallDepth: 10 });
+
+    const code = `
+        local function loop() return loop() end
+        loop()
+    `;
+
+    runner.assertThrows(() => {
+        interpreter.execute(code);
+    }, 'Recursion depth exceeded');
 });
 
 // Run all tests

@@ -192,14 +192,14 @@ end
 function M.print_ast(node, indent)
     indent = indent or 0
     local prefix = string.rep("  ", indent)
-    
+
     if type(node) ~= "table" then
         print(prefix .. tostring(node))
         return
     end
-    
+
     print(prefix .. (node.type or "Unknown"))
-    
+
     for k, v in pairs(node) do
         if k ~= "type" then
             io.write(prefix .. "  " .. k .. ": ")

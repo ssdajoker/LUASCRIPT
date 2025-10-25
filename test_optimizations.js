@@ -112,7 +112,8 @@ async function runOptimizationTests() {
             
             try {
                 const startTime = process.hrtime.bigint();
-                const luaCode = await transpiler.transpile(testCase.code);
+                const result = await transpiler.transpile(testCase.code);
+                const luaCode = typeof result === 'string' ? result : result.code;
                 const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
                 
                 results.push({
@@ -219,12 +220,6 @@ async function testTonyYokaOptimizations() {
             }
             return result;
         }
-        
-        let testData = [
-            { active: true, value: "Memory Pool" },
-            { active: true, value: "Cache Optimization" },
-            { active: true, value: "SIMD Processing" }
-        ];
         
         let optimized = optimizePerformance(testData);
         console.log("PS2/PS3 Optimizations:", optimized.join(", "));

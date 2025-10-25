@@ -1,0 +1,287 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/ssdajoker/LUASCRIPT/refs/heads/main/docs/canonical_ir.schema.json",
+  "title": "LuaScript Canonical IR v1.0.0",
+  "type": "object",
+  "required": ["schemaVersion", "module", "nodes"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "module": { "$ref": "#/$defs/Module" },
+    "nodes": {
+      "type": "object",
+      "description": "Map of node id -> node",
+      "additionalProperties": { "$ref": "#/$defs/Node" }
+    },
+    "controlFlowGraphs": {
+      "type": "object",
+      "description": "Optional map of CFG id -> graph",
+      "additionalProperties": { "$ref": "#/$defs/ControlFlowGraph" }
+    }
+  },
+  "$defs": {
+    "CatchHandler": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "param": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] },
+        "body": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] }
+      }
+    },
+    "IRId": {
+      "type": "string",
+      "description": "Balanced-ternary encoded identifier with any prefix (e.g., id_T01, node_10T, mod_001).",
+      "pattern": "^[^_]+_[T01]+$"
+    },
+    "NodeRef": { "$ref": "#/$defs/IRId" },
+    "Span": {
+      "type": "object",
+      "required": ["start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "start": { "$ref": "#/$defs/Position" },
+        "end": { "$ref": "#/$defs/Position" }
+      }
+    },
+    "Position": {
+      "type": "object",
+      "required": ["line", "column", "offset"],
+      "additionalProperties": false,
+      "properties": {
+        "line": { "type": "number" },
+        "column": { "type": "number" },
+        "offset": { "type": "number" }
+      }
+    },
+    "Doc": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "leadingComments": { "type": "array", "items": { "type": "string" } },
+        "trailingComments": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "Meta": {
+      "type": "object",
+      "description": "Open metadata bag; when present, cfg must follow a specific shape.",
+      "additionalProperties": true,
+      "properties": {
+        "cfg": {
+          "type": ["object", "null"],
+          "additionalProperties": true,
+          "properties": {
+            "id": { "$ref": "#/$defs/IRId" },
+            "entry": { "$ref": "#/$defs/IRId" },
+            "exit": { "$ref": "#/$defs/IRId" }
+          }
+        }
+      }
+    },
+    "Module": {
+      "type": "object",
+      "required": ["id", "body"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "$ref": "#/$defs/IRId" },
+        "source": {
+          "type": ["object", "null"],
+          "additionalProperties": true,
+          "properties": {
+            "path": { "type": ["string", "null"] },
+            "hash": { "type": ["string", "null"] }
+          }
+        },
+        "directives": { "type": "array", "items": { "type": "string" } },
+        "body": { "type": "array", "items": { "$ref": "#/$defs/NodeRef" } },
+        "exports": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "type": { "type": "string" },
+            "entries": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "name": { "type": ["string", "null"] },
+                  "local": { "type": ["string", "null"] }
+                }
+              }
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "authoredBy": { "type": "string" },
+            "createdAt": { "type": "string" },
+            "toolchain": { "type": "object", "additionalProperties": true },
+            "metaPerf": {
+              "type": "object",
+              "required": ["parseMs", "normalizeMs", "lowerMs", "totalMs", "nodeCount"],
+              "additionalProperties": true,
+              "properties": {
+                "parseMs": { "type": "number" },
+                "normalizeMs": { "type": "number" },
+                "lowerMs": { "type": "number" },
+                "totalMs": { "type": "number" },
+                "nodeCount": { "type": "number" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Node": {
+      "type": "object",
+      "required": ["id", "kind"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "$ref": "#/$defs/IRId" },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Identifier",
+            "Literal",
+            "BinaryExpression",
+            "LogicalExpression",
+            "AssignmentExpression",
+            "UpdateExpression",
+            "ConditionalExpression",
+            "CallExpression",
+            "MemberExpression",
+            "NewExpression",
+            "ArrayExpression",
+            "ObjectExpression",
+            "TemplateLiteral",
+            "ArrowFunctionExpression",
+            "FunctionDeclaration",
+            "VariableDeclaration",
+            "BlockStatement",
+            "ExpressionStatement",
+            "ReturnStatement",
+            "IfStatement",
+            "SwitchStatement",
+            "ForStatement",
+            "ForOfStatement",
+            "WhileStatement",
+            "DoWhileStatement",
+            "BreakStatement",
+            "ContinueStatement",
+            "ThrowStatement",
+            "TryStatement",
+            "ImportDeclaration",
+            "ExportDeclaration",
+            "ClassDeclaration",
+            "ClassBody",
+            "MethodDefinition",
+            "Property",
+            "ObjectPattern",
+            "ArrayPattern",
+            "RestElement",
+            "AssignmentPattern",
+            "ProgramComment"
+          ]
+        },
+        "span": { "anyOf": [{ "$ref": "#/$defs/Span" }, { "type": "null" }] },
+        "flags": {
+          "type": "object",
+          "additionalProperties": { "type": "boolean" }
+        },
+        "doc": { "anyOf": [{ "$ref": "#/$defs/Doc" }, { "type": "null" }] },
+        "meta": { "anyOf": [{ "$ref": "#/$defs/Meta" }, { "type": "null" }] },
+        "name": { "type": ["string", "null"] },
+        "binding": { "type": ["string", "null"] },
+        "value": {},
+        "raw": { "type": ["string", "null"] },
+        "literalKind": { "type": ["string", "null"] },
+        "operator": { "type": ["string", "null"] },
+        "left": { "anyOf": [{ "$ref": "#/$defs/NodeRef" }, { "type": "null" }] },
+        "right": { "anyOf": [{ "$ref": "#/$defs/NodeRef" }, { "type": "null" }] },
+        "argument": { "anyOf": [{ "$ref": "#/$defs/NodeRef" }, { "type": "null" }] },
+        "prefix": { "type": ["boolean", "null"] },
+        "expression": { "anyOf": [{ "$ref": "#/$defs/NodeRef" }, { "type": "null" }] },
+        "statements": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/NodeRef" }
+        },
+        "declarations": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "object",
+            "required": ["id"],
+            "additionalProperties": true,
+            "properties": {
+              "id": { "$ref": "#/$defs/IRId" },
+              "pattern": { "anyOf": [{ "$ref": "#/$defs/NodeRef" }, { "type": "null" }] },
+              "init": { "anyOf": [{ "$ref": "#/$defs/NodeRef" }, { "type": "null" }] },
+              "kind": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "declarationKind": { "type": ["string", "null"] },
+        "test": { "anyOf": [{ "$ref": "#/$defs/NodeRef" }, { "type": "null" }] },
+        "consequent": { "anyOf": [{ "$ref": "#/$defs/NodeRef" }, { "type": "null" }] },
+        "alternate": { "anyOf": [{ "$ref": "#/$defs/NodeRef" }, { "type": "null" }] },
+        "params": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/NodeRef" }
+        },
+        "body": { "anyOf": [{ "$ref": "#/$defs/NodeRef" }, { "type": "null" }] },
+        "async": { "type": ["boolean", "null"] },
+        "generator": { "type": ["boolean", "null"] },
+        "returnType": {},
+        "callee": { "anyOf": [{ "$ref": "#/$defs/NodeRef" }, { "type": "null" }] },
+        "arguments": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/NodeRef" }
+        },
+        "superClass": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] },
+        "block": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] },
+        "handler": { "anyOf": [ { "$ref": "#/$defs/CatchHandler" }, { "type": "null" } ] },
+        "finalizer": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] }
+      }
+    },
+    "ControlFlowGraph": {
+      "type": "object",
+      "required": ["id", "blocks"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "$ref": "#/$defs/IRId" },
+        "blocks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/BasicBlock" }
+        },
+        "successors": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/IRId" }
+          }
+        },
+        "predecessors": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/IRId" }
+          }
+        }
+      }
+    },
+    "BasicBlock": {
+      "type": "object",
+      "required": ["id", "kind", "statements"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "$ref": "#/$defs/IRId" },
+        "kind": { "type": "string" },
+        "statements": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/NodeRef" }
+        }
+      }
+    }
+  }
+}

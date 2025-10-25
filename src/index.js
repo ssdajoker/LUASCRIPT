@@ -12,7 +12,19 @@ const { ModuleLoader, ESModuleLoader } = require('./phase2_core_modules');
 const { EnterpriseInterpreter, PerformanceProfiler, MemoryOptimizer, SecurityManager } = require('./phase5_enterprise_optimization');
 const { ProductionRuntime, ProductionCompiler, VictoryValidator } = require('./phase6_production_deployment');
 
+/**
+ * The main class for the LuaScript environment, providing a unified interface for compilation and execution.
+ */
 class LuaScript {
+    /**
+     * Creates an instance of the LuaScript environment.
+     * @param {object} [options={}] - Configuration options.
+     * @param {string} [options.mode='production'] - The runtime mode ('development', 'production', 'enterprise').
+     * @param {boolean} [options.enableProfiling=true] - Whether to enable performance profiling.
+     * @param {boolean} [options.enableOptimization=true] - Whether to enable code optimization.
+     * @param {boolean} [options.enableSecurity=true] - Whether to enable security features.
+     * @param {boolean} [options.enableCaching=true] - Whether to enable caching.
+     */
     constructor(options = {}) {
         this.options = {
             mode: options.mode || 'production', // 'development', 'production', 'enterprise'
@@ -33,6 +45,11 @@ class LuaScript {
         };
     }
 
+    /**
+     * Creates a runtime instance based on the configured mode.
+     * @returns {object} The runtime instance.
+     * @private
+     */
     createRuntime() {
         switch (this.options.mode) {
             case 'enterprise':
@@ -45,7 +62,12 @@ class LuaScript {
         }
     }
 
-    // Main execution methods
+    /**
+     * Executes a string of LuaScript code.
+     * @param {string} source - The source code to execute.
+     * @param {string} [filename='main.luascript'] - The filename for error reporting.
+     * @returns {*} The result of the execution.
+     */
     execute(source, filename = 'main.luascript') {
         if (this.runtime instanceof ProductionRuntime) {
             return this.runtime.execute(source, filename);
@@ -61,17 +83,35 @@ class LuaScript {
         }
     }
 
+    /**
+     * Executes a LuaScript file.
+     * @param {string} filePath - The path to the file to execute.
+     * @returns {*} The result of the execution.
+     */
     executeFile(filePath) {
         const fs = require('fs');
         const source = fs.readFileSync(filePath, 'utf8');
         return this.execute(source, filePath);
     }
 
+    /**
+     * Compiles a string of LuaScript code.
+     * @param {string} source - The source code to compile.
+     * @param {object} [options={}] - Compilation options.
+     * @returns {object} The compiled code and source map.
+     */
     compile(source, options = {}) {
         const compiler = new ProductionCompiler(options);
         return compiler.compile(source, options.filename || 'main.luascript');
     }
 
+    /**
+     * Compiles a string of LuaScript code and writes it to a file.
+     * @param {string} source - The source code to compile.
+     * @param {string} outputPath - The path to write the compiled code to.
+     * @param {object} [options={}] - Compilation options.
+     * @returns {object} The compiled code and source map.
+     */
     compileToFile(source, outputPath, options = {}) {
         if (this.runtime instanceof ProductionRuntime) {
             return this.runtime.compileToFile(source, outputPath, options);
@@ -90,17 +130,30 @@ class LuaScript {
         }
     }
 
-    // Utility methods
+    /**
+     * Parses a string of LuaScript code into an AST.
+     * @param {string} source - The source code to parse.
+     * @returns {object} The Abstract Syntax Tree.
+     */
     parse(source) {
         const parser = new LuaScriptParser(source);
         return parser.parse();
     }
 
+    /**
+     * Tokenizes a string of LuaScript code.
+     * @param {string} source - The source code to tokenize.
+     * @returns {object[]} An array of tokens.
+     */
     tokenize(source) {
         const lexer = new LuaScriptLexer(source);
         return lexer.tokenize();
     }
 
+    /**
+     * Validates the current runtime against production standards.
+     * @returns {object} The validation report.
+     */
     validate() {
         const validator = new VictoryValidator();
         if (this.runtime instanceof ProductionRuntime) {
@@ -112,6 +165,10 @@ class LuaScript {
         }
     }
 
+    /**
+     * Gets a performance report for the current runtime.
+     * @returns {object} The performance report.
+     */
     getPerformanceReport() {
         if (this.runtime.getPerformanceReport) {
             return this.runtime.getPerformanceReport();
@@ -120,6 +177,10 @@ class LuaScript {
         }
     }
 
+    /**
+     * Gets information about the current build.
+     * @returns {object} The build information.
+     */
     getBuildInfo() {
         return {
             ...this.buildInfo,
@@ -130,6 +191,11 @@ class LuaScript {
         };
     }
 
+    /**
+     * Gets a list of enabled features for the current configuration.
+     * @returns {string[]} An array of enabled feature names.
+     * @private
+     */
     getEnabledFeatures() {
         const features = [];
         
@@ -161,24 +227,46 @@ class LuaScript {
         return features;
     }
 
-    // Static factory methods
+    /**
+     * Creates a new LuaScript instance.
+     * @param {object} [options={}] - Configuration options.
+     * @returns {LuaScript} A new LuaScript instance.
+     */
     static create(options = {}) {
         return new LuaScript(options);
     }
 
+    /**
+     * Creates a new LuaScript instance in development mode.
+     * @param {object} [options={}] - Configuration options.
+     * @returns {LuaScript} A new LuaScript instance.
+     */
     static createDevelopment(options = {}) {
         return new LuaScript({ ...options, mode: 'development' });
     }
 
+    /**
+     * Creates a new LuaScript instance in production mode.
+     * @param {object} [options={}] - Configuration options.
+     * @returns {LuaScript} A new LuaScript instance.
+     */
     static createProduction(options = {}) {
         return new LuaScript({ ...options, mode: 'production' });
     }
 
+    /**
+     * Creates a new LuaScript instance in enterprise mode.
+     * @param {object} [options={}] - Configuration options.
+     * @returns {LuaScript} A new LuaScript instance.
+     */
     static createEnterprise(options = {}) {
         return new LuaScript({ ...options, mode: 'enterprise' });
     }
 
-    // Victory validation
+    /**
+     * Validates the LuaScript implementation against a set of test scenarios.
+     * @returns {object} The validation report.
+     */
     static validateVictory() {
         console.log('🚨 LUASCRIPT VICTORY VALIDATION - CRUNCH MODE COMPLETE! 🚨');
         console.log('=' .repeat(80));

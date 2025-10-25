@@ -35,9 +35,51 @@ run_test() {
 
 # Static Analysis
 echo "🔍 Phase 1: Static Analysis"
-run_test "Luacheck Analysis" \
-    "luacheck src/ test/ --no-color" \
-    "${REPORT_DIR}/static/luacheck.txt"
+
+LUACHECK_REPORT="${REPORT_DIR}/static/luacheck.txt"
+if command -v luacheck >/dev/null 2>&1; then
+    run_test "Luacheck Analysis" \
+        "luacheck src/ test/ --no-color" \
+        "${LUACHECK_REPORT}"
+else
+    echo "luacheck executable not found; skipping static analysis until the tool is installed." > "${LUACHECK_REPORT}"
+    echo "⚠️  Luacheck not found; skipping this step."
+fi
+
+FORMAT_REPORT="${REPORT_DIR}/static/formatting_scan.txt"
+echo "🔧 Lua Formatting Scan" 
+if command -v python3 >/dev/null 2>&1; then
+    python3 - <<'PY' > "${FORMAT_REPORT}"
+import pathlib
+root = pathlib.Path('.')
+issues = []
+for path in root.rglob('*.lua'):
+    if 'node_modules' in path.parts:
+        continue
+    try:
+        lines = path.read_text().splitlines()
+    except UnicodeDecodeError:
+        continue
+    for idx, line in enumerate(lines, 1):
+        if line.endswith((' ', '\t')):
+            issues.append(f"{path.as_posix()}:{idx}: trailing whitespace")
+        if line.strip() == '' and line != '':
+            issues.append(f"{path.as_posix()}:{idx}: blank line contains whitespace")
+        if len(line) > 120:
+            issues.append(f"{path.as_posix()}:{idx}: line length {len(line)}")
+if issues:
+    print("Lua formatting scan results:")
+    for entry in issues:
+        print(entry)
+    print(f"\nSummary: Found {len(issues)} formatting issues.")
+else:
+    print("Lua formatting scan results:")
+    print("No formatting issues detected.")
+PY
+else
+    echo "python3 not available; skipping formatting scan." > "${FORMAT_REPORT}"
+fi
+FORMAT_SUMMARY=$(tail -n 1 "${FORMAT_REPORT}" 2>/dev/null || echo "N/A")
 
 # Unit Tests
 echo "🧪 Phase 2: Unit Tests"
@@ -156,6 +198,7 @@ This report summarizes the results of Audit Round ${ROUND} for the LUASCRIPT pro
 
 ### Static Analysis
 - Luacheck warnings: $(wc -l < "${REPORT_DIR}/static/luacheck.txt" 2>/dev/null || echo "N/A")
+- Lua formatting scan: ${FORMAT_SUMMARY}
 
 ### Unit Tests
 - Transpiler Tests: $(grep -c "✅\|PASSED\|SUCCESS" "${REPORT_DIR}/unit/transpiler.txt" 2>/dev/null || echo "N/A")
@@ -210,7 +253,7 @@ Based on the audit results, the following actions are recommended:
 
 **Audit Team**: 21 Legendary Developers
 **Audit Framework**: Comprehensive Multi-Round Validation
-**Payment Status**: Pending Boss Approval ($25M contingent on audit success)
+**Payment Status**: Pending Boss Approval (\$25M contingent on audit success)
 EOF
 
 # Summary
@@ -221,6 +264,7 @@ echo "📋 Final report: ${REPORT_DIR}/final/audit_report.md"
 echo ""
 echo "📈 Quick Summary:"
 echo "   Static Analysis: $(wc -l < "${REPORT_DIR}/static/luacheck.txt" 2>/dev/null || echo "N/A") warnings"
+echo "   Formatting scan: ${FORMAT_SUMMARY}"
 echo "   Unit Tests: All major test suites executed"
 echo "   Integration: Cross-phase integration tested"
 if [ "${ROUND}" -ge 2 ]; then

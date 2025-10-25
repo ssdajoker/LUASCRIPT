@@ -38,13 +38,13 @@ end
 -- Analyze stylesheet
 function M.analyze(ast, context)
     context = context or M.Context()
-    
+
     if ast.type == "Stylesheet" then
         for _, block in ipairs(ast.blocks) do
             M.analyze_block(block, context)
         end
     end
-    
+
     return context
 end
 
@@ -98,7 +98,7 @@ function M.analyze_ramp_stmt(stmt, context)
         inferno = true,
         custom = true
     }
-    
+
     if not valid_palettes[stmt.palette] then
         table.insert(context.errors, {
             type = "invalid_palette",
@@ -126,7 +126,7 @@ end
 function M.check_value(value, param_name, context)
     if value.type == "CSSVar" then
         local var_name = value.name
-        
+
         -- Check if variable is defined
         if not M.defaults[var_name] then
             table.insert(context.warnings, {
@@ -134,7 +134,7 @@ function M.check_value(value, param_name, context)
                 message = "CSS variable " .. var_name .. " not in defaults"
             })
         end
-        
+
         -- Apply fallback if provided
         if value.fallback then
             return M.resolve_value(value.fallback, context)
@@ -160,7 +160,7 @@ function M.check_value(value, param_name, context)
         local right = M.check_value(value.right, param_name, context)
         return M.eval_binary_expr(value.op, left, right)
     end
-    
+
     return value
 end
 
@@ -183,7 +183,7 @@ function M.eval_binary_expr(op, left, right)
     local lval = left.value or 0
     local rval = right.value or 0
     local result = 0
-    
+
     if op == "+" then
         result = lval + rval
     elseif op == "-" then
@@ -195,7 +195,7 @@ function M.eval_binary_expr(op, left, right)
     elseif op == "%" then
         result = rval ~= 0 and lval % rval or 0
     end
-    
+
     return {value = result, unit = left.unit or "px"}
 end
 
@@ -206,16 +206,16 @@ function M.generate_manifest(ast, context)
         defaults = {},
         ranges = {}
     }
-    
+
     -- Collect all CSS variables used
     M.collect_variables(ast, manifest.variables)
-    
+
     -- Add defaults and ranges
     for var_name, _ in pairs(manifest.variables) do
         manifest.defaults[var_name] = M.defaults[var_name]
         manifest.ranges[var_name] = M.ranges[var_name]
     end
-    
+
     return manifest
 end
 
@@ -224,11 +224,11 @@ function M.collect_variables(node, vars)
     if type(node) ~= "table" then
         return
     end
-    
+
     if node.type == "CSSVar" then
         vars[node.name] = true
     end
-    
+
     for k, v in pairs(node) do
         if k ~= "type" then
             if type(v) == "table" then
@@ -251,21 +251,21 @@ function M.print_results(context)
     for var, _ in pairs(context.variables) do
         print("  " .. var)
     end
-    
+
     if #context.errors > 0 then
         print("\nErrors:")
         for _, err in ipairs(context.errors) do
             print("  [" .. err.type .. "] " .. err.message)
         end
     end
-    
+
     if #context.warnings > 0 then
         print("\nWarnings:")
         for _, warn in ipairs(context.warnings) do
             print("  [" .. warn.type .. "] " .. warn.message)
         end
     end
-    
+
     if #context.errors == 0 and #context.warnings == 0 then
         print("\n✓ No errors or warnings")
     end

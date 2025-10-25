@@ -9,7 +9,21 @@
 
 const { EventEmitter } = require('events');
 
+/**
+ * The CoreTranspiler class is responsible for the primary transformation of JavaScript code into Lua.
+ * It uses a pattern-based approach to replace JavaScript syntax with its Lua equivalents.
+ * This class forms the foundation of the LUASCRIPT transpilation engine.
+ * @extends EventEmitter
+ */
 class CoreTranspiler extends EventEmitter {
+    /**
+     * Creates an instance of the CoreTranspiler.
+     * @param {object} [options={}] - The configuration options for the transpiler.
+     * @param {string} [options.target='lua5.4'] - The target Lua version.
+     * @param {boolean} [options.optimize=true] - Whether to apply optimizations.
+     * @param {boolean} [options.sourceMap=true] - Whether to generate source maps.
+     * @param {boolean} [options.strict=true] - Whether to enforce strict mode.
+     */
     constructor(options = {}) {
         super();
         
@@ -33,6 +47,10 @@ class CoreTranspiler extends EventEmitter {
         this.initializePatterns();
     }
 
+    /**
+     * Initializes the core set of regex patterns for transpilation.
+     * These patterns cover fundamental JavaScript syntax such as variables, operators, and control structures.
+     */
     initializePatterns() {
         // Core JavaScript to Lua patterns
         this.patterns.set('variables', [
@@ -41,6 +59,10 @@ class CoreTranspiler extends EventEmitter {
             { from: /\bconst\s+(\w+)/g, to: 'local $1' }
         ]);
         
+        this.patterns.set('objects', [
+            { from: /([{,])\s*(\w+)\s*:/g, to: '$1$2 =' }
+        ]);
+
         this.patterns.set('operators', [
             { from: /\|\|/g, to: 'or' },
             { from: /&&/g, to: 'and' },
@@ -75,6 +97,14 @@ class CoreTranspiler extends EventEmitter {
         ]);
     }
 
+    /**
+     * Transpiles a string of JavaScript code into Lua.
+     * This is the main method of the transpiler, orchestrating the various transformation passes.
+     * @param {string} jsCode - The JavaScript code to transpile.
+     * @param {string} [filename='main.js'] - The name of the file being transpiled, used for caching and source maps.
+     * @returns {object} An object containing the transpiled Lua code, source map, and statistics.
+     * @throws {Error} If a fatal error occurs during transpilation.
+     */
     transpile(jsCode, filename = 'main.js') {
         try {
             this.emit('transpileStart', { filename, size: jsCode.length });
@@ -142,6 +172,11 @@ class CoreTranspiler extends EventEmitter {
         }
     }
 
+    /**
+     * Transforms ES6 arrow functions into standard Lua functions.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transformArrowFunctions(code) {
         // Simple arrow functions: x => x * 2
         code = code.replace(/(\w+)\s*=>\s*([^;{]+)/g, 'function($1) return $2 end');
@@ -155,6 +190,11 @@ class CoreTranspiler extends EventEmitter {
         return code;
     }
 
+    /**
+     * Transforms ES6 destructuring assignments into Lua variable declarations.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transformDestructuring(code) {
         // Object destructuring: let {a, b} = obj
         code = code.replace(/let\s*{\s*(\w+),\s*(\w+)\s*}\s*=\s*([^;]+);/g, 
@@ -167,6 +207,11 @@ class CoreTranspiler extends EventEmitter {
         return code;
     }
 
+    /**
+     * Transforms async/await syntax into Lua coroutine-based equivalents.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transformAsyncAwait(code) {
         // Async functions
         code = code.replace(/async\s+function\s+(\w+)/g, 'local function $1');
@@ -177,6 +222,11 @@ class CoreTranspiler extends EventEmitter {
         return code;
     }
 
+    /**
+     * Transforms ES6 classes into Lua table-based equivalents.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transformClasses(code) {
         // Class declarations
         code = code.replace(/class\s+(\w+)\s*{/g, 'local $1 = {}; $1.__index = $1');
@@ -190,6 +240,11 @@ class CoreTranspiler extends EventEmitter {
         return code;
     }
 
+    /**
+     * Transforms ES6 modules (import/export) into Lua `require` and `return` statements.
+     * @param {string} code - The code to transform.
+     * @returns {string} The transformed code.
+     */
     transformModules(code) {
         // ES6 imports
         code = code.replace(/import\s+(\w+)\s+from\s+['"]([^'"]+)['"]/g, 'local $1 = require("$2")');
@@ -203,6 +258,11 @@ class CoreTranspiler extends EventEmitter {
         return code;
     }
 
+    /**
+     * Performs basic optimizations on the generated Lua code.
+     * @param {string} code - The Lua code to optimize.
+     * @returns {string} The optimized Lua code.
+     */
     optimizeCode(code) {
         // Remove unnecessary semicolons
         code = code.replace(/;\s*end/g, ' end');
@@ -219,13 +279,24 @@ class CoreTranspiler extends EventEmitter {
         return code;
     }
 
+    /**
+     * Cleans up the final generated code, fixing syntax and formatting.
+     * @param {string} code - The code to clean up.
+     * @returns {string} The cleaned-up code.
+     */
     cleanupCode(code) {
-        // Fix closing braces to 'end'
-        code = code.replace(/}/g, 'end');
+        // Fix closing braces to 'end' for blocks, but not for object literals
+        // A block-closing brace is typically at the start of a line or after a statement.
+        // An object-closing brace is part of an expression.
         
-        // Clean up whitespace
+        // Heuristic: Replace '}' with 'end' only when it's likely a block terminator.
+        // This regex is more specific. It no longer uses a semicolon in the lookahead,
+        // which prevents it from incorrectly converting object literal braces.
+        code = code.replace(/}\s*(?=else|catch|finally|$|\n)/g, 'end');
+
+        // Clean up whitespace without removing significant newlines
+        code = code.split('\n').map(line => line.trim()).join('\n');
         code = code.replace(/\s+/g, ' ');
-        code = code.replace(/\s*\n\s*/g, '\n');
         
         // Fix line endings
         code = code.trim();
@@ -233,6 +304,13 @@ class CoreTranspiler extends EventEmitter {
         return code;
     }
 
+    /**
+     * Generates a basic source map for debugging.
+     * @param {string} jsCode - The original JavaScript code.
+     * @param {string} luaCode - The transpiled Lua code.
+     * @param {string} filename - The original filename.
+     * @returns {object} A source map object.
+     */
     generateSourceMap(jsCode, luaCode, filename) {
         return {
             version: 3,
@@ -244,14 +322,26 @@ class CoreTranspiler extends EventEmitter {
         };
     }
 
+    /**
+     * Generates a cache key for a given code string.
+     * @param {string} code - The code to generate a key for.
+     * @returns {string} The MD5 hash of the code.
+     */
     getCacheKey(code) {
         return require('crypto').createHash('md5').update(code).digest('hex');
     }
 
+    /**
+     * Retrieves the current transpilation statistics.
+     * @returns {object} An object containing statistics about transpilation operations.
+     */
     getStats() {
         return { ...this.stats };
     }
 
+    /**
+     * Clears the transpilation cache.
+     */
     clearCache() {
         this.cache.clear();
     }

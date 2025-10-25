@@ -5,7 +5,18 @@
  * 32+ Developer Team Implementation
  */
 
+/**
+ * The core lexer for LUASCRIPT, responsible for converting source code into a stream of tokens.
+ * It includes advanced features like error recovery and support for a wide range of JavaScript syntax.
+ */
 class LuaScriptLexer {
+    /**
+     * Creates an instance of the LuaScriptLexer.
+     * @param {string} source - The source code to tokenize.
+     * @param {object} [options={}] - Configuration options for the lexer.
+     * @param {boolean} [options.errorRecovery=true] - Whether to enable error recovery mode.
+     * @param {boolean} [options.strictMode=false] - Whether to enforce strict mode rules.
+     */
     constructor(source, options = {}) {
         this.source = source;
         this.position = 0;
@@ -16,7 +27,8 @@ class LuaScriptLexer {
             'let', 'const', 'var', 'function', 'return', 'if', 'else', 'for', 
             'while', 'do', 'break', 'continue', 'true', 'false', 'null', 
             'undefined', 'class', 'extends', 'super', 'this', 'new', 'try', 
-            'catch', 'finally', 'throw', 'async', 'await', 'import', 'export'
+            'catch', 'finally', 'throw', 'async', 'await', 'import', 'export',
+            'switch', 'case', 'default', 'static'
         ]);
         this.operators = new Map([
             ['+', 'PLUS'], ['-', 'MINUS'], ['*', 'MULTIPLY'], ['/', 'DIVIDE'],
@@ -35,6 +47,10 @@ class LuaScriptLexer {
         this.strictMode = options.strictMode || false;
     }
 
+    /**
+     * Tokenizes the source code into a stream of tokens.
+     * @returns {object[]} The array of tokens.
+     */
     tokenize() {
         this.tokens = [];
         this.position = 0;
@@ -85,6 +101,10 @@ class LuaScriptLexer {
         return this.tokens;
     }
 
+    /**
+     * Tokenizes an identifier or a keyword.
+     * @private
+     */
     tokenizeIdentifier() {
         const start = this.position;
         const startLine = this.line;
@@ -101,6 +121,10 @@ class LuaScriptLexer {
         this.addToken(type, value, startLine, startColumn);
     }
 
+    /**
+     * Tokenizes a number, handling various formats like decimal, hex, binary, and octal.
+     * @private
+     */
     tokenizeNumber() {
         const start = this.position;
         const startLine = this.line;
@@ -147,6 +171,13 @@ class LuaScriptLexer {
         this.addToken('NUMBER', parseFloat(value), startLine, startColumn);
     }
 
+    /**
+     * Tokenizes a hexadecimal number.
+     * @param {number} start - The starting position of the number.
+     * @param {number} startLine - The starting line of the number.
+     * @param {number} startColumn - The starting column of the number.
+     * @private
+     */
     tokenizeHexNumber(start, startLine, startColumn) {
         while (this.position < this.source.length && this.isHexDigit(this.current())) {
             this.advance();
@@ -155,6 +186,13 @@ class LuaScriptLexer {
         this.addToken('NUMBER', parseInt(value, 16), startLine, startColumn);
     }
 
+    /**
+     * Tokenizes a binary number.
+     * @param {number} start - The starting position of the number.
+     * @param {number} startLine - The starting line of the number.
+     * @param {number} startColumn - The starting column of the number.
+     * @private
+     */
     tokenizeBinaryNumber(start, startLine, startColumn) {
         while (this.position < this.source.length && (this.current() === '0' || this.current() === '1')) {
             this.advance();
@@ -163,6 +201,13 @@ class LuaScriptLexer {
         this.addToken('NUMBER', parseInt(value.substring(2), 2), startLine, startColumn);
     }
 
+    /**
+     * Tokenizes an octal number.
+     * @param {number} start - The starting position of the number.
+     * @param {number} startLine - The starting line of the number.
+     * @param {number} startColumn - The starting column of the number.
+     * @private
+     */
     tokenizeOctalNumber(start, startLine, startColumn) {
         while (this.position < this.source.length && this.current() >= '0' && this.current() <= '7') {
             this.advance();
@@ -171,6 +216,10 @@ class LuaScriptLexer {
         this.addToken('NUMBER', parseInt(value.substring(2), 8), startLine, startColumn);
     }
 
+    /**
+     * Tokenizes a string literal, handling quotes, template literals, and escape sequences.
+     * @private
+     */
     tokenizeString() {
         const quote = this.current();
         const start = this.position;
@@ -231,6 +280,10 @@ class LuaScriptLexer {
         throw new SyntaxError(`Unterminated string literal starting at line ${startLine}`);
     }
 
+    /**
+     * Tokenizes a single-line comment.
+     * @private
+     */
     tokenizeLineComment() {
         this.advance(); // Skip first /
         this.advance(); // Skip second /
@@ -244,6 +297,11 @@ class LuaScriptLexer {
         this.addToken('COMMENT', value);
     }
 
+    /**
+     * Tokenizes a block comment.
+     * @private
+     * @throws {SyntaxError} If the block comment is unterminated.
+     */
     tokenizeBlockComment() {
         const startLine = this.line;
         this.advance(); // Skip /
@@ -268,6 +326,10 @@ class LuaScriptLexer {
         throw new SyntaxError(`Unterminated block comment starting at line ${startLine}`);
     }
 
+    /**
+     * Tokenizes an operator.
+     * @private
+     */
     tokenizeOperator() {
         const start = this.position;
         const startLine = this.line;
@@ -290,6 +352,10 @@ class LuaScriptLexer {
         this.addToken('OPERATOR', char, startLine, startColumn);
     }
 
+    /**
+     * Tokenizes punctuation characters.
+     * @private
+     */
     tokenizePunctuation() {
         const char = this.current();
         const startLine = this.line;
@@ -314,16 +380,30 @@ class LuaScriptLexer {
         this.addToken(type, char, startLine, startColumn);
     }
 
-    // Utility methods
+    /**
+     * Gets the current character without advancing.
+     * @returns {string} The current character.
+     * @private
+     */
     current() {
         return this.position < this.source.length ? this.source[this.position] : '\0';
     }
 
+    /**
+     * Peeks at the next character without advancing.
+     * @param {number} [offset=1] - The offset from the current position.
+     * @returns {string} The character at the given offset.
+     * @private
+     */
     peek(offset = 1) {
         const pos = this.position + offset;
         return pos < this.source.length ? this.source[pos] : '\0';
     }
 
+    /**
+     * Advances the lexer's position.
+     * @private
+     */
     advance() {
         if (this.position < this.source.length) {
             if (this.source[this.position] === '\n') {
@@ -336,40 +416,95 @@ class LuaScriptLexer {
         }
     }
 
+    /**
+     * Skips whitespace characters.
+     * @private
+     */
     skipWhitespace() {
         while (this.position < this.source.length && this.isWhitespace(this.current())) {
             this.advance();
         }
     }
 
+    /**
+     * Checks if a character is whitespace.
+     * @param {string} char - The character to check.
+     * @returns {boolean} True if the character is whitespace.
+     * @private
+     */
     isWhitespace(char) {
         return /\s/.test(char);
     }
 
+    /**
+     * Checks if a character is alphabetic.
+     * @param {string} char - The character to check.
+     * @returns {boolean} True if the character is alphabetic.
+     * @private
+     */
     isAlpha(char) {
         return /[a-zA-Z]/.test(char);
     }
 
+    /**
+     * Checks if a character is a digit.
+     * @param {string} char - The character to check.
+     * @returns {boolean} True if the character is a digit.
+     * @private
+     */
     isDigit(char) {
         return /[0-9]/.test(char);
     }
 
+    /**
+     * Checks if a character is a hexadecimal digit.
+     * @param {string} char - The character to check.
+     * @returns {boolean} True if the character is a hex digit.
+     * @private
+     */
     isHexDigit(char) {
         return /[0-9a-fA-F]/.test(char);
     }
 
+    /**
+     * Checks if a character is alphanumeric.
+     * @param {string} char - The character to check.
+     * @returns {boolean} True if the character is alphanumeric.
+     * @private
+     */
     isAlphaNumeric(char) {
         return this.isAlpha(char) || this.isDigit(char);
     }
 
+    /**
+     * Checks if a character can be the start of an operator.
+     * @param {string} char - The character to check.
+     * @returns {boolean} True if the character can start an operator.
+     * @private
+     */
     isOperatorStart(char) {
-        return '+-*/%=<>!&|^~?:'.includes(char);
+    // Treat ':' and '?' as punctuation (COLON/QUESTION); exclude them here
+    return '+-*/%=<>!&|^~'.includes(char);
     }
 
+    /**
+     * Checks if a character is a punctuation mark.
+     * @param {string} char - The character to check.
+     * @returns {boolean} True if the character is punctuation.
+     * @private
+     */
     isPunctuation(char) {
         return '()[]{},.;:?'.includes(char);
     }
 
+    /**
+     * Adds a token to the token list.
+     * @param {string} type - The type of the token.
+     * @param {*} value - The value of the token.
+     * @param {number} [line=this.line] - The line number of the token.
+     * @param {number} [column=this.column] - The column number of the token.
+     * @private
+     */
     addToken(type, value, line = this.line, column = this.column) {
         this.tokens.push({
             type,
@@ -380,6 +515,11 @@ class LuaScriptLexer {
         });
     }
 
+    /**
+     * Adds an error token to the token list.
+     * @param {string} message - The error message.
+     * @private
+     */
     addError(message) {
         this.tokens.push({
             type: 'ERROR',
@@ -390,14 +530,26 @@ class LuaScriptLexer {
         });
     }
 
+    /**
+     * Gets the list of all tokens.
+     * @returns {object[]} The array of tokens.
+     */
     getTokens() {
         return this.tokens;
     }
 
+    /**
+     * Checks if any errors were encountered during tokenization.
+     * @returns {boolean} True if there are errors.
+     */
     hasErrors() {
         return this.tokens.some(token => token.type === 'ERROR');
     }
 
+    /**
+     * Gets the list of all error tokens.
+     * @returns {object[]} The array of error tokens.
+     */
     getErrors() {
         return this.tokens.filter(token => token.type === 'ERROR');
     }

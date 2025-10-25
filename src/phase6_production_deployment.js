@@ -11,7 +11,20 @@ const { EnterpriseInterpreter } = require('./phase5_enterprise_optimization');
 const { ModuleLoader } = require('./phase2_core_modules');
 const { LuaScriptParser } = require('./phase1_core_parser');
 
+/**
+ * A production-ready compiler that transforms LuaScript code into optimized JavaScript.
+ */
 class ProductionCompiler {
+    /**
+     * Creates an instance of the ProductionCompiler.
+     * @param {object} [options={}] - Configuration options for the compiler.
+     * @param {boolean} [options.optimize=true] - Whether to apply optimizations.
+     * @param {boolean} [options.minify=false] - Whether to minify the output code.
+     * @param {boolean} [options.sourceMaps=false] - Whether to generate source maps.
+     * @param {string} [options.target='es2020'] - The JavaScript language target.
+     * @param {string} [options.outputFormat='commonjs'] - The output module format.
+     * @param {boolean} [options.bundleModules=false] - Whether to bundle modules.
+     */
     constructor(options = {}) {
         this.options = {
             optimize: options.optimize !== false,
@@ -28,6 +41,12 @@ class ProductionCompiler {
         this.sourceMapData = [];
     }
 
+    /**
+     * Compiles a string of LuaScript code into JavaScript.
+     * @param {string} source - The source code to compile.
+     * @param {string} [filename='main.luascript'] - The original filename for source map generation.
+     * @returns {object} An object containing the compiled code, source map, and statistics.
+     */
     compile(source, filename = 'main.luascript') {
         const parser = new LuaScriptParser(source, {
             errorRecovery: false,
@@ -61,6 +80,12 @@ class ProductionCompiler {
         };
     }
 
+    /**
+     * Optimizes the AST by applying various transformation passes.
+     * @param {object} ast - The AST to optimize.
+     * @returns {object} The optimized AST.
+     * @private
+     */
     optimizeAST(ast) {
         // Dead code elimination
         ast = this.eliminateDeadCode(ast);
@@ -81,6 +106,12 @@ class ProductionCompiler {
         return ast;
     }
 
+    /**
+     * Eliminates dead code from the AST.
+     * @param {object} ast - The AST to process.
+     * @returns {object} The processed AST.
+     * @private
+     */
     eliminateDeadCode(ast) {
         const usedVariables = new Set();
         const usedFunctions = new Set();
@@ -108,6 +139,12 @@ class ProductionCompiler {
         });
     }
 
+    /**
+     * Folds constant expressions in the AST.
+     * @param {object} ast - The AST to process.
+     * @returns {object} The processed AST.
+     * @private
+     */
     foldConstants(ast) {
         return this.transformAST(ast, (node) => {
             if (node.type === 'BinaryExpression') {
@@ -144,6 +181,12 @@ class ProductionCompiler {
         });
     }
 
+    /**
+     * Inlines small functions in the AST.
+     * @param {object} ast - The AST to process.
+     * @returns {object} The processed AST.
+     * @private
+     */
     inlineFunctions(ast) {
         const inlineCandidates = new Map();
         
@@ -168,6 +211,12 @@ class ProductionCompiler {
         });
     }
 
+    /**
+     * Optimizes loops in the AST.
+     * @param {object} ast - The AST to process.
+     * @returns {object} The processed AST.
+     * @private
+     */
     optimizeLoops(ast) {
         return this.transformAST(ast, (node) => {
             if (node.type === 'ForStatement') {
@@ -183,11 +232,24 @@ class ProductionCompiler {
         });
     }
 
+    /**
+     * Generates JavaScript code from an AST.
+     * @param {object} ast - The AST to generate code from.
+     * @param {string} filename - The original filename.
+     * @returns {string} The generated JavaScript code.
+     * @private
+     */
     generateJavaScript(ast, filename) {
         const generator = new JavaScriptGenerator(this.options);
         return generator.generate(ast, filename);
     }
 
+    /**
+     * Minifies the generated JavaScript code.
+     * @param {string} code - The code to minify.
+     * @returns {string} The minified code.
+     * @private
+     */
     minifyCode(code) {
         // Simple minification - remove comments and extra whitespace
         return code
@@ -200,6 +262,12 @@ class ProductionCompiler {
             .trim();
     }
 
+    /**
+     * Generates a source map.
+     * @param {string} filename - The original filename.
+     * @returns {object} The source map object.
+     * @private
+     */
     generateSourceMap(filename) {
         // Simplified source map generation
         return {
@@ -212,6 +280,10 @@ class ProductionCompiler {
         };
     }
 
+    /**
+     * Gets the compilation statistics.
+     * @returns {object} The compilation statistics.
+     */
     getCompilationStats() {
         return {
             optimizations: this.optimizations.size,
@@ -222,7 +294,12 @@ class ProductionCompiler {
         };
     }
 
-    // Helper methods
+    /**
+     * Traverses the AST with a callback.
+     * @param {object} node - The node to start traversal from.
+     * @param {function(object): void} callback - The callback to execute for each node.
+     * @private
+     */
     traverseAST(node, callback) {
         if (!node) return;
         
@@ -241,6 +318,13 @@ class ProductionCompiler {
         }
     }
 
+    /**
+     * Transforms the AST with a transformer function.
+     * @param {object} node - The node to start transformation from.
+     * @param {function(object): object|null} transformer - The transformer function.
+     * @returns {object|null} The transformed node.
+     * @private
+     */
     transformAST(node, transformer) {
         if (!node) return null;
         
@@ -262,6 +346,12 @@ class ProductionCompiler {
         return node;
     }
 
+    /**
+     * Calculates the complexity of a function node.
+     * @param {object} funcNode - The function node.
+     * @returns {number} The complexity score.
+     * @private
+     */
     getFunctionComplexity(funcNode) {
         let complexity = 0;
         this.traverseAST(funcNode, (node) => {
@@ -272,12 +362,24 @@ class ProductionCompiler {
         return complexity;
     }
 
+    /**
+     * Checks if a for loop is a constant loop.
+     * @param {object} forNode - The for loop node.
+     * @returns {boolean} True if the loop is a constant loop.
+     * @private
+     */
     isConstantLoop(forNode) {
         return forNode.init && forNode.init.type === 'VariableDeclaration' &&
                forNode.test && forNode.test.type === 'BinaryExpression' &&
                forNode.test.right.type === 'Literal';
     }
 
+    /**
+     * Gets the number of iterations for a constant loop.
+     * @param {object} forNode - The for loop node.
+     * @returns {number} The number of iterations.
+     * @private
+     */
     getLoopIterations(forNode) {
         if (this.isConstantLoop(forNode)) {
             return forNode.test.right.value;
@@ -286,6 +388,9 @@ class ProductionCompiler {
     }
 }
 
+/**
+ * A generator that converts an AST into JavaScript code.
+ */
 class JavaScriptGenerator {
     constructor(options = {}) {
         this.options = options;
@@ -293,6 +398,12 @@ class JavaScriptGenerator {
         this.output = [];
     }
 
+    /**
+     * Generates JavaScript code from an AST.
+     * @param {object} ast - The AST to generate code from.
+     * @param {string} filename - The original filename.
+     * @returns {string} The generated JavaScript code.
+     */
     generate(ast, filename) {
         this.output = [];
         this.indentLevel = 0;
@@ -311,6 +422,11 @@ class JavaScriptGenerator {
         return this.output.join('\n');
     }
 
+    /**
+     * Generates code for a single AST node.
+     * @param {object} node - The AST node.
+     * @private
+     */
     generateNode(node) {
         if (!node) return;
         
@@ -389,6 +505,12 @@ class JavaScriptGenerator {
         }
     }
 
+    /**
+     * Generates code for an expression node.
+     * @param {object} node - The expression node.
+     * @returns {string} The generated code for the expression.
+     * @private
+     */
     generateExpression(node) {
         if (!node) return '';
         
@@ -443,12 +565,24 @@ class JavaScriptGenerator {
         }
     }
 
+    /**
+     * Generates code for a variable declarator.
+     * @param {object} declarator - The declarator node.
+     * @returns {string} The generated code.
+     * @private
+     */
     generateDeclarator(declarator) {
         return declarator.init ? 
             `${declarator.id.name} = ${this.generateExpression(declarator.init)}` : 
             declarator.id.name;
     }
 
+    /**
+     * Generates code for the initialization part of a for loop.
+     * @param {object} init - The initialization node.
+     * @returns {string} The generated code.
+     * @private
+     */
     generateForInit(init) {
         if (init.type === 'VariableDeclaration') {
             return `${init.kind} ${init.declarations.map(d => this.generateDeclarator(d)).join(', ')}`;
@@ -456,21 +590,44 @@ class JavaScriptGenerator {
         return this.generateExpression(init);
     }
 
+    /**
+     * Emits a line of code with proper indentation.
+     * @param {string} code - The line of code to emit.
+     * @private
+     */
     emit(code) {
         const indent = '  '.repeat(this.indentLevel);
         this.output.push(indent + code);
     }
 
+    /**
+     * Increases the indentation level.
+     * @private
+     */
     indent() {
         this.indentLevel++;
     }
 
+    /**
+     * Decreases the indentation level.
+     * @private
+     */
     dedent() {
         this.indentLevel = Math.max(0, this.indentLevel - 1);
     }
 }
 
+/**
+ * A runtime environment for production deployments, featuring JIT compilation and caching.
+ */
 class ProductionRuntime {
+    /**
+     * Creates an instance of the ProductionRuntime.
+     * @param {object} [options={}] - Configuration options for the runtime.
+     * @param {boolean} [options.enableJIT=true] - Whether to enable JIT compilation.
+     * @param {boolean} [options.enableCaching=true] - Whether to enable caching of compiled code.
+     * @param {boolean} [options.enableMonitoring=false] - Whether to enable performance monitoring.
+     */
     constructor(options = {}) {
         this.interpreter = new EnterpriseInterpreter(options);
         this.compiler = new ProductionCompiler(options.compiler);
@@ -493,6 +650,13 @@ class ProductionRuntime {
         };
     }
 
+    /**
+     * Executes a string of LuaScript code in the production runtime.
+     * @param {string} source - The source code to execute.
+     * @param {string} [filename='main.luascript'] - The filename for error reporting.
+     * @param {object} [options={}] - Execution options.
+     * @returns {object} The result of the execution.
+     */
     execute(source, filename = 'main.luascript', options = {}) {
         const startTime = Date.now();
         
@@ -533,11 +697,24 @@ class ProductionRuntime {
         }
     }
 
+    /**
+     * Executes a LuaScript file in the production runtime.
+     * @param {string} filePath - The path to the file.
+     * @param {object} [options={}] - Execution options.
+     * @returns {object} The result of the execution.
+     */
     executeFile(filePath, options = {}) {
         const source = fs.readFileSync(filePath, 'utf8');
         return this.execute(source, filePath, options);
     }
 
+    /**
+     * Compiles a LuaScript file and writes the output to a file.
+     * @param {string} source - The source code to compile.
+     * @param {string} outputPath - The path to the output file.
+     * @param {object} [options={}] - Compilation options.
+     * @returns {object} The compilation result.
+     */
     compileToFile(source, outputPath, options = {}) {
         const compiled = this.compiler.compile(source, options.filename || 'main.luascript');
         
@@ -553,6 +730,10 @@ class ProductionRuntime {
         return compiled;
     }
 
+    /**
+     * Gets a comprehensive performance report for the runtime.
+     * @returns {object} The performance report.
+     */
     getPerformanceReport() {
         return {
             runtime: this.interpreter.getPerformanceReport(),
@@ -565,6 +746,11 @@ class ProductionRuntime {
         };
     }
 
+    /**
+     * Generates performance recommendations based on the collected statistics.
+     * @returns {object[]} An array of recommendation objects.
+     * @private
+     */
     generatePerformanceRecommendations() {
         const recommendations = [];
         
@@ -603,6 +789,13 @@ class ProductionRuntime {
         return recommendations;
     }
 
+    /**
+     * Generates a cache key for a given source code and options.
+     * @param {string} source - The source code.
+     * @param {object} options - The execution options.
+     * @returns {string} The cache key.
+     * @private
+     */
     getCacheKey(source, options) {
         const hash = require('crypto').createHash('md5');
         hash.update(source);
@@ -610,6 +803,11 @@ class ProductionRuntime {
         return hash.digest('hex');
     }
 
+    /**
+     * Updates the execution statistics.
+     * @param {number} executionTime - The execution time to record.
+     * @private
+     */
     updateExecutionStats(executionTime) {
         this.executionStats.totalExecutions++;
         this.executionStats.averageExecutionTime = 
@@ -617,6 +815,13 @@ class ProductionRuntime {
             this.executionStats.totalExecutions;
     }
 
+    /**
+     * Records an error that occurred during execution.
+     * @param {Error} error - The error object.
+     * @param {string} filename - The name of the file being executed.
+     * @param {number} executionTime - The execution time before the error.
+     * @private
+     */
     recordError(error, filename, executionTime) {
         this.executionStats.errors.push({
             timestamp: Date.now(),
@@ -632,10 +837,17 @@ class ProductionRuntime {
         }
     }
 
+    /**
+     * Clears the compilation cache.
+     */
     clearCache() {
         this.compiledCache.clear();
     }
 
+    /**
+     * Gets the current execution statistics.
+     * @returns {object} The execution statistics.
+     */
     getStats() {
         return {
             ...this.executionStats,
@@ -644,7 +856,9 @@ class ProductionRuntime {
     }
 }
 
-// Victory Validation System
+/**
+ * A system for validating the production readiness of the LuaScript runtime.
+ */
 class VictoryValidator {
     constructor() {
         this.validationResults = new Map();
@@ -657,6 +871,11 @@ class VictoryValidator {
         ];
     }
 
+    /**
+     * Validates a production runtime against a set of quality gates.
+     * @param {ProductionRuntime} runtime - The production runtime instance to validate.
+     * @returns {object} The overall validation score and results.
+     */
     validateProduction(runtime) {
         const results = new Map();
         
@@ -680,6 +899,12 @@ class VictoryValidator {
         return this.calculateOverallScore();
     }
 
+    /**
+     * Validates the compilation quality gate.
+     * @param {ProductionRuntime} runtime - The runtime instance.
+     * @returns {object} The validation result for this gate.
+     * @private
+     */
     validateCompilation(runtime) {
         const stats = runtime.getStats();
         const successRate = (stats.totalCompilations - stats.errors.length) / stats.totalCompilations * 100;
@@ -694,6 +919,12 @@ class VictoryValidator {
         };
     }
 
+    /**
+     * Validates the execution quality gate.
+     * @param {ProductionRuntime} runtime - The runtime instance.
+     * @returns {object} The validation result for this gate.
+     * @private
+     */
     validateExecution(runtime) {
         const report = runtime.getPerformanceReport();
         const errorRate = report.execution.errors.length / report.execution.totalExecutions * 100;
@@ -709,6 +940,12 @@ class VictoryValidator {
         };
     }
 
+    /**
+     * Validates the performance quality gate.
+     * @param {ProductionRuntime} runtime - The runtime instance.
+     * @returns {object} The validation result for this gate.
+     * @private
+     */
     validatePerformance(runtime) {
         const report = runtime.getPerformanceReport();
         const avgTime = report.execution.averageExecutionTime;
@@ -730,6 +967,12 @@ class VictoryValidator {
         };
     }
 
+    /**
+     * Validates the security quality gate.
+     * @param {ProductionRuntime} runtime - The runtime instance.
+     * @returns {object} The validation result for this gate.
+     * @private
+     */
     validateSecurity(runtime) {
         const report = runtime.getPerformanceReport();
         const securityReport = report.runtime.security;
@@ -751,6 +994,12 @@ class VictoryValidator {
         };
     }
 
+    /**
+     * Validates the reliability quality gate.
+     * @param {ProductionRuntime} runtime - The runtime instance.
+     * @returns {object} The validation result for this gate.
+     * @private
+     */
     validateReliability(runtime) {
         const stats = runtime.getStats();
         const uptime = 100; // Assume 100% uptime for now
@@ -768,6 +1017,11 @@ class VictoryValidator {
         };
     }
 
+    /**
+     * Calculates the overall validation score based on all quality gates.
+     * @returns {object} The overall score and results.
+     * @private
+     */
     calculateOverallScore() {
         let totalScore = 0;
         let totalWeight = 0;
@@ -804,6 +1058,10 @@ class VictoryValidator {
         };
     }
 
+    /**
+     * Generates a human-readable victory report.
+     * @returns {object} The victory report.
+     */
     generateVictoryReport() {
         const validation = this.calculateOverallScore();
         
@@ -819,6 +1077,12 @@ class VictoryValidator {
         };
     }
 
+    /**
+     * Generates recommendations based on the validation results.
+     * @param {object} validation - The validation results.
+     * @returns {object[]} An array of recommendation objects.
+     * @private
+     */
     generateVictoryRecommendations(validation) {
         const recommendations = [];
         
@@ -838,6 +1102,12 @@ class VictoryValidator {
         return recommendations;
     }
 
+    /**
+     * Gets a specific recommendation for a failed quality gate.
+     * @param {string} gateName - The name of the failed gate.
+     * @returns {string} The recommendation message.
+     * @private
+     */
     getGateRecommendation(gateName) {
         const recommendations = {
             compilation: 'Fix compilation errors and improve parser robustness',

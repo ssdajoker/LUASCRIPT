@@ -16,20 +16,20 @@ end
 
 -- Generate cache key
 function M.cache_key(muX, muY, sigma, viewport)
-    return string.format("%.2f_%.2f_%.2f_%dx%d", 
+    return string.format("%.2f_%.2f_%.2f_%dx%d",
         muX, muY, sigma, viewport.w, viewport.h)
 end
 
 -- Get from cache
 function M.get(cache, key)
     local entry = cache.entries[key]
-    
+
     if entry then
         -- Update access order (move to end)
         M.touch(cache, key)
         return entry.data
     end
-    
+
     return nil
 end
 
@@ -41,12 +41,12 @@ function M.put(cache, key, data)
         M.touch(cache, key)
         return
     end
-    
+
     -- Evict if at capacity
     if cache.size >= cache.max_size then
         M.evict_lru(cache)
     end
-    
+
     -- Add new entry
     cache.entries[key] = {
         data = data,
@@ -65,7 +65,7 @@ function M.touch(cache, key)
             break
         end
     end
-    
+
     -- Add to end (most recently used)
     table.insert(cache.access_order, key)
 end
@@ -75,7 +75,7 @@ function M.evict_lru(cache)
     if #cache.access_order == 0 then
         return
     end
-    
+
     -- Remove first entry (least recently used)
     local key = table.remove(cache.access_order, 1)
     cache.entries[key] = nil

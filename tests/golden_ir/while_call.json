@@ -1,0 +1,385 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_0",
+    "source": {
+      "path": "-",
+      "hash": null
+    },
+    "directives": [],
+    "body": [
+      "node_100T"
+    ],
+    "exports": {
+      "type": "named",
+      "entries": []
+    },
+    "metadata": {
+      "authoredBy": "ir-builder",
+      "createdAt": "2025-10-14T03:58:51.650Z",
+      "toolchain": {
+        "parser": "phase1_core_parser@1.0.0",
+        "normalizer": "ir-normalizer@1.0.0",
+        "lowerer": "ir-lowerer@1.0.0"
+      },
+      "metaPerf": {
+        "parseMs": 25.37614,
+        "normalizeMs": 2.23813,
+        "lowerMs": 19.329999,
+        "totalMs": 49.056633,
+        "nodeCount": 22
+      }
+    }
+  },
+  "nodes": {
+    "node_1": {
+      "id": "node_1",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "loop",
+      "binding": "loop"
+    },
+    "node_1T": {
+      "id": "node_1T",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "n",
+      "binding": "n"
+    },
+    "node_10": {
+      "id": "node_10",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_11": {
+      "id": "node_11",
+      "kind": "Literal",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "value": 0,
+      "raw": "0",
+      "literalKind": "number"
+    },
+    "node_1T0": {
+      "id": "node_1T0",
+      "kind": "VariableDeclaration",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "declarations": [
+        {
+          "id": "decl_1TT",
+          "pattern": "node_10",
+          "init": "node_11",
+          "kind": "let"
+        }
+      ],
+      "declarationKind": "let"
+    },
+    "node_1T1": {
+      "id": "node_1T1",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_10T": {
+      "id": "node_10T",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "n",
+      "binding": "n"
+    },
+    "node_100": {
+      "id": "node_100",
+      "kind": "BinaryExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "operator": "<",
+      "left": "node_1T1",
+      "right": "node_10T"
+    },
+    "node_101": {
+      "id": "node_101",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "call",
+      "binding": "call"
+    },
+    "node_11T": {
+      "id": "node_11T",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_110": {
+      "id": "node_110",
+      "kind": "CallExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "callee": "node_101",
+      "arguments": [
+        "node_11T"
+      ]
+    },
+    "node_111": {
+      "id": "node_111",
+      "kind": "ExpressionStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "expression": "node_110"
+    },
+    "node_1TTT": {
+      "id": "node_1TTT",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_1TT0": {
+      "id": "node_1TT0",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_1TT1": {
+      "id": "node_1TT1",
+      "kind": "Literal",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "value": 1,
+      "raw": "1",
+      "literalKind": "number"
+    },
+    "node_1T0T": {
+      "id": "node_1T0T",
+      "kind": "BinaryExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "operator": "+",
+      "left": "node_1TT0",
+      "right": "node_1TT1"
+    },
+    "node_1T00": {
+      "id": "node_1T00",
+      "kind": "AssignmentExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "operator": "=",
+      "left": "node_1TTT",
+      "right": "node_1T0T"
+    },
+    "node_1T01": {
+      "id": "node_1T01",
+      "kind": "ExpressionStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "expression": "node_1T00"
+    },
+    "node_1T1T": {
+      "id": "node_1T1T",
+      "kind": "BlockStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "statements": [
+        "node_111",
+        "node_1T01"
+      ]
+    },
+    "node_1T10": {
+      "id": "node_1T10",
+      "kind": "WhileStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "test": "node_100",
+      "body": "node_1T1T"
+    },
+    "node_1T11": {
+      "id": "node_1T11",
+      "kind": "BlockStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "statements": [
+        "node_1T0",
+        "node_1T10"
+      ]
+    },
+    "node_100T": {
+      "id": "node_100T",
+      "kind": "FunctionDeclaration",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {
+        "cfg": {
+          "id": "cfg_10TT",
+          "entry": "bb_10T0",
+          "exit": "bb_10T1"
+        },
+        "auditTags": [
+          "knuth:awaiting-proof"
+        ]
+      },
+      "name": "loop",
+      "params": [
+        "node_1T"
+      ],
+      "body": "node_1T11",
+      "async": false,
+      "generator": false,
+      "returnType": null
+    }
+  },
+  "controlFlowGraphs": {
+    "cfg_10TT": {
+      "id": "cfg_10TT",
+      "blocks": [
+        {
+          "id": "bb_10T0",
+          "kind": "entry",
+          "statements": [
+            "node_1T0",
+            "node_1T10"
+          ]
+        },
+        {
+          "id": "bb_10T1",
+          "kind": "exit",
+          "statements": []
+        }
+      ],
+      "successors": {
+        "bb_10T0": [
+          "bb_10T1"
+        ],
+        "bb_10T1": []
+      },
+      "predecessors": {
+        "bb_10T0": [],
+        "bb_10T1": [
+          "bb_10T0"
+        ]
+      }
+    }
+  }
+}
