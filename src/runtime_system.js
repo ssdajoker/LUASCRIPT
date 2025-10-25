@@ -850,12 +850,16 @@ class LuaInterpreter {
 
             if (char === ')' || char === '}' || char === ']') {
                 if (stack.length === 0) {
-                    throw new Error(pushError(`Unmatched closing delimiter '${char}' at position ${i}`));
+                    const msg = `Unmatched closing delimiter '${char}' at position ${i}`;
+                    pushError(msg);
+                    throw new Error(msg);
                 }
 
                 const expected = stack.pop();
                 if (char !== expected) {
-                    throw new Error(pushError(`Mismatched closing delimiter: expected '${expected}', got '${char}' at position ${i}`));
+                    const msg = `Mismatched closing delimiter: expected '${expected}', got '${char}' at position ${i}`;
+                    pushError(msg);
+                    throw new Error(msg);
                 }
 
                 current += char;
