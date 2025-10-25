@@ -214,6 +214,9 @@ end
 -- Lua's for-loop semantics already handle positive or negative step values,
 -- so we can rely on a single loop without branching on the step sign.
 function _LS.iterate_range(start_value, end_value, step, callback)
+    if type(callback) ~= 'function' then
+        error('callback must be a function')
+    end
     for value = start_value, end_value, step do
         callback(value)
     end
