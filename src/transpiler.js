@@ -75,6 +75,8 @@ class LuaScriptTranspiler {
      * @returns {string} - Transpiled Lua code
      */
     transpile(jsCode, options = {}) {
+        options = this.normalizeOptions(options);
+
         // PHASE 1: Runtime Validation - Input validation
         this.validateInput(jsCode, options);
         
@@ -91,6 +93,9 @@ class LuaScriptTranspiler {
      * @returns {Promise<string>} A promise that resolves to the transpiled Lua code.
      */
     async transpile(jsCode, options = {}) {
+        options = this.normalizeOptions(options);
+        this.validateInput(jsCode, options);
+
         const startTime = process.hrtime.bigint();
         this.stats.transpilationsCount++;
         
@@ -359,6 +364,28 @@ class LuaScriptTranspiler {
         this.validateOutput(luaCode, options);
 
         return luaCode;
+    }
+
+    /**
+     * Normalizes legacy options argument forms to the current object shape.
+     * Supports historical string inputs that represented filenames.
+     * @param {object|string|undefined|null} options
+     * @returns {object}
+     */
+    normalizeOptions(options) {
+        if (options === undefined || options === null) {
+            return {};
+        }
+
+        if (typeof options === 'string') {
+            return { filename: options };
+        }
+
+        if (typeof options !== 'object') {
+            return {};
+        }
+
+        return options;
     }
 
     /**
