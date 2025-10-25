@@ -74,7 +74,7 @@ To install LuaScript, open your terminal and run the following command:
 
 ```bash
 npm install luascript
-```text
+```bash
 
 This will install the `luascript` package and its dependencies in your project.
 
