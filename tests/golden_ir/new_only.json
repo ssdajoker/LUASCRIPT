@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_0",
+    "source": { "path": "new_only.js", "hash": null },
+    "directives": [],
+    "body": ["node_T"],
+    "exports": { "type": "named", "entries": [] },
+    "metadata": { "authoredBy": "golden", "createdAt": "2025-10-13T00:00:00.000Z", "toolchain": {} }
+  },
+  "nodes": {
+    "node_T": { "id": "node_T", "kind": "VariableDeclaration", "declarations": [ { "id": "decl_T", "pattern": "node_0", "init": "node_1", "kind": "const" } ], "declarationKind": "const" },
+    "node_0": { "id": "node_0", "kind": "Identifier", "name": "o", "binding": "o" },
+  "node_1": { "id": "node_1", "kind": "NewExpression", "callee": "node_1T", "arguments": ["node_10", "node_11"] },
+  "node_1T": { "id": "node_1T", "kind": "Identifier", "name": "C", "binding": null },
+    "node_10": { "id": "node_10", "kind": "Literal", "value": 1, "raw": "1", "literalKind": "number" },
+    "node_11": { "id": "node_11", "kind": "Literal", "value": 2, "raw": "2", "literalKind": "number" }
+  }
+}

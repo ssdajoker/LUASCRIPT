@@ -137,6 +137,18 @@ class IRBuilder {
     );
   }
 
+  breakStatement(options) {
+    return this.registerNode(
+      this.nodeFactory.createBreakStatement(options)
+    );
+  }
+
+  continueStatement(options) {
+    return this.registerNode(
+      this.nodeFactory.createContinueStatement(options)
+    );
+  }
+
   ifStatement(testRef, consequentRef, alternateRef, options) {
     return this.registerNode(
       this.nodeFactory.createIfStatement(testRef, consequentRef, alternateRef, options)
@@ -161,9 +173,57 @@ class IRBuilder {
     );
   }
 
+  createMemberExpression(objectRef, propertyRef, options) {
+    return this.registerNode(
+      this.nodeFactory.createMemberExpression(objectRef, propertyRef, options)
+    );
+  }
+
+  tryStatement(blockRef, handler, finalizerRef, options) {
+    return this.registerNode(
+      this.nodeFactory.createTryStatement(blockRef, handler, finalizerRef, options)
+    );
+  }
+
   unaryExpression(operator, argumentRef, options) {
     return this.registerNode(
       this.nodeFactory.createUnaryExpression(operator, argumentRef, options)
+    );
+  }
+
+  updateExpression(operator, argumentRef, options) {
+    return this.registerNode(
+      this.nodeFactory.createUpdateExpression(operator, argumentRef, options)
+    );
+  }
+
+  conditionalExpression(testRef, consequentRef, alternateRef, options) {
+    return this.registerNode(
+      this.nodeFactory.createConditionalExpression(testRef, consequentRef, alternateRef, options)
+    );
+  }
+
+  newExpression(calleeRef, argumentRefs, options) {
+    return this.registerNode(
+      this.nodeFactory.createNewExpression(calleeRef, argumentRefs, options)
+    );
+  }
+
+  arrayExpression(elementRefs, options) {
+    return this.registerNode(
+      this.nodeFactory.createArrayExpression(elementRefs, options)
+    );
+  }
+
+  property(keyRef, valueRef, options) {
+    return this.registerNode(
+      this.nodeFactory.createProperty(keyRef, valueRef, options)
+    );
+  }
+
+  objectExpression(propertyRefs, options) {
+    return this.registerNode(
+      this.nodeFactory.createObjectExpression(propertyRefs, options)
     );
   }
 

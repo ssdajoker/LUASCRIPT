@@ -98,6 +98,18 @@ Evidence: audit/diff_upstream_report.md (WASM backend present upstream), docs/ca
 
   - Finalize IR schema v1.0; publish JSON Schema; scaffold validator.
   - Parser normalization prototype; golden IR snapshots for 3 sample programs.
+
+  
+  Status (as of 2025-10-13):
+  - Schema/Validator/Golden Snapshots: Delivered (v1.0.0 schema published; AJV validator and invariant checks in CI; 9+ goldens committed and gated).
+  - Parser Normalization: ~90% complete (cycle-safe normalizer implemented; member access and try/catch lowering landed; added lowering for New/Object/Array/Conditional/Update; smoke test + parity comparator added; goldens expanded (array_only, array_nested, update_only, object_only, new_only) and all validate; parity seeds expanded and all passing after comparator normalization; determinism check ir:repro green in CI; new CI gates run determinism unit test and emit Lua from goldens every build).
+
+  Next steps to reach 100% Parser Normalization:
+  - Normalize and lower remaining constructs used in suite: Switch → If-chain; Class → prototype table methods (now implemented, see IR/lowerer.js); break/continue; labeled loops (fallback: treat as normal loop, label ignored); continue semantics fallback: only supported in standard loops, not labeled blocks.
+  - Ensure consistent Identifier/Literal handling and span propagation across all nodes (no null spans).
+  - Harden recursion guard and array/object flattening in normalizer for all composite nodes.
+  - CI gates: zero parity skips and FAIL_ON_EMIT_SKIPS=1 (already enabled); add a job to assert no `Error` kind appears anywhere in parse → normalize output for the seed suite.
+  - Expand seeds to 25+ diverse samples (loops, calls, members, arrays/objects, conditionals, classes, switch, try/catch) and require all pass parity.
   - Owners: Parser Lead (TBD), IR Lead (TBD).
 
 - M1 (Weeks 3–4):

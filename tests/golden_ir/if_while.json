@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_10",
+    "source": { "path": "control.js", "hash": null },
+    "directives": [],
+  "body": ["id_T", "id_0"],
+    "exports": { "type": "named", "entries": [] },
+    "metadata": { "authoredBy": "golden", "createdAt": "2025-10-13T00:00:00.000Z", "toolchain": {} }
+  },
+  "nodes": {
+    "id_T": { "id": "id_T", "kind": "IfStatement", "test": "id_1", "consequent": "id_10", "alternate": null },
+    "id_1": { "id": "id_1", "kind": "Identifier", "name": "flag" },
+    "id_10": { "id": "id_10", "kind": "BlockStatement", "statements": [] },
+    "id_0": { "id": "id_0", "kind": "WhileStatement", "test": "id_T0", "body": "id_11" },
+    "id_T0": { "id": "id_T0", "kind": "Literal", "value": true, "raw": "true", "literalKind": "boolean" },
+    "id_11": { "id": "id_11", "kind": "BlockStatement", "statements": [] }
+  }
+}

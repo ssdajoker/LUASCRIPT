@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_0",
+    "source": {
+      "path": "-",
+      "hash": null
+    },
+    "directives": [],
+    "body": [
+      "node_10T"
+    ],
+    "exports": {
+      "type": "named",
+      "entries": []
+    },
+    "metadata": {
+      "authoredBy": "ir-builder",
+      "createdAt": "2025-10-14T04:43:25.967Z",
+      "toolchain": {
+        "parser": "phase1_core_parser@1.0.0",
+        "normalizer": "ir-normalizer@1.0.0",
+        "lowerer": "ir-lowerer@1.0.0"
+      },
+      "metaPerf": {
+        "parseMs": 21.253294,
+        "normalizeMs": 2.82619,
+        "lowerMs": 14.28172,
+        "totalMs": 40.77039,
+        "nodeCount": 7
+      }
+    }
+  },
+  "nodes": {
+    "node_1": {
+      "id": "node_1",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "nested",
+      "binding": "nested"
+    },
+    "node_1T": {
+      "id": "node_1T",
+      "kind": "Literal",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "value": 1,
+      "raw": "1",
+      "literalKind": "number"
+    },
+    "node_10": {
+      "id": "node_10",
+      "kind": "Literal",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "value": 2,
+      "raw": "2",
+      "literalKind": "number"
+    },
+    "node_11": {
+      "id": "node_11",
+      "kind": "Literal",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "value": 3,
+      "raw": "3",
+      "literalKind": "number"
+    },
+    "node_1TT": {
+      "id": "node_1TT",
+      "kind": "ArrayExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "elements": [
+        "node_10",
+        "node_11"
+      ]
+    },
+    "node_1T0": {
+      "id": "node_1T0",
+      "kind": "ArrayExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "elements": [
+        "node_1T",
+        "node_1TT"
+      ]
+    },
+    "node_10T": {
+      "id": "node_10T",
+      "kind": "VariableDeclaration",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "declarations": [
+        {
+          "id": "decl_1T1",
+          "pattern": "node_1",
+          "init": "node_1T0",
+          "kind": "const"
+        }
+      ],
+      "declarationKind": "const"
+    }
+  },
+  "controlFlowGraphs": {}
+}

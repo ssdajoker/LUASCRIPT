@@ -1,0 +1,5 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/ssdajoker/LUASCRIPT/refs/heads/main/docs/schema/1.x/canonical_ir.schema.json",
+  "$ref": "../1.0.0/canonical_ir.schema.json"
+}

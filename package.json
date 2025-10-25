@@ -24,12 +24,23 @@
     "benchmark": "node -e \"const {UnifiedLuaScript} = require('./src/unified_luascript.js'); const system = UnifiedLuaScript.createProduction(); system.initializeComponents().then(() => system.benchmark('let x = 5;', 100)).then(result => console.log('Benchmark:', result));\"",
     "validate": "npm run test:victory && echo 'LUASCRIPT VALIDATION COMPLETE - VICTORY ACHIEVED!'",
     "ir:validate": "node tests/ir/run_ir_validate.js",
+    "ir:validate:schema": "node scripts/validate_ir_schema.js",
+    "ir:validate:all": "npm run -s ir:validate && npm run -s ir:validate:schema",
+    "ir:golden:check": "node tests/golden_ir/check_golden_ir.js",
+  "ir:golden:parity": "node tests/golden_ir/compare_pipeline_to_goldens.js",
+    "ir:cli": "node scripts/ir_cli.js",
     "ir:report": "node scripts/generate_ir_status.js",
+  "ir:repro": "bash -lc 'npm run -s ir:report >/dev/null 2>&1 && cp reports/canonical_ir_status.md reports/canonical_ir_status.1.md && npm run -s ir:report >/dev/null 2>&1 && diff -u reports/canonical_ir_status.1.md reports/canonical_ir_status.md'",
+  "golden:gen": "node scripts/generate_golden_from_js.js",
+  "golden:gen:example": "bash -lc 'cat <<\nJS\nfunction demo(x){ return x + 1; }\nJS\n | node scripts/generate_golden_from_js.js demo -'",
     "perf:demo": "PERF_ENABLE=1 node test/test_unified_system.js all",
     "prepare": "husky install",
     "pr": "bash scripts/pr.sh",
     "test:parity": "node tests/parity/run_parity_tests.js",
-    "test:quick-ugmp": "npm run -s test:core && npm run -s test:parity && npm run -s ir:report"
+    "test:quick-ugmp": "npm run -s test:core && npm run -s test:parity && npm run -s ir:report",
+    "test:normalizer": "node tests/ir/normalizer.smoke.js",
+    "test:determinism": "node tests/ir/determinism.test.js"
+    ,"ir:emit:goldens": "node tests/emitter/emit_from_goldens.js"
   },
   "keywords": [
     "luascript",
@@ -56,6 +67,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.19",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "husky": "^8.0.0",
     "tsx": "^4.7.0",
     "typescript": "^5.4.0"

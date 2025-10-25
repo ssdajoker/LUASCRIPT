@@ -52,16 +52,41 @@ function validateIR(ir) {
     "BinaryExpression",
     "LogicalExpression",
     "AssignmentExpression",
+    "UpdateExpression",
+    "ConditionalExpression",
+    "CallExpression",
+    "MemberExpression",
+    "NewExpression",
+    "ArrayExpression",
+    "ObjectExpression",
+    "TemplateLiteral",
+    "ArrowFunctionExpression",
+    "FunctionDeclaration",
     "VariableDeclaration",
     "BlockStatement",
     "ExpressionStatement",
     "ReturnStatement",
     "IfStatement",
+    "SwitchStatement",
+    "ForStatement",
+    "ForOfStatement",
     "WhileStatement",
-    "ArrowFunctionExpression",
-    "CallExpression",
-    "UnaryExpression",
-    "FunctionDeclaration"
+    "DoWhileStatement",
+    "BreakStatement",
+    "ContinueStatement",
+    "ThrowStatement",
+    "TryStatement",
+    "ImportDeclaration",
+    "ExportDeclaration",
+    "ClassDeclaration",
+    "ClassBody",
+    "MethodDefinition",
+    "Property",
+    "ObjectPattern",
+    "ArrayPattern",
+    "RestElement",
+    "AssignmentPattern",
+    "ProgramComment"
   ]);
 
   // Validate nodes
@@ -91,6 +116,18 @@ function validateIR(ir) {
     if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg != null && typeof node.meta.cfg !== "object") {
       errors.push(`Node ${nodeId} FunctionDeclaration meta.cfg must be an object when present`);
     }
+
+    // VariableDeclaration: declarations[].kind should match declarationKind when used
+    if (node.kind === "VariableDeclaration") {
+      const declKind = node.declarationKind || null;
+      if (Array.isArray(node.declarations)) {
+        node.declarations.forEach((d, i) => {
+          if (d && d.kind && declKind && d.kind !== declKind) {
+            errors.push(`VariableDeclaration ${nodeId} declarations[${i}].kind (${d.kind}) does not match declarationKind (${declKind})`);
+          }
+        });
+      }
+    }
   });
 
   // Optional: validate metaPerf if present
@@ -116,6 +153,22 @@ function validateIR(ir) {
           const blockIds = new Set((graph.blocks || []).map((b) => b.id));
           if (entry && !blockIds.has(entry)) errors.push(`Function ${nodeId} cfg.entry ${entry} not in CFG`);
           if (exit && !blockIds.has(exit)) errors.push(`Function ${nodeId} cfg.exit ${exit} not in CFG`);
+
+          // If function has a body pointing to a BlockStatement, ensure CFG entry block statements are a subset
+          if (entry) {
+            const entryBlock = (graph.blocks || []).find((b) => b.id === entry);
+            const bodyRef = node.body;
+            if (bodyRef && nodes[bodyRef] && nodes[bodyRef].kind === "BlockStatement") {
+              const bodyStatements = nodes[bodyRef].statements || [];
+              const entryStatements = (entryBlock && entryBlock.statements) || [];
+              // Require entry statements to be a subset of function body statements (order not enforced here)
+              const bodySet = new Set(Array.isArray(bodyStatements) ? bodyStatements : []);
+              const allReachable = (Array.isArray(entryStatements) ? entryStatements : []).every((s) => bodySet.has(s));
+              if (!allReachable) {
+                errors.push(`Function ${nodeId} cfg.entry statements must be subset of function body statements`);
+              }
+            }
+          }
         }
       }
     });

@@ -344,6 +344,17 @@ class CallExpressionNode extends ASTNode {
     }
 }
 
+/** Represents a constructor call expression: new Callee(args). */
+class NewExpressionNode extends ASTNode {
+    constructor(callee, args, properties = {}) {
+        super('NewExpression', properties);
+        this.callee = callee;
+        this.arguments = args;
+        this.addChild(callee);
+        args.forEach(arg => this.addChild(arg));
+    }
+}
+
 /** Represents a member access expression (e.g., obj.prop, arr[0]). */
 class MemberExpressionNode extends ASTNode {
     constructor(object, property, computed = false, properties = {}) {
@@ -373,6 +384,57 @@ class ObjectExpressionNode extends ASTNode {
         super('ObjectExpression', nodeProperties);
         this.properties = properties;
         properties.forEach(prop => this.addChild(prop));
+    }
+}
+
+/** Represents a class declaration statement. Minimal shape: id and body. */
+class ClassDeclarationNode extends ASTNode {
+    constructor(id, superClass = null, body = [], properties = {}) {
+        super('ClassDeclaration', properties);
+        this.id = id;
+        this.superClass = superClass;
+        this.body = body; // array of method-like nodes or raw statements (minimal)
+        if (id) this.addChild(id);
+        if (superClass) this.addChild(superClass);
+        body.forEach(n => this.addChild(n));
+    }
+}
+
+/** Represents a method definition inside a class body. */
+class MethodDefinitionNode extends ASTNode {
+    constructor(key, params = [], body = null, properties = {}) {
+        super('MethodDefinition', properties);
+        this.key = key; // Identifier or Literal (we’ll use Identifier for now)
+        this.params = params; // array of Identifier
+        this.body = body; // BlockStatement
+        this.kind = properties.kind || 'method'; // 'constructor' | 'method' | 'get' | 'set'
+        this.static = properties.static || false;
+
+        if (key) this.addChild(key);
+        params.forEach(p => this.addChild(p));
+        if (body) this.addChild(body);
+    }
+}
+
+/** Represents a single case within a switch statement. */
+class SwitchCaseNode extends ASTNode {
+    constructor(test, consequent = [], properties = {}) {
+        super('SwitchCase', properties);
+        this.test = test; // null for default
+        this.consequent = consequent; // array of statements
+        if (test) this.addChild(test);
+        consequent.forEach(s => this.addChild(s));
+    }
+}
+
+/** Represents a switch statement. */
+class SwitchStatementNode extends ASTNode {
+    constructor(discriminant, cases = [], properties = {}) {
+        super('SwitchStatement', properties);
+        this.discriminant = discriminant;
+        this.cases = cases;
+        this.addChild(discriminant);
+        cases.forEach(c => this.addChild(c));
     }
 }
 
@@ -604,10 +666,15 @@ module.exports = {
     LogicalExpressionNode,
     ConditionalExpressionNode,
     CallExpressionNode,
+    NewExpressionNode,
     MemberExpressionNode,
     ArrayExpressionNode,
     ObjectExpressionNode,
     PropertyNode,
+    ClassDeclarationNode,
+    MethodDefinitionNode,
+    SwitchCaseNode,
+    SwitchStatementNode,
     ArrowFunctionExpressionNode,
     FunctionExpressionNode,
     LiteralNode,

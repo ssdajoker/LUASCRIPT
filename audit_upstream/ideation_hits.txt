@@ -1,0 +1,352 @@
+No ideation markers found.
+README.md:2:🚀 LUASCRIPT - Complete JavaScript to Lua Transpiler
+README.md:7:🏆 Mission Status: VICTORY ACHIEVED!
+README.md:16:📚 Documentation
+README.md:26:- 📈 **Status & Planning** - Current status, TODO lists, and achievement tracking
+README.md:26:- 📈 **Status & Planning** - Current status, TODO lists, and achievement tracking
+README.md:30:🌟 Core Features
+README.md:32:🔧 Core Transpiler
+README.md:38:⚡ Runtime System
+README.md:44:🎯 Advanced Features
+README.md:50:📊 Performance Tools
+README.md:56:🤖 Agentic IDE
+README.md:62:🚀 Getting Started
+README.md:66:Prerequisites
+README.md:71:Installation
+README.md:81:Basic Usage
+README.md:117:Transpiling Files
+README.md:140:Advanced Features
+README.md:176:Performance Optimization
+README.md:199:IDE Integration
+README.md:220:📋 API Reference
+README.md:224:`new UnifiedLuaScript(options)`
+README.md:237:`async initializeComponents()`
+README.md:241:`async transpile(jsCode, options)`
+README.md:252:`async execute(luaCode, context)`
+README.md:260:`async transpileAndExecute(jsCode, options)`
+README.md:268:`async profile(code, options)`
+README.md:276:`async benchmark(code, iterations)`
+README.md:284:`async optimize(code, options)`
+README.md:292:📁 Project Structure
+README.md:309:🏗️ Architecture
+README.md:311:Component Overview
+README.md:338:Phase Implementation Status
+README.md:350:🧪 Testing
+README.md:352:Run All Tests
+README.md:357:Run Specific Test Suites
+README.md:359:Core functionality
+README.md:362:Performance tests
+README.md:365:Integration tests
+README.md:368:Victory validation
+README.md:372:Memory-Efficient Testing
+README.md:382:📊 Performance Benchmarks
+README.md:384:Transpilation Performance
+README.md:389:Runtime Performance
+README.md:394:Optimization Results
+README.md:399:🤝 Contributing
+README.md:403:Development Setup
+README.md:411:Code Style
+README.md:417:📄 License
+README.md:421:🏆 Team Credits
+README.md:429:🎯 Victory Achievement
+README_PHASE_1D.md:2:LUASCRIPT Phase 1D Implementation
+README_PHASE_1D.md:4:Overview
+README_PHASE_1D.md:12:🚀 New Features
+README_PHASE_1D.md:14:Arrow Functions
+README_PHASE_1D.md:21:Memory Management
+README_PHASE_1D.md:28:Accessibility Features
+README_PHASE_1D.md:36:📁 Project Structure
+README_PHASE_1D.md:53:🛠 Installation & Usage
+README_PHASE_1D.md:55:Prerequisites
+README_PHASE_1D.md:59:Basic Usage
+README_PHASE_1D.md:81:With Memory Management
+README_PHASE_1D.md:93:🧪 Testing
+README_PHASE_1D.md:106:Test Coverage
+README_PHASE_1D.md:113:📖 Code Examples
+README_PHASE_1D.md:115:Arrow Functions
+README_PHASE_1D.md:140:Memory Management
+README_PHASE_1D.md:163:🎨 UI Templates
+README_PHASE_1D.md:165:IDE Template (`templates/ide.html`)
+README_PHASE_1D.md:172:Documentation Template (`templates/documentation.html`)
+README_PHASE_1D.md:179:🔧 API Reference
+README_PHASE_1D.md:181:MemoryManager
+README_PHASE_1D.md:193:RuntimeMemoryManager
+README_PHASE_1D.md:204:Parser (Enhanced)
+README_PHASE_1D.md:213:Interpreter (Enhanced)
+README_PHASE_1D.md:222:🚨 Error Handling
+README_PHASE_1D.md:232:🎯 Performance Considerations
+README_PHASE_1D.md:234:Memory Management Overhead
+README_PHASE_1D.md:240:Optimization Tips
+README_PHASE_1D.md:246:🔄 Migration from Previous Phases
+README_PHASE_1D.md:254:🐛 Known Issues & Limitations
+README_PHASE_1D.md:261:🔮 Future Roadmap
+README_PHASE_1D.md:269:🤝 Contributing
+README_PHASE_1D.md:277:📄 License
+README_PHASE_1D.md:281:🙏 Acknowledgments
+AUDIT_PLAN.md:2:LUASCRIPT COMPREHENSIVE AUDIT FRAMEWORK
+AUDIT_PLAN.md:3:BOSS FINAL DEMAND - RIGOROUS TESTING PROTOCOL
+AUDIT_PLAN.md:5:EXECUTIVE SUMMARY
+AUDIT_PLAN.md:8:AUDIT OBJECTIVES
+AUDIT_PLAN.md:14:AUDIT PHASES
+AUDIT_PLAN.md:40:TESTING CATEGORIES
+AUDIT_PLAN.md:66:QUALITY GATES
+AUDIT_PLAN.md:92:ESCALATION PROCEDURES
+AUDIT_PLAN.md:112:REPORTING STRUCTURE
+AUDIT_PLAN.md:126:- Recommendations for next phase
+AUDIT_PLAN.md:128:SUCCESS CRITERIA
+AUDIT_PLAN.md:145:TIMELINE
+AUDIT_PLAN.md:153:RISK MITIGATION
+AUDIT_PROTOCOL.md:2:🔍 EXTENSIVE AUDIT PROTOCOL - $1M QUALITY ASSURANCE 🔍
+AUDIT_PROTOCOL.md:4:🎯 MISSION: ENSURE $1M WINNER MEETS HIGHEST STANDARDS
+AUDIT_PROTOCOL.md:8:🚨 MANDATORY AUDIT GATES
+AUDIT_PROTOCOL.md:10:📋 PHASE 3 → PHASE 4 AUDIT
+AUDIT_PROTOCOL.md:28:📋 PHASE 4 → PHASE 5 AUDIT
+AUDIT_PROTOCOL.md:46:📋 PHASE 5 → PHASE 6 AUDIT ($1M GATE) 🏆
+AUDIT_PROTOCOL.md:65:🔄 CONTINUOUS AUDIT PROCESSES
+AUDIT_PROTOCOL.md:67:Daily Quality Monitoring:
+AUDIT_PROTOCOL.md:73:Weekly Deep Audits:
+AUDIT_PROTOCOL.md:81:🎖️ AUDIT SCORING SYSTEM
+AUDIT_PROTOCOL.md:83:Quality Score Calculation:
+AUDIT_PROTOCOL.md:91:Passing Thresholds:
+AUDIT_PROTOCOL.md:98:🚨 ESCALATION PROCEDURES
+AUDIT_PROTOCOL.md:100:Quality Issues Detected:
+AUDIT_PROTOCOL.md:106:Critical Failures:
+AUDIT_PROTOCOL.md:114:📊 AUDIT REPORTING
+AUDIT_PROTOCOL.md:116:Real-Time Dashboard:
+AUDIT_PROTOCOL.md:122:Audit Reports:
+AUDIT_PROTOCOL.md:130:🔧 AUDIT TOOLS & AUTOMATION
+AUDIT_PROTOCOL.md:132:Automated Testing:
+AUDIT_PROTOCOL.md:138:Quality Analysis:
+AUDIT_PROTOCOL.md:146:🏆 AUDIT SUCCESS REWARDS
+AUDIT_PROTOCOL.md:148:Quality Excellence Bonuses:
+AUDIT_PROTOCOL.md:156:📋 AUDIT CHECKLIST TEMPLATES
+AUDIT_PROTOCOL.md:158:Pre-Audit Preparation:
+AUDIT_PROTOCOL.md:165:Post-Audit Actions:
+AUDIT_PROTOCOL.md:167:- [ ] Resolution plan created
+PHASE_PLAN.md:2:PARALLEL TEAMS EXECUTION PLAN - BOSS DIRECTIVE UPDATE
+PHASE_PLAN.md:4:EXECUTION STRATEGY: PARALLEL TEAMS WITH META-TEAM OVERSIGHT
+PHASE_PLAN.md:7:PARALLEL EXECUTION MODEL
+PHASE_PLAN.md:20:WEEK-BY-WEEK PARALLEL EXECUTION
+PHASE_PLAN.md:82:CROSS-TEAM INTEGRATION WEEK (Week 5)
+PHASE_PLAN.md:109:DAILY EXECUTION MONITORING
+PHASE_PLAN.md:111:Daily Standup Protocol (Every Day - 9:00 AM UTC)
+PHASE_PLAN.md:115:- **Team A Standup** (10 minutes): Progress, blockers, next steps
+PHASE_PLAN.md:116:- **Team B Standup** (10 minutes): Progress, blockers, next steps
+PHASE_PLAN.md:119:Daily Progress Monitoring
+PHASE_PLAN.md:125:Daily Quality Gates Enforcement
+PHASE_PLAN.md:132:WEEKLY CHECKPOINTS (Every Friday - 3:00 PM UTC)
+PHASE_PLAN.md:134:Weekly Deep Dive (2 hours)
+PHASE_PLAN.md:138:- **META-TEAM Assessment** (30 minutes): Quality gates review and next week planning
+PHASE_PLAN.md:140:Weekly Risk Assessment
+PHASE_PLAN.md:146:PARALLEL EXECUTION COORDINATION
+PHASE_PLAN.md:148:Interface Management
+PHASE_PLAN.md:154:Dependency Management
+PHASE_PLAN.md:160:Communication Protocols
+PHASE_PLAN.md:166:RISK MITIGATION FOR PARALLEL EXECUTION
+PHASE_PLAN.md:168:Coordination Risks
+PHASE_PLAN.md:174:Integration Risks
+PHASE_PLAN.md:180:Quality Risks
+PHASE_PLAN.md:186:SUCCESS CRITERIA FOR PARALLEL EXECUTION
+PHASE_PLAN.md:197:ESCALATION PROCEDURES FOR PARALLEL EXECUTION
+PHASE5_6_PLAN.md:2:🚀 PHASE 5-6 COMPETITIVE EXECUTION PLAN 🚀
+PHASE5_6_PLAN.md:4:🎯 MISSION: REACH $1M WINNER PHASE 6 FIRST!
+PHASE5_6_PLAN.md:8:📋 PHASE 5: ADVANCED INTEGRATION & OPTIMIZATION
+PHASE5_6_PLAN.md:10:🎯 OBJECTIVES
+PHASE5_6_PLAN.md:26:👥 TEAM ASSIGNMENTS
+PHASE5_6_PLAN.md:42:🏆 PHASE 6: FINAL SPRINT TO $1M VICTORY
+PHASE5_6_PLAN.md:44:🎯 OBJECTIVES
+PHASE5_6_PLAN.md:60:🚨 SPLIT-AND-LAUNCH MECHANISM
+PHASE5_6_PLAN.md:81:⏰ TIMELINE & DEADLINES
+PHASE5_6_PLAN.md:83:Phase 5 Target: 3 weeks maximum
+PHASE5_6_PLAN.md:88:Phase 6 Target: 2 weeks maximum
+PHASE5_6_PLAN.md:94:🎖️ SUCCESS METRICS
+PHASE5_6_PLAN.md:96:Phase 5 Completion Criteria:
+PHASE5_6_PLAN.md:102:Phase 6 Victory Criteria:
+PHASE5_6_PLAN.md:110:🔥 COMPETITIVE ADVANTAGES
+PHASE5_6_PLAN.md:112:Speed Multipliers:
+PHASE5_6_PLAN.md:118:Risk Mitigation:
+PHASE5_6_PLAN.md:126:🚨 EMERGENCY PROTOCOLS
+PHASE5_6_PLAN.md:128:If Behind Schedule:
+PHASE5_6_PLAN.md:134:If Quality Issues:
+PROJECT_STATUS.md:1:LUASCRIPT Project Status
+PROJECT_STATUS.md:3:Overview
+PROJECT_STATUS.md:9:Development Timeline
+PROJECT_STATUS.md:11:Completed Phases
+PROJECT_STATUS.md:33:Current Phase
+PROJECT_STATUS.md:40:Feature-by-Feature Status
+PROJECT_STATUS.md:42:Core Language Components
+PROJECT_STATUS.md:75:Data Types
+PROJECT_STATUS.md:89:Control Flow
+PROJECT_STATUS.md:112:Standard Library
+PROJECT_STATUS.md:129:Testing Infrastructure
+PROJECT_STATUS.md:144:Performance and Optimization
+PROJECT_STATUS.md:157:Documentation
+PROJECT_STATUS.md:171:- **TODO.md**: ✅ Updated for Week 5
+PROJECT_STATUS.md:171:- **TODO.md**: ✅ Updated for Week 5
+PROJECT_STATUS.md:175:Current Issues and Fixes
+PROJECT_STATUS.md:177:Critical Issues (Phase 1A)
+PROJECT_STATUS.md:182:Documentation Issues (Phase 1B)
+PROJECT_STATUS.md:187:Testing Issues (Phase 1C)
+PROJECT_STATUS.md:192:Performance Issues (Phase 1D)
+PROJECT_STATUS.md:197:Success Metrics
+PROJECT_STATUS.md:199:Week 5 Phase 1A-1D Goals
+PROJECT_STATUS.md:205:Overall Project Health
+PROJECT_STATUS.md:211:Risk Assessment
+PROJECT_STATUS.md:213:Low Risk
+PROJECT_STATUS.md:218:Medium Risk
+PROJECT_STATUS.md:223:High Risk
+PROJECT_STATUS.md:226:Next Steps
+PROJECT_STATUS.md:228:Immediate (Week 5)
+PROJECT_STATUS.md:234:Short Term (Week 6-8)
+PROJECT_STATUS.md:240:Long Term (Week 9+)
+TODO.md:1:LUASCRIPT Development TODO
+TODO.md:3:Week 5 - Phase 1A-1D Critical Stabilization
+TODO.md:5:Phase 1A: Runtime Compatibility Fixes
+TODO.md:24:Phase 1B: Documentation Accuracy
+TODO.md:30:- [x] Create comprehensive TODO.md
+TODO.md:30:- [x] Create comprehensive TODO.md
+TODO.md:43:Phase 1C: Testing Stabilization
+TODO.md:62:Phase 1D: Performance Validation
+TODO.md:76:Week 6+ Future Tasks
+TODO.md:78:Core Language Features
+TODO.md:84:Advanced Features
+TODO.md:90:Tooling and Ecosystem
+TODO.md:96:Performance and Optimization
+TODO.md:102:Completed Tasks (Weeks 1-4)
+TODO.md:104:Week 1: Foundation
+TODO.md:110:Week 2: Core Parser
+TODO.md:116:Week 3: Interpreter Engine
+TODO.md:122:Week 4: Testing and Documentation
+TODO.md:128:Notes
+TODO.md:135:Review Schedule
+TODO_GSS_AGSS.md:2:GSS & AGSS Implementation TODO
+TODO_GSS_AGSS.md:4:🎯 Mission: Transform LUASCRIPT into the most elegant, powerful, and AI-assisted programming language
+TODO_GSS_AGSS.md:6:Milestone A: GSS Implementation (Elegance)
+TODO_GSS_AGSS.md:8:Phase 1: Grammar & Parser ⏳
+TODO_GSS_AGSS.md:29:Phase 2: Kernel Graph IR ⏳
+TODO_GSS_AGSS.md:48:Phase 3: Runtime Kernels ⏳
+TODO_GSS_AGSS.md:73:Phase 4: Performance Optimization ⏳
+TODO_GSS_AGSS.md:95:Milestone B: AGSS Implementation (Agentic Optimization)
+TODO_GSS_AGSS.md:97:Phase 5: Agent Grammar & Parser ⏳
+TODO_GSS_AGSS.md:111:Phase 6: Agent Runtime ⏳
+TODO_GSS_AGSS.md:132:Phase 7: Tape-Deck UI Controls ⏳
+TODO_GSS_AGSS.md:148:Phase 8: Logging & Reporting ⏳
+TODO_GSS_AGSS.md:164:Integration & Testing
+TODO_GSS_AGSS.md:166:Phase 9: Full Integration ⏳
+TODO_GSS_AGSS.md:182:Phase 10: Validation & Polish ⏳
+TODO_GSS_AGSS.md:203:Current Status
+TODO_GSS_AGSS.md:209:Next Actions
+TODO_GSS_AGSS.md:212:2. ✅ Create TODO checklist (this file)
+TODO_GSS_AGSS.md:218:Team Coordination
+TODO_GSS_AGSS.md:227:Leadership Checkpoints
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:1:GSS & AGSS Implementation Summary
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:3:🎯 Mission Complete: Milestones A & B Achieved
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:11:Executive Summary
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:15:Key Achievements
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:35:Implementation Statistics
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:37:Code Metrics
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:50:Architecture Components
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:66:Technical Highlights
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:68:1. Grammar & Parser (LPEG-based)
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:87:2. Kernel Graph IR
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:103:3. Runtime Kernels
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:126:4. AGSS Search Strategies
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:152:5. Mathematical Elegance
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:167:Performance Results
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:169:Milestone A Targets
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:178:Milestone B Features
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:195:Acceptance Criteria Status
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:206:File Structure
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:245:Usage Examples
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:247:Basic GSS
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:259:AGSS Agent
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:273:Programmatic API
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:302:Testing & Validation
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:304:Test Suite
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:310:Benchmarks
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:314:Test Execution
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:316:Run all tests
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:319:Individual tests
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:324:Benchmarks
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:331:Design Principles
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:333:Steve Jobs: "Ship it now. CSS-like elegance."
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:339:Donald Knuth: "Provably correct. Formal rigor."
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:347:Future Enhancements
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:349:Phase 1 (Immediate)
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:354:Phase 2 (Near-term)
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:359:Phase 3 (Long-term)
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:366:Dependencies
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:381:Team Contributions
+GSS_AGSS_IMPLEMENTATION_SUMMARY.md:393:Conclusion
+IMPLEMENTATION_SUMMARY.md:1:LUASCRIPT Enhanced Transpiler - Implementation Summary
+IMPLEMENTATION_SUMMARY.md:3:Task Completion Status: ✅ COMPLETE
+IMPLEMENTATION_SUMMARY.md:5:Objective
+IMPLEMENTATION_SUMMARY.md:11:Deliverables
+IMPLEMENTATION_SUMMARY.md:46:Key Achievements
+IMPLEMENTATION_SUMMARY.md:122:Technical Implementation
+IMPLEMENTATION_SUMMARY.md:141:Files Created
+IMPLEMENTATION_SUMMARY.md:161:- Next steps
+IMPLEMENTATION_SUMMARY.md:163:Git Status
+IMPLEMENTATION_SUMMARY.md:182:Next Steps for User
+IMPLEMENTATION_SUMMARY.md:191:Alternative: Manual PR Creation
+IMPLEMENTATION_SUMMARY.md:199:Conclusion
+QUALITY_GATES_ENFORCEMENT.md:2:QUALITY GATES ENFORCEMENT - PARALLEL TEAMS EXECUTION
+QUALITY_GATES_ENFORCEMENT.md:4:QUALITY GATE FRAMEWORK OVERVIEW
+QUALITY_GATES_ENFORCEMENT.md:6:META-TEAM QUALITY AUTHORITY
+QUALITY_GATES_ENFORCEMENT.md:13:QUALITY GATE ENFORCEMENT LEVELS
+QUALITY_GATES_ENFORCEMENT.md:19:DAILY QUALITY GATES ENFORCEMENT
+QUALITY_GATES_ENFORCEMENT.md:21:STEVE JOBS QUALITY GATES - USER EXPERIENCE EXCELLENCE
+QUALITY_GATES_ENFORCEMENT.md:47:DONALD KNUTH QUALITY GATES - ALGORITHMIC EXCELLENCE
+QUALITY_GATES_ENFORCEMENT.md:68:LINUS TORVALDS QUALITY GATES - CODE QUALITY EXCELLENCE
+QUALITY_GATES_ENFORCEMENT.md:89:ADA LOVELACE QUALITY GATES - TESTING EXCELLENCE
+QUALITY_GATES_ENFORCEMENT.md:110:CROSS-TEAM INTEGRATION QUALITY GATES
+QUALITY_GATES_ENFORCEMENT.md:112:INTERFACE COMPATIBILITY GATES
+QUALITY_GATES_ENFORCEMENT.md:120:DEPENDENCY SATISFACTION GATES
+QUALITY_GATES_ENFORCEMENT.md:128:WEEKLY COMPREHENSIVE QUALITY GATES
+QUALITY_GATES_ENFORCEMENT.md:130:FRIDAY COMPREHENSIVE REVIEW (3:00 PM UTC - 2 hours)
+QUALITY_GATES_ENFORCEMENT.md:157:QUALITY GATE FAILURE PROTOCOLS
+QUALITY_GATES_ENFORCEMENT.md:159:IMMEDIATE FAILURE RESPONSE
+QUALITY_GATES_ENFORCEMENT.md:166:FAILURE RESOLUTION TIMELINE
+QUALITY_GATES_ENFORCEMENT.md:172:FAILURE ESCALATION MATRIX
+QUALITY_GATES_ENFORCEMENT.md:180:QUALITY METRICS DASHBOARD
+QUALITY_GATES_ENFORCEMENT.md:182:Real-Time Quality Tracking
+QUALITY_GATES_ENFORCEMENT.md:190:Quality Performance Indicators
+QUALITY_GATES_ENFORCEMENT.md:196:QUALITY ENFORCEMENT AUTOMATION
+QUALITY_GATES_ENFORCEMENT.md:198:Automated Quality Checks
+QUALITY_GATES_ENFORCEMENT.md:204:Manual Quality Reviews
+QUALITY_GATES_ENFORCEMENT.md:210:QUALITY GATE SUCCESS REWARDS
+QUALITY_GATES_ENFORCEMENT.md:212:Daily Success Recognition
+QUALITY_GATES_ENFORCEMENT.md:217:Weekly Success Celebration
+DESIGN_GSS.md:2:GSS & AGSS Design Specification
+DESIGN_GSS.md:4:Overview
+DESIGN_GSS.md:10:Architecture
+DESIGN_GSS.md:59:GSS Grammar (EBNF)
+DESIGN_GSS.md:87:AGSS Grammar Extension
+DESIGN_GSS.md:107:Kernel Graph IR
+DESIGN_GSS.md:109:Node Types
+DESIGN_GSS.md:165:Runtime Kernels
+DESIGN_GSS.md:167:Gaussian Tile Renderer
+DESIGN_GSS.md:196:Marching Squares Iso Contours
+DESIGN_GSS.md:229:Performance Targets
+DESIGN_GSS.md:231:Milestone A (GSS)
+DESIGN_GSS.md:237:Optimization Strategies
+DESIGN_GSS.md:245:AGSS Agent Runtime
+DESIGN_GSS.md:247:Search Strategies
+DESIGN_GSS.md:282:Measurement & Logging
+DESIGN_GSS.md:324:Acceptance Criteria
+DESIGN_GSS.md:326:A1: Engine Boundary + JS Fallback
+DESIGN_GSS.md:331:A2: Benchmark Harness
+DESIGN_GSS.md:335:A3: Baseline Comparisons
+DESIGN_GSS.md:339:A4: GSS Parse/Compile
+DESIGN_GSS.md:343:A5: Agent Loop
+DESIGN_GSS.md:347:A6: WASM Path
+DESIGN_GSS.md:351:File Structure
+DESIGN_GSS.md:388:Implementation Phases
+DESIGN_GSS.md:390:Phase 1: Grammar & Parser (Days 1-2)
+DESIGN_GSS.md:396:Phase 2: Kernel Graph IR (Days 2-3)
+DESIGN_GSS.md:402:Phase 3: Runtime Kernels (Days 3-5)
+DESIGN_GSS.md:409:Phase 4: Performance Optimization (Days 5-6)
+DESIGN_GSS.md:415:Phase 5: AGSS Implementation (Days 6-7)
+DESIGN_GSS.md:421:Phase 6: Integration & Testing (Days 7-8)
+DESIGN_GSS.md:427:Mathematical Elegance
+DESIGN_GSS.md:442:Leadership Principles

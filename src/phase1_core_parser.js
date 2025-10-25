@@ -14,6 +14,7 @@ const {
     UnaryExpressionNode, AssignmentExpressionNode, UpdateExpressionNode,
     LogicalExpressionNode, ConditionalExpressionNode, CallExpressionNode,
     MemberExpressionNode, ArrayExpressionNode, ObjectExpressionNode,
+    NewExpressionNode, ClassDeclarationNode, SwitchStatementNode, SwitchCaseNode,
     PropertyNode, ArrowFunctionExpressionNode, FunctionExpressionNode,
     LiteralNode, IdentifierNode, ThisExpressionNode, TemplateLiteralNode,
     TemplateElementNode, ErrorNode, ASTUtils
@@ -101,7 +102,11 @@ class LuaScriptParser {
         while (!this.isAtEnd()) {
             try {
                 const stmt = this.parseStatement();
-                if (stmt) body.push(stmt);
+                if (stmt) {
+                    body.push(stmt);
+                    // Only break on EOF after a successful statement parse to avoid masking genuine parsing errors
+                    if (this.isAtEnd()) break;
+                }
             } catch (error) {
                 if (this.options.errorRecovery) {
                     this.addError(error.message);
@@ -145,6 +150,10 @@ class LuaScriptParser {
                         return this.parseContinueStatement();
                     case 'do':
                         return this.parseDoWhileStatement();
+                    case 'class':
+                        return this.parseClassDeclaration();
+                    case 'switch':
+                        return this.parseSwitchStatement();
                     default:
                         // Backtrack and parse as expression statement
                         this.current--;
@@ -662,6 +671,15 @@ class LuaScriptParser {
                     line: expr.line,
                     column: expr.column
                 });
+            } else if (this.match('KEYWORD') && this.previous().value === 'new') {
+                // Support minimal `new Callee(args)` syntax
+                const callee = this.parsePrimaryExpression();
+                let args = [];
+                if (this.match('LEFT_PAREN')) {
+                    args = this.parseArgumentList();
+                    this.consume('RIGHT_PAREN', "Expected ')' after arguments");
+                }
+                expr = new NewExpressionNode(callee, args, { line: callee.line, column: callee.column });
             } else if (this.match('LEFT_BRACKET')) {
                 // Member access (computed)
                 const property = this.parseExpression();
@@ -721,6 +739,8 @@ class LuaScriptParser {
                     });
                 case 'function':
                     return this.parseFunctionExpression();
+                case 'new':
+                    return this.parseNewExpression();
                 default:
                     throw new SyntaxError(`Unexpected keyword '${keyword}' at line ${this.previous().line}`);
             }
@@ -755,7 +775,7 @@ class LuaScriptParser {
                 line: token.line,
                 column: token.column
             });
-        }
+    }
         
         if (this.match('LEFT_PAREN')) {
             // Could be grouped expression or arrow function parameters
@@ -783,6 +803,85 @@ class LuaScriptParser {
         }
         
         throw new SyntaxError(`Unexpected token '${this.peek().value}' at line ${this.peek().line}`);
+    }
+
+    /** Parses a 'new' expression: new Callee(args?) */
+    parseNewExpression() {
+        const start = this.previous(); // 'new'
+        const callee = this.parsePrimaryExpression();
+        let args = [];
+        if (this.match('LEFT_PAREN')) {
+            args = this.parseArgumentList();
+            this.consume('RIGHT_PAREN', "Expected ')' after arguments");
+        }
+        return new NewExpressionNode(callee, args, { line: start.line, column: start.column });
+    }
+
+    /** Parses a class declaration with methods */
+    parseClassDeclaration() {
+        const token = this.previous(); // 'class'
+        const id = this.parseIdentifier();
+        let superClass = null;
+        if (this.match('KEYWORD') && this.previous().value === 'extends') {
+            superClass = this.parseIdentifier();
+        }
+        this.consume('LEFT_BRACE', "Expected '{' for class body");
+        const body = [];
+        while (!this.check('RIGHT_BRACE') && !this.isAtEnd()) {
+            // Allow optional 'static' modifier
+            let isStatic = false;
+            if (this.check('KEYWORD') && this.peek().value === 'static') {
+                this.advance();
+                isStatic = true;
+            }
+            // Method name must be identifier for now
+            const nameToken = this.consume('IDENTIFIER', "Expected method name in class body");
+            const nameId = new IdentifierNode(nameToken.value, { line: nameToken.line, column: nameToken.column });
+            this.consume('LEFT_PAREN', "Expected '(' after method name");
+            const params = this.parseParameterList();
+            this.consume('RIGHT_PAREN', "Expected ')' after method parameters");
+            const methodBody = this.parseBlockStatement();
+            const kind = nameToken.value === 'constructor' ? 'constructor' : 'method';
+            body.push(new (require('./phase1_core_ast').MethodDefinitionNode)(nameId, params, methodBody, { static: isStatic, kind, line: nameToken.line, column: nameToken.column }));
+            // Optional semicolon between methods is not standard, but be tolerant
+            if (this.check('SEMICOLON')) this.advance();
+        }
+        this.consume('RIGHT_BRACE', "Expected '}' after class body");
+        return new ClassDeclarationNode(id, superClass, body, {
+            line: token.line,
+            column: token.column
+        });
+    }
+
+    /** Parses a switch statement to an AST shape */
+    parseSwitchStatement() {
+        const token = this.previous(); // 'switch'
+        this.consume('LEFT_PAREN', "Expected '(' after 'switch'");
+        const discriminant = this.parseExpression();
+        this.consume('RIGHT_PAREN', "Expected ')' after switch discriminant");
+        this.consume('LEFT_BRACE', "Expected '{' to start switch cases");
+        const cases = [];
+        while (!this.check('RIGHT_BRACE') && !this.isAtEnd()) {
+            if (this.match('KEYWORD') && (this.previous().value === 'case' || this.previous().value === 'default')) {
+                const isDefault = this.previous().value === 'default';
+                let test = null;
+                if (!isDefault) {
+                    test = this.parseExpression();
+                }
+                this.consume('COLON', "Expected ':' after case");
+                const consequent = [];
+                while (!this.check('RIGHT_BRACE') && !(this.check('KEYWORD') && ['case', 'default'].includes(this.peek().value)) && !this.isAtEnd()) {
+                    // collect statements until next case/default or '}'
+                    consequent.push(this.parseStatement());
+                }
+                cases.push(new SwitchCaseNode(test, consequent, { line: token.line, column: token.column }));
+            } else {
+                // Skip unexpected tokens within switch
+                this.advance();
+            }
+        }
+        this.consume('RIGHT_BRACE', "Expected '}' to close switch");
+        return new SwitchStatementNode(discriminant, cases, { line: token.line, column: token.column });
     }
 
     /**
@@ -931,10 +1030,19 @@ class LuaScriptParser {
             // Identifier key
             key = this.parseIdentifier();
         }
-        
+        // Support shorthand {a} as {a: a}
+        if (this.check('COMMA') || this.check('RIGHT_BRACE')) {
+            return new PropertyNode(key, key, 'init', {
+                line: key.line,
+                column: key.column,
+                computed,
+                shorthand: true
+            });
+        }
+
         this.consume('COLON', "Expected ':' after property key");
         const value = this.parseAssignmentExpression();
-        
+
         return new PropertyNode(key, value, 'init', {
             line: key.line,
             column: key.column,
