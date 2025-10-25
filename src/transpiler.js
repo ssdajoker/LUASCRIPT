@@ -78,12 +78,16 @@ class LuaScriptTranspiler {
     async transpile(jsCode, options = {}) {
         options = this.normalizeOptions(options);
         this.validateInput(jsCode, options);
+
+    transpile(jsCode, options = {}) {
+        const normalizedOptions = this.normalizeTranspileOptions(options);
+        this.validateInput(jsCode, normalizedOptions);
         const startTime = process.hrtime.bigint();
         this.stats.transpilationsCount++;
 
         try {
-            if (this.shouldUseCanonicalPipeline(options)) {
-                const canonicalResult = this.transpileWithCanonicalIR(jsCode, options);
+            if (this.shouldUseCanonicalPipeline(normalizedOptions)) {
+                const canonicalResult = this.transpileWithCanonicalIR(jsCode, normalizedOptions);
                 const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
                 this.stats.totalTime += duration;
                 return canonicalResult;
@@ -110,8 +114,8 @@ class LuaScriptTranspiler {
                 this.validateLuaBalanceOrThrow(luaCode, { phase: 'legacy' });
             }
 
-            luaCode = this.injectRuntimeLibrary(luaCode, options);
-            this.validateOutput(luaCode, options);
+            luaCode = this.injectRuntimeLibrary(luaCode, normalizedOptions);
+            this.validateOutput(luaCode, normalizedOptions);
 
             const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
             this.stats.totalTime += duration;
@@ -123,7 +127,7 @@ class LuaScriptTranspiler {
                     duration,
                     optimizations: 0,
                     originalSize: jsCode.length,
-                    filename: options && options.filename ? options.filename : null,
+                    filename: normalizedOptions.filename || null,
                 },
             };
 
@@ -131,6 +135,30 @@ class LuaScriptTranspiler {
             console.error('❌ TRANSPILATION ERROR:', error.message);
             throw error;
         }
+    }
+
+    /**
+     * Normalizes legacy transpile option inputs.
+     * Accepts string filenames for backward compatibility and ensures an object is returned.
+     */
+    normalizeTranspileOptions(options) {
+        if (options == null) {
+            return {};
+        }
+
+        if (typeof options === 'string') {
+            return { filename: options };
+        }
+
+        if (Array.isArray(options)) {
+            return {};
+        }
+
+        if (typeof options !== 'object') {
+            return {};
+        }
+
+        return options;
     }
 
     shouldUseCanonicalPipeline(options = {}) {

@@ -80,6 +80,267 @@ _LS.math = {
     end,
 }
 
+local function pack_arguments(...)
+    return { n = select("#", ...), ... }
+end
+
+local function ensure_numeric(value, context)
+    if type(value) == "number" then
+        return value
+    end
+
+    local converted = tonumber(value)
+    if converted == nil then
+        error(string.format("%s: expected numeric value, got %s", context, type(value)))
+    end
+
+    return converted
+end
+
+local function create_summation_impl()
+    return function(...)
+        local args = pack_arguments(...)
+        if args.n == 0 then
+            error("math.summation: expected at least one argument")
+        end
+
+        local first = args[1]
+
+        if type(first) == "table" then
+            local callback = type(args[2]) == "function" and args[2] or nil
+            local total = 0
+
+            for index = 1, #first do
+                local value = first[index]
+                if callback then
+                    value = callback(value, index, first)
+                end
+                total = total + ensure_numeric(value, "math.summation callback result")
+            end
+
+            return total
+        end
+
+        local lower
+        local upper
+        local step
+        local callback
+
+        if type(first) == "function" and args.n >= 3 and type(args[2]) == "number" and type(args[3]) == "number" then
+            callback = first
+            lower = ensure_numeric(args[2], "math.summation lower")
+            upper = ensure_numeric(args[3], "math.summation upper")
+            step = args.n >= 4 and ensure_numeric(args[4], "math.summation step") or nil
+        elseif args.n >= 4 and type(args[4]) == "function" then
+            callback = args[4]
+            lower = ensure_numeric(args[2], "math.summation lower")
+            upper = ensure_numeric(args[3], "math.summation upper")
+            step = args.n >= 5 and ensure_numeric(args[5], "math.summation step") or nil
+        else
+            lower = ensure_numeric(first, "math.summation lower")
+            upper = ensure_numeric(args[2], "math.summation upper")
+
+            if args.n >= 3 and type(args[3]) == "function" then
+                callback = args[3]
+                step = args.n >= 4 and ensure_numeric(args[4], "math.summation step") or nil
+            else
+                step = args.n >= 3 and ensure_numeric(args[3], "math.summation step") or nil
+                callback = type(args[4]) == "function" and args[4] or nil
+            end
+        end
+
+        callback = callback or function(value)
+            return value
+        end
+
+        if type(callback) ~= "function" then
+            error("math.summation: expected callback function")
+        end
+
+        step = step or (lower <= upper and 1 or -1)
+        if step == 0 then
+            error("math.summation: step must be non-zero")
+        end
+
+        local total = 0
+        local iteration = 0
+
+        for value = lower, upper, step do
+            local result = callback(value, iteration)
+            total = total + ensure_numeric(result, "math.summation callback result")
+            iteration = iteration + 1
+        end
+
+        return total
+    end
+end
+
+local function create_product_impl()
+    return function(...)
+        local args = pack_arguments(...)
+        if args.n == 0 then
+            error("math.product: expected at least one argument")
+        end
+
+        local first = args[1]
+
+        if type(first) == "table" then
+            local callback = type(args[2]) == "function" and args[2] or nil
+            local total = 1
+
+            for index = 1, #first do
+                local value = first[index]
+                if callback then
+                    value = callback(value, index, first)
+                end
+                total = total * ensure_numeric(value, "math.product callback result")
+            end
+
+            return total
+        end
+
+        local lower
+        local upper
+        local step
+        local callback
+
+        if type(first) == "function" and args.n >= 3 and type(args[2]) == "number" and type(args[3]) == "number" then
+            callback = first
+            lower = ensure_numeric(args[2], "math.product lower")
+            upper = ensure_numeric(args[3], "math.product upper")
+            step = args.n >= 4 and ensure_numeric(args[4], "math.product step") or nil
+        elseif args.n >= 4 and type(args[4]) == "function" then
+            callback = args[4]
+            lower = ensure_numeric(args[2], "math.product lower")
+            upper = ensure_numeric(args[3], "math.product upper")
+            step = args.n >= 5 and ensure_numeric(args[5], "math.product step") or nil
+        else
+            lower = ensure_numeric(first, "math.product lower")
+            upper = ensure_numeric(args[2], "math.product upper")
+
+            if args.n >= 3 and type(args[3]) == "function" then
+                callback = args[3]
+                step = args.n >= 4 and ensure_numeric(args[4], "math.product step") or nil
+            else
+                step = args.n >= 3 and ensure_numeric(args[3], "math.product step") or nil
+                callback = type(args[4]) == "function" and args[4] or nil
+            end
+        end
+
+        callback = callback or function(value)
+            return value
+        end
+
+        if type(callback) ~= "function" then
+            error("math.product: expected callback function")
+        end
+
+        step = step or (lower <= upper and 1 or -1)
+        if step == 0 then
+            error("math.product: step must be non-zero")
+        end
+
+        local total = 1
+        local iteration = 0
+
+        for value = lower, upper, step do
+            local result = callback(value, iteration)
+            total = total * ensure_numeric(result, "math.product callback result")
+            iteration = iteration + 1
+        end
+
+        return total
+    end
+end
+
+local function create_integral_impl()
+    return function(...)
+        local args = pack_arguments(...)
+        if args.n == 0 then
+            error("math.integral: expected at least one argument")
+        end
+
+        local first = args[1]
+
+        if type(first) == "table" then
+            if #first < 2 then
+                return 0
+            end
+
+            local area = 0
+            for i = 1, #first - 1 do
+                local segment_start = first[i]
+                local segment_end = first[i + 1]
+
+                if type(segment_start) ~= "table" or type(segment_end) ~= "table" then
+                    error("math.integral: expected table of {x, y} points")
+                end
+
+                local x0 = ensure_numeric(segment_start[1], "math.integral point x0")
+                local y0 = ensure_numeric(segment_start[2], "math.integral point y0")
+                local x1 = ensure_numeric(segment_end[1], "math.integral point x1")
+                local y1 = ensure_numeric(segment_end[2], "math.integral point y1")
+
+                area = area + ((y0 + y1) / 2) * (x1 - x0)
+            end
+
+            return area
+        end
+
+        local integrand
+        local lower
+        local upper
+        local segments
+
+        if type(first) == "function" and args.n >= 3 and type(args[2]) == "number" and type(args[3]) == "number" then
+            integrand = first
+            lower = ensure_numeric(args[2], "math.integral lower")
+            upper = ensure_numeric(args[3], "math.integral upper")
+            segments = args.n >= 4 and ensure_numeric(args[4], "math.integral segments") or nil
+        elseif args.n >= 4 and type(args[4]) == "function" then
+            integrand = args[4]
+            lower = ensure_numeric(args[2], "math.integral lower")
+            upper = ensure_numeric(args[3], "math.integral upper")
+            segments = args.n >= 5 and ensure_numeric(args[5], "math.integral segments") or nil
+        elseif type(args[3]) == "function" then
+            lower = ensure_numeric(first, "math.integral lower")
+            upper = ensure_numeric(args[2], "math.integral upper")
+            integrand = args[3]
+            segments = args.n >= 4 and ensure_numeric(args[4], "math.integral segments") or nil
+        else
+            error("math.integral: expected integrand function")
+        end
+
+        if type(integrand) ~= "function" then
+            error("math.integral: expected integrand function")
+        end
+
+        segments = segments or 1000
+        segments = math.max(1, math.floor(ensure_numeric(segments, "math.integral segments")))
+
+        local range = upper - lower
+        local step = range / segments
+        if step == 0 then
+            return 0
+        end
+
+        local area = 0
+        local position = lower
+
+        for _ = 1, segments do
+            local midpoint = position + step / 2
+            local height = ensure_numeric(integrand(midpoint), "math.integral integrand result")
+            area = area + height * step
+            position = position + step
+        end
+
+        return area
+    end
+end
+
+local summation_impl = math.summation or create_summation_impl()
+local product_impl = math.product or create_product_impl()
+local integral_impl = math.integral or create_integral_impl()
 local function normalize_step(start_value, end_value, step)
     if step == nil then
         return start_value <= end_value and 1 or -1
@@ -91,6 +352,9 @@ local function normalize_step(start_value, end_value, step)
 end
 
 local function iterate_range(start_value, end_value, step, handler)
+    if step == 0 then
+        error("math range step cannot be zero")
+    end
     local index = 0
     for value = start_value, end_value, step do
         handler(value, index)
@@ -100,7 +364,32 @@ end
 
 local function summation_impl(collection_or_start, finish, step_or_mapper, maybe_mapper)
     local total = 0
-    if type(collection_or_start) == "table" then
+    if type(collection_or_start) == "function" then
+        local lower = finish
+        local upper = step_or_mapper
+        local step = maybe_mapper
+
+        if type(lower) ~= "number" or type(upper) ~= "number" then
+            error("math.summation expects numeric bounds (got " .. type(lower) .. ", " .. type(upper) .. ")")
+        end
+        if step ~= nil and type(step) ~= "number" then
+            error("math.summation step must be a number")
+        end
+
+        step = normalize_step(lower, upper, step)
+
+        if (step > 0 and lower > upper) or (step < 0 and lower < upper) then
+            return total
+        end
+
+        iterate_range(lower, upper, step, function(value, index)
+            local mapped = collection_or_start(value, index)
+            if mapped ~= nil then
+                total = total + mapped
+            end
+        end)
+        return total
+    elseif type(collection_or_start) == "table" then
         local mapper = step_or_mapper
         if mapper ~= nil and type(mapper) ~= "function" then
             error("math.summation mapper must be a function")
@@ -150,7 +439,32 @@ end
 
 local function product_impl(collection_or_start, finish, step_or_mapper, maybe_mapper)
     local result = 1
-    if type(collection_or_start) == "table" then
+    if type(collection_or_start) == "function" then
+        local lower = finish
+        local upper = step_or_mapper
+        local step = maybe_mapper
+
+        if type(lower) ~= "number" or type(upper) ~= "number" then
+            error("math.product expects numeric bounds (got '" .. type(lower) .. "', '" .. type(upper) .. "')")
+        end
+        if step ~= nil and type(step) ~= "number" then
+            error("math.product step must be a number")
+        end
+
+        step = normalize_step(lower, upper, step)
+
+        if (step > 0 and lower > upper) or (step < 0 and lower < upper) then
+            return result
+        end
+
+        iterate_range(lower, upper, step, function(value, index)
+            local mapped = collection_or_start(value, index)
+            if mapped ~= nil then
+                result = result * mapped
+            end
+        end)
+        return result
+    elseif type(collection_or_start) == "table" then
         local mapper = step_or_mapper
         if mapper ~= nil and type(mapper) ~= "function" then
             error("math.product mapper must be a function")
@@ -237,6 +551,10 @@ end
 if not math.integral then
     math.integral = integral_impl
 end
+
+_LS.math.summation = summation_impl
+_LS.math.product = product_impl
+_LS.math.integral = integral_impl
 
 -- ============================================================================
 -- ARRAY OPERATIONS (FIXED: Properly Connected)
@@ -350,18 +668,34 @@ end
 
 function _LS.concat(array1, array2)
     local result = {}
-    
+
     -- Copy first array
     for i = 1, #array1 do
         result[i] = array1[i]
     end
-    
+
     -- Append second array
     for i = 1, #array2 do
         result[#result + 1] = array2[i]
     end
-    
+
     return _LS.array(result)
+end
+
+-- ==========================================================================
+-- RANGE ITERATION SUPPORT
+-- ==========================================================================
+
+-- Iterate over a numeric range, invoking the callback for each value.
+-- Lua's for-loop semantics already handle positive or negative step values,
+-- so we can rely on a single loop without branching on the step sign.
+function _LS.iterate_range(start_value, end_value, step, callback)
+    if type(callback) ~= 'function' then
+        error('callback must be a function')
+    end
+    for value = start_value, end_value, step do
+        callback(value)
+    end
 end
 
 -- ============================================================================

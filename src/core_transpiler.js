@@ -38,6 +38,7 @@ class CoreTranspiler extends EventEmitter {
         
         this.patterns = new Map();
         this.cache = new Map();
+        this.tempVarCounter = 0;
         this.stats = {
             transpiled: 0,
             errors: 0,
@@ -115,71 +116,188 @@ class CoreTranspiler extends EventEmitter {
     }
 
     /**
-     * Transpiles a string of JavaScript code into Lua.
-     * This is the main method of the transpiler, orchestrating the various transformation passes.
-     * @param {string} jsCode - The JavaScript code to transpile.
-     * @param {string} [filename='main.js'] - The name of the file being transpiled, used for caching and source maps.
-     * @returns {object} An object containing the transpiled Lua code, source map, and statistics.
-     * @throws {Error} If a fatal error occurs during transpilation.
+     * @param {object} node - The AST node to convert.
+     * @returns {string} The generated Lua code fragment for the node.
      */
-                return `${init}\nwhile ${test} do\n  ${body}\n  ${update}\nend`;
+    generateLuaFromAST(node) {
+        if (!node) {
+            return '';
+        }
+
         switch (node.type) {
             case 'Program':
-                return node.body.map(this.generateLuaFromAST.bind(this)).join('\n');
+                return node.body.map(child => this.generateLuaFromAST(child)).filter(Boolean).join('\n');
+
+            case 'BlockStatement':
+                return node.body.map(child => this.generateLuaFromAST(child)).filter(Boolean).join('\n');
+
             case 'ExpressionStatement':
+                if (!node.expression) {
+                    return '';
+                }
+                if (node.expression.type === 'UpdateExpression') {
+                    return this.generateUpdateExpression(node.expression, true);
+                }
                 return this.generateLuaFromAST(node.expression);
-                throw new Error(`Unsupported AST node type: ${node.type} at node: ${JSON.stringify(node)}`);
+
+            case 'BinaryExpression':
+            case 'LogicalExpression': {
                 const left = this.generateLuaFromAST(node.left);
                 const right = this.generateLuaFromAST(node.right);
-                const operator = this.getLuaOperator(node.operator, this.isStringNode(node.left), this.isStringNode(node.right));
+                const operator = this.getLuaOperator(
+                    node.operator,
+                    this.isStringNode(node.left),
+                    this.isStringNode(node.right)
+                );
                 return `${left} ${operator} ${right}`;
+            }
+
             case 'Identifier':
                 return node.name;
+
             case 'Literal':
-                return node.raw;
-            case 'VariableDeclaration':
-                return `local ${node.declarations.map(this.generateLuaFromAST.bind(this)).join(', ')}`;
-            case 'VariableDeclarator':
-                return `${this.generateLuaFromAST(node.id)} = ${this.generateLuaFromAST(node.init)}`;
-            case 'FunctionDeclaration':
-                return `function ${this.generateLuaFromAST(node.id)}(${node.params.map(this.generateLuaFromAST.bind(this)).join(', ')})\n${this.generateLuaFromAST(node.body)}\nend`;
-            case 'BlockStatement':
-                return node.body.map(this.generateLuaFromAST.bind(this)).join('\n');
-            case 'ArrowFunctionExpression':
-                return `function(${node.params.map(this.generateLuaFromAST.bind(this)).join(', ')}) return ${this.generateLuaFromAST(node.body)} end`;
+                return node.raw !== undefined ? node.raw : JSON.stringify(node.value);
+
+            case 'VariableDeclaration': {
+                const declarations = node.declarations
+                    .map(decl => this.generateLuaFromAST(decl))
+                    .filter(Boolean);
+                if (!declarations.length) {
+                    return '';
+                }
+                return `local ${declarations.join(', ')}`;
+            }
+
+            case 'VariableDeclarator': {
+                const id = this.generateLuaFromAST(node.id);
+                const init = node.init ? this.generateLuaFromAST(node.init) : 'nil';
+                return `${id} = ${init}`;
+            }
+
+            case 'FunctionDeclaration': {
+                const id = this.generateLuaFromAST(node.id);
+                const params = node.params.map(param => this.generateLuaFromAST(param)).join(', ');
+                const body = this.generateLuaFromAST(node.body);
+                const indentedBody = this.indentCode(body);
+                if (indentedBody) {
+                    return `function ${id}(${params})\n${indentedBody}\nend`;
+                }
+                return `function ${id}(${params})\nend`;
+            }
+
+            case 'ArrowFunctionExpression': {
+                const params = node.params.map(param => this.generateLuaFromAST(param)).join(', ');
+                if (node.body.type === 'BlockStatement') {
+                    const body = this.generateLuaFromAST(node.body);
+                    const indentedBody = this.indentCode(body);
+                    if (indentedBody) {
+                        return `function(${params})\n${indentedBody}\nend`;
+                    }
+                    return `function(${params})\nend`;
+                }
+                return `function(${params}) return ${this.generateLuaFromAST(node.body)} end`;
+            }
+
             case 'ObjectExpression':
-                return `{ ${node.properties.map(this.generateLuaFromAST.bind(this)).join(', ')} }`;
-            case 'Property':
-                return `${this.generateLuaFromAST(node.key)} = ${this.generateLuaFromAST(node.value)}`;
+                return `{ ${node.properties.map(prop => this.generateLuaFromAST(prop)).join(', ')} }`;
+
+            case 'Property': {
+                const key = node.key.type === 'Identifier'
+                    ? node.key.name
+                    : `[${this.generateLuaFromAST(node.key)}]`;
+                return `${key} = ${this.generateLuaFromAST(node.value)}`;
+            }
+
             case 'ReturnStatement':
-                return `return ${this.generateLuaFromAST(node.argument)}`;
-            case 'CallExpression':
-                return `${this.generateLuaFromAST(node.callee)}(${node.arguments.map(this.generateLuaFromAST.bind(this)).join(', ')})`;
-            case 'MemberExpression':
-                return `${this.generateLuaFromAST(node.object)}.${this.generateLuaFromAST(node.property)}`;
+                return node.argument ? `return ${this.generateLuaFromAST(node.argument)}` : 'return';
+
+            case 'CallExpression': {
+                const callee = this.generateLuaFromAST(node.callee);
+                const args = node.arguments.map(arg => this.generateLuaFromAST(arg)).join(', ');
+                return `${callee}(${args})`;
+            }
+
+            case 'MemberExpression': {
+                const object = this.generateLuaFromAST(node.object);
+                const property = this.generateLuaFromAST(node.property);
+                return node.computed ? `${object}[${property}]` : `${object}.${property}`;
+            }
+
             case 'AssignmentExpression':
                 return `${this.generateLuaFromAST(node.left)} = ${this.generateLuaFromAST(node.right)}`;
+
             case 'UpdateExpression':
-                return `${this.generateLuaFromAST(node.argument)} = ${this.generateLuaFromAST(node.argument)} + 1`;
-            case 'IfStatement':
-                let result = `if ${this.generateLuaFromAST(node.test)} then\n${this.generateLuaFromAST(node.consequent)}`;
-                if (node.alternate) {
-                    result += `\nelse\n${this.generateLuaFromAST(node.alternate)}`;
-                }
-                result += '\nend';
-                return result;
-            case 'ForStatement':
-                const init = this.generateLuaFromAST(node.init);
+                return this.generateUpdateExpression(node, false);
+
+            case 'IfStatement': {
                 const test = this.generateLuaFromAST(node.test);
-                const update = this.generateLuaFromAST(node.update);
+                const consequent = this.generateLuaFromAST(node.consequent);
+                const alternate = node.alternate ? this.generateLuaFromAST(node.alternate) : '';
+                let code = `if ${test} then`;
+                if (consequent) {
+                    code += `\n${this.indentCode(consequent)}`;
+                }
+                if (alternate) {
+                    code += `\nelse`;
+                    code += `\n${this.indentCode(alternate)}`;
+                }
+                code += `\nend`;
+                return code;
+            }
+
+            case 'ForStatement': {
+                const init = node.init ? this.generateLuaFromAST(node.init) : '';
+                const test = node.test ? this.generateLuaFromAST(node.test) : 'true';
+                let update = '';
+                if (node.update) {
+                    update = node.update.type === 'UpdateExpression'
+                        ? this.generateUpdateExpression(node.update, true)
+                        : this.generateLuaFromAST(node.update);
+                }
                 const body = this.generateLuaFromAST(node.body);
-                return `for ${init} do\n  if not (${test}) then\n    break\n  end\n  ${body}\n  ${update}\nend`;
-            case 'UnaryExpression':
-                return `${this.getLuaOperator(node.operator)} ${this.generateLuaFromAST(node.argument)}`;
-            case 'WhileStatement':
-                return `while ${this.generateLuaFromAST(node.test)} do\n${this.generateLuaFromAST(node.body)}\nend`;
-            default:
+                const loopBodyParts = [];
+                if (body) loopBodyParts.push(body);
+                if (update) loopBodyParts.push(update);
+                const loopBody = loopBodyParts.filter(Boolean).join('\n');
+                const indentedBody = this.indentCode(loopBody);
+                const whileLoop = loopBody
+                    ? `while ${test} do\n${indentedBody}\nend`
+                    : `while ${test} do\nend`;
+                return init ? `${init}\n${whileLoop}` : whileLoop;
+            }
+
+            case 'UnaryExpression': {
+                const argument = this.generateLuaFromAST(node.argument);
+                if (node.operator === 'typeof') {
+                    return `type(${argument})`;
+                }
+                const operator = this.getLuaUnaryOperator(node.operator);
+                if (!operator) {
+                    return argument;
+                }
+                if (operator === 'not') {
+                    return `not ${argument}`;
+                }
+                return `${operator}${argument}`;
+            }
+
+            case 'WhileStatement': {
+                const test = this.generateLuaFromAST(node.test);
+                const body = this.generateLuaFromAST(node.body);
+                const indentedBody = this.indentCode(body);
+                return body
+                    ? `while ${test} do\n${indentedBody}\nend`
+                    : `while ${test} do\nend`;
+            }
+
+            case 'BreakStatement':
+                return 'break';
+
+            case 'EmptyStatement':
                 return '';
+
+            default:
+                throw new Error(`Unsupported AST node type: ${node.type}`);
         }
     }
 
@@ -187,7 +305,60 @@ class CoreTranspiler extends EventEmitter {
         return node.type === 'Literal' && typeof node.value === 'string';
     }
 
-    getLuaOperator(operator, isLeftString, isRightString) {
+    createTempVar(prefix = '__temp') {
+        this.tempVarCounter += 1;
+        return `${prefix}${this.tempVarCounter}`;
+    }
+
+    indentCode(code, level = 1) {
+        if (!code) {
+            return '';
+        }
+        const indent = '  '.repeat(level);
+        return code
+            .split('\n')
+            .map(line => (line ? indent + line : line))
+            .join('\n');
+    }
+
+    generateUpdateExpression(node, asStatement = false) {
+        const argument = this.generateLuaFromAST(node.argument);
+        const isIncrement = node.operator === '++';
+        const isDecrement = node.operator === '--';
+
+        if (!isIncrement && !isDecrement) {
+            throw new Error(`Unsupported update operator: ${node.operator}`);
+        }
+
+        const operator = isIncrement ? '+' : '-';
+        const updateExpression = `${argument} = ${argument} ${operator} 1`;
+
+        if (asStatement) {
+            return updateExpression;
+        }
+
+        if (node.prefix) {
+            return `((function()\n  ${updateExpression}\n  return ${argument}\nend)())`;
+        }
+
+        const tempVar = this.createTempVar();
+        return `((function()\n  local ${tempVar} = ${argument}\n  ${updateExpression}\n  return ${tempVar}\nend)())`;
+    }
+
+    getLuaUnaryOperator(operator) {
+        switch (operator) {
+            case '!':
+                return 'not';
+            case '+':
+                return '';
+            case '-':
+                return '-';
+            default:
+                return operator;
+        }
+    }
+
+    getLuaOperator(operator, isLeftString = false, isRightString = false) {
         if (operator === '+' && (isLeftString || isRightString)) {
             return '..';
         }
