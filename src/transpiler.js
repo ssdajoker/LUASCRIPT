@@ -68,24 +68,6 @@ class LuaScriptTranspiler {
     }
 
     /**
-     * Main transpilation function
-     * PERFECT PARSER INITIATIVE - Phase 1: Enhanced with Runtime Validation
-     * @param {string} jsCode - JavaScript code to transpile
-     * @param {Object} options - Transpilation options
-     * @returns {string} - Transpiled Lua code
-     */
-    transpile(jsCode, options = {}) {
-        options = this.normalizeOptions(options);
-
-        // PHASE 1: Runtime Validation - Input validation
-        this.validateInput(jsCode, options);
-        
-        let luaCode = jsCode;
-
-        // PHASE 1: Critical Fixes - Order matters for parser strategy alignment!
-        luaCode = this.fixEqualityOperators(luaCode);
-        luaCode = this.fixLogicalOperators(luaCode);
-    /**
      * The main transpilation function, enhanced with optional optimizations.
      * It processes JavaScript code through either the standard or the optimized transpilation pipeline.
      * @param {string} jsCode - The JavaScript code to transpile.
@@ -95,9 +77,6 @@ class LuaScriptTranspiler {
      */
     async transpile(jsCode, options = {}) {
         options = this.normalizeOptions(options);
-        this.validateInput(jsCode, options);
-
-    transpile(jsCode, options = {}) {
         this.validateInput(jsCode, options);
         const startTime = process.hrtime.bigint();
         this.stats.transpilationsCount++;
