@@ -477,37 +477,36 @@ if type(math.integral) ~= "function" then
             return 0
         end
 
-        local direction = lower < upper and 1 or -1
-        local range = math.abs(upper - lower)
-        local step_size = range / steps
         local start = lower
         local finish = upper
-
-        if direction < 0 then
+        local direction = 1
+        if upper < lower then
             start = upper
             finish = lower
+            direction = -1
         end
 
-        local sum = 0
-        -- Trapezoidal rule integration: evaluate at steps+1 points
-        for i = 0, steps do
-            local x = start + i * step_size * direction
-            -- Ensure last point is exactly finish
-            if (direction > 0 and x > finish) or (direction < 0 and x < finish) then
-                x = finish
-            end
-            local value = callback(x)
+        local step_size = (finish - start) / steps
+
+        local function evaluate(point)
+            local value = callback(point)
             if type(value) ~= "number" then
                 error("math.integral callback must return a number", 2)
             end
-            if i == 0 or i == steps then
-                sum = sum + value
-            else
-                sum = sum + 2 * value
-            end
+            return value
         end
-        sum = sum * (step_size / 2)
-        return sum * direction
+
+        local sum = 0.5 * (evaluate(start) + evaluate(finish))
+
+        for i = 1, steps - 1 do
+            local x = start + step_size * i
+            if x >= finish then
+                break
+            end
+            sum = sum + evaluate(x)
+        end
+
+        return sum * step_size * direction
     end
 end
 -- String prototype methods
