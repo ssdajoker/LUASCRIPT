@@ -844,6 +844,13 @@ class LuaInterpreter {
             result.push(trimmed);
         }
 
+        // Check for unclosed delimiters or strings
+        if (stack.length > 0) {
+            throw new Error("Unclosed delimiter(s) at end of input: " + stack.join(', '));
+        }
+        if (inString) {
+            throw new Error("Unclosed string at end of input");
+        }
         return result;
     }
 
