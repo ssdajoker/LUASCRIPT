@@ -745,15 +745,99 @@ class LuaInterpreter {
     }
 
     parseArguments(args) {
-        if (!args || !args.trim()) {
+        const normalized = (args ?? '').trim();
+        if (!normalized) {
             return [];
         }
 
-        return args
-            .split(',')
-            .map(arg => arg.trim())
-            .filter(Boolean)
+        return this.splitTopLevel(normalized)
             .map(arg => this.evaluateExpression(arg));
+    }
+
+    splitTopLevel(input, delimiter = ',') {
+        const result = [];
+        let current = '';
+        const stack = [];
+        let inString = false;
+        let stringChar = '';
+        let escapeNext = false;
+
+        for (let i = 0; i < input.length; i++) {
+            const char = input[i];
+
+            if (inString) {
+                current += char;
+
+                if (escapeNext) {
+                    escapeNext = false;
+                    continue;
+                }
+
+                if (char === '\\') {
+                    escapeNext = true;
+                    continue;
+                }
+
+                if (char === stringChar) {
+                    inString = false;
+                    stringChar = '';
+                }
+
+                continue;
+            }
+
+            if (char === "\"" || char === "'") {
+                inString = true;
+                stringChar = char;
+                current += char;
+                continue;
+            }
+
+            if (char === '(') {
+                stack.push(')');
+                current += char;
+                continue;
+            }
+
+            if (char === '{') {
+                stack.push('}');
+                current += char;
+                continue;
+            }
+
+            if (char === '[') {
+                stack.push(']');
+                current += char;
+                continue;
+            }
+
+            if ((char === ')' || char === '}' || char === ']') && stack.length) {
+                const expected = stack[stack.length - 1];
+                if (char === expected) {
+                    stack.pop();
+                }
+                current += char;
+                continue;
+            }
+
+            if (char === delimiter && stack.length === 0) {
+                const trimmed = current.trim();
+                if (trimmed) {
+                    result.push(trimmed);
+                }
+                current = '';
+                continue;
+            }
+
+            current += char;
+        }
+
+        const trimmed = current.trim();
+        if (trimmed) {
+            result.push(trimmed);
+        }
+
+        return result;
     }
 
     invokeFunction(name, args) {
