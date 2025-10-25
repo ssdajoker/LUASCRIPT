@@ -352,6 +352,9 @@ local function normalize_step(start_value, end_value, step)
 end
 
 local function iterate_range(start_value, end_value, step, handler)
+    if step == 0 then
+        error("math range step cannot be zero")
+    end
     local index = 0
     for value = start_value, end_value, step do
         handler(value, index)
