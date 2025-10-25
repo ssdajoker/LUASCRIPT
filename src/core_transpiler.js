@@ -95,6 +95,12 @@ class CoreTranspiler extends EventEmitter {
             { from: /\.pop\s*\(\s*\)/g, to: '.remove()' },
             { from: /\.length/g, to: '.#' }
         ]);
+
+        this.patterns.set('math_operators', [
+            { from: /∏\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g, to: 'math.product($1, $2, $3, $4)' },
+            { from: /∑\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g, to: 'math.summation($1, $2, $3, $4)' },
+            { from: /∫\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g, to: 'math.integral($1, $2, $3, $4)' }
+        ]);
     }
 
     /**
@@ -126,6 +132,13 @@ class CoreTranspiler extends EventEmitter {
                     luaCode = luaCode.replace(pattern.from, pattern.to);
                     if (before !== luaCode) optimizations++;
                 }
+            }
+
+            // Apply math operators transformations
+            for (const pattern of this.patterns.get('math_operators')) {
+                const before = luaCode;
+                luaCode = luaCode.replace(pattern.from, pattern.to);
+                if (before !== luaCode) optimizations++;
             }
             
             // Advanced transformations
