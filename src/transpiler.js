@@ -381,7 +381,7 @@ class LuaScriptTranspiler {
             return { filename: options };
         }
 
-        if (typeof options !== 'object') {
+        if (typeof options !== 'object' || Array.isArray(options)) {
             return {};
         }
 
