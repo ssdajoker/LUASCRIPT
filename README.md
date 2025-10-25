@@ -187,7 +187,7 @@ process_data(dataset) = dataset
 ## 📖 Documentation
 
 - **[Language Specification](docs/LANGUAGE_SPEC.md)** - Complete LUASCRIPT syntax reference
-- **[Mathematical Operators](docs/MATH_OPERATORS.md)** - Unicode mathematical operator guide  
+- **[Mathematical Operators](docs/MATHEMATICAL_OPERATORS.md)** - Unicode mathematical operator guide
 - **[Runtime Library](docs/RUNTIME_API.md)** - JavaScript-compatible runtime functions
 - **[Examples Gallery](examples/)** - Comprehensive example programs
 
