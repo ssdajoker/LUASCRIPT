@@ -404,6 +404,8 @@ if (require.main === module) {
 }
 
 module.exports = PerfectParserPhase1Tester;
+
+/**
  * PERFECT PARSER INITIATIVE - Phase 1 Test Suite (Reintroduced & Updated)
  *
  * Validates:
@@ -415,11 +417,8 @@ module.exports = PerfectParserPhase1Tester;
  */
 
 const assert = require('assert');
-const path = require('path');
-const fs = require('fs');
 
 // Use unified system entry points
-const LuaScriptTranspiler = require('../src/transpiler');
 const { parseAndLower } = require('../src/ir/pipeline');
 
 function expectIncludes(haystack, needle, msg) {

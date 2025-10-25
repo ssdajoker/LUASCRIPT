@@ -198,6 +198,28 @@ greet("World");`,
             ],
             true
         );
+
+        // Test 7: Operator Precedence
+        await this.runTest(
+            'Operator Precedence',
+            `let result = 1 + 2 * 3;
+console.log(result);`,
+            [
+                '1 + 2 * 3'
+            ],
+            true
+        );
+
+        // Test 8: Mixed String and Arithmetic Operations
+        await this.runTest(
+            'Mixed String and Arithmetic Operations',
+            `let result = "Result: " + (1 + 2);
+console.log(result);`,
+            [
+                '"Result: " .. (1 + 2)'
+            ],
+            true
+        );
     }
 
     /**

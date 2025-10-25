@@ -8,6 +8,7 @@
  */
 
 const { EventEmitter } = require('events');
+const esprima = require('esprima');
 
 /**
  * The CoreTranspiler class is responsible for the primary transformation of JavaScript code into Lua.
@@ -51,51 +52,7 @@ class CoreTranspiler extends EventEmitter {
      * Initializes the core set of regex patterns for transpilation.
      * These patterns cover fundamental JavaScript syntax such as variables, operators, and control structures.
      */
-    initializePatterns() {
-        // Core JavaScript to Lua patterns
-        this.patterns.set('variables', [
-            { from: /\bvar\s+(\w+)/g, to: 'local $1' },
-            { from: /\blet\s+(\w+)/g, to: 'local $1' },
-            { from: /\bconst\s+(\w+)/g, to: 'local $1' }
-        ]);
-        
-        this.patterns.set('objects', [
-            { from: /([{,])\s*(\w+)\s*:/g, to: '$1$2 =' }
-        ]);
-
-        this.patterns.set('operators', [
-            { from: /\|\|/g, to: 'or' },
-            { from: /&&/g, to: 'and' },
-            { from: /!/g, to: 'not ' },
-            { from: /!==/g, to: '~=' },
-            { from: /!=/g, to: '~=' },
-            { from: /===/g, to: '==' }
-        ]);
-        
-        this.patterns.set('functions', [
-            { from: /function\s+(\w+)\s*\(([^)]*)\)\s*{/g, to: 'local function $1($2)' },
-            { from: /(\w+)\s*=\s*function\s*\(([^)]*)\)\s*{/g, to: 'local function $1($2)' },
-            { from: /(\w+)\s*:\s*function\s*\(([^)]*)\)\s*{/g, to: '$1 = function($2)' }
-        ]);
-        
-        this.patterns.set('control', [
-            { from: /if\s*\(/g, to: 'if ' },
-            { from: /\)\s*{/g, to: ' then' },
-            { from: /else\s*{/g, to: 'else' },
-            { from: /while\s*\(/g, to: 'while ' },
-            { from: /for\s*\(/g, to: 'for ' }
-        ]);
-        
-        this.patterns.set('strings', [
-            { from: /(\w+|"[^"]*"|'[^']*')\s*\+\s*(\w+|"[^"]*"|'[^']*')/g, to: '$1 .. $2' }
-        ]);
-        
-        this.patterns.set('arrays', [
-            { from: /\.push\s*\(/g, to: '.insert(' },
-            { from: /\.pop\s*\(\s*\)/g, to: '.remove()' },
-            { from: /\.length/g, to: '.#' }
-        ]);
-    }
+    initializePatterns() {}
 
     /**
      * Transpiles a string of JavaScript code into Lua.
@@ -105,6 +62,91 @@ class CoreTranspiler extends EventEmitter {
      * @returns {object} An object containing the transpiled Lua code, source map, and statistics.
      * @throws {Error} If a fatal error occurs during transpilation.
      */
+    generateLuaFromAST(node) {
+        switch (node.type) {
+            case 'Program':
+                return node.body.map(this.generateLuaFromAST.bind(this)).join('\n');
+            case 'ExpressionStatement':
+                return this.generateLuaFromAST(node.expression);
+            case 'BinaryExpression':
+                const left = this.generateLuaFromAST(node.left);
+                const right = this.generateLuaFromAST(node.right);
+                const operator = this.getLuaOperator(node.operator, this.isStringNode(node.left), this.isStringNode(node.right));
+                return `${left} ${operator} ${right}`;
+            case 'Identifier':
+                return node.name;
+            case 'Literal':
+                return node.raw;
+            case 'VariableDeclaration':
+                return `local ${node.declarations.map(this.generateLuaFromAST.bind(this)).join(', ')}`;
+            case 'VariableDeclarator':
+                return `${this.generateLuaFromAST(node.id)} = ${this.generateLuaFromAST(node.init)}`;
+            case 'FunctionDeclaration':
+                return `function ${this.generateLuaFromAST(node.id)}(${node.params.map(this.generateLuaFromAST.bind(this)).join(', ')})\n${this.generateLuaFromAST(node.body)}\nend`;
+            case 'BlockStatement':
+                return node.body.map(this.generateLuaFromAST.bind(this)).join('\n');
+            case 'ArrowFunctionExpression':
+                return `function(${node.params.map(this.generateLuaFromAST.bind(this)).join(', ')}) return ${this.generateLuaFromAST(node.body)} end`;
+            case 'ObjectExpression':
+                return `{ ${node.properties.map(this.generateLuaFromAST.bind(this)).join(', ')} }`;
+            case 'Property':
+                return `${this.generateLuaFromAST(node.key)} = ${this.generateLuaFromAST(node.value)}`;
+            case 'ReturnStatement':
+                return `return ${this.generateLuaFromAST(node.argument)}`;
+            case 'CallExpression':
+                return `${this.generateLuaFromAST(node.callee)}(${node.arguments.map(this.generateLuaFromAST.bind(this)).join(', ')})`;
+            case 'MemberExpression':
+                return `${this.generateLuaFromAST(node.object)}.${this.generateLuaFromAST(node.property)}`;
+            case 'AssignmentExpression':
+                return `${this.generateLuaFromAST(node.left)} = ${this.generateLuaFromAST(node.right)}`;
+            case 'UpdateExpression':
+                return `${this.generateLuaFromAST(node.argument)} = ${this.generateLuaFromAST(node.argument)} + 1`;
+            case 'IfStatement':
+                let result = `if ${this.generateLuaFromAST(node.test)} then\n${this.generateLuaFromAST(node.consequent)}`;
+                if (node.alternate) {
+                    result += `\nelse\n${this.generateLuaFromAST(node.alternate)}`;
+                }
+                result += '\nend';
+                return result;
+            case 'ForStatement':
+                const init = this.generateLuaFromAST(node.init);
+                const test = this.generateLuaFromAST(node.test);
+                const update = this.generateLuaFromAST(node.update);
+                const body = this.generateLuaFromAST(node.body);
+                return `for ${init} do\n  if not (${test}) then\n    break\n  end\n  ${body}\n  ${update}\nend`;
+            case 'UnaryExpression':
+                return `${this.getLuaOperator(node.operator)} ${this.generateLuaFromAST(node.argument)}`;
+            case 'WhileStatement':
+                return `while ${this.generateLuaFromAST(node.test)} do\n${this.generateLuaFromAST(node.body)}\nend`;
+            default:
+                return '';
+        }
+    }
+
+    isStringNode(node) {
+        return node.type === 'Literal' && typeof node.value === 'string';
+    }
+
+    getLuaOperator(operator, isLeftString, isRightString) {
+        if (operator === '+' && (isLeftString || isRightString)) {
+            return '..';
+        }
+        switch (operator) {
+            case '===':
+                return '==';
+            case '!==':
+                return '~=';
+            case '!=':
+                return '~=';
+            case '&&':
+                return 'and';
+            case '||':
+                return 'or';
+            default:
+                return operator;
+        }
+    }
+
     transpile(jsCode, filename = 'main.js') {
         try {
             this.emit('transpileStart', { filename, size: jsCode.length });
@@ -116,17 +158,9 @@ class CoreTranspiler extends EventEmitter {
                 return this.cache.get(cacheKey);
             }
             
-            let luaCode = jsCode;
+            const ast = esprima.parseScript(jsCode);
+            let luaCode = this.generateLuaFromAST(ast);
             let optimizations = 0;
-            
-            // Apply pattern transformations
-            for (const [category, patterns] of this.patterns) {
-                for (const pattern of patterns) {
-                    const before = luaCode;
-                    luaCode = luaCode.replace(pattern.from, pattern.to);
-                    if (before !== luaCode) optimizations++;
-                }
-            }
             
             // Advanced transformations
             luaCode = this.transformArrowFunctions(luaCode);

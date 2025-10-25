@@ -153,7 +153,7 @@ class MemoryManager {
             ...data,
             _allocated: true,
             _createdAt: Date.now(),
-            _depth: this.currentDepth
+            _depth: this.currentDepth,
             _pooled: false,
             __dataKeys: Object.keys(data)
         };
@@ -334,7 +334,7 @@ class MemoryManager {
             nodeTypeBreakdown: Object.fromEntries(this.nodeTypeStats),
             allocationRate: this.allocationHistory.length > 1 ? 
                 (this.allocationHistory.length / ((Date.now() - this.allocationHistory[0].timestamp) / 1000)).toFixed(2) + ' nodes/sec' : 
-                'N/A'
+                'N/A',
             peakMemory: this.stats.peakMemory,
             allocations: this.stats.allocations,
             deallocations: this.stats.deallocations,
