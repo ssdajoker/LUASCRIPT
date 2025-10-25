@@ -1,0 +1,3663 @@
+{
+  "items": [
+    {
+      "id": "IDEA_1",
+      "source_path": "README.md",
+      "summary": "🚀 LUASCRIPT - Complete JavaScript to Lua Transpiler",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "src/core_transpiler.js",
+        "src/transpiler.js",
+        "src/enhanced_transpiler.js"
+      ]
+    },
+    {
+      "id": "IDEA_2",
+      "source_path": "README.md",
+      "summary": "🏆 Mission Status: VICTORY ACHIEVED!",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_3",
+      "source_path": "README.md",
+      "summary": "📚 Documentation",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_4",
+      "source_path": "README.md",
+      "summary": "- 📈 **Status & Planning** - Current status, TODO lists, and achievement tracking",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_5",
+      "source_path": "README.md",
+      "summary": "- 📈 **Status & Planning** - Current status, TODO lists, and achievement tracking",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_6",
+      "source_path": "README.md",
+      "summary": "🌟 Core Features",
+      "status": "implemented",
+      "links": [
+        "src/phase2_core_modules.js",
+        "src/core_transpiler.js",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/core/symbol-table.test.ts",
+        "src/core/symbol-table.ts",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/advanced_features.js"
+      ]
+    },
+    {
+      "id": "IDEA_7",
+      "source_path": "README.md",
+      "summary": "🔧 Core Transpiler",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "src/core_transpiler.js",
+        "src/transpiler.js",
+        "src/enhanced_transpiler.js"
+      ]
+    },
+    {
+      "id": "IDEA_8",
+      "source_path": "README.md",
+      "summary": "⚡ Runtime System",
+      "status": "partial",
+      "links": [
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "src/index.js"
+      ]
+    },
+    {
+      "id": "IDEA_9",
+      "source_path": "README.md",
+      "summary": "🎯 Advanced Features",
+      "status": "partial",
+      "links": [
+        "src/phase3_advanced_features.lua",
+        "src/advanced_async.js",
+        "src/advanced_features.js"
+      ]
+    },
+    {
+      "id": "IDEA_10",
+      "source_path": "README.md",
+      "summary": "📊 Performance Tools",
+      "status": "partial",
+      "links": [
+        "src/performance_tools.js"
+      ]
+    },
+    {
+      "id": "IDEA_11",
+      "source_path": "README.md",
+      "summary": "🤖 Agentic IDE",
+      "status": "partial",
+      "links": [
+        "src/agentic_ide.js"
+      ]
+    },
+    {
+      "id": "IDEA_12",
+      "source_path": "README.md",
+      "summary": "🚀 Getting Started",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_13",
+      "source_path": "README.md",
+      "summary": "Prerequisites",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_14",
+      "source_path": "README.md",
+      "summary": "Installation",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_15",
+      "source_path": "README.md",
+      "summary": "Basic Usage",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_16",
+      "source_path": "README.md",
+      "summary": "Transpiling Files",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_17",
+      "source_path": "README.md",
+      "summary": "Advanced Features",
+      "status": "partial",
+      "links": [
+        "src/phase3_advanced_features.lua",
+        "src/advanced_async.js",
+        "src/advanced_features.js"
+      ]
+    },
+    {
+      "id": "IDEA_18",
+      "source_path": "README.md",
+      "summary": "Performance Optimization",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "src/performance_tools.js"
+      ]
+    },
+    {
+      "id": "IDEA_19",
+      "source_path": "README.md",
+      "summary": "IDE Integration",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_integration.lua",
+        "src/phase4_ecosystem_integration.lua"
+      ]
+    },
+    {
+      "id": "IDEA_20",
+      "source_path": "README.md",
+      "summary": "📋 API Reference",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_21",
+      "source_path": "README.md",
+      "summary": "`new UnifiedLuaScript(options)`",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_22",
+      "source_path": "README.md",
+      "summary": "`async initializeComponents()`",
+      "status": "partial",
+      "links": [
+        "src/advanced_async.js"
+      ]
+    },
+    {
+      "id": "IDEA_23",
+      "source_path": "README.md",
+      "summary": "`async transpile(jsCode, options)`",
+      "status": "implemented",
+      "links": [
+        "test/test_transpiler.js",
+        "test/test_enhanced_transpiler.js",
+        "src_transpiler.json",
+        "test_transpiler.json",
+        "src/optimized_transpiler.js",
+        "src/core_transpiler.js",
+        "src/transpiler.js",
+        "src/advanced_async.js",
+        "src/enhanced_transpiler.js"
+      ]
+    },
+    {
+      "id": "IDEA_24",
+      "source_path": "README.md",
+      "summary": "`async execute(luaCode, context)`",
+      "status": "partial",
+      "links": [
+        "src/advanced_async.js"
+      ]
+    },
+    {
+      "id": "IDEA_25",
+      "source_path": "README.md",
+      "summary": "`async transpileAndExecute(jsCode, options)`",
+      "status": "partial",
+      "links": [
+        "src/advanced_async.js"
+      ]
+    },
+    {
+      "id": "IDEA_26",
+      "source_path": "README.md",
+      "summary": "`async profile(code, options)`",
+      "status": "partial",
+      "links": [
+        "src/advanced_async.js"
+      ]
+    },
+    {
+      "id": "IDEA_27",
+      "source_path": "README.md",
+      "summary": "`async benchmark(code, iterations)`",
+      "status": "partial",
+      "links": [
+        "gss/benchmarks/bench_gss.lua",
+        "gss/benchmarks/bench_agss.lua",
+        "src/advanced_async.js"
+      ]
+    },
+    {
+      "id": "IDEA_28",
+      "source_path": "README.md",
+      "summary": "`async optimize(code, options)`",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "src/advanced_async.js"
+      ]
+    },
+    {
+      "id": "IDEA_29",
+      "source_path": "README.md",
+      "summary": "📁 Project Structure",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_30",
+      "source_path": "README.md",
+      "summary": "🏗️ Architecture",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_31",
+      "source_path": "README.md",
+      "summary": "Component Overview",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_32",
+      "source_path": "README.md",
+      "summary": "Phase Implementation Status",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_33",
+      "source_path": "README.md",
+      "summary": "🧪 Testing",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_34",
+      "source_path": "README.md",
+      "summary": "Run All Tests",
+      "status": "implemented",
+      "links": [
+        "tests/test_arrow_functions.js",
+        "tests/test_memory_management.js",
+        "gss/tests/test_kernels.lua",
+        "gss/tests/test_parser.lua",
+        "gss/tests/test_agss.lua",
+        "gss/tests/test_integration.lua",
+        "scripts/run_gss_tests.sh"
+      ]
+    },
+    {
+      "id": "IDEA_35",
+      "source_path": "README.md",
+      "summary": "Run Specific Test Suites",
+      "status": "partial",
+      "links": [
+        "tests/test_arrow_functions.js",
+        "tests/test_memory_management.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_unified_system.js",
+        "test/temp/test_1759249530265.lua",
+        "test/temp/test_1759233219251.lua",
+        "test/temp/test_1759249489093.lua",
+        "test/temp/test_1759249489058.lua",
+        "test/temp/test_1759233219259.lua",
+        "test/temp/test_1759233219227.lua",
+        "test/temp/test_1759249489117.lua",
+        "test/temp/test_1759233219236.lua",
+        "test/temp/test_1759233219218.lua",
+        "test/temp/test_1759249489129.lua",
+        "test/temp/test_1759233219244.lua"
+      ]
+    },
+    {
+      "id": "IDEA_36",
+      "source_path": "README.md",
+      "summary": "Core functionality",
+      "status": "implemented",
+      "links": [
+        "src/phase2_core_modules.js",
+        "src/core_transpiler.js",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/core/symbol-table.test.ts",
+        "src/core/symbol-table.ts",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_37",
+      "source_path": "README.md",
+      "summary": "Performance tests",
+      "status": "implemented",
+      "links": [
+        "src/performance_tools.js",
+        "tests/test_arrow_functions.js",
+        "tests/test_memory_management.js",
+        "gss/tests/test_kernels.lua",
+        "gss/tests/test_parser.lua",
+        "gss/tests/test_agss.lua",
+        "gss/tests/test_integration.lua",
+        "scripts/run_gss_tests.sh"
+      ]
+    },
+    {
+      "id": "IDEA_38",
+      "source_path": "README.md",
+      "summary": "Integration tests",
+      "status": "implemented",
+      "links": [
+        "tests/test_arrow_functions.js",
+        "tests/test_memory_management.js",
+        "gss/tests/test_kernels.lua",
+        "gss/tests/test_parser.lua",
+        "gss/tests/test_agss.lua",
+        "gss/tests/test_integration.lua",
+        "src/phase4_ecosystem_integration.lua",
+        "scripts/run_gss_tests.sh"
+      ]
+    },
+    {
+      "id": "IDEA_39",
+      "source_path": "README.md",
+      "summary": "Victory validation",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_40",
+      "source_path": "README.md",
+      "summary": "Memory-Efficient Testing",
+      "status": "partial",
+      "links": [
+        "tests/test_memory_management.js"
+      ]
+    },
+    {
+      "id": "IDEA_41",
+      "source_path": "README.md",
+      "summary": "📊 Performance Benchmarks",
+      "status": "partial",
+      "links": [
+        "src/performance_tools.js",
+        "gss/benchmarks/bench_gss.lua",
+        "gss/benchmarks/bench_agss.lua"
+      ]
+    },
+    {
+      "id": "IDEA_42",
+      "source_path": "README.md",
+      "summary": "Transpilation Performance",
+      "status": "partial",
+      "links": [
+        "src/performance_tools.js"
+      ]
+    },
+    {
+      "id": "IDEA_43",
+      "source_path": "README.md",
+      "summary": "Runtime Performance",
+      "status": "partial",
+      "links": [
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "src/index.js",
+        "src/performance_tools.js"
+      ]
+    },
+    {
+      "id": "IDEA_44",
+      "source_path": "README.md",
+      "summary": "Optimization Results",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "test_optimizations.js",
+        "src/phase3_compiler_optimizations.lua",
+        "src/phase5_enterprise_optimization.js"
+      ]
+    },
+    {
+      "id": "IDEA_45",
+      "source_path": "README.md",
+      "summary": "🤝 Contributing",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_46",
+      "source_path": "README.md",
+      "summary": "Development Setup",
+      "status": "partial",
+      "links": [
+        "scripts/setup_daily_monitoring.sh"
+      ]
+    },
+    {
+      "id": "IDEA_47",
+      "source_path": "README.md",
+      "summary": "Code Style",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_48",
+      "source_path": "README.md",
+      "summary": "📄 License",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_49",
+      "source_path": "README.md",
+      "summary": "🏆 Team Credits",
+      "status": "partial",
+      "links": [
+        "src/meta_team_activation.lua"
+      ]
+    },
+    {
+      "id": "IDEA_50",
+      "source_path": "README.md",
+      "summary": "🎯 Victory Achievement",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_51",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "LUASCRIPT Phase 1D Implementation",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/unified_luascript.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_52",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Overview",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_53",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🚀 New Features",
+      "status": "partial",
+      "links": [
+        "src/phase3_advanced_features.lua",
+        "src/advanced_features.js"
+      ]
+    },
+    {
+      "id": "IDEA_54",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Arrow Functions",
+      "status": "partial",
+      "links": [
+        "tests/test_arrow_functions.js"
+      ]
+    },
+    {
+      "id": "IDEA_55",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Memory Management",
+      "status": "partial",
+      "links": [
+        "tests/test_memory_management.js"
+      ]
+    },
+    {
+      "id": "IDEA_56",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Accessibility Features",
+      "status": "partial",
+      "links": [
+        "src/phase3_advanced_features.lua",
+        "src/advanced_features.js"
+      ]
+    },
+    {
+      "id": "IDEA_57",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "📁 Project Structure",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_58",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🛠 Installation & Usage",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_59",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Prerequisites",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_60",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Basic Usage",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_61",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "With Memory Management",
+      "status": "partial",
+      "links": [
+        "tests/test_memory_management.js"
+      ]
+    },
+    {
+      "id": "IDEA_62",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🧪 Testing",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_63",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Test Coverage",
+      "status": "partial",
+      "links": [
+        "tests/test_arrow_functions.js",
+        "tests/test_memory_management.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_unified_system.js",
+        "test/temp/test_1759249530265.lua",
+        "test/temp/test_1759233219251.lua",
+        "test/temp/test_1759249489093.lua",
+        "test/temp/test_1759249489058.lua",
+        "test/temp/test_1759233219259.lua",
+        "test/temp/test_1759233219227.lua",
+        "test/temp/test_1759249489117.lua",
+        "test/temp/test_1759233219236.lua",
+        "test/temp/test_1759233219218.lua",
+        "test/temp/test_1759249489129.lua",
+        "test/temp/test_1759233219244.lua"
+      ]
+    },
+    {
+      "id": "IDEA_64",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "📖 Code Examples",
+      "status": "partial",
+      "links": [
+        "examples/phase1b_demo.js"
+      ]
+    },
+    {
+      "id": "IDEA_65",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Arrow Functions",
+      "status": "partial",
+      "links": [
+        "tests/test_arrow_functions.js"
+      ]
+    },
+    {
+      "id": "IDEA_66",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Memory Management",
+      "status": "partial",
+      "links": [
+        "tests/test_memory_management.js"
+      ]
+    },
+    {
+      "id": "IDEA_67",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🎨 UI Templates",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_68",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "IDE Template (`templates/ide.html`)",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_69",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Documentation Template (`templates/documentation.html`)",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_70",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🔧 API Reference",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_71",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "MemoryManager",
+      "status": "partial",
+      "links": [
+        "tests/test_memory_management.js"
+      ]
+    },
+    {
+      "id": "IDEA_72",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "RuntimeMemoryManager",
+      "status": "implemented",
+      "links": [
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "src/index.js",
+        "tests/test_memory_management.js"
+      ]
+    },
+    {
+      "id": "IDEA_73",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Parser (Enhanced)",
+      "status": "partial",
+      "links": [
+        "src/enhanced_transpiler.js",
+        "src/parser.js",
+        "src/phase1_core_parser.js"
+      ]
+    },
+    {
+      "id": "IDEA_74",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Interpreter (Enhanced)",
+      "status": "partial",
+      "links": [
+        "src/enhanced_transpiler.js",
+        "src/phase2_core_interpreter.js"
+      ]
+    },
+    {
+      "id": "IDEA_75",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🚨 Error Handling",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_76",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🎯 Performance Considerations",
+      "status": "partial",
+      "links": [
+        "src/performance_tools.js"
+      ]
+    },
+    {
+      "id": "IDEA_77",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Memory Management Overhead",
+      "status": "partial",
+      "links": [
+        "tests/test_memory_management.js"
+      ]
+    },
+    {
+      "id": "IDEA_78",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "Optimization Tips",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "test_optimizations.js",
+        "src/phase3_compiler_optimizations.lua",
+        "src/phase5_enterprise_optimization.js"
+      ]
+    },
+    {
+      "id": "IDEA_79",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🔄 Migration from Previous Phases",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_80",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🐛 Known Issues & Limitations",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_81",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🔮 Future Roadmap",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_82",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🤝 Contributing",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_83",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "📄 License",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_84",
+      "source_path": "README_PHASE_1D.md",
+      "summary": "🙏 Acknowledgments",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_85",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "LUASCRIPT COMPREHENSIVE AUDIT FRAMEWORK",
+      "status": "implemented",
+      "links": [
+        "test/test_phase1_6_comprehensive.js",
+        "src/unified_luascript.js",
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_86",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "BOSS FINAL DEMAND - RIGOROUS TESTING PROTOCOL",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_87",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "EXECUTIVE SUMMARY",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_88",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "AUDIT OBJECTIVES",
+      "status": "partial",
+      "links": [
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_89",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "AUDIT PHASES",
+      "status": "partial",
+      "links": [
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_90",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "TESTING CATEGORIES",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_91",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "QUALITY GATES",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_92",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "ESCALATION PROCEDURES",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_93",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "REPORTING STRUCTURE",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_94",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "- Recommendations for next phase",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_95",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "SUCCESS CRITERIA",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_96",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "TIMELINE",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_97",
+      "source_path": "AUDIT_PLAN.md",
+      "summary": "RISK MITIGATION",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_98",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "🔍 EXTENSIVE AUDIT PROTOCOL - $1M QUALITY ASSURANCE 🔍",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh",
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_99",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "🎯 MISSION: ENSURE $1M WINNER MEETS HIGHEST STANDARDS",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_100",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "🚨 MANDATORY AUDIT GATES",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh",
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_101",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "📋 PHASE 3 → PHASE 4 AUDIT",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_102",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "📋 PHASE 4 → PHASE 5 AUDIT",
+      "status": "implemented",
+      "links": [
+        "src/phase5_enterprise_optimization.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_103",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "📋 PHASE 5 → PHASE 6 AUDIT ($1M GATE) 🏆",
+      "status": "partial",
+      "links": [
+        "src/phase5_enterprise_optimization.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_104",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "🔄 CONTINUOUS AUDIT PROCESSES",
+      "status": "partial",
+      "links": [
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_105",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Daily Quality Monitoring:",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh",
+        "scripts/daily_standup_monitor.lua",
+        "scripts/setup_daily_monitoring.sh"
+      ]
+    },
+    {
+      "id": "IDEA_106",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Weekly Deep Audits:",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_107",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "🎖️ AUDIT SCORING SYSTEM",
+      "status": "implemented",
+      "links": [
+        "test/test_unified_system.js",
+        "test/test_phase9_ecosystem.js",
+        "src/runtime_system.js",
+        "src/phase9_ecosystem.js",
+        "src/phase4_ecosystem_integration.lua",
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_108",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Quality Score Calculation:",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_109",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Passing Thresholds:",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_110",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "🚨 ESCALATION PROCEDURES",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_111",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Quality Issues Detected:",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_112",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Critical Failures:",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_113",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "📊 AUDIT REPORTING",
+      "status": "partial",
+      "links": [
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_114",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Real-Time Dashboard:",
+      "status": "partial",
+      "links": [
+        "gss/runtime/ramp.lua",
+        "gss/runtime/iso.lua",
+        "gss/runtime/gaussian.lua",
+        "gss/runtime/wasm.lua",
+        "gss/runtime/engine.lua",
+        "gss/runtime/cache.lua",
+        "gss/runtime/blend.lua",
+        "runtime_runtime.json",
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "runtime/runtime.lua"
+      ]
+    },
+    {
+      "id": "IDEA_115",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Audit Reports:",
+      "status": "partial",
+      "links": [
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_116",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "🔧 AUDIT TOOLS & AUTOMATION",
+      "status": "partial",
+      "links": [
+        "src/performance_tools.js",
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_117",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Automated Testing:",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_118",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Quality Analysis:",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_119",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "🏆 AUDIT SUCCESS REWARDS",
+      "status": "partial",
+      "links": [
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_120",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Quality Excellence Bonuses:",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_121",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "📋 AUDIT CHECKLIST TEMPLATES",
+      "status": "partial",
+      "links": [
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_122",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Pre-Audit Preparation:",
+      "status": "partial",
+      "links": [
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_123",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "Post-Audit Actions:",
+      "status": "partial",
+      "links": [
+        "scripts/run_audit_round.sh"
+      ]
+    },
+    {
+      "id": "IDEA_124",
+      "source_path": "AUDIT_PROTOCOL.md",
+      "summary": "- [ ] Resolution plan created",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_125",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "PARALLEL TEAMS EXECUTION PLAN - BOSS DIRECTIVE UPDATE",
+      "status": "partial",
+      "links": [
+        "scripts/kickoff_phase3_parallel.sh"
+      ]
+    },
+    {
+      "id": "IDEA_126",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "EXECUTION STRATEGY: PARALLEL TEAMS WITH META-TEAM OVERSIGHT",
+      "status": "partial",
+      "links": [
+        "src/meta_team_activation.lua",
+        "scripts/kickoff_phase3_parallel.sh"
+      ]
+    },
+    {
+      "id": "IDEA_127",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "PARALLEL EXECUTION MODEL",
+      "status": "partial",
+      "links": [
+        "scripts/kickoff_phase3_parallel.sh"
+      ]
+    },
+    {
+      "id": "IDEA_128",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "WEEK-BY-WEEK PARALLEL EXECUTION",
+      "status": "partial",
+      "links": [
+        "scripts/kickoff_phase3_parallel.sh"
+      ]
+    },
+    {
+      "id": "IDEA_129",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "CROSS-TEAM INTEGRATION WEEK (Week 5)",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_integration.lua",
+        "src/meta_team_activation.lua",
+        "src/phase4_ecosystem_integration.lua"
+      ]
+    },
+    {
+      "id": "IDEA_130",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "DAILY EXECUTION MONITORING",
+      "status": "partial",
+      "links": [
+        "scripts/daily_standup_monitor.lua",
+        "scripts/setup_daily_monitoring.sh"
+      ]
+    },
+    {
+      "id": "IDEA_131",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "Daily Standup Protocol (Every Day - 9:00 AM UTC)",
+      "status": "partial",
+      "links": [
+        "scripts/daily_standup_monitor.lua",
+        "scripts/setup_daily_monitoring.sh"
+      ]
+    },
+    {
+      "id": "IDEA_132",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "- **Team A Standup** (10 minutes): Progress, blockers, next steps",
+      "status": "partial",
+      "links": [
+        "src/meta_team_activation.lua",
+        "scripts/daily_standup_monitor.lua"
+      ]
+    },
+    {
+      "id": "IDEA_133",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "- **Team B Standup** (10 minutes): Progress, blockers, next steps",
+      "status": "partial",
+      "links": [
+        "src/meta_team_activation.lua",
+        "scripts/daily_standup_monitor.lua"
+      ]
+    },
+    {
+      "id": "IDEA_134",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "Daily Progress Monitoring",
+      "status": "partial",
+      "links": [
+        "scripts/daily_standup_monitor.lua",
+        "scripts/setup_daily_monitoring.sh"
+      ]
+    },
+    {
+      "id": "IDEA_135",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "Daily Quality Gates Enforcement",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh",
+        "scripts/daily_standup_monitor.lua",
+        "scripts/setup_daily_monitoring.sh"
+      ]
+    },
+    {
+      "id": "IDEA_136",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "WEEKLY CHECKPOINTS (Every Friday - 3:00 PM UTC)",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_137",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "Weekly Deep Dive (2 hours)",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_138",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "- **META-TEAM Assessment** (30 minutes): Quality gates review and next week planning",
+      "status": "partial",
+      "links": [
+        "src/meta_team_activation.lua",
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_139",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "Weekly Risk Assessment",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_140",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "PARALLEL EXECUTION COORDINATION",
+      "status": "partial",
+      "links": [
+        "scripts/kickoff_phase3_parallel.sh"
+      ]
+    },
+    {
+      "id": "IDEA_141",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "Interface Management",
+      "status": "partial",
+      "links": [
+        "tests/test_memory_management.js"
+      ]
+    },
+    {
+      "id": "IDEA_142",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "Dependency Management",
+      "status": "partial",
+      "links": [
+        "tests/test_memory_management.js"
+      ]
+    },
+    {
+      "id": "IDEA_143",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "Communication Protocols",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_144",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "RISK MITIGATION FOR PARALLEL EXECUTION",
+      "status": "partial",
+      "links": [
+        "scripts/kickoff_phase3_parallel.sh"
+      ]
+    },
+    {
+      "id": "IDEA_145",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "Coordination Risks",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_146",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "Integration Risks",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_integration.lua",
+        "src/phase4_ecosystem_integration.lua"
+      ]
+    },
+    {
+      "id": "IDEA_147",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "Quality Risks",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_148",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "SUCCESS CRITERIA FOR PARALLEL EXECUTION",
+      "status": "partial",
+      "links": [
+        "scripts/kickoff_phase3_parallel.sh"
+      ]
+    },
+    {
+      "id": "IDEA_149",
+      "source_path": "PHASE_PLAN.md",
+      "summary": "ESCALATION PROCEDURES FOR PARALLEL EXECUTION",
+      "status": "partial",
+      "links": [
+        "scripts/kickoff_phase3_parallel.sh"
+      ]
+    },
+    {
+      "id": "IDEA_150",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "🚀 PHASE 5-6 COMPETITIVE EXECUTION PLAN 🚀",
+      "status": "implemented",
+      "links": [
+        "src/phase5_enterprise_optimization.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_151",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "🎯 MISSION: REACH $1M WINNER PHASE 6 FIRST!",
+      "status": "implemented",
+      "links": [
+        "src/phase6_production_deployment.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_152",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "📋 PHASE 5: ADVANCED INTEGRATION & OPTIMIZATION",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "src/phase5_enterprise_optimization.js"
+      ]
+    },
+    {
+      "id": "IDEA_153",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "🎯 OBJECTIVES",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_154",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "👥 TEAM ASSIGNMENTS",
+      "status": "partial",
+      "links": [
+        "src/meta_team_activation.lua"
+      ]
+    },
+    {
+      "id": "IDEA_155",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "🏆 PHASE 6: FINAL SPRINT TO $1M VICTORY",
+      "status": "implemented",
+      "links": [
+        "src/phase6_production_deployment.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_156",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "🎯 OBJECTIVES",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_157",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "🚨 SPLIT-AND-LAUNCH MECHANISM",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_158",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "⏰ TIMELINE & DEADLINES",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_159",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "Phase 5 Target: 3 weeks maximum",
+      "status": "implemented",
+      "links": [
+        "src/phase5_enterprise_optimization.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_160",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "Phase 6 Target: 2 weeks maximum",
+      "status": "implemented",
+      "links": [
+        "src/phase6_production_deployment.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_161",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "🎖️ SUCCESS METRICS",
+      "status": "partial",
+      "links": [
+        "gss/agss/metrics.lua"
+      ]
+    },
+    {
+      "id": "IDEA_162",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "Phase 5 Completion Criteria:",
+      "status": "implemented",
+      "links": [
+        "src/phase5_enterprise_optimization.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_163",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "Phase 6 Victory Criteria:",
+      "status": "implemented",
+      "links": [
+        "src/phase6_production_deployment.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_164",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "🔥 COMPETITIVE ADVANTAGES",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_165",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "Speed Multipliers:",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_166",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "Risk Mitigation:",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_167",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "🚨 EMERGENCY PROTOCOLS",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_168",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "If Behind Schedule:",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_169",
+      "source_path": "PHASE5_6_PLAN.md",
+      "summary": "If Quality Issues:",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_170",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "LUASCRIPT Project Status",
+      "status": "partial",
+      "links": [
+        "src/unified_luascript.js"
+      ]
+    },
+    {
+      "id": "IDEA_171",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Overview",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_172",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Development Timeline",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_173",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Completed Phases",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_174",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Current Phase",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_175",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Feature-by-Feature Status",
+      "status": "partial",
+      "links": [
+        "src/phase3_advanced_features.lua",
+        "src/advanced_features.js"
+      ]
+    },
+    {
+      "id": "IDEA_176",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Core Language Components",
+      "status": "implemented",
+      "links": [
+        "src/phase2_core_modules.js",
+        "src/core_transpiler.js",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/core/symbol-table.test.ts",
+        "src/core/symbol-table.ts",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_177",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Data Types",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_178",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Control Flow",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_179",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Standard Library",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_180",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Testing Infrastructure",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_181",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Performance and Optimization",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "src/performance_tools.js"
+      ]
+    },
+    {
+      "id": "IDEA_182",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Documentation",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_183",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "- **TODO.md**: ✅ Updated for Week 5",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_184",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "- **TODO.md**: ✅ Updated for Week 5",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_185",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Current Issues and Fixes",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_186",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Critical Issues (Phase 1A)",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_187",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Documentation Issues (Phase 1B)",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_188",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Testing Issues (Phase 1C)",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_189",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Performance Issues (Phase 1D)",
+      "status": "implemented",
+      "links": [
+        "src/performance_tools.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_190",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Success Metrics",
+      "status": "partial",
+      "links": [
+        "gss/agss/metrics.lua"
+      ]
+    },
+    {
+      "id": "IDEA_191",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Week 5 Phase 1A-1D Goals",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_192",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Overall Project Health",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_193",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Risk Assessment",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_194",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Low Risk",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_195",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Medium Risk",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_196",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "High Risk",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_197",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Next Steps",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_198",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Immediate (Week 5)",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_199",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Short Term (Week 6-8)",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_200",
+      "source_path": "PROJECT_STATUS.md",
+      "summary": "Long Term (Week 9+)",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_201",
+      "source_path": "TODO.md",
+      "summary": "LUASCRIPT Development TODO",
+      "status": "partial",
+      "links": [
+        "src/unified_luascript.js"
+      ]
+    },
+    {
+      "id": "IDEA_202",
+      "source_path": "TODO.md",
+      "summary": "Week 5 - Phase 1A-1D Critical Stabilization",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_203",
+      "source_path": "TODO.md",
+      "summary": "Phase 1A: Runtime Compatibility Fixes",
+      "status": "partial",
+      "links": [
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "src/index.js"
+      ]
+    },
+    {
+      "id": "IDEA_204",
+      "source_path": "TODO.md",
+      "summary": "Phase 1B: Documentation Accuracy",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_205",
+      "source_path": "TODO.md",
+      "summary": "- [x] Create comprehensive TODO.md",
+      "status": "partial",
+      "links": [
+        "test/test_phase1_6_comprehensive.js"
+      ]
+    },
+    {
+      "id": "IDEA_206",
+      "source_path": "TODO.md",
+      "summary": "- [x] Create comprehensive TODO.md",
+      "status": "partial",
+      "links": [
+        "test/test_phase1_6_comprehensive.js"
+      ]
+    },
+    {
+      "id": "IDEA_207",
+      "source_path": "TODO.md",
+      "summary": "Phase 1C: Testing Stabilization",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_208",
+      "source_path": "TODO.md",
+      "summary": "Phase 1D: Performance Validation",
+      "status": "implemented",
+      "links": [
+        "src/performance_tools.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_209",
+      "source_path": "TODO.md",
+      "summary": "Week 6+ Future Tasks",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_210",
+      "source_path": "TODO.md",
+      "summary": "Core Language Features",
+      "status": "implemented",
+      "links": [
+        "src/phase2_core_modules.js",
+        "src/core_transpiler.js",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/core/symbol-table.test.ts",
+        "src/core/symbol-table.ts",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/advanced_features.js"
+      ]
+    },
+    {
+      "id": "IDEA_211",
+      "source_path": "TODO.md",
+      "summary": "Advanced Features",
+      "status": "partial",
+      "links": [
+        "src/phase3_advanced_features.lua",
+        "src/advanced_async.js",
+        "src/advanced_features.js"
+      ]
+    },
+    {
+      "id": "IDEA_212",
+      "source_path": "TODO.md",
+      "summary": "Tooling and Ecosystem",
+      "status": "implemented",
+      "links": [
+        "test/test_phase9_ecosystem.js",
+        "src/phase9_ecosystem.js",
+        "src/phase4_ecosystem_integration.lua"
+      ]
+    },
+    {
+      "id": "IDEA_213",
+      "source_path": "TODO.md",
+      "summary": "Performance and Optimization",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "src/performance_tools.js"
+      ]
+    },
+    {
+      "id": "IDEA_214",
+      "source_path": "TODO.md",
+      "summary": "Completed Tasks (Weeks 1-4)",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_215",
+      "source_path": "TODO.md",
+      "summary": "Week 1: Foundation",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_216",
+      "source_path": "TODO.md",
+      "summary": "Week 2: Core Parser",
+      "status": "partial",
+      "links": [
+        "src/parser.js",
+        "src/phase1_core_parser.js"
+      ]
+    },
+    {
+      "id": "IDEA_217",
+      "source_path": "TODO.md",
+      "summary": "Week 3: Interpreter Engine",
+      "status": "partial",
+      "links": [
+        "src/phase2_core_interpreter.js",
+        "gss/runtime/engine.lua"
+      ]
+    },
+    {
+      "id": "IDEA_218",
+      "source_path": "TODO.md",
+      "summary": "Week 4: Testing and Documentation",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_219",
+      "source_path": "TODO.md",
+      "summary": "Notes",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_220",
+      "source_path": "TODO.md",
+      "summary": "Review Schedule",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_221",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "GSS & AGSS Implementation TODO",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "gss/tests/test_agss.lua",
+        "gss/agss/metrics.lua",
+        "gss/agss/strategies.lua",
+        "gss/agss/agent.lua",
+        "gss/benchmarks/bench_agss.lua"
+      ]
+    },
+    {
+      "id": "IDEA_222",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "🎯 Mission: Transform LUASCRIPT into the most elegant, powerful, and AI-assisted programming language",
+      "status": "partial",
+      "links": [
+        "src/unified_luascript.js"
+      ]
+    },
+    {
+      "id": "IDEA_223",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Milestone A: GSS Implementation (Elegance)",
+      "status": "partial",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua"
+      ]
+    },
+    {
+      "id": "IDEA_224",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Phase 1: Grammar & Parser ⏳",
+      "status": "partial",
+      "links": [
+        "src/parser.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_ast.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_225",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Phase 2: Kernel Graph IR ⏳",
+      "status": "partial",
+      "links": [
+        "src/phase2_core_modules.js",
+        "src/phase2_core_interpreter.js"
+      ]
+    },
+    {
+      "id": "IDEA_226",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Phase 3: Runtime Kernels ⏳",
+      "status": "partial",
+      "links": [
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "src/index.js"
+      ]
+    },
+    {
+      "id": "IDEA_227",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Phase 4: Performance Optimization ⏳",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "src/performance_tools.js"
+      ]
+    },
+    {
+      "id": "IDEA_228",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Milestone B: AGSS Implementation (Agentic Optimization)",
+      "status": "implemented",
+      "links": [
+        "src/optimized_transpiler.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "gss/tests/test_agss.lua",
+        "gss/agss/metrics.lua",
+        "gss/agss/strategies.lua",
+        "gss/agss/agent.lua",
+        "gss/benchmarks/bench_agss.lua",
+        "test_optimizations.js",
+        "src/agentic_ide.js",
+        "src/phase3_compiler_optimizations.lua",
+        "src/phase5_enterprise_optimization.js"
+      ]
+    },
+    {
+      "id": "IDEA_229",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Phase 5: Agent Grammar & Parser ⏳",
+      "status": "partial",
+      "links": [
+        "src/parser.js",
+        "src/phase1_core_parser.js",
+        "src/phase5_enterprise_optimization.js"
+      ]
+    },
+    {
+      "id": "IDEA_230",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Phase 6: Agent Runtime ⏳",
+      "status": "partial",
+      "links": [
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "src/index.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_231",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Phase 7: Tape-Deck UI Controls ⏳",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_232",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Phase 8: Logging & Reporting ⏳",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_233",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Integration & Testing",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_integration.lua",
+        "src/phase4_ecosystem_integration.lua"
+      ]
+    },
+    {
+      "id": "IDEA_234",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Phase 9: Full Integration ⏳",
+      "status": "implemented",
+      "links": [
+        "src/phase9_ecosystem.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "gss/tests/test_integration.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_235",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Phase 10: Validation & Polish ⏳",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_236",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Current Status",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_237",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Next Actions",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_238",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "2. ✅ Create TODO checklist (this file)",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_239",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Team Coordination",
+      "status": "partial",
+      "links": [
+        "src/meta_team_activation.lua"
+      ]
+    },
+    {
+      "id": "IDEA_240",
+      "source_path": "TODO_GSS_AGSS.md",
+      "summary": "Leadership Checkpoints",
+      "status": "partial",
+      "links": [
+        "scripts/leadership_activation_runner.lua"
+      ]
+    },
+    {
+      "id": "IDEA_241",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "GSS & AGSS Implementation Summary",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "gss/tests/test_agss.lua",
+        "gss/agss/metrics.lua",
+        "gss/agss/strategies.lua",
+        "gss/agss/agent.lua",
+        "gss/benchmarks/bench_agss.lua"
+      ]
+    },
+    {
+      "id": "IDEA_242",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "🎯 Mission Complete: Milestones A & B Achieved",
+      "status": "partial",
+      "links": [
+        "src/phase8_complete.js"
+      ]
+    },
+    {
+      "id": "IDEA_243",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Executive Summary",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_244",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Key Achievements",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_245",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Implementation Statistics",
+      "status": "partial",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua"
+      ]
+    },
+    {
+      "id": "IDEA_246",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Code Metrics",
+      "status": "partial",
+      "links": [
+        "gss/agss/metrics.lua"
+      ]
+    },
+    {
+      "id": "IDEA_247",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Architecture Components",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_248",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Technical Highlights",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_249",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "1. Grammar & Parser (LPEG-based)",
+      "status": "partial",
+      "links": [
+        "src/parser.js",
+        "src/phase1_core_parser.js"
+      ]
+    },
+    {
+      "id": "IDEA_250",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "2. Kernel Graph IR",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_kernels.lua",
+        "gss/ir/graph.lua"
+      ]
+    },
+    {
+      "id": "IDEA_251",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "3. Runtime Kernels",
+      "status": "partial",
+      "links": [
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "src/index.js"
+      ]
+    },
+    {
+      "id": "IDEA_252",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "4. AGSS Search Strategies",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_agss.lua",
+        "gss/agss/metrics.lua",
+        "gss/agss/strategies.lua",
+        "gss/agss/agent.lua",
+        "gss/benchmarks/bench_agss.lua"
+      ]
+    },
+    {
+      "id": "IDEA_253",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "5. Mathematical Elegance",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_254",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Performance Results",
+      "status": "partial",
+      "links": [
+        "src/performance_tools.js"
+      ]
+    },
+    {
+      "id": "IDEA_255",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Milestone A Targets",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_256",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Milestone B Features",
+      "status": "partial",
+      "links": [
+        "src/phase3_advanced_features.lua",
+        "src/advanced_features.js"
+      ]
+    },
+    {
+      "id": "IDEA_257",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Acceptance Criteria Status",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_258",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "File Structure",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_259",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Usage Examples",
+      "status": "partial",
+      "links": [
+        "examples/phase1b_demo.js"
+      ]
+    },
+    {
+      "id": "IDEA_260",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Basic GSS",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_261",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "AGSS Agent",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_agss.lua",
+        "gss/agss/metrics.lua",
+        "gss/agss/strategies.lua",
+        "gss/agss/agent.lua",
+        "gss/benchmarks/bench_agss.lua",
+        "src/agents/resolver-agent.test.ts",
+        "src/agents/resolver-agent.ts",
+        "src/agentic_ide.js"
+      ]
+    },
+    {
+      "id": "IDEA_262",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Programmatic API",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_263",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Testing & Validation",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_264",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Test Suite",
+      "status": "partial",
+      "links": [
+        "tests/test_arrow_functions.js",
+        "tests/test_memory_management.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_unified_system.js",
+        "test/temp/test_1759249530265.lua",
+        "test/temp/test_1759233219251.lua",
+        "test/temp/test_1759249489093.lua",
+        "test/temp/test_1759249489058.lua",
+        "test/temp/test_1759233219259.lua",
+        "test/temp/test_1759233219227.lua",
+        "test/temp/test_1759249489117.lua",
+        "test/temp/test_1759233219236.lua",
+        "test/temp/test_1759233219218.lua",
+        "test/temp/test_1759249489129.lua",
+        "test/temp/test_1759233219244.lua"
+      ]
+    },
+    {
+      "id": "IDEA_265",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Benchmarks",
+      "status": "partial",
+      "links": [
+        "gss/benchmarks/bench_gss.lua",
+        "gss/benchmarks/bench_agss.lua"
+      ]
+    },
+    {
+      "id": "IDEA_266",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Test Execution",
+      "status": "partial",
+      "links": [
+        "tests/test_arrow_functions.js",
+        "tests/test_memory_management.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_unified_system.js",
+        "test/temp/test_1759249530265.lua",
+        "test/temp/test_1759233219251.lua",
+        "test/temp/test_1759249489093.lua",
+        "test/temp/test_1759249489058.lua",
+        "test/temp/test_1759233219259.lua",
+        "test/temp/test_1759233219227.lua",
+        "test/temp/test_1759249489117.lua",
+        "test/temp/test_1759233219236.lua",
+        "test/temp/test_1759233219218.lua",
+        "test/temp/test_1759249489129.lua",
+        "test/temp/test_1759233219244.lua"
+      ]
+    },
+    {
+      "id": "IDEA_267",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Run all tests",
+      "status": "implemented",
+      "links": [
+        "tests/test_arrow_functions.js",
+        "tests/test_memory_management.js",
+        "gss/tests/test_kernels.lua",
+        "gss/tests/test_parser.lua",
+        "gss/tests/test_agss.lua",
+        "gss/tests/test_integration.lua",
+        "scripts/run_gss_tests.sh"
+      ]
+    },
+    {
+      "id": "IDEA_268",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Individual tests",
+      "status": "implemented",
+      "links": [
+        "tests/test_arrow_functions.js",
+        "tests/test_memory_management.js",
+        "gss/tests/test_kernels.lua",
+        "gss/tests/test_parser.lua",
+        "gss/tests/test_agss.lua",
+        "gss/tests/test_integration.lua",
+        "scripts/run_gss_tests.sh"
+      ]
+    },
+    {
+      "id": "IDEA_269",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Benchmarks",
+      "status": "partial",
+      "links": [
+        "gss/benchmarks/bench_gss.lua",
+        "gss/benchmarks/bench_agss.lua"
+      ]
+    },
+    {
+      "id": "IDEA_270",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Design Principles",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_271",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Steve Jobs: \"Ship it now. CSS-like elegance.\"",
+      "status": "partial",
+      "links": [
+        "scripts/leadership_activation_runner.lua"
+      ]
+    },
+    {
+      "id": "IDEA_272",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Donald Knuth: \"Provably correct. Formal rigor.\"",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_273",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Future Enhancements",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_274",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Phase 1 (Immediate)",
+      "status": "partial",
+      "links": [
+        "src/phase1_core_ast.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_275",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Phase 2 (Near-term)",
+      "status": "partial",
+      "links": [
+        "src/phase2_core_modules.js",
+        "src/phase2_core_interpreter.js"
+      ]
+    },
+    {
+      "id": "IDEA_276",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Phase 3 (Long-term)",
+      "status": "implemented",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_lexer.js",
+        "src/phase6_production_deployment.js"
+      ]
+    },
+    {
+      "id": "IDEA_277",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Dependencies",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_278",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Team Contributions",
+      "status": "partial",
+      "links": [
+        "src/meta_team_activation.lua"
+      ]
+    },
+    {
+      "id": "IDEA_279",
+      "source_path": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "summary": "Conclusion",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_280",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "LUASCRIPT Enhanced Transpiler - Implementation Summary",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "src/core_transpiler.js",
+        "src/transpiler.js",
+        "src/enhanced_transpiler.js"
+      ]
+    },
+    {
+      "id": "IDEA_281",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "Task Completion Status: ✅ COMPLETE",
+      "status": "partial",
+      "links": [
+        "src/phase8_complete.js"
+      ]
+    },
+    {
+      "id": "IDEA_282",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "Objective",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_283",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "Deliverables",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_284",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "Key Achievements",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_285",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "Technical Implementation",
+      "status": "partial",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua"
+      ]
+    },
+    {
+      "id": "IDEA_286",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "Files Created",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_287",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "- Next steps",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_288",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "Git Status",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_289",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "Next Steps for User",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_290",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "Alternative: Manual PR Creation",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_291",
+      "source_path": "IMPLEMENTATION_SUMMARY.md",
+      "summary": "Conclusion",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_292",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "QUALITY GATES ENFORCEMENT - PARALLEL TEAMS EXECUTION",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh",
+        "scripts/kickoff_phase3_parallel.sh"
+      ]
+    },
+    {
+      "id": "IDEA_293",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "QUALITY GATE FRAMEWORK OVERVIEW",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_294",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "META-TEAM QUALITY AUTHORITY",
+      "status": "partial",
+      "links": [
+        "src/meta_team_activation.lua",
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_295",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "QUALITY GATE ENFORCEMENT LEVELS",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_296",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "DAILY QUALITY GATES ENFORCEMENT",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh",
+        "scripts/daily_standup_monitor.lua",
+        "scripts/setup_daily_monitoring.sh"
+      ]
+    },
+    {
+      "id": "IDEA_297",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "STEVE JOBS QUALITY GATES - USER EXPERIENCE EXCELLENCE",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_298",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "DONALD KNUTH QUALITY GATES - ALGORITHMIC EXCELLENCE",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_299",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "LINUS TORVALDS QUALITY GATES - CODE QUALITY EXCELLENCE",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_300",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "ADA LOVELACE QUALITY GATES - TESTING EXCELLENCE",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_301",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "CROSS-TEAM INTEGRATION QUALITY GATES",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_integration.lua",
+        "src/meta_team_activation.lua",
+        "src/phase4_ecosystem_integration.lua",
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_302",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "INTERFACE COMPATIBILITY GATES",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_303",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "DEPENDENCY SATISFACTION GATES",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_304",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "WEEKLY COMPREHENSIVE QUALITY GATES",
+      "status": "implemented",
+      "links": [
+        "test/test_phase1_6_comprehensive.js",
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_305",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "FRIDAY COMPREHENSIVE REVIEW (3:00 PM UTC - 2 hours)",
+      "status": "partial",
+      "links": [
+        "test/test_phase1_6_comprehensive.js"
+      ]
+    },
+    {
+      "id": "IDEA_306",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "QUALITY GATE FAILURE PROTOCOLS",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_307",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "IMMEDIATE FAILURE RESPONSE",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_308",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "FAILURE RESOLUTION TIMELINE",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_309",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "FAILURE ESCALATION MATRIX",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_310",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "QUALITY METRICS DASHBOARD",
+      "status": "partial",
+      "links": [
+        "gss/agss/metrics.lua",
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_311",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "Real-Time Quality Tracking",
+      "status": "partial",
+      "links": [
+        "gss/runtime/ramp.lua",
+        "gss/runtime/iso.lua",
+        "gss/runtime/gaussian.lua",
+        "gss/runtime/wasm.lua",
+        "gss/runtime/engine.lua",
+        "gss/runtime/cache.lua",
+        "gss/runtime/blend.lua",
+        "runtime_runtime.json",
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "scripts/validate_quality_gates.sh",
+        "runtime/runtime.lua"
+      ]
+    },
+    {
+      "id": "IDEA_312",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "Quality Performance Indicators",
+      "status": "partial",
+      "links": [
+        "src/performance_tools.js",
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_313",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "QUALITY ENFORCEMENT AUTOMATION",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_314",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "Automated Quality Checks",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_315",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "Manual Quality Reviews",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_316",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "QUALITY GATE SUCCESS REWARDS",
+      "status": "partial",
+      "links": [
+        "scripts/validate_quality_gates.sh"
+      ]
+    },
+    {
+      "id": "IDEA_317",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "Daily Success Recognition",
+      "status": "partial",
+      "links": [
+        "scripts/daily_standup_monitor.lua",
+        "scripts/setup_daily_monitoring.sh"
+      ]
+    },
+    {
+      "id": "IDEA_318",
+      "source_path": "QUALITY_GATES_ENFORCEMENT.md",
+      "summary": "Weekly Success Celebration",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_319",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "GSS & AGSS Design Specification",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_agss.lua",
+        "gss/agss/metrics.lua",
+        "gss/agss/strategies.lua",
+        "gss/agss/agent.lua",
+        "gss/benchmarks/bench_agss.lua"
+      ]
+    },
+    {
+      "id": "IDEA_320",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Overview",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_321",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Architecture",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_322",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "GSS Grammar (EBNF)",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_323",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "AGSS Grammar Extension",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_agss.lua",
+        "gss/agss/metrics.lua",
+        "gss/agss/strategies.lua",
+        "gss/agss/agent.lua",
+        "gss/benchmarks/bench_agss.lua"
+      ]
+    },
+    {
+      "id": "IDEA_324",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Kernel Graph IR",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_kernels.lua",
+        "gss/ir/graph.lua"
+      ]
+    },
+    {
+      "id": "IDEA_325",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Node Types",
+      "status": "partial",
+      "links": [
+        "gss/ir/nodes.lua"
+      ]
+    },
+    {
+      "id": "IDEA_326",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Runtime Kernels",
+      "status": "partial",
+      "links": [
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "src/index.js"
+      ]
+    },
+    {
+      "id": "IDEA_327",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Gaussian Tile Renderer",
+      "status": "partial",
+      "links": [
+        "gss/runtime/gaussian.lua"
+      ]
+    },
+    {
+      "id": "IDEA_328",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Marching Squares Iso Contours",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_329",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Performance Targets",
+      "status": "partial",
+      "links": [
+        "src/performance_tools.js"
+      ]
+    },
+    {
+      "id": "IDEA_330",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Milestone A (GSS)",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_331",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Optimization Strategies",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "gss/agss/strategies.lua",
+        "test_optimizations.js",
+        "src/phase3_compiler_optimizations.lua",
+        "src/phase5_enterprise_optimization.js"
+      ]
+    },
+    {
+      "id": "IDEA_332",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "AGSS Agent Runtime",
+      "status": "partial",
+      "links": [
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "src/index.js"
+      ]
+    },
+    {
+      "id": "IDEA_333",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Search Strategies",
+      "status": "partial",
+      "links": [
+        "gss/agss/strategies.lua"
+      ]
+    },
+    {
+      "id": "IDEA_334",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Measurement & Logging",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_335",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Acceptance Criteria",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_336",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "A1: Engine Boundary + JS Fallback",
+      "status": "partial",
+      "links": [
+        "gss/runtime/engine.lua"
+      ]
+    },
+    {
+      "id": "IDEA_337",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "A2: Benchmark Harness",
+      "status": "partial",
+      "links": [
+        "gss/benchmarks/bench_gss.lua",
+        "gss/benchmarks/bench_agss.lua"
+      ]
+    },
+    {
+      "id": "IDEA_338",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "A3: Baseline Comparisons",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_339",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "A4: GSS Parse/Compile",
+      "status": "implemented",
+      "links": [
+        "gss/tests/test_parser.lua",
+        "gss/parser/ast.lua",
+        "gss/parser/parser.lua",
+        "gss/parser/semantic.lua",
+        "src/parser.js",
+        "src/phase1_core_parser.js",
+        "src/phase3_compiler_optimizations.lua"
+      ]
+    },
+    {
+      "id": "IDEA_340",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "A5: Agent Loop",
+      "status": "implemented",
+      "links": [
+        "gss/agss/agent.lua",
+        "src/agents/resolver-agent.test.ts",
+        "src/agents/resolver-agent.ts",
+        "src/agentic_ide.js"
+      ]
+    },
+    {
+      "id": "IDEA_341",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "A6: WASM Path",
+      "status": "implemented",
+      "links": [
+        "src/wasm_backend.js",
+        "test/test_wasm_backend.js",
+        "gss/runtime/wasm.lua",
+        "scripts/build_wasm.sh"
+      ]
+    },
+    {
+      "id": "IDEA_342",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "File Structure",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_343",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Implementation Phases",
+      "status": "partial",
+      "links": [
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua"
+      ]
+    },
+    {
+      "id": "IDEA_344",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Phase 1: Grammar & Parser (Days 1-2)",
+      "status": "partial",
+      "links": [
+        "src/parser.js",
+        "src/phase1_core_parser.js",
+        "src/phase1_core_ast.js",
+        "src/phase1_core_lexer.js"
+      ]
+    },
+    {
+      "id": "IDEA_345",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Phase 2: Kernel Graph IR (Days 2-3)",
+      "status": "partial",
+      "links": [
+        "src/phase2_core_modules.js",
+        "src/phase2_core_interpreter.js"
+      ]
+    },
+    {
+      "id": "IDEA_346",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Phase 3: Runtime Kernels (Days 3-5)",
+      "status": "partial",
+      "links": [
+        "src/runtime.js",
+        "src/runtime_system.js",
+        "src/index.js"
+      ]
+    },
+    {
+      "id": "IDEA_347",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Phase 4: Performance Optimization (Days 5-6)",
+      "status": "partial",
+      "links": [
+        "src/optimized_transpiler.js",
+        "src/performance_tools.js"
+      ]
+    },
+    {
+      "id": "IDEA_348",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Phase 5: AGSS Implementation (Days 6-7)",
+      "status": "implemented",
+      "links": [
+        "src/phase5_enterprise_optimization.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "gss/tests/test_agss.lua",
+        "gss/agss/metrics.lua",
+        "gss/agss/strategies.lua",
+        "gss/agss/agent.lua",
+        "gss/benchmarks/bench_agss.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js"
+      ]
+    },
+    {
+      "id": "IDEA_349",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Phase 6: Integration & Testing (Days 7-8)",
+      "status": "implemented",
+      "links": [
+        "src/phase6_production_deployment.js",
+        "test/test_phase4_implementation.lua",
+        "test/test_phase3_implementation.lua",
+        "test/test_phase9_ecosystem.js",
+        "test/test_phase1_6_comprehensive.js",
+        "test/test_phase4_debugging.lua",
+        "gss/tests/test_integration.lua",
+        "src/phase2_core_modules.js",
+        "src/phase4_debugging_profiling.lua",
+        "src/phase2_core_interpreter.js",
+        "src/phase1_core_ast.js",
+        "src/phase3_advanced_features.lua",
+        "src/phase8_complete.js",
+        "src/phase9_ecosystem.js",
+        "src/phase1_core_parser.js"
+      ]
+    },
+    {
+      "id": "IDEA_350",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Mathematical Elegance",
+      "status": "unknown",
+      "links": []
+    },
+    {
+      "id": "IDEA_351",
+      "source_path": "DESIGN_GSS.md",
+      "summary": "Leadership Principles",
+      "status": "partial",
+      "links": [
+        "scripts/leadership_activation_runner.lua"
+      ]
+    }
+  ],
+  "summary": {
+    "total": 351,
+    "implemented": 61,
+    "partial": 156,
+    "coverage_pct": 40,
+    "dangling": [
+      "IDEA_2",
+      "IDEA_3",
+      "IDEA_4",
+      "IDEA_5",
+      "IDEA_12",
+      "IDEA_13",
+      "IDEA_14",
+      "IDEA_15",
+      "IDEA_16",
+      "IDEA_20",
+      "IDEA_21",
+      "IDEA_29",
+      "IDEA_30",
+      "IDEA_31",
+      "IDEA_33",
+      "IDEA_39",
+      "IDEA_45",
+      "IDEA_47",
+      "IDEA_48",
+      "IDEA_50"
+    ]
+  }
+}

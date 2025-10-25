@@ -1,0 +1,40 @@
+1..39
+not ok 1 runtime/runtime.lua:67:121: line is too long (127 > 120)
+not ok 2 runtime/runtime.lua:78:121: line is too long (133 > 120)
+not ok 3 scripts/bonus_tracker.lua:6:7: unused variable 'io'
+not ok 4 scripts/daily_standup_monitor.lua:105:9: unused loop variable 'i'
+ok 5 scripts/leadership_activation_runner.lua
+ok 6 src/meta_team_activation.lua
+ok 7 src/phase3_advanced_features.lua
+not ok 8 src/phase3_compiler_optimizations.lua:77:121: line is too long (126 > 120)
+not ok 9 src/phase4_debugging_profiling.lua:137:35: unused argument 'line'
+not ok 10 src/phase4_debugging_profiling.lua:224:11: unused variable 'registry'
+not ok 11 src/phase4_debugging_profiling.lua:259:37: unused argument 'self'
+not ok 12 src/phase4_debugging_profiling.lua:320:30: unused argument 'self'
+not ok 13 src/phase4_debugging_profiling.lua:336:121: line is too long (130 > 120)
+not ok 14 src/phase4_ecosystem_integration.lua:59:32: unused argument 'self'
+not ok 15 src/phase4_ecosystem_integration.lua:59:62: unused argument 'version'
+not ok 16 src/phase4_ecosystem_integration.lua:107:32: unused argument 'self'
+not ok 17 src/phase4_ecosystem_integration.lua:117:32: unused argument 'self'
+not ok 18 src/phase4_ecosystem_integration.lua:172:32: unused argument 'self'
+not ok 19 src/phase4_ecosystem_integration.lua:193:32: unused argument 'self'
+not ok 20 src/phase4_ecosystem_integration.lua:210:32: unused argument 'self'
+not ok 21 src/phase4_ecosystem_integration.lua:220:32: unused argument 'self'
+not ok 22 src/phase4_ecosystem_integration.lua:310:29: unused argument 'self'
+ok 23 test/temp/test_1759233219218.lua
+ok 24 test/temp/test_1759233219227.lua
+ok 25 test/temp/test_1759233219236.lua
+ok 26 test/temp/test_1759233219244.lua
+ok 27 test/temp/test_1759233219251.lua
+ok 28 test/temp/test_1759233219259.lua
+ok 29 test/temp/test_1759249489058.lua
+ok 30 test/temp/test_1759249489077.lua
+ok 31 test/temp/test_1759249489093.lua
+ok 32 test/temp/test_1759249489105.lua
+ok 33 test/temp/test_1759249489117.lua
+ok 34 test/temp/test_1759249489129.lua
+ok 35 test/temp/test_1759249530265.lua
+not ok 36 test/test_phase3_implementation.lua:84:5: unused loop variable 'i'
+not ok 37 test/test_phase4_debugging.lua:12:7: variable 'test_data' is mutated but never accessed
+not ok 38 test/test_phase4_debugging.lua:93:7: unused variable 'test_var'
+not ok 39 test/test_phase4_implementation.lua:69:32: unused argument 'ctx'

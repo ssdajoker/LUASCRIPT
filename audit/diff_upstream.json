@@ -1,0 +1,1928 @@
+[
+  {
+    "entity_type": "idea",
+    "id": "IDEA_12",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_13",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_16",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_21",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_22",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_23",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_24",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_25",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_26",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_27",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_28",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_29",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_183",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "PROJECT_STATUS.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_12",
+    "status": "removed",
+    "pointers": {
+      "local": "README.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_19",
+    "status": "removed",
+    "pointers": {
+      "local": "README.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_173",
+    "status": "removed",
+    "pointers": {
+      "local": "PROJECT_STATUS.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_180",
+    "status": "removed",
+    "pointers": {
+      "local": "PROJECT_STATUS.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_195",
+    "status": "removed",
+    "pointers": {
+      "local": "TODO.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_344",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_345",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_346",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_347",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_348",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_349",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_350",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_351",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_352",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_353",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_354",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_355",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_356",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_357",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_358",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_359",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_360",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_361",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_362",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "adr",
+    "id": "docs/adr/0001-decision-transpiler-architecture.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/adr/0001-decision-transpiler-architecture.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "adr",
+    "id": "docs/adr/0002-decision-runtime-memory-management.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/adr/0002-decision-runtime-memory-management.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "audit_upstream/FILE_TREE.md",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit_upstream/FILE_TREE.md"
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "reports/perf/benchmark-verification-addendum.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/perf/benchmark-verification-addendum.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "reports/perf/callgraphs/phase3-lite/README.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/perf/callgraphs/phase3-lite/README.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "reports/static_hygiene_update.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/static_hygiene_update.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "reports/cross_platform/PHASE1A-rollup.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/PHASE1A-rollup.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "reports/cross_platform/2025-10-12-windows/summary.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/2025-10-12-windows/summary.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "reports/cross_platform/2025-10-12-linux/summary.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/2025-10-12-linux/summary.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "reports/cross_platform/2025-10-12-macos/summary.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/2025-10-12-macos/summary.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "reports/canonical_ir_status.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/canonical_ir_status.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/CROSS_PLATFORM_VALIDATION.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/CROSS_PLATFORM_VALIDATION.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/canonical_ir_spec.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/testing/legacy_harness_modularization.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/testing/legacy_harness_modularization.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/testing/legacy-harness-modularization.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/testing/legacy-harness-modularization.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/adr/0001-decision-transpiler-architecture.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/adr/0001-decision-transpiler-architecture.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/adr/0002-decision-runtime-memory-management.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/adr/0002-decision-runtime-memory-management.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/PERFECT_PARSER_PHASE1_TODO.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/PERFECT_PARSER_PHASE1_TODO.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/audits/phase3_algorithms.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/audits/phase3_algorithms.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/PHASE1A_STANDUP_CHECKLIST.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/PHASE1A_STANDUP_CHECKLIST.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/PARSER_RUNTIME_PARITY_PLAN.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/PARSER_RUNTIME_PARITY_PLAN.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/PHASE1A_RUNTIME_TICKETS.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/PHASE1A_RUNTIME_TICKETS.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "docs/WEEK6_RUNWAY_PREP.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/WEEK6_RUNWAY_PREP.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "doc",
+    "id": "GIT_DISABLED_README.md",
+    "status": "removed",
+    "pointers": {
+      "local": "GIT_DISABLED_README.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759249530265.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759249530265.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759233219251.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759233219251.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759249489093.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759249489093.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759249489058.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759249489058.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759233219259.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759233219259.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759233219227.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759233219227.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759249489117.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759249489117.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759233219236.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759233219236.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759233219218.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759233219218.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759249489129.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759249489129.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759233219244.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759233219244.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759249489105.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759249489105.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/temp/test_1759249489077.lua",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "test/temp/test_1759249489077.lua"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "audit_upstream/FILE_TREE.md",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit_upstream/FILE_TREE.md"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "audit_upstream/.gitkeep",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit_upstream/.gitkeep"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "audit_upstream/files_all.txt",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit_upstream/files_all.txt"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "audit/synthesize_phaseA.js",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit/synthesize_phaseA.js"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "audit/merge_candidates.md",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit/merge_candidates.md"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "audit/diff_upstream.json",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit/diff_upstream.json"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "audit/synthesis_phaseA.md",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit/synthesis_phaseA.md"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "audit/diff_upstream.js",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit/diff_upstream.js"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "audit/diff_upstream_report.md",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit/diff_upstream_report.md"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "audit/run_all_upstream.sh",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit/run_all_upstream.sh"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "audit/merge_candidates.js",
+    "status": "added",
+    "pointers": {
+      "local": null,
+      "upstream": "audit/merge_candidates.js"
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "tests/ir/emitter.test.js",
+    "status": "removed",
+    "pointers": {
+      "local": "tests/ir/emitter.test.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "tests/ir/builder.test.js",
+    "status": "removed",
+    "pointers": {
+      "local": "tests/ir/builder.test.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "tests/ir/run_ir_validate.js",
+    "status": "removed",
+    "pointers": {
+      "local": "tests/ir/run_ir_validate.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "tests/ir/lowering.test.js",
+    "status": "removed",
+    "pointers": {
+      "local": "tests/ir/lowering.test.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/test_perfect_parser_phase1.js",
+    "status": "removed",
+    "pointers": {
+      "local": "test/test_perfect_parser_phase1.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/test_perfect_parser_phase1_negative.js",
+    "status": "removed",
+    "pointers": {
+      "local": "test/test_perfect_parser_phase1_negative.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/legacy/runtime.suite.js",
+    "status": "removed",
+    "pointers": {
+      "local": "test/legacy/runtime.suite.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/legacy/transpiler.suite.js",
+    "status": "removed",
+    "pointers": {
+      "local": "test/legacy/transpiler.suite.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "test/legacy/parser.suite.js",
+    "status": "removed",
+    "pointers": {
+      "local": "test/legacy/parser.suite.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "tsconfig.json",
+    "status": "removed",
+    "pointers": {
+      "local": "tsconfig.json",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/perf/benchmark-verification-addendum.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/perf/benchmark-verification-addendum.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/perf/callgraphs/phase3-lite/README.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/perf/callgraphs/phase3-lite/README.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/static_hygiene_update.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/static_hygiene_update.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/cross_platform/PHASE1A-rollup.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/PHASE1A-rollup.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/cross_platform/2025-10-12-windows/summary.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/2025-10-12-windows/summary.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/cross_platform/2025-10-12-windows/command_output.txt",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/2025-10-12-windows/command_output.txt",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/cross_platform/2025-10-12-linux/summary.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/2025-10-12-linux/summary.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/cross_platform/2025-10-12-linux/command_output.txt",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/2025-10-12-linux/command_output.txt",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/cross_platform/2025-10-12-linux/benchmark.json",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/2025-10-12-linux/benchmark.json",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/cross_platform/2025-10-12-linux/segfault-sweep.log",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/2025-10-12-linux/segfault-sweep.log",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/cross_platform/2025-10-12-macos/summary.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/2025-10-12-macos/summary.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/cross_platform/2025-10-12-macos/command_output.txt",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/cross_platform/2025-10-12-macos/command_output.txt",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "reports/canonical_ir_status.md",
+    "status": "removed",
+    "pointers": {
+      "local": "reports/canonical_ir_status.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".vscode/settings.json",
+    "status": "removed",
+    "pointers": {
+      "local": ".vscode/settings.json",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".github/workflows/ci.yml",
+    "status": "removed",
+    "pointers": {
+      "local": ".github/workflows/ci.yml",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "static_warnings_new.txt",
+    "status": "removed",
+    "pointers": {
+      "local": "static_warnings_new.txt",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/language/parser.test.ts",
+    "status": "removed",
+    "pointers": {
+      "local": "src/language/parser.test.ts",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/language/tokenizer.ts",
+    "status": "removed",
+    "pointers": {
+      "local": "src/language/tokenizer.ts",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/language/parser.ts",
+    "status": "removed",
+    "pointers": {
+      "local": "src/language/parser.ts",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/ide/resolution-diagnostics.ts",
+    "status": "removed",
+    "pointers": {
+      "local": "src/ide/resolution-diagnostics.ts",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/ide/resolution-diagnostics.test.ts",
+    "status": "removed",
+    "pointers": {
+      "local": "src/ide/resolution-diagnostics.test.ts",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/ide/resolution-diagnostics.js",
+    "status": "removed",
+    "pointers": {
+      "local": "src/ide/resolution-diagnostics.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/ir/nodes.js",
+    "status": "removed",
+    "pointers": {
+      "local": "src/ir/nodes.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/ir/idGenerator.js",
+    "status": "removed",
+    "pointers": {
+      "local": "src/ir/idGenerator.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/ir/normalizer.js",
+    "status": "removed",
+    "pointers": {
+      "local": "src/ir/normalizer.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/ir/pipeline.js",
+    "status": "removed",
+    "pointers": {
+      "local": "src/ir/pipeline.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/ir/emitter.js",
+    "status": "removed",
+    "pointers": {
+      "local": "src/ir/emitter.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/ir/builder.js",
+    "status": "removed",
+    "pointers": {
+      "local": "src/ir/builder.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/ir/lowerer.js",
+    "status": "removed",
+    "pointers": {
+      "local": "src/ir/lowerer.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/ir/validator.js",
+    "status": "removed",
+    "pointers": {
+      "local": "src/ir/validator.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/agents/auditor-agent.test.ts",
+    "status": "removed",
+    "pointers": {
+      "local": "src/agents/auditor-agent.test.ts",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "src/agents/auditor-agent.ts",
+    "status": "removed",
+    "pointers": {
+      "local": "src/agents/auditor-agent.ts",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "examples/crashers/chained_recursion.js",
+    "status": "removed",
+    "pointers": {
+      "local": "examples/crashers/chained_recursion.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "examples/crashers/table_metatable_cycle.js",
+    "status": "removed",
+    "pointers": {
+      "local": "examples/crashers/table_metatable_cycle.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "examples/crashers/runtime_gc_edge.js",
+    "status": "removed",
+    "pointers": {
+      "local": "examples/crashers/runtime_gc_edge.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "examples/crashers/deep_scope_shadowing.js",
+    "status": "removed",
+    "pointers": {
+      "local": "examples/crashers/deep_scope_shadowing.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/CROSS_PLATFORM_VALIDATION.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/CROSS_PLATFORM_VALIDATION.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/canonical_ir_spec.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/canonical_ir_spec.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/testing/legacy_harness_modularization.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/testing/legacy_harness_modularization.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/testing/legacy-harness-modularization.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/testing/legacy-harness-modularization.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/adr/0001-decision-transpiler-architecture.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/adr/0001-decision-transpiler-architecture.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/adr/0002-decision-runtime-memory-management.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/adr/0002-decision-runtime-memory-management.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/PERFECT_PARSER_PHASE1_TODO.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/PERFECT_PARSER_PHASE1_TODO.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/audits/phase3_algorithms.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/audits/phase3_algorithms.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/PHASE1A_STANDUP_CHECKLIST.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/PHASE1A_STANDUP_CHECKLIST.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/PARSER_RUNTIME_PARITY_PLAN.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/PARSER_RUNTIME_PARITY_PLAN.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/PHASE1A_RUNTIME_TICKETS.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/PHASE1A_RUNTIME_TICKETS.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "docs/WEEK6_RUNWAY_PREP.md",
+    "status": "removed",
+    "pointers": {
+      "local": "docs/WEEK6_RUNWAY_PREP.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "scripts/tmp_phase1_debug.js",
+    "status": "removed",
+    "pointers": {
+      "local": "scripts/tmp_phase1_debug.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "scripts/smoke_ci.js",
+    "status": "removed",
+    "pointers": {
+      "local": "scripts/smoke_ci.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "scripts/run_micro_benchmark.js",
+    "status": "removed",
+    "pointers": {
+      "local": "scripts/run_micro_benchmark.js",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "GIT_DISABLED_README.md",
+    "status": "removed",
+    "pointers": {
+      "local": "GIT_DISABLED_README.md",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": "package-lock.json",
+    "status": "removed",
+    "pointers": {
+      "local": "package-lock.json",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/pre-commit",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/pre-commit",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/pre-auto-gc",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/pre-auto-gc",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/h",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/h",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/post-applypatch",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/post-applypatch",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/pre-rebase",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/pre-rebase",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/pre-applypatch",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/pre-applypatch",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/post-rewrite",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/post-rewrite",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/prepare-commit-msg",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/prepare-commit-msg",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/post-merge",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/post-merge",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/post-checkout",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/post-checkout",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/commit-msg",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/commit-msg",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/.gitignore",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/.gitignore",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/post-commit",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/post-commit",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/pre-merge-commit",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/pre-merge-commit",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/applypatch-msg",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/applypatch-msg",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/husky.sh",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/husky.sh",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/_/pre-push",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/_/pre-push",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "file",
+    "id": ".husky/pre-push",
+    "status": "removed",
+    "pointers": {
+      "local": ".husky/pre-push",
+      "upstream": null
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_24",
+    "status": "changed",
+    "pointers": {
+      "local": "README.md",
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_27",
+    "status": "changed",
+    "pointers": {
+      "local": "README.md",
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_28",
+    "status": "changed",
+    "pointers": {
+      "local": "README.md",
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_37",
+    "status": "changed",
+    "pointers": {
+      "local": "README.md",
+      "upstream": "README.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_54",
+    "status": "changed",
+    "pointers": {
+      "local": "README_PHASE_1D.md",
+      "upstream": "README_PHASE_1D.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_75",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PLAN.md",
+      "upstream": "AUDIT_PLAN.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_78",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PLAN.md",
+      "upstream": "AUDIT_PLAN.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_79",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PLAN.md",
+      "upstream": "AUDIT_PLAN.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_88",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_90",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_94",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_96",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_97",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_103",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_104",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_105",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_106",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_109",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_111",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_112",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_113",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_114",
+    "status": "changed",
+    "pointers": {
+      "local": "AUDIT_PROTOCOL.md",
+      "upstream": "AUDIT_PROTOCOL.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_116",
+    "status": "changed",
+    "pointers": {
+      "local": "PHASE_PLAN.md",
+      "upstream": "PHASE_PLAN.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_119",
+    "status": "changed",
+    "pointers": {
+      "local": "PHASE_PLAN.md",
+      "upstream": "PHASE_PLAN.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_127",
+    "status": "changed",
+    "pointers": {
+      "local": "PHASE_PLAN.md",
+      "upstream": "PHASE_PLAN.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_128",
+    "status": "changed",
+    "pointers": {
+      "local": "PHASE_PLAN.md",
+      "upstream": "PHASE_PLAN.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_166",
+    "status": "changed",
+    "pointers": {
+      "local": "PROJECT_STATUS.md",
+      "upstream": "PROJECT_STATUS.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_168",
+    "status": "changed",
+    "pointers": {
+      "local": "PROJECT_STATUS.md",
+      "upstream": "PROJECT_STATUS.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_202",
+    "status": "changed",
+    "pointers": {
+      "local": "TODO.md",
+      "upstream": "TODO.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_214",
+    "status": "changed",
+    "pointers": {
+      "local": "TODO_GSS_AGSS.md",
+      "upstream": "TODO_GSS_AGSS.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_217",
+    "status": "changed",
+    "pointers": {
+      "local": "TODO_GSS_AGSS.md",
+      "upstream": "TODO_GSS_AGSS.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_238",
+    "status": "changed",
+    "pointers": {
+      "local": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "upstream": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_242",
+    "status": "changed",
+    "pointers": {
+      "local": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "upstream": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_251",
+    "status": "changed",
+    "pointers": {
+      "local": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "upstream": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_253",
+    "status": "changed",
+    "pointers": {
+      "local": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "upstream": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_259",
+    "status": "changed",
+    "pointers": {
+      "local": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "upstream": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_260",
+    "status": "changed",
+    "pointers": {
+      "local": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md",
+      "upstream": "GSS_AGSS_IMPLEMENTATION_SUMMARY.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_286",
+    "status": "changed",
+    "pointers": {
+      "local": "QUALITY_GATES_ENFORCEMENT.md",
+      "upstream": "QUALITY_GATES_ENFORCEMENT.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_291",
+    "status": "changed",
+    "pointers": {
+      "local": "QUALITY_GATES_ENFORCEMENT.md",
+      "upstream": "QUALITY_GATES_ENFORCEMENT.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_293",
+    "status": "changed",
+    "pointers": {
+      "local": "QUALITY_GATES_ENFORCEMENT.md",
+      "upstream": "QUALITY_GATES_ENFORCEMENT.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_300",
+    "status": "changed",
+    "pointers": {
+      "local": "QUALITY_GATES_ENFORCEMENT.md",
+      "upstream": "QUALITY_GATES_ENFORCEMENT.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_303",
+    "status": "changed",
+    "pointers": {
+      "local": "QUALITY_GATES_ENFORCEMENT.md",
+      "upstream": "QUALITY_GATES_ENFORCEMENT.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_316",
+    "status": "changed",
+    "pointers": {
+      "local": "DESIGN_GSS.md",
+      "upstream": "DESIGN_GSS.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_317",
+    "status": "changed",
+    "pointers": {
+      "local": "DESIGN_GSS.md",
+      "upstream": "DESIGN_GSS.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_329",
+    "status": "changed",
+    "pointers": {
+      "local": "DESIGN_GSS.md",
+      "upstream": "DESIGN_GSS.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_331",
+    "status": "changed",
+    "pointers": {
+      "local": "DESIGN_GSS.md",
+      "upstream": "DESIGN_GSS.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_332",
+    "status": "changed",
+    "pointers": {
+      "local": "DESIGN_GSS.md",
+      "upstream": "DESIGN_GSS.md"
+    }
+  },
+  {
+    "entity_type": "idea",
+    "id": "IDEA_337",
+    "status": "changed",
+    "pointers": {
+      "local": "DESIGN_GSS.md",
+      "upstream": "DESIGN_GSS.md"
+    }
+  }
+]

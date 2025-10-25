@@ -1,0 +1,239 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_0",
+    "source": {
+      "path": "-",
+      "hash": null
+    },
+    "directives": [],
+    "body": [
+      "node_1TT0"
+    ],
+    "exports": {
+      "type": "named",
+      "entries": []
+    },
+    "metadata": {
+      "authoredBy": "ir-builder",
+      "createdAt": "2025-10-14T04:15:40.986Z",
+      "toolchain": {
+        "parser": "phase1_core_parser@1.0.0",
+        "normalizer": "ir-normalizer@1.0.0",
+        "lowerer": "ir-lowerer@1.0.0"
+      },
+      "metaPerf": {
+        "parseMs": 22.520241,
+        "normalizeMs": 3.948165,
+        "lowerMs": 17.906475,
+        "totalMs": 47.345343,
+        "nodeCount": 12
+      }
+    }
+  },
+  "nodes": {
+    "node_1": {
+      "id": "node_1",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "f",
+      "binding": "f"
+    },
+    "node_1T": {
+      "id": "node_1T",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "o",
+      "binding": "o"
+    },
+    "node_10": {
+      "id": "node_10",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "unknown",
+      "binding": null
+    },
+    "node_11": {
+      "id": "node_11",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "binding": null
+    },
+    "node_1TT": {
+      "id": "node_1TT",
+      "kind": "MemberExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "object": "node_10",
+      "property": "node_11",
+      "computed": false
+    },
+    "node_1T0": {
+      "id": "node_1T0",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "binding": null
+    },
+    "node_1T1": {
+      "id": "node_1T1",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "binding": null
+    },
+    "node_10T": {
+      "id": "node_10T",
+      "kind": "MemberExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "object": "node_1T0",
+      "property": "node_1T1",
+      "computed": false
+    },
+    "node_100": {
+      "id": "node_100",
+      "kind": "CallExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "callee": "node_1TT",
+      "arguments": [
+        "node_10T"
+      ]
+    },
+    "node_101": {
+      "id": "node_101",
+      "kind": "ReturnStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "argument": "node_100"
+    },
+    "node_11T": {
+      "id": "node_11T",
+      "kind": "BlockStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "statements": [
+        "node_101"
+      ]
+    },
+    "node_1TT0": {
+      "id": "node_1TT0",
+      "kind": "FunctionDeclaration",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {
+        "cfg": {
+          "id": "cfg_110",
+          "entry": "bb_111",
+          "exit": "bb_1TTT"
+        },
+        "auditTags": [
+          "knuth:awaiting-proof"
+        ]
+      },
+      "name": "f",
+      "params": [
+        "node_1T"
+      ],
+      "body": "node_11T",
+      "async": false,
+      "generator": false,
+      "returnType": null
+    }
+  },
+  "controlFlowGraphs": {
+    "cfg_110": {
+      "id": "cfg_110",
+      "blocks": [
+        {
+          "id": "bb_111",
+          "kind": "entry",
+          "statements": [
+            "node_101"
+          ]
+        },
+        {
+          "id": "bb_1TTT",
+          "kind": "exit",
+          "statements": []
+        }
+      ],
+      "successors": {
+        "bb_111": [
+          "bb_1TTT"
+        ],
+        "bb_1TTT": []
+      },
+      "predecessors": {
+        "bb_111": [],
+        "bb_1TTT": [
+          "bb_111"
+        ]
+      }
+    }
+  }
+}

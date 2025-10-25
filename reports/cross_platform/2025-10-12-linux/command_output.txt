@@ -1,0 +1,71 @@
+# Linux Reference Validation Command Output (October 12, 2025)
+
+## node tests/test_memory_management.js
+Running Memory Management Test Suite...
+
+✅ MemoryManager initializes with correct defaults
+✅ MemoryManager allocates nodes correctly
+✅ MemoryManager enforces node limit
+✅ MemoryManager tracks scope depth
+✅ MemoryManager enforces depth limit
+✅ MemoryManager cleanup works
+✅ MemoryManager provides accurate stats
+✅ RuntimeMemoryManager initializes correctly
+✅ RuntimeMemoryManager tracks function calls
+✅ RuntimeMemoryManager enforces call stack limit
+✅ RuntimeMemoryManager tracks heap allocation
+GC: Freed 27.000000000000007 bytes, heap size now 62.99999999999999 bytes
+GC: Freed 18.9 bytes, heap size now 44.099999999999994 bytes
+✅ RuntimeMemoryManager enforces heap limit
+GC: Freed 255 bytes, heap size now 595 bytes
+✅ RuntimeMemoryManager triggers garbage collection
+GC: Freed 0 bytes, heap size now 0 bytes
+✅ RuntimeMemoryManager cleanup works
+✅ RuntimeMemoryManager provides accurate stats
+✅ Parser with memory limits handles complex code
+GC: Freed 0 bytes, heap size now 0 bytes
+✅ Runtime with memory limits prevents infinite recursion
+GC: Freed 0 bytes, heap size now 0 bytes
+✅ Memory stats are accessible during execution
+✅ String concatenation allocations are tracked and released
+✅ LuaInterpreter enforces recursion depth limit
+
+Test Results: 20 passed, 0 failed
+
+## npm test *(targeted harness)*
+> luascript@1.0.0 test
+> npm run test:core && node tests/test_memory_management.js
+
+> luascript@1.0.0 test:core
+> node -e "const {UnifiedSystemTests} = require('./test/test_unified_system.js'); const suite = new UnifiedSystemTests(); suite.testBasicTranspilation().then(() => suite.testRuntimeExecution()).then(() => console.log('Core tests complete'));"
+
+📝 Testing Basic Transpilation...
+  ✅ Variable Declaration (51ms)
+  ✅ Function Declaration (3ms)
+  ✅ Arrow Function (2ms)
+
+🔧 Testing Runtime Execution...
+  ✅ Basic Execution (12ms)
+  ✅ Function Execution (5ms)
+Core tests complete
+
+Running Memory Management Test Suite...
+
+✅ MemoryManager initializes with correct defaults
+... (duplicate output truncated - see above for full details)
+
+## node scripts/run_micro_benchmark.js
+{
+  "timestamp": "2025-10-12T22:56:28.574Z",
+  "iterations": 100,
+  "mean": 6.262589889999999,
+  "median": 6.317458,
+  "min": 0.584587,
+  "max": 29.069931,
+  "stdDev": 3.884746435157185,
+  "p95": 11.973164,
+  "p99": 29.069931
+}
+
+## Heap Snapshot
+- Not captured (optional step deferred)

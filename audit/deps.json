@@ -1,0 +1,40 @@
+{
+  "manifests": [
+    "package.json",
+    "package-lock.json"
+  ],
+  "deps": [
+    {
+      "manager": "npm",
+      "manifest": "package.json",
+      "section": "devDependencies",
+      "name": "@types/node",
+      "version": "^20.11.19",
+      "license": "MIT"
+    },
+    {
+      "manager": "npm",
+      "manifest": "package.json",
+      "section": "devDependencies",
+      "name": "husky",
+      "version": "^8.0.0",
+      "license": "MIT"
+    },
+    {
+      "manager": "npm",
+      "manifest": "package.json",
+      "section": "devDependencies",
+      "name": "tsx",
+      "version": "^4.7.0",
+      "license": "MIT"
+    },
+    {
+      "manager": "npm",
+      "manifest": "package.json",
+      "section": "devDependencies",
+      "name": "typescript",
+      "version": "^5.4.0",
+      "license": "MIT"
+    }
+  ]
+}
