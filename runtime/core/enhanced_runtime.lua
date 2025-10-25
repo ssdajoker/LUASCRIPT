@@ -364,7 +364,32 @@ end
 
 local function summation_impl(collection_or_start, finish, step_or_mapper, maybe_mapper)
     local total = 0
-    if type(collection_or_start) == "table" then
+    if type(collection_or_start) == "function" then
+        local lower = finish
+        local upper = step_or_mapper
+        local step = maybe_mapper
+
+        if type(lower) ~= "number" or type(upper) ~= "number" then
+            error("math.summation expects numeric bounds (got " .. type(lower) .. ", " .. type(upper) .. ")")
+        end
+        if step ~= nil and type(step) ~= "number" then
+            error("math.summation step must be a number")
+        end
+
+        step = normalize_step(lower, upper, step)
+
+        if (step > 0 and lower > upper) or (step < 0 and lower < upper) then
+            return total
+        end
+
+        iterate_range(lower, upper, step, function(value, index)
+            local mapped = collection_or_start(value, index)
+            if mapped ~= nil then
+                total = total + mapped
+            end
+        end)
+        return total
+    elseif type(collection_or_start) == "table" then
         local mapper = step_or_mapper
         if mapper ~= nil and type(mapper) ~= "function" then
             error("math.summation mapper must be a function")
@@ -414,7 +439,32 @@ end
 
 local function product_impl(collection_or_start, finish, step_or_mapper, maybe_mapper)
     local result = 1
-    if type(collection_or_start) == "table" then
+    if type(collection_or_start) == "function" then
+        local lower = finish
+        local upper = step_or_mapper
+        local step = maybe_mapper
+
+        if type(lower) ~= "number" or type(upper) ~= "number" then
+            error("math.product expects numeric bounds (got '" .. type(lower) .. "', '" .. type(upper) .. "')")
+        end
+        if step ~= nil and type(step) ~= "number" then
+            error("math.product step must be a number")
+        end
+
+        step = normalize_step(lower, upper, step)
+
+        if (step > 0 and lower > upper) or (step < 0 and lower < upper) then
+            return result
+        end
+
+        iterate_range(lower, upper, step, function(value, index)
+            local mapped = collection_or_start(value, index)
+            if mapped ~= nil then
+                result = result * mapped
+            end
+        end)
+        return result
+    elseif type(collection_or_start) == "table" then
         local mapper = step_or_mapper
         if mapper ~= nil and type(mapper) ~= "function" then
             error("math.product mapper must be a function")
