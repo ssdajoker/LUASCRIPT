@@ -105,7 +105,17 @@ class UnifiedSystemTests {
             const result = await system.execute('local function test() return 42 end; return test()');
             return result.result !== undefined;
         });
-        
+
+        await this.runTest('Unicode Function Call with Nested Arguments', async () => {
+            const code = `
+local function foo(x, y) return x + y end
+local function ∏(i, startValue, endValue, expr) return expr end
+return ∏(i, 1, 10, foo(3, 4))
+`;
+            const result = await system.execute(code);
+            return result.result === 7;
+        });
+
         system.shutdown();
     }
 
