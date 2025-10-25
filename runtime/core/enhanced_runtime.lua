@@ -615,18 +615,34 @@ end
 
 function _LS.concat(array1, array2)
     local result = {}
-    
+
     -- Copy first array
     for i = 1, #array1 do
         result[i] = array1[i]
     end
-    
+
     -- Append second array
     for i = 1, #array2 do
         result[#result + 1] = array2[i]
     end
-    
+
     return _LS.array(result)
+end
+
+-- ==========================================================================
+-- RANGE ITERATION SUPPORT
+-- ==========================================================================
+
+-- Iterate over a numeric range, invoking the callback for each value.
+-- Lua's for-loop semantics already handle positive or negative step values,
+-- so we can rely on a single loop without branching on the step sign.
+function _LS.iterate_range(start_value, end_value, step, callback)
+    if type(callback) ~= 'function' then
+        error('callback must be a function')
+    end
+    for value = start_value, end_value, step do
+        callback(value)
+    end
 end
 
 -- ============================================================================
