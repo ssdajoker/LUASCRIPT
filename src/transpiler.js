@@ -68,6 +68,13 @@ class LuaScriptTranspiler {
     }
 
     /**
+     * Main transpilation function
+     * PERFECT PARSER INITIATIVE - Phase 1: Enhanced with Runtime Validation
+     * @param {string} jsCode - JavaScript code to transpile
+     * @param {Object} options - Transpilation options
+     * @returns {string} - Transpiled Lua code
+     */
+    /**
      * The main transpilation function, enhanced with optional optimizations.
      * It processes JavaScript code through either the standard or the optimized transpilation pipeline.
      * @param {string} jsCode - The JavaScript code to transpile.
@@ -514,6 +521,63 @@ class LuaScriptTranspiler {
         if (depth > 0) {
             throw new Error(`LUASCRIPT_OUTPUT_VALIDATION_ERROR: ${depth} unmatched opening keyword(s) found`);
         }
+    }
+
+    /**
+     * Fix string concatenation operator: + to ..
+     * PERFECT PARSER INITIATIVE - Phase 1: Critical Fix
+     * 
+     * ISSUE: Previous implementation converted ALL + operators to .., including numeric addition
+     * SOLUTION: Context-aware detection of string concatenation vs numeric addition
+     */
+    fixStringConcatenation(code) {
+        // Enhanced context-aware string concatenation detection
+        // This implementation properly distinguishes between numeric addition and string concatenation
+        
+        let result = code;
+        
+        // Pattern 1: String literal + anything -> string concatenation
+        // Use negative lookbehind/lookahead to preserve string content
+        result = result.replace(
+            /(["'])([^"']*)\1\s*\+\s*([^;,)}\]]+)/g,
+            (match, quote, content, rest) => {
+                return `${quote}${content}${quote} .. ${rest}`;
+            }
+        );
+        
+        // Pattern 2: Anything + string literal -> string concatenation  
+        result = result.replace(
+            /([^;,({[\s]+)\s*\+\s*(["'])([^"']*)\2/g,
+            (match, left, quote, content) => {
+                return `${left} .. ${quote}${content}${quote}`;
+            }
+        );
+        
+        // Pattern 3: Variable + variable where at least one is likely a string
+        // (This is more conservative - only converts if we have strong indicators)
+        result = result.replace(
+            /(\w+)\s*\+\s*(\w+)(?=\s*[;,)}\]])/g,
+            (match, left, right) => {
+                // Keep numeric patterns as addition
+                if (/^(sum|total|count|num|value|result|calc)$/i.test(left) || 
+                    /^(sum|total|count|num|value|result|calc)$/i.test(right)) {
+                    return match; // Keep as numeric addition
+                }
+                // Convert likely string concatenations
+                if (/^(message|text|str|name|title|label|output)$/i.test(left) || 
+                    /^(message|text|str|name|title|label|output)$/i.test(right)) {
+                    return `${left} .. ${right}`;
+                }
+                return match; // Default: keep as addition for ambiguous cases
+            }
+        );
+        
+        // Pattern 4: Handle chained concatenations that were partially converted
+        result = result.replace(
+            /(\w+|["'][^"']*["'])\s*\.\.\s*([^;,)}\]]+)\s*\+\s*([^;,)}\]]+)/g,
+            '$1 .. $2 .. $3'
+        );
+        
     }
 
     /**

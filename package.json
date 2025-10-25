@@ -143,4 +143,8 @@
       "agentic_ide": "AI-powered development environment"
     }
   },
+  "dependencies": {
+    "@types/esprima": "^4.0.6",
+    "esprima": "^4.0.1"
+  }
 }

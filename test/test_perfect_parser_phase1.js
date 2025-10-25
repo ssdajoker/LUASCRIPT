@@ -424,6 +424,11 @@ module.exports = PerfectParserPhase1Tester;
  * 5. Error Handling Improvements
  */
 
+const assert = require('assert');
+
+// Use unified system entry points
+const { parseAndLower } = require('../src/ir/pipeline');
+
 // Supplemental runner leveraging the unified system entry points
 function expectIncludes(haystack, needle, msg) {
   assert(haystack.includes(needle), msg || `Expected to include: ${needle}`);
