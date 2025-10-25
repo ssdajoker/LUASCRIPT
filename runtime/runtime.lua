@@ -331,28 +331,24 @@ if type(math.integral) ~= "function" then
         end
 
         local sum = 0
-        local current = start
-
-        -- Trapezoidal rule integration
-        local previous_value = callback(current)
-        if type(previous_value) ~= "number" then
-            error("math.integral callback must return a number", 2)
-        end
-
-        for _ = 1, steps do
-            current = current + step_size
-            local clamped = math.min(current, finish)
-            local value = callback(clamped)
+        -- Trapezoidal rule integration: evaluate at steps+1 points
+        for i = 0, steps do
+            local x = start + i * step_size * direction
+            -- Ensure last point is exactly finish
+            if (direction > 0 and x > finish) or (direction < 0 and x < finish) then
+                x = finish
+            end
+            local value = callback(x)
             if type(value) ~= "number" then
                 error("math.integral callback must return a number", 2)
             end
-            sum = sum + (previous_value + value) * 0.5 * step_size
-            previous_value = value
-            if clamped >= finish then
-                break
+            if i == 0 or i == steps then
+                sum = sum + value
+            else
+                sum = sum + 2 * value
             end
         end
-
+        sum = sum * (step_size / 2)
         return sum * direction
     end
 end
