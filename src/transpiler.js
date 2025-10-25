@@ -75,10 +75,6 @@ class LuaScriptTranspiler {
      * @param {boolean} [options.includeRuntime=true] - Whether to inject the Lua runtime library.
      * @returns {object|string} The transpilation result or code, depending on pipeline used.
      */
-    async transpile(jsCode, options = {}) {
-        options = this.normalizeOptions(options);
-        this.validateInput(jsCode, options);
-
     transpile(jsCode, options = {}) {
         const normalizedOptions = this.normalizeTranspileOptions(options);
         this.validateInput(jsCode, normalizedOptions);
@@ -342,28 +338,6 @@ class LuaScriptTranspiler {
             throw new Error(`Lua delimiter imbalance: ${stack.length} unclosed delimiters (phase=${ctx.phase || 'n/a'})`);
         }
         return true;
-    }
-
-    /**
-     * Normalizes legacy options argument forms to the current object shape.
-     * Supports historical string inputs that represented filenames.
-     * @param {object|string|undefined|null} options
-     * @returns {object}
-     */
-    normalizeOptions(options) {
-        if (options === undefined || options === null) {
-            return {};
-        }
-
-        if (typeof options === 'string') {
-            return { filename: options };
-        }
-
-        if (typeof options !== 'object' || Array.isArray(options)) {
-            return {};
-        }
-
-        return options;
     }
 
     /**
