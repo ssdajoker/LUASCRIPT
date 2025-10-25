@@ -301,7 +301,7 @@ local function product_impl(collection_or_start, finish, step_or_mapper, maybe_m
         local step = maybe_mapper
 
         if type(lower) ~= "number" or type(upper) ~= "number" then
-            error("math.product expects numeric bounds")
+            error("math.product expects numeric bounds (got '" .. type(lower) .. "', '" .. type(upper) .. "')")
         end
         if step ~= nil and type(step) ~= "number" then
             error("math.product step must be a number")
