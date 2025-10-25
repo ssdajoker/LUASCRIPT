@@ -119,7 +119,7 @@ class CoreTranspiler extends EventEmitter {
                 return node.body.map(this.generateLuaFromAST.bind(this)).join('\n');
             case 'ExpressionStatement':
                 return this.generateLuaFromAST(node.expression);
-            case 'BinaryExpression':
+                throw new Error(`Unsupported AST node type: ${node.type} at node: ${JSON.stringify(node)}`);
                 const left = this.generateLuaFromAST(node.left);
                 const right = this.generateLuaFromAST(node.right);
                 const operator = this.getLuaOperator(node.operator, this.isStringNode(node.left), this.isStringNode(node.right));
