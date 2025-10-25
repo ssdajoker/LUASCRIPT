@@ -68,32 +68,18 @@ class LuaScriptTranspiler {
     }
 
     /**
-     * Main transpilation function
-     * PERFECT PARSER INITIATIVE - Phase 1: Enhanced with Runtime Validation
-     * @param {string} jsCode - JavaScript code to transpile
-     * @param {Object} options - Transpilation options
-     * @returns {string} - Transpiled Lua code
-     */
-    transpile(jsCode, options = {}) {
-        // PHASE 1: Runtime Validation - Input validation
-        this.validateInput(jsCode, options);
-        
-        let luaCode = jsCode;
-
-        // PHASE 1: Critical Fixes - Order matters for parser strategy alignment!
-        luaCode = this.fixEqualityOperators(luaCode);
-        luaCode = this.fixLogicalOperators(luaCode);
      * The main transpilation function, enhanced with optional optimizations.
      * It processes JavaScript code through either the standard or the optimized transpilation pipeline.
      * @param {string} jsCode - The JavaScript code to transpile.
      * @param {object} [options={}] - Transpilation options.
      * @param {boolean} [options.includeRuntime=true] - Whether to inject the Lua runtime library.
-     * @returns {Promise<string>} A promise that resolves to the transpiled Lua code.
+     * @returns {object|string} The transpilation result or code, depending on pipeline used.
      */
-    async transpile(jsCode, options = {}) {
+    transpile(jsCode, options = {}) {
+        this.validateInput(jsCode, options);
         const startTime = process.hrtime.bigint();
         this.stats.transpilationsCount++;
-        
+
         try {
             if (this.shouldUseCanonicalPipeline(options)) {
                 const canonicalResult = this.transpileWithCanonicalIR(jsCode, options);
@@ -102,35 +88,8 @@ class LuaScriptTranspiler {
                 return canonicalResult;
             }
 
-            // Legacy optimized path retained as fallback
             if (this.options.enableOptimizations && this.optimizedTranspiler) {
-                console.log('🚀 APPLYING TONY YOKA\'S 20 PS2/PS3 OPTIMIZATIONS...');
-
-                const optimizedResult = await this.optimizedTranspiler.transpile(jsCode, options);
-                this.stats.optimizationsApplied++;
-
-                // Ensure string concatenation is correct even on optimized path
-                let optimizedCode = optimizedResult.code || optimizedResult;
-                optimizedCode = this.fixStringConcatenation(optimizedCode);
-                if (this.options.validateLuaBalance !== false) {
-                    this.validateLuaBalanceOrThrow(optimizedCode, { phase: 'optimized' });
-                }
-
-                const finalCode = this.injectRuntimeLibrary(optimizedCode, options);
-                const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
-                this.stats.totalTime += duration;
-
-                console.log(`✅ OPTIMIZATION COMPLETE: ${duration.toFixed(2)}ms`);
-                return {
-                    code: finalCode,
-                    ir: null,
-                    stats: {
-                        duration,
-                        optimizations: this.stats.optimizationsApplied,
-                        originalSize: jsCode.length,
-                        filename: options && options.filename ? options.filename : null,
-                    },
-                };
+                console.warn('⚠️ Optimized transpilation requires async support; falling back to legacy pipeline.');
             }
 
             console.log('📝 Using legacy string-rewrite transpilation');
@@ -151,6 +110,7 @@ class LuaScriptTranspiler {
             }
 
             luaCode = this.injectRuntimeLibrary(luaCode, options);
+            this.validateOutput(luaCode, options);
 
             const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
             this.stats.totalTime += duration;
@@ -165,7 +125,7 @@ class LuaScriptTranspiler {
                     filename: options && options.filename ? options.filename : null,
                 },
             };
-            
+
         } catch (error) {
             console.error('❌ TRANSPILATION ERROR:', error.message);
             throw error;
@@ -353,12 +313,6 @@ class LuaScriptTranspiler {
             throw new Error(`Lua delimiter imbalance: ${stack.length} unclosed delimiters (phase=${ctx.phase || 'n/a'})`);
         }
         return true;
-    }
-
-        // PHASE 1: Runtime Validation - Output validation
-        this.validateOutput(luaCode, options);
-
-        return luaCode;
     }
 
     /**
@@ -560,65 +514,6 @@ class LuaScriptTranspiler {
         if (depth > 0) {
             throw new Error(`LUASCRIPT_OUTPUT_VALIDATION_ERROR: ${depth} unmatched opening keyword(s) found`);
         }
-    }
-
-    /**
-     * Fix string concatenation operator: + to ..
-     * PERFECT PARSER INITIATIVE - Phase 1: Critical Fix
-     * 
-     * ISSUE: Previous implementation converted ALL + operators to .., including numeric addition
-     * SOLUTION: Context-aware detection of string concatenation vs numeric addition
-     */
-    fixStringConcatenation(code) {
-        // Enhanced context-aware string concatenation detection
-        // This implementation properly distinguishes between numeric addition and string concatenation
-        
-        let result = code;
-        
-        // Pattern 1: String literal + anything -> string concatenation
-        // Use negative lookbehind/lookahead to preserve string content
-        result = result.replace(
-            /(["'])([^"']*)\1\s*\+\s*([^;,)}\]]+)/g,
-            (match, quote, content, rest) => {
-                return `${quote}${content}${quote} .. ${rest}`;
-            }
-        );
-        
-        // Pattern 2: Anything + string literal -> string concatenation  
-        result = result.replace(
-            /([^;,({[\s]+)\s*\+\s*(["'])([^"']*)\2/g,
-            (match, left, quote, content) => {
-                return `${left} .. ${quote}${content}${quote}`;
-            }
-        );
-        
-        // Pattern 3: Variable + variable where at least one is likely a string
-        // (This is more conservative - only converts if we have strong indicators)
-        result = result.replace(
-            /(\w+)\s*\+\s*(\w+)(?=\s*[;,)}\]])/g,
-            (match, left, right) => {
-                // Keep numeric patterns as addition
-                if (/^(sum|total|count|num|value|result|calc)$/i.test(left) || 
-                    /^(sum|total|count|num|value|result|calc)$/i.test(right)) {
-                    return match; // Keep as numeric addition
-                }
-                // Convert likely string concatenations
-                if (/^(message|text|str|name|title|label|output)$/i.test(left) || 
-                    /^(message|text|str|name|title|label|output)$/i.test(right)) {
-                    return `${left} .. ${right}`;
-                }
-                return match; // Default: keep as addition for ambiguous cases
-            }
-        );
-        
-        // Pattern 4: Handle chained concatenations that were partially converted
-        result = result.replace(
-            /(\w+|["'][^"']*["'])\s*\.\.\s*([^;,)}\]]+)\s*\+\s*([^;,)}\]]+)/g,
-            '$1 .. $2 .. $3'
-        );
-        
-    isMatchingPair(open, close) {
-        return (open === '(' && close === ')') || (open === '{' && close === '}') || (open === '[' && close === ']');
     }
 
     /**
