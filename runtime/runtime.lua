@@ -514,6 +514,33 @@ local function summation_impl(collection_or_start, finish, step_or_mapper, maybe
             end
         end
         return total
+    elseif type(collection_or_start) == "function" then
+        local mapper = collection_or_start
+        if type(finish) ~= "number" or type(step_or_mapper) ~= "number" then
+            error("math.summation expects numeric bounds when callback is first argument")
+        end
+
+        local lower = ensure_numeric(finish, "math.summation lower")
+        local upper = ensure_numeric(step_or_mapper, "math.summation upper")
+        local step
+
+        if maybe_mapper ~= nil then
+            if type(maybe_mapper) ~= "number" then
+                error("math.summation step must be a number")
+            end
+            step = normalize_step(lower, upper, ensure_numeric(maybe_mapper, "math.summation step"))
+        else
+            step = normalize_step(lower, upper)
+        end
+
+        iterate_range(lower, upper, step, function(value, index)
+            local mapped = mapper(value, index)
+            if mapped then
+                total = total + mapped
+            end
+        end)
+
+        return total
     elseif type(collection_or_start) == "number" and type(finish) == "number" then
         local step, mapper
         if type(step_or_mapper) == "number" then
