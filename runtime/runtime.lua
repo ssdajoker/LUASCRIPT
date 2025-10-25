@@ -226,7 +226,7 @@ local function summation_impl(collection_or_start, finish, step_or_mapper, maybe
         local step = maybe_mapper
 
         if type(lower) ~= "number" or type(upper) ~= "number" then
-            error("math.summation expects numeric bounds")
+            error("math.summation expects numeric bounds (got " .. type(lower) .. ", " .. type(upper) .. ")")
         end
         if step ~= nil and type(step) ~= "number" then
             error("math.summation step must be a number")
