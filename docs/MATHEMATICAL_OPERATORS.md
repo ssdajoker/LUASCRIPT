@@ -46,9 +46,9 @@ behaviour.
 
 | Symbol | Token type | Description | Lua emission / notes |
 | ------ | ---------- | ----------- | ------------------- |
-| `∑` | `SUMMATION` | Summation | Tokenised; lowering not implemented yet. |
-| `∏` | `PRODUCT` | Product | Tokenised; lowering not implemented yet. |
-| `∫` | `INTEGRAL` | Integral | Tokenised; lowering not implemented yet. |
+| `∑` | `SUMMATION` | Summation | Emits `math.summation(...)`. Accepts numeric ranges, custom callbacks, or arrays. |
+| `∏` | `PRODUCT` | Product | Emits `math.product(...)`. Supports the same overloads as `math.summation`. |
+| `∫` | `INTEGRAL` | Integral | Emits `math.integral(...)`. Works with numeric integrand callbacks or trapezoidal integration over point samples. |
 | `∂` | `PARTIAL` | Partial derivative | Tokenised; lowering not implemented yet. |
 | `∇` | `NABLA` | Gradient / divergence operator | Tokenised; lowering not implemented yet. |
 | `Δ` | `DELTA` | Difference operator | Tokenised; lowering not implemented yet. |
