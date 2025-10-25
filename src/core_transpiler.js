@@ -107,8 +107,6 @@ class CoreTranspiler extends EventEmitter {
     }
 
     /**
-     * Transpiles a string of JavaScript code into Lua.
-     * This is the main method of the transpiler, orchestrating the various transformation passes.
      * @param {object} node - The AST node to convert.
      * @returns {string} The generated Lua code fragment for the node.
      */
