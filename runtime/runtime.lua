@@ -212,16 +212,9 @@ end
 
 local function iterate_range(start_value, end_value, step, handler)
     local index = 0
-    if step > 0 then
-        for value = start_value, end_value, step do
-            handler(value, index)
-            index = index + 1
-        end
-    else
-        for value = start_value, end_value, step do
-            handler(value, index)
-            index = index + 1
-        end
+    for value = start_value, end_value, step do
+        handler(value, index)
+        index = index + 1
     end
 end
 
