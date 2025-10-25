@@ -53,6 +53,57 @@ class CoreTranspiler extends EventEmitter {
      * These patterns cover fundamental JavaScript syntax such as variables, operators, and control structures.
      */
     initializePatterns() {}
+    initializePatterns() {
+        // Core JavaScript to Lua patterns
+        this.patterns.set('variables', [
+            { from: /\bvar\s+(\w+)/g, to: 'local $1' },
+            { from: /\blet\s+(\w+)/g, to: 'local $1' },
+            { from: /\bconst\s+(\w+)/g, to: 'local $1' }
+        ]);
+        
+        this.patterns.set('objects', [
+            { from: /([{,])\s*(\w+)\s*:/g, to: '$1$2 =' }
+        ]);
+
+        this.patterns.set('operators', [
+            { from: /\|\|/g, to: 'or' },
+            { from: /&&/g, to: 'and' },
+            { from: /!/g, to: 'not ' },
+            { from: /!==/g, to: '~=' },
+            { from: /!=/g, to: '~=' },
+            { from: /===/g, to: '==' }
+        ]);
+        
+        this.patterns.set('functions', [
+            { from: /function\s+(\w+)\s*\(([^)]*)\)\s*{/g, to: 'local function $1($2)' },
+            { from: /(\w+)\s*=\s*function\s*\(([^)]*)\)\s*{/g, to: 'local function $1($2)' },
+            { from: /(\w+)\s*:\s*function\s*\(([^)]*)\)\s*{/g, to: '$1 = function($2)' }
+        ]);
+        
+        this.patterns.set('control', [
+            { from: /if\s*\(/g, to: 'if ' },
+            { from: /\)\s*{/g, to: ' then' },
+            { from: /else\s*{/g, to: 'else' },
+            { from: /while\s*\(/g, to: 'while ' },
+            { from: /for\s*\(/g, to: 'for ' }
+        ]);
+        
+        this.patterns.set('strings', [
+            { from: /(\w+|"[^"]*"|'[^']*')\s*\+\s*(\w+|"[^"]*"|'[^']*')/g, to: '$1 .. $2' }
+        ]);
+        
+        this.patterns.set('arrays', [
+            { from: /\.push\s*\(/g, to: '.insert(' },
+            { from: /\.pop\s*\(\s*\)/g, to: '.remove()' },
+            { from: /\.length/g, to: '.#' }
+        ]);
+
+        this.patterns.set('math_operators', [
+            { from: /∏\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g, to: 'math.product($1, $2, $3, $4)' },
+            { from: /∑\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g, to: 'math.summation($1, $2, $3, $4)' },
+            { from: /∫\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)/g, to: 'math.integral($1, $2, $3, $4)' }
+        ]);
+    }
 
     /**
      * Transpiles a string of JavaScript code into Lua.
@@ -161,6 +212,22 @@ class CoreTranspiler extends EventEmitter {
             const ast = esprima.parseScript(jsCode);
             let luaCode = this.generateLuaFromAST(ast);
             let optimizations = 0;
+            
+            // Apply pattern transformations
+            for (const [category, patterns] of this.patterns) {
+                for (const pattern of patterns) {
+                    const before = luaCode;
+                    luaCode = luaCode.replace(pattern.from, pattern.to);
+                    if (before !== luaCode) optimizations++;
+                }
+            }
+
+            // Apply math operators transformations
+            for (const pattern of this.patterns.get('math_operators')) {
+                const before = luaCode;
+                luaCode = luaCode.replace(pattern.from, pattern.to);
+                if (before !== luaCode) optimizations++;
+            }
             
             // Advanced transformations
             luaCode = this.transformArrowFunctions(luaCode);

@@ -9,6 +9,7 @@
  * 5. Error Handling Improvements
  */
 
+const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
@@ -16,6 +17,7 @@ const { execSync } = require('child_process');
 // Import the enhanced modules
 const LuaScriptTranspiler = require('../src/transpiler');
 const { Lexer, Parser, MemoryManager, Token } = require('../src/parser');
+const { parseAndLower } = require('../src/ir/pipeline');
 
 class PerfectParserPhase1Tester {
     constructor() {
@@ -245,8 +247,11 @@ class PerfectParserPhase1Tester {
      */
     testValidationCase(name, input, expectedErrorType, shouldFail, options = {}) {
         try {
-            const result = this.transpiler.transpile(input, options);
-            
+            const transpileResult = this.transpiler.transpile(input, options);
+            const result = typeof transpileResult === 'string'
+                ? transpileResult
+                : (transpileResult && transpileResult.code) || '';
+
             if (shouldFail) {
                 this.recordTest(`Validation_${name}`, false, 'Expected validation error but none occurred');
             } else {
@@ -270,8 +275,11 @@ class PerfectParserPhase1Tester {
      */
     runSingleTest(name, input, expectedPatterns = [], unexpectedPatterns = []) {
         try {
-            const result = this.transpiler.transpile(input, { includeRuntime: false });
-            
+            const transpileResult = this.transpiler.transpile(input, { includeRuntime: false });
+            const result = typeof transpileResult === 'string'
+                ? transpileResult
+                : (transpileResult && transpileResult.code) || '';
+
             let passed = true;
             let details = [];
             
@@ -421,6 +429,7 @@ const assert = require('assert');
 // Use unified system entry points
 const { parseAndLower } = require('../src/ir/pipeline');
 
+// Supplemental runner leveraging the unified system entry points
 function expectIncludes(haystack, needle, msg) {
   assert(haystack.includes(needle), msg || `Expected to include: ${needle}`);
 }
