@@ -334,22 +334,54 @@ JavaScript' should be semantically equivalent to JavaScript
 4. **Property Tests**: Verify invariants
 5. **Regression Tests**: Prevent known issues
 
+## Backend Integration
+
+### WASM Backend ✅
+- **Status**: Fully Implemented
+- **Location**: `src/backends/wasm/`
+- **Features**: Direct compilation to WebAssembly bytecode
+- **Compiler**: `IRToWasmCompiler`
+
+### MLIR Backend ✅
+- **Status**: Fully Implemented
+- **Location**: `src/backends/mlir/`
+- **Features**: Multi-level IR with dialect system
+- **Compiler**: `IRToMLIRCompiler`
+- **Dialect**: `LuascriptDialect` with 30+ operations
+
+### LLVM IR Backend ✅
+- **Status**: Fully Implemented
+- **Location**: `src/backends/llvm/`
+- **Features**: SSA-form IR with comprehensive type system
+- **Compiler**: `IRToLLVMCompiler`
+
+### Backend Manager
+- **Unified Interface**: `BackendManager` class
+- **Multi-target**: Compile to all backends simultaneously
+- **Optimization**: Per-backend optimization configuration
+
+See [Backend Documentation](../backends/README.md) for details.
+
 ## Future Enhancements
 
 ### Near-term
-- Complete Lua-to-IR compiler
-- Source map support
-- Optimization passes
-- Error recovery
+- ✅ Complete Lua-to-IR compiler
+- ✅ MLIR dialect integration
+- ✅ LLVM IR generation
+- 🔄 Source map support
+- 🔄 Advanced optimization passes
+- 🔄 Error recovery
 
 ### Mid-term
-- MLIR dialect integration
-- LLVM IR generation
+- MLIR → LLVM lowering
+- LLVM → native code generation
 - Advanced type inference
 - Control flow analysis
+- Profile-guided optimization
 
 ### Long-term
 - Incremental compilation
 - Multi-threaded compilation
 - JIT compilation support
 - IDE integration
+- GPU code generation
