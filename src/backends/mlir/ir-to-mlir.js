@@ -715,16 +715,19 @@ class IRToMLIRCompiler {
      * Compile conditional expression
      */
     compileConditional(conditional, operations) {
-        // For MLIR, use select-like operation
-        // Simplified: evaluate both branches (not optimal)
-        
+        // Evaluate condition, then branch, and else branch
+        const condValue = this.compileExpression(conditional.test, operations);
         const thenValue = this.compileExpression(conditional.consequent, operations);
-        
+        const elseValue = this.compileExpression(conditional.alternate, operations);
         // Use a special select operation (simplified)
-        
-        // In real MLIR, this would be a proper select or if-expression
-        // For now, just return the then value
-        return thenValue;
+        const resultValue = this.newValue();
+        const selectOp = new MLIROperation(
+            'luascript.select',
+            [condValue, thenValue, elseValue],
+            [resultValue]
+        );
+        operations.push(selectOp);
+        return resultValue;
     }
 
     /**
