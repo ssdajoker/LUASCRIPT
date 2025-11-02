@@ -329,6 +329,8 @@ class IREmitter {
       }
       case "ArrowFunctionExpression":
         return this.emitArrowFunction(node, context);
+      case "FunctionExpression":
+        return this.emitFunctionExpression(node, context);
       case "BlockStatement":
         return `{ --[[block]] }`;
       default:
@@ -351,7 +353,8 @@ class IREmitter {
       kind === "ConditionalExpression" ||
       kind === "ArrayExpression" ||
       kind === "ObjectExpression" ||
-      kind === "ArrowFunctionExpression"
+      kind === "ArrowFunctionExpression" ||
+      kind === "FunctionExpression"
     );
   }
 
@@ -392,6 +395,25 @@ class IREmitter {
       indentLevel: context.indentLevel + 1,
     });
 
+    return `function(${params})${NEWLINE}${body}${NEWLINE}${this.currentIndent(context)}end`;
+  }
+
+  emitFunctionExpression(node, context) {
+    const params = (node.params || [])
+      .map((paramId) => {
+        const paramNode = context.nodes[paramId];
+        if (!paramNode || paramNode.kind !== "Identifier") {
+          throw new Error("Function expression parameters must be identifiers");
+        }
+        return paramNode.name;
+      })
+      .join(", ");
+
+    const body = this.emitBlockById(node.body, context, {
+      indentLevel: context.indentLevel + 1,
+    });
+
+    // Function expressions are anonymous (or have a name), emit similar to arrow functions
     return `function(${params})${NEWLINE}${body}${NEWLINE}${this.currentIndent(context)}end`;
   }
 

@@ -890,6 +890,8 @@ class LuaScriptParser {
      * @private
      */
     parseArrowFunction() {
+        this.functionDepth++;
+        
         const startToken = this.peek();
         let params = [];
         
@@ -925,6 +927,8 @@ class LuaScriptParser {
             expression = true;
         }
         
+        this.functionDepth--;
+        
         return new ArrowFunctionExpressionNode(params, body, {
             line: startToken.line,
             column: startToken.column,
@@ -938,6 +942,8 @@ class LuaScriptParser {
      * @private
      */
     parseFunctionExpression() {
+        this.functionDepth++;
+        
         let id = null;
         if (this.check('IDENTIFIER')) {
             id = this.parseIdentifier();
@@ -948,6 +954,8 @@ class LuaScriptParser {
         this.consume('RIGHT_PAREN', "Expected ')' after parameters");
         
         const body = this.parseBlockStatement();
+        
+        this.functionDepth--;
         
         return new FunctionExpressionNode(id, params, body, {
             line: this.previous().line,

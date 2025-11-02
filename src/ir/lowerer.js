@@ -331,6 +331,9 @@ class IRLowerer {
       case "ArrowFunctionExpression": {
         return this.lowerArrowFunctionExpression(node).id;
       }
+      case "FunctionExpression": {
+        return this.lowerFunctionExpression(node).id;
+      }
       case "FunctionDeclaration": {
         const functionNode = this.lowerFunctionDeclaration(node, {
           pushToBody: false,
@@ -380,6 +383,28 @@ class IRLowerer {
     return this.builder.arrowFunctionExpression(params, bodyBlock.id, {
       async: node.async,
     });
+  }
+
+  lowerFunctionExpression(node) {
+    // Handle optional name (anonymous functions have id: null)
+    const name = node.id ? this.lowerIdentifier(node.id, { binding: node.id.name }).name : null;
+    const params = (node.params || []).map((param) =>
+      this.lowerIdentifier(param, { binding: param.name }).id
+    );
+
+    const bodyBlock = this.lowerBlockStatement(
+      this.normalizeBlockForFunction(node.body)
+    );
+
+    return this.builder.functionExpression(
+      name,
+      params,
+      bodyBlock.id,
+      {
+        async: Boolean(node.async),
+        generator: Boolean(node.generator),
+      }
+    );
   }
 
   lowerIdentifier(node, { binding } = {}) {

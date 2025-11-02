@@ -275,6 +275,19 @@ class IRNodeFactory {
     });
   }
 
+  createFunctionExpression(name, params, bodyRef, options = {}) {
+    return this.createNode("FunctionExpression", {
+      name,
+      params,
+      body: bodyRef,
+      async: Boolean(options.async),
+      generator: Boolean(options.generator),
+      returnType: options.returnType || null,
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
   createTryStatement(blockRef, handler, finalizerRef, options = {}) {
     return this.createNode("TryStatement", {
       block: blockRef,

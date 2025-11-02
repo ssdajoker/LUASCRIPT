@@ -241,6 +241,12 @@ class IRBuilder {
     return node;
   }
 
+  functionExpression(name, params, bodyRef, options = {}) {
+    return this.registerNode(
+      this.nodeFactory.createFunctionExpression(name, params, bodyRef, options)
+    );
+  }
+
   /**
    * Records a control-flow graph for a given function.
    */
