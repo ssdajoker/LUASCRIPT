@@ -337,7 +337,7 @@ class IRToWasmCompiler {
         
         switch (irType.category) {
             case TypeCategory.PRIMITIVE:
-                switch (irType.name) {
+                switch (irType.primitiveType) {
                     case 'number':
                         return WasmType.F64; // Use f64 for JavaScript numbers
                     case 'boolean':
