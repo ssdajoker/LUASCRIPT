@@ -275,7 +275,7 @@ class LuaToIRCompiler {
         const operatorMap = {
             'and': '&&',
             'or': '||',
-            '..': '+', // String concatenation -> addition (will need special handling)
+            '..': 'concat', // String concatenation (special IR operator for Lua '..')
             '~=': '!=',
         };
         
