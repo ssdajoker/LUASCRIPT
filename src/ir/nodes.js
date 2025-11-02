@@ -5,8 +5,6 @@
  * Defines all node types for the canonical Intermediate Representation.
  */
 
-const { Types } = require('./types');
-
 /**
  * Node Categories
  */
