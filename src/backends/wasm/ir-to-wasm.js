@@ -827,7 +827,7 @@ class IRToWasmCompiler {
         const code = [];
         
         // Compile value
-        code.push(...this.compileExpression(assignment.value));
+        code.push(...this.compileExpression(assignment.right));
         
         // Store based on target
         if (assignment.target.kind === NodeCategory.IDENTIFIER) {
