@@ -6,7 +6,6 @@
  */
 
 const { NodeCategory } = require('./nodes');
-const { TypeCategory } = require('./types');
 
 class ValidationError extends Error {
     constructor(message, node) {
