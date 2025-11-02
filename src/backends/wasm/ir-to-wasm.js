@@ -534,7 +534,7 @@ class IRToWasmCompiler {
         const code = [];
         
         // Compile condition
-        code.push(...this.compileExpression(ifStmt.test));
+        code.push(...this.compileExpression(ifStmt.condition));
         
         // If block
         code.push(WasmOp.IF, WasmType.EMPTY_BLOCK);
