@@ -183,7 +183,7 @@ class IRSerializer {
         const traverse = (n) => {
             const currentId = nodeCounter++;
             const json = n.toJSON();
-            const label = this.getDotLabel(json);
+            // Removed unused variable label
             
             // Removed unused variable nodeDef
             
