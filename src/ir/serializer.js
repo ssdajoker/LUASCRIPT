@@ -185,7 +185,7 @@ class IRSerializer {
             const json = n.toJSON();
             const label = this.getDotLabel(json);
             
-            const nodeDef = `  node${currentId} [label="${label}"];`;
+            // Removed unused variable nodeDef
             
             // Collect child nodes
             const children = this.getChildNodes(json);
