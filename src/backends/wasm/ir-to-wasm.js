@@ -323,8 +323,8 @@ class IRToWasmCompiler {
         
         this.globals.push({
             name: varDecl.name,
-            type: this.irTypeToWasmType(varDecl.varType),
-            mutable: !varDecl.isConst,
+            type: this.irTypeToWasmType(varDecl.type),
+            mutable: varDecl.varKind !== 'const',
             init: varDecl.init
         });
     }
