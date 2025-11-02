@@ -148,8 +148,6 @@ class IRToJSGenerator {
     }
 
     visitCase(node) {
-        
-        
         if (node.test) {
             const test = this.visit(node.test);
             this.indentLevel++;
