@@ -6,7 +6,6 @@
  */
 
 const { IRNode } = require('./nodes');
-const { Type } = require('./types');
 
 class IRSerializer {
     constructor(options = {}) {
