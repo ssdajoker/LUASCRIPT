@@ -3,7 +3,7 @@
  * Test LLVM IR Backend
  */
 
-const { IRToLLVMCompiler, LLVMType } = require('../../src/backends/llvm');
+const { IRToLLVMCompiler } = require('../../src/backends/llvm');
 const { builder } = require('../../src/ir/builder');
 
 describe('LLVM IR Compiler', () => {
