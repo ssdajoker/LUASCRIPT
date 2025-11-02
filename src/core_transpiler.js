@@ -180,9 +180,9 @@ class CoreTranspiler extends EventEmitter {
                 const body = this.generateLuaFromAST(node.body);
                 const indentedBody = this.indentCode(body);
                 if (indentedBody) {
-                    return `function ${id}(${params})\n${indentedBody}\nend`;
+                    return `local function ${id}(${params})\n${indentedBody}\nend`;
                 }
-                return `function ${id}(${params})\nend`;
+                return `local function ${id}(${params})\nend`;
             }
 
             case 'ArrowFunctionExpression': {
@@ -566,18 +566,15 @@ class CoreTranspiler extends EventEmitter {
      * @returns {string} The cleaned-up code.
      */
     cleanupCode(code) {
-        // Fix closing braces to 'end' for blocks, but not for object literals
-        // A block-closing brace is typically at the start of a line or after a statement.
-        // An object-closing brace is part of an expression.
+        // The AST generator already produces proper 'end' keywords for control structures
+        // We should NOT convert braces to 'end' here as it breaks object literals
         
-        // Heuristic: Replace '}' with 'end' only when it's likely a block terminator.
-        // This regex is more specific. It no longer uses a semicolon in the lookahead,
-        // which prevents it from incorrectly converting object literal braces.
-        code = code.replace(/}\s*(?=else|catch|finally|$|\n)/g, 'end');
-
-        // Clean up whitespace without removing significant newlines
-        code = code.split('\n').map(line => line.trim()).join('\n');
-        code = code.replace(/\s+/g, ' ');
+        // Clean up excessive whitespace while preserving structure
+        // Preserve newlines but trim each line
+        code = code.split('\n').map(line => line.trim()).filter(line => line).join('\n');
+        
+        // Remove multiple spaces within lines
+        code = code.replace(/  +/g, ' ');
         
         // Fix line endings
         code = code.trim();
