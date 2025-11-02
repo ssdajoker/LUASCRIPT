@@ -189,11 +189,10 @@ class IRSerializer {
             
             // Collect child nodes
             const children = this.getChildNodes(json);
-            const childDefs = children.map(child => {
+            children.forEach(child => {
                 const childNode = IRNode.fromJSON(child.node);
                 const childId = traverse(childNode);
                 edges.push(`  node${currentId} -> node${childId} [label="${child.label}"];`);
-                return childId;
             });
             
             return currentId;
