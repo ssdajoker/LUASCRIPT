@@ -412,15 +412,3 @@ if (require.main === module) {
 }
 
 module.exports = PerfectParserPhase1Tester;
-
-if (require.main === module) {
-    const tester = new PerfectParserPhase1Tester();
-    tester.runAllTests().then(() => {
-        console.log('\n✅ All Phase 1 tests completed successfully!');
-        tester.cleanup();
-    }).catch((error) => {
-        console.error('\n❌ Phase 1 tests failed:', error);
-        tester.cleanup();
-        process.exit(1);
-    });
-}
