@@ -721,7 +721,6 @@ class IRToMLIRCompiler {
         const thenValue = this.compileExpression(conditional.consequent, operations);
         
         // Use a special select operation (simplified)
-        const resultValue = this.newValue();
         
         // In real MLIR, this would be a proper select or if-expression
         // For now, just return the then value
