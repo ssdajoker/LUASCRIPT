@@ -882,7 +882,7 @@ class IRToWasmCompiler {
         const code = [];
         
         // Test condition
-        code.push(...this.compileExpression(conditional.test));
+        code.push(...this.compileExpression(conditional.condition));
         
         // If-else expression
         code.push(WasmOp.IF, WasmType.I32); // Result type
