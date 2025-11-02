@@ -471,6 +471,7 @@ class EnhancedLuaScriptTranspiler {
         result = result.replace(
             /\blocal\s+(\w+)\s*=\s*function\s*\(([^)]*)\)\s*\{/g,
             'local $1 = function($2) '
+        );
 
         // Named function declarations
         result = result.replace(
@@ -518,6 +519,7 @@ class EnhancedLuaScriptTranspiler {
         result = result.replace(
             /\b(?:const|let|var)\s+(\w+)\s*=\s*(\w+)\s*=>\s*([^;{]+);?/g,
             'const $1 = function($2) return $3 end'
+        );
 
         // Arrow function with block: (params) => { body }
         result = result.replace(
@@ -572,11 +574,6 @@ class EnhancedLuaScriptTranspiler {
     convertTernaryOperator(code) {
         // Convert ternary to if-then-else expression, removing extra spaces
         return code.replace(
-            /(\w+)\s*=\s*([^?]+)\?\s*([^:]+)\s*:\s*([^;]+);?/g,
-            (match, varName, condition, trueVal, falseVal) => {
-                // Trim spaces from condition
-                const cleanCondition = condition.trim();
-                return `${varName} = (${cleanCondition}) and ${trueVal.trim()} or ${falseVal.trim()}`;
             /(\w[\w\.\[\]]*)\s*=\s*([^?]+?)\?\s*([^:]+?)\s*:\s*([^;]+);?/g,
             (match, target, condition, truthy, falsy) => {
                 const trimmedCondition = condition.trim();
@@ -696,7 +693,6 @@ class EnhancedLuaScriptTranspiler {
         // Convert case statements
         result = result.replace(
             /case\s+([^:]+):/g,
-            'elseif __sw_expr == $1 then'
             'elseif __selector_expr == $1 then'
         );
         
@@ -717,14 +713,12 @@ class EnhancedLuaScriptTranspiler {
      */
     convertArrays(code) {
         // Convert array literals: [1, 2, 3] to {1, 2, 3}
-        // Also convert array access: arr[i] to arr{i}
+        // NOTE: Array access (arr[i]) should remain as brackets in Lua
         let result = code;
         
-        // First, convert array access: arr[i] to arr{i}
-        result = result.replace(/(\w+)\[([^\]]+)\]/g, '$1{$2}');
-        
-        // Then convert array literals (not already converted)
-        // Look for [ that's preceded by = or , or ( or start of line
+        // Convert array literals (not array access)
+        // Look for [ that's preceded by = or , or ( or start of line (indicates a literal)
+        // This will match [1, 2, 3] but not arr[i]
         result = result.replace(/(^|[=,(\s])\[([^\]]*)\]/gm, '$1{$2}');
         
         return result;
@@ -790,6 +784,7 @@ class EnhancedLuaScriptTranspiler {
             // 1. If line is just whitespace + }, it's likely a control structure closing
             // 2. If line has }, but also has other content like commas or is part of object, keep }
             // 3. If line has both { and } (like {1, 2, 3}), it's an object/array literal - keep }
+            // 4. If } appears at the end of a line after code (inline block), convert to end
             
             // Pattern 1: Standalone } on a line (control structure)
             if (/^\s*\}\s*$/.test(processedLine)) {
@@ -798,33 +793,22 @@ class EnhancedLuaScriptTranspiler {
             // Pattern 2: } followed by else or elseif (control structure)
             else if (/\}\s*(else|elseif)/.test(processedLine)) {
                 processedLine = processedLine.replace(/\}/g, 'end');
-            if (char === '{') {
-                // Check if this is a table literal or control structure by examining previous token
-                const before = result.substring(0, i).trimEnd();
-                const prevChar = before.length > 0 ? before[before.length - 1] : '';
-                const isTable = ['=', ',', '(', '[', '{', ':'].includes(prevChar);
-
-                inTable[depth] = isTable;
-                depth++;
-                output += char;
-            } else if (char === '}') {
-                depth--;
-                if (depth >= 0 && inTable[depth]) {
-                    output += '}'; // Keep as table closing
-                } else {
-                    output += 'end'; // Convert to end for control structures
+            }
+            // Pattern 3: } at end of line (inline block closing), but NOT if it's a table literal
+            // Table literal detection: line contains { followed by values, key = value, or key: value patterns
+            else if (/\}\s*$/.test(processedLine)) {
+                // Check if this is a table literal (object or array) by looking for:
+                // 1. { with = or : before the } (object literal)
+                // 2. { with numbers/values separated by commas (array literal)
+                // 3. local var = { ... } pattern
+                const isTableLiteral = /\{[^}]*[\w\s]*[=:][^}]*\}/.test(processedLine) ||  // object
+                                       /\{[^}]*,\s*[^}]*\}/.test(processedLine) ||          // array with commas
+                                       /local\s+\w+\s*=\s*\{[^}]*\}/.test(processedLine) || // local var = {}
+                                       /\w+\s*=\s*\{[^}]*\}/.test(processedLine);           // var = {}
+                if (!isTableLiteral) {
+                    processedLine = processedLine.replace(/\}\s*$/, 'end');
                 }
-            } else {
-                output += char;
             }
-            // Pattern 3: } at end of line after statement (control structure/function)
-            // BUT: Don't convert if line has both { and } (object/array literal on same line)
-            else if (/[^,{]\s*\}\s*$/.test(processedLine) && !/[=:]\s*$/.test(processedLine) && !/\{.*\}/.test(processedLine)) {
-                // Convert to end if not part of object literal (no = or : before it on same line)
-                // and not a complete object/array literal on one line
-                processedLine = processedLine.replace(/\}\s*$/g, 'end');
-            }
-            // Otherwise keep } as is (object literal)
             
             processedLines.push(processedLine);
         }
