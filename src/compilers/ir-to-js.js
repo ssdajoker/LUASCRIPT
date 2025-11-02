@@ -148,7 +148,7 @@ class IRToJSGenerator {
     }
 
     visitCase(node) {
-        const semi = this.options.semicolons ? ';' : '';
+        
         
         if (node.test) {
             const test = this.visit(node.test);
