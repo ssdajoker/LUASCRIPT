@@ -8,9 +8,7 @@ const assert = require('assert');
 const { JSToIRCompiler, LuaToIRCompiler, IRToJSGenerator, IRToLuaGenerator } = require('../../src/compilers');
 const { IRSerializer } = require('../../src/ir');
 
-// Mock describe and it functions for compatibility
-const describe = (name, fn) => fn && fn();
-const it = (name, fn) => fn && fn();
+// Use the test framework's describe and it functions
 
 describe('Round-Trip Tests', () => {
     describe('JavaScript → IR → JavaScript', () => {
