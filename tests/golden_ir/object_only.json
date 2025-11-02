@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_0",
+    "source": { "path": "object_only.js", "hash": null },
+    "directives": [],
+  "body": ["node_T"],
+    "exports": { "type": "named", "entries": [] },
+    "metadata": { "authoredBy": "golden", "createdAt": "2025-10-13T00:00:00.000Z", "toolchain": {} }
+  },
+  "nodes": {
+    "node_T": { "id": "node_T", "kind": "VariableDeclaration", "declarations": [ { "id": "decl_T", "pattern": "node_0", "init": "node_1", "kind": "const" } ], "declarationKind": "const" },
+    "node_0": { "id": "node_0", "kind": "Identifier", "name": "obj", "binding": "obj" },
+    "node_1": { "id": "node_1", "kind": "ObjectExpression", "properties": ["node_10", "node_11"] },
+    "node_10": { "id": "node_10", "kind": "Property", "key": "node_1T", "value": "node_100", "computed": false, "shorthand": false, "propertyKind": "init" },
+    "node_11": { "id": "node_11", "kind": "Property", "key": "node_1TT", "value": "node_101", "computed": false, "shorthand": false, "propertyKind": "init" },
+    "node_1T": { "id": "node_1T", "kind": "Identifier", "name": "a", "binding": null },
+    "node_100": { "id": "node_100", "kind": "Literal", "value": 1, "raw": "1", "literalKind": "number" },
+    "node_1TT": { "id": "node_1TT", "kind": "Identifier", "name": "b", "binding": null },
+    "node_101": { "id": "node_101", "kind": "Literal", "value": 2, "raw": "2", "literalKind": "number" }
+  }
+}

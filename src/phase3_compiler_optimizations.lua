@@ -1,7 +1,19 @@
 -- PHASE 3: COMPILER OPTIMIZATIONS - REAL CODE!
--- Team A: Advanced compilation and optimization features
+--[[
+-- phase3_compiler_optimizations.lua
+--
+-- Implements compiler optimizations for LuaScript, including dead code elimination,
+-- constant folding, loop optimization, register allocation, and instruction scheduling.
+--
+-- @author Ada Lovelace's Unified Team
+-- @version 1.0
+--]]
+
 local optimizer = {}
--- Dead Code Elimination
+
+--- Eliminates dead code from the abstract syntax tree (AST).
+-- @param ast The AST to optimize.
+-- @return The optimized AST.
 function optimizer.eliminate_dead_code(ast)
     local used_variables = {}
     local live_code = {}
@@ -34,6 +46,9 @@ function optimizer.eliminate_dead_code(ast)
     return {type = "program", statements = live_code}
 end
 -- Constant Folding
+--- Folds constant expressions in the AST.
+-- @param ast The AST to optimize.
+-- @return The optimized AST.
 function optimizer.fold_constants(ast)
     local function fold_node(node)
         if node.type == "binary_op" then
@@ -65,6 +80,9 @@ function optimizer.fold_constants(ast)
     return {type = "program", statements = optimized_statements}
 end
 -- Loop Optimization
+--- Optimizes loops in the AST, including loop unrolling.
+-- @param ast The AST to optimize.
+-- @return The optimized AST.
 function optimizer.optimize_loops(ast)
     local function optimize_node(node)
         if node.type == "for_loop" then
@@ -90,6 +108,11 @@ function optimizer.optimize_loops(ast)
     end
     return {type = "program", statements = optimized_statements}
 end
+--- Substitutes a variable in an AST node with a replacement node.
+-- @param node The AST node to process.
+-- @param var_name The name of the variable to substitute.
+-- @param replacement The replacement node.
+-- @return The transformed AST node.
 function optimizer.substitute_variable(node, var_name, replacement)
     if node.type == "variable" and node.name == var_name then
         return replacement
@@ -103,12 +126,17 @@ function optimizer.substitute_variable(node, var_name, replacement)
     end
     return node
 end
--- Register Allocation
+
+--- Manages register allocation for variables.
 optimizer.register_allocator = {
     available_registers = {"r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8"},
     variable_to_register = {},
     register_to_variable = {}
 }
+
+--- Allocates a register for a variable.
+-- @param variable The variable to allocate a register for.
+-- @return The allocated register or a memory location.
 function optimizer.register_allocator:allocate(variable)
     if self.variable_to_register[variable] then
         return self.variable_to_register[variable]
@@ -123,6 +151,9 @@ function optimizer.register_allocator:allocate(variable)
     -- Spill to memory if no registers available
     return "memory_" .. variable
 end
+
+--- Frees a register that was allocated to a variable.
+-- @param variable The variable whose register should be freed.
 function optimizer.register_allocator:free(variable)
     local reg = self.variable_to_register[variable]
     if reg then
@@ -130,7 +161,10 @@ function optimizer.register_allocator:free(variable)
         self.register_to_variable[reg] = nil
     end
 end
--- Instruction Scheduling
+
+--- Schedules instructions to optimize for pipeline execution.
+-- @param instructions A list of instructions to schedule.
+-- @return The scheduled list of instructions.
 function optimizer.schedule_instructions(instructions)
     local scheduled = {}
     local dependencies = {}
@@ -165,6 +199,10 @@ function optimizer.schedule_instructions(instructions)
     end
     return scheduled
 end
+--- Checks if one instruction has a dependency on another.
+-- @param instr1 The first instruction.
+-- @param instr2 The second instruction.
+-- @return True if instr2 depends on instr1, false otherwise.
 function optimizer.has_dependency(instr1, instr2)
     -- Check if instr2 depends on instr1
     if instr1.type == "assignment" and instr2.type == "variable" then

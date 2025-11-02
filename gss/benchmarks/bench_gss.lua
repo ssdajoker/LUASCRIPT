@@ -155,7 +155,11 @@ print(string.format("640x480 single blob: %.1f FPS %s", fps1, fps1 >= 60 and "�
 print(string.format("1280x720 two blobs: %.1f FPS %s", fps2, fps2 >= 30 and "✅" or "⚠"))
 print(string.format("First paint: %.2f ms %s", first_paint, first_paint <= 300 and "✅" or "⚠"))
 print(string.format("Param update: %.2f ms %s", update_latency, update_latency <= 60 and "✅" or "⚠"))
-print(string.format("Cache hit rate: %.1f%% %s", stats.cache_hit_rate * 100, stats.cache_hit_rate > 0.9 and "✅" or "⚠"))
+print(string.format(
+    "Cache hit rate: %.1f%% %s",
+    stats.cache_hit_rate * 100,
+    stats.cache_hit_rate > 0.9 and "✅" or "⚠"
+))
 print("=================================")
 
 -- Export results to CSV
@@ -164,11 +168,31 @@ local file = io.open(csv_file, "w")
 
 if file then
     file:write("benchmark,metric,value,unit,status\n")
-    file:write(string.format("single_gaussian_640x480,fps,%.2f,fps,%s\n", fps1, fps1 >= 60 and "pass" or "warn"))
-    file:write(string.format("two_gaussians_1280x720,fps,%.2f,fps,%s\n", fps2, fps2 >= 30 and "pass" or "warn"))
-    file:write(string.format("first_paint,latency,%.2f,ms,%s\n", first_paint, first_paint <= 300 and "pass" or "warn"))
-    file:write(string.format("param_update,latency,%.2f,ms,%s\n", update_latency, update_latency <= 60 and "pass" or "warn"))
-    file:write(string.format("cache,hit_rate,%.2f,percent,%s\n", stats.cache_hit_rate * 100, stats.cache_hit_rate > 0.9 and "pass" or "warn"))
+    file:write(string.format(
+        "single_gaussian_640x480,fps,%.2f,fps,%s\n",
+        fps1,
+        fps1 >= 60 and "pass" or "warn"
+    ))
+    file:write(string.format(
+        "two_gaussians_1280x720,fps,%.2f,fps,%s\n",
+        fps2,
+        fps2 >= 30 and "pass" or "warn"
+    ))
+    file:write(string.format(
+        "first_paint,latency,%.2f,ms,%s\n",
+        first_paint,
+        first_paint <= 300 and "pass" or "warn"
+    ))
+    file:write(string.format(
+        "param_update,latency,%.2f,ms,%s\n",
+        update_latency,
+        update_latency <= 60 and "pass" or "warn"
+    ))
+    file:write(string.format(
+        "cache,hit_rate,%.2f,percent,%s\n",
+        stats.cache_hit_rate * 100,
+        stats.cache_hit_rate > 0.9 and "pass" or "warn"
+    ))
     file:close()
     print("\n✓ Results exported to:", csv_file)
 end

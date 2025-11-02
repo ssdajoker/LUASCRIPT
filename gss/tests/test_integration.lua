@@ -58,7 +58,7 @@ print("✓ Graph executed")
 
 -- Get stats
 local stats = engine.get_stats(test_engine)
-print(string.format("✓ Performance: %.2f ms/frame, %.1f FPS", 
+print(string.format("✓ Performance: %.2f ms/frame, %.1f FPS",
     stats.avg_render_time_ms, stats.fps))
 
 print("\n✅ Integration Test 1 PASSED")
@@ -90,7 +90,7 @@ print("✓ Agent started")
 for i = 1, 3 do
     local result = agent_module.step(test_agent, test_engine, graph)
     if result then
-        print(string.format("✓ Trial %d: sigma=%.1f, reward=%.2f", 
+        print(string.format("✓ Trial %d: sigma=%.1f, reward=%.2f",
             result.trial, result.params["--sigma"], result.reward))
     else
         break

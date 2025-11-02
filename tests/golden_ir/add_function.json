@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_1",
+    "source": { "path": "input.js", "hash": null },
+    "directives": [],
+  "body": ["id_1"],
+    "exports": { "type": "named", "entries": [] },
+    "metadata": { "authoredBy": "golden", "createdAt": "2025-10-13T00:00:00.000Z", "toolchain": {} }
+  },
+  "nodes": {
+    "id_1": {
+      "id": "id_1",
+      "kind": "FunctionDeclaration",
+      "name": "add",
+      "params": ["id_T", "id_0"],
+      "body": "id_10",
+      "meta": { "cfg": { "id": "cfg_1", "entry": "bb_1", "exit": "bb_T" } }
+    },
+    "id_T": { "id": "id_T", "kind": "Identifier", "name": "a" },
+    "id_0": { "id": "id_0", "kind": "Identifier", "name": "b" },
+    "id_10": { "id": "id_10", "kind": "BlockStatement", "statements": ["id_T0"] },
+    "id_11": { "id": "id_11", "kind": "BinaryExpression", "operator": "+", "left": "id_T", "right": "id_0" },
+    "id_T0": { "id": "id_T0", "kind": "ReturnStatement", "argument": "id_11" }
+  },
+  "controlFlowGraphs": {
+    "cfg_1": {
+      "id": "cfg_1",
+      "blocks": [
+        { "id": "bb_1", "kind": "entry", "statements": ["id_T0"] },
+        { "id": "bb_T", "kind": "exit", "statements": [] }
+      ],
+      "successors": { "bb_1": ["bb_T"], "bb_T": [] },
+      "predecessors": { "bb_1": [], "bb_T": ["bb_1"] }
+    }
+  }
+}

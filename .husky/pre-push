@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+# Husky pre-push hook: enforce PR-first and run a quick smoke suite.
+
+# Allow skipping via environment variables (one-time bypass):
+#   HUSKY=0 git push ...
+#   SKIP_TESTS=1 git push ...
+if [ "$HUSKY" = "0" ] || [ "$SKIP_TESTS" = "1" ]; then
+	exit 0
+fi
+
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+
+# Block direct pushes to main unless explicitly allowed.
+if [ "$branch" = "main" ] && [ "$ALLOW_PUSH_MAIN" != "1" ]; then
+	echo "[husky] Direct pushes to 'main' are blocked by policy. Create a feature branch and open a PR."
+	echo "        To override once: ALLOW_PUSH_MAIN=1 git push (or use --no-verify)."
+	exit 1
+fi
+
+# Prefer a fast smoke test; fall back to npm test if not present.
+if command -v npm >/dev/null 2>&1; then
+	if npm run -s test:smoke >/dev/null 2>&1; then
+		echo "[husky] Running smoke tests (test:smoke)"
+		npm run -s test:smoke || exit 1
+	else
+		echo "[husky] Running full test suite (npm test)"
+		npm test || exit 1
+	fi
+fi
+
+exit 0

@@ -1,0 +1,487 @@
+{
+  "schemaVersion": "1.0.0",
+  "module": {
+    "id": "mod_0",
+    "source": {
+      "path": "-",
+      "hash": null
+    },
+    "directives": [],
+    "body": [
+      "node_11T1"
+    ],
+    "exports": {
+      "type": "named",
+      "entries": []
+    },
+    "metadata": {
+      "authoredBy": "ir-builder",
+      "createdAt": "2025-10-14T03:57:22.685Z",
+      "toolchain": {
+        "parser": "phase1_core_parser@1.0.0",
+        "normalizer": "ir-normalizer@1.0.0",
+        "lowerer": "ir-lowerer@1.0.0"
+      },
+      "metaPerf": {
+        "parseMs": 58.515097,
+        "normalizeMs": 4.22711,
+        "lowerMs": 79.592473,
+        "totalMs": 145.180685,
+        "nodeCount": 29
+      }
+    }
+  },
+  "nodes": {
+    "node_1": {
+      "id": "node_1",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "sum",
+      "binding": "sum"
+    },
+    "node_1T": {
+      "id": "node_1T",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "n",
+      "binding": "n"
+    },
+    "node_10": {
+      "id": "node_10",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_11": {
+      "id": "node_11",
+      "kind": "Literal",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "value": 0,
+      "raw": "0",
+      "literalKind": "number"
+    },
+    "node_1T0": {
+      "id": "node_1T0",
+      "kind": "VariableDeclaration",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "declarations": [
+        {
+          "id": "decl_1TT",
+          "pattern": "node_10",
+          "init": "node_11",
+          "kind": "let"
+        }
+      ],
+      "declarationKind": "let"
+    },
+    "node_1T1": {
+      "id": "node_1T1",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "s",
+      "binding": "s"
+    },
+    "node_10T": {
+      "id": "node_10T",
+      "kind": "Literal",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "value": 0,
+      "raw": "0",
+      "literalKind": "number"
+    },
+    "node_101": {
+      "id": "node_101",
+      "kind": "VariableDeclaration",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "declarations": [
+        {
+          "id": "decl_100",
+          "pattern": "node_1T1",
+          "init": "node_10T",
+          "kind": "let"
+        }
+      ],
+      "declarationKind": "let"
+    },
+    "node_11T": {
+      "id": "node_11T",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_110": {
+      "id": "node_110",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "n",
+      "binding": "n"
+    },
+    "node_111": {
+      "id": "node_111",
+      "kind": "BinaryExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "operator": "<",
+      "left": "node_11T",
+      "right": "node_110"
+    },
+    "node_1TTT": {
+      "id": "node_1TTT",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "s",
+      "binding": "s"
+    },
+    "node_1TT0": {
+      "id": "node_1TT0",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "s",
+      "binding": "s"
+    },
+    "node_1TT1": {
+      "id": "node_1TT1",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_1T0T": {
+      "id": "node_1T0T",
+      "kind": "BinaryExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "operator": "+",
+      "left": "node_1TT0",
+      "right": "node_1TT1"
+    },
+    "node_1T00": {
+      "id": "node_1T00",
+      "kind": "AssignmentExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "operator": "=",
+      "left": "node_1TTT",
+      "right": "node_1T0T"
+    },
+    "node_1T01": {
+      "id": "node_1T01",
+      "kind": "ExpressionStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "expression": "node_1T00"
+    },
+    "node_1T1T": {
+      "id": "node_1T1T",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_1T10": {
+      "id": "node_1T10",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "i",
+      "binding": "i"
+    },
+    "node_1T11": {
+      "id": "node_1T11",
+      "kind": "Literal",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "value": 1,
+      "raw": "1",
+      "literalKind": "number"
+    },
+    "node_10TT": {
+      "id": "node_10TT",
+      "kind": "BinaryExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "operator": "+",
+      "left": "node_1T10",
+      "right": "node_1T11"
+    },
+    "node_10T0": {
+      "id": "node_10T0",
+      "kind": "AssignmentExpression",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "operator": "=",
+      "left": "node_1T1T",
+      "right": "node_10TT"
+    },
+    "node_10T1": {
+      "id": "node_10T1",
+      "kind": "ExpressionStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "expression": "node_10T0"
+    },
+    "node_100T": {
+      "id": "node_100T",
+      "kind": "BlockStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "statements": [
+        "node_1T01",
+        "node_10T1"
+      ]
+    },
+    "node_1000": {
+      "id": "node_1000",
+      "kind": "WhileStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "test": "node_111",
+      "body": "node_100T"
+    },
+    "node_1001": {
+      "id": "node_1001",
+      "kind": "Identifier",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "name": "s",
+      "binding": "s"
+    },
+    "node_101T": {
+      "id": "node_101T",
+      "kind": "ReturnStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "argument": "node_1001"
+    },
+    "node_1010": {
+      "id": "node_1010",
+      "kind": "BlockStatement",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {},
+      "statements": [
+        "node_1T0",
+        "node_101",
+        "node_1000",
+        "node_101T"
+      ]
+    },
+    "node_11T1": {
+      "id": "node_11T1",
+      "kind": "FunctionDeclaration",
+      "span": null,
+      "flags": {},
+      "doc": {
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "meta": {
+        "cfg": {
+          "id": "cfg_1011",
+          "entry": "bb_11TT",
+          "exit": "bb_11T0"
+        },
+        "auditTags": [
+          "knuth:awaiting-proof"
+        ]
+      },
+      "name": "sum",
+      "params": [
+        "node_1T"
+      ],
+      "body": "node_1010",
+      "async": false,
+      "generator": false,
+      "returnType": null
+    }
+  },
+  "controlFlowGraphs": {
+    "cfg_1011": {
+      "id": "cfg_1011",
+      "blocks": [
+        {
+          "id": "bb_11TT",
+          "kind": "entry",
+          "statements": [
+            "node_1T0",
+            "node_101",
+            "node_1000",
+            "node_101T"
+          ]
+        },
+        {
+          "id": "bb_11T0",
+          "kind": "exit",
+          "statements": []
+        }
+      ],
+      "successors": {
+        "bb_11TT": [
+          "bb_11T0"
+        ],
+        "bb_11T0": []
+      },
+      "predecessors": {
+        "bb_11TT": [],
+        "bb_11T0": [
+          "bb_11TT"
+        ]
+      }
+    }
+  }
+}

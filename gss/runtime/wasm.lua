@@ -28,26 +28,26 @@ function M.init(config)
     if M.initialized then
         return true
     end
-    
+
     -- Merge configuration
     if config then
         for k, v in pairs(config) do
             M.config[k] = v
         end
     end
-    
+
     -- Check if WASM is available (via FFI or external bridge)
     local has_wasm = pcall(function()
         -- Try to load WASM support
         -- This would use LuaJIT FFI or external bridge
         return true
     end)
-    
+
     if not has_wasm then
         print("WASM not available, falling back to Lua implementation")
         return false
     end
-    
+
     M.initialized = true
     return true
 end
@@ -59,13 +59,13 @@ function M.compile_gaussian_kernel()
     if not M.initialized then
         M.init()
     end
-    
+
     -- WASM module for Gaussian computation
     -- This is a simplified representation
     local wasm_code = {
         magic = {0x00, 0x61, 0x73, 0x6d},  -- '\0asm'
         version = {0x01, 0x00, 0x00, 0x00},  -- version 1
-        
+
         -- Type section: (f64, f64, f64, f64, f64) -> f64
         type_section = {
             id = 1,
@@ -77,13 +77,13 @@ function M.compile_gaussian_kernel()
                 }
             }
         },
-        
+
         -- Function section
         function_section = {
             id = 3,
             functions = {0}  -- Use type 0
         },
-        
+
         -- Memory section
         memory_section = {
             id = 5,
@@ -97,7 +97,7 @@ function M.compile_gaussian_kernel()
                 }
             }
         },
-        
+
         -- Export section
         export_section = {
             id = 7,
@@ -106,7 +106,7 @@ function M.compile_gaussian_kernel()
                 {name = "memory", kind = 2, index = 0}
             }
         },
-        
+
         -- Code section: Gaussian computation
         code_section = {
             id = 10,
@@ -116,7 +116,7 @@ function M.compile_gaussian_kernel()
                     body = {
                         -- Gaussian formula: exp(-((x-muX)^2 + (y-muY)^2) / (2*sigma^2))
                         -- Stack: [x, y, muX, muY, sigma]
-                        
+
                         0x20, 0x00,  -- local.get 0 (x)
                         0x20, 0x02,  -- local.get 2 (muX)
                         0xa1,        -- f64.sub
@@ -124,7 +124,7 @@ function M.compile_gaussian_kernel()
                         0x20, 0x02,  -- local.get 2 (muX)
                         0xa1,        -- f64.sub
                         0xa2,        -- f64.mul (dx^2)
-                        
+
                         0x20, 0x01,  -- local.get 1 (y)
                         0x20, 0x03,  -- local.get 3 (muY)
                         0xa1,        -- f64.sub
@@ -132,29 +132,29 @@ function M.compile_gaussian_kernel()
                         0x20, 0x03,  -- local.get 3 (muY)
                         0xa1,        -- f64.sub
                         0xa2,        -- f64.mul (dy^2)
-                        
+
                         0xa0,        -- f64.add (dx^2 + dy^2)
-                        
+
                         0x44, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40,  -- f64.const 2.0
                         0x20, 0x04,  -- local.get 4 (sigma)
                         0xa2,        -- f64.mul
                         0x20, 0x04,  -- local.get 4 (sigma)
                         0xa2,        -- f64.mul (2*sigma^2)
-                        
+
                         0xa3,        -- f64.div
                         0x44, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  -- f64.const 0.0
                         0xa1,        -- f64.sub (negate)
-                        
+
                         -- Call exp (would need to import from env)
                         -- For now, approximate with Taylor series
-                        
+
                         0x0b  -- end
                     }
                 }
             }
         }
     }
-    
+
     return wasm_code
 end
 
@@ -170,7 +170,7 @@ function M.execute_gaussian(x, y, muX, muY, sigma)
         local inv2s2 = 1.0 / (2.0 * sigma * sigma)
         return math.exp(-dist_sq * inv2s2)
     end
-    
+
     -- Call WASM function
     return M.wasm_instance.exports.gaussian(x, y, muX, muY, sigma)
 end
@@ -180,24 +180,24 @@ end
 ]]
 function M.render_tile_wasm(tile_x, tile_y, tile_size, params)
     local tile = {}
-    
+
     for y = 0, tile_size - 1 do
         tile[y] = {}
         for x = 0, tile_size - 1 do
             local px = tile_x + x
             local py = tile_y + y
-            
+
             local value = M.execute_gaussian(
                 px, py,
                 params.muX or 0,
                 params.muY or 0,
                 params.sigma or 1
             )
-            
+
             tile[y][x] = value
         end
     end
-    
+
     return tile
 end
 
@@ -206,7 +206,7 @@ end
 ]]
 function M.batch_render_wasm(tiles, params)
     local results = {}
-    
+
     for i, tile_info in ipairs(tiles) do
         results[i] = M.render_tile_wasm(
             tile_info.x,
@@ -215,7 +215,7 @@ function M.batch_render_wasm(tiles, params)
             params
         )
     end
-    
+
     return results
 end
 
@@ -224,13 +224,13 @@ end
 ]]
 function M.benchmark(iterations)
     iterations = iterations or 1000
-    
+
     local params = {
         muX = 320,
         muY = 240,
         sigma = 50
     }
-    
+
     -- Benchmark Lua implementation
     local lua_start = os.clock()
     for i = 1, iterations do
@@ -241,7 +241,7 @@ function M.benchmark(iterations)
         local _ = math.exp(-dist_sq * inv2s2)
     end
     local lua_time = os.clock() - lua_start
-    
+
     -- Benchmark WASM implementation (if available)
     local wasm_time = 0
     if M.initialized and M.wasm_instance then
@@ -251,7 +251,7 @@ function M.benchmark(iterations)
         end
         wasm_time = os.clock() - wasm_start
     end
-    
+
     return {
         lua_time = lua_time,
         wasm_time = wasm_time,

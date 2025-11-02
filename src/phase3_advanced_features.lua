@@ -1,7 +1,21 @@
 -- PHASE 3: ADVANCED LANGUAGE FEATURES - REAL IMPLEMENTATION
--- Team A: Architects - ACTUAL CODE NOW!
+--[[
+-- phase3_advanced_features.lua
+--
+-- Implements advanced language features for LuaScript, including an object-oriented system,
+-- pattern matching, memory management, concurrency, and enhanced error handling.
+--
+-- @author Ada Lovelace's Unified Team
+-- @version 1.0
+--]]
+
 local phase3 = {}
--- Advanced Object-Oriented Programming with Metaclasses
+
+--- Creates a new metaclass for object-oriented programming.
+-- @param name The name of the class.
+-- @param methods A table of methods for the class.
+-- @param properties A table of properties with getters and setters.
+-- @return The new metaclass.
 function phase3.create_metaclass(name, methods, properties)
     local metaclass = {
         __name = name,
@@ -49,6 +63,10 @@ function phase3.create_metaclass(name, methods, properties)
     return metaclass
 end
 -- Advanced Pattern Matching System
+--- Matches a value against a set of patterns.
+-- @param value The value to match.
+-- @param patterns A table of patterns and corresponding actions.
+-- @return The result of the action for the matched pattern.
 function phase3.pattern_match(value, patterns)
     for pattern, action in pairs(patterns) do
         if type(pattern) == "function" then
@@ -69,6 +87,11 @@ function phase3.pattern_match(value, patterns)
     end
     error("No pattern matched for value: " .. tostring(value))
 end
+
+--- Performs a deep match between a value and a pattern.
+-- @param value The value to match.
+-- @param pattern The pattern to match against.
+-- @return True if the value matches the pattern, false otherwise.
 function phase3.deep_match(value, pattern)
     if type(value) ~= type(pattern) then
         return false
@@ -84,12 +107,18 @@ function phase3.deep_match(value, pattern)
     return true
 end
 -- Advanced Memory Management with Garbage Collection Hooks
+--- A memory manager with garbage collection hooks.
 phase3.memory_manager = {
     allocated_objects = {},
     gc_callbacks = {},
     memory_limit = 1024 * 1024 * 100, -- 100MB default
     current_usage = 0
 }
+
+--- Allocates a new object in memory.
+-- @param size The size of the object to allocate.
+-- @param object_type The type of the object.
+-- @return The ID of the allocated object.
 function phase3.memory_manager:allocate(size, object_type)
     if self.current_usage + size > self.memory_limit then
         self:trigger_gc()
@@ -106,6 +135,9 @@ function phase3.memory_manager:allocate(size, object_type)
     self.current_usage = self.current_usage + size
     return obj_id
 end
+
+--- Deallocates an object from memory.
+-- @param obj_id The ID of the object to deallocate.
 function phase3.memory_manager:deallocate(obj_id)
     local obj = self.allocated_objects[obj_id]
     if obj then
@@ -117,6 +149,8 @@ function phase3.memory_manager:deallocate(obj_id)
         end
     end
 end
+
+--- Triggers a garbage collection cycle.
 function phase3.memory_manager:trigger_gc()
     collectgarbage("collect")
     -- Custom GC logic here
@@ -130,7 +164,12 @@ function phase3.memory_manager:trigger_gc()
     print("GC freed " .. freed .. " objects")
 end
 -- Advanced Concurrency with Coroutines and Channels
+--- Concurrency utilities using coroutines and channels.
 phase3.concurrency = {}
+
+--- Creates a new channel for communication between coroutines.
+-- @param buffer_size The size of the channel's buffer.
+-- @return The new channel object.
 function phase3.concurrency.create_channel(buffer_size)
     return {
         buffer = {},
@@ -140,6 +179,10 @@ function phase3.concurrency.create_channel(buffer_size)
         closed = false
     }
 end
+
+--- Sends a value to a channel.
+-- @param channel The channel to send to.
+-- @param value The value to send.
 function phase3.concurrency.send(channel, value)
     if channel.closed then
         error("Cannot send to closed channel")
@@ -157,6 +200,10 @@ function phase3.concurrency.send(channel, value)
         coroutine.yield()
     end
 end
+
+--- Receives a value from a channel.
+-- @param channel The channel to receive from.
+-- @return The received value.
 function phase3.concurrency.receive(channel)
     if #channel.buffer > 0 then
         local value = table.remove(channel.buffer, 1)
@@ -175,6 +222,9 @@ function phase3.concurrency.receive(channel)
     end
 end
 -- Advanced Error Handling with Stack Traces
+--- Throws an enhanced error with a stack trace.
+-- @param message The error message.
+-- @param level The stack level to start the trace from.
 function phase3.enhanced_error(message, level)
     level = level or 2
     local stack_trace = {}
@@ -196,6 +246,10 @@ function phase3.enhanced_error(message, level)
     }
     error(error_obj, 0)
 end
+
+--- Formats an enhanced error object into a string.
+-- @param error_obj The error object to format.
+-- @return The formatted error string.
 function phase3.format_error(error_obj)
     if type(error_obj) ~= "table" or not error_obj.stack_trace then
         return tostring(error_obj)

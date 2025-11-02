@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUASCRIPT IDE - Mathematical Programming Revolution</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            color: white;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd89b, #19547b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .tape-controls {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tape-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            color: #333;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .tape-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+
+        .editor-panel {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .panel-header {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+
+        #editor {
+            height: calc(100% - 60px);
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background: rgba(0, 0, 0, 0.6);
+            color: #f8f8f2;
+            padding: 1rem;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            border: none;
+            outline: none;
+            overflow-y: auto;
+        }
+
+        .output-panel {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mathematical-preview {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .lua-output {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            color: #a0ff8f;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .status-bar {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .mathematical-expr {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-left: 4px solid #ffd89b;
+        }
+
+        .example-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .example-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .example-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .unicode-palette {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .unicode-symbols {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .unicode-symbol {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .unicode-symbol:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🧮 LUASCRIPT IDE</div>
+        
+        <div class="controls">
+            <div class="tape-controls">
+                <button class="tape-btn" onclick="playCode()" title="Play/Compile">▶</button>
+                <button class="tape-btn" onclick="pauseCode()" title="Pause">⏸</button>
+                <button class="tape-btn" onclick="stopCode()" title="Stop">⏹</button>
+                <button class="tape-btn" onclick="recordCode()" title="Record Session">⏺</button>
+                <button class="tape-btn" onclick="rewindCode()" title="Rewind">⏮</button>
+            </div>
+            
+            <div class="example-buttons">
+                <button class="example-btn" onclick="loadExample('hello')">Hello World</button>
+                <button class="example-btn" onclick="loadExample('math')">Mathematics</button>
+                <button class="example-btn" onclick="loadExample('class')">Classes</button>
+                <button class="example-btn" onclick="loadExample('vector')">Vectors</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="editor-panel">
+            <div class="panel-header">
+                📝 LUASCRIPT Editor
+                <span style="float: right; font-size: 0.8rem; opacity: 0.7;">
+                    Mathematical Programming Language
+                </span>
+            </div>
+            <textarea id="editor" placeholder="// Welcome to LUASCRIPT - Where Mathematics Meets Code
+// Type your beautiful mathematical expressions here...
+
+let radius = 5;
+let area = π × radius²;
+let circumference = 2 × π × radius;
+
+function gaussian(x, μ, σ) {
+    return (1/√(2×π×σ²)) × ℯ^(-((x-μ)²)/(2×σ²));
+}
+
+console.log(`Circle area: ${area}`);
+console.log(`Gaussian at x=0: ${gaussian(0, 0, 1)}`);"></textarea>
+        </div>
+
+        <div class="output-panel">
+            <div class="panel-header">🎯 Mathematical Preview</div>
+            <div class="mathematical-preview">
+                <div class="unicode-palette">
+                    <div><strong>Mathematical Symbols</strong></div>
+                    <div class="unicode-symbols">
+                        <button class="unicode-symbol" onclick="insertSymbol('π')">π</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('∞')">∞</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('√')">√</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('∑')">∑</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('∏')">∏</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('∫')">∫</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('∂')">∂</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('×')">×</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('÷')">÷</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('±')">±</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('≤')">≤</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('≥')">≥</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('≠')">≠</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('∈')">∈</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('∅')">∅</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('∘')">∘</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('λ')">λ</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('²')">²</button>
+                        <button class="unicode-symbol" onclick="insertSymbol('³')">³</button>
+                    </div>
+                </div>
+
+                <div class="mathematical-expr">
+                    <strong>Live Mathematical Expressions:</strong>
+                    <div id="math-preview">Your beautiful mathematics will appear here...</div>
+                </div>
+            </div>
+
+            <div class="panel-header">⚡ Generated Lua Code</div>
+            <div class="lua-output" id="lua-output">
+-- Your LUASCRIPT will be transpiled to elegant Lua here...
+-- Watch the mathematical beauty transform into executable code!
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <span id="status">Ready - LUASCRIPT Mathematical Programming IDE</span>
+        <span style="margin-left: auto;">
+            🚀 Real-time compilation | 🧮 Unicode mathematics | ⚡ LuaJIT performance
+        </span>
+    </div>
+
+    <script>
+        // Initialize the LUASCRIPT IDE
+        let currentEditor = null;
+        let isCompiling = false;
+
+        // Initialize editor
+        function initializeEditor() {
+            const editor = document.getElementById('editor');
+            currentEditor = editor;
+            
+            // Set initial content
+            editor.value = `// Welcome to LUASCRIPT - Where Mathematics Meets Code
+// Mathematical programming with Unicode elegance!
+
+let radius = 5;
+let area = π × radius²;
+let circumference = 2 × π × radius;
+
+function gaussian(x, μ, σ) {
+    return (1/√(2×π×σ²)) × ℯ^(-((x-μ)²)/(2×σ²));
+}
+
+console.log(\`Circle area: \${area}\`);
+console.log(\`Gaussian at x=0: \${gaussian(0, 0, 1)}\`);`;
+            
+            // Add real-time compilation on change
+            editor.addEventListener('input', debounce(compileCode, 500));
+            
+            // Initial compilation
+            compileCode();
+        }
+
+        // Mock compilation for demo
+        function compileCode() {
+            if (isCompiling) return;
+            
+            isCompiling = true;
+            updateStatus("⚙️ Compiling LUASCRIPT...");
+            
+            const code = currentEditor.value;
+            
+            setTimeout(() => {
+                // Mock transpilation
+                const mockLua = `-- Generated by LUASCRIPT Enhanced Transpiler
+-- Mathematical programming with Unicode operator support
+
+${code.split('\n').map(line => {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('let ')) {
+        return 'local ' + line.substring(line.indexOf('let ') + 4);
+    } else if (trimmed.startsWith('const ')) {
+        return 'local ' + line.substring(line.indexOf('const ') + 6);
+    } else if (line.includes('π')) {
+        return line.replace(/π/g, 'math.pi');
+    } else if (line.includes('×')) {
+        return line.replace(/×/g, ' * ');
+    } else if (line.includes('√')) {
+        return line.replace(/√/g, 'math.sqrt');
+    } else if (line.includes('ℯ^')) {
+        return line.replace(/ℯ\^/g, 'math.exp');
+    } else if (line.includes('console.log')) {
+        return line.replace('console.log', 'print');
+    }
+    return line;
+}).join('\n')}`;
+                
+                document.getElementById('lua-output').textContent = mockLua;
+                updateMathPreview(code);
+                updateStatus("✅ Compilation successful!");
+                isCompiling = false;
+            }, 300);
+        }
+
+        // Update mathematical preview
+        function updateMathPreview(code) {
+            const mathExpressions = extractMathExpressions(code);
+            const preview = document.getElementById('math-preview');
+            
+            if (mathExpressions.length > 0) {
+                preview.innerHTML = mathExpressions
+                    .map(expr => `<div style="margin: 0.5rem 0; font-family: serif; font-size: 1.1rem;">
+                        <code style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 4px;">
+                            ${expr.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+                        </code>
+                    </div>`).join('');
+            } else {
+                preview.innerHTML = 'No mathematical expressions detected...';
+            }
+        }
+
+        // Extract mathematical expressions from code
+        function extractMathExpressions(code) {
+            const mathSymbols = /[π∞√∑∏∫∂×÷±≤≥≠∈∅∘λ²³]/g;
+            return code.split('\n')
+                .filter(line => mathSymbols.test(line))
+                .map(line => line.trim())
+                .filter(line => line.length > 0);
+        }
+
+        // Tape control functions
+        function playCode() {
+            compileCode();
+        }
+
+        function pauseCode() {
+            updateStatus("⏸ Paused");
+        }
+
+        function stopCode() {
+            document.getElementById('lua-output').textContent = '-- Stopped';
+            updateStatus("⏹ Stopped");
+        }
+
+        function recordCode() {
+            updateStatus("⏺ Recording session...");
+        }
+
+        function rewindCode() {
+            updateStatus("⏮ Rewinding...");
+        }
+
+        // Insert mathematical symbols
+        function insertSymbol(symbol) {
+            const editor = currentEditor;
+            if (editor) {
+                const cursorPos = editor.selectionStart;
+                const textBefore = editor.value.substring(0, cursorPos);
+                const textAfter = editor.value.substring(editor.selectionEnd);
+                
+                editor.value = textBefore + symbol + textAfter;
+                editor.selectionStart = editor.selectionEnd = cursorPos + symbol.length;
+                editor.focus();
+                
+                compileCode();
+            }
+        }
+
+        // Load example code
+        function loadExample(type) {
+            const examples = {
+                hello: `// LUASCRIPT Hello World
+let message = "Hello from LUASCRIPT!";
+const version = 1.0;
+
+function greet(name) {
+    return \`Hello, \${name}! Welcome to LUASCRIPT v\${version}\`;
+}
+
+console.log(message);
+console.log(greet("World"));`,
+
+                math: `// Mathematical Beauty in LUASCRIPT
+let radius = 5;
+let area = π × radius²;
+let circumference = 2 × π × radius;
+
+// Gaussian function with Unicode elegance
+function gaussian(x, μ, σ) {
+    return (1/√(2×π×σ²)) × ℯ^(-((x-μ)²)/(2×σ²));
+}
+
+// Beautiful mathematical expressions
+let sum = ∑([1, 2, 3, 4, 5]);
+let product = ∏([1, 2, 3, 4, 5]);
+
+console.log(\`Circle area: \${area}\`);
+console.log(\`Gaussian at x=0: \${gaussian(0, 0, 1)}\`);`,
+
+                class: `// Object-Oriented LUASCRIPT
+class Point {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    
+    distance(other) {
+        return √((this.x - other.x)² + (this.y - other.y)²);
+    }
+}
+
+let p1 = new Point(0, 0);
+let p2 = new Point(3, 4);
+let dist = p1.distance(p2);
+
+console.log(\`Distance: \${dist}\`);`,
+
+                vector: `// Vector Mathematics in LUASCRIPT
+class Vector {
+    constructor(components) {
+        this.components = components;
+    }
+    
+    magnitude() {
+        return √(this.components
+            .map(x => x²)
+            .reduce((a, b) => a + b, 0));
+    }
+    
+    dot(other) {
+        return this.components
+            .map((x, i) => x × other.components[i])
+            .reduce((a, b) => a + b, 0);
+    }
+}
+
+let v1 = new Vector([1, 2, 3]);
+let v2 = new Vector([4, 5, 6]);
+
+console.log(\`Magnitude: \${v1.magnitude()}\`);
+console.log(\`Dot product: \${v1.dot(v2)}\`);`
+            };
+            
+            if (examples[type]) {
+                currentEditor.value = examples[type];
+                compileCode();
+                updateStatus(`✨ Loaded ${type} example`);
+            }
+        }
+
+        // Utility functions
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeEditor();
+            updateStatus("🚀 LUASCRIPT IDE initialized - Ready for mathematical programming!");
+        });
+    </script>
+</body>
+</html>
