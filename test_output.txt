@@ -1,0 +1,750 @@
+
+======================================================================
+🚀 ENHANCED LUASCRIPT TRANSPILER - COMPREHENSIVE TEST SUITE
+======================================================================
+
+██████████████████████████████████████████████████████████████████████
+📦 CATEGORY 1: VARIABLE DECLARATIONS
+██████████████████████████████████████████████████████████████████████
+
+======================================================================
+🧪 TEST: 1.1 - var declaration
+======================================================================
+📝 JavaScript Input:
+var x = 10;
+
+🔄 Transpiled Lua:
+local x = 10
+✅ Expected pattern found: "local x = 10"
+✅ Correctly avoided: "var"
+
+✅ TEST PASSED: 1.1 - var declaration
+
+======================================================================
+🧪 TEST: 1.2 - let declaration
+======================================================================
+📝 JavaScript Input:
+let y = 20;
+
+🔄 Transpiled Lua:
+local y = 20
+✅ Expected pattern found: "local y = 20"
+✅ Correctly avoided: "let"
+
+✅ TEST PASSED: 1.2 - let declaration
+
+======================================================================
+🧪 TEST: 1.3 - const declaration
+======================================================================
+📝 JavaScript Input:
+const z = 30;
+
+🔄 Transpiled Lua:
+local z = 30
+✅ Expected pattern found: "local z = 30"
+✅ Correctly avoided: "const"
+
+✅ TEST PASSED: 1.3 - const declaration
+
+======================================================================
+🧪 TEST: 1.4 - Multiple declarations
+======================================================================
+📝 JavaScript Input:
+let a = 1, b = 2, c = 3;
+
+🔄 Transpiled Lua:
+local a = 1
+local b = 2
+local c = 3
+✅ Expected pattern found: "local a = 1"
+✅ Expected pattern found: "local b = 2"
+✅ Expected pattern found: "local c = 3"
+✅ Correctly avoided: "let"
+
+✅ TEST PASSED: 1.4 - Multiple declarations
+
+======================================================================
+🧪 TEST: 1.5 - Declaration without initialization
+======================================================================
+📝 JavaScript Input:
+var count;
+
+🔄 Transpiled Lua:
+local count
+✅ Expected pattern found: "local count"
+✅ Correctly avoided: "var"
+
+✅ TEST PASSED: 1.5 - Declaration without initialization
+
+██████████████████████████████████████████████████████████████████████
+🔀 CATEGORY 2: CONTROL FLOW
+██████████████████████████████████████████████████████████████████████
+
+======================================================================
+🧪 TEST: 2.1 - if statement
+======================================================================
+📝 JavaScript Input:
+if (x > 5) { console.log("big"); }
+
+🔄 Transpiled Lua:
+if x > 5 then console.log("big") end
+✅ Expected pattern found: "if x > 5 then"
+✅ Expected pattern found: "console.log("big")"
+✅ Expected pattern found: "end"
+✅ Correctly avoided: "if ("
+✅ Correctly avoided: ") {"
+✅ Correctly avoided: "}"
+
+✅ TEST PASSED: 2.1 - if statement
+
+======================================================================
+🧪 TEST: 2.2 - if-else statement
+======================================================================
+📝 JavaScript Input:
+if (x > 5) { console.log("big"); } else { console.log("small"); }
+
+🔄 Transpiled Lua:
+if x > 5 then console.log("big") else console.log("small") end
+✅ Expected pattern found: "if x > 5 then"
+✅ Expected pattern found: "else"
+✅ Expected pattern found: "end"
+✅ Correctly avoided: "if ("
+✅ Correctly avoided: ") {"
+✅ Correctly avoided: "}"
+
+✅ TEST PASSED: 2.2 - if-else statement
+
+======================================================================
+🧪 TEST: 2.3 - if-elseif-else statement
+======================================================================
+📝 JavaScript Input:
+if (x > 10) { console.log("big"); } else if (x > 5) { console.log("medium"); } else { console.log("small"); }
+
+🔄 Transpiled Lua:
+if x > 10 then console.log("big") elseif x > 5 then console.log("medium") else console.log("small") end
+✅ Expected pattern found: "if x > 10 then"
+✅ Expected pattern found: "elseif x > 5 then"
+✅ Expected pattern found: "else"
+✅ Expected pattern found: "end"
+✅ Correctly avoided: "else if"
+
+✅ TEST PASSED: 2.3 - if-elseif-else statement
+
+======================================================================
+🧪 TEST: 2.4 - while loop
+======================================================================
+📝 JavaScript Input:
+while (i < 10) { i++; }
+
+🔄 Transpiled Lua:
+while i < 10 do i = i + 1 end
+✅ Expected pattern found: "while i < 10 do"
+✅ Expected pattern found: "i = i + 1"
+✅ Expected pattern found: "end"
+✅ Correctly avoided: "while ("
+✅ Correctly avoided: ") {"
+✅ Correctly avoided: "++"
+
+✅ TEST PASSED: 2.4 - while loop
+
+======================================================================
+🧪 TEST: 2.5 - for loop (numeric)
+======================================================================
+📝 JavaScript Input:
+for (let i = 0; i < 10; i++) { console.log(i); }
+
+🔄 Transpiled Lua:
+for i = 0, 9 do console.log(i) end
+✅ Expected pattern found: "for i = 0, 9 do"
+✅ Expected pattern found: "console.log(i)"
+✅ Expected pattern found: "end"
+✅ Correctly avoided: "for ("
+✅ Correctly avoided: "i++"
+✅ Correctly avoided: ") {"
+
+✅ TEST PASSED: 2.5 - for loop (numeric)
+
+======================================================================
+🧪 TEST: 2.6 - for loop with <=
+======================================================================
+📝 JavaScript Input:
+for (let i = 1; i <= 10; i++) { console.log(i); }
+
+🔄 Transpiled Lua:
+for i = 1, 10 do console.log(i) end
+✅ Expected pattern found: "for i = 1, 10 do"
+✅ Correctly avoided: "i++"
+
+✅ TEST PASSED: 2.6 - for loop with <=
+
+======================================================================
+🧪 TEST: 2.7 - for loop with step
+======================================================================
+📝 JavaScript Input:
+for (let i = 0; i < 10; i += 2) { console.log(i); }
+
+🔄 Transpiled Lua:
+for i = 0, 9, 2 do console.log(i) end
+✅ Expected pattern found: "for i = 0, 9, 2 do"
+✅ Correctly avoided: "i += 2"
+
+✅ TEST PASSED: 2.7 - for loop with step
+
+======================================================================
+🧪 TEST: 2.8 - do-while loop
+======================================================================
+📝 JavaScript Input:
+do { i++; } while (i < 10);
+
+🔄 Transpiled Lua:
+repeat i = i + 1 until not (i < 10)
+✅ Expected pattern found: "repeat"
+✅ Expected pattern found: "i = i + 1"
+✅ Expected pattern found: "until not (i < 10)"
+✅ Correctly avoided: "do {"
+✅ Correctly avoided: "while ("
+
+✅ TEST PASSED: 2.8 - do-while loop
+
+======================================================================
+🧪 TEST: 2.9 - switch statement
+======================================================================
+📝 JavaScript Input:
+switch (x) { case 1: console.log("one"); break; case 2: console.log("two"); break; default: console.log("other"); }
+
+🔄 Transpiled Lua:
+local __switch_expr = x if false then elseif __switch_expr == 1 then console.log("one") elseif __switch_expr == 2 then console.log("two") else console.log("other") end
+✅ Expected pattern found: "__switch_expr"
+✅ Expected pattern found: "elseif"
+✅ Expected pattern found: "else"
+❌ Should not contain: "switch"
+✅ Correctly avoided: "case"
+✅ Correctly avoided: "break"
+
+❌ TEST FAILED: 2.9 - switch statement
+Issues: Should not contain: "switch"
+
+██████████████████████████████████████████████████████████████████████
+➕ CATEGORY 3: OPERATORS
+██████████████████████████████████████████████████████████████████████
+
+======================================================================
+🧪 TEST: 3.1 - Arithmetic operators
+======================================================================
+📝 JavaScript Input:
+let result = a + b - c * d / e % f;
+
+🔄 Transpiled Lua:
+local result = a + b - c * d / e % f
+✅ Expected pattern found: "local result = a + b - c * d / e % f"
+
+✅ TEST PASSED: 3.1 - Arithmetic operators
+
+======================================================================
+🧪 TEST: 3.2 - Logical operators
+======================================================================
+📝 JavaScript Input:
+if (a && b || c) { }
+
+🔄 Transpiled Lua:
+if a and b or c then end
+✅ Expected pattern found: "if a and b or c then"
+✅ Correctly avoided: "&&"
+✅ Correctly avoided: "||"
+
+✅ TEST PASSED: 3.2 - Logical operators
+
+======================================================================
+🧪 TEST: 3.3 - Comparison operators
+======================================================================
+📝 JavaScript Input:
+if (a > b && c < d && e >= f && g <= h) { }
+
+🔄 Transpiled Lua:
+if a > b and c < d and e >= f and g <= h then end
+✅ Expected pattern found: "if a > b and c < d and e >= f and g <= h then"
+
+✅ TEST PASSED: 3.3 - Comparison operators
+
+======================================================================
+🧪 TEST: 3.4 - Equality operators
+======================================================================
+📝 JavaScript Input:
+if (a === b && c !== d) { }
+
+🔄 Transpiled Lua:
+if a == b and c ~= d then end
+✅ Expected pattern found: "if a == b and c ~= d then"
+✅ Correctly avoided: "==="
+✅ Correctly avoided: "!=="
+
+✅ TEST PASSED: 3.4 - Equality operators
+
+======================================================================
+🧪 TEST: 3.5 - Not equal operator
+======================================================================
+📝 JavaScript Input:
+if (a != b) { }
+
+🔄 Transpiled Lua:
+if a ~= b then end
+✅ Expected pattern found: "if a ~= b then"
+✅ Correctly avoided: "!="
+
+✅ TEST PASSED: 3.5 - Not equal operator
+
+======================================================================
+🧪 TEST: 3.6 - Logical NOT operator
+======================================================================
+📝 JavaScript Input:
+if (!isValid) { }
+
+🔄 Transpiled Lua:
+if not isValid then end
+✅ Expected pattern found: "if not isValid then"
+✅ Correctly avoided: "!"
+
+✅ TEST PASSED: 3.6 - Logical NOT operator
+
+======================================================================
+🧪 TEST: 3.7 - Increment operators
+======================================================================
+📝 JavaScript Input:
+x++; ++y;
+
+🔄 Transpiled Lua:
+x = x + 1 y = y + 1
+✅ Expected pattern found: "x = x + 1"
+✅ Expected pattern found: "y = y + 1"
+✅ Correctly avoided: "++"
+
+✅ TEST PASSED: 3.7 - Increment operators
+
+======================================================================
+🧪 TEST: 3.8 - Decrement operators
+======================================================================
+📝 JavaScript Input:
+x--; --y;
+
+🔄 Transpiled Lua:
+x = x - 1 y = y - 1
+✅ Expected pattern found: "x = x - 1"
+✅ Expected pattern found: "y = y - 1"
+✅ Correctly avoided: "--"
+
+✅ TEST PASSED: 3.8 - Decrement operators
+
+======================================================================
+🧪 TEST: 3.9 - Assignment operators
+======================================================================
+📝 JavaScript Input:
+x += 5; y -= 3; z *= 2; a /= 4; b %= 3;
+
+🔄 Transpiled Lua:
+x = x + 5 y = y - 3 z = z * 2 a = a / 4 b = b % 3
+✅ Expected pattern found: "x = x + 5"
+✅ Expected pattern found: "y = y - 3"
+✅ Expected pattern found: "z = z * 2"
+✅ Expected pattern found: "a = a / 4"
+✅ Expected pattern found: "b = b % 3"
+✅ Correctly avoided: "+="
+✅ Correctly avoided: "-="
+✅ Correctly avoided: "*="
+✅ Correctly avoided: "/="
+✅ Correctly avoided: "%="
+
+✅ TEST PASSED: 3.9 - Assignment operators
+
+======================================================================
+🧪 TEST: 3.10 - Ternary operator
+======================================================================
+📝 JavaScript Input:
+let result = x > 5 ? "big" : "small";
+
+🔄 Transpiled Lua:
+local result = (x > 5 ) and "big" or "small"
+❌ Expected pattern missing: "local result = (x > 5) and "big" or "small""
+✅ Correctly avoided: "?"
+✅ Correctly avoided: ":"
+
+❌ TEST FAILED: 3.10 - Ternary operator
+Issues: Missing: "local result = (x > 5) and "big" or "small""
+
+██████████████████████████████████████████████████████████████████████
+🐛 CATEGORY 4: BUG FIXES FROM PR #7
+██████████████████████████████████████████████████████████████████████
+
+======================================================================
+🧪 TEST: 4.1 - String concatenation (PR #7 fix)
+======================================================================
+📝 JavaScript Input:
+let message = "Hello" + " " + "World";
+
+🔄 Transpiled Lua:
+local message = "Hello" .. " " .. "World"
+✅ Expected pattern found: "local message = "Hello" .. " " .. "World""
+✅ Correctly avoided: ""Hello" + " ""
+
+✅ TEST PASSED: 4.1 - String concatenation (PR #7 fix)
+
+======================================================================
+🧪 TEST: 4.2 - Numeric addition (PR #7 fix)
+======================================================================
+📝 JavaScript Input:
+let sum = 5 + 3;
+
+🔄 Transpiled Lua:
+local sum = 5 + 3
+✅ Expected pattern found: "local sum = 5 + 3"
+✅ Correctly avoided: "5 .. 3"
+
+✅ TEST PASSED: 4.2 - Numeric addition (PR #7 fix)
+
+======================================================================
+🧪 TEST: 4.3 - Colon in strings (PR #7 fix)
+======================================================================
+📝 JavaScript Input:
+let msg = "Value: " + x;
+
+🔄 Transpiled Lua:
+local msg = "Value: " .. x
+✅ Expected pattern found: "local msg = "Value: " .. x"
+✅ Correctly avoided: ""Value = ""
+
+✅ TEST PASSED: 4.3 - Colon in strings (PR #7 fix)
+
+======================================================================
+🧪 TEST: 4.4 - Mixed operations
+======================================================================
+📝 JavaScript Input:
+let result = "Count: " + (a + b);
+
+🔄 Transpiled Lua:
+local result = "Count: " .. (a  .. b)
+❌ Expected pattern missing: "local result = "Count: " .. (a + b)"
+
+❌ TEST FAILED: 4.4 - Mixed operations
+Issues: Missing: "local result = "Count: " .. (a + b)"
+
+======================================================================
+🧪 TEST: 4.5 - Chained concatenation
+======================================================================
+📝 JavaScript Input:
+let full = first + " " + middle + " " + last;
+
+🔄 Transpiled Lua:
+local full = first .. " " .. middle .. " "  .. last
+✅ Expected pattern found: ".."
+
+✅ TEST PASSED: 4.5 - Chained concatenation
+
+██████████████████████████████████████████████████████████████████████
+🔧 CATEGORY 5: FUNCTIONS
+██████████████████████████████████████████████████████████████████████
+
+======================================================================
+🧪 TEST: 5.1 - Function declaration
+======================================================================
+📝 JavaScript Input:
+function greet(name) { console.log("Hello " + name); }
+
+🔄 Transpiled Lua:
+local function greet(name) console.log("Hello " .. name) end
+✅ Expected pattern found: "local function greet(name)"
+✅ Expected pattern found: "console.log("Hello " .. name)"
+✅ Expected pattern found: "end"
+❌ Should not contain: "function greet"
+✅ Correctly avoided: ") {"
+✅ Correctly avoided: "}"
+
+❌ TEST FAILED: 5.1 - Function declaration
+Issues: Should not contain: "function greet"
+
+======================================================================
+🧪 TEST: 5.2 - Function expression
+======================================================================
+📝 JavaScript Input:
+const add = function(a, b) { return a + b; };
+
+🔄 Transpiled Lua:
+local local add = function(a, b) return a + b end
+✅ Expected pattern found: "local add = function(a, b)"
+✅ Expected pattern found: "return a + b"
+✅ Expected pattern found: "end"
+✅ Correctly avoided: "const"
+❌ Should not contain: "= function"
+✅ Correctly avoided: ") {"
+
+❌ TEST FAILED: 5.2 - Function expression
+Issues: Should not contain: "= function"
+
+======================================================================
+🧪 TEST: 5.3 - Arrow function with block
+======================================================================
+📝 JavaScript Input:
+const multiply = (a, b) => { return a * b; };
+
+🔄 Transpiled Lua:
+local local multiply = function(a, b) return a * b end
+✅ Expected pattern found: "local multiply = function(a, b)"
+✅ Expected pattern found: "return a * b"
+✅ Expected pattern found: "end"
+✅ Correctly avoided: "=>"
+✅ Correctly avoided: ") {"
+
+✅ TEST PASSED: 5.3 - Arrow function with block
+
+======================================================================
+🧪 TEST: 5.4 - Arrow function with expression
+======================================================================
+📝 JavaScript Input:
+const square = (x) => x * x;
+
+🔄 Transpiled Lua:
+local local square = function(x) return x * x end
+✅ Expected pattern found: "local square = function(x) return x * x end"
+✅ Correctly avoided: "=>"
+
+✅ TEST PASSED: 5.4 - Arrow function with expression
+
+======================================================================
+🧪 TEST: 5.5 - Function with multiple parameters
+======================================================================
+📝 JavaScript Input:
+function calculate(a, b, c, d) { return a + b + c + d; }
+
+🔄 Transpiled Lua:
+local function calculate(a, b, c, d) return a + b + c + d end
+✅ Expected pattern found: "local function calculate(a, b, c, d)"
+✅ Expected pattern found: "return a + b + c + d"
+✅ Expected pattern found: "end"
+
+✅ TEST PASSED: 5.5 - Function with multiple parameters
+
+██████████████████████████████████████████████████████████████████████
+📊 CATEGORY 6: DATA STRUCTURES
+██████████████████████████████████████████████████████████████████████
+
+======================================================================
+🧪 TEST: 6.1 - Array literal
+======================================================================
+📝 JavaScript Input:
+let arr = [1, 2, 3, 4, 5];
+
+🔄 Transpiled Lua:
+local arr = {1, 2, 3, 4, 5}
+✅ Expected pattern found: "local arr = {1, 2, 3, 4, 5}"
+✅ Correctly avoided: "["
+✅ Correctly avoided: "]"
+
+✅ TEST PASSED: 6.1 - Array literal
+
+======================================================================
+🧪 TEST: 6.2 - Empty array
+======================================================================
+📝 JavaScript Input:
+let empty = [];
+
+🔄 Transpiled Lua:
+local empty = {}
+✅ Expected pattern found: "local empty = {}"
+✅ Correctly avoided: "[]"
+
+✅ TEST PASSED: 6.2 - Empty array
+
+======================================================================
+🧪 TEST: 6.3 - Object literal
+======================================================================
+📝 JavaScript Input:
+let obj = { name: "John", age: 30 };
+
+🔄 Transpiled Lua:
+local obj = { name = "John", age = 30 }
+✅ Expected pattern found: "local obj = { name = "John", age = 30 }"
+✅ Correctly avoided: "name:"
+✅ Correctly avoided: "age:"
+
+✅ TEST PASSED: 6.3 - Object literal
+
+======================================================================
+🧪 TEST: 6.4 - Nested structures
+======================================================================
+📝 JavaScript Input:
+let data = { items: [1, 2, 3], count: 3 };
+
+🔄 Transpiled Lua:
+local data = { items = {1, 2, 3}, count = 3 }
+✅ Expected pattern found: "local data = { items = {1, 2, 3}, count = 3 }"
+
+✅ TEST PASSED: 6.4 - Nested structures
+
+======================================================================
+🧪 TEST: 6.5 - Array of objects
+======================================================================
+📝 JavaScript Input:
+let users = [{ name: "Alice" }, { name: "Bob" }];
+
+🔄 Transpiled Lua:
+local users = {{ name = "Alice" end, { name = "Bob" }}
+❌ Expected pattern missing: "local users = {{ name = "Alice" }, { name = "Bob" }}"
+
+❌ TEST FAILED: 6.5 - Array of objects
+Issues: Missing: "local users = {{ name = "Alice" }, { name = "Bob" }}"
+
+██████████████████████████████████████████████████████████████████████
+🎯 CATEGORY 7: COMPLEX INTEGRATION TESTS
+██████████████████████████████████████████████████████████████████████
+
+======================================================================
+🧪 TEST: 7.1 - Complete function with control flow
+======================================================================
+📝 JavaScript Input:
+function fibonacci(n) {
+                if (n <= 1) {
+                    return n;
+                }
+                return fibonacci(n - 1) + fibonacci(n - 2);
+            }
+
+🔄 Transpiled Lua:
+local function fibonacci(n)
+ if n <= 1 then
+ return n
+ end
+ return fibonacci(n - 1) + fibonacci(n - 2)
+ end
+✅ Expected pattern found: "local function fibonacci(n)"
+✅ Expected pattern found: "if n <= 1 then"
+✅ Expected pattern found: "return n"
+✅ Expected pattern found: "end"
+✅ Expected pattern found: "return fibonacci(n - 1) + fibonacci(n - 2)"
+
+✅ TEST PASSED: 7.1 - Complete function with control flow
+
+======================================================================
+🧪 TEST: 7.2 - Loop with array operations
+======================================================================
+📝 JavaScript Input:
+let sum = 0;
+            for (let i = 0; i < arr.length; i++) {
+                sum += arr[i];
+            }
+
+🔄 Transpiled Lua:
+local sum = 0
+ for (local i = 0 i < arr.length i = i + 1) {
+ sum = sum + arr[i]
+ end
+✅ Expected pattern found: "local sum = 0"
+❌ Expected pattern missing: "for i = 0"
+❌ Expected pattern missing: "sum = sum + arr{i}"
+✅ Correctly avoided: "++"
+✅ Correctly avoided: "+="
+
+❌ TEST FAILED: 7.2 - Loop with array operations
+Issues: Missing: "for i = 0", Missing: "sum = sum + arr{i}"
+
+======================================================================
+🧪 TEST: 7.3 - Conditional with logical operators
+======================================================================
+📝 JavaScript Input:
+if (x > 0 && x < 100 || x === 200) {
+                console.log("Valid");
+            } else {
+                console.log("Invalid");
+            }
+
+🔄 Transpiled Lua:
+if x > 0 and x < 100 or x == 200 then
+ console.log("Valid")
+ else
+ console.log("Invalid")
+ end
+✅ Expected pattern found: "if x > 0 and x < 100 or x == 200 then"
+✅ Expected pattern found: "console.log("Valid")"
+✅ Expected pattern found: "else"
+✅ Expected pattern found: "console.log("Invalid")"
+✅ Correctly avoided: "&&"
+✅ Correctly avoided: "||"
+✅ Correctly avoided: "==="
+
+✅ TEST PASSED: 7.3 - Conditional with logical operators
+
+======================================================================
+🧪 TEST: 7.4 - Object with methods
+======================================================================
+📝 JavaScript Input:
+let calculator = {
+                add: function(a, b) { return a + b; },
+                subtract: function(a, b) { return a - b; }
+            };
+
+🔄 Transpiled Lua:
+local calculator = {
+ add = function(a, b) { return a + b end,
+ subtract = function(a, b) { return a - b end
+ }
+✅ Expected pattern found: "local calculator = {"
+✅ Expected pattern found: "add = function(a, b)"
+✅ Expected pattern found: "subtract = function(a, b)"
+
+✅ TEST PASSED: 7.4 - Object with methods
+
+======================================================================
+🧪 TEST: 7.5 - String concatenation in loop
+======================================================================
+📝 JavaScript Input:
+let result = "";
+            for (let i = 0; i < 5; i++) {
+                result += "Item " + i + ", ";
+            }
+
+🔄 Transpiled Lua:
+local result = ""
+ for i = 0, 4 do
+ result = result .. "Item " .. i .. ", "
+ end
+✅ Expected pattern found: "local result = """
+✅ Expected pattern found: "for i = 0, 4 do"
+✅ Expected pattern found: "result = result .. "Item " .. i .. ", ""
+✅ Correctly avoided: "++"
+✅ Correctly avoided: "+="
+
+✅ TEST PASSED: 7.5 - String concatenation in loop
+
+======================================================================
+📊 TEST SUMMARY
+======================================================================
+Total Tests: 44
+✅ Passed: 37
+❌ Failed: 7
+📈 Pass Rate: 84.1%
+
+❌ Failed Tests:
+  - 2.9 - switch statement
+    Should not contain: "switch"
+  - 3.10 - Ternary operator
+    Missing: "local result = (x > 5) and "big" or "small""
+  - 4.4 - Mixed operations
+    Missing: "local result = "Count: " .. (a + b)"
+  - 5.1 - Function declaration
+    Should not contain: "function greet"
+  - 5.2 - Function expression
+    Should not contain: "= function"
+  - 6.5 - Array of objects
+    Missing: "local users = {{ name = "Alice" }, { name = "Bob" }}"
+  - 7.2 - Loop with array operations
+    Missing: "for i = 0"
+    Missing: "sum = sum + arr{i}"
+
+📊 Transpiler Statistics:
+  Transpilations: 44
+  Total Time: 3ms
+  Average Time: 0.07ms
+  Errors: 0
+  Warnings: 0
+
+======================================================================
+⚠️  SOME TESTS FAILED - REVIEW REQUIRED
+======================================================================
+

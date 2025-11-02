@@ -2,10 +2,13 @@
  * LUASCRIPT WASM Backend - Phase 8 & A6 Implementation
  * Ada Lovelace's Unified Team - Complete WASM Compilation Pipeline
  * Acceptance Criteria A6: WASM path to 100%
+ * 
+ * Updated to use canonical IR system
  */
 
 const fs = require('fs');
 const path = require('path');
+const { IRToWasmCompiler } = require('./backends/wasm/ir-to-wasm');
 
 /**
  * A backend for compiling Lua code to WebAssembly (WASM).
@@ -34,6 +37,7 @@ class WASMBackend {
         this.wasmInstance = null;
         this.memory = null;
         this.initialized = false;
+        this.irCompiler = null;
     }
 
     /**
@@ -49,6 +53,9 @@ class WASMBackend {
                 throw new Error('WebAssembly is not supported in this environment');
             }
 
+            // Initialize IR to WASM compiler
+            this.irCompiler = new IRToWasmCompiler(this.options);
+
             this.initialized = true;
             return true;
         } catch (error) {
@@ -58,31 +65,29 @@ class WASMBackend {
     }
 
     /**
+     * Compile IR to WASM
+     * @param {Object} ir - Canonical IR program
+     * @returns {Promise<Object>} Compiled WASM module info
      * Compiles Lua code to a WebAssembly module.
      * @param {string} luaCode - The Lua source code to compile.
      * @returns {Promise<object>} A promise that resolves with the compilation result.
      */
-    async compileLuaToWASM(luaCode) {
+    async compileIRToWASM(ir) {
         if (!this.initialized) {
             await this.initialize();
         }
 
         try {
-            // Step 1: Parse Lua code into IR
-            const ir = this.parseLuaToIR(luaCode);
+            // Compile IR to WASM bytecode
+            const wasmBytecode = this.irCompiler.compile(ir);
             
-            // Step 2: Optimize IR
-            const optimizedIR = this.options.optimize ? this.optimizeIR(ir) : ir;
-            
-            // Step 3: Generate WASM bytecode
-            const wasmBytecode = this.generateWASMBytecode(optimizedIR);
-            
-            // Step 4: Compile to WASM module
+            // Compile to WASM module
             const wasmModule = await WebAssembly.compile(wasmBytecode);
             
             return {
                 success: true,
                 module: wasmModule,
+                bytecode: wasmBytecode,
                 size: wasmBytecode.length,
                 optimized: this.options.optimize
             };
@@ -96,20 +101,61 @@ class WASMBackend {
     }
 
     /**
+     * Compile Lua code to WASM (legacy method - uses IR pipeline)
+     * @param {string} luaCode - Lua source code
+     * @returns {Promise<Object>} Compiled WASM module info
      * Parses Lua code into an intermediate representation (IR).
      * @param {string} luaCode - The Lua source code.
      * @returns {object} The intermediate representation.
      * @private
      */
-    parseLuaToIR(luaCode) {
-        // Simplified IR generation for demonstration
-        // In production, this would use a full Lua parser
-        return {
-            type: 'Module',
-            functions: [],
-            globals: [],
-            code: luaCode
-        };
+    async compileLuaToWASM(luaCode) {
+        if (!this.initialized) {
+            await this.initialize();
+        }
+
+        try {
+            // Step 1: Parse Lua code into IR (requires lua-to-ir compiler)
+            const { LuaToIRCompiler } = require('./compilers/lua-to-ir');
+            const luaCompiler = new LuaToIRCompiler();
+            const ir = luaCompiler.compile(luaCode);
+            
+            // Step 2: Compile IR to WASM
+            return await this.compileIRToWASM(ir);
+        } catch (error) {
+            return {
+                success: false,
+                error: error.message,
+                stack: error.stack
+            };
+        }
+    }
+
+    /**
+     * Compile JavaScript code to WASM (uses IR pipeline)
+     * @param {string} jsCode - JavaScript source code
+     * @returns {Promise<Object>} Compiled WASM module info
+     */
+    async compileJSToWASM(jsCode) {
+        if (!this.initialized) {
+            await this.initialize();
+        }
+
+        try {
+            // Step 1: Parse JS code into IR
+            const { JSToIRCompiler } = require('./compilers/js-to-ir');
+            const jsCompiler = new JSToIRCompiler();
+            const ir = jsCompiler.compile(jsCode);
+            
+            // Step 2: Compile IR to WASM
+            return await this.compileIRToWASM(ir);
+        } catch (error) {
+            return {
+                success: false,
+                error: error.message,
+                stack: error.stack
+            };
+        }
     }
 
     /**
