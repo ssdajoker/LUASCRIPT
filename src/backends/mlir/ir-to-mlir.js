@@ -201,7 +201,7 @@ class IRToMLIRCompiler {
         const funcName = funcDecl.name;
         
         // Build function type
-        const paramTypes = funcDecl.params.map(p => this.irTypeToMLIRType(p.type));
+        const paramTypes = funcDecl.parameters.map(p => this.irTypeToMLIRType(p.type));
         const returnType = this.irTypeToMLIRType(funcDecl.returnType);
         const funcType = `(${paramTypes.join(', ')}) -> ${returnType}`;
 
@@ -219,7 +219,7 @@ class IRToMLIRCompiler {
         // Setup function context
         this.currentFunction = {
             name: funcName,
-            params: funcDecl.params,
+            params: funcDecl.parameters,
             locals: new Map()
         };
 
@@ -228,7 +228,7 @@ class IRToMLIRCompiler {
         const entryBlock = new MLIRBlock('entry');
 
         // Add parameter allocations
-        funcDecl.params.forEach((param, idx) => {
+        funcDecl.parameters.forEach((param, idx) => {
             const paramValue = this.newValue(param.name);
             this.currentFunction.locals.set(param.name, paramValue);
             

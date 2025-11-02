@@ -281,7 +281,7 @@ class IRToWasmCompiler {
         this.functionMap.set(funcDecl.name, funcIndex);
         
         // Create function type
-        const paramTypes = funcDecl.params.map(p => this.irTypeToWasmType(p.type));
+        const paramTypes = funcDecl.parameters.map(p => this.irTypeToWasmType(p.type));
         const returnType = this.irTypeToWasmType(funcDecl.returnType);
         
         const typeIndex = this.registerFunctionType(paramTypes, returnType);
@@ -289,7 +289,7 @@ class IRToWasmCompiler {
         this.functions.push({
             name: funcDecl.name,
             typeIndex: typeIndex,
-            params: funcDecl.params,
+            params: funcDecl.parameters,
             body: funcDecl.body,
             locals: [],
             code: []
@@ -377,11 +377,11 @@ class IRToWasmCompiler {
         this.localMap.clear();
         
         // Add parameters to locals
-        funcDecl.params.forEach((param, idx) => {
+        funcDecl.parameters.forEach((param, idx) => {
             this.localMap.set(param.name, idx);
         });
         
-        let nextLocalIndex = funcDecl.params.length;
+        let nextLocalIndex = funcDecl.parameters.length;
         
         // Collect local variables from function body
         const localVars = this.collectLocalVars(funcDecl.body);
@@ -406,7 +406,7 @@ class IRToWasmCompiler {
         
         // Store locals info
         func.locals = Array.from(this.localMap.entries())
-            .filter(([name, idx]) => idx >= funcDecl.params.length)
+            .filter(([name, idx]) => idx >= funcDecl.parameters.length)
             .map(([name, idx]) => ({
                 name,
                 index: idx,
