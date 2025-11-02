@@ -397,7 +397,7 @@ class IRToLuaGenerator {
         // Lua ternary: (condition and consequent or alternate)
         // Note: This doesn't work correctly if consequent is false/nil
         // For proper behavior, we need: (condition and {consequent} or {alternate})[1]
-        return `((${condition}) and (${consequent}) or (${alternate}))`;
+        return `((${condition}) and {${consequent}} or {${alternate}})[1]`;
     }
 
     // ========== HELPERS ==========
