@@ -738,7 +738,7 @@ class IRToMLIRCompiler {
 
         switch (irType.category) {
             case TypeCategory.PRIMITIVE:
-                switch (irType.name) {
+                switch (irType.primitiveType) {
                     case 'number':
                         return 'luascript.number';
                     case 'boolean':
