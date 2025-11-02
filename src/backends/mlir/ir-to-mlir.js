@@ -719,7 +719,6 @@ class IRToMLIRCompiler {
         // Simplified: evaluate both branches (not optimal)
         
         const thenValue = this.compileExpression(conditional.consequent, operations);
-        const elseValue = this.compileExpression(conditional.alternate, operations);
         
         // Use a special select operation (simplified)
         const resultValue = this.newValue();
