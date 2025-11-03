@@ -128,7 +128,7 @@ class IRValidator {
     validateFunctionDecl(node) {
         // Allow anonymous functions (name can be null or undefined)
         if (node.name !== undefined && node.name !== null && typeof node.name !== 'string') {
-            throw new ValidationError('Function name must be a string, null, or undefined', node);
+            throw new ValidationError('Function name must be a string when provided', node);
         }
         if (!Array.isArray(node.parameters)) {
             throw new ValidationError('Function parameters must be an array', node);
