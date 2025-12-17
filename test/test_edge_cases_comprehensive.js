@@ -28,7 +28,7 @@ class EdgeCaseTestSuite {
      */
     runAllTests() {
         console.log('🧪 COMPREHENSIVE EDGE CASE TEST SUITE');
-        console.log('=' .repeat(60));
+        console.log('='.repeat(60));
         
         this.testNestedObjectsAndArrays();
         this.testComplexControlFlow();
