@@ -143,15 +143,19 @@ class LuaScriptTranspiler {
         }
 
         if (typeof options === 'string') {
+            // Validate that string looks like a filename (has extension or path separator)
+            if (!options.includes('.') && !options.includes('/') && !options.includes('\\')) {
+                throw new Error('LUASCRIPT_VALIDATION_ERROR: Invalid options - string must be a valid filename with extension or path');
+            }
             return { filename: options };
         }
 
         if (Array.isArray(options)) {
-            return {};
+            throw new Error('LUASCRIPT_VALIDATION_ERROR: Invalid options - arrays are not supported');
         }
 
         if (typeof options !== 'object') {
-            return {};
+            throw new Error('LUASCRIPT_VALIDATION_ERROR: Invalid options - must be an object, null, undefined, or filename string');
         }
 
         return options;
