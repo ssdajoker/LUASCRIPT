@@ -830,8 +830,8 @@ class IRToWasmCompiler {
         code.push(...this.compileExpression(assignment.right));
         
         // Store based on target
-        if (assignment.target.kind === NodeCategory.IDENTIFIER) {
-            const name = assignment.target.name;
+        if (assignment.left.kind === NodeCategory.IDENTIFIER) {
+            const name = assignment.left.name;
             
             // Duplicate value for return
             code.push(WasmOp.LOCAL_TEE, 0); // Use temp local
