@@ -426,7 +426,7 @@ class IRToWasmCompiler {
             if (node.kind === NodeCategory.VAR_DECL) {
                 vars.add(node.name);
             } else if (node.kind === NodeCategory.BLOCK) {
-                node.body.forEach(visit);
+                node.statements.forEach(visit);
             } else if (node.kind === NodeCategory.IF) {
                 visit(node.consequent);
                 if (node.alternate) visit(node.alternate);
@@ -440,7 +440,7 @@ class IRToWasmCompiler {
         };
         
         if (block.kind === NodeCategory.BLOCK) {
-            block.body.forEach(visit);
+            block.statements.forEach(visit);
         }
         
         return vars;
@@ -453,7 +453,7 @@ class IRToWasmCompiler {
         const code = [];
         
         const statements = block.kind === NodeCategory.BLOCK ? 
-            block.body : [block];
+            block.statements : [block];
         
         for (const stmt of statements) {
             code.push(...this.compileStatement(stmt));
