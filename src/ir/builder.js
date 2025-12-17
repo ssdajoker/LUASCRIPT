@@ -33,7 +33,7 @@ class IRBuilder {
 
     // ========== STATEMENTS ==========
 
-    block(statements, options = {}) {
+    blockStmt(statements, options = {}) {
         return new nodes.Block(statements, options);
     }
 
