@@ -563,7 +563,7 @@ class IRToWasmCompiler {
         code.push(WasmOp.LOOP, WasmType.EMPTY_BLOCK);
         
         // Condition
-        code.push(...this.compileExpression(whileStmt.test));
+        code.push(...this.compileExpression(whileStmt.condition));
         code.push(WasmOp.I32_EQZ);
         code.push(WasmOp.BR_IF, 1); // Break if false
         
