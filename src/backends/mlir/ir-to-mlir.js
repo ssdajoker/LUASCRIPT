@@ -460,8 +460,8 @@ class IRToMLIRCompiler {
         const bodyBlock = new MLIRBlock();
         
         // Test condition
-        if (forStmt.test) {
-            this.compileExpression(forStmt.test, bodyBlock.operations);
+        if (forStmt.condition) {
+            this.compileExpression(forStmt.condition, bodyBlock.operations);
         }
         
         // Body
