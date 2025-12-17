@@ -6,6 +6,7 @@
  */
 
 const { NodeCategory } = require('../ir/nodes');
+const { TypeCategory, PrimitiveType } = require('../ir/types');
 
 class IRToLuaGenerator {
     constructor(options = {}) {
@@ -14,6 +15,7 @@ class IRToLuaGenerator {
             ...options
         };
         this.indentLevel = 0;
+        this.tempVarCounter = 0;
     }
 
     /**
@@ -276,7 +278,7 @@ class IRToLuaGenerator {
     visitBinaryOp(node) {
         const left = this.visit(node.left);
         const right = this.visit(node.right);
-        
+
         // Map JavaScript operators to Lua operators
         let operator = node.operator;
         if (operator === '===') operator = '==';
@@ -284,23 +286,38 @@ class IRToLuaGenerator {
         if (operator === '!=') operator = '~=';
         if (operator === '&&') operator = 'and';
         if (operator === '||') operator = 'or';
-        
+        if (operator === '+') {
+            const leftIsString = this.isStringLike(node.left);
+            const rightIsString = this.isStringLike(node.right);
+            if (leftIsString || rightIsString) {
+                operator = '..';
+                // Wrap non-string-like operands with tostring()
+                const leftOperand = leftIsString ? left : `tostring(${left})`;
+                const rightOperand = rightIsString ? right : `tostring(${right})`;
+                return `(${leftOperand} ${operator} ${rightOperand})`;
+            }
+        }
+
         return `(${left} ${operator} ${right})`;
     }
 
     visitUnaryOp(node) {
         const operand = this.visit(node.operand);
-        
+
         // Map JavaScript operators to Lua operators
         let operator = node.operator;
         if (operator === '!') operator = 'not';
-        
+
         if (operator === '++' || operator === '--') {
-            // Convert ++ and -- to += 1 or -= 1
             const op = operator === '++' ? '+' : '-';
-            return `${operand} = ${operand} ${op} 1`;
+            if (node.prefix) {
+                return `(function() ${operand} = ${operand} ${op} 1; return ${operand}; end)()`;
+            } else {
+                const tempVar = this.createTempVar();
+                return `(function() local ${tempVar} = ${operand}; ${operand} = ${operand} ${op} 1; return ${tempVar}; end)()`;
+            }
         }
-        
+
         if (node.prefix) {
             return `${operator} ${operand}`;
         } else {
@@ -404,6 +421,43 @@ class IRToLuaGenerator {
 
     indent() {
         return this.options.indent.repeat(this.indentLevel);
+    }
+
+    createTempVar() {
+        return `__tmp${this.tempVarCounter++}`;
+    }
+
+    isStringLike(node) {
+        if (!node) {
+            return false;
+        }
+
+        if (node.type && this.isStringType(node.type)) {
+            return true;
+        }
+
+        if (node.kind === NodeCategory.LITERAL && typeof node.value === 'string') {
+            return true;
+        }
+
+        return false;
+    }
+
+    isStringType(type) {
+        if (!type || !type.category) {
+            return false;
+        }
+
+        switch (type.category) {
+            case TypeCategory.PRIMITIVE:
+                return type.primitiveType === PrimitiveType.STRING;
+            case TypeCategory.OPTIONAL:
+                return this.isStringType(type.baseType);
+            case TypeCategory.UNION:
+                return Array.isArray(type.types) && type.types.every(t => this.isStringType(t));
+            default:
+                return false;
+        }
     }
 }
 
