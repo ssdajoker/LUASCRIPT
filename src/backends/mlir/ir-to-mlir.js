@@ -426,7 +426,7 @@ class IRToMLIRCompiler {
      */
     compileWhile(whileStmt, mlirBlock) {
         // Compile condition
-        const condValue = this.compileExpression(whileStmt.test, mlirBlock.operations);
+        const condValue = this.compileExpression(whileStmt.condition, mlirBlock.operations);
 
         // Create while operation
         const whileOp = new MLIROperation('luascript.while', [condValue], []);
