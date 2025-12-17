@@ -716,7 +716,7 @@ class IRToMLIRCompiler {
      */
     compileConditional(conditional, operations) {
         // Evaluate condition, then branch, and else branch
-        const condValue = this.compileExpression(conditional.test, operations);
+        const condValue = this.compileExpression(conditional.condition, operations);
         const thenValue = this.compileExpression(conditional.consequent, operations);
         const elseValue = this.compileExpression(conditional.alternate, operations);
         // Use a special select operation (simplified)
