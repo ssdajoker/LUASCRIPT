@@ -80,6 +80,13 @@ Following conventional commits:
 - **Integration tests**: End-to-end transpilation tests
 - **Performance tests**: Benchmark against previous versions
 - **Manual testing**: Web IDE functionality
+- **IR harness**: Run `npm run harness` for fast regression coverage (determinism + timing guard, artifacts in [artifacts/harness_results.json](artifacts/harness_results.json)).
+
+### CI/Status Bundle (local dry-run)
+- Generate a local status bundle with `npm run status:bundle` (uses [scripts/status_bundle.js](scripts/status_bundle.js)).
+- Populate optional env overrides before running: `WORKFLOW`, `RUN_ID` or `GITHUB_RUN_ID`, `GIT_SHA` or `GITHUB_SHA`, and test signals `TEST_STATUS`, `HARNESS_STATUS`, `IR_VALIDATE_STATUS`, `EMIT_GOLDENS_STATUS`, `PERF_STATUS`.
+- Output: [artifacts/status.json](artifacts/status.json) matching [scripts/status_schema.json](scripts/status_schema.json). Fields default to `unknown` if unset.
+- Keep `artifacts/` untracked; it is ignored in version control.
 
 ### Week 2 Core Features (94% Complete)
 #### Remaining Tasks (6%):

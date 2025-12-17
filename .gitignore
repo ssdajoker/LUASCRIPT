@@ -54,6 +54,7 @@ dist/
 build/
 *.min.js
 *.bundle.js
+artifacts/
 
 # Temporary files
 *.tmp
