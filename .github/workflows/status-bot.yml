@@ -1,0 +1,91 @@
+name: status-bot
+
+on:
+  workflow_run:
+    workflows: ["matrix-audit"]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  bundle-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch job conclusions
+        id: jobs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runId = context.payload.workflow_run.id;
+            const { data } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: runId,
+              per_page: 100,
+            });
+            const harnessJob = data.jobs.find((j) => j.name === 'harness-check');
+            core.setOutput('harness', harnessJob ? harnessJob.conclusion || 'unknown' : 'unknown');
+
+      - name: Build status bundle
+        run: node scripts/status_bundle.js
+        env:
+          WORKFLOW: ${{ github.event.workflow_run.name }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          GIT_SHA: ${{ github.event.workflow_run.head_sha }}
+          TEST_STATUS: ${{ github.event.workflow_run.conclusion }}
+          HARNESS_STATUS: ${{ steps.jobs.outputs.harness || github.event.workflow_run.conclusion }}
+          IR_VALIDATE_STATUS: ${{ github.event.workflow_run.conclusion }}
+          EMIT_GOLDENS_STATUS: ${{ github.event.workflow_run.conclusion }}
+          PERF_STATUS: unknown
+
+      - name: Upload status bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: status-bundle-${{ github.event.workflow_run.id }}
+          path: artifacts/status.json
+
+      - name: Post status issue
+        uses: actions/github-script@v7
+        env:
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+        with:
+          script: |
+            const title = 'Autonomous status report';
+            const body = `Status: ${process.env.RUN_CONCLUSION}\nRun: ${process.env.RUN_URL}`;
+
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 50,
+            });
+
+            const existing = issues.data.find((i) => i.title === title);
+
+            if (existing) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.number,
+                body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+              });
+            }
