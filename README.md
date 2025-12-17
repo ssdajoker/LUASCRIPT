@@ -101,9 +101,6 @@ LUASCRIPT Architecture
 - Python 3.8+
 - LuaJIT 2.1+ (included in project)
 
-> If you installed LuaJIT with winget on Windows, persist it for new shells with:
-> `setx PATH "C:\\Users\\ssdaj\\AppData\\Local\\Programs\\LuaJIT\\bin;%PATH%"`
-
 ### Quick Start
 ```bash
 # Clone the project
@@ -205,18 +202,7 @@ python tests/test_mathematical_functions.py
 
 # Run transpilation tests  
 python tests/test_transpiler.py
-
-# Run example integration suite (compiles and executes .ls examples)
-npm run test:examples
-
-# Run IR harness regression suite
-npm run harness
 ```
-
-### CI status bundle (local)
-- Generate a local bundle with `npm run status:bundle`; output is written to [artifacts/status.json](artifacts/status.json) and matches [scripts/status_schema.json](scripts/status_schema.json).
-- Optional env hints: `WORKFLOW`, `RUN_ID`/`GITHUB_RUN_ID`, `GIT_SHA`/`GITHUB_SHA`, `TEST_STATUS`, `HARNESS_STATUS`, `IR_VALIDATE_STATUS`, `EMIT_GOLDENS_STATUS`, `PERF_STATUS`. Unset values default to `unknown`.
-- For contributor workflow details see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md).
 
 ## 🎯 Roadmap
 
