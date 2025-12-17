@@ -397,7 +397,7 @@ class IRToMLIRCompiler {
      */
     compileIf(ifStmt, mlirBlock) {
         // Compile condition
-        const condValue = this.compileExpression(ifStmt.test, mlirBlock.operations);
+        const condValue = this.compileExpression(ifStmt.condition, mlirBlock.operations);
 
         // Create if operation with regions
         const ifOp = new MLIROperation('luascript.if', [condValue], []);
