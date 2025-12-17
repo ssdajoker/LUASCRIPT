@@ -74,7 +74,7 @@ class AnthropicAdapter:
 
         payload: Dict[str, Any] = dict(self._mutable_defaults)
         payload.update(params)
-        payload.setdefault("prompt", prompt)
+        payload["prompt"] = prompt
 
         try:
             response = self.client(**payload)
