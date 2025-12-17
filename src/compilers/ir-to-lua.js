@@ -454,7 +454,7 @@ class IRToLuaGenerator {
             case TypeCategory.OPTIONAL:
                 return this.isStringType(type.baseType);
             case TypeCategory.UNION:
-                return Array.isArray(type.types) && type.types.some(t => this.isStringType(t));
+                return Array.isArray(type.types) && type.types.every(t => this.isStringType(t));
             default:
                 return false;
         }
