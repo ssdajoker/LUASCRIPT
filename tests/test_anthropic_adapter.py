@@ -47,7 +47,7 @@ def test_adapter_wraps_standard_exceptions():
 
 
 def test_keyboard_interrupt_is_not_swallowed():
-    client = DummyClient(error=KeyboardInterrupt)
+    client = DummyClient(error=KeyboardInterrupt())
     adapter = AnthropicAdapter(client=client, model="claude-3-haiku")
 
     with pytest.raises(KeyboardInterrupt):
