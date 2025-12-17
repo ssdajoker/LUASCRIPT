@@ -291,6 +291,10 @@ class IRToLuaGenerator {
             const rightIsString = this.isStringLike(node.right);
             if (leftIsString || rightIsString) {
                 operator = '..';
+                // Wrap non-string-like operands with tostring()
+                const leftOperand = leftIsString ? left : `tostring(${left})`;
+                const rightOperand = rightIsString ? right : `tostring(${right})`;
+                return `(${leftOperand} ${operator} ${rightOperand})`;
             }
         }
 
