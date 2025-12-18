@@ -713,6 +713,8 @@ class Assignment extends IRNode {
             json
         );
     }
+}
+
 class IRNodeFactory {
   constructor(options = {}) {
     const { idGenerator = new BalancedTernaryIdGenerator() } = options;
