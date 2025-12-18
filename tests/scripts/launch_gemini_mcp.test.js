@@ -35,6 +35,9 @@ class LaunchGeminiMcpTestRunner {
   }
 
   setupTestDir() {
+    // Clean up any previous test directory first
+    this.cleanupTestDir();
+    
     this.testDir = path.join(__dirname, '..', '..', 'tmp', 'test_launch_gemini_mcp');
     if (fs.existsSync(this.testDir)) {
       fs.rmSync(this.testDir, { recursive: true, force: true });
@@ -46,6 +49,7 @@ class LaunchGeminiMcpTestRunner {
   cleanupTestDir() {
     if (this.testDir && fs.existsSync(this.testDir)) {
       fs.rmSync(this.testDir, { recursive: true, force: true });
+      this.testDir = null;
     }
   }
 }
@@ -90,7 +94,7 @@ async function runTests() {
     } finally {
       process.chdir(originalCwd);
       Object.keys(process.env).forEach(key => {
-        if (!originalEnv.hasOwnProperty(key)) delete process.env[key];
+        if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) delete process.env[key];
       });
       Object.assign(process.env, originalEnv);
       runner.cleanupTestDir();
@@ -130,7 +134,7 @@ async function runTests() {
     } finally {
       process.chdir(originalCwd);
       Object.keys(process.env).forEach(key => {
-        if (!originalEnv.hasOwnProperty(key)) delete process.env[key];
+        if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) delete process.env[key];
       });
       Object.assign(process.env, originalEnv);
       runner.cleanupTestDir();
@@ -166,7 +170,7 @@ async function runTests() {
     } finally {
       process.chdir(originalCwd);
       Object.keys(process.env).forEach(key => {
-        if (!originalEnv.hasOwnProperty(key)) delete process.env[key];
+        if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) delete process.env[key];
       });
       Object.assign(process.env, originalEnv);
       runner.cleanupTestDir();
@@ -199,7 +203,7 @@ async function runTests() {
     } finally {
       process.chdir(originalCwd);
       Object.keys(process.env).forEach(key => {
-        if (!originalEnv.hasOwnProperty(key)) delete process.env[key];
+        if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) delete process.env[key];
       });
       Object.assign(process.env, originalEnv);
       runner.cleanupTestDir();
@@ -238,7 +242,7 @@ async function runTests() {
     } finally {
       process.chdir(originalCwd);
       Object.keys(process.env).forEach(key => {
-        if (!originalEnv.hasOwnProperty(key)) delete process.env[key];
+        if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) delete process.env[key];
       });
       Object.assign(process.env, originalEnv);
       runner.cleanupTestDir();
@@ -276,7 +280,7 @@ async function runTests() {
     } finally {
       process.chdir(originalCwd);
       Object.keys(process.env).forEach(key => {
-        if (!originalEnv.hasOwnProperty(key)) delete process.env[key];
+        if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) delete process.env[key];
       });
       Object.assign(process.env, originalEnv);
       runner.cleanupTestDir();
@@ -320,7 +324,7 @@ async function runTests() {
     } finally {
       process.chdir(originalCwd);
       Object.keys(process.env).forEach(key => {
-        if (!originalEnv.hasOwnProperty(key)) delete process.env[key];
+        if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) delete process.env[key];
       });
       Object.assign(process.env, originalEnv);
       runner.cleanupTestDir();
@@ -367,7 +371,7 @@ async function runTests() {
     } finally {
       process.chdir(originalCwd);
       Object.keys(process.env).forEach(key => {
-        if (!originalEnv.hasOwnProperty(key)) delete process.env[key];
+        if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) delete process.env[key];
       });
       Object.assign(process.env, originalEnv);
       runner.cleanupTestDir();
