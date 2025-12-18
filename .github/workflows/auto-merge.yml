@@ -63,9 +63,14 @@ jobs:
               }
             }
             const latestReviews = Array.from(latestReviewsByUser.values());
-            const approved = latestReviews.some((r) => r.state === 'APPROVED');
-            if (!approved) {
+            const hasApproval = latestReviews.some((r) => r.state === 'APPROVED');
+            const hasChangesRequested = latestReviews.some((r) => r.state === 'CHANGES_REQUESTED');
+            if (!hasApproval) {
               core.info('No approvals yet; skipping');
+              return;
+            }
+            if (hasChangesRequested) {
+              core.info('Changes requested; skipping auto-merge');
               return;
             }
             if (prData.auto_merge) {
