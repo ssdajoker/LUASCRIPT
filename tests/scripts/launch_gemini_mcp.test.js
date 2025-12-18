@@ -5,6 +5,47 @@ const fs = require("fs");
 const path = require("path");
 const { main } = require("../../scripts/launch_gemini_mcp");
 
+// Helper function to clear MCP endpoint environment variables
+function clearMcpEndpoints() {
+  Object.keys(process.env).forEach(key => {
+    if (key.startsWith('MCP_') && key.endsWith('_ENDPOINT')) {
+      delete process.env[key];
+    }
+  });
+}
+
+// Helper function to mock console output
+function mockConsole() {
+  const originalLog = console.log;
+  const originalWarn = console.warn;
+  const logs = [];
+  
+  console.log = (...args) => logs.push(args.join(' '));
+  console.warn = (...args) => logs.push(`WARN: ${args.join(' ')}`);
+  
+  return {
+    logs,
+    restore() {
+      console.log = originalLog;
+      console.warn = originalWarn;
+    }
+  };
+}
+
+// Helper function to restore environment variables
+function restoreEnv(originalEnv) {
+  // Clear current env vars
+  Object.keys(process.env).forEach(key => {
+    if (!originalEnv.hasOwnProperty(key)) {
+      delete process.env[key];
+    }
+  });
+  // Restore original values
+  Object.keys(originalEnv).forEach(key => {
+    process.env[key] = originalEnv[key];
+  });
+}
+
 (function testMainCreatesArtifactsDirectory() {
   const testDir = path.join(__dirname, "tmp_test_gemini_mcp");
   const artifactsDir = path.join(testDir, "artifacts");
@@ -21,25 +62,13 @@ const { main } = require("../../scripts/launch_gemini_mcp");
     fs.mkdirSync(testDir, { recursive: true });
     process.chdir(testDir);
     
-    // Clear any MCP environment variables for clean test
-    Object.keys(process.env).forEach(key => {
-      if (key.startsWith('MCP_') && key.endsWith('_ENDPOINT')) {
-        delete process.env[key];
-      }
-    });
+    clearMcpEndpoints();
     
-    // Mock console to avoid cluttering test output
-    const originalLog = console.log;
-    const originalWarn = console.warn;
-    const logs = [];
-    console.log = (...args) => logs.push(args.join(' '));
-    console.warn = (...args) => logs.push(`WARN: ${args.join(' ')}`);
+    const consoleMock = mockConsole();
     
     main();
     
-    // Restore console
-    console.log = originalLog;
-    console.warn = originalWarn;
+    consoleMock.restore();
     
     assert.ok(fs.existsSync(artifactsDir), "artifacts directory should be created");
     
@@ -54,14 +83,14 @@ const { main } = require("../../scripts/launch_gemini_mcp");
     assert.ok(Array.isArray(content.entries), "entries should be an array");
     
     // Verify console output
-    const outputStr = logs.join('\n');
+    const outputStr = consoleMock.logs.join('\n');
     assert.ok(outputStr.includes("MCP endpoints captured for Gemini"), "should log MCP endpoints message");
     assert.ok(outputStr.includes("Suggested env export for Gemini"), "should log env export suggestion");
     assert.ok(outputStr.includes("Config written"), "should log config written message");
     
   } finally {
     process.chdir(originalCwd);
-    process.env = originalEnv;
+    restoreEnv(originalEnv);
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });
     }
@@ -88,17 +117,11 @@ const { main } = require("../../scripts/launch_gemini_mcp");
     process.env.MCP_FLAKE_DB_ENDPOINT = "http://localhost:8081/flake";
     process.env.MCP_TEST_ENDPOINT = "http://localhost:8082/test";
     
-    // Mock console
-    const originalLog = console.log;
-    const originalWarn = console.warn;
-    const logs = [];
-    console.log = (...args) => logs.push(args.join(' '));
-    console.warn = (...args) => logs.push(`WARN: ${args.join(' ')}`);
+    const consoleMock = mockConsole();
     
     main();
     
-    console.log = originalLog;
-    console.warn = originalWarn;
+    consoleMock.restore();
     
     const endpointsFile = path.join(artifactsDir, "gemini_mcp_endpoints.json");
     const content = JSON.parse(fs.readFileSync(endpointsFile, "utf8"));
@@ -114,13 +137,13 @@ const { main } = require("../../scripts/launch_gemini_mcp");
     assert.strictEqual(content.endpoints.MCP_TEST_ENDPOINT, "http://localhost:8082/test");
     
     // Verify console logged the endpoints
-    const outputStr = logs.join('\n');
+    const outputStr = consoleMock.logs.join('\n');
     assert.ok(outputStr.includes("MCP_DOC_INDEX_ENDPOINT: http://localhost:8080/doc"), "should log DOC endpoint");
     assert.ok(outputStr.includes("MCP_FLAKE_DB_ENDPOINT: http://localhost:8081/flake"), "should log FLAKE endpoint");
     
   } finally {
     process.chdir(originalCwd);
-    process.env = originalEnv;
+    restoreEnv(originalEnv);
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });
     }
@@ -145,33 +168,22 @@ const { main } = require("../../scripts/launch_gemini_mcp");
     const instructionsContent = "# Gemini Instructions\n\nTest instructions for Gemini AI";
     fs.writeFileSync(path.join(testDir, "gemini-instructions.md"), instructionsContent);
     
-    // Clear MCP env vars
-    Object.keys(process.env).forEach(key => {
-      if (key.startsWith('MCP_') && key.endsWith('_ENDPOINT')) {
-        delete process.env[key];
-      }
-    });
+    clearMcpEndpoints();
     delete process.env.GEMINI_INSTRUCTIONS_PATH;
     
-    // Mock console
-    const originalLog = console.log;
-    const originalWarn = console.warn;
-    const logs = [];
-    console.log = (...args) => logs.push(args.join(' '));
-    console.warn = (...args) => logs.push(`WARN: ${args.join(' ')}`);
+    const consoleMock = mockConsole();
     
     main();
     
-    console.log = originalLog;
-    console.warn = originalWarn;
+    consoleMock.restore();
     
-    const outputStr = logs.join('\n');
+    const outputStr = consoleMock.logs.join('\n');
     assert.ok(outputStr.includes("Gemini instructions path: gemini-instructions.md"), "should log instructions path");
     assert.ok(outputStr.includes("bytes"), "should log byte count");
     
   } finally {
     process.chdir(originalCwd);
-    process.env = originalEnv;
+    restoreEnv(originalEnv);
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });
     }
@@ -192,32 +204,21 @@ const { main } = require("../../scripts/launch_gemini_mcp");
     fs.mkdirSync(testDir, { recursive: true });
     process.chdir(testDir);
     
-    // Clear MCP env vars
-    Object.keys(process.env).forEach(key => {
-      if (key.startsWith('MCP_') && key.endsWith('_ENDPOINT')) {
-        delete process.env[key];
-      }
-    });
+    clearMcpEndpoints();
     delete process.env.GEMINI_INSTRUCTIONS_PATH;
     
-    // Mock console
-    const originalLog = console.log;
-    const originalWarn = console.warn;
-    const logs = [];
-    console.log = (...args) => logs.push(args.join(' '));
-    console.warn = (...args) => logs.push(`WARN: ${args.join(' ')}`);
+    const consoleMock = mockConsole();
     
     main();
     
-    console.log = originalLog;
-    console.warn = originalWarn;
+    consoleMock.restore();
     
-    const outputStr = logs.join('\n');
+    const outputStr = consoleMock.logs.join('\n');
     assert.ok(outputStr.includes("No gemini-instructions.md found"), "should warn about missing instructions");
     
   } finally {
     process.chdir(originalCwd);
-    process.env = originalEnv;
+    restoreEnv(originalEnv);
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });
     }
@@ -246,31 +247,20 @@ const { main } = require("../../scripts/launch_gemini_mcp");
     // Set custom path
     process.env.GEMINI_INSTRUCTIONS_PATH = customPath;
     
-    // Clear MCP env vars
-    Object.keys(process.env).forEach(key => {
-      if (key.startsWith('MCP_') && key.endsWith('_ENDPOINT')) {
-        delete process.env[key];
-      }
-    });
+    clearMcpEndpoints();
     
-    // Mock console
-    const originalLog = console.log;
-    const originalWarn = console.warn;
-    const logs = [];
-    console.log = (...args) => logs.push(args.join(' '));
-    console.warn = (...args) => logs.push(`WARN: ${args.join(' ')}`);
+    const consoleMock = mockConsole();
     
     main();
     
-    console.log = originalLog;
-    console.warn = originalWarn;
+    consoleMock.restore();
     
-    const outputStr = logs.join('\n');
+    const outputStr = consoleMock.logs.join('\n');
     assert.ok(outputStr.includes("Gemini instructions path: custom-instructions.md"), "should use custom path");
     
   } finally {
     process.chdir(originalCwd);
-    process.env = originalEnv;
+    restoreEnv(originalEnv);
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });
     }
