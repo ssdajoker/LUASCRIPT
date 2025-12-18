@@ -68,5 +68,23 @@ jobs:
               );
               core.info(`Auto-merge enabled for PR #${prNumber}`);
             } catch (err) {
-              core.warning(`Failed to enable auto-merge for PR #${prNumber}: ${err.message}`);
+              let errorMessage = 'Unknown error';
+              if (typeof err === 'string') {
+                errorMessage = err;
+              } else if (err && typeof err === 'object') {
+                if (err.message) {
+                  errorMessage = err.message;
+                } else if (Array.isArray(err.errors) && err.errors[0] && err.errors[0].message) {
+                  errorMessage = err.errors[0].message;
+                } else {
+                  try {
+                    errorMessage = JSON.stringify(err);
+                  } catch (jsonErr) {
+                    errorMessage = String(err);
+                  }
+                }
+              } else if (err != null) {
+                errorMessage = String(err);
+              }
+              core.warning(`Failed to enable auto-merge for PR #${prNumber}: ${errorMessage}`);
             }
