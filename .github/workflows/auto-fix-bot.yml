@@ -1,0 +1,74 @@
+name: auto-fix-bot
+
+on:
+  workflow_run:
+    workflows: ["Parity and IR Gates"]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  autofix:
+    if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm i; fi
+
+      - name: Refresh IR status and parity diagnostics
+        run: |
+          set -e
+          npm run -s ir:report
+          npm run -s test:parity || true
+
+      - name: Commit and push auto-fixes if present
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "luascript-bot"
+            git config user.email "bot@luascript.dev"
+            git add -A
+            git commit -m "chore: auto-fix bot (refresh IR/parity artifacts)"
+            git push origin HEAD:${BRANCH}
+          else
+            echo "No changes to commit"
+          fi
+
+      - name: Comment on PR with results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = (context.payload.workflow_run.pull_requests || [])[0];
+            if (!pr) { core.info('No PR to comment on'); return; }
+            const conclusion = context.payload.workflow_run.conclusion;
+            const body = [
+              `Auto-fix bot run for workflow: ${context.payload.workflow_run.name}`,
+              `Conclusion: ${conclusion}`,
+              `Branch: ${context.payload.workflow_run.head_branch}`,
+              `Run: ${context.payload.workflow_run.html_url}`,
+              `Actions: refreshed IR report; reran parity tests (non-blocking); auto-commit if files changed.`
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body,
+            });
