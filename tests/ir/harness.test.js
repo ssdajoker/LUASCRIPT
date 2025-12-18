@@ -200,7 +200,7 @@ async function main() {
   } catch (err) {
     console.error('harness tests failed');
     console.error(err && err.stack ? err.stack : err);
-    const hint = await fetchDocHints(`${currentCase || 'unknown case'} ${err && err.message ? err.message : ''}`);
+    const hint = await fetchDocHints(`${currentCase} ${err && err.message ? err.message : ''}`);
     writeArtifacts({ error: err && err.message ? err.message : 'harness failed', cases: results, docHint: hint });
     process.exit(1);
   }
