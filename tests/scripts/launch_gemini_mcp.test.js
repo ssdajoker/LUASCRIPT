@@ -38,14 +38,59 @@ function captureConsole(fn) {
   }
 }
 
-(function testMainCreatesArtifactsDirectory() {
-  const testDir = createTempDir();
+// Helper function to save and restore environment
+function withCleanEnv(fn) {
   const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
+  const savedEnvKeys = Object.keys(process.env);
+  const savedEnvValues = {};
+  savedEnvKeys.forEach(key => {
+    savedEnvValues[key] = process.env[key];
+  });
 
   try {
+    return fn();
+  } finally {
+    // Restore original working directory
+    process.chdir(originalCwd);
+    
+    // Remove any keys that were added
+    Object.keys(process.env).forEach(key => {
+      if (!savedEnvKeys.includes(key)) {
+        delete process.env[key];
+      }
+    });
+    
+    // Restore original values
+    savedEnvKeys.forEach(key => {
+      if (savedEnvValues[key] !== undefined) {
+        process.env[key] = savedEnvValues[key];
+      } else {
+        delete process.env[key];
+      }
+    });
+  }
+}
+
+// Helper function to clear MCP endpoint environment variables
+function clearMcpEndpoints() {
+  Object.keys(process.env).forEach((key) => {
+    if (/^MCP_.*_ENDPOINT$/.test(key)) {
+      delete process.env[key];
+    }
+  });
+}
+
+// Helper function to clear gemini instructions path
+function clearGeminiInstructions() {
+  delete process.env.GEMINI_INSTRUCTIONS_PATH;
+}
+
+(function testMainCreatesArtifactsDirectory() {
+  const testDir = createTempDir();
+
+  withCleanEnv(() => {
     process.chdir(testDir);
-    delete process.env.GEMINI_INSTRUCTIONS_PATH;
+    clearGeminiInstructions();
 
     captureConsole(() => main());
 
@@ -55,21 +100,17 @@ function captureConsole(fn) {
       fs.statSync(artifactsDir).isDirectory(),
       "artifacts should be a directory"
     );
-  } finally {
-    process.chdir(originalCwd);
-    process.env = originalEnv;
-    cleanupTempDir(testDir);
-  }
+  });
+
+  cleanupTempDir(testDir);
 })();
 
 (function testMainWritesEndpointsJsonFile() {
   const testDir = createTempDir();
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
 
-  try {
+  withCleanEnv(() => {
     process.chdir(testDir);
-    delete process.env.GEMINI_INSTRUCTIONS_PATH;
+    clearGeminiInstructions();
 
     captureConsole(() => main());
 
@@ -83,21 +124,17 @@ function captureConsole(fn) {
     assert.ok(Array.isArray(data.keys), "data should have keys array");
     assert.ok(Array.isArray(data.entries), "data should have entries array");
     assert.ok(typeof data.endpoints === "object", "data should have endpoints object");
-  } finally {
-    process.chdir(originalCwd);
-    process.env = originalEnv;
-    cleanupTempDir(testDir);
-  }
+  });
+
+  cleanupTempDir(testDir);
 })();
 
 (function testMainCollectsEnvironmentMcpEndpoints() {
   const testDir = createTempDir();
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
 
-  try {
+  withCleanEnv(() => {
     process.chdir(testDir);
-    delete process.env.GEMINI_INSTRUCTIONS_PATH;
+    clearGeminiInstructions();
     process.env.MCP_DOC_INDEX_ENDPOINT = "https://example.com/docs";
     process.env.MCP_FLAKE_DB_ENDPOINT = "https://example.com/flakes";
 
@@ -125,21 +162,17 @@ function captureConsole(fn) {
       "https://example.com/flakes",
       "endpoints should include flake DB URL"
     );
-  } finally {
-    process.chdir(originalCwd);
-    process.env = originalEnv;
-    cleanupTempDir(testDir);
-  }
+  });
+
+  cleanupTempDir(testDir);
 })();
 
 (function testMainOutputsExpectedConsoleMessages() {
   const testDir = createTempDir();
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
 
-  try {
+  withCleanEnv(() => {
     process.chdir(testDir);
-    delete process.env.GEMINI_INSTRUCTIONS_PATH;
+    clearGeminiInstructions();
     process.env.MCP_TEST_ENDPOINT = "https://example.com/test";
 
     const { logs } = captureConsole(() => main());
@@ -161,21 +194,17 @@ function captureConsole(fn) {
       allOutput.includes("Config written:"),
       "should output config written message"
     );
-  } finally {
-    process.chdir(originalCwd);
-    process.env = originalEnv;
-    cleanupTempDir(testDir);
-  }
+  });
+
+  cleanupTempDir(testDir);
 })();
 
 (function testMainWarnsWhenGeminiInstructionsNotFound() {
   const testDir = createTempDir();
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
 
-  try {
+  withCleanEnv(() => {
     process.chdir(testDir);
-    delete process.env.GEMINI_INSTRUCTIONS_PATH;
+    clearGeminiInstructions();
 
     const { warnings } = captureConsole(() => main());
 
@@ -184,19 +213,15 @@ function captureConsole(fn) {
       allWarnings.includes("No gemini-instructions.md found"),
       "should warn about missing gemini-instructions.md"
     );
-  } finally {
-    process.chdir(originalCwd);
-    process.env = originalEnv;
-    cleanupTempDir(testDir);
-  }
+  });
+
+  cleanupTempDir(testDir);
 })();
 
 (function testMainReadsGeminiInstructionsWhenExists() {
   const testDir = createTempDir();
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
 
-  try {
+  withCleanEnv(() => {
     process.chdir(testDir);
     const instructionsPath = path.join(testDir, "gemini-instructions.md");
     const instructionsContent = "# Gemini Instructions\nTest content here.";
@@ -217,19 +242,15 @@ function captureConsole(fn) {
       allOutput.includes("bytes"),
       "should output file size in bytes"
     );
-  } finally {
-    process.chdir(originalCwd);
-    process.env = originalEnv;
-    cleanupTempDir(testDir);
-  }
+  });
+
+  cleanupTempDir(testDir);
 })();
 
 (function testMainUsesCustomGeminiInstructionsPath() {
   const testDir = createTempDir();
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
 
-  try {
+  withCleanEnv(() => {
     process.chdir(testDir);
     const customPath = path.join(testDir, "custom-gemini-instructions.md");
     const instructionsContent = "# Custom Instructions\nCustom content.";
@@ -243,28 +264,18 @@ function captureConsole(fn) {
       allOutput.includes("custom-gemini-instructions.md"),
       "should use custom instructions path from environment"
     );
-  } finally {
-    process.chdir(originalCwd);
-    process.env = originalEnv;
-    cleanupTempDir(testDir);
-  }
+  });
+
+  cleanupTempDir(testDir);
 })();
 
 (function testMainHandlesEmptyMcpEndpoints() {
   const testDir = createTempDir();
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
 
-  try {
+  withCleanEnv(() => {
     process.chdir(testDir);
-    delete process.env.GEMINI_INSTRUCTIONS_PATH;
-
-    // Clear all MCP_*_ENDPOINT environment variables
-    Object.keys(process.env).forEach((key) => {
-      if (/^MCP_.*_ENDPOINT$/.test(key)) {
-        delete process.env[key];
-      }
-    });
+    clearGeminiInstructions();
+    clearMcpEndpoints();
 
     captureConsole(() => main());
 
@@ -285,11 +296,9 @@ function captureConsole(fn) {
     priorityKeys.forEach((key) => {
       assert.ok(data.keys.includes(key), `should include priority key ${key}`);
     });
-  } finally {
-    process.chdir(originalCwd);
-    process.env = originalEnv;
-    cleanupTempDir(testDir);
-  }
+  });
+
+  cleanupTempDir(testDir);
 })();
 
 console.log("All launch_gemini_mcp tests passed!");
