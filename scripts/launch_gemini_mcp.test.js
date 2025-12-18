@@ -4,6 +4,7 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 const { main } = require("./launch_gemini_mcp");
+const { PRIORITY_MCP_KEYS } = require("./context_pack");
 
 // Test setup and teardown
 const testDir = path.join(__dirname, `../tmp_test_launch_gemini_mcp_${process.pid}`);
@@ -19,12 +20,14 @@ function setupTestEnv() {
   const originalCwd = process.cwd();
   const originalEnvVars = {};
   
-  // Save all MCP endpoint variables and custom paths
-  Object.keys(process.env)
-    .filter(key => key.startsWith("MCP_") || key.includes("INSTRUCTIONS_PATH"))
-    .forEach(key => {
-      originalEnvVars[key] = process.env[key];
-    });
+  // Save all MCP endpoint variables and specific instruction path variables
+  const envKeysToSave = Object.keys(process.env).filter(
+    key => key.startsWith("MCP_") || key === "GEMINI_INSTRUCTIONS_PATH" || key === "COPILOT_INSTRUCTIONS_PATH"
+  );
+  
+  envKeysToSave.forEach(key => {
+    originalEnvVars[key] = process.env[key];
+  });
   
   // Change to test directory
   process.chdir(testDir);
@@ -38,17 +41,24 @@ function teardownTestEnv(original) {
   
   // Restore environment variables
   // First, delete any that weren't in the original environment
-  Object.keys(process.env)
-    .filter(key => key.startsWith("MCP_") || key.includes("INSTRUCTIONS_PATH"))
-    .forEach(key => {
-      if (!(key in original.originalEnvVars)) {
-        delete process.env[key];
-      }
-    });
+  const envKeysToCheck = Object.keys(process.env).filter(
+    key => key.startsWith("MCP_") || key === "GEMINI_INSTRUCTIONS_PATH" || key === "COPILOT_INSTRUCTIONS_PATH"
+  );
   
-  // Then restore original values
+  envKeysToCheck.forEach(key => {
+    if (!(key in original.originalEnvVars)) {
+      delete process.env[key];
+    }
+  });
+  
+  // Then restore original values (or delete if originally undefined)
   Object.keys(original.originalEnvVars).forEach(key => {
-    process.env[key] = original.originalEnvVars[key];
+    const originalValue = original.originalEnvVars[key];
+    if (originalValue === undefined) {
+      delete process.env[key];
+    } else {
+      process.env[key] = originalValue;
+    }
   });
   
   // Clean up test directory
@@ -208,9 +218,8 @@ function captureConsoleOutput(fn) {
     });
     
     // Verify priority keys come before non-priority keys in the keys array
-    const priorityKeys = ["MCP_DOC_INDEX_ENDPOINT", "MCP_FLAKE_DB_ENDPOINT", "MCP_IR_SCHEMA_ENDPOINT"];
-    const presentPriorityKeys = priorityKeys.filter(key => content.keys.includes(key));
-    const firstNonPriorityIndex = content.keys.findIndex(key => !priorityKeys.includes(key));
+    const presentPriorityKeys = PRIORITY_MCP_KEYS.filter(key => content.keys.includes(key));
+    const firstNonPriorityIndex = content.keys.findIndex(key => !PRIORITY_MCP_KEYS.includes(key));
     
     if (presentPriorityKeys.length > 0 && firstNonPriorityIndex !== -1) {
       // All priority keys should appear before the first non-priority key
