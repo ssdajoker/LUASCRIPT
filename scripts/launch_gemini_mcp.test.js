@@ -218,13 +218,14 @@ function captureConsoleOutput(fn) {
     });
     
     // Verify priority keys come before non-priority keys in the keys array
-    const presentPriorityKeys = PRIORITY_MCP_KEYS.filter(key => content.keys.includes(key));
+    const keyIndexMap = new Map(content.keys.map((key, index) => [key, index]));
+    const presentPriorityKeys = PRIORITY_MCP_KEYS.filter(key => keyIndexMap.has(key));
     const firstNonPriorityIndex = content.keys.findIndex(key => !PRIORITY_MCP_KEYS.includes(key));
     
     if (presentPriorityKeys.length > 0 && firstNonPriorityIndex !== -1) {
       // All priority keys should appear before the first non-priority key
       presentPriorityKeys.forEach(key => {
-        const keyIndex = content.keys.indexOf(key);
+        const keyIndex = keyIndexMap.get(key);
         assert.ok(keyIndex < firstNonPriorityIndex, `Priority key ${key} should appear before non-priority keys`);
       });
     }
