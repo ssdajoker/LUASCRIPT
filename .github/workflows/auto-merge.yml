@@ -45,7 +45,25 @@ jobs:
               pull_number: prNumber,
               per_page: 100,
             });
-            const approved = reviews.some((r) => r.state === 'APPROVED');
+            // Determine the latest review per reviewer, then check approvals based on those.
+            const latestReviewsByUser = new Map();
+            for (const review of reviews) {
+              const user = review.user || {};
+              const key = user.id ?? user.login;
+              if (!key) continue;
+              const existing = latestReviewsByUser.get(key);
+              if (!existing) {
+                latestReviewsByUser.set(key, review);
+                continue;
+              }
+              const existingTime = existing.submitted_at ? Date.parse(existing.submitted_at) : 0;
+              const reviewTime = review.submitted_at ? Date.parse(review.submitted_at) : 0;
+              if (reviewTime >= existingTime) {
+                latestReviewsByUser.set(key, review);
+              }
+            }
+            const latestReviews = Array.from(latestReviewsByUser.values());
+            const approved = latestReviews.some((r) => r.state === 'APPROVED');
             if (!approved) {
               core.info('No approvals yet; skipping');
               return;
