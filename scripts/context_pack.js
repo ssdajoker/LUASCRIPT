@@ -13,7 +13,8 @@ const COORDINATION_DOC = 'assistant_coordination.md';
 
 function listMcpKeys() {
   const envKeys = Object.keys(process.env).filter((key) => /^MCP_.*_ENDPOINT$/.test(key));
-  return Array.from(new Set([...PRIORITY_MCP_KEYS, ...envKeys])).sort();
+  const nonPriorityEnvKeys = envKeys.filter((key) => !PRIORITY_MCP_KEYS.includes(key)).sort();
+  return [...PRIORITY_MCP_KEYS, ...nonPriorityEnvKeys];
 }
 
 function collectMcpEndpoints() {
