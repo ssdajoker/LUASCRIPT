@@ -1,9 +1,7 @@
 # LUASCRIPT Development Workflow
 ## Established by Linus Torvalds - GitHub Integration Lead
+*"Talk is cheap. Show me the code." - Linus Torvalds*
 
-### Repository Structure
-```
-LUASCRIPT/
 ├── src/                    # Core transpiler implementation
 │   ├── lexer/             # Lexical analysis
 │   ├── parser/            # Syntax parsing
