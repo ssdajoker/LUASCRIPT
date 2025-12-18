@@ -56,7 +56,7 @@ git push origin feature/your-feature-name
 
 #### Auto-merge
 - Auto-merge is enabled in repository settings and runs via `.github/workflows/auto-merge.yml` after the `matrix-audit` workflow succeeds on a PR.
-- Requires at least one approval and a non-draft PR; respects branch protection for required checks. Harness is advisory but the overall `matrix-audit` conclusion must be `success`.
+- Can be enabled once there is at least one approval and the PR is non-draft; the actual merge will only occur once all branch protection rules are satisfied (including the minimum 2 approvals for `develop`) and the overall `matrix-audit` conclusion is `success`. The harness is advisory and does not override branch protection.
 - Uses a squash merge; if auto-merge cannot be enabled (missing approval or failed checks), the workflow exits without changing the PR.
 
 #### 3. Release Process
