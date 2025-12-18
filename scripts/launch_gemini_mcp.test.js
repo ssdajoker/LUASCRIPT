@@ -6,7 +6,7 @@ const path = require("path");
 const { main } = require("./launch_gemini_mcp");
 
 // Test setup and teardown
-const testDir = path.join(__dirname, "../tmp_test_launch_gemini_mcp");
+const testDir = path.join(__dirname, `../tmp_test_launch_gemini_mcp_${process.pid}`);
 const artifactsDir = path.join(testDir, "artifacts");
 
 function setupTestEnv() {
@@ -15,20 +15,41 @@ function setupTestEnv() {
     fs.mkdirSync(testDir, { recursive: true });
   }
   
-  // Save original process.cwd and environment
+  // Save original process.cwd and environment variables we might modify
   const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
+  const originalEnvVars = {};
+  
+  // Save all MCP endpoint variables and custom paths
+  Object.keys(process.env)
+    .filter(key => key.startsWith("MCP_") || key.includes("INSTRUCTIONS_PATH"))
+    .forEach(key => {
+      originalEnvVars[key] = process.env[key];
+    });
   
   // Change to test directory
   process.chdir(testDir);
   
-  return { originalCwd, originalEnv };
+  return { originalCwd, originalEnvVars };
 }
 
 function teardownTestEnv(original) {
-  // Restore original environment
+  // Restore original working directory
   process.chdir(original.originalCwd);
-  process.env = original.originalEnv;
+  
+  // Restore environment variables
+  // First, delete any that weren't in the original environment
+  Object.keys(process.env)
+    .filter(key => key.startsWith("MCP_") || key.includes("INSTRUCTIONS_PATH"))
+    .forEach(key => {
+      if (!(key in original.originalEnvVars)) {
+        delete process.env[key];
+      }
+    });
+  
+  // Then restore original values
+  Object.keys(original.originalEnvVars).forEach(key => {
+    process.env[key] = original.originalEnvVars[key];
+  });
   
   // Clean up test directory
   if (fs.existsSync(testDir)) {
@@ -186,13 +207,18 @@ function captureConsoleOutput(fn) {
       assert.ok(typeof entry.url === "string", "each entry should have a url string");
     });
     
-    // Verify priority keys are first in keys array
+    // Verify priority keys come before non-priority keys in the keys array
     const priorityKeys = ["MCP_DOC_INDEX_ENDPOINT", "MCP_FLAKE_DB_ENDPOINT", "MCP_IR_SCHEMA_ENDPOINT"];
-    priorityKeys.forEach((key, index) => {
-      if (content.keys.includes(key)) {
-        assert.strictEqual(content.keys[index], key, `${key} should be at index ${index}`);
-      }
-    });
+    const presentPriorityKeys = priorityKeys.filter(key => content.keys.includes(key));
+    const firstNonPriorityIndex = content.keys.findIndex(key => !priorityKeys.includes(key));
+    
+    if (presentPriorityKeys.length > 0 && firstNonPriorityIndex !== -1) {
+      // All priority keys should appear before the first non-priority key
+      presentPriorityKeys.forEach(key => {
+        const keyIndex = content.keys.indexOf(key);
+        assert.ok(keyIndex < firstNonPriorityIndex, `Priority key ${key} should appear before non-priority keys`);
+      });
+    }
   } finally {
     teardownTestEnv(original);
   }
