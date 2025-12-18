@@ -137,9 +137,10 @@ const { main } = require("../../scripts/launch_gemini_mcp");
   const originalLog = console.log;
   const originalWarn = console.warn;
   const logOutput = [];
+  const warnOutput = [];
 
   console.log = (...args) => logOutput.push(args.join(" "));
-  console.warn = (...args) => {};
+  console.warn = (...args) => warnOutput.push(args.join(" "));
 
   try {
     // Create custom instructions file
@@ -171,9 +172,10 @@ const { main } = require("../../scripts/launch_gemini_mcp");
   const originalLog = console.log;
   const originalWarn = console.warn;
   const logOutput = [];
+  const warnOutput = [];
 
   console.log = (...args) => logOutput.push(args.join(" "));
-  console.warn = (...args) => {};
+  console.warn = (...args) => warnOutput.push(args.join(" "));
 
   try {
     // Remove all MCP endpoints from environment

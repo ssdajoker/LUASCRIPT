@@ -15,7 +15,7 @@ const {
   writeContextArtifacts,
 } = require("../../scripts/context_pack");
 
-// Test listMcpKeys through collectMcpEndpoints
+// Test collectMcpEndpoints - filters and orders MCP environment variables
 (function testCollectMcpEndpointsFiltersAndOrders() {
   const originalEnv = { ...process.env };
 
@@ -66,7 +66,7 @@ const {
   }
 })();
 
-// Test loadInstructions with existing file
+// Test loadInstructions with existing file (using fallback)
 (function testLoadInstructionsWithExistingFile() {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "context-pack-test-"));
   const testFile = path.join(tmpDir, "test-instructions.md");
@@ -75,7 +75,7 @@ const {
   try {
     fs.writeFileSync(testFile, testContent, "utf8");
 
-    const result = loadInstructions(tmpDir, testFile, "fallback.md");
+    const result = loadInstructions(tmpDir, null, "test-instructions.md");
 
     assert.strictEqual(result.exists, true, "File should exist");
     assert.strictEqual(result.bytes, Buffer.byteLength(testContent, "utf8"), "Byte count should match");
@@ -101,8 +101,8 @@ const {
   }
 })();
 
-// Test loadInstructions with absolute path
-(function testLoadInstructionsWithAbsolutePath() {
+// Test loadInstructions with explicit absolute path
+(function testLoadInstructionsWithExplicitAbsolutePath() {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "context-pack-test-"));
   const testFile = path.join(tmpDir, "absolute-test.md");
   const testContent = "Absolute path test";
@@ -110,6 +110,7 @@ const {
   try {
     fs.writeFileSync(testFile, testContent, "utf8");
 
+    // Pass the absolute path as explicitPath parameter
     const result = loadInstructions(tmpDir, testFile, "fallback.md");
 
     assert.strictEqual(result.exists, true, "File should exist");
