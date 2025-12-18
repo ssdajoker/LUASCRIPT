@@ -36,13 +36,21 @@ function mockConsole() {
 function restoreEnv(originalEnv) {
   // Clear current env vars
   Object.keys(process.env).forEach(key => {
-    if (!originalEnv.hasOwnProperty(key)) {
+    if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) {
       delete process.env[key];
     }
   });
   // Restore original values
   Object.keys(originalEnv).forEach(key => {
     process.env[key] = originalEnv[key];
+  });
+}
+
+// Helper function to assert console output contains expected strings
+function assertConsoleOutput(logs, expectedStrings, testName) {
+  const outputStr = logs.join('\n');
+  expectedStrings.forEach(expected => {
+    assert.ok(outputStr.includes(expected), `${testName}: should include "${expected}"`);
   });
 }
 
@@ -83,10 +91,11 @@ function restoreEnv(originalEnv) {
     assert.ok(Array.isArray(content.entries), "entries should be an array");
     
     // Verify console output
-    const outputStr = consoleMock.logs.join('\n');
-    assert.ok(outputStr.includes("MCP endpoints captured for Gemini"), "should log MCP endpoints message");
-    assert.ok(outputStr.includes("Suggested env export for Gemini"), "should log env export suggestion");
-    assert.ok(outputStr.includes("Config written"), "should log config written message");
+    assertConsoleOutput(consoleMock.logs, [
+      "MCP endpoints captured for Gemini",
+      "Suggested env export for Gemini",
+      "Config written"
+    ], "testMainCreatesArtifactsDirectory");
     
   } finally {
     process.chdir(originalCwd);
@@ -137,9 +146,10 @@ function restoreEnv(originalEnv) {
     assert.strictEqual(content.endpoints.MCP_TEST_ENDPOINT, "http://localhost:8082/test");
     
     // Verify console logged the endpoints
-    const outputStr = consoleMock.logs.join('\n');
-    assert.ok(outputStr.includes("MCP_DOC_INDEX_ENDPOINT: http://localhost:8080/doc"), "should log DOC endpoint");
-    assert.ok(outputStr.includes("MCP_FLAKE_DB_ENDPOINT: http://localhost:8081/flake"), "should log FLAKE endpoint");
+    assertConsoleOutput(consoleMock.logs, [
+      "MCP_DOC_INDEX_ENDPOINT: http://localhost:8080/doc",
+      "MCP_FLAKE_DB_ENDPOINT: http://localhost:8081/flake"
+    ], "testMainHandlesMcpEndpoints");
     
   } finally {
     process.chdir(originalCwd);
@@ -177,9 +187,10 @@ function restoreEnv(originalEnv) {
     
     consoleMock.restore();
     
-    const outputStr = consoleMock.logs.join('\n');
-    assert.ok(outputStr.includes("Gemini instructions path: gemini-instructions.md"), "should log instructions path");
-    assert.ok(outputStr.includes("bytes"), "should log byte count");
+    assertConsoleOutput(consoleMock.logs, [
+      "Gemini instructions path: gemini-instructions.md",
+      "bytes"
+    ], "testMainHandlesGeminiInstructions");
     
   } finally {
     process.chdir(originalCwd);
@@ -213,8 +224,9 @@ function restoreEnv(originalEnv) {
     
     consoleMock.restore();
     
-    const outputStr = consoleMock.logs.join('\n');
-    assert.ok(outputStr.includes("No gemini-instructions.md found"), "should warn about missing instructions");
+    assertConsoleOutput(consoleMock.logs, [
+      "No gemini-instructions.md found"
+    ], "testMainWarnsWhenNoInstructions");
     
   } finally {
     process.chdir(originalCwd);
@@ -255,8 +267,9 @@ function restoreEnv(originalEnv) {
     
     consoleMock.restore();
     
-    const outputStr = consoleMock.logs.join('\n');
-    assert.ok(outputStr.includes("Gemini instructions path: custom-instructions.md"), "should use custom path");
+    assertConsoleOutput(consoleMock.logs, [
+      "Gemini instructions path: custom-instructions.md"
+    ], "testMainUsesCustomInstructionsPath");
     
   } finally {
     process.chdir(originalCwd);
