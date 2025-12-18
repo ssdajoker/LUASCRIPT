@@ -49,7 +49,7 @@ function loadInstructions(baseDir = process.cwd(), explicitPath, fallback) {
   return {
     path: path.relative(baseDir, resolvedPath),
     exists,
-    bytes: Buffer.byteLength(content || '', 'utf8'),
+    bytes: Buffer.byteLength(content, 'utf8'),
     excerpt,
   };
 }
