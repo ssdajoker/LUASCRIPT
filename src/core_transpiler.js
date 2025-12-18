@@ -178,11 +178,24 @@ class CoreTranspiler extends EventEmitter {
                 const id = this.generateLuaFromAST(node.id);
                 const params = node.params.map(param => this.generateLuaFromAST(param)).join(', ');
                 const body = this.generateLuaFromAST(node.body);
-                const indentedBody = this.indentCode(body);
+                let indentedBody = this.indentCode(body);
+
+                let functionCode;
                 if (indentedBody) {
-                    return `local function ${id}(${params})\n${indentedBody}\nend`;
+                    functionCode = `local function ${id}(${params})\n${indentedBody}\nend`;
+                } else {
+                    functionCode = `local function ${id}(${params})\nend`;
                 }
-                return `local function ${id}(${params})\nend`;
+
+                if (node.async) {
+                    // Wrap in coroutine.create if it's an async function
+                    const coroutineBody = this.indentCode(indentedBody || '', 2); // Indent body further for coroutine
+                    functionCode = `local function ${id}(${params})\n` +
+                                   `  return coroutine.create(function()\n${coroutineBody}\n  end)\n` +
+                                   `end`;
+                }
+
+                return functionCode;
             }
 
             case 'ArrowFunctionExpression': {
