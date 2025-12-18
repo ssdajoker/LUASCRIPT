@@ -33,6 +33,9 @@ function fetchDocHints(query) {
             resolve({ ok: res.statusCode, error: err && err.message ? err.message : String(err) });
           }
         });
+        res.on('error', (err) => {
+          resolve({ ok: 0, error: err && err.message ? err.message : String(err) });
+        });
       });
       req.on('timeout', () => {
         req.destroy();
