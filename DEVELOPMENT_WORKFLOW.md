@@ -86,10 +86,10 @@ Following conventional commits:
 - **Copilot context pack**: Keep [copilot-instructions.md](copilot-instructions.md) current; run `npm run copilot:context` to refresh [artifacts/context_pack.json](artifacts/context_pack.json) (includes MCP endpoints from `MCP_*_ENDPOINT` env and latest harness results). Use `npm run copilot:launch` to emit a `COPILOT_MCP_ENDPOINTS` string and a local endpoints file for Copilot/MCP.
 
 - **Local MCP endpoints**: If you want local helpers, run `npm run mcp:serve` (defaults to http://localhost:8787). Then set:
-	- `MCP_DOC_INDEX_ENDPOINT=http://localhost:8787/doc-index/search`
-	- `MCP_FLAKE_DB_ENDPOINT=http://localhost:8787/flake-db/flakes`
-	- `MCP_IR_SCHEMA_ENDPOINT=http://localhost:8787/ir-schema`
-	Re-run `npm run copilot:context` after setting these to refresh the context pack.
+  - `MCP_DOC_INDEX_ENDPOINT=http://localhost:8787/doc-index/search`
+  - `MCP_FLAKE_DB_ENDPOINT=http://localhost:8787/flake-db/flakes`
+  - `MCP_IR_SCHEMA_ENDPOINT=http://localhost:8787/ir-schema`
+  Re-run `npm run copilot:context` after setting these to refresh the context pack.
 
 - Generate a local status bundle with `npm run status:bundle` (uses [scripts/status_bundle.js](scripts/status_bundle.js)).
 - Populate optional env overrides before running: `WORKFLOW`, `RUN_ID` or `GITHUB_RUN_ID`, `GIT_SHA` or `GITHUB_SHA`, and test signals `TEST_STATUS`, `HARNESS_STATUS`, `IR_VALIDATE_STATUS`, `EMIT_GOLDENS_STATUS`, `PERF_STATUS`.
