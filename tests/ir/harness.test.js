@@ -13,7 +13,7 @@ const DOC_ENDPOINT = process.env.MCP_DOC_INDEX_ENDPOINT || '';
 const REQUEST_TIMEOUT_MS = 2000;
 
 function fetchDocHints(query) {
-  if (!DOC_ENDPOINT) return null;
+  if (!DOC_ENDPOINT) return Promise.resolve(null);
   try {
     const url = new URL(DOC_ENDPOINT);
     if (!url.searchParams.has('q')) {
@@ -25,6 +25,7 @@ function fetchDocHints(query) {
         req.setTimeout(REQUEST_TIMEOUT_MS);
         const chunks = [];
         res.on('data', (c) => chunks.push(c));
+        res.on('end', () => {
           try {
             const body = Buffer.concat(chunks).toString('utf8');
             const json = JSON.parse(body);
@@ -44,7 +45,7 @@ function fetchDocHints(query) {
       req.on('error', (err) => resolve({ ok: 0, error: err && err.message ? err.message : String(err) }));
     });
   } catch (err) {
-    return null;
+    return Promise.resolve(null);
   }
 }
 
