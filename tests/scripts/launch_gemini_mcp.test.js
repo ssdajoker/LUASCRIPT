@@ -84,9 +84,9 @@ function assertConsoleOutput(logs, expectedStrings, testName) {
     assert.ok(fs.existsSync(endpointsFile), "gemini_mcp_endpoints.json should be created");
     
     const content = JSON.parse(fs.readFileSync(endpointsFile, "utf8"));
-    assert.ok(content.hasOwnProperty("keys"), "endpoints file should have keys property");
-    assert.ok(content.hasOwnProperty("entries"), "endpoints file should have entries property");
-    assert.ok(content.hasOwnProperty("endpoints"), "endpoints file should have endpoints property");
+    assert.ok(Object.prototype.hasOwnProperty.call(content, "keys"), "endpoints file should have keys property");
+    assert.ok(Object.prototype.hasOwnProperty.call(content, "entries"), "endpoints file should have entries property");
+    assert.ok(Object.prototype.hasOwnProperty.call(content, "endpoints"), "endpoints file should have endpoints property");
     assert.ok(Array.isArray(content.keys), "keys should be an array");
     assert.ok(Array.isArray(content.entries), "entries should be an array");
     
