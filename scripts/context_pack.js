@@ -63,8 +63,10 @@ function loadGeminiInstructions(baseDir, explicitPath) {
   return loadInstructions(baseDir, explicitPath, GEMINI_INSTRUCTIONS);
 }
 
-function writeContextArtifacts({ harnessSummary, outDir = path.join(process.cwd(), 'artifacts'), runInfo = {} }) {
-  fs.mkdirSync(outDir, { recursive: true });
+function writeContextArtifacts({ harnessSummary, outDir, runInfo = {} }) {
+  // Use default path if outDir is not provided or is explicitly undefined
+  const outputDir = outDir || path.join(process.cwd(), 'artifacts');
+  fs.mkdirSync(outputDir, { recursive: true });
   const instructions = loadInstructions(process.cwd(), process.env.COPILOT_INSTRUCTIONS_PATH, DEFAULT_INSTRUCTIONS);
   const geminiInstructions = loadInstructions(process.cwd(), process.env.GEMINI_INSTRUCTIONS_PATH, GEMINI_INSTRUCTIONS);
   const coordination = loadInstructions(process.cwd(), process.env.ASSISTANT_COORD_PATH, COORDINATION_DOC);
@@ -81,8 +83,8 @@ function writeContextArtifacts({ harnessSummary, outDir = path.join(process.cwd(
   };
 
   // Copilot-oriented bundle
-  fs.writeFileSync(path.join(outDir, 'harness_results.json'), JSON.stringify(payload, null, 2));
-  fs.writeFileSync(path.join(outDir, 'context_pack.json'), JSON.stringify(contextPack, null, 2));
+  fs.writeFileSync(path.join(outputDir, 'harness_results.json'), JSON.stringify(payload, null, 2));
+  fs.writeFileSync(path.join(outputDir, 'context_pack.json'), JSON.stringify(contextPack, null, 2));
 
   // Gemini-oriented bundle (same data, different label for downstream consumers)
   const geminiPack = {
@@ -91,7 +93,7 @@ function writeContextArtifacts({ harnessSummary, outDir = path.join(process.cwd(
     instructions: geminiInstructions,
     copilotInstructions: instructions,
   };
-  fs.writeFileSync(path.join(outDir, 'context_pack_gemini.json'), JSON.stringify(geminiPack, null, 2));
+  fs.writeFileSync(path.join(outputDir, 'context_pack_gemini.json'), JSON.stringify(geminiPack, null, 2));
 
   return { payload, contextPack };
 }
