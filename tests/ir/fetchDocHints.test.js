@@ -157,7 +157,7 @@ function restoreEnv(originalEnv) {
 })();
 
 // Test 5: fetchDocHints parses successful JSON response
-(async function testFetchDocHintsParsesSucessfulResponse() {
+(async function testFetchDocHintsParsesSuccessfulResponse() {
   const originalEnv = { ...process.env };
   let server;
   
@@ -181,7 +181,7 @@ function restoreEnv(originalEnv) {
     assert.strictEqual(result.ok, 200, "successful response should have status 200");
     assert.deepStrictEqual(result.body, mockResponse, "body should be parsed JSON");
     assert.ok(!result.error, "successful response should not have error");
-    console.log("✓ testFetchDocHintsParsesSucessfulResponse passed");
+    console.log("✓ testFetchDocHintsParsesSuccessfulResponse passed");
   } finally {
     if (server) {
       server.close();
