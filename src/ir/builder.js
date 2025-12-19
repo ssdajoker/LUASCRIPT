@@ -7,10 +7,51 @@
 
 const nodes = require('./nodes');
 const { Types } = require('./types');
+const { BalancedTernaryIdGenerator } = require('./idGenerator');
+const { IRNodeFactory } = require('./nodes');
+const { validateIR } = require('./validator');
 
 class IRBuilder {
-    constructor() {
+    constructor(options = {}) {
         this.nodeStack = [];
+        // Support for canonical IR building (optional)
+        if (options.schemaVersion || options.moduleId || options.source) {
+            const {
+                schemaVersion = "1.0.0",
+                moduleId,
+                source = { path: null, hash: null },
+                directives = [],
+                metadata = {},
+                exports = { type: "named", entries: [] },
+                toolchain = {},
+                idPrefix = "id",
+            } = options;
+
+            this.schemaVersion = schemaVersion;
+            this.idGenerator = new BalancedTernaryIdGenerator({ prefix: idPrefix });
+            this.nodeFactory = new IRNodeFactory({ idGenerator: this.idGenerator });
+
+            this.module = {
+                schemaVersion: this.schemaVersion,
+                module: {
+                    id: moduleId || this.idGenerator.next("mod"),
+                    source,
+                    directives: [...directives],
+                    body: [],
+                    exports,
+                    metadata: Object.assign(
+                        {
+                            authoredBy: metadata.authoredBy || "ir-builder",
+                            createdAt: metadata.createdAt || new Date().toISOString(),
+                            toolchain,
+                        },
+                        metadata
+                    ),
+                },
+                nodes: {},
+                controlFlowGraphs: {},
+            };
+        }
     }
 
     // ========== DECLARATIONS ==========
@@ -244,43 +285,6 @@ class IRBuilder {
     constant(name, value, type = null, options = {}) {
         return this.declareAndInit(name, value, 'const', type, options);
     }
-  constructor(options = {}) {
-    const {
-      schemaVersion = "1.0.0",
-      moduleId,
-      source = { path: null, hash: null },
-      directives = [],
-      metadata = {},
-      exports = { type: "named", entries: [] },
-      toolchain = {},
-      idPrefix = "id",
-    } = options;
-
-    this.schemaVersion = schemaVersion;
-    this.idGenerator = new BalancedTernaryIdGenerator({ prefix: idPrefix });
-    this.nodeFactory = new IRNodeFactory({ idGenerator: this.idGenerator });
-
-    this.module = {
-      schemaVersion: this.schemaVersion,
-      module: {
-        id: moduleId || this.idGenerator.next("mod"),
-        source,
-        directives: [...directives],
-        body: [],
-        exports,
-        metadata: Object.assign(
-          {
-            authoredBy: metadata.authoredBy || "ir-builder",
-            createdAt: metadata.createdAt || new Date().toISOString(),
-            toolchain,
-          },
-          metadata
-        ),
-      },
-      nodes: {},
-      controlFlowGraphs: {},
-    };
-  }
 
   addDirective(directive) {
     this.module.module.directives.push(directive);
