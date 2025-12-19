@@ -64,8 +64,8 @@ function loadGeminiInstructions(baseDir, explicitPath) {
 }
 
 function writeContextArtifacts({ harnessSummary, outDir, runInfo = {} }) {
-  // Use default path if outDir is not provided or is explicitly undefined
-  const outputDir = outDir || path.join(process.cwd(), 'artifacts');
+  // Use default path if outDir is not provided or is explicitly undefined/null
+  const outputDir = outDir ?? path.join(process.cwd(), 'artifacts');
   fs.mkdirSync(outputDir, { recursive: true });
   const instructions = loadInstructions(process.cwd(), process.env.COPILOT_INSTRUCTIONS_PATH, DEFAULT_INSTRUCTIONS);
   const geminiInstructions = loadInstructions(process.cwd(), process.env.GEMINI_INSTRUCTIONS_PATH, GEMINI_INSTRUCTIONS);
