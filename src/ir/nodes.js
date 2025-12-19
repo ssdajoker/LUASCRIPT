@@ -1087,5 +1087,5 @@ module.exports = {
     Literal,
     Assignment,
     Conditional,
-    IRNodeFactory
+    IRNodeFactory,
 };

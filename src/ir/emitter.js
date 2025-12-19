@@ -519,11 +519,13 @@ class IREmitter {
     // If same precedence, check associativity
     if (nodePrec === parentPrec) {
       // Right-associative operators need parens on the left side
+      // Example: a ^ (b ^ c) is different from (a ^ b) ^ c
       if (RIGHT_ASSOCIATIVE.has(parentOp) && position === 'left') {
         return true;
       }
-      // Left-associative (default) needs parens on the right side
-      // But only if operators are different to avoid unnecessary parens
+      // Left-associative (default) needs parens on the right side only if operators differ
+      // This handles cases like (a + b) - c where grouping matters, but allows a + b + c
+      // Example: a - (b + c) needs parens, but a - b - c doesn't
       if (!RIGHT_ASSOCIATIVE.has(parentOp) && position === 'right' && parentOp !== nodeOp) {
         return true;
       }
