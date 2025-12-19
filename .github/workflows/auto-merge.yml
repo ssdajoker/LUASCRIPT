@@ -49,6 +49,7 @@ jobs:
             const latestReviewsByUser = new Map();
             for (const review of reviews) {
               const user = review.user || {};
+              if (!review.submitted_at) continue;
               const key = user.id ?? user.login;
               if (!key) continue;
               const existing = latestReviewsByUser.get(key);
@@ -63,9 +64,14 @@ jobs:
               }
             }
             const latestReviews = Array.from(latestReviewsByUser.values());
-            const approved = latestReviews.some((r) => r.state === 'APPROVED');
-            if (!approved) {
+            const hasApproval = latestReviews.some((r) => r.state === 'APPROVED');
+            const hasChangesRequested = latestReviews.some((r) => r.state === 'CHANGES_REQUESTED');
+            if (!hasApproval) {
               core.info('No approvals yet; skipping');
+              return;
+            }
+            if (hasChangesRequested) {
+              core.info('Changes requested; skipping auto-merge');
               return;
             }
             if (prData.auto_merge) {
