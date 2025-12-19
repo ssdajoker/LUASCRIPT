@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-const assert = require("assert");
-const http = require("http");
-const https = require("https");
+const assert = require('assert');
+const http = require('http');
+const https = require('https');
 
 const REQUEST_TIMEOUT_MS = 2000;
 
