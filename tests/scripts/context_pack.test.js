@@ -7,7 +7,6 @@ const os = require("os");
 const {
   DEFAULT_INSTRUCTIONS,
   GEMINI_INSTRUCTIONS,
-  COORDINATION_DOC,
   collectMcpEndpoints,
   loadInstructions,
   loadCopilotInstructions,
