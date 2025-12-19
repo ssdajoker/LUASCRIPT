@@ -1,3 +1,4 @@
+"use strict";
 
 /**
  * LUASCRIPT IR Validator
@@ -319,7 +320,10 @@ class IRValidator {
     }
 }
 
-"use strict";
+module.exports = {
+    IRValidator,
+    ValidationError
+};
 
 const { encodeBalancedTernary } = require("./idGenerator");
 

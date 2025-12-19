@@ -2,6 +2,37 @@
 
 const NEWLINE = "\n";
 
+// Lua operator precedence (from lowest to highest)
+// Reference: https://www.lua.org/manual/5.4/manual.html#3.4.8
+const LUA_PRECEDENCE = {
+  // Logical OR has lowest precedence
+  'or': 1,
+  // Logical AND  
+  'and': 2,
+  // Comparison operators
+  '<': 3, '>': 3, '<=': 3, '>=': 3, '~=': 3, '==': 3,
+  // Bitwise OR (Lua 5.3+)
+  '|': 4,
+  // Bitwise XOR (Lua 5.3+)
+  '~': 5,
+  // Bitwise AND (Lua 5.3+)
+  '&': 6,
+  // Bitwise shifts (Lua 5.3+)
+  '<<': 7, '>>': 7,
+  // Concatenation
+  '..': 8,
+  // Addition and subtraction
+  '+': 9, '-': 9,
+  // Multiplication, division, modulo
+  '*': 10, '/': 10, '//': 10, '%': 10,
+  // Unary operators (not, -, #, ~) have precedence 11
+  // Exponentiation has highest precedence (right associative)
+  '^': 12
+};
+
+// Operators that are right-associative in Lua
+const RIGHT_ASSOCIATIVE = new Set(['^', '..']);
+
 class IREmitter {
   constructor(options = {}) {
     this.indentUnit = options.indent || "  ";
@@ -284,8 +315,8 @@ class IREmitter {
       case "BinaryExpression":
       case "LogicalExpression": {
         const operator = this.luaBinaryOperator(node, context);
-        const left = this.emitGrouped(node.left, context);
-        const right = this.emitGrouped(node.right, context);
+        const left = this.emitGroupedWithParent(node.left, node, context, 'left');
+        const right = this.emitGroupedWithParent(node.right, node, context, 'right');
         return `${left} ${operator} ${right}`;
       }
       case "AssignmentExpression":
@@ -438,6 +469,14 @@ class IREmitter {
     return expression;
   }
 
+  emitGroupedWithParent(nodeId, parentNode, context, position) {
+    const expression = this.emitExpressionById(nodeId, context);
+    if (this.requiresGroupingWithParent(nodeId, parentNode, context, position)) {
+      return `(${expression})`;
+    }
+    return expression;
+  }
+
   requiresGrouping(nodeId, context) {
     const node = context.nodes[nodeId];
     if (!node) return false;
@@ -448,6 +487,51 @@ class IREmitter {
       return true;
     }
     return node.kind === "LogicalExpression";
+  }
+
+  requiresGroupingWithParent(nodeId, parentNode, context, position) {
+    const node = context.nodes[nodeId];
+    if (!node) return false;
+    
+    // Only binary and logical expressions need grouping consideration
+    if (node.kind !== "BinaryExpression" && node.kind !== "LogicalExpression") {
+      return false;
+    }
+
+    // Parent is not a binary/logical expression, no grouping needed
+    if (parentNode.kind !== "BinaryExpression" && parentNode.kind !== "LogicalExpression") {
+      return false;
+    }
+
+    // Get Lua operators for both parent and child
+    const parentOp = this.luaBinaryOperator(parentNode, context);
+    const nodeOp = this.luaBinaryOperator(node, context);
+
+    // Get precedence levels
+    const parentPrec = LUA_PRECEDENCE[parentOp] || 0;
+    const nodePrec = LUA_PRECEDENCE[nodeOp] || 0;
+
+    // If child has lower precedence, it needs parentheses
+    if (nodePrec < parentPrec) {
+      return true;
+    }
+
+    // If same precedence, check associativity
+    if (nodePrec === parentPrec) {
+      // Right-associative operators need parens on the left side
+      // Example: a ^ (b ^ c) is different from (a ^ b) ^ c
+      if (RIGHT_ASSOCIATIVE.has(parentOp) && position === 'left') {
+        return true;
+      }
+      // Left-associative (default) needs parens on the right side only if operators differ
+      // This handles cases like (a + b) - c where grouping matters, but allows a + b + c
+      // Example: a - (b + c) needs parens, but a - b - c doesn't
+      if (!RIGHT_ASSOCIATIVE.has(parentOp) && position === 'right' && parentOp !== nodeOp) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   luaDeclarationPrefix(kind) {

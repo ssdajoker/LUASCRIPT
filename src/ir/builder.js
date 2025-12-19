@@ -12,43 +12,47 @@ const { IRNodeFactory } = require('./nodes');
 const { validateIR } = require('./validator');
 
 class IRBuilder {
-  constructor(options = {}) {
-    const {
-      schemaVersion = "1.0.0",
-      moduleId,
-      source = { path: null, hash: null },
-      directives = [],
-      metadata = {},
-      exports = { type: "named", entries: [] },
-      toolchain = {},
-      idPrefix = "id",
-    } = options;
+    constructor(options = {}) {
+        this.nodeStack = [];
+        // Support for canonical IR building (optional)
+        if (options.schemaVersion || options.moduleId || options.source) {
+            const {
+                schemaVersion = "1.0.0",
+                moduleId,
+                source = { path: null, hash: null },
+                directives = [],
+                metadata = {},
+                exports = { type: "named", entries: [] },
+                toolchain = {},
+                idPrefix = "id",
+            } = options;
 
-    this.schemaVersion = schemaVersion;
-    this.idGenerator = new BalancedTernaryIdGenerator({ prefix: idPrefix });
-    this.nodeFactory = new IRNodeFactory({ idGenerator: this.idGenerator });
+            this.schemaVersion = schemaVersion;
+            this.idGenerator = new BalancedTernaryIdGenerator({ prefix: idPrefix });
+            this.nodeFactory = new IRNodeFactory({ idGenerator: this.idGenerator });
 
-    this.module = {
-      schemaVersion: this.schemaVersion,
-      module: {
-        id: moduleId || this.idGenerator.next("mod"),
-        source,
-        directives: [...directives],
-        body: [],
-        exports,
-        metadata: Object.assign(
-          {
-            authoredBy: metadata.authoredBy || "ir-builder",
-            createdAt: metadata.createdAt || new Date().toISOString(),
-            toolchain,
-          },
-          metadata
-        ),
-      },
-      nodes: {},
-      controlFlowGraphs: {},
-    };
-  }
+            this.module = {
+                schemaVersion: this.schemaVersion,
+                module: {
+                    id: moduleId || this.idGenerator.next("mod"),
+                    source,
+                    directives: [...directives],
+                    body: [],
+                    exports,
+                    metadata: Object.assign(
+                        {
+                            authoredBy: metadata.authoredBy || "ir-builder",
+                            createdAt: metadata.createdAt || new Date().toISOString(),
+                            toolchain,
+                        },
+                        metadata
+                    ),
+                },
+                nodes: {},
+                controlFlowGraphs: {},
+            };
+        }
+    }
 
     // ========== DECLARATIONS ==========
 
