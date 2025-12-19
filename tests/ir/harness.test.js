@@ -21,7 +21,7 @@ function fetchDocHints(query) {
     }
     const client = url.protocol === 'https:' ? https : http;
     return new Promise((resolve) => {
-      const req = client.get(url, (res) => {
+      const req = client.get(url, { timeout: REQUEST_TIMEOUT_MS }, (res) => {
         const chunks = [];
         res.on('data', (c) => chunks.push(c));
         res.on('end', () => {
@@ -124,7 +124,7 @@ async function main() {
     runCase(currentCase, 'function pick(foo) { const [a, , c] = foo; return a + c; }', ({ lua }) => {
       assert.ok(lua.includes('local __ds1 = foo'), 'array destruct temp missing');
       assert.ok(lua.includes('__ds1[0]'), 'first element access missing');
-      assert.ok(lua.includes('__ds1[1]'), 'third element access missing');
+      assert.ok(lua.includes('__ds1[2]'), 'third element access missing');
       assert.ok(lua.match(/return a \+ c/), 'return expression missing');
     });
 
