@@ -68,5 +68,18 @@ jobs:
               );
               core.info(`Auto-merge enabled for PR #${prNumber}`);
             } catch (err) {
-              core.warning(`Failed to enable auto-merge for PR #${prNumber}: ${err.message}`);
+              const message = err && err.message ? err.message : String(err);
+              core.warning(`Failed to enable auto-merge for PR #${prNumber}: ${message}`);
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: [
+                  `⚠️ Failed to enable auto-merge for this pull request automatically.`,
+                  ``,
+                  `Error: ${message}`,
+                  ``,
+                  `Please investigate and, if appropriate, enable auto-merge manually or merge this PR by hand.`
+                ].join('\n'),
+              });
             }
