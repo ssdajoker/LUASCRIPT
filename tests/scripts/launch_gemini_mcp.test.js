@@ -8,8 +8,15 @@ const {
   clearMcpEndpoints,
   restoreEnv,
   mockConsole,
-  assertConsoleOutput,
 } = require("./test-utils");
+
+// Helper function to assert console output contains expected strings
+function assertConsoleOutput(logs, expectedStrings, testName) {
+  const outputStr = logs.join('\n');
+  expectedStrings.forEach(expected => {
+    assert.ok(outputStr.includes(expected), `${testName}: should include "${expected}"`);
+  });
+}
 
 (function testMainCreatesArtifactsDirectory() {
   const testDir = path.join(__dirname, "tmp_test_gemini_mcp");

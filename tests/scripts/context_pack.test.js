@@ -238,14 +238,16 @@ const {
   try {
     fs.mkdirSync(testDir, { recursive: true });
     
-    // Create a large file (> 2000 bytes)
-    const largeContent = "A".repeat(3000);
+    // Create a large file (> excerpt limit)
+    const EXCERPT_LIMIT = 2000;
+    const LARGE_FILE_SIZE = 3000;
+    const largeContent = "A".repeat(LARGE_FILE_SIZE);
     fs.writeFileSync(path.join(testDir, "large.md"), largeContent);
     
     const result = loadInstructions(testDir, "large.md", "fallback.md");
     
-    assert.strictEqual(result.excerpt.length, 2000, "excerpt should be truncated to 2000 bytes");
-    assert.strictEqual(result.bytes, 3000, "bytes should reflect full content");
+    assert.strictEqual(result.excerpt.length, EXCERPT_LIMIT, "excerpt should be truncated to 2000 bytes");
+    assert.strictEqual(result.bytes, LARGE_FILE_SIZE, "bytes should reflect full content");
     
   } finally {
     if (fs.existsSync(testDir)) {
