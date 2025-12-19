@@ -387,6 +387,7 @@ function validateIR(ir) {
     "TemplateLiteral",
     "ArrowFunctionExpression",
     "FunctionDeclaration",
+    "FunctionExpression",
     "VariableDeclaration",
     "BlockStatement",
     "ExpressionStatement",
