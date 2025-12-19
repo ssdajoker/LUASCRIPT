@@ -49,6 +49,9 @@ jobs:
             const latestReviewsByUser = new Map();
             for (const review of reviews) {
               const user = review.user || {};
+              const key = user.id;
+              if (!key) continue;
+              if (!review.submitted_at) continue;
               const key = user.id ?? user.login;
               if (!key) continue;
               const existing = latestReviewsByUser.get(key);
@@ -56,6 +59,8 @@ jobs:
                 latestReviewsByUser.set(key, review);
                 continue;
               }
+              const existingTime = Date.parse(existing.submitted_at);
+              const reviewTime = Date.parse(review.submitted_at);
               const existingTime = existing.submitted_at ? Date.parse(existing.submitted_at) : 0;
               const reviewTime = review.submitted_at ? Date.parse(review.submitted_at) : 0;
               if (reviewTime >= existingTime) {
