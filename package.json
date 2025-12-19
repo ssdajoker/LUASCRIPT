@@ -68,7 +68,9 @@
   },
   "dependencies": {
     "acorn": "^8.15.0",
-    "luaparse": "^0.3.1"
+    "luaparse": "^0.3.1",
+    "@types/esprima": "^4.0.6",
+    "esprima": "^4.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",
@@ -147,9 +149,5 @@
       "performance_tools": "Profiling, Optimization, GPU Acceleration",
       "agentic_ide": "AI-powered development environment"
     }
-  },
-  "dependencies": {
-    "@types/esprima": "^4.0.6",
-    "esprima": "^4.0.1"
   }
 }
