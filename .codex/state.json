@@ -1,0 +1,16 @@
+{
+  "last_work_id": "work_github_134",
+  "status": "in_progress",
+  "current_work": {
+    "id": "work_github_134",
+    "issue_number": 134,
+    "title": "Fix ArrayPattern destructuring with RestElement",
+    "body": "# Fix ArrayPattern Destructuring with RestElement in Parity Tests\r\n\r\n**Priority**: HIGH  \r\n**Labels**: codex-work, priority:high, bug  \r\n**Estimated Time**: 30-60 minutes\r\n\r\n## Issue\r\n\r\nArrayPattern destructuring is failing in parity tests.\r\n\r\n**Current Status**: 5/6 parity tests passing, 1 failing  \r\n**Failure**: `Destructuring: array with rest (Unsupported AST node type: ArrayPattern)`  \r\n**Test Case**: `let [a, ...rest] = arr;`\r\n\r\n## Root Cause\r\n\r\nThe lowerer has ArrayPattern support in `src/ir/lowerer.js` (lines 347-369), but it's not being invoked correctly during destructuring transpilation. The issue occurs when ArrayPattern contains RestElement nodes.\r\n\r\n## Expected Behavior\r\n\r\n1. **Parse**: `let [a, ...rest] = arr;`\r\n2. **Lower**: ArrayPattern with Identifier('a') + RestElement(Identifier('rest'))\r\n3. **Emit**: Valid Lua code that unpacks array into local variables\r\n\r\n## Files to Modify\r\n\r\n- `src/ir/lowerer.js` - Ensure ArrayPattern properly handles RestElement children\r\n- `tests/parity/run_parity_tests.js` - Verify test passes after fix\r\n\r\n## Implementation Steps\r\n\r\n1. Check how `lowerArrayPattern()` handles `RestElement` nodes in the elements array\r\n2. Verify `lowerRestElement()` is being called for rest parameters\r\n3. Ensure the emitter generates correct Lua unpacking code\r\n4. Run `npm run test:parity` to verify fix\r\n5. Ensure all 6/6 tests pass\r\n\r\n## Related Code\r\n\r\n**src/ir/lowerer.js:365-369**:\r\n```javascript\r\nlowerArrayPattern(node) {\r\n  const elements = (node.elements || []).map((el) => \r\n    el ? this.lowerExpression(el) : null\r\n  );\r\n  return this.builder.arrayPattern(elements);\r\n}\r\n```\r\n\r\n**src/ir/lowerer.js:389-392**:\r\n```javascript\r\nlowerRestElement(node) {\r\n  const argument = this.lowerExpression(node.argument);\r\n  return this.builder.restElement(argument);\r\n}\r\n```\r\n\r\n## Acceptance Criteria\r\n\r\n- ✅ Parity tests: 6/6 passing (currently 5/6)\r\n- ✅ `npm run test:parity` exits with code 0\r\n- ✅ ArrayPattern + RestElement transpiles to valid Lua\r\n- ✅ Test case `let [a, ...rest] = arr;` works correctly\r\n- ✅ Harness tests still pass (no regressions)\r\n- ✅ IR validation passes\r\n\r\n## Test Command\r\n\r\n```bash\r\nnpm run test:parity\r\n```\r\n\r\nExpected output:\r\n```\r\nPassed 6/6\r\n```\r\n\r\n## GitHub Issue Creation Command\r\n\r\n```bash\r\ngh issue create --title \"Fix ArrayPattern destructuring with RestElement\" --label \"codex-work,priority:high,bug\" --body-file .codex/issue-templates/arraypattern-fix.md\r\n```\r\n",
+    "local_branch": "codex/fix-134",
+    "claimed_at": "2025-12-19T05:03:07.098Z",
+    "implementation_started": false,
+    "harness_result": null,
+    "ir_validation": null,
+    "ready_to_merge": false
+  }
+}

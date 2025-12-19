@@ -2,7 +2,7 @@
 # Codex Configuration
 # VS Code cloud development engine for LUASCRIPT
 
-codex_mode: "enabled"  # Local VS Code development + occasional remote push
+codex_mode: "disabled"  # Local VS Code development + occasional remote push
 
 # Local development settings
 local:

@@ -78,49 +78,103 @@ function log(level, message) {
   }
 }
 
+function logNuclearFailure(stage, error) {
+  const explosion = `
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║   ██████╗ ██████╗ ██████╗ ███████╗██╗  ██╗    ███████╗ █████╗ ██╗██╗     ║
+║  ██╔════╝██╔═══██╗██╔══██╗██╔════╝╚██╗██╔╝    ██╔════╝██╔══██╗██║██║     ║
+║  ██║     ██║   ██║██║  ██║█████╗   ╚███╔╝     █████╗  ███████║██║██║     ║
+║  ██║     ██║   ██║██║  ██║██╔══╝   ██╔██╗     ██╔══╝  ██╔══██║██║██║     ║
+║  ╚██████╗╚██████╔╝██████╔╝███████╗██╔╝ ██╗    ██║     ██║  ██║██║███████╗║
+║   ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝║
+║                                                                           ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                                           ║
+║                        ⚠️  CRITICAL FAILURE  ⚠️                            ║
+║                                                                           ║
+║                                ☢️ ☢️ ☢️                                     ║
+║                           ███████████████                                 ║
+║                        ████░░░░░░░░░░░░░████                             ║
+║                      ███░░░░░░░░░░░░░░░░░░░███                           ║
+║                    ███░░░░████████████░░░░░░░███                         ║
+║                   ██░░░░██████████████████░░░░░██                        ║
+║                  ██░░░████████████████████████░░░██                      ║
+║                 ██░░░████████████████████████████░░░██                   ║
+║                ██░░░████████████████████████████████░░░██                ║
+║                █░░░████████████████████████████████████░░░█              ║
+║               ██░░░████████████████████████████████████░░░██             ║
+║               █░░░████████████████████████████████████████░░█            ║
+║               █░░░████████████████████████████████████████░░█            ║
+║               █░░░████████████████████████████████████████░░█            ║
+║               ██░░░████████████████████████████████████░░░██             ║
+║                █░░░░████████████████████████████████░░░░░█               ║
+║                ██░░░░████████████████████████████░░░░░░██                ║
+║                 ██░░░░░████████████████████░░░░░░░██                     ║
+║                  ███░░░░░░████████░░░░░░░░░███                           ║
+║                    ███░░░░░░░░░░░░░░░░███                                ║
+║                       ████░░░░░░░████                                    ║
+║                          ██████████                                      ║
+║                                                                           ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                                           ║
+║  FAILURE STAGE: ${stage.padEnd(56)} ║
+║                                                                           ║
+║  ERROR DETAILS:                                                          ║`;
+
+  console.error(explosion);
+  
+  // Split error message into lines and pad them
+  const errorLines = error.toString().split('\n').slice(0, 10);
+  errorLines.forEach(line => {
+    const paddedLine = '║  ' + line.substring(0, 73).padEnd(75) + '║';
+    console.error(paddedLine);
+  });
+  
+  const footer = `║                                                                           ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                                           ║
+║  ⚠️  IMMEDIATE ACTION REQUIRED  ⚠️                                        ║
+║                                                                           ║
+║  1. Check the error details above                                        ║
+║  2. Review .codex/codex.log for full context                             ║
+║  3. Fix the issue and restart Codex manually                             ║
+║  4. DO NOT auto-restart - manual intervention required                   ║
+║                                                                           ║
+║                        ☢️  CODEX HALTED  ☢️                                ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+`;
+  
+  console.error(footer);
+  
+  // Also log to file
+  try {
+    fs.appendFileSync(LOG_PATH, explosion + '\n');
+    errorLines.forEach(line => {
+      fs.appendFileSync(LOG_PATH, '║  ' + line + '\n');
+    });
+    fs.appendFileSync(LOG_PATH, footer + '\n');
+  } catch (err) {
+    // Ignore log write errors
+  }
+}
+
 // ========== GitHub Integration ==========
 
 function pollGitHubForWork() {
   log('INFO', 'Polling GitHub for work items...');
   
   try {
-    // Use gh cli to query GitHub GraphQL
-    const query = `
-      query {
-        search(query: "label:codex-work state:open", type: ISSUE, first: 10) {
-          edges {
-            node {
-              ... on Issue {
-                id
-                number
-                title
-                body
-                labels(first: 5) { nodes { name } }
-                createdAt
-                repository { nameWithOwner }
-              }
-              ... on PullRequest {
-                id
-                number
-                title
-                body
-                labels(first: 5) { nodes { name } }
-                createdAt
-                repository { nameWithOwner }
-              }
-            }
-          }
-        }
-      }
-    `;
-
-    const result = execSync(`gh api graphql -f query='${query}'`, {
+    // Use gh cli REST API instead of GraphQL for better Windows compatibility
+    const result = execSync('gh issue list --label "codex-work" --state open --json number,title,body,labels,createdAt --limit 10', {
       encoding: 'utf8',
-      stdio: ['pipe', 'pipe', 'ignore']
+      stdio: ['pipe', 'pipe', 'pipe']
     });
 
-    const data = JSON.parse(result);
-    const issues = data.data?.search?.edges || [];
+    const issues = JSON.parse(result);
 
     if (issues.length === 0) {
       log('INFO', 'No pending work items found');
@@ -131,17 +185,17 @@ function pollGitHubForWork() {
 
     // Find highest priority (high > medium > low)
     const workItem = issues
-      .map(e => ({
-        github_id: e.node.id,
-        issue_number: e.node.number,
-        title: e.node.title,
-        body: e.node.body,
-        labels: e.node.labels.nodes.map(l => l.name),
-        created_at: e.node.createdAt,
-        priority: e.node.labels.nodes.some(l => l.name === 'priority:high') ? 'high'
-          : e.node.labels.nodes.some(l => l.name === 'priority:medium') ? 'medium'
+      .map(issue => ({
+        github_id: issue.number.toString(),
+        issue_number: issue.number,
+        title: issue.title,
+        body: issue.body || '',
+        labels: issue.labels.map(l => l.name),
+        created_at: issue.createdAt,
+        priority: issue.labels.some(l => l.name === 'priority:high') ? 'high'
+          : issue.labels.some(l => l.name === 'priority:medium') ? 'medium'
           : 'low',
-        repo: e.node.repository.nameWithOwner
+        repo: 'ssdajoker/LUASCRIPT'
       }))
       .sort((a, b) => {
         const priority_map = { high: 3, medium: 2, low: 1 };
@@ -197,13 +251,20 @@ function createFeatureBranch(workItem) {
   const branchName = `codex/fix-${workItem.issue_number}`;
   
   try {
-    execSync(`git checkout -b ${branchName} 2>/dev/null || git checkout ${branchName}`, {
-      stdio: 'ignore'
-    });
-    log('INFO', `Created/checked out branch: ${branchName}`);
+    // Check if branch exists
+    try {
+      execSync(`git rev-parse --verify ${branchName}`, { stdio: 'ignore' });
+      // Branch exists, check it out
+      execSync(`git checkout ${branchName}`, { stdio: 'ignore' });
+      log('INFO', `Checked out existing branch: ${branchName}`);
+    } catch {
+      // Branch doesn't exist, create it
+      execSync(`git checkout -b ${branchName}`, { stdio: 'ignore' });
+      log('INFO', `Created new branch: ${branchName}`);
+    }
     return branchName;
   } catch (err) {
-    log('ERROR', `Failed to create branch: ${err.message}`);
+    log('ERROR', `Failed to create/checkout branch: ${err.message}`);
     recordTelemetry('branch_creation_error', { error: err.message });
     return null;
   }
@@ -229,18 +290,60 @@ function updateState(workItem, branch) {
 }
 
 function waitForLocalImplementation() {
-  log('INFO', 'Waiting for implementation in VS Code...');
-  log('INFO', 'When ready: save files, run tests, and type "done" + Enter');
-
-  // Simple stdin for manual completion signal
-  const { createInterface } = require('readline');
-  const rl = createInterface({ input: process.stdin, output: process.stdout });
+  const SIGNAL_FILE = '.codex/signal.txt';
+  const CHECK_INTERVAL = 1000; // Check every 1 second
+  
+  // Clear any existing signal
+  if (fs.existsSync(SIGNAL_FILE)) {
+    fs.unlinkSync(SIGNAL_FILE);
+  }
+  
+  log('INFO', '⏳ Waiting for implementation in VS Code...');
+  log('INFO', '');
+  log('INFO', '╔════════════════════════════════════════════════════════════════╗');
+  log('INFO', '║                   CODEX AWAITING SIGNAL                        ║');
+  log('INFO', '╠════════════════════════════════════════════════════════════════╣');
+  log('INFO', '║  When ready to validate:                                       ║');
+  log('INFO', '║                                                                ║');
+  log('INFO', '║  Option 1: Run this command:                                   ║');
+  log('INFO', '║    echo done > .codex/signal.txt                               ║');
+  log('INFO', '║                                                                ║');
+  log('INFO', '║  Option 2: Run this command:                                   ║');
+  log('INFO', '║    npm run codex:done                                          ║');
+  log('INFO', '║                                                                ║');
+  log('INFO', '║  To cancel:                                                    ║');
+  log('INFO', '║    echo cancel > .codex/signal.txt                             ║');
+  log('INFO', '║    npm run codex:cancel                                        ║');
+  log('INFO', '╚════════════════════════════════════════════════════════════════╝');
+  log('INFO', '');
 
   return new Promise(resolve => {
-    rl.question('Ready to validate? (done/cancel): ', answer => {
-      rl.close();
-      resolve(answer.toLowerCase() === 'done');
-    });
+    const checkSignal = () => {
+      if (fs.existsSync(SIGNAL_FILE)) {
+        try {
+          const signal = fs.readFileSync(SIGNAL_FILE, 'utf8').trim().toLowerCase();
+          fs.unlinkSync(SIGNAL_FILE); // Clean up signal file
+          
+          if (signal === 'done') {
+            log('INFO', '✅ Implementation complete signal received');
+            resolve(true);
+          } else if (signal === 'cancel') {
+            log('INFO', '❌ Work cancelled by user');
+            resolve(false);
+          } else {
+            log('WARN', `Unknown signal: ${signal}`);
+            setTimeout(checkSignal, CHECK_INTERVAL);
+          }
+        } catch (err) {
+          log('ERROR', `Failed to read signal file: ${err.message}`);
+          setTimeout(checkSignal, CHECK_INTERVAL);
+        }
+      } else {
+        setTimeout(checkSignal, CHECK_INTERVAL);
+      }
+    };
+    
+    checkSignal();
   });
 }
 
@@ -438,6 +541,9 @@ async function runCycle() {
       const ready = await waitForLocalImplementation();
       if (!ready) {
         log('INFO', 'Work cancelled by user');
+        state.status = 'idle';
+        state.current_work = null;
+        saveState();
         return;
       }
     } else {
@@ -445,6 +551,58 @@ async function runCycle() {
       const workItem = pollGitHubForWork();
       if (!workItem) {
         log('INFO', 'No work available. Sleeping...');
+        return;
+      }
+
+      // 3. Claim and set up work
+      claimWorkItem(workItem);
+      const branch = createFeatureBranch(workItem);
+      if (!branch) {
+        logNuclearFailure('BRANCH CREATION', new Error('Failed to create feature branch'));
+        state.status = 'idle';
+        saveState();
+        return;
+      }
+      updateStateForNewWork(workItem, branch);
+
+      // 4. Wait for implementation
+      const ready = await waitForLocalImplementation();
+      if (!ready) {
+        log('INFO', 'Work cancelled by user');
+        state.status = 'idle';
+        state.current_work = null;
+        saveState();
+        return;
+      }
+    }
+
+    // 5. Validate locally
+    const validationResults = validateLocally();
+    if (!validationResults.all_passed) {
+      logNuclearFailure('VALIDATION', new Error('Local validation failed: ' + JSON.stringify(validationResults, null, 2)));
+      state.status = 'idle';
+      state.current_work = null;
+      saveState();
+      return;
+    }
+
+    // 6. Push to GitHub
+    pushToGitHub();
+    log('INFO', '✅ Codex cycle complete. PR created successfully!');
+
+    // Reset state
+    state.status = 'idle';
+    state.current_work = null;
+    saveState();
+
+  } catch (err) {
+    logNuclearFailure('RUNTIME ERROR', err);
+    log('ERROR', `Codex cycle failed: ${err.message}`);
+    state.status = 'idle';
+    state.current_work = null;
+    saveState();
+  }
+}
         return;
       }
 
