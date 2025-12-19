@@ -25,32 +25,49 @@ function M.async(fn)
 end
 
 -- Await an async operation
-function M.await(async_op)
-    if async_op.state == M.State.COMPLETED then
-        return async_op.result
-    elseif async_op.state == M.State.FAILED then
-        error(async_op.error)
+function M.await(async_op, max_iterations)
+    max_iterations = max_iterations or 1000 -- Default max iterations to prevent infinite recursion
+    local iterations = 0
+    
+    local function await_impl(op)
+        iterations = iterations + 1
+        
+        if iterations > max_iterations then
+            op.state = M.State.FAILED
+            op.error = "Maximum await iterations exceeded"
+            error("Maximum await iterations exceeded")
+        end
+        
+        if op.state == M.State.COMPLETED then
+            return op.result
+        elseif op.state == M.State.FAILED then
+            error(op.error)
+        end
+        
+        -- Resume the coroutine
+        op.state = M.State.RUNNING
+        local success, result = coroutine.resume(op.coroutine)
+        
+        if not success then
+            op.state = M.State.FAILED
+            op.error = result
+            error(result)
+        end
+        
+        if coroutine.status(op.coroutine) == "dead" then
+            op.state = M.State.COMPLETED
+            op.result = result
+            return result
+        end
+        
+        -- Still pending, yield control if in coroutine
+        if coroutine.running() then
+            coroutine.yield()
+        end
+        return await_impl(op)
     end
     
-    -- Resume the coroutine
-    async_op.state = M.State.RUNNING
-    local success, result = coroutine.resume(async_op.coroutine)
-    
-    if not success then
-        async_op.state = M.State.FAILED
-        async_op.error = result
-        error(result)
-    end
-    
-    if coroutine.status(async_op.coroutine) == "dead" then
-        async_op.state = M.State.COMPLETED
-        async_op.result = result
-        return result
-    end
-    
-    -- Still pending, yield control
-    coroutine.yield()
-    return M.await(async_op)
+    return await_impl(async_op)
 end
 
 -- Run async operation with cooperative multitasking
@@ -106,8 +123,10 @@ function M.all(async_ops)
             end
         end
         
-        -- Yield to allow other operations to progress
-        coroutine.yield()
+        -- Yield to allow other operations to progress (only if in coroutine)
+        if coroutine.running() then
+            coroutine.yield()
+        end
     end
     
     return results
@@ -177,8 +196,10 @@ function M.with_timeout(async_op, timeout_ms)
             error("Async operation failed: " .. tostring(result))
         end
         
-        -- Brief sleep to avoid busy waiting
-        coroutine.yield()
+        -- Brief sleep to avoid busy waiting (only if in coroutine)
+        if coroutine.running() then
+            coroutine.yield()
+        end
     end
     
     return async_op.result
