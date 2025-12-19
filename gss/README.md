@@ -14,6 +14,7 @@ This implementation provides a complete pipeline for defining, rendering, and op
 - **High Performance**: Tile-based rendering with caching (≥60 FPS at 640×480)
 - **Mathematical Elegance**: Unicode operators (∑, √, ∫, ∂) with ASCII equivalence
 - **Agentic Optimization**: Automated parameter tuning with multiple search strategies
+- **Async/Await Support**: Structured asynchronous operations for cooperative multitasking
 - **Comprehensive Testing**: Full test suite with benchmarks
 
 ## Architecture
@@ -74,6 +75,7 @@ gss/
 │   ├── iso.lua      # Marching squares
 │   ├── blend.lua    # Blend modes
 │   ├── cache.lua    # Tile caching
+│   ├── async.lua    # Async/await runtime
 │   └── engine.lua   # Main execution engine
 ├── agss/             # Agentic optimization
 │   ├── strategies.lua # Search strategies
@@ -83,6 +85,7 @@ gss/
 │   ├── test_parser.lua
 │   ├── test_kernels.lua
 │   ├── test_agss.lua
+│   ├── test_async.lua
 │   └── test_integration.lua
 └── benchmarks/       # Performance benchmarks
     ├── bench_gss.lua
@@ -99,6 +102,9 @@ lua gss/tests/test_kernels.lua
 
 # AGSS tests
 lua gss/tests/test_agss.lua
+
+# Async/await tests
+lua gss/tests/test_async.lua
 
 # Integration tests
 lua gss/tests/test_integration.lua
@@ -148,6 +154,64 @@ local stats = engine.get_stats(render_engine)
 print("FPS:", stats.fps)
 ```
 
+### Async/Await Usage
+
+```lua
+local async = require("gss.runtime.async")
+local graph = require("gss.ir.graph")
+
+-- Create async operation
+local async_render = async.async(function()
+    -- Perform expensive rendering operation
+    local result = render_complex_scene()
+    coroutine.yield() -- Allow other operations to run
+    return result
+end)
+
+-- Run async operation
+local step = async.run_async(async_render)
+local status, result
+
+-- Step through execution
+repeat
+    status, result = step()
+    -- Do other work while waiting
+until status ~= nil
+
+print("Render completed:", result)
+
+-- Create async operation in IR graph
+local g = graph.Graph()
+local inputs = {nodes.ConstantNode(100)}
+local async_node = graph.async_operation(g, "complex_compute", inputs)
+local await_node = graph.await_operation(g, async_node)
+graph.set_root(g, await_node)
+
+-- Run multiple async operations concurrently
+local ops = {
+    async.async(function() return compute_1() end),
+    async.async(function() return compute_2() end),
+    async.async(function() return compute_3() end)
+}
+
+local results = async.all(ops) -- Wait for all to complete
+print("All operations completed")
+
+-- Chain async operations
+local chained = async.chain({
+    async.async(function() return step_1() end),
+    async.async(function() return step_2() end),
+    async.async(function() return step_3() end)
+})
+
+-- Run with timeout
+local timed_op = async.async(function()
+    return long_running_computation()
+end)
+
+local result = async.with_timeout(timed_op, 5000) -- 5 second timeout
+```
+
 ## Performance Targets
 
 ### Milestone A: GSS Implementation
@@ -194,6 +258,56 @@ g = math.exp(-(r*r)/(2*sigma*sigma))
 -- Verified equivalence
 assert(|unicode_result - ascii_result| ≤ 1e-15)
 ```
+
+## IR Node Types
+
+The kernel graph IR supports the following node types:
+
+### Core Nodes
+- **GaussianNode**: Gaussian field with center (μx, μy) and spread (σ)
+- **MixNode**: Weighted blend between two fields
+- **SumNode**: Additive combination of multiple fields
+- **RampNode**: Color lookup table application
+- **IsoNode**: Isoline/contour extraction
+- **CompositeNode**: Layer composition with blend modes
+
+### Async Nodes
+- **AsyncNode**: Asynchronous operation that can yield control
+- **AwaitNode**: Wait for async operation to complete
+- **AsyncBlockNode**: Group multiple async operations
+
+### Utility Nodes
+- **ParamNode**: Parameter binding (e.g., CSS variables)
+- **ConstantNode**: Constant value
+- **BinaryOpNode**: Binary arithmetic operations
+
+### Async/Await Features
+
+The IR builder and lowerer support structured async/await operations:
+
+```lua
+local graph = require("gss.ir.graph")
+local nodes = require("gss.ir.nodes")
+
+-- Create graph
+local g = graph.Graph()
+
+-- Create async operation node
+local inputs = {nodes.ConstantNode(100)}
+local async_node = graph.async_operation(g, "expensive_compute", inputs)
+
+-- Create await node
+local await_node = graph.await_operation(g, async_node)
+
+-- Set as root and execute
+graph.set_root(g, await_node)
+```
+
+**Benefits:**
+- **Cooperative Multitasking**: Long operations can yield control
+- **Better Responsiveness**: UI remains responsive during heavy computation
+- **Structured Concurrency**: Clear dependencies and execution order
+- **Resource Efficiency**: Avoid blocking on I/O or expensive operations
 
 ## Search Strategies
 
