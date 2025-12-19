@@ -86,7 +86,7 @@ Located in `.github/workflows/`:
 |------|-------|---------|
 | copilot-instructions.md | ~80 | Copilot behavior rules & expectations |
 | gemini-instructions.md | ~80 | Gemini behavior rules & constraints |
-| GEMINI.md | ~30 | Gemini context guide (workflows + quick rules) |
+| GEMINI.md | ~22-23 | Gemini context guide (workflows + quick rules) |
 | COPILOT_GEMINI_HANDOFF.md | ~50 | Latest handoff state + work-queue |
 | assistant_coordination.md | ~100+ | Shared protocol, priorities, MCP guidance |
 | DEVELOPMENT_WORKFLOW.md | ~150+ | Code review, branching, auto-merge, amend guidance |
