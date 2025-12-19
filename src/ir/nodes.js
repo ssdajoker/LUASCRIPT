@@ -6,6 +6,7 @@
  */
 
 const { Types } = require('./types');
+const { BalancedTernaryIdGenerator } = require('./idGenerator');
 
 /**
  * Node Categories
@@ -1064,5 +1065,6 @@ module.exports = {
     Identifier,
     Literal,
     Assignment,
-    Conditional
+    Conditional,
+    IRNodeFactory
 };
