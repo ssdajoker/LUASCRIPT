@@ -4,29 +4,7 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 const { writeContextArtifacts } = require("../../scripts/context_pack");
-
-// Helper function to clear MCP endpoint environment variables
-function clearMcpEndpoints() {
-  Object.keys(process.env).forEach(key => {
-    if (key.startsWith('MCP_') && key.endsWith('_ENDPOINT')) {
-      delete process.env[key];
-    }
-  });
-}
-
-// Helper function to restore environment variables
-function restoreEnv(originalEnv) {
-  // Clear current env vars
-  Object.keys(process.env).forEach(key => {
-    if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) {
-      delete process.env[key];
-    }
-  });
-  // Restore original values
-  Object.keys(originalEnv).forEach(key => {
-    process.env[key] = originalEnv[key];
-  });
-}
+const { clearMcpEndpoints, restoreEnv } = require("./test-helpers");
 
 (function testWriteContextArtifactsCreatesDirectory() {
   const testDir = path.join(__dirname, "tmp_test_context_pack");

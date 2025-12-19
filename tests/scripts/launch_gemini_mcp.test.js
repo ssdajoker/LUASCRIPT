@@ -4,55 +4,7 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 const { main } = require("../../scripts/launch_gemini_mcp");
-
-// Helper function to clear MCP endpoint environment variables
-function clearMcpEndpoints() {
-  Object.keys(process.env).forEach(key => {
-    if (key.startsWith('MCP_') && key.endsWith('_ENDPOINT')) {
-      delete process.env[key];
-    }
-  });
-}
-
-// Helper function to mock console output
-function mockConsole() {
-  const originalLog = console.log;
-  const originalWarn = console.warn;
-  const logs = [];
-  
-  console.log = (...args) => logs.push(args.join(' '));
-  console.warn = (...args) => logs.push(`WARN: ${args.join(' ')}`);
-  
-  return {
-    logs,
-    restore() {
-      console.log = originalLog;
-      console.warn = originalWarn;
-    }
-  };
-}
-
-// Helper function to restore environment variables
-function restoreEnv(originalEnv) {
-  // Clear current env vars
-  Object.keys(process.env).forEach(key => {
-    if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) {
-      delete process.env[key];
-    }
-  });
-  // Restore original values
-  Object.keys(originalEnv).forEach(key => {
-    process.env[key] = originalEnv[key];
-  });
-}
-
-// Helper function to assert console output contains expected strings
-function assertConsoleOutput(logs, expectedStrings, testName) {
-  const outputStr = logs.join('\n');
-  expectedStrings.forEach(expected => {
-    assert.ok(outputStr.includes(expected), `${testName}: should include "${expected}"`);
-  });
-}
+const { clearMcpEndpoints, restoreEnv, mockConsole, assertConsoleOutput } = require("./test-helpers");
 
 (function testMainCreatesArtifactsDirectory() {
   const testDir = path.join(__dirname, "tmp_test_gemini_mcp");
