@@ -319,9 +319,6 @@ class IRValidator {
     }
 }
 
-module.exports = {
-    IRValidator,
-    ValidationError
 "use strict";
 
 const { encodeBalancedTernary } = require("./idGenerator");
@@ -542,4 +539,6 @@ module.exports = {
   isBalancedTernaryIdentifier,
   decodeBalancedTernaryString,
   encodeBalancedTernary,
+  IRValidator,
+  ValidationError,
 };

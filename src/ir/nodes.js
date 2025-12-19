@@ -6,6 +6,7 @@
  */
 
 const { Types } = require('./types');
+const { BalancedTernaryIdGenerator } = require('./idGenerator');
 
 /**
  * Node Categories
@@ -713,6 +714,8 @@ class Assignment extends IRNode {
             json
         );
     }
+}
+
 class IRNodeFactory {
   constructor(options = {}) {
     const { idGenerator = new BalancedTernaryIdGenerator() } = options;
@@ -1062,5 +1065,6 @@ module.exports = {
     Identifier,
     Literal,
     Assignment,
-    Conditional
+    Conditional,
+    IRNodeFactory
 };
