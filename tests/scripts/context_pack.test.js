@@ -3,6 +3,7 @@
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 const {
   collectMcpEndpoints,
   loadInstructions,
@@ -39,7 +40,7 @@ function restoreEnv(originalEnv) {
 
 // Helper function to create temporary directory
 function createTempDir() {
-  const tmpDir = path.join('/tmp', `context_pack_test_${Date.now()}_${Math.random().toString(36).slice(2)}`);
+  const tmpDir = path.join(os.tmpdir(), `context_pack_test_${Date.now()}_${Math.random().toString(36).slice(2)}`);
   fs.mkdirSync(tmpDir, { recursive: true });
   return tmpDir;
 }
