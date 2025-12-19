@@ -90,9 +90,9 @@ Located in `.github/workflows/`:
 | COPILOT_GEMINI_HANDOFF.md | ~50 | Latest handoff state + work-queue |
 | assistant_coordination.md | ~100+ | Shared protocol, priorities, MCP guidance |
 | DEVELOPMENT_WORKFLOW.md | ~150+ | Code review, branching, auto-merge, amend guidance |
-| .github/workflows/parity-ir.yml | ~50 | Main CI gate (parity + IR + perf checks) |
-| .github/workflows/auto-merge.yml | ~65 | Auto-merge enabler on green CI + approval |
-| .github/workflows/auto-fix-bot.yml | ~68 | Auto-fix committer on CI failure |
+| .github/workflows/parity-ir.yml | ~70+ | Main CI gate (parity + IR + perf checks) |
+| .github/workflows/auto-merge.yml | ~72 | Auto-merge enabler on green CI + approval |
+| .github/workflows/auto-fix-bot.yml | ~74 | Auto-fix committer on CI failure |
 
 ---
 
