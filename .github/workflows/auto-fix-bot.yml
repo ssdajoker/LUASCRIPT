@@ -47,7 +47,7 @@ jobs:
             git config user.email "bot@luascript.dev"
             git add reports/ tests/
             git commit -m "chore: auto-fix bot (refresh IR/parity artifacts)"
-            git push origin HEAD:${BRANCH}
+            git push --force-with-lease origin HEAD:${BRANCH}
           else
             echo "No IR/parity artifact changes to commit"
           fi
