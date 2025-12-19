@@ -19,6 +19,9 @@ const {
   restoreEnv,
 } = require("./test-utils");
 
+// Constants matching the implementation in context_pack.js
+const EXCERPT_LIMIT = 2000; // Maximum bytes for instruction file excerpt
+
 (function testCollectMcpEndpointsEmpty() {
   const originalEnv = { ...process.env };
   
@@ -239,14 +242,13 @@ const {
     fs.mkdirSync(testDir, { recursive: true });
     
     // Create a large file (> excerpt limit)
-    const EXCERPT_LIMIT = 2000;
-    const LARGE_FILE_SIZE = 3000;
+    const LARGE_FILE_SIZE = EXCERPT_LIMIT + 1000;
     const largeContent = "A".repeat(LARGE_FILE_SIZE);
     fs.writeFileSync(path.join(testDir, "large.md"), largeContent);
     
     const result = loadInstructions(testDir, "large.md", "fallback.md");
     
-    assert.strictEqual(result.excerpt.length, EXCERPT_LIMIT, "excerpt should be truncated to 2000 bytes");
+    assert.strictEqual(result.excerpt.length, EXCERPT_LIMIT, `excerpt should be truncated to ${EXCERPT_LIMIT} bytes`);
     assert.strictEqual(result.bytes, LARGE_FILE_SIZE, "bytes should reflect full content");
     
   } finally {
