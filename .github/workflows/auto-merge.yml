@@ -2,7 +2,7 @@ name: auto-merge-on-green
 
 on:
   workflow_run:
-    workflows: ["matrix-audit"]
+    workflows: ["Parity and IR Gates"]
     types: [completed]
 
 permissions:
@@ -19,30 +19,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            // Helper function to extract error message from various error formats
-            function extractErrorMessage(err) {
-              if (typeof err === 'string') {
-                return err;
-              }
-              if (err && typeof err === 'object') {
-                if (err.message) {
-                  return err.message;
-                }
-                if (Array.isArray(err.errors) && err.errors[0] && err.errors[0].message) {
-                  return err.errors[0].message;
-                }
-                try {
-                  return JSON.stringify(err);
-                } catch (jsonErr) {
-                  return String(err);
-                }
-              }
-              if (err != null) {
-                return String(err);
-              }
-              return 'Unknown error';
-            }
-
             const run = context.payload.workflow_run;
             const pr = (run.pull_requests || [])[0];
             if (!pr) {
@@ -69,33 +45,9 @@ jobs:
               pull_number: prNumber,
               per_page: 100,
             });
-            // Determine the latest review per reviewer, then check approvals based on those.
-            const latestReviewsByUser = new Map();
-            for (const review of reviews) {
-              const user = review.user || {};
-              if (!review.submitted_at) continue;
-              const key = user.id ?? user.login;
-              if (!key) continue;
-              const existing = latestReviewsByUser.get(key);
-              if (!existing) {
-                latestReviewsByUser.set(key, review);
-                continue;
-              }
-              const existingTime = existing.submitted_at ? Date.parse(existing.submitted_at) : 0;
-              const reviewTime = review.submitted_at ? Date.parse(review.submitted_at) : 0;
-              if (reviewTime >= existingTime) {
-                latestReviewsByUser.set(key, review);
-              }
-            }
-            const latestReviews = Array.from(latestReviewsByUser.values());
-            const hasApproval = latestReviews.some((r) => r.state === 'APPROVED');
-            const hasChangesRequested = latestReviews.some((r) => r.state === 'CHANGES_REQUESTED');
-            if (!hasApproval) {
+            const approved = reviews.some((r) => r.state === 'APPROVED');
+            if (!approved) {
               core.info('No approvals yet; skipping');
-              return;
-            }
-            if (hasChangesRequested) {
-              core.info('Changes requested; skipping auto-merge');
               return;
             }
             if (prData.auto_merge) {
@@ -116,6 +68,18 @@ jobs:
               );
               core.info(`Auto-merge enabled for PR #${prNumber}`);
             } catch (err) {
-              const errorMessage = extractErrorMessage(err);
-              core.warning(`Failed to enable auto-merge for PR #${prNumber}: ${errorMessage}`);
+              const message = err && err.message ? err.message : String(err);
+              core.warning(`Failed to enable auto-merge for PR #${prNumber}: ${message}`);
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: [
+                  `⚠️ Failed to enable auto-merge for this pull request automatically.`,
+                  ``,
+                  `Error: ${message}`,
+                  ``,
+                  `Please investigate and, if appropriate, enable auto-merge manually or merge this PR by hand.`
+                ].join('\n'),
+              });
             }
