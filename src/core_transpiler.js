@@ -159,16 +159,40 @@ class CoreTranspiler extends EventEmitter {
                 return node.raw !== undefined ? node.raw : JSON.stringify(node.value);
 
             case 'VariableDeclaration': {
-                const declarations = node.declarations
-                    .map(decl => this.generateLuaFromAST(decl))
-                    .filter(Boolean);
-                if (!declarations.length) {
-                    return '';
+                // Handle destructuring specially
+                const hasDestructuring = node.declarations.some(decl => 
+                    decl.id.type === 'ArrayPattern' || decl.id.type === 'ObjectPattern'
+                );
+                
+                if (hasDestructuring) {
+                    // Generate each declaration as a separate statement
+                    const statements = node.declarations
+                        .map(decl => {
+                            if (decl.id.type === 'ArrayPattern') {
+                                return this.generateArrayDestructuring(decl, node.kind);
+                            } else {
+                                const id = this.generateLuaFromAST(decl.id);
+                                const init = decl.init ? this.generateLuaFromAST(decl.init) : 'nil';
+                                return `local ${id} = ${init}`;
+                            }
+                        })
+                        .filter(Boolean);
+                    return statements.join('\n');
+                } else {
+                    // Regular declarations
+                    const declarations = node.declarations
+                        .map(decl => this.generateLuaFromAST(decl))
+                        .filter(Boolean);
+                    if (!declarations.length) {
+                        return '';
+                    }
+                    return `local ${declarations.join(', ')}`;
                 }
-                return `local ${declarations.join(', ')}`;
             }
 
             case 'VariableDeclarator': {
+                // Regular variable declarator (non-destructuring)
+                // Destructuring is handled in VariableDeclaration case
                 const id = this.generateLuaFromAST(node.id);
                 const init = node.init ? this.generateLuaFromAST(node.init) : 'nil';
                 return `${id} = ${init}`;
@@ -296,6 +320,20 @@ class CoreTranspiler extends EventEmitter {
             case 'EmptyStatement':
                 return '';
 
+            case 'ArrayPattern': {
+                // ArrayPattern represents destructuring: let [a, b, ...rest] = arr
+                // We need to generate variable names for each element
+                const elements = node.elements || [];
+                return elements.map(el => el ? this.generateLuaFromAST(el) : '_').join(', ');
+            }
+
+            case 'RestElement': {
+                // RestElement represents the ...rest part in destructuring
+                // We'll handle this specially in VariableDeclarator
+                const arg = this.generateLuaFromAST(node.argument);
+                return arg;
+            }
+
             default:
                 throw new Error(`Unsupported AST node type: ${node.type}`);
         }
@@ -308,6 +346,55 @@ class CoreTranspiler extends EventEmitter {
     createTempVar(prefix = '__temp') {
         this.tempVarCounter += 1;
         return `${prefix}${this.tempVarCounter}`;
+    }
+
+    generateArrayDestructuring(declaratorNode, kind = 'let') {
+        // Array destructuring: let [a, ...rest] = arr
+        const elements = declaratorNode.id.elements || [];
+        const init = declaratorNode.init ? this.generateLuaFromAST(declaratorNode.init) : 'nil';
+        
+        // Find where the rest element is (if any)
+        const restIndex = elements.findIndex(el => el && el.type === 'RestElement');
+        const hasRest = restIndex !== -1;
+        
+        const unpackFunc = this.options.target === 'lua5.1' ? 'unpack' : 'table.unpack';
+        
+        if (hasRest) {
+            // Handle rest element separately
+            const regularElements = elements.slice(0, restIndex);
+            const restElement = elements[restIndex];
+            
+            // Generate code for regular elements and rest
+            const regularVars = regularElements.map(el => 
+                el ? this.generateLuaFromAST(el) : '_'
+            );
+            const restVar = this.generateLuaFromAST(restElement.argument);
+            
+            const statements = [];
+            
+            if (regularVars.length > 0) {
+                // Declare regular variables
+                statements.push(`local ${regularVars.join(', ')}`);
+                // Extract regular elements
+                statements.push(`${regularVars.join(', ')} = ${unpackFunc}(${init}, 1, ${regularVars.length})`);
+                // Declare and extract rest elements
+                statements.push(`local ${restVar} = {${unpackFunc}(${init}, ${regularVars.length + 1})}`);
+            } else {
+                // Only rest element
+                statements.push(`local ${restVar} = {${unpackFunc}(${init})}`);
+            }
+            
+            return statements.join('\n');
+        } else {
+            // No rest element, simple destructuring
+            const vars = elements.map(el => 
+                el ? this.generateLuaFromAST(el) : '_'
+            );
+            const statements = [];
+            statements.push(`local ${vars.join(', ')}`);
+            statements.push(`${vars.join(', ')} = ${unpackFunc}(${init})`);
+            return statements.join('\n');
+        }
     }
 
     indentCode(code, level = 1) {
