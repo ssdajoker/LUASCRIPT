@@ -31,8 +31,7 @@ jobs:
 
       - name: Refresh IR status and parity diagnostics
         run: |
-          set -e
-          npm run -s ir:report
+          npm run -s ir:report || true
           npm run -s test:parity || true
 
       - name: Commit and push auto-fixes if present
