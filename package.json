@@ -9,6 +9,7 @@
     "test:all": "npm test && npm run test:edge && npm run test:enhanced && npm run test:legacy && npm run test:parity",
     "test:phase1": "node test/test_perfect_parser_phase1.js && node test/test_perfect_parser_phase1_negative.js",
     "test:smoke": "node scripts/smoke_ci.js",
+    "harness": "node tests/ir/harness.test.js",
     "test:legacy": "node test/test_unified_system.js all",
     "test:legacy:parser": "node test/legacy/parser.suite.js",
     "test:legacy:runtime": "node test/legacy/runtime.suite.js",
@@ -41,7 +42,17 @@
     "test:normalizer": "node tests/ir/normalizer.smoke.js",
     "test:determinism": "node tests/ir/determinism.test.js",
     "ir:emit:goldens": "node tests/emitter/emit_from_goldens.js",
-    "test:edge": "node test/test_edge_cases_comprehensive.js"
+    "test:edge": "node test/test_edge_cases_comprehensive.js",
+    "codex:poll": "node scripts/codex-work-consumer.js",
+    "codex:poll:once": "CODEX_ONE_SHOT=1 node scripts/codex-work-consumer.js",
+    "codex:status": "cat .codex/state.json 2>/dev/null || echo 'No active Codex work'",
+    "codex:logs": "tail -50 .codex/codex.log 2>/dev/null || echo 'No Codex logs'",
+    "codex:reset": "rm -f .codex/state.json .codex/telemetry.jsonl && echo '✅ Codex state reset'",
+    "codex:pr-status": "gh pr list --label ready-for-review --state open",
+    "sync-status": "gh run list --workflow gemini-pr-review.yml --workflow codex-test-gates.yml --limit 10 | head -20",
+    "coordination:status": "npm run -s sync-status && echo '' && npm run -s codex:status",
+    "copilot:context": "node scripts/context_pack.js",
+    "codex:validate:local": "npm run harness && npm run ir:validate:all && npm run test:parity"
   },
   "keywords": [
     "luascript",
@@ -67,8 +78,9 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
-    "acorn": "^8.15.0",
-    "luaparse": "^0.3.1"
+    "@types/esprima": "^4.0.6",
+    "esprima": "^4.0.1",
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",
@@ -147,9 +159,5 @@
       "performance_tools": "Profiling, Optimization, GPU Acceleration",
       "agentic_ide": "AI-powered development environment"
     }
-  },
-  "dependencies": {
-    "@types/esprima": "^4.0.6",
-    "esprima": "^4.0.1"
   }
 }

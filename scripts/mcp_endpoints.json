@@ -1,0 +1,5 @@
+{
+  "MCP_DOC_INDEX_ENDPOINT": "http://localhost:8787/doc-index/search",
+  "MCP_FLAKE_DB_ENDPOINT": "http://localhost:8787/flake-db/flakes",
+  "MCP_IR_SCHEMA_ENDPOINT": "http://localhost:8787/ir-schema"
+}

@@ -22,5 +22,6 @@ if (!result.ok) {
   console.error("IR validation failed:\n", result.errors.join("\n"));
   process.exitCode = 1;
 } else {
-  console.log("IR validation successful. CFG count:", Object.keys(ir.controlFlowGraphs).length);
+  const cfgs = ir.module.metadata.controlFlowGraphs || {};
+  console.log("IR validation successful. CFG count:", Object.keys(cfgs).length);
 }

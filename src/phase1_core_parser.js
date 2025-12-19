@@ -126,15 +126,17 @@ class LuaScriptParser {
      * @private
      */
     parseStatement() {
+        console.log('Parsing statement, current token:', this.peek());
         try {
             if (this.check('KEYWORD')) {
                 const firstKeywordToken = this.peek();
-                const nextToken = this.tokens[this.current + 1];
-
-                if (firstKeywordToken.value === 'async' && nextToken && nextToken.type === 'KEYWORD' && nextToken.value === 'function') {
-                    this.advance(); // Consume 'async'
-                    this.advance(); // Consume 'function'
-                    return this.parseFunctionDeclaration(true);
+                if (firstKeywordToken.value === 'async') {
+                    const nextToken = this.tokens[this.current + 1];
+                    if (nextToken && nextToken.type === 'KEYWORD' && nextToken.value === 'function') {
+                        this.advance(); // Consume 'async'
+                        this.advance(); // Consume 'function'
+                        return this.parseFunctionDeclaration(true);
+                    }
                 }
 
                 this.advance(); // Consume the current keyword
@@ -1259,3 +1261,4 @@ class LuaScriptParser {
 }
 
 module.exports = { LuaScriptParser };
+# Test fix

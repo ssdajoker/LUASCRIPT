@@ -1,0 +1,218 @@
+name: Codex Test Gates
+
+# Trigger on Codex feature branch push (codex/fix-*)
+
+on:
+  push:
+    branches:
+      - "codex/fix-*"
+      - "feature/codex-*"
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: read
+  checks: write
+
+jobs:
+  test_gates:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.4 luajit python3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run harness tests
+        id: harness
+        continue-on-error: true
+        run: |
+          npm run harness 2>&1 | tee harness-output.log
+          if [ ${PIPESTATUS[0]} -eq 0 ]; then
+            echo "result=PASS" >> $GITHUB_OUTPUT
+          else
+            echo "result=FAIL" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run IR validation
+        id: ir_validation
+        continue-on-error: true
+        run: |
+          npm run ir:validate:all 2>&1 | tee ir-validation-output.log
+          if [ ${PIPESTATUS[0]} -eq 0 ]; then
+            echo "result=PASS" >> $GITHUB_OUTPUT
+          else
+            echo "result=FAIL" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run parity tests
+        id: parity
+        continue-on-error: true
+        run: |
+          npm run test:parity 2>&1 | tee parity-output.log
+          if [ ${PIPESTATUS[0]} -eq 0 ]; then
+            echo "result=PASS" >> $GITHUB_OUTPUT
+          else
+            echo "result=FAIL" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Determine PR action
+        id: pr_action
+        run: |
+          HARNESS=${{ steps.harness.outputs.result }}
+          IR_VALIDATION=${{ steps.ir_validation.outputs.result }}
+          PARITY=${{ steps.parity.outputs.result }}
+          
+          if [ "${HARNESS}" = "PASS" ] && \
+             [ "${IR_VALIDATION}" = "PASS" ] && \
+             [ "${PARITY}" = "PASS" ]; then
+            echo "action=create_pr_ready" >> $GITHUB_OUTPUT
+            echo "all_pass=true" >> $GITHUB_OUTPUT
+          else
+            echo "action=create_pr_pending" >> $GITHUB_OUTPUT
+            echo "all_pass=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract branch name
+        id: branch
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          ISSUE_NUMBER=$(echo ${BRANCH_NAME} | sed 's/.*-//')
+          echo "branch=${BRANCH_NAME}" >> $GITHUB_OUTPUT
+          echo "issue_number=${ISSUE_NUMBER}" >> $GITHUB_OUTPUT
+
+      - name: Create or update PR
+        id: create_pr
+        run: |
+          BRANCH_NAME=${{ steps.branch.outputs.branch }}
+          ISSUE_NUMBER=${{ steps.branch.outputs.issue_number }}
+          
+          # Check if PR already exists
+          EXISTING_PR=$(gh pr list \
+            --head ${BRANCH_NAME} \
+            --state open \
+            --json number \
+            --jq '.[0].number' || echo "")
+          
+          if [ -n "${EXISTING_PR}" ]; then
+            echo "PR already exists: #${EXISTING_PR}"
+            echo "pr_number=${EXISTING_PR}" >> $GITHUB_OUTPUT
+            echo "pr_created=false" >> $GITHUB_OUTPUT
+          else
+            # Create new PR
+            PR_TITLE="fix(#${ISSUE_NUMBER}): Codex implementation"
+            PR_BODY="🤖 **Codex PR** — Automated implementation and testing
+
+Branch: \`${BRANCH_NAME}\`
+Issue: #${ISSUE_NUMBER}
+
+**Validation Status**:
+- Harness: ${{ steps.harness.outputs.result }}
+- IR Validation: ${{ steps.ir_validation.outputs.result }}
+- Parity: ${{ steps.parity.outputs.result }}
+
+Waiting for Gemini review agent to approve and merge."
+            
+            NEW_PR=$(gh pr create \
+              --base main \
+              --head ${BRANCH_NAME} \
+              --title "${PR_TITLE}" \
+              --body "${PR_BODY}" \
+              --json number \
+              --jq '.number' || echo "")
+            
+            echo "pr_number=${NEW_PR}" >> $GITHUB_OUTPUT
+            echo "pr_created=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Label PR based on test results
+        if: steps.create_pr.outputs.pr_number
+        run: |
+          PR_NUMBER=${{ steps.create_pr.outputs.pr_number }}
+          ALL_PASS=${{ steps.pr_action.outputs.all_pass }}
+          
+          if [ "${ALL_PASS}" = "true" ]; then
+            # Add ready-for-review label
+            gh pr edit ${PR_NUMBER} \
+              --add-label "ready-for-review" \
+              --add-label "codex-validated"
+            
+            echo "✅ PR #${PR_NUMBER} labeled: ready-for-review"
+          else
+            # Add pending label
+            gh pr edit ${PR_NUMBER} \
+              --add-label "codex-pending" \
+              --add-label "test-failure"
+            
+            echo "⏳ PR #${PR_NUMBER} labeled: codex-pending"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Post detailed test results
+        if: steps.create_pr.outputs.pr_number
+        run: |
+          PR_NUMBER=${{ steps.create_pr.outputs.pr_number }}
+          
+          RESULTS_BODY="### 🧪 Test Results
+
+#### Harness
+\`\`\`
+Result: ${{ steps.harness.outputs.result }}
+\`\`\`
+
+#### IR Validation
+\`\`\`
+Result: ${{ steps.ir_validation.outputs.result }}
+\`\`\`
+
+#### Parity Tests
+\`\`\`
+Result: ${{ steps.parity.outputs.result }}
+\`\`\`
+
+---
+*Generated by Codex Test Gates workflow*"
+          
+          # Check if comment already exists
+          EXISTING=$(gh pr view ${PR_NUMBER} --json comments --jq '.comments[].body | select(contains("Test Results"))' | head -1)
+          
+          if [ -z "${EXISTING}" ]; then
+            gh pr comment ${PR_NUMBER} --body "${RESULTS_BODY}"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.run_id }}
+          path: |
+            harness-output.log
+            ir-validation-output.log
+            parity-output.log
+            reports/
+          retention-days: 30
+
+      - name: Fail job if tests failed
+        if: steps.pr_action.outputs.all_pass != 'true'
+        run: |
+          echo "❌ Test gates failed. PR labeled as pending review."
+          exit 1

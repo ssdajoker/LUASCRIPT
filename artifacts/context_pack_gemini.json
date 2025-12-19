@@ -1,0 +1,208 @@
+{
+  "generatedAt": "2025-12-18T16:37:03.111Z",
+  "run": {
+    "gitSha": null,
+    "runId": null,
+    "runUrl": null
+  },
+  "instructions": {
+    "path": "gemini-instructions.md",
+    "exists": true,
+    "bytes": 3011,
+    "excerpt": "# Gemini Instructions\r\n\r\n## Goals\r\n- Accelerate LuaScript changes with safe, minimal diffs; prefer deterministic IR/Lua output.\r\n- Follow existing test signals (harness, parity, IR validate) and keep artifacts in `artifacts/`.\r\n\r\n## Style and Practices\r\n- Keep changes small and reversible; add/adjust tests alongside behavior changes.\r\n- Favor explicit data flow and early validation; avoid hidden globals.\r\n- Surface context pack usage: read `context_pack_gemini.json` for MCP endpoints and docs.\r\n\r\n## Work Queue Protocol (Async Coordination)\r\n\r\n### Polling for Tasks\r\nCheck MCP work queue periodically for test failures submitted by Copilot:\r\n```bash\r\ncurl http://localhost:8787/work-queue?action=list&assignee=gemini\r\n```\r\n\r\n### Claiming High-Priority Tasks\r\n1. **Identify task** from work queue list (check `priority: high` first)\r\n2. **Claim atomically** to prevent conflicts:\r\n   ```bash\r\n   curl \"http://localhost:8787/work-queue?action=claim&id=1&agent=gemini\"\r\n   ```\r\n3. **Read context** from task payload (error message, stack trace, test case, artifacts)\r\n\r\n### Fix and Validate\r\n1. **Implement fix** based on task context:\r\n   - Parse errors → update parser (src/phase1_core_parser.js)\r\n   - Emitter errors → add emit method (src/ir/emitter.js)\r\n   - Lowerer errors → add lowering logic (src/ir/lowerer.js)\r\n2. **Run tests** to verify fix: `npm run harness`\r\n3. **Update artifacts** if needed (context packs, golden fixtures with approval)\r\n\r\n### Mark Complete\r\nAfter successful fix and test validation:\r\n```bash\r\ncurl \"http://localhost:8787/work-queue?action=complete&id=1&result=fixed&agent=gemini\"\r\n```\r\n\r\n### Check Sync Status Before Starting\r\nAvoid duplicate work by checking if Copilot is actively testing:\r\n```bash\r\ncurl http://localhost:8787/sync-status\r\n```\r\nIf `copilotActive: true`, focus on pending work items. If false, can expand test coverage.\r\n\r\n### Priority Order\r\n1. **High**: Test failures blocking harness (parse/emitter/lowerer errors)\r\n2. **Medium**: Missing feat"
+  },
+  "geminiInstructions": {
+    "path": "gemini-instructions.md",
+    "exists": true,
+    "bytes": 3011,
+    "excerpt": "# Gemini Instructions\r\n\r\n## Goals\r\n- Accelerate LuaScript changes with safe, minimal diffs; prefer deterministic IR/Lua output.\r\n- Follow existing test signals (harness, parity, IR validate) and keep artifacts in `artifacts/`.\r\n\r\n## Style and Practices\r\n- Keep changes small and reversible; add/adjust tests alongside behavior changes.\r\n- Favor explicit data flow and early validation; avoid hidden globals.\r\n- Surface context pack usage: read `context_pack_gemini.json` for MCP endpoints and docs.\r\n\r\n## Work Queue Protocol (Async Coordination)\r\n\r\n### Polling for Tasks\r\nCheck MCP work queue periodically for test failures submitted by Copilot:\r\n```bash\r\ncurl http://localhost:8787/work-queue?action=list&assignee=gemini\r\n```\r\n\r\n### Claiming High-Priority Tasks\r\n1. **Identify task** from work queue list (check `priority: high` first)\r\n2. **Claim atomically** to prevent conflicts:\r\n   ```bash\r\n   curl \"http://localhost:8787/work-queue?action=claim&id=1&agent=gemini\"\r\n   ```\r\n3. **Read context** from task payload (error message, stack trace, test case, artifacts)\r\n\r\n### Fix and Validate\r\n1. **Implement fix** based on task context:\r\n   - Parse errors → update parser (src/phase1_core_parser.js)\r\n   - Emitter errors → add emit method (src/ir/emitter.js)\r\n   - Lowerer errors → add lowering logic (src/ir/lowerer.js)\r\n2. **Run tests** to verify fix: `npm run harness`\r\n3. **Update artifacts** if needed (context packs, golden fixtures with approval)\r\n\r\n### Mark Complete\r\nAfter successful fix and test validation:\r\n```bash\r\ncurl \"http://localhost:8787/work-queue?action=complete&id=1&result=fixed&agent=gemini\"\r\n```\r\n\r\n### Check Sync Status Before Starting\r\nAvoid duplicate work by checking if Copilot is actively testing:\r\n```bash\r\ncurl http://localhost:8787/sync-status\r\n```\r\nIf `copilotActive: true`, focus on pending work items. If false, can expand test coverage.\r\n\r\n### Priority Order\r\n1. **High**: Test failures blocking harness (parse/emitter/lowerer errors)\r\n2. **Medium**: Missing feat"
+  },
+  "coordination": {
+    "path": "assistant_coordination.md",
+    "exists": true,
+    "bytes": 2875,
+    "excerpt": "# Assistant Coordination (Copilot + Gemini)\r\n\r\n## Role Definition\r\n\r\n- **Copilot**: Test expander and breadcrumb creator\r\n  - Extends test coverage by uncommenting/adding harness and parity cases\r\n  - Runs `npm run harness` to validate IR pipeline\r\n  - Submits test failures as work items to MCP work queue (automatic in harness)\r\n  - Checks `/sync-status` before expanding to avoid conflicts\r\n  \r\n- **Gemini**: Failure resolver and implementation specialist\r\n  - Polls `/work-queue` for high-priority tasks (parse/emit/lower errors)\r\n  - Claims work items atomically to prevent conflicts\r\n  - Implements fixes in parser/lowerer/emitter based on work item context\r\n  - Marks work complete after validation with `npm run harness`\r\n\r\n## Async Workflow via MCP Work Queue\r\n\r\n### Copilot's Workflow\r\n1. **Expand coverage**: Uncomment/add test cases in harness or parity suite\r\n2. **Run tests**: `npm run harness` (auto-submits failures to `/submit-work`)\r\n3. **Check status**: `curl http://localhost:8787/sync-status` to see pending work\r\n4. **Wait if needed**: If Gemini is active, let work items be completed\r\n5. **Validate fixes**: Re-run harness after Gemini marks work complete\r\n6. **Iterate**: Continue expanding coverage or switch to next feature\r\n\r\n### Gemini's Workflow\r\n1. **Check status**: `curl http://localhost:8787/sync-status` to see activity\r\n2. **List tasks**: `curl http://localhost:8787/work-queue?action=list&assignee=gemini`\r\n3. **Claim high-priority**: `curl \"http://localhost:8787/work-queue?action=claim&id=X&agent=gemini\"`\r\n4. **Implement fix**: Update parser/lowerer/emitter based on context\r\n5. **Validate**: Run `npm run harness` to verify fix\r\n6. **Mark complete**: `curl \"http://localhost:8787/work-queue?action=complete&id=X&result=fixed&agent=gemini\"`\r\n7. **Repeat**: Poll for next task\r\n\r\n### Work Item Priority\r\n- **High**: Parse errors, missing IR nodes, emitter crashes (blocking harness)\r\n- **Medium**: Semantic errors, missing features, optimization failures\r\n- **Lo"
+  },
+  "mcp": {
+    "keys": [
+      "MCP_DOC_INDEX_ENDPOINT",
+      "MCP_FLAKE_DB_ENDPOINT",
+      "MCP_IR_SCHEMA_ENDPOINT"
+    ],
+    "entries": [
+      {
+        "key": "MCP_DOC_INDEX_ENDPOINT",
+        "url": ""
+      },
+      {
+        "key": "MCP_FLAKE_DB_ENDPOINT",
+        "url": ""
+      },
+      {
+        "key": "MCP_IR_SCHEMA_ENDPOINT",
+        "url": ""
+      }
+    ],
+    "endpoints": {},
+    "envString": "{}"
+  },
+  "harness": {
+    "summary": {
+      "cases": 28,
+      "slowest": {
+        "name": "optional chaining + nullish coalesce",
+        "durationMs": 16.693,
+        "bytes": 163
+      }
+    },
+    "cases": [
+      {
+        "name": "optional chaining + nullish coalesce",
+        "durationMs": 16.693,
+        "bytes": 163
+      },
+      {
+        "name": "nullish assignment",
+        "durationMs": 2.1437,
+        "bytes": 95
+      },
+      {
+        "name": "for-of emission",
+        "durationMs": 6.0982,
+        "bytes": 140
+      },
+      {
+        "name": "for-of array literal",
+        "durationMs": 3.5564,
+        "bytes": 135
+      },
+      {
+        "name": "template literal basic",
+        "durationMs": 3.8623,
+        "bytes": 88
+      },
+      {
+        "name": "array destructuring",
+        "durationMs": 4.6958,
+        "bytes": 112
+      },
+      {
+        "name": "spread in array literal",
+        "durationMs": 2.501,
+        "bytes": 40
+      },
+      {
+        "name": "rest in function params",
+        "durationMs": 2.5542,
+        "bytes": 44
+      },
+      {
+        "name": "arrow function expression body",
+        "durationMs": 1.4829,
+        "bytes": 43
+      },
+      {
+        "name": "arrow function block body",
+        "durationMs": 1.3943,
+        "bytes": 63
+      },
+      {
+        "name": "object property shorthand",
+        "durationMs": 2.1641,
+        "bytes": 41
+      },
+      {
+        "name": "computed property names",
+        "durationMs": 1.0569,
+        "bytes": 40
+      },
+      {
+        "name": "class with methods",
+        "durationMs": 2.3836,
+        "bytes": 173
+      },
+      {
+        "name": "try-catch block",
+        "durationMs": 5.2166,
+        "bytes": 229
+      },
+      {
+        "name": "switch statement",
+        "durationMs": 3.9954,
+        "bytes": 147
+      },
+      {
+        "name": "binary operators",
+        "durationMs": 0.8519,
+        "bytes": 28
+      },
+      {
+        "name": "logical operators",
+        "durationMs": 0.9361,
+        "bytes": 26
+      },
+      {
+        "name": "unary operators",
+        "durationMs": 1.3668,
+        "bytes": 33
+      },
+      {
+        "name": "nested function calls",
+        "durationMs": 0.8126,
+        "bytes": 38
+      },
+      {
+        "name": "object member access",
+        "durationMs": 0.5639,
+        "bytes": 27
+      },
+      {
+        "name": "array element access",
+        "durationMs": 0.5258,
+        "bytes": 22
+      },
+      {
+        "name": "while loop",
+        "durationMs": 1.4667,
+        "bytes": 101
+      },
+      {
+        "name": "do-while loop",
+        "durationMs": 1.6466,
+        "bytes": 107
+      },
+      {
+        "name": "continue statement",
+        "durationMs": 1.916,
+        "bytes": 60
+      },
+      {
+        "name": "break statement",
+        "durationMs": 0.887,
+        "bytes": 52
+      },
+      {
+        "name": "async function declaration",
+        "durationMs": 0.918,
+        "bytes": 100
+      },
+      {
+        "name": "await expression",
+        "durationMs": 1.7125,
+        "bytes": 122
+      },
+      {
+        "name": "class extends",
+        "durationMs": 2.2461,
+        "bytes": 118
+      }
+    ]
+  },
+  "target": "gemini",
+  "copilotInstructions": {
+    "path": "copilot-instructions.md",
+    "exists": true,
+    "bytes": 3919,
+    "excerpt": "# Copilot Instructions\r\n\r\n## Goals\r\n- Keep IR pipeline deterministic, fast, and schema-aligned.\r\n- Prefer edits that improve test visibility (harness, parity, validation) and agent/automation ergonomics.\r\n- Default to non-breaking changes; guard new behavior with tests or feature flags when possible.\r\n\r\n## Style and Practices\r\n- JavaScript/TypeScript: favor small pure functions, explicit return values, and early validation.\r\n- Lua emission: keep output minimal and stable; avoid unnecessary temporaries.\r\n- Workflows: keep jobs additive/advisory unless explicitly required; surface artifacts in step summaries.\r\n- Comments: only for intent or tricky code paths.\r\n\r\n## Preferred APIs/Modules\r\n- IR pipeline: use `parseAndLower`, `validateIR`, and `emitLuaFromIR` from `src/ir` helpers.\r\n- Context packs: reuse `scripts/context_pack.js` helpers for instructions/endpoints/artifacts.\r\n- Tests: extend `tests/ir/harness.test.js` or parity suites for IR behavior.\r\n\r\n## Do Not Touch (without explicit approval)\r\n- `src/ir/pipeline.js`, `src/ir/emitter.js`, and IR schema definitions except when tests demand and scope is agreed.\r\n- Historical reports in `reports/` and golden fixtures in `tests/golden_ir/` unless regenerating with the approved workflow.\r\n- Release metadata in `runtime_runtime.json` and `luascript` manifest blocks in `package.json`.\r\n\r\n## Breadcrumb Trail Protocol (Async Coordination)\r\n\r\n### When to Submit Work Items\r\nAfter running tests, submit failures as work items for Gemini to handle:\r\n1. **After harness runs** with failures (automatic in harness.test.js)\r\n2. **After expanding parity suite** if new tests reveal gaps\r\n3. **After discovering missing features** via commented-out test analysis\r\n\r\n### Work Submission Context\r\nProvide rich context for effective fixes:\r\n- **Error message** and stack trace\r\n- **Test case name** and source snippet\r\n- **Expected vs actual** behavior description\r\n- **Priority classification**:\r\n  - `high`: Parse errors, missing IR node types,"
+  }
+}

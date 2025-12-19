@@ -282,46 +282,8 @@ class IRValidator {
         }
         return true;
     }
-
-    validateLiteral(node) {
-        // Literals are always valid
-        return true;
-    }
-
-    validateAssignment(node) {
-        if (!node.operator) {
-            throw new ValidationError('Assignment must have an operator', node);
-        }
-        this.visitNode(node.left);
-        this.visitNode(node.right);
-        return true;
-    }
-
-    validateConditional(node) {
-        this.visitNode(node.condition);
-        this.visitNode(node.consequent);
-        this.visitNode(node.alternate);
-        return true;
-    }
-
-    /**
-     * Add a warning
-     */
-    warn(message, node) {
-        this.warnings.push({ message, node });
-    }
-
-    /**
-     * Add an error
-     */
-    error(message, node) {
-        this.errors.push(new ValidationError(message, node));
-    }
 }
 
-module.exports = {
-    IRValidator,
-    ValidationError
 "use strict";
 
 const { encodeBalancedTernary } = require("./idGenerator");
@@ -388,11 +350,13 @@ function validateIR(ir) {
     "FunctionDeclaration",
     "FunctionExpression",
     "VariableDeclaration",
+    "VariableDeclarator",
     "BlockStatement",
     "ExpressionStatement",
     "ReturnStatement",
     "IfStatement",
     "SwitchStatement",
+    "SwitchCase",
     "ForStatement",
     "ForOfStatement",
     "WhileStatement",
@@ -411,7 +375,9 @@ function validateIR(ir) {
     "ArrayPattern",
     "RestElement",
     "AssignmentPattern",
-    "ProgramComment"
+    "ProgramComment",
+    "Parameter",
+    "UnaryExpression"
   ]);
 
   // Validate nodes
@@ -442,13 +408,18 @@ function validateIR(ir) {
       errors.push(`Node ${nodeId} FunctionDeclaration meta.cfg must be an object when present`);
     }
 
-    // VariableDeclaration: declarations[].kind should match declarationKind when used
+    // VariableDeclaration: declarations[] should be VariableDeclarator nodes
     if (node.kind === "VariableDeclaration") {
       const declKind = node.declarationKind || null;
       if (Array.isArray(node.declarations)) {
         node.declarations.forEach((d, i) => {
-          if (d && d.kind && declKind && d.kind !== declKind) {
-            errors.push(`VariableDeclaration ${nodeId} declarations[${i}].kind (${d.kind}) does not match declarationKind (${declKind})`);
+          const declNode = nodes[d.id || d];
+          if (declNode && declNode.kind && declNode.kind !== "VariableDeclarator") {
+            errors.push(`VariableDeclaration ${nodeId} declarations[${i}].kind should be VariableDeclarator, got ${declNode.kind}`);
+          }
+          // Check varKind matches parent declarationKind if present
+          if (declNode && declNode.varKind && declKind && declNode.varKind !== declKind) {
+            errors.push(`VariableDeclaration ${nodeId} declarations[${i}].varKind (${declNode.varKind}) does not match declarationKind (${declKind})`);
           }
         });
       }

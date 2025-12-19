@@ -216,12 +216,30 @@ class IREmitter {
       })
       .join(", ");
 
-    const body = this.emitBlockById(node.body, context, {
-      indentLevel: context.indentLevel + 1,
-    });
-
     const header = `${this.currentIndent(context)}local function ${name}(${params})`;
-    return `${header}${NEWLINE}${body}${NEWLINE}${this.currentIndent(context)}end`;
+    let emittedBody;
+
+    if (node.async) {
+      // Emit the body for the coroutine, which is one level deeper than the function itself
+      const coroutineBody = this.emitBlockById(node.body, context, {
+        indentLevel: (context.indentLevel || 0) + 2, // Body is inside coroutine function, which is inside outer function
+      });
+
+      // Assemble the coroutine wrapper
+      emittedBody = `${this.currentIndent(context, 1)}return coroutine.create(function()${NEWLINE}` +
+                    `${coroutineBody}${this.currentIndent(context, 1)}end)${NEWLINE}`; // Adjusted end indentation and removed extra NEWLINE
+    } else {
+      // Standard function body
+      emittedBody = this.emitBlockById(node.body, context, {
+        indentLevel: (context.indentLevel || 0) + 1,
+      });
+    }
+
+    return `${header}${NEWLINE}${emittedBody}${this.currentIndent(context)}end`;
+  }
+
+  currentIndent(context, offset = 0) {
+    return this.indentUnit.repeat((context.indentLevel || 0) + offset);
   }
 
   emitBlockById(blockId, parentContext, overrides = {}) {
@@ -527,8 +545,8 @@ class IREmitter {
     return factory(indent);
   }
 
-  currentIndent(context) {
-    return this.indentUnit.repeat(context.indentLevel || 0);
+  currentIndent(context, offset = 0) {
+    return this.indentUnit.repeat((context.indentLevel || 0) + offset);
   }
 }
 

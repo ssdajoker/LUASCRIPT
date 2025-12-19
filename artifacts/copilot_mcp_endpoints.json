@@ -1,0 +1,27 @@
+{
+  "keys": [
+    "MCP_DOC_INDEX_ENDPOINT",
+    "MCP_FLAKE_DB_ENDPOINT",
+    "MCP_IR_SCHEMA_ENDPOINT"
+  ],
+  "entries": [
+    {
+      "key": "MCP_DOC_INDEX_ENDPOINT",
+      "url": "http://localhost:8787/doc-index/search"
+    },
+    {
+      "key": "MCP_FLAKE_DB_ENDPOINT",
+      "url": "http://localhost:8787/flake-db/flakes"
+    },
+    {
+      "key": "MCP_IR_SCHEMA_ENDPOINT",
+      "url": "http://localhost:8787/ir-schema"
+    }
+  ],
+  "endpoints": {
+    "MCP_DOC_INDEX_ENDPOINT": "http://localhost:8787/doc-index/search",
+    "MCP_FLAKE_DB_ENDPOINT": "http://localhost:8787/flake-db/flakes",
+    "MCP_IR_SCHEMA_ENDPOINT": "http://localhost:8787/ir-schema"
+  },
+  "envString": "{\"MCP_DOC_INDEX_ENDPOINT\":\"http://localhost:8787/doc-index/search\",\"MCP_FLAKE_DB_ENDPOINT\":\"http://localhost:8787/flake-db/flakes\",\"MCP_IR_SCHEMA_ENDPOINT\":\"http://localhost:8787/ir-schema\"}"
+}
