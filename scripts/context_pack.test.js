@@ -48,7 +48,11 @@ function setupTestEnv() {
 
 function teardownTestEnv(original) {
   // Restore original working directory
-  process.chdir(original.originalCwd);
+  try {
+    process.chdir(original.originalCwd);
+  } catch (err) {
+    console.warn("Failed to restore original working directory:", err.message);
+  }
   
   // Restore environment variables
   const envKeysToCheck = Object.keys(process.env).filter(
@@ -76,8 +80,18 @@ function teardownTestEnv(original) {
   
   // Clean up test directory
   if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
+    try {
+      fs.rmSync(testDir, { recursive: true, force: true });
+    } catch (err) {
+      console.warn("Failed to clean up test directory:", err.message);
+    }
   }
+}
+
+function clearMcpEndpoints() {
+  Object.keys(process.env)
+    .filter(key => key.startsWith("MCP_") && key.endsWith("_ENDPOINT"))
+    .forEach(key => delete process.env[key]);
 }
 
 // Tests for collectMcpEndpoints
@@ -86,9 +100,7 @@ function teardownTestEnv(original) {
   
   try {
     // Clear all MCP environment variables
-    Object.keys(process.env)
-      .filter(key => key.startsWith("MCP_") && key.endsWith("_ENDPOINT"))
-      .forEach(key => delete process.env[key]);
+    clearMcpEndpoints();
     
     const result = collectMcpEndpoints();
     
