@@ -21,7 +21,7 @@ function fetchDocHints(query) {
     }
     const client = url.protocol === 'https:' ? https : http;
     return new Promise((resolve) => {
-      const req = client.get(url, { timeout: REQUEST_TIMEOUT_MS }, (res) => {
+      const req = client.get(url, (res) => {
         const chunks = [];
         res.on('data', (c) => chunks.push(c));
         res.on('end', () => {
