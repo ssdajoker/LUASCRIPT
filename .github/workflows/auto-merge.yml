@@ -19,6 +19,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            // Helper function to extract error messages from various error formats
             function extractErrorMessage(err) {
               if (typeof err === 'string') {
                 return err;
