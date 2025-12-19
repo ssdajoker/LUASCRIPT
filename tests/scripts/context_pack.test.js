@@ -4,6 +4,7 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
+const crypto = require("crypto");
 const {
   collectMcpEndpoints,
   loadInstructions,
@@ -40,7 +41,7 @@ function restoreEnv(originalEnv) {
 
 // Helper function to create temporary directory
 function createTempDir() {
-  const tmpDir = path.join(os.tmpdir(), `context_pack_test_${Date.now()}_${Math.random().toString(36).slice(2)}`);
+  const tmpDir = path.join(os.tmpdir(), `context_pack_test_${Date.now()}_${crypto.randomUUID()}`);
   fs.mkdirSync(tmpDir, { recursive: true });
   return tmpDir;
 }
@@ -87,9 +88,9 @@ function testCollectMcpEndpoints() {
 function testLoadInstructions() {
   const tmpDir = createTempDir();
   try {
-    // Test with default instructions when file doesn't exist
-    const defaultText = 'nonexistent.md';
-    let result = loadInstructions(tmpDir, 'nonexistent.md', defaultText);
+    // Test with fallback filename when file doesn't exist
+    const fallbackFilename = 'nonexistent.md';
+    let result = loadInstructions(tmpDir, 'nonexistent.md', fallbackFilename);
     assert.ok(result.path, 'Should have path property');
     assert.ok(typeof result.exists === 'boolean', 'Should have exists property');
     assert.ok(typeof result.bytes === 'number', 'Should have bytes property');
@@ -100,7 +101,7 @@ function testLoadInstructions() {
     const testFile = path.join(tmpDir, 'test_instructions.md');
     const testContent = 'Test instructions content';
     fs.writeFileSync(testFile, testContent);
-    result = loadInstructions(tmpDir, testFile, defaultText);
+    result = loadInstructions(tmpDir, testFile, fallbackFilename);
     assert.strictEqual(result.exists, true, 'Should return exists=true for existing file');
     assert.strictEqual(result.excerpt, testContent, 'Should load content from explicit path');
     assert.strictEqual(result.bytes, Buffer.byteLength(testContent, 'utf8'), 'Should report correct byte length');
@@ -286,7 +287,7 @@ function testWriteContextArtifactsDefaultOutDir() {
 }
 
 // Run all tests
-async function runTests() {
+function runTests() {
   console.log('Running context_pack.js tests...\n');
   
   try {
