@@ -6,9 +6,10 @@
   "scripts": {
     "test": "npm run test:core && npm run test:phase1 && node tests/test_memory_management.js",
     "test:enhanced": "node test/test_enhanced_transpiler.js",
-    "test:all": "npm test && npm run test:enhanced && npm run test:legacy && npm run test:parity",
+    "test:all": "npm test && npm run test:enhanced && npm run test:legacy && npm run test:parity && npm run test:scripts",
     "test:phase1": "node test/test_perfect_parser_phase1.js && node test/test_perfect_parser_phase1_negative.js",
     "test:smoke": "node scripts/smoke_ci.js",
+    "test:scripts": "node scripts/launch_gemini_mcp.test.js",
     "status:bundle": "node scripts/status_bundle.js",
     "harness": "node tests/ir/harness.test.js",
     "test:legacy": "node test/test_unified_system.js all",
