@@ -69,7 +69,7 @@ function writeContextArtifacts({ harnessSummary, outDir = path.join(process.cwd(
   const geminiInstructions = loadInstructions(process.cwd(), process.env.GEMINI_INSTRUCTIONS_PATH, GEMINI_INSTRUCTIONS);
   const coordination = loadInstructions(process.cwd(), process.env.ASSISTANT_COORD_PATH, COORDINATION_DOC);
   const mcp = collectMcpEndpoints();
-  const payload = { ...harnessSummary, mcp, instructions };
+  const copilotPayload = { ...harnessSummary, mcp, instructions };
   const contextPack = {
     generatedAt: new Date().toISOString(),
     run: runInfo,
@@ -81,7 +81,7 @@ function writeContextArtifacts({ harnessSummary, outDir = path.join(process.cwd(
   };
 
   // Copilot-oriented bundle
-  fs.writeFileSync(path.join(outDir, 'harness_results.json'), JSON.stringify(payload, null, 2));
+  fs.writeFileSync(path.join(outDir, 'harness_results.json'), JSON.stringify(copilotPayload, null, 2));
   fs.writeFileSync(path.join(outDir, 'context_pack.json'), JSON.stringify(contextPack, null, 2));
 
   // Gemini-oriented bundle (same data, different label for downstream consumers)
@@ -93,7 +93,7 @@ function writeContextArtifacts({ harnessSummary, outDir = path.join(process.cwd(
   };
   fs.writeFileSync(path.join(outDir, 'context_pack_gemini.json'), JSON.stringify(geminiPack, null, 2));
 
-  return { payload, contextPack };
+  return { copilotPayload, contextPack };
 }
 
 module.exports = {
