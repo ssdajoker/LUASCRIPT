@@ -63,35 +63,37 @@ function loadGeminiInstructions(baseDir, explicitPath) {
   return loadInstructions(baseDir, explicitPath, GEMINI_INSTRUCTIONS);
 }
 
-function writeContextArtifacts({ harnessSummary, outDir, runInfo = {} }) {
-  // Use default path if outDir is not provided or is explicitly undefined/null
-  const outputDir = outDir ?? path.join(process.cwd(), 'artifacts');
-  fs.mkdirSync(outputDir, { recursive: true });
-  const instructions = loadInstructions(process.cwd(), process.env.COPILOT_INSTRUCTIONS_PATH, DEFAULT_INSTRUCTIONS);
+function writeContextArtifacts({ harnessSummary, outDir = path.join(process.cwd(), 'artifacts'), runInfo = {} }) {
+  fs.mkdirSync(outDir, { recursive: true });
+  const copilotInstructions = loadInstructions(process.cwd(), process.env.COPILOT_INSTRUCTIONS_PATH, DEFAULT_INSTRUCTIONS);
   const geminiInstructions = loadInstructions(process.cwd(), process.env.GEMINI_INSTRUCTIONS_PATH, GEMINI_INSTRUCTIONS);
   const coordination = loadInstructions(process.cwd(), process.env.ASSISTANT_COORD_PATH, COORDINATION_DOC);
   const mcp = collectMcpEndpoints();
-  const payload = { ...harnessSummary, mcp, instructions };
+  
+  // Legacy payload format for backwards compatibility (Copilot-focused)
+  const payload = { ...harnessSummary, mcp, instructions: copilotInstructions };
+  
+  // Full context pack with all instructions types (neutral format)
   const contextPack = {
     generatedAt: new Date().toISOString(),
     run: runInfo,
-    instructions,
+    instructions: copilotInstructions,
     geminiInstructions,
     coordination,
     mcp,
     harness: harnessSummary,
   };
 
-  // Copilot-oriented bundle
-  fs.writeFileSync(path.join(outputDir, 'harness_results.json'), JSON.stringify(payload, null, 2));
-  fs.writeFileSync(path.join(outputDir, 'context_pack.json'), JSON.stringify(contextPack, null, 2));
+  // Write artifacts
+  fs.writeFileSync(path.join(outDir, 'harness_results.json'), JSON.stringify(payload, null, 2));
+  fs.writeFileSync(path.join(outDir, 'context_pack.json'), JSON.stringify(contextPack, null, 2));
 
-  // Gemini-oriented bundle (same data, different label for downstream consumers)
+  // Gemini-oriented bundle: swap instruction priorities for Gemini consumers
   const geminiPack = {
     ...contextPack,
     target: 'gemini',
     instructions: geminiInstructions,
-    copilotInstructions: instructions,
+    copilotInstructions,
   };
   fs.writeFileSync(path.join(outputDir, 'context_pack_gemini.json'), JSON.stringify(geminiPack, null, 2));
 

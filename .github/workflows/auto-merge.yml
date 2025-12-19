@@ -19,6 +19,29 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            function extractErrorMessage(err) {
+              if (typeof err === 'string') {
+                return err;
+              }
+              if (err && typeof err === 'object') {
+                if (err.message) {
+                  return err.message;
+                }
+                if (Array.isArray(err.errors) && err.errors[0] && err.errors[0].message) {
+                  return err.errors[0].message;
+                }
+                try {
+                  return JSON.stringify(err);
+                } catch (jsonErr) {
+                  return String(err);
+                }
+              }
+              if (err != null) {
+                return String(err);
+              }
+              return 'Unknown error';
+            }
+
             const run = context.payload.workflow_run;
             const pr = (run.pull_requests || [])[0];
             if (!pr) {
@@ -92,23 +115,6 @@ jobs:
               );
               core.info(`Auto-merge enabled for PR #${prNumber}`);
             } catch (err) {
-              let errorMessage = 'Unknown error';
-              if (typeof err === 'string') {
-                errorMessage = err;
-              } else if (err && typeof err === 'object') {
-                if (err.message) {
-                  errorMessage = err.message;
-                } else if (Array.isArray(err.errors) && err.errors[0] && err.errors[0].message) {
-                  errorMessage = err.errors[0].message;
-                } else {
-                  try {
-                    errorMessage = JSON.stringify(err);
-                  } catch (jsonErr) {
-                    errorMessage = String(err);
-                  }
-                }
-              } else if (err != null) {
-                errorMessage = String(err);
-              }
+              const errorMessage = extractErrorMessage(err);
               core.warning(`Failed to enable auto-merge for PR #${prNumber}: ${errorMessage}`);
             }
