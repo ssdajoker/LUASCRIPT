@@ -4,6 +4,9 @@
 
 local M = {}
 
+-- Configuration constants
+local DEFAULT_MAX_ITERATIONS = 1000
+
 -- Async operation state
 M.State = {
     PENDING = "pending",
@@ -26,37 +29,29 @@ end
 
 -- Await an async operation
 function M.await(async_op, max_iterations)
-    max_iterations = max_iterations or 1000 -- Default max iterations to prevent infinite recursion
-    local iterations = 0
+    max_iterations = max_iterations or DEFAULT_MAX_ITERATIONS
     
-    local function await_impl(op)
-        iterations = iterations + 1
-        
-        if iterations > max_iterations then
-            op.state = M.State.FAILED
-            op.error = "Maximum await iterations exceeded"
-            error("Maximum await iterations exceeded")
-        end
-        
-        if op.state == M.State.COMPLETED then
-            return op.result
-        elseif op.state == M.State.FAILED then
-            error(op.error)
+    -- Use iterative approach to avoid stack overflow
+    for i = 1, max_iterations do
+        if async_op.state == M.State.COMPLETED then
+            return async_op.result
+        elseif async_op.state == M.State.FAILED then
+            error(async_op.error)
         end
         
         -- Resume the coroutine
-        op.state = M.State.RUNNING
-        local success, result = coroutine.resume(op.coroutine)
+        async_op.state = M.State.RUNNING
+        local success, result = coroutine.resume(async_op.coroutine)
         
         if not success then
-            op.state = M.State.FAILED
-            op.error = result
+            async_op.state = M.State.FAILED
+            async_op.error = result
             error(result)
         end
         
-        if coroutine.status(op.coroutine) == "dead" then
-            op.state = M.State.COMPLETED
-            op.result = result
+        if coroutine.status(async_op.coroutine) == "dead" then
+            async_op.state = M.State.COMPLETED
+            async_op.result = result
             return result
         end
         
@@ -64,10 +59,12 @@ function M.await(async_op, max_iterations)
         if coroutine.running() then
             coroutine.yield()
         end
-        return await_impl(op)
     end
     
-    return await_impl(async_op)
+    -- Max iterations exceeded
+    async_op.state = M.State.FAILED
+    async_op.error = "Maximum await iterations exceeded"
+    error("Maximum await iterations exceeded")
 end
 
 -- Run async operation with cooperative multitasking
@@ -108,11 +105,16 @@ function M.all(async_ops)
     local results = {}
     local completed = 0
     
+    -- Create step functions once
+    local steps = {}
+    for i, async_op in ipairs(async_ops) do
+        steps[i] = M.run_async(async_op)
+    end
+    
     while completed < #async_ops do
         for i, async_op in ipairs(async_ops) do
             if async_op.state ~= M.State.COMPLETED and async_op.state ~= M.State.FAILED then
-                local step = M.run_async(async_op)
-                local status, result = step()
+                local status, result = steps[i]()
                 
                 if status == true then
                     results[i] = result
@@ -176,12 +178,13 @@ end
 
 -- Execute async operation with timeout
 function M.with_timeout(async_op, timeout_ms)
-    local start_time = os.clock() * 1000
+    local timeout_s = timeout_ms / 1000.0
+    local start_time = os.clock()
     
     while async_op.state ~= M.State.COMPLETED and async_op.state ~= M.State.FAILED do
-        local elapsed = (os.clock() * 1000) - start_time
+        local elapsed = os.clock() - start_time
         
-        if elapsed > timeout_ms then
+        if elapsed > timeout_s then
             async_op.state = M.State.FAILED
             async_op.error = "Timeout exceeded"
             error("Async operation timed out after " .. timeout_ms .. "ms")
@@ -208,9 +211,10 @@ end
 -- Schedule async operation for later execution
 function M.defer(async_op, delay_ms)
     return M.async(function()
-        local start_time = os.clock() * 1000
+        local delay_s = delay_ms / 1000.0
+        local start_time = os.clock()
         
-        while (os.clock() * 1000) - start_time < delay_ms do
+        while os.clock() - start_time < delay_s do
             coroutine.yield()
         end
         
