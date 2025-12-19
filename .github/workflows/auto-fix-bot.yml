@@ -39,12 +39,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: ${{ github.event.workflow_run.head_branch }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "luascript-bot"
             git config user.email "bot@luascript.dev"
             git add -A
             git commit -m "chore: auto-fix bot (refresh IR/parity artifacts)"
+            git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
             git push origin HEAD:${BRANCH}
           else
             echo "No changes to commit"
