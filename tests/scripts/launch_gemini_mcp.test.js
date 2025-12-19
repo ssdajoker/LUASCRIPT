@@ -4,7 +4,7 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
-const { main } = require("../../scripts/launch_gemini_mcp");
+let { main } = require("../../scripts/launch_gemini_mcp");
 
 // Test main function
 (function testMainFunctionCreatesExpectedOutputs() {
