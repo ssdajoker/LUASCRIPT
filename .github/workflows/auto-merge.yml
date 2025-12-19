@@ -49,8 +49,6 @@ jobs:
             const latestReviewsByUser = new Map();
             for (const review of reviews) {
               const user = review.user || {};
-              const key = user.id;
-              if (!key) continue;
               if (!review.submitted_at) continue;
               const key = user.id ?? user.login;
               if (!key) continue;
