@@ -69,7 +69,9 @@ function writeContextArtifacts({ harnessSummary, outDir = path.join(process.cwd(
   const geminiInstructions = loadInstructions(process.cwd(), process.env.GEMINI_INSTRUCTIONS_PATH, GEMINI_INSTRUCTIONS);
   const coordination = loadInstructions(process.cwd(), process.env.ASSISTANT_COORD_PATH, COORDINATION_DOC);
   const mcp = collectMcpEndpoints();
-  const copilotPayload = { ...harnessSummary, mcp, instructions };
+  
+  // Copilot-oriented bundle (backward compatible with 'instructions' key)
+  const payload = { ...harnessSummary, mcp, instructions: copilotInstructions };
   const contextPack = {
     generatedAt: new Date().toISOString(),
     run: runInfo,
@@ -80,11 +82,10 @@ function writeContextArtifacts({ harnessSummary, outDir = path.join(process.cwd(
     harness: harnessSummary,
   };
 
-  // Copilot-oriented bundle
-  fs.writeFileSync(path.join(outDir, 'harness_results.json'), JSON.stringify(copilotPayload, null, 2));
+  fs.writeFileSync(path.join(outDir, 'harness_results.json'), JSON.stringify(payload, null, 2));
   fs.writeFileSync(path.join(outDir, 'context_pack.json'), JSON.stringify(contextPack, null, 2));
 
-  // Gemini-oriented bundle: swap instruction priorities for Gemini consumers
+  // Gemini-oriented bundle (same data, instructions key points to gemini)
   const geminiPack = {
     ...contextPack,
     target: 'gemini',

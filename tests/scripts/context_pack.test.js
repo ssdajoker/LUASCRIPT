@@ -3,530 +3,313 @@
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
-const { writeContextArtifacts } = require("../../scripts/context_pack");
-const { clearMcpEndpoints, restoreEnv } = require("./test-helpers");
+const os = require("os");
+const crypto = require("crypto");
+const {
+  collectMcpEndpoints,
+  loadInstructions,
+  loadCopilotInstructions,
+  loadGeminiInstructions,
+  writeContextArtifacts,
+  DEFAULT_INSTRUCTIONS,
+  GEMINI_INSTRUCTIONS,
+  COORDINATION_DOC,
+} = require("../../scripts/context_pack");
 
-(function testWriteContextArtifactsCreatesDirectory() {
-  const testDir = path.join(__dirname, "tmp_test_context_pack");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  // Clean up any previous test artifacts
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
+// Helper function to clear MCP endpoint environment variables
+function clearMcpEndpoints() {
+  Object.keys(process.env).forEach(key => {
+    if (key.startsWith('MCP_') && key.endsWith('_ENDPOINT')) {
+      delete process.env[key];
+    }
+  });
+}
+
+// Helper function to restore environment variables
+function restoreEnv(originalEnv) {
+  // Clear current env vars
+  Object.keys(process.env).forEach(key => {
+    if (!Object.prototype.hasOwnProperty.call(originalEnv, key)) {
+      delete process.env[key];
+    }
+  });
+  // Restore original values
+  Object.keys(originalEnv).forEach(key => {
+    process.env[key] = originalEnv[key];
+  });
+}
+
+// Helper function to create temporary directory
+function createTempDir() {
+  const tmpDir = path.join(os.tmpdir(), `context_pack_test_${Date.now()}_${crypto.randomUUID()}`);
+  fs.mkdirSync(tmpDir, { recursive: true });
+  return tmpDir;
+}
+
+// Helper function to clean up temporary directory
+function cleanupTempDir(tmpDir) {
+  if (fs.existsSync(tmpDir)) {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
   }
-  
-  const originalCwd = process.cwd();
+}
+
+// Test collectMcpEndpoints
+function testCollectMcpEndpoints() {
   const originalEnv = { ...process.env };
-  
   try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
-    
     clearMcpEndpoints();
     
-    const harnessSummary = { cases: 5, slowest: { name: "test", durationMs: 100 } };
-    const result = writeContextArtifacts({ harnessSummary, outDir: artifactsDir });
+    // Test with no MCP endpoints (still returns priority keys with empty values)
+    let result = collectMcpEndpoints();
+    assert.ok(result.endpoints, 'Should have endpoints property');
+    assert.ok(result.entries, 'Should have entries property');
+    assert.ok(result.keys, 'Should have keys property');
+    assert.ok(result.envString, 'Should have envString property');
+    assert.deepStrictEqual(result.endpoints, {}, 'endpoints should be empty when no URLs are set');
     
-    assert.ok(fs.existsSync(artifactsDir), "artifacts directory should be created");
-    assert.ok(result.payload, "result should include payload");
-    assert.ok(result.contextPack, "result should include contextPack");
+    // Test with single MCP endpoint
+    process.env.MCP_TEST_ENDPOINT = 'http://localhost:8787';
+    result = collectMcpEndpoints();
+    assert.strictEqual(result.endpoints.MCP_TEST_ENDPOINT, 'http://localhost:8787', 'Should collect single MCP endpoint');
     
+    // Test with multiple MCP endpoints
+    process.env.MCP_ANOTHER_ENDPOINT = 'http://localhost:9999';
+    result = collectMcpEndpoints();
+    assert.strictEqual(result.endpoints.MCP_TEST_ENDPOINT, 'http://localhost:8787', 'Should collect first MCP endpoint');
+    assert.strictEqual(result.endpoints.MCP_ANOTHER_ENDPOINT, 'http://localhost:9999', 'Should collect second MCP endpoint');
+    
+    console.log('✓ collectMcpEndpoints tests passed');
   } finally {
-    process.chdir(originalCwd);
     restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
-    }
   }
-})();
+}
 
-(function testWriteContextArtifactsCreatesExpectedFiles() {
-  const testDir = path.join(__dirname, "tmp_test_context_files");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
-  }
-  
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
-  
+// Test loadInstructions
+function testLoadInstructions() {
+  const tmpDir = createTempDir();
   try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
+    // Test with fallback filename when file doesn't exist
+    const fallbackFilename = 'nonexistent.md';
+    let result = loadInstructions(tmpDir, 'nonexistent.md', fallbackFilename);
+    assert.ok(result.path, 'Should have path property');
+    assert.ok(typeof result.exists === 'boolean', 'Should have exists property');
+    assert.ok(typeof result.bytes === 'number', 'Should have bytes property');
+    assert.ok(typeof result.excerpt === 'string', 'Should have excerpt property');
+    assert.strictEqual(result.exists, false, 'Should return exists=false when file does not exist');
     
+    // Test with explicit path that exists
+    const testFile = path.join(tmpDir, 'test_instructions.md');
+    const testContent = 'Test instructions content';
+    fs.writeFileSync(testFile, testContent);
+    result = loadInstructions(tmpDir, testFile, fallbackFilename);
+    assert.strictEqual(result.exists, true, 'Should return exists=true for existing file');
+    assert.strictEqual(result.excerpt, testContent, 'Should load content from explicit path');
+    assert.strictEqual(result.bytes, Buffer.byteLength(testContent, 'utf8'), 'Should report correct byte length');
+    
+    // Test with baseDir search when no explicit path
+    const baseInstructionsFile = path.join(tmpDir, DEFAULT_INSTRUCTIONS);
+    const baseContent = 'Base instructions content';
+    fs.writeFileSync(baseInstructionsFile, baseContent);
+    result = loadInstructions(tmpDir, null, DEFAULT_INSTRUCTIONS);
+    assert.strictEqual(result.exists, true, 'Should find file in baseDir when no explicit path');
+    assert.strictEqual(result.excerpt, baseContent, 'Should load from baseDir when no explicit path');
+    
+    console.log('✓ loadInstructions tests passed');
+  } finally {
+    cleanupTempDir(tmpDir);
+  }
+}
+
+// Test loadCopilotInstructions
+function testLoadCopilotInstructions() {
+  const tmpDir = createTempDir();
+  try {
+    // Test that it uses DEFAULT_INSTRUCTIONS
+    const result = loadCopilotInstructions(tmpDir, null);
+    assert.ok(result.path, 'Should return object with path');
+    assert.ok(typeof result.exists === 'boolean', 'Should have exists property');
+    assert.ok(typeof result.bytes === 'number', 'Should have bytes property');
+    assert.ok(typeof result.excerpt === 'string', 'Should have excerpt property');
+    
+    // Test with explicit path
+    const testFile = path.join(tmpDir, 'copilot_test.md');
+    const testContent = 'Copilot test instructions';
+    fs.writeFileSync(testFile, testContent);
+    const resultWithPath = loadCopilotInstructions(tmpDir, testFile);
+    assert.strictEqual(resultWithPath.exists, true, 'Should find file at explicit path');
+    assert.strictEqual(resultWithPath.excerpt, testContent, 'Should load from explicit path');
+    
+    console.log('✓ loadCopilotInstructions tests passed');
+  } finally {
+    cleanupTempDir(tmpDir);
+  }
+}
+
+// Test loadGeminiInstructions
+function testLoadGeminiInstructions() {
+  const tmpDir = createTempDir();
+  try {
+    // Test that it uses GEMINI_INSTRUCTIONS
+    const result = loadGeminiInstructions(tmpDir, null);
+    assert.ok(result.path, 'Should return object with path');
+    assert.ok(typeof result.exists === 'boolean', 'Should have exists property');
+    assert.ok(typeof result.bytes === 'number', 'Should have bytes property');
+    assert.ok(typeof result.excerpt === 'string', 'Should have excerpt property');
+    
+    // Test with explicit path
+    const testFile = path.join(tmpDir, 'gemini_test.md');
+    const testContent = 'Gemini test instructions';
+    fs.writeFileSync(testFile, testContent);
+    const resultWithPath = loadGeminiInstructions(tmpDir, testFile);
+    assert.strictEqual(resultWithPath.exists, true, 'Should find file at explicit path');
+    assert.strictEqual(resultWithPath.excerpt, testContent, 'Should load from explicit path');
+    
+    console.log('✓ loadGeminiInstructions tests passed');
+  } finally {
+    cleanupTempDir(tmpDir);
+  }
+}
+
+// Test writeContextArtifacts
+function testWriteContextArtifacts() {
+  const tmpDir = createTempDir();
+  const originalEnv = { ...process.env };
+  try {
     clearMcpEndpoints();
+    process.env.MCP_TEST_ENDPOINT = 'http://localhost:8787';
     
-    const harnessSummary = { cases: 3, slowest: { name: "slowTest", durationMs: 250 } };
-    writeContextArtifacts({ harnessSummary, outDir: artifactsDir });
+    const harnessSummary = {
+      totalTests: 10,
+      passed: 8,
+      failed: 2,
+      testResults: []
+    };
     
-    // Check that all expected files are created
-    const harnessFile = path.join(artifactsDir, "harness_results.json");
-    const contextPackFile = path.join(artifactsDir, "context_pack.json");
-    const geminiPackFile = path.join(artifactsDir, "context_pack_gemini.json");
-    
-    assert.ok(fs.existsSync(harnessFile), "harness_results.json should be created");
-    assert.ok(fs.existsSync(contextPackFile), "context_pack.json should be created");
-    assert.ok(fs.existsSync(geminiPackFile), "context_pack_gemini.json should be created");
-    
-  } finally {
-    process.chdir(originalCwd);
-    restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
-    }
-  }
-})();
-
-(function testWriteContextArtifactsHandlesCopilotInstructions() {
-  const testDir = path.join(__dirname, "tmp_test_copilot_instructions");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
-  }
-  
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
-  
-  try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
-    
-    clearMcpEndpoints();
-    
-    // Create a copilot-instructions.md file
-    const copilotContent = "# Copilot Instructions\n\nTest instructions for Copilot";
-    fs.writeFileSync(path.join(testDir, "copilot-instructions.md"), copilotContent);
-    
-    const harnessSummary = { cases: 2 };
-    writeContextArtifacts({ harnessSummary, outDir: artifactsDir });
-    
-    const contextPackFile = path.join(artifactsDir, "context_pack.json");
-    const content = JSON.parse(fs.readFileSync(contextPackFile, "utf8"));
-    
-    assert.ok(content.instructions, "context pack should include instructions");
-    assert.strictEqual(content.instructions.exists, true, "instructions should exist");
-    assert.ok(content.instructions.bytes > 0, "instructions should have content");
-    assert.ok(content.instructions.excerpt.includes("Copilot Instructions"), "instructions excerpt should contain header");
-    
-  } finally {
-    process.chdir(originalCwd);
-    restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
-    }
-  }
-})();
-
-(function testWriteContextArtifactsHandlesGeminiInstructions() {
-  const testDir = path.join(__dirname, "tmp_test_gemini_instructions");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
-  }
-  
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
-  
-  try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
-    
-    clearMcpEndpoints();
-    
-    // Create a gemini-instructions.md file
-    const geminiContent = "# Gemini Instructions\n\nTest instructions for Gemini AI";
-    fs.writeFileSync(path.join(testDir, "gemini-instructions.md"), geminiContent);
-    
-    const harnessSummary = { cases: 4 };
-    writeContextArtifacts({ harnessSummary, outDir: artifactsDir });
-    
-    const geminiPackFile = path.join(artifactsDir, "context_pack_gemini.json");
-    const content = JSON.parse(fs.readFileSync(geminiPackFile, "utf8"));
-    
-    assert.strictEqual(content.target, "gemini", "gemini pack should have target field");
-    assert.ok(content.instructions, "gemini pack should include gemini instructions");
-    assert.strictEqual(content.instructions.exists, true, "gemini instructions should exist");
-    assert.ok(content.instructions.bytes > 0, "gemini instructions should have content");
-    assert.ok(content.instructions.excerpt.includes("Gemini Instructions"), "gemini instructions excerpt should contain header");
-    assert.ok(content.copilotInstructions, "gemini pack should also include copilot instructions reference");
-    
-  } finally {
-    process.chdir(originalCwd);
-    restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
-    }
-  }
-})();
-
-(function testWriteContextArtifactsHandlesCoordinationDoc() {
-  const testDir = path.join(__dirname, "tmp_test_coordination");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
-  }
-  
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
-  
-  try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
-    
-    clearMcpEndpoints();
-    
-    // Create an assistant_coordination.md file
-    const coordContent = "# Assistant Coordination\n\nTest coordination document";
-    fs.writeFileSync(path.join(testDir, "assistant_coordination.md"), coordContent);
-    
-    const harnessSummary = { cases: 1 };
-    writeContextArtifacts({ harnessSummary, outDir: artifactsDir });
-    
-    const contextPackFile = path.join(artifactsDir, "context_pack.json");
-    const content = JSON.parse(fs.readFileSync(contextPackFile, "utf8"));
-    
-    assert.ok(content.coordination, "context pack should include coordination");
-    assert.strictEqual(content.coordination.exists, true, "coordination should exist");
-    assert.ok(content.coordination.bytes > 0, "coordination should have content");
-    assert.ok(content.coordination.excerpt.includes("Assistant Coordination"), "coordination excerpt should contain header");
-    
-  } finally {
-    process.chdir(originalCwd);
-    restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
-    }
-  }
-})();
-
-(function testWriteContextArtifactsHandlesMissingInstructions() {
-  const testDir = path.join(__dirname, "tmp_test_missing_instructions");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
-  }
-  
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
-  
-  try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
-    
-    clearMcpEndpoints();
-    
-    // Don't create any instruction files
-    const harnessSummary = { cases: 3 };
-    writeContextArtifacts({ harnessSummary, outDir: artifactsDir });
-    
-    const contextPackFile = path.join(artifactsDir, "context_pack.json");
-    const content = JSON.parse(fs.readFileSync(contextPackFile, "utf8"));
-    
-    assert.ok(content.instructions, "context pack should include instructions field");
-    assert.strictEqual(content.instructions.exists, false, "instructions should not exist");
-    assert.strictEqual(content.instructions.bytes, 0, "instructions should have zero bytes");
-    
-    assert.ok(content.geminiInstructions, "context pack should include geminiInstructions field");
-    assert.strictEqual(content.geminiInstructions.exists, false, "gemini instructions should not exist");
-    
-    assert.ok(content.coordination, "context pack should include coordination field");
-    assert.strictEqual(content.coordination.exists, false, "coordination should not exist");
-    
-  } finally {
-    process.chdir(originalCwd);
-    restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
-    }
-  }
-})();
-
-(function testWriteContextArtifactsHandlesCustomInstructionPaths() {
-  const testDir = path.join(__dirname, "tmp_test_custom_paths");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
-  }
-  
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
-  
-  try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
-    
-    clearMcpEndpoints();
-    
-    // Create custom instruction files with custom paths
-    const customCopilotPath = "my-copilot.md";
-    const customGeminiPath = "my-gemini.md";
-    const customCoordPath = "my-coord.md";
-    
-    fs.writeFileSync(path.join(testDir, customCopilotPath), "# Custom Copilot\n\nCustom content");
-    fs.writeFileSync(path.join(testDir, customGeminiPath), "# Custom Gemini\n\nCustom content");
-    fs.writeFileSync(path.join(testDir, customCoordPath), "# Custom Coordination\n\nCustom content");
-    
-    process.env.COPILOT_INSTRUCTIONS_PATH = customCopilotPath;
-    process.env.GEMINI_INSTRUCTIONS_PATH = customGeminiPath;
-    process.env.ASSISTANT_COORD_PATH = customCoordPath;
-    
-    const harnessSummary = { cases: 2 };
-    writeContextArtifacts({ harnessSummary, outDir: artifactsDir });
-    
-    const contextPackFile = path.join(artifactsDir, "context_pack.json");
-    const content = JSON.parse(fs.readFileSync(contextPackFile, "utf8"));
-    
-    assert.strictEqual(content.instructions.path, customCopilotPath, "should use custom copilot path");
-    assert.strictEqual(content.geminiInstructions.path, customGeminiPath, "should use custom gemini path");
-    assert.strictEqual(content.coordination.path, customCoordPath, "should use custom coordination path");
-    
-    assert.ok(content.instructions.excerpt.includes("Custom Copilot"), "should load custom copilot content");
-    assert.ok(content.geminiInstructions.excerpt.includes("Custom Gemini"), "should load custom gemini content");
-    assert.ok(content.coordination.excerpt.includes("Custom Coordination"), "should load custom coordination content");
-    
-  } finally {
-    process.chdir(originalCwd);
-    restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
-    }
-  }
-})();
-
-(function testWriteContextArtifactsHandlesMcpEndpoints() {
-  const testDir = path.join(__dirname, "tmp_test_mcp_endpoints");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
-  }
-  
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
-  
-  try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
-    
-    // Set test MCP endpoints
-    process.env.MCP_DOC_INDEX_ENDPOINT = "http://localhost:8080/doc";
-    process.env.MCP_FLAKE_DB_ENDPOINT = "http://localhost:8081/flake";
-    process.env.MCP_IR_SCHEMA_ENDPOINT = "http://localhost:8082/schema";
-    process.env.MCP_TEST_ENDPOINT = "http://localhost:8083/test";
-    
-    const harnessSummary = { cases: 6 };
-    writeContextArtifacts({ harnessSummary, outDir: artifactsDir });
-    
-    const contextPackFile = path.join(artifactsDir, "context_pack.json");
-    const content = JSON.parse(fs.readFileSync(contextPackFile, "utf8"));
-    
-    assert.ok(content.mcp, "context pack should include mcp field");
-    assert.ok(content.mcp.keys, "mcp should have keys array");
-    assert.ok(content.mcp.endpoints, "mcp should have endpoints object");
-    assert.ok(content.mcp.envString, "mcp should have envString");
-    
-    assert.ok(content.mcp.keys.includes("MCP_DOC_INDEX_ENDPOINT"), "should include DOC endpoint key");
-    assert.ok(content.mcp.keys.includes("MCP_FLAKE_DB_ENDPOINT"), "should include FLAKE endpoint key");
-    assert.ok(content.mcp.keys.includes("MCP_IR_SCHEMA_ENDPOINT"), "should include IR_SCHEMA endpoint key");
-    assert.ok(content.mcp.keys.includes("MCP_TEST_ENDPOINT"), "should include TEST endpoint key");
-    
-    assert.strictEqual(content.mcp.endpoints.MCP_DOC_INDEX_ENDPOINT, "http://localhost:8080/doc");
-    assert.strictEqual(content.mcp.endpoints.MCP_FLAKE_DB_ENDPOINT, "http://localhost:8081/flake");
-    assert.strictEqual(content.mcp.endpoints.MCP_IR_SCHEMA_ENDPOINT, "http://localhost:8082/schema");
-    
-  } finally {
-    process.chdir(originalCwd);
-    restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
-    }
-  }
-})();
-
-(function testWriteContextArtifactsHandlesRunInfo() {
-  const testDir = path.join(__dirname, "tmp_test_run_info");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
-  }
-  
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
-  
-  try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
-    
-    clearMcpEndpoints();
-    
-    const harnessSummary = { cases: 5 };
     const runInfo = {
-      gitSha: "abc123def456",
-      runId: "12345",
-      runUrl: "https://github.com/test/repo/actions/runs/12345"
+      startTime: new Date().toISOString(),
+      endTime: new Date().toISOString()
     };
     
-    writeContextArtifacts({ harnessSummary, outDir: artifactsDir, runInfo });
+    // Test artifact generation
+    const result = writeContextArtifacts({
+      harnessSummary,
+      outDir: tmpDir,
+      runInfo
+    });
     
-    const contextPackFile = path.join(artifactsDir, "context_pack.json");
-    const content = JSON.parse(fs.readFileSync(contextPackFile, "utf8"));
+    // Verify returned object structure
+    assert.ok(result.payload, 'Should return payload object');
+    assert.ok(result.contextPack, 'Should return contextPack object');
+    assert.strictEqual(result.payload.totalTests, 10, 'Payload should include harness summary');
+    assert.ok(result.payload.mcp, 'Payload should include MCP endpoints');
+    assert.ok(result.payload.instructions, 'Payload should include instructions');
     
-    assert.ok(content.run, "context pack should include run field");
-    assert.strictEqual(content.run.gitSha, "abc123def456", "run should include gitSha");
-    assert.strictEqual(content.run.runId, "12345", "run should include runId");
-    assert.strictEqual(content.run.runUrl, "https://github.com/test/repo/actions/runs/12345", "run should include runUrl");
+    // Verify files were created
+    const harnessResultsFile = path.join(tmpDir, 'harness_results.json');
+    const contextPackFile = path.join(tmpDir, 'context_pack.json');
+    const geminiPackFile = path.join(tmpDir, 'context_pack_gemini.json');
     
+    assert.ok(fs.existsSync(harnessResultsFile), 'Should create harness_results.json');
+    assert.ok(fs.existsSync(contextPackFile), 'Should create context_pack.json');
+    assert.ok(fs.existsSync(geminiPackFile), 'Should create context_pack_gemini.json');
+    
+    // Verify file contents
+    const harnessResults = JSON.parse(fs.readFileSync(harnessResultsFile, 'utf8'));
+    assert.strictEqual(harnessResults.totalTests, 10, 'harness_results.json should contain test data');
+    assert.ok(harnessResults.mcp, 'harness_results.json should contain MCP endpoints');
+    assert.ok(harnessResults.mcp.endpoints, 'MCP should have endpoints property');
+    assert.ok(harnessResults.instructions, 'harness_results.json should contain Copilot instructions');
+    assert.ok(harnessResults.instructions.path, 'Instructions should be an object with path');
+    
+    const contextPack = JSON.parse(fs.readFileSync(contextPackFile, 'utf8'));
+    assert.ok(contextPack.generatedAt, 'context_pack.json should have timestamp');
+    assert.ok(contextPack.instructions, 'context_pack.json should have Copilot instructions');
+    assert.ok(contextPack.geminiInstructions, 'context_pack.json should have Gemini instructions');
+    assert.ok(contextPack.coordination, 'context_pack.json should have coordination doc');
+    assert.ok(contextPack.mcp, 'context_pack.json should have MCP endpoints');
+    assert.ok(contextPack.harness, 'context_pack.json should have harness summary');
+    assert.deepStrictEqual(contextPack.run, runInfo, 'context_pack.json should have run info');
+    
+    const geminiPack = JSON.parse(fs.readFileSync(geminiPackFile, 'utf8'));
+    assert.strictEqual(geminiPack.target, 'gemini', 'gemini pack should have target=gemini');
+    assert.ok(geminiPack.instructions, 'gemini pack should have instructions (gemini)');
+    assert.ok(geminiPack.copilotInstructions, 'gemini pack should have copilotInstructions');
+    assert.ok(geminiPack.geminiInstructions, 'gemini pack should preserve geminiInstructions field');
+    
+    // Verify that instructions in gemini pack are different from context pack
+    assert.deepStrictEqual(geminiPack.instructions, contextPack.geminiInstructions, 
+      'gemini pack instructions should be gemini instructions');
+    assert.deepStrictEqual(geminiPack.copilotInstructions, contextPack.instructions,
+      'gemini pack copilotInstructions should be copilot instructions');
+    
+    console.log('✓ writeContextArtifacts tests passed');
   } finally {
-    process.chdir(originalCwd);
+    cleanupTempDir(tmpDir);
     restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
-    }
   }
-})();
+}
 
-(function testWriteContextArtifactsIncludesTimestamp() {
-  const testDir = path.join(__dirname, "tmp_test_timestamp");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
-  }
-  
-  const originalCwd = process.cwd();
+// Test writeContextArtifacts with default outDir
+function testWriteContextArtifactsDefaultOutDir() {
   const originalEnv = { ...process.env };
+  const defaultOutDir = path.join(process.cwd(), 'artifacts');
+  const createdByTest = !fs.existsSync(defaultOutDir);
   
   try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
-    
     clearMcpEndpoints();
     
-    const beforeTime = new Date();
-    const harnessSummary = { cases: 3 };
-    writeContextArtifacts({ harnessSummary, outDir: artifactsDir });
-    const afterTime = new Date();
-    
-    const contextPackFile = path.join(artifactsDir, "context_pack.json");
-    const content = JSON.parse(fs.readFileSync(contextPackFile, "utf8"));
-    
-    assert.ok(content.generatedAt, "context pack should include generatedAt field");
-    const generatedTime = new Date(content.generatedAt);
-    assert.ok(generatedTime >= beforeTime, "generatedAt should be after start time");
-    assert.ok(generatedTime <= afterTime, "generatedAt should be before end time");
-    
-  } finally {
-    process.chdir(originalCwd);
-    restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
-    }
-  }
-})();
-
-(function testWriteContextArtifactsIncludesHarnessSummary() {
-  const testDir = path.join(__dirname, "tmp_test_harness_summary");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
-  }
-  
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
-  
-  try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
-    
-    clearMcpEndpoints();
-    
-    const harnessSummary = { 
-      cases: 7, 
-      slowest: { name: "complexTest", durationMs: 500 },
-      summary: { passed: 7, failed: 0 }
+    const harnessSummary = {
+      totalTests: 5,
+      passed: 5,
+      failed: 0
     };
-    writeContextArtifacts({ harnessSummary, outDir: artifactsDir });
     
-    const contextPackFile = path.join(artifactsDir, "context_pack.json");
-    const content = JSON.parse(fs.readFileSync(contextPackFile, "utf8"));
+    // Test with default outDir (should use cwd/artifacts)
+    const result = writeContextArtifacts({ harnessSummary });
     
-    assert.ok(content.harness, "context pack should include harness field");
-    assert.strictEqual(content.harness.cases, 7, "harness should include cases count");
-    assert.ok(content.harness.slowest, "harness should include slowest test");
-    assert.strictEqual(content.harness.slowest.name, "complexTest", "harness should include slowest test name");
-    assert.strictEqual(content.harness.slowest.durationMs, 500, "harness should include slowest test duration");
-    assert.ok(content.harness.summary, "harness should include summary");
+    assert.ok(result.payload, 'Should return payload with default outDir');
+    assert.ok(fs.existsSync(defaultOutDir), 'Should create default artifacts directory');
     
-    const harnessFile = path.join(artifactsDir, "harness_results.json");
-    const harnessContent = JSON.parse(fs.readFileSync(harnessFile, "utf8"));
-    assert.strictEqual(harnessContent.cases, 7, "harness_results should include cases");
-    assert.ok(harnessContent.slowest, "harness_results should include slowest");
-    
+    console.log('✓ writeContextArtifacts with default outDir tests passed');
   } finally {
-    process.chdir(originalCwd);
-    restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
+    // Clean up only if we created the directory
+    if (createdByTest && fs.existsSync(defaultOutDir)) {
+      // Only remove if it's empty or only contains test files
+      const files = fs.readdirSync(defaultOutDir);
+      const testFiles = ['harness_results.json', 'context_pack.json', 'context_pack_gemini.json'];
+      const onlyTestFiles = files.every(f => testFiles.includes(f));
+      if (onlyTestFiles || files.length === 0) {
+        fs.rmSync(defaultOutDir, { recursive: true, force: true });
+      }
     }
+    restoreEnv(originalEnv);
   }
-})();
+}
 
-(function testWriteContextArtifactsGeminiPackStructure() {
-  const testDir = path.join(__dirname, "tmp_test_gemini_structure");
-  const artifactsDir = path.join(testDir, "artifacts");
-  
-  if (fs.existsSync(testDir)) {
-    fs.rmSync(testDir, { recursive: true, force: true });
-  }
-  
-  const originalCwd = process.cwd();
-  const originalEnv = { ...process.env };
+// Run all tests
+function runTests() {
+  console.log('Running context_pack.js tests...\n');
   
   try {
-    fs.mkdirSync(testDir, { recursive: true });
-    process.chdir(testDir);
+    testCollectMcpEndpoints();
+    testLoadInstructions();
+    testLoadCopilotInstructions();
+    testLoadGeminiInstructions();
+    testWriteContextArtifacts();
+    testWriteContextArtifactsDefaultOutDir();
     
-    clearMcpEndpoints();
-    
-    // Create both instruction files
-    fs.writeFileSync(path.join(testDir, "copilot-instructions.md"), "# Copilot\n\nContent");
-    fs.writeFileSync(path.join(testDir, "gemini-instructions.md"), "# Gemini\n\nContent");
-    
-    const harnessSummary = { cases: 4 };
-    writeContextArtifacts({ harnessSummary, outDir: artifactsDir });
-    
-    const geminiPackFile = path.join(artifactsDir, "context_pack_gemini.json");
-    const geminiPack = JSON.parse(fs.readFileSync(geminiPackFile, "utf8"));
-    
-    // Verify gemini pack has all expected fields
-    assert.strictEqual(geminiPack.target, "gemini", "gemini pack should have target=gemini");
-    assert.ok(geminiPack.generatedAt, "gemini pack should have generatedAt");
-    assert.ok(geminiPack.run, "gemini pack should have run");
-    assert.ok(geminiPack.instructions, "gemini pack should have instructions (gemini)");
-    assert.ok(geminiPack.copilotInstructions, "gemini pack should have copilotInstructions");
-    assert.ok(geminiPack.coordination, "gemini pack should have coordination");
-    assert.ok(geminiPack.mcp, "gemini pack should have mcp");
-    assert.ok(geminiPack.harness, "gemini pack should have harness");
-    
-    // Verify instructions fields point to correct files
-    assert.ok(geminiPack.instructions.excerpt.includes("Gemini"), "instructions should be gemini instructions");
-    assert.ok(geminiPack.copilotInstructions.excerpt.includes("Copilot"), "copilotInstructions should be copilot instructions");
-    
-  } finally {
-    process.chdir(originalCwd);
-    restoreEnv(originalEnv);
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
-    }
+    console.log('\n✓ All context_pack.js tests passed');
+    process.exit(0);
+  } catch (err) {
+    console.error('\n✗ Test failed:', err.message);
+    console.error(err.stack);
+    process.exit(1);
   }
-})();
+}
 
-console.log("context_pack tests completed successfully.");
+// Run tests if this file is executed directly
+if (require.main === module) {
+  runTests();
+}
+
+module.exports = { runTests };

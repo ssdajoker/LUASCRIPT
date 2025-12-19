@@ -19,7 +19,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            // Helper function to extract error messages from various error formats
             function extractErrorMessage(err) {
               if (typeof err === 'string') {
                 return err;
@@ -42,7 +41,7 @@ jobs:
               }
               return 'Unknown error';
             }
-
+            
             const run = context.payload.workflow_run;
             const pr = (run.pull_requests || [])[0];
             if (!pr) {
