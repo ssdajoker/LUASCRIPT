@@ -174,6 +174,34 @@ class CoreTranspiler extends EventEmitter {
                 return `${id} = ${init}`;
             }
 
+            case 'ArrayPattern': {
+                // Generate destructuring pattern for arrays
+                const elements = node.elements.map((el, idx) => {
+                    if (!el) return null;  // holes in pattern
+                    if (el.type === 'RestElement') {
+                        return `...${this.generateLuaFromAST(el.argument)}`;
+                    }
+                    return this.generateLuaFromAST(el);
+                }).filter(Boolean);
+                return elements.join(', ');
+            }
+
+            case 'ObjectPattern': {
+                // Generate destructuring pattern for objects  
+                const props = node.properties.map(prop => {
+                    const key = prop.key.name || this.generateLuaFromAST(prop.key);
+                    if (prop.value.type === 'Identifier' && prop.value.name === key) {
+                        return key;  // shorthand
+                    }
+                    return `${key} = ${this.generateLuaFromAST(prop.value)}`;
+                });
+                return props.join(', ');
+            }
+
+            case 'RestElement': {
+                return `...${this.generateLuaFromAST(node.argument)}`;
+            }
+
             case 'FunctionDeclaration': {
                 const id = this.generateLuaFromAST(node.id);
                 const params = node.params.map(param => this.generateLuaFromAST(param)).join(', ');

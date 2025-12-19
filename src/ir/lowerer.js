@@ -110,9 +110,25 @@ class IRLowerer {
 
   lowerVariableDeclaration(node) {
     const declarations = node.declarations.map((decl) => {
-      const idNode = this.lowerIdentifier(decl.id, { binding: decl.id?.name });
+      let idNode;
+      
+      // Handle different pattern types for id
+      if (decl.id.type === 'Identifier') {
+        idNode = this.lowerIdentifier(decl.id, { binding: decl.id.name });
+      } else if (decl.id.type === 'ArrayPattern') {
+        idNode = this.lowerArrayPattern(decl.id);
+      } else if (decl.id.type === 'ObjectPattern') {
+        idNode = this.lowerObjectPattern(decl.id);
+      } else {
+        throw new Error(`Unsupported declarator id type: ${decl.id.type}`);
+      }
+      
       const initRef = decl.init ? this.lowerExpression(decl.init) : null;
-      return this.builder.varDecl(idNode.name, initRef, null, { // varDecl expects name, not id
+      
+      // For patterns, pass the pattern IR node id, not a name
+      const idParam = idNode.type === 'Identifier' ? idNode.name : idNode.id;
+      
+      return this.builder.varDecl(idParam, initRef, null, {
         kind: node.kind,
       });
     });
