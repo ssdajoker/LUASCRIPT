@@ -1,5 +1,7 @@
 "use strict";
 
+const assert = require("assert");
+
 /**
  * Shared test utilities for script tests
  */
@@ -33,8 +35,8 @@ function mockConsole() {
   const originalWarn = console.warn;
   const logs = [];
   
-  console.log = (...args) => logs.push(args.join(' '));
-  console.warn = (...args) => logs.push(`WARN: ${args.join(' ')}`);
+  console.log = function(...args) { logs.push(args.join(' ')); };
+  console.warn = function(...args) { logs.push(`WARN: ${args.join(' ')}`); };
   
   return {
     logs,
@@ -47,7 +49,6 @@ function mockConsole() {
 
 // Helper function to assert console output contains expected strings
 function assertConsoleOutput(logs, expectedStrings, testName) {
-  const assert = require("assert");
   const outputStr = logs.join('\n');
   expectedStrings.forEach(expected => {
     assert.ok(outputStr.includes(expected), `${testName}: should include "${expected}"`);
