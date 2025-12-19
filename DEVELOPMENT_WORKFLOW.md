@@ -81,20 +81,10 @@ Following conventional commits:
 - `chore:` Build process or auxiliary tool changes
 
 ### Testing Requirements
-- **IR harness**: Run `npm run harness` for fast regression coverage (determinism + timing guard, artifacts in [artifacts/harness_results.json](artifacts/harness_results.json)); in CI it is advisory (non-blocking) but still posts summaries/artifacts.
-
-- **Copilot context pack**: Keep [copilot-instructions.md](copilot-instructions.md) current; run `npm run copilot:context` to refresh [artifacts/context_pack.json](artifacts/context_pack.json) (includes MCP endpoints from `MCP_*_ENDPOINT` env and latest harness results). Use `npm run copilot:launch` to emit a `COPILOT_MCP_ENDPOINTS` string and a local endpoints file for Copilot/MCP.
-
-- **Local MCP endpoints**: If you want local helpers, start your local MCP endpoint server (see package.json or the README for the appropriate command; defaults to http://localhost:8787). Then set:
-  - `MCP_DOC_INDEX_ENDPOINT=http://localhost:8787/doc-index/search`
-  - `MCP_FLAKE_DB_ENDPOINT=http://localhost:8787/flake-db/flakes`
-  - `MCP_IR_SCHEMA_ENDPOINT=http://localhost:8787/ir-schema`
-  Re-run `npm run copilot:context` after setting these to refresh the context pack.
-
-- Generate a local status bundle with `npm run status:bundle` (uses [scripts/status_bundle.js](scripts/status_bundle.js)).
-- Populate optional env overrides before running: `WORKFLOW`, `RUN_ID` or `GITHUB_RUN_ID`, `GIT_SHA` or `GITHUB_SHA`, and test signals `TEST_STATUS`, `HARNESS_STATUS`, `IR_VALIDATE_STATUS`, `EMIT_GOLDENS_STATUS`, `PERF_STATUS`.
-- Output: [artifacts/status.json](artifacts/status.json) matching [scripts/status_schema.json](scripts/status_schema.json). Fields default to `unknown` if unset.
-- Keep `artifacts/` untracked; it is ignored in version control.
+- **Unit tests**: All new code must have >90% coverage
+- **Integration tests**: End-to-end transpilation tests
+- **Performance tests**: Benchmark against previous versions
+- **Manual testing**: Web IDE functionality
 
 ### Week 2 Core Features (94% Complete)
 #### Remaining Tasks (6%):

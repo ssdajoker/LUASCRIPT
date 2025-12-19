@@ -241,6 +241,16 @@ function normalizeNode(node, options = {}) {
         body: normalizeNode(node.body, options),
       };
 
+    case "FunctionExpression":
+      return {
+        type: "FunctionExpression",
+        id: normalizeNode(node.id, options),
+        params: normalizeArray(node.params, options),
+        body: normalizeNode(node.body, options),
+        async: Boolean(node.async),
+        generator: Boolean(node.generator),
+      };
+
     case "ArrowFunction": {
       const params = normalizeArray(node.params, options);
       let body = normalizeNode(node.body, options);
