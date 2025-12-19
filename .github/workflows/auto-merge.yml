@@ -1,0 +1,109 @@
+name: auto-merge-on-green
+
+on:
+  workflow_run:
+    workflows: ["matrix-audit"]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  enable-auto-merge:
+    if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable auto-merge when checks pass
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const run = context.payload.workflow_run;
+            const pr = (run.pull_requests || [])[0];
+            if (!pr) {
+              core.info('No associated PR; skipping');
+              return;
+            }
+            const prNumber = pr.number;
+            const { data: prData } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+            if (prData.state !== 'open') {
+              core.info('PR is not open; skipping');
+              return;
+            }
+            if (prData.draft) {
+              core.info('PR is draft; skipping');
+              return;
+            }
+            const reviews = await github.paginate(github.rest.pulls.listReviews, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+              per_page: 100,
+            });
+            // Determine the latest review per reviewer, then check approvals based on those.
+            const latestReviewsByUser = new Map();
+            for (const review of reviews) {
+              const user = review.user || {};
+              if (!review.submitted_at) continue;
+              const key = user.id ?? user.login;
+              if (!key) continue;
+              const existing = latestReviewsByUser.get(key);
+              if (!existing) {
+                latestReviewsByUser.set(key, review);
+                continue;
+              }
+              const existingTime = existing.submitted_at ? Date.parse(existing.submitted_at) : 0;
+              const reviewTime = review.submitted_at ? Date.parse(review.submitted_at) : 0;
+              if (reviewTime >= existingTime) {
+                latestReviewsByUser.set(key, review);
+              }
+            }
+            const latestReviews = Array.from(latestReviewsByUser.values());
+            const approved = latestReviews.some((r) => r.state === 'APPROVED');
+            if (!approved) {
+              core.info('No approvals yet; skipping');
+              return;
+            }
+            if (prData.auto_merge) {
+              core.info('Auto-merge already enabled');
+              return;
+            }
+            try {
+              await github.graphql(
+                `mutation($pullRequestId: ID!, $mergeMethod: PullRequestMergeMethod!) {
+                  enablePullRequestAutoMerge(input: { pullRequestId: $pullRequestId, mergeMethod: $mergeMethod }) {
+                    pullRequest { number autoMergeRequest { enabledAt enabledBy { login } } }
+                  }
+                }`,
+                {
+                  pullRequestId: prData.node_id,
+                  mergeMethod: 'SQUASH',
+                }
+              );
+              core.info(`Auto-merge enabled for PR #${prNumber}`);
+            } catch (err) {
+              let errorMessage = 'Unknown error';
+              if (typeof err === 'string') {
+                errorMessage = err;
+              } else if (err && typeof err === 'object') {
+                if (err.message) {
+                  errorMessage = err.message;
+                } else if (Array.isArray(err.errors) && err.errors[0] && err.errors[0].message) {
+                  errorMessage = err.errors[0].message;
+                } else {
+                  try {
+                    errorMessage = JSON.stringify(err);
+                  } catch (jsonErr) {
+                    errorMessage = String(err);
+                  }
+                }
+              } else if (err != null) {
+                errorMessage = String(err);
+              }
+              core.warning(`Failed to enable auto-merge for PR #${prNumber}: ${errorMessage}`);
+            }
