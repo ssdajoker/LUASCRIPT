@@ -38,26 +38,20 @@ Located in `.github/workflows/`:
 ## 📖 How to Load Context
 
 ### For Quick Debugging
-```
-1. Read: GEMINI.md or copilot-instructions.md (depending on agent)
-2. Skim: DEVELOPMENT_WORKFLOW.md (auto-merge + amend workflow sections)
-3. If coordination needed: COPILOT_GEMINI_HANDOFF.md (latest state)
-```
+1. Read: [GEMINI.md](GEMINI.md) or [copilot-instructions.md](copilot-instructions.md) (depending on agent)
+2. Skim: [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) (auto-merge + amend workflow sections)
+3. If coordination needed: [COPILOT_GEMINI_HANDOFF.md](COPILOT_GEMINI_HANDOFF.md) (latest state)
 
 ### For Bug Fixes / Feature Work
-```
-1. Load: assistant_coordination.md (priorities + MCP state)
+1. Load: [assistant_coordination.md](assistant_coordination.md) (priorities + MCP state)
 2. Load: [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) (branch/commit guidance)
-3. Load: agent-specific instructions (copilot-instructions.md or gemini-instructions.md)
-4. Cross-ref: COPILOT_GEMINI_HANDOFF.md (if agent coordination needed)
-```
+3. Load: agent-specific instructions ([copilot-instructions.md](copilot-instructions.md) or [gemini-instructions.md](gemini-instructions.md))
+4. Cross-ref: [COPILOT_GEMINI_HANDOFF.md](COPILOT_GEMINI_HANDOFF.md) (if agent coordination needed)
 
 ### For Infrastructure / CI Work
-```
-1. Load: GEMINI.md (.github/workflows/ references)
+1. Load: [GEMINI.md](GEMINI.md) (.github/workflows/ references)
 2. Load: [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) (auto-merge + CI sections)
-3. Load: parity-ir.yml, auto-merge.yml, auto-fix-bot.yml (.github/workflows/)
-```
+3. Load: `parity-ir.yml`, `auto-merge.yml`, `auto-fix-bot.yml` (from `.github/workflows/`)
 
 ---
 
