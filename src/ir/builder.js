@@ -7,10 +7,12 @@
 
 const nodes = require('./nodes');
 const { Types } = require('./types');
+const { BalancedTernaryIdGenerator } = require('./idGenerator');
 
 class IRBuilder {
     constructor() {
         this.nodeStack = [];
+        this.idGenerator = new BalancedTernaryIdGenerator({ prefix: 'ir' });
     }
 
     // ========== DECLARATIONS ==========
@@ -243,6 +245,143 @@ class IRBuilder {
      */
     constant(name, value, type = null, options = {}) {
         return this.declareAndInit(name, value, 'const', type, options);
+    }
+
+    // ========== COMPATIBILITY FACTORY METHODS ==========
+    // The following methods restore the older factory-style API
+    // that other parts of the codebase still depend on.
+
+    /**
+     * Create a binary expression node (compatibility alias).
+     */
+    binaryExpression(left, operator, right, options = {}) {
+        return this.binaryOp(operator, left, right, options);
+    }
+
+    /**
+     * Create a variable declarator node.
+     */
+    variableDeclarator(id, init, options = {}) {
+        if (nodes.VariableDeclarator) {
+            return new nodes.VariableDeclarator(id, init, options);
+        }
+        return { type: 'VariableDeclarator', id, init, ...options };
+    }
+
+    /**
+     * Create a variable declaration node.
+     */
+    variableDeclaration(kind, declarations, options = {}) {
+        if (nodes.VariableDeclaration) {
+            return new nodes.VariableDeclaration(kind, declarations, options);
+        }
+        return { type: 'VariableDeclaration', kind, declarations, ...options };
+    }
+
+    /**
+     * Create a block statement node (compatibility alias).
+     */
+    blockStatement(body = [], options = {}) {
+        return this.block(body, options);
+    }
+
+    /**
+     * Create a return statement node (compatibility alias).
+     */
+    returnStatement(value = null, options = {}) {
+        return this.returnStmt(value, options);
+    }
+
+    /**
+     * Create an expression statement node (compatibility alias).
+     */
+    expressionStatement(expression, options = {}) {
+        return this.expressionStmt(expression, options);
+    }
+
+    /**
+     * Create an assignment expression node.
+     */
+    assignmentExpression(left, operator = '=', right, options = {}) {
+        if (nodes.AssignmentExpression) {
+            return new nodes.AssignmentExpression(operator, left, right, options);
+        }
+        return this.assignment(left, right, operator, options);
+    }
+
+    /**
+     * Create an object literal / expression node (compatibility alias).
+     */
+    objectExpression(properties = [], options = {}) {
+        return this.objectLiteral(properties, options);
+    }
+
+    /**
+     * Create a member expression node.
+     */
+    createMemberExpression(object, property, computed = false, options = {}) {
+        return this.member(object, property, computed, options);
+    }
+
+    /**
+     * Create a function expression node.
+     */
+    functionExpression(params = [], body = null, options = {}) {
+        if (nodes.FunctionExpression) {
+            const name = options.name || null;
+            return new nodes.FunctionExpression(name, params, body, options);
+        }
+        return { type: 'FunctionExpression', params, body, ...options };
+    }
+
+    /**
+     * Create an arrow function expression node.
+     */
+    arrowFunctionExpression(params = [], body = null, options = {}) {
+        if (nodes.ArrowFunctionExpression) {
+            return new nodes.ArrowFunctionExpression(params, body, options);
+        }
+        return { type: 'ArrowFunctionExpression', params, body, ...options };
+    }
+
+    /**
+     * Backwards-compatible functionDeclaration alias that
+     * delegates to the existing functionDecl helper.
+     */
+    functionDeclaration(name, parameters, body, returnType = null, options = {}) {
+        return this.functionDecl(name, parameters, body, returnType, options);
+    }
+
+    /**
+     * Push a node into the current body/module.
+     * This restores the old factory-style registration behavior.
+     */
+    pushToBody(node) {
+        this.nodeStack.push(node);
+        return node;
+    }
+
+    /**
+     * Register a control flow graph with the builder.
+     */
+    registerControlFlowGraph(cfg) {
+        if (!this.controlFlowGraphs) {
+            this.controlFlowGraphs = [];
+        }
+        this.controlFlowGraphs.push(cfg);
+        return cfg;
+    }
+
+    /**
+     * Finalize and build a Program node from the accumulated body.
+     */
+    build() {
+        const programNode = this.program(this.nodeStack);
+        // Reset internal state so the builder can be reused.
+        this.nodeStack = [];
+        this.controlFlowGraphs = this.controlFlowGraphs || [];
+        programNode.controlFlowGraphs = this.controlFlowGraphs;
+        return programNode;
     }
 }
 

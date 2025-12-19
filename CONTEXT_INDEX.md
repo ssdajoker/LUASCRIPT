@@ -38,26 +38,20 @@ Located in `.github/workflows/`:
 ## 📖 How to Load Context
 
 ### For Quick Debugging
-```
-1. Read: GEMINI.md or copilot-instructions.md (depending on agent)
-2. Skim: DEVELOPMENT_WORKFLOW.md (auto-merge + amend workflow sections)
-3. If coordination needed: COPILOT_GEMINI_HANDOFF.md (latest state)
-```
+1. Read: [GEMINI.md](GEMINI.md) or [copilot-instructions.md](copilot-instructions.md) (depending on agent)
+2. Skim: [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) (auto-merge + amend workflow sections)
+3. If coordination needed: [COPILOT_GEMINI_HANDOFF.md](COPILOT_GEMINI_HANDOFF.md) (latest state)
 
 ### For Bug Fixes / Feature Work
-```
-1. Load: assistant_coordination.md (priorities + MCP state)
+1. Load: [assistant_coordination.md](assistant_coordination.md) (priorities + MCP state)
 2. Load: [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) (branch/commit guidance)
-3. Load: agent-specific instructions (copilot-instructions.md or gemini-instructions.md)
-4. Cross-ref: COPILOT_GEMINI_HANDOFF.md (if agent coordination needed)
-```
+3. Load: agent-specific instructions ([copilot-instructions.md](copilot-instructions.md) or [gemini-instructions.md](gemini-instructions.md))
+4. Cross-ref: [COPILOT_GEMINI_HANDOFF.md](COPILOT_GEMINI_HANDOFF.md) (if agent coordination needed)
 
 ### For Infrastructure / CI Work
-```
-1. Load: GEMINI.md (.github/workflows/ references)
+1. Load: [GEMINI.md](GEMINI.md) (.github/workflows/ references)
 2. Load: [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) (auto-merge + CI sections)
-3. Load: parity-ir.yml, auto-merge.yml, auto-fix-bot.yml (.github/workflows/)
-```
+3. Load: `parity-ir.yml`, `auto-merge.yml`, `auto-fix-bot.yml` (from `.github/workflows/`)
 
 ---
 
@@ -92,13 +86,13 @@ Located in `.github/workflows/`:
 |------|-------|---------|
 | copilot-instructions.md | ~80 | Copilot behavior rules & expectations |
 | gemini-instructions.md | ~80 | Gemini behavior rules & constraints |
-| GEMINI.md | ~30 | Gemini context guide (workflows + quick rules) |
+| GEMINI.md | ~22 | Gemini context guide (workflows + quick rules) |
 | COPILOT_GEMINI_HANDOFF.md | ~50 | Latest handoff state + work-queue |
 | assistant_coordination.md | ~100+ | Shared protocol, priorities, MCP guidance |
 | DEVELOPMENT_WORKFLOW.md | ~150+ | Code review, branching, auto-merge, amend guidance |
-| .github/workflows/parity-ir.yml | ~50 | Main CI gate (parity + IR + perf checks) |
-| .github/workflows/auto-merge.yml | ~65 | Auto-merge enabler on green CI + approval |
-| .github/workflows/auto-fix-bot.yml | ~68 | Auto-fix committer on CI failure |
+| .github/workflows/parity-ir.yml | ~56 | Main CI gate (parity + IR + perf checks) |
+| .github/workflows/auto-merge.yml | ~85 | Auto-merge enabler on green CI + approval |
+| .github/workflows/auto-fix-bot.yml | ~76 | Auto-fix committer on CI failure |
 
 ---
 
