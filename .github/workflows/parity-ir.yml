@@ -41,7 +41,7 @@ jobs:
           echo "Performance check: $PERF_RESULT"
           
           # If regression detected (optional blocking logic can be added here)
-          if grep -q "regression" perf_results.txt; then
+          if grep -Ei '\bperformance regression\b' perf_results.txt; then
             echo "⚠️ Performance regression detected - see details below"
             cat perf_results.txt
           fi
