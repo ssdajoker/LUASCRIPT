@@ -71,7 +71,18 @@ class JSToIRCompiler {
         // JavaScript variable declarations can have multiple declarators
         // We'll convert each to a separate IR VarDecl
         const declarations = node.declarations.map(declarator => {
-            const name = declarator.id.name;
+            // Handle different types of declarator.id (Identifier, ArrayPattern, ObjectPattern, etc.)
+            let name;
+            if (declarator.id.type === 'Identifier') {
+                name = declarator.id.name;
+            } else if (declarator.id.type === 'ArrayPattern' || declarator.id.type === 'ObjectPattern') {
+                // For destructuring patterns, convert the pattern and use a temporary name
+                name = this.convertNode(declarator.id);
+            } else {
+                // Fallback for other pattern types
+                name = this.convertNode(declarator.id);
+            }
+            
             const init = declarator.init ? this.convertNode(declarator.init) : null;
             return this.builder.varDecl(name, init, null, {
                 kind: node.kind,
@@ -95,6 +106,24 @@ class JSToIRCompiler {
             const name = node.left.name;
             const defaultValue = this.convertNode(node.right);
             return this.builder.parameter(name, null, defaultValue, this.getLoc(node));
+        } else if (node.type === 'ArrayPattern') {
+            // Handle array destructuring parameters
+            // For now, convert to a single parameter with metadata about the pattern
+            const paramName = `_destructured_${Date.now()}`;
+            return this.builder.parameter(paramName, null, null, {
+                ...this.getLoc(node),
+                metadata: { 
+                    destructuring: 'array',
+                    elements: node.elements.map(el => el ? el.name || null : null)
+                }
+            });
+        } else if (node.type === 'RestElement') {
+            // Handle rest parameters (...rest)
+            const name = node.argument.name;
+            return this.builder.parameter(name, null, null, {
+                ...this.getLoc(node),
+                metadata: { isRest: true }
+            });
         }
         
         throw new Error(`Unsupported parameter type: ${node.type}`);
@@ -305,6 +334,24 @@ class JSToIRCompiler {
         return this.builder.call(callee, args, {
             ...this.getLoc(node),
             metadata: { isNew: true }
+        });
+    }
+
+    convertArrayPattern(node) {
+        // Array patterns in variable declarations (e.g., const [a, b] = arr)
+        const elements = node.elements.map(el => el ? this.convertNode(el) : null);
+        return this.builder.identifier('_array_pattern', {
+            ...this.getLoc(node),
+            metadata: { pattern: 'array', elements }
+        });
+    }
+
+    convertRestElement(node) {
+        // Rest elements in destructuring (e.g., ...rest)
+        const argument = this.convertNode(node.argument);
+        return this.builder.identifier('_rest', {
+            ...this.getLoc(node),
+            metadata: { isRest: true, argument }
         });
     }
 

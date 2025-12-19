@@ -296,6 +296,25 @@ class CoreTranspiler extends EventEmitter {
             case 'EmptyStatement':
                 return '';
 
+            case 'ArrayPattern': {
+                // Handle array destructuring pattern
+                // For now, we'll generate a simple identifier for the pattern
+                // The actual destructuring will be handled by the variable declarator
+                const elements = node.elements.map((el, idx) => {
+                    if (!el) return null;
+                    if (el.type === 'RestElement') {
+                        return this.generateLuaFromAST(el);
+                    }
+                    return this.generateLuaFromAST(el);
+                }).filter(Boolean);
+                return elements.join(', ');
+            }
+
+            case 'RestElement': {
+                // Handle rest element (...rest)
+                return this.generateLuaFromAST(node.argument);
+            }
+
             default:
                 throw new Error(`Unsupported AST node type: ${node.type}`);
         }
