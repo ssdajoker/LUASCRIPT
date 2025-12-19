@@ -716,6 +716,19 @@ class Assignment extends IRNode {
     }
 }
 
+// Helper function to infer literal kind from value
+function inferLiteralKind(value) {
+    if (value === null) return "null";
+    if (value === undefined) return "undefined";
+    switch (typeof value) {
+        case "string": return "string";
+        case "number": return "numeric";
+        case "boolean": return "boolean";
+        case "bigint": return "bigint";
+        default: return "unknown";
+    }
+}
+
 class IRNodeFactory {
   constructor(options = {}) {
     const { idGenerator = new BalancedTernaryIdGenerator() } = options;

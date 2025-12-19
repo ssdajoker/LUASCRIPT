@@ -8,6 +8,7 @@
 const nodes = require('./nodes');
 const { Types } = require('./types');
 const { BalancedTernaryIdGenerator } = require('./idGenerator');
+const { validateIR } = require('./validator');
 const { IRNodeFactory } = nodes;
 
 class IRBuilder {
