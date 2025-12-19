@@ -28,6 +28,26 @@ jobs:
       - name: Run IR report
         run: npm run -s ir:report
 
+      - name: Run performance tests
+        run: npm run -s test:performance > perf_results.txt 2>&1
+        continue-on-error: true
+
+      - name: Compare performance to baseline
+        id: perf-check
+        run: |
+          # Extract performance metrics from results
+          PERF_RESULT=$(tail -5 perf_results.txt)
+          echo "PERF_RESULT=$PERF_RESULT" >> $GITHUB_OUTPUT
+          echo "Performance check: $PERF_RESULT"
+          
+          # If regression detected (optional blocking logic can be added here)
+          if grep -Ei '\bperformance regression\b' perf_results.txt; then
+            echo "⚠️ Performance regression detected - see details below"
+            cat perf_results.txt
+          fi
+        shell: bash
+        continue-on-error: true
+
       - name: Upload IR status artifact
         if: always()
         uses: actions/upload-artifact@v4

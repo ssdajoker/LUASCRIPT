@@ -1,9 +1,7 @@
 # LUASCRIPT Development Workflow
 ## Established by Linus Torvalds - GitHub Integration Lead
+*"Talk is cheap. Show me the code." - Linus Torvalds*
 
-### Repository Structure
-```
-LUASCRIPT/
 ├── src/                    # Core transpiler implementation
 │   ├── lexer/             # Lexical analysis
 │   ├── parser/            # Syntax parsing
@@ -53,6 +51,34 @@ git push origin feature/your-feature-name
 - **Linus approval required** for: Core architecture, build system, CI/CD
 - **Minimum 2 approvals** for any merge to develop
 - **All tests must pass** before merge
+
+### Auto-merge on Green (PRs)
+- Trigger: after "Parity and IR Gates" workflow succeeds on a PR.
+- Requirements: PR is open, non-draft, has at least 1 approval.
+- Action: GitHub auto-merge (SQUASH) is enabled automatically; do not manually merge.
+- Note: If no approvals yet or PR is draft, auto-merge is skipped until ready.
+
+### Amend Workflow (Conflict Fixes / Bot Noise)
+When resolving conflicts or CI-only changes, prefer amending to keep history tidy:
+
+```bash
+# after fixing files locally
+git add -A
+git commit --amend --no-edit
+git push --force-with-lease
+```
+
+- Use this especially when only generated artifacts or CI configs change.
+- Avoid spamming fixup commits; keep PR diffs focused on intent.
+
+### Draft PRs
+- Use draft PRs for exploratory work; CI can still run as needed.
+- Auto-merge is disabled for drafts, becomes eligible once marked "Ready for review".
+
+### Agent & Bot Workflows
+- Auto-fix bot may push commits to refresh IR report/parity artifacts on CI failures.
+- Avoid racing the bot: let it finish, then re-run CI or amend if additional fixes are needed.
+- See also: .github/workflows/auto-merge.yml and .github/workflows/auto-fix-bot.yml.
 
 #### 3. Release Process
 ```bash
