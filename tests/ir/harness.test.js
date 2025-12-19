@@ -13,7 +13,7 @@ const DOC_ENDPOINT = process.env.MCP_DOC_INDEX_ENDPOINT || '';
 const REQUEST_TIMEOUT_MS = 2000;
 
 function fetchDocHints(query) {
-  if (!DOC_ENDPOINT) return null;
+  if (!DOC_ENDPOINT) return Promise.resolve(null);
   try {
     const url = new URL(DOC_ENDPOINT);
     if (!url.searchParams.has('q')) {
@@ -21,8 +21,7 @@ function fetchDocHints(query) {
     }
     const client = url.protocol === 'https:' ? https : http;
     return new Promise((resolve) => {
-      const req = client.get(url, (res) => {
-        req.setTimeout(REQUEST_TIMEOUT_MS);
+      const req = client.get(url, { timeout: REQUEST_TIMEOUT_MS }, (res) => {
         const chunks = [];
         res.on('data', (c) => chunks.push(c));
         res.on('end', () => {
@@ -34,10 +33,8 @@ function fetchDocHints(query) {
             resolve({ ok: res.statusCode, error: err && err.message ? err.message : String(err) });
           }
         });
-        res.on('error', (err) => {
-          resolve({ ok: 0, error: err && err.message ? err.message : String(err) });
-        });
       });
+      req.setTimeout(REQUEST_TIMEOUT_MS);
       req.on('timeout', () => {
         req.destroy();
         resolve({ ok: 0, error: 'timeout' });
@@ -45,7 +42,7 @@ function fetchDocHints(query) {
       req.on('error', (err) => resolve({ ok: 0, error: err && err.message ? err.message : String(err) }));
     });
   } catch (err) {
-    return null;
+    return Promise.resolve(null);
   }
 }
 
@@ -128,6 +125,7 @@ async function main() {
       assert.ok(lua.includes('local __ds1 = foo'), 'array destruct temp missing');
       assert.ok(lua.includes('__ds1[0]'), 'first element access missing');
       assert.ok(lua.includes('__ds1[1]'), 'third element access missing');
+      assert.ok(lua.includes('__ds1[2]'), 'third element access missing');
       assert.ok(lua.match(/return a \+ c/), 'return expression missing');
     });
 
@@ -201,7 +199,7 @@ async function main() {
   } catch (err) {
     console.error('harness tests failed');
     console.error(err && err.stack ? err.stack : err);
-    const hint = await fetchDocHints(`${currentCase} ${err && err.message ? err.message : ''}`);
+    const hint = await fetchDocHints(`${currentCase || 'unknown case'} ${err && err.message ? err.message : ''}`);
     writeArtifacts({ error: err && err.message ? err.message : 'harness failed', cases: results, docHint: hint });
     process.exit(1);
   }

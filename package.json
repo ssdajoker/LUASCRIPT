@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run test:core && npm run test:phase1 && node tests/test_memory_management.js",
     "test:enhanced": "node test/test_enhanced_transpiler.js",
-    "test:all": "npm test && npm run test:enhanced && npm run test:legacy && npm run test:parity",
+    "test:all": "npm test && npm run test:enhanced && npm run test:legacy && npm run test:parity && npm run test:scripts",
     "test:phase1": "node test/test_perfect_parser_phase1.js && node test/test_perfect_parser_phase1_negative.js",
     "test:smoke": "node scripts/smoke_ci.js",
     "status:bundle": "node scripts/status_bundle.js",
@@ -45,7 +45,8 @@
     "test:normalizer": "node tests/ir/normalizer.smoke.js",
     "ir:normalizer": "npm run -s test:normalizer",
     "test:determinism": "node tests/ir/determinism.test.js",
-    "ir:emit:goldens": "node tests/emitter/emit_from_goldens.js"
+    "ir:emit:goldens": "node tests/emitter/emit_from_goldens.js",
+    "test:scripts": "node tests/scripts/launch_gemini_mcp.test.js"
   },
   "keywords": [
     "luascript",
