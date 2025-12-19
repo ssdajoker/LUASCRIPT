@@ -27,7 +27,6 @@
     "ir:validate:schema": "node scripts/validate_ir_schema.js",
     "ir:validate:all": "npm run -s ir:validate && npm run -s ir:validate:schema",
     "ir:golden:check": "node tests/golden_ir/check_golden_ir.js",
-    "ir:golden:parity": "node tests/golden_ir/compare_pipeline_to_goldens.js",
     "ir:cli": "node scripts/ir_cli.js",
     "ir:report": "node scripts/generate_ir_status.js",
     "ir:repro": "bash -lc 'npm run -s ir:report >/dev/null 2>&1 && cp reports/canonical_ir_status.md reports/canonical_ir_status.1.md && npm run -s ir:report >/dev/null 2>&1 && diff -u reports/canonical_ir_status.1.md reports/canonical_ir_status.md'",

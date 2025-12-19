@@ -20,14 +20,6 @@
     }
   },
   "$defs": {
-    "CatchHandler": {
-      "type": "object",
-      "additionalProperties": true,
-      "properties": {
-        "param": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] },
-        "body": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] }
-      }
-    },
     "IRId": {
       "type": "string",
       "description": "Balanced-ternary encoded identifier with any prefix (e.g., id_T01, node_10T, mod_001).",
@@ -237,11 +229,7 @@
         "arguments": {
           "type": ["array", "null"],
           "items": { "$ref": "#/$defs/NodeRef" }
-        },
-        "superClass": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] },
-        "block": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] },
-        "handler": { "anyOf": [ { "$ref": "#/$defs/CatchHandler" }, { "type": "null" } ] },
-        "finalizer": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] }
+        }
       }
     },
     "ControlFlowGraph": {
