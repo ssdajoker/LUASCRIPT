@@ -102,6 +102,7 @@ module.exports = {
   DEFAULT_INSTRUCTIONS,
   GEMINI_INSTRUCTIONS,
   COORDINATION_DOC,
+  PRIORITY_MCP_KEYS,
   collectMcpEndpoints,
   loadInstructions,
   loadCopilotInstructions,

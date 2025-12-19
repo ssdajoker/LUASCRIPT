@@ -21,8 +21,8 @@ function fetchDocHints(query) {
     }
     const client = url.protocol === 'https:' ? https : http;
     return new Promise((resolve) => {
+      const req = client.get(url, { timeout: REQUEST_TIMEOUT_MS }, (res) => {
       const req = client.get(url, (res) => {
-        req.setTimeout(REQUEST_TIMEOUT_MS);
         const chunks = [];
         res.on('data', (c) => chunks.push(c));
         res.on('end', () => {
@@ -34,10 +34,8 @@ function fetchDocHints(query) {
             resolve({ ok: res.statusCode, error: err && err.message ? err.message : String(err) });
           }
         });
-        res.on('error', (err) => {
-          resolve({ ok: 0, error: err && err.message ? err.message : String(err) });
-        });
       });
+      req.setTimeout(REQUEST_TIMEOUT_MS);
       req.on('timeout', () => {
         req.destroy();
         resolve({ ok: 0, error: 'timeout' });
@@ -89,47 +87,47 @@ async function main() {
   try {
     currentCase = 'optional chaining + nullish coalesce';
     runCase(currentCase, 'const r = (obj?.value ?? 1) | 4;', ({ lua }) => {
-    assert.ok(lua.includes('function(__o)'), 'optional guard missing');
-    assert.ok(lua.includes('__o ~= nil'), 'optional chain guard condition missing');
-    assert.ok(lua.includes('__v == nil then return 1 else return __v'), 'nullish coalesce fallback missing');
-    assert.ok(lua.includes('| 4'), 'bitwise OR missing');
-  });
+      assert.ok(lua.includes('function(__o)'), 'optional guard missing');
+      assert.ok(lua.includes('__o ~= nil'), 'optional chain guard condition missing');
+      assert.ok(lua.includes('__v == nil then return 1 else return __v'), 'nullish coalesce fallback missing');
+      assert.ok(lua.includes('| 4'), 'bitwise OR missing');
+    });
 
     currentCase = 'nullish assignment';
     runCase(currentCase, 'x ??= y;', ({ lua }) => {
-    assert.ok(lua.includes('local __val = x'), 'nullish assignment temp missing');
-    assert.ok(lua.includes('__val == nil then __val = y'), 'nullish assignment guard missing');
-    assert.ok(lua.includes('x = __val'), 'nullish assignment writeback missing');
-  });
+      assert.ok(lua.includes('local __val = x'), 'nullish assignment temp missing');
+      assert.ok(lua.includes('__val == nil then __val = y'), 'nullish assignment guard missing');
+      assert.ok(lua.includes('x = __val'), 'nullish assignment writeback missing');
+    });
 
     currentCase = 'for-of emission';
     runCase(currentCase, 'function sum(items) { let total = 0; for (const v of items) { total += v; } return total; }', ({ lua }) => {
-    assert.ok(lua.includes('for __k, v in pairs(items)'), 'for-of should use pairs iterator');
-    assert.ok(lua.includes('total = total + v'), 'accumulation missing');
-    assert.ok(lua.includes('return total'), 'return total missing');
-  });
+      assert.ok(lua.includes('for __k, v in pairs(items)'), 'for-of should use pairs iterator');
+      assert.ok(lua.includes('total = total + v'), 'accumulation missing');
+      assert.ok(lua.includes('return total'), 'return total missing');
+    });
 
     currentCase = 'for-of array literal';
     runCase(currentCase, 'function sum(arr) { let s = 0; for (const n of [1,2,3]) { s += n; } return s + arr[0]; }', ({ lua }) => {
-    assert.ok(lua.includes('for __k, n in pairs({1, 2, 3})'), 'for-of array literal should desugar to pairs over table');
-    assert.ok(lua.includes('s = s + n'), 'accumulation missing in literal loop');
-    assert.ok(lua.includes('return s + arr[0]'), 'return expression missing');
-  });
+      assert.ok(lua.includes('for __k, n in pairs({1, 2, 3})'), 'for-of array literal should desugar to pairs over table');
+      assert.ok(lua.includes('s = s + n'), 'accumulation missing in literal loop');
+      assert.ok(lua.includes('return s + arr[0]'), 'return expression missing');
+    });
 
     currentCase = 'template literal basic';
     runCase(currentCase, 'function greet(name) { const msg = `hi ${name}!`; return msg; }', ({ lua }) => {
-    assert.ok(lua.includes('local msg'), 'template literal binding missing');
-    assert.ok(lua.includes('string.format("hi %s!", name)'), 'template literal interpolation missing');
-    assert.ok(lua.includes('return msg'), 'template literal return missing');
-  });
+      assert.ok(lua.includes('local msg'), 'template literal binding missing');
+      assert.ok(lua.includes('string.format("hi %s!", name)'), 'template literal interpolation missing');
+      assert.ok(lua.includes('return msg'), 'template literal return missing');
+    });
 
     currentCase = 'array destructuring';
     runCase(currentCase, 'function pick(foo) { const [a, , c] = foo; return a + c; }', ({ lua }) => {
-    assert.ok(lua.includes('local __ds1 = foo'), 'array destruct temp missing');
-    assert.ok(lua.includes('__ds1[0]'), 'first element access missing');
-    assert.ok(lua.includes('__ds1[1]'), 'third element access missing');
-    assert.ok(lua.match(/return a \+ c/), 'return expression missing');
-  });
+      assert.ok(lua.includes('local __ds1 = foo'), 'array destruct temp missing');
+      assert.ok(lua.includes('__ds1[0]'), 'first element access missing');
+      assert.ok(lua.includes('__ds1[1]'), 'third element access missing');
+      assert.ok(lua.match(/return a \+ c/), 'return expression missing');
+    });
 
     /*
     currentCase = 'spread in array literal';
@@ -147,17 +145,17 @@ async function main() {
 
     currentCase = 'arrow function expression body';
     runCase(currentCase, 'const double = x => x * 2;', ({ lua }) => {
-    assert.ok(lua.includes('local double'), 'arrow binding missing');
-    assert.ok(lua.includes('function('), 'arrow function missing');
-    assert.ok(lua.includes('return'), 'implicit return missing');
-  });
+      assert.ok(lua.includes('local double'), 'arrow binding missing');
+      assert.ok(lua.includes('function('), 'arrow function missing');
+      assert.ok(lua.includes('return'), 'implicit return missing');
+    });
 
     currentCase = 'arrow function block body';
     runCase(currentCase, 'const add = (a, b) => { const sum = a + b; return sum; };', ({ lua }) => {
-    assert.ok(lua.includes('local add'), 'arrow binding missing');
-    assert.ok(lua.includes('local sum'), 'block body variable missing');
-    assert.ok(lua.includes('return sum'), 'explicit return missing');
-  });
+      assert.ok(lua.includes('local add'), 'arrow binding missing');
+      assert.ok(lua.includes('local sum'), 'block body variable missing');
+      assert.ok(lua.includes('return sum'), 'explicit return missing');
+    });
 
     /*
     currentCase = 'object property shorthand';
@@ -170,9 +168,9 @@ async function main() {
 
     currentCase = 'computed property names';
     runCase(currentCase, 'const key = "a"; const obj = { [key]: 1 };', ({ lua }) => {
-    assert.ok(lua.includes('local key'), 'computed key var missing');
-    assert.ok(lua.includes('local obj'), 'object binding missing');
-  });
+      assert.ok(lua.includes('local key'), 'computed key var missing');
+      assert.ok(lua.includes('local obj'), 'object binding missing');
+    });
 
     /*
     currentCase = 'class with methods';
@@ -185,15 +183,15 @@ async function main() {
 
     currentCase = 'try-catch block';
     runCase(currentCase, 'function safe() { try { throw new Error("x"); } catch (e) { return e; } }', ({ lua }) => {
-    assert.ok(lua.includes('pcall'), 'protected call missing');
-    assert.ok(lua.includes('function safe'), 'function declaration missing');
-  });
+      assert.ok(lua.includes('pcall'), 'protected call missing');
+      assert.ok(lua.includes('function safe'), 'function declaration missing');
+    });
 
     currentCase = 'switch statement';
     runCase(currentCase, 'function test(x) { switch(x) { case 1: return "one"; default: return "other"; } }', ({ lua }) => {
-    assert.ok(lua.includes('if'), 'switch condition missing');
-    assert.ok(lua.includes('return'), 'case return missing');
-  });
+      assert.ok(lua.includes('if'), 'switch condition missing');
+      assert.ok(lua.includes('return'), 'case return missing');
+    });
 
     const slowest = results.slice().sort((a, b) => b.durationMs - a.durationMs)[0];
     writeArtifacts({ summary: { cases: results.length, slowest }, cases: results });
@@ -201,7 +199,7 @@ async function main() {
   } catch (err) {
     console.error('harness tests failed');
     console.error(err && err.stack ? err.stack : err);
-    const hint = await fetchDocHints(`${currentCase} ${err && err.message ? err.message : ''}`);
+    const hint = await fetchDocHints(`${currentCase || 'unknown case'} ${err && err.message ? err.message : ''}`);
     writeArtifacts({ error: err && err.message ? err.message : 'harness failed', cases: results, docHint: hint });
     process.exit(1);
   }
