@@ -57,8 +57,6 @@ jobs:
                 latestReviewsByUser.set(key, review);
                 continue;
               }
-              const existingTime = Date.parse(existing.submitted_at);
-              const reviewTime = Date.parse(review.submitted_at);
               const existingTime = existing.submitted_at ? Date.parse(existing.submitted_at) : 0;
               const reviewTime = review.submitted_at ? Date.parse(review.submitted_at) : 0;
               if (reviewTime >= existingTime) {
