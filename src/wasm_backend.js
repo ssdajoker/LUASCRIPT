@@ -1,14 +1,25 @@
 /**
- * LUASCRIPT WASM Backend - Phase 8 & A6 Implementation
- * Ada Lovelace's Unified Team - Complete WASM Compilation Pipeline
- * Acceptance Criteria A6: WASM path to 100%
+ * LUASCRIPT WASM Backend - Phase 2 Implementation
+ * Complete WASM Compilation Pipeline with Canonical IR Integration
  * 
- * Updated to use canonical IR system
+ * Features:
+ * - Integration with canonical IR from src/ir/pipeline.js
+ * - Full WASM instruction set support
+ * - Type inference and mapping
+ * - Optimization passes
+ * - Memory management
  */
 
 const fs = require('fs');
 const path = require('path');
-const { IRToWasmCompiler } = require('./backends/wasm/ir-to-wasm');
+const { parseAndLower } = require('./ir/pipeline');
+const {
+    collectFunctions,
+    collectGlobals,
+    compileExpression,
+    compileStatement,
+    encodeU32
+} = require('./wasm_backend_helpers');
 
 /**
  * A backend for compiling Lua code to WebAssembly (WASM).
@@ -65,23 +76,32 @@ class WASMBackend {
     }
 
     /**
-     * Compile IR to WASM
-     * @param {Object} ir - Canonical IR program
-     * @returns {Promise<Object>} Compiled WASM module info
-     * Compiles Lua code to a WebAssembly module.
-     * @param {string} luaCode - The Lua source code to compile.
+     * Compiles JavaScript code to a WebAssembly module using the canonical IR.
+     * @param {string} jsCode - The JavaScript source code to compile.
+     * @param {object} options - Compilation options.
      * @returns {Promise<object>} A promise that resolves with the compilation result.
      */
-    async compileIRToWASM(ir) {
+    async compileJSToWASM(jsCode, options = {}) {
         if (!this.initialized) {
             await this.initialize();
         }
 
         try {
-            // Compile IR to WASM bytecode
-            const wasmBytecode = this.irCompiler.compile(ir);
+            // Step 1: Parse JavaScript and lower to canonical IR
+            const ir = parseAndLower(jsCode, {
+                sourcePath: options.sourcePath || '<input>',
+                sourceHash: options.sourceHash || null,
+                schemaVersion: '1.0.0',
+                validate: true
+            });
             
-            // Compile to WASM module
+            // Step 2: Optimize IR (if enabled)
+            const optimizedIR = this.options.optimize ? this.optimizeIR(ir) : ir;
+            
+            // Step 3: Generate WASM bytecode from IR
+            const wasmBytecode = this.generateWASMBytecode(optimizedIR);
+            
+            // Step 4: Compile to WASM module
             const wasmModule = await WebAssembly.compile(wasmBytecode);
             
             return {
@@ -89,7 +109,12 @@ class WASMBackend {
                 module: wasmModule,
                 bytecode: wasmBytecode,
                 size: wasmBytecode.length,
-                optimized: this.options.optimize
+                optimized: this.options.optimize,
+                stats: {
+                    nodes: ir.nodes ? Object.keys(ir.nodes).length : 0,
+                    functions: this.countFunctions(ir),
+                    performance: ir.module.metadata?.metaPerf || {}
+                }
             };
         } catch (error) {
             return {
@@ -101,61 +126,51 @@ class WASMBackend {
     }
 
     /**
-     * Compile Lua code to WASM (legacy method - uses IR pipeline)
-     * @param {string} luaCode - Lua source code
-     * @returns {Promise<Object>} Compiled WASM module info
-     * Parses Lua code into an intermediate representation (IR).
-     * @param {string} luaCode - The Lua source code.
-     * @returns {object} The intermediate representation.
-     * @private
+     * Legacy method for backward compatibility. Compiles Lua code to WASM.
+     * Note: This wraps compileJSToWASM as the project uses JS->Lua transpilation.
+     * @param {string} luaCode - The Lua source code to compile.
+     * @returns {Promise<object>} A promise that resolves with the compilation result.
+     * @deprecated Use compileJSToWASM instead
      */
     async compileLuaToWASM(luaCode) {
-        if (!this.initialized) {
-            await this.initialize();
-        }
-
-        try {
-            // Step 1: Parse Lua code into IR (requires lua-to-ir compiler)
-            const { LuaToIRCompiler } = require('./compilers/lua-to-ir');
-            const luaCompiler = new LuaToIRCompiler();
-            const ir = luaCompiler.compile(luaCode);
-            
-            // Step 2: Compile IR to WASM
-            return await this.compileIRToWASM(ir);
-        } catch (error) {
-            return {
-                success: false,
-                error: error.message,
-                stack: error.stack
-            };
-        }
+        console.warn('compileLuaToWASM is deprecated. Use compileJSToWASM for JS->WASM compilation.');
+        return this.compileJSToWASM(luaCode);
     }
 
     /**
-     * Compile JavaScript code to WASM (uses IR pipeline)
-     * @param {string} jsCode - JavaScript source code
-     * @returns {Promise<Object>} Compiled WASM module info
+     * Counts the number of functions in the IR.
+     * @param {object} ir - The canonical IR.
+     * @returns {number} The number of functions.
+     * @private
      */
-    async compileJSToWASM(jsCode) {
-        if (!this.initialized) {
-            await this.initialize();
-        }
+    countFunctions(ir) {
+        if (!ir || !ir.nodes) return 0;
+        return Object.values(ir.nodes).filter(
+            node => node.kind === 'FunctionDeclaration' || 
+                    node.kind === 'ArrowFunctionExpression' ||
+                    node.kind === 'FunctionExpression'
+        ).length;
+    }
 
-        try {
-            // Step 1: Parse JS code into IR
-            const { JSToIRCompiler } = require('./compilers/js-to-ir');
-            const jsCompiler = new JSToIRCompiler();
-            const ir = jsCompiler.compile(jsCode);
-            
-            // Step 2: Compile IR to WASM
-            return await this.compileIRToWASM(ir);
-        } catch (error) {
-            return {
-                success: false,
-                error: error.message,
-                stack: error.stack
-            };
-        }
+    /**
+     * Maps a canonical IR type to a WASM type.
+     * @param {string} irType - The IR type hint.
+     * @returns {number} The WASM type code.
+     * @private
+     */
+    mapIRTypeToWASM(irType) {
+        // WASM value types:
+        // 0x7F = i32, 0x7E = i64, 0x7D = f32, 0x7C = f64
+        const typeMap = {
+            'i32': 0x7F,
+            'i64': 0x7E,
+            'f32': 0x7D,
+            'f64': 0x7C,
+            'number': 0x7D,  // Default to f32 for numbers
+            'boolean': 0x7F, // i32 for booleans (0 or 1)
+            'void': 0x40     // void type
+        };
+        return typeMap[irType] || 0x7D; // Default to f32
     }
 
     /**
@@ -181,8 +196,8 @@ class WASMBackend {
     }
 
     /**
-     * Generates WebAssembly bytecode from the intermediate representation.
-     * @param {object} ir - The intermediate representation.
+     * Generates WebAssembly bytecode from the canonical IR.
+     * @param {object} ir - The canonical intermediate representation.
      * @returns {Uint8Array} The generated WASM bytecode.
      * @private
      */
@@ -193,6 +208,10 @@ class WASMBackend {
             version: [0x01, 0x00, 0x00, 0x00], // version 1
             sections: []
         };
+        
+        // Collect function information from IR
+        const functions = collectFunctions(ir);
+        const globals = collectGlobals(ir);
 
         // Type section
         wasmModule.sections.push(this.generateTypeSection());

@@ -658,7 +658,7 @@ class CoreTranspiler extends EventEmitter {
         
         // Clean up excessive whitespace while preserving structure
         // Preserve newlines but trim each line
-        code = code.split('\n').map(line => line.trim()).join('\n');
+        code = code.split('\n').map(line => line.trim()).filter(line => line).join('\n');
         
         // Remove multiple spaces within lines
         code = code.replace(/  +/g, ' ');

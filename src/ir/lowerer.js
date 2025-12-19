@@ -343,8 +343,53 @@ class IRLowerer {
       case "ExpressionStatement": {
         return this.lowerExpression(node.expression);
       }
+      case "SequenceExpression": {
+        // Handle comma-separated expressions: (a, b, c)
+        // In Lua, we'll emit them as separate statements or wrap in a do-end block
+        const expressions = (node.expressions || []).map((expr) => this.lowerExpression(expr));
+        // Return the last expression as the result
+        return expressions.length > 0 ? expressions[expressions.length - 1] : null;
+      }
+      case "ThisExpression": {
+        // Handle 'this' keyword - map to 'self' in Lua
+        return this.builder.identifier("self").id;
+      }
+      case "TemplateLiteral": {
+        // Handle template literals: `Hello ${name}`
+        // Convert to string concatenation
+        const quasis = node.quasis || [];
+        const expressions = (node.expressions || []).map((expr) => this.lowerExpression(expr));
+        
+        if (expressions.length === 0) {
+          // No interpolation, just a string
+          return this.builder.literal(quasis[0]?.value?.cooked || "", {}).id;
+        }
+        
+        // Build concatenation: quasi[0] .. expr[0] .. quasi[1] .. expr[1] .. ...
+        let result = this.builder.literal(quasis[0]?.value?.cooked || "", {}).id;
+        for (let i = 0; i < expressions.length; i++) {
+          result = this.builder.binaryExpression(result, "+", expressions[i]).id;
+          if (i + 1 < quasis.length) {
+            const nextQuasi = this.builder.literal(quasis[i + 1]?.value?.cooked || "", {}).id;
+            result = this.builder.binaryExpression(result, "+", nextQuasi).id;
+          }
+        }
+        return result;
+      }
       default: {
-        throw new Error(`Lowerer does not yet support expression type ${node.type}`);
+        // Handle error nodes from parser
+        if (node.type === "Error" || node.type === "LexicalError" || node.type === "SyntaxError") {
+          // Re-throw parse errors with the original message
+          const errorMsg = node.message || "Unknown parser error";
+          throw new Error(`Parse error during lowering: ${errorMsg}`);
+        }
+        
+        throw new Error(
+          `Lowerer does not yet support expression type ${node.type}. ` +
+          `Please report this issue with the following context:\n` +
+          `  Location: ${JSON.stringify(node.loc || node.span || "unknown")}\n` +
+          `  Node keys: ${Object.keys(node).join(", ")}`
+        );
       }
     }
   }

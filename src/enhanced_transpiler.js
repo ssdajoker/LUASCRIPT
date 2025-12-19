@@ -518,7 +518,7 @@ class EnhancedLuaScriptTranspiler {
         // Arrow function with single param and expression: const name = param => expression
         result = result.replace(
             /\b(?:const|let|var)\s+(\w+)\s*=\s*(\w+)\s*=>\s*([^;{]+);?/g,
-            'local $1 = function($2) return $3 end'
+            'const $1 = function($2) return $3 end'
         );
 
         // Arrow function with block: (params) => { body }

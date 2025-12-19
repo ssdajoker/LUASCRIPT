@@ -372,12 +372,14 @@ function validateIR(ir) {
 
   // Allowed node kinds (keep permissive; extend as spec evolves)
   const allowedKinds = new Set([
+    // Expressions
     "Identifier",
     "Literal",
     "BinaryExpression",
     "LogicalExpression",
     "AssignmentExpression",
     "UpdateExpression",
+    "UnaryExpression",
     "ConditionalExpression",
     "CallExpression",
     "MemberExpression",
@@ -385,7 +387,12 @@ function validateIR(ir) {
     "ArrayExpression",
     "ObjectExpression",
     "TemplateLiteral",
+    "SequenceExpression",
+    "ThisExpression",
     "ArrowFunctionExpression",
+    "FunctionExpression",
+    
+    // Statements
     "FunctionDeclaration",
     "FunctionExpression",
     "VariableDeclaration",
@@ -396,23 +403,39 @@ function validateIR(ir) {
     "SwitchStatement",
     "ForStatement",
     "ForOfStatement",
+    "ForInStatement",
     "WhileStatement",
     "DoWhileStatement",
     "BreakStatement",
     "ContinueStatement",
     "ThrowStatement",
     "TryStatement",
+    "LabeledStatement",
+    "WithStatement",
+    "DebuggerStatement",
+    
+    // Declarations
     "ImportDeclaration",
     "ExportDeclaration",
     "ClassDeclaration",
+    
+    // Class-related
     "ClassBody",
     "MethodDefinition",
+    
+    // Property and Patterns
     "Property",
     "ObjectPattern",
     "ArrayPattern",
     "RestElement",
     "AssignmentPattern",
-    "ProgramComment"
+    "SpreadElement",
+    
+    // Comments
+    "ProgramComment",
+    
+    // Special
+    "EmptyStatement"
   ]);
 
   // Validate nodes
