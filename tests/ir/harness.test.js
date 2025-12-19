@@ -21,6 +21,7 @@ function fetchDocHints(query) {
     }
     const client = url.protocol === 'https:' ? https : http;
     return new Promise((resolve) => {
+      const req = client.get(url, { timeout: REQUEST_TIMEOUT_MS }, (res) => {
       const req = client.get(url, (res) => {
         const chunks = [];
         res.on('data', (c) => chunks.push(c));
@@ -32,9 +33,6 @@ function fetchDocHints(query) {
           } catch (err) {
             resolve({ ok: res.statusCode, error: err && err.message ? err.message : String(err) });
           }
-        });
-        res.on('error', (err) => {
-          resolve({ ok: 0, error: err && err.message ? err.message : String(err) });
         });
       });
       req.setTimeout(REQUEST_TIMEOUT_MS);
@@ -201,7 +199,7 @@ async function main() {
   } catch (err) {
     console.error('harness tests failed');
     console.error(err && err.stack ? err.stack : err);
-    const hint = await fetchDocHints(`${currentCase} ${err && err.message ? err.message : ''}`);
+    const hint = await fetchDocHints(`${currentCase || 'unknown case'} ${err && err.message ? err.message : ''}`);
     writeArtifacts({ error: err && err.message ? err.message : 'harness failed', cases: results, docHint: hint });
     process.exit(1);
   }
