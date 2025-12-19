@@ -259,7 +259,6 @@ const { main } = require("../../scripts/launch_gemini_mcp");
 })();
 
 console.log("launch_gemini_mcp.js tests completed successfully.");
-const { main } = require("../../scripts/launch_gemini_mcp");
 
 // Helper function to clear MCP endpoint environment variables
 function clearMcpEndpoints() {
