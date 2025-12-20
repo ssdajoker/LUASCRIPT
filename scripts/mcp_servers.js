@@ -145,7 +145,7 @@ function handleSyncStatus(_u, res) {
   const inProgress = workQueue.filter(w => w.status === 'in-progress');
   const completed = workQueue.filter(w => w.status === 'completed');
   const now = Date.now();
-  const recentWindow = 300000; // 5 minutes
+  const recentWindow = 5 * 60 * 1000; // 5 minutes in milliseconds
   
   json(res, 200, {
     timestamp: new Date().toISOString(),
