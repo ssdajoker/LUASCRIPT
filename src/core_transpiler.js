@@ -18,6 +18,12 @@ const esprima = require('esprima');
  */
 class CoreTranspiler extends EventEmitter {
     /**
+     * Regex pattern to detect anonymous function expressions that need wrapping in call expressions.
+     * @type {RegExp}
+     */
+    static ANON_FUNCTION_REGEX = /^function\s*\(/;
+
+    /**
      * Creates an instance of the CoreTranspiler.
      * @param {object} [options={}] - The configuration options for the transpiler.
      * @param {string} [options.target='lua5.4'] - The target Lua version.
@@ -257,7 +263,7 @@ class CoreTranspiler extends EventEmitter {
             case 'CallExpression': {
                 const callee = this.generateLuaFromAST(node.callee);
                 const args = node.arguments.map(arg => this.generateLuaFromAST(arg)).join(', ');
-                const needsWrap = /^function\s*\(/.test(callee.trim());
+                const needsWrap = CoreTranspiler.ANON_FUNCTION_REGEX.test(callee.trim());
                 const callable = needsWrap ? `(${callee})` : callee;
                 return `${callable}(${args})`;
             }
