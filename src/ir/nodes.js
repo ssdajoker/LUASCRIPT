@@ -14,7 +14,7 @@ const NodeCategory = {
     // Declarations
     PROGRAM: 'Program',
     FUNCTION_DECL: 'FunctionDeclaration',
-    VAR_DECL: 'VariableDeclarator', // Deprecated: use VariableDeclarator
+    VAR_DECL: 'VariableDeclarator', // Deprecated: use VARIABLE_DECLARATION (kept as alias for backward compatibility)
     VARIABLE_DECLARATION: 'VariableDeclaration',
     PARAMETER: 'Parameter',
     
