@@ -379,10 +379,6 @@ class IRBuilder {
         return this.call(callee, args, options);
     }
 
-    callExpression(callee, args, options = {}) {
-        return this.call(callee, args, options);
-    }
-
     newExpression(callee, args, options = {}) {
         return this.call(callee, args, { ...options, isNew: true });
     }
