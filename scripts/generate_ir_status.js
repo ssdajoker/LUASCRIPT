@@ -14,10 +14,12 @@ function write(file, content) {
 
 function main() {
   const sample = `
-export function add(a, b) {
+function add(a, b) {
   const result = a + b;
   return result;
 }
+
+const square = (n) => n * n;
 `;
 
   let statusMd = `# Canonical IR Status\n\n`;
@@ -29,14 +31,19 @@ export function add(a, b) {
       statusMd += res.errors.map(e => `- ${e}`).join("\n");
     } else {
       const nodes = ir.nodes ? Object.keys(ir.nodes).length : 0;
-      const cfgCount = ir.controlFlowGraphs ? Object.keys(ir.controlFlowGraphs).length : 0;
+      const cfgs = ir.module.metadata.controlFlowGraphs || {};
+      const cfgCount = Object.keys(cfgs).length;
       statusMd += `✅ Validation passed\n\n`;
       statusMd += `- Nodes: ${nodes}\n`;
       statusMd += `- CFGs: ${cfgCount}\n`;
       statusMd += `- Module ID: ${ir.module && ir.module.id}\n`;
+      statusMd += `- Schema Version: ${ir.schemaVersion}\n`;
     }
   } catch (err) {
-    statusMd += `💥 Exception during IR validation: ${err && err.message}`;
+    statusMd += `💥 Exception during IR validation: ${err && err.message}\n\n`;
+    if (err.stack) {
+      statusMd += `Stack trace:\n\`\`\`\n${err.stack}\n\`\`\`\n`;
+    }
   }
 
   const out = path.join(process.cwd(), "reports", "canonical_ir_status.md");

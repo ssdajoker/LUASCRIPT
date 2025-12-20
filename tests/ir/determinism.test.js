@@ -3,9 +3,20 @@
 const assert = require("assert");
 const { parseAndLower } = require("../../src/ir/pipeline");
 
+function serialize(value) {
+  if (value === null || value === undefined) return value;
+  if (Array.isArray(value)) return value.map(serialize);
+  if (typeof value !== "object") return value;
+  const out = {};
+  for (const key of Object.keys(value)) {
+    out[key] = serialize(value[key]);
+  }
+  return out;
+}
+
 function normalizeIr(ir) {
   // Remove volatile fields that are not semantically relevant
-  const clone = JSON.parse(JSON.stringify(ir));
+  const clone = serialize(ir);
   if (clone?.module?.metadata) {
     delete clone.module.metadata.createdAt;
     delete clone.module.metadata.metaPerf; // timings vary run-to-run

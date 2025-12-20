@@ -1,0 +1,73 @@
+---
+# Codex Configuration
+# VS Code cloud development engine for LUASCRIPT
+
+codex_mode: "disabled"  # Local VS Code development + occasional remote push
+
+# Local development settings
+local:
+  workspace_root: "."
+  state_file: ".codex/state.json"
+  log_file: ".codex/codex.log"
+  max_retries: 3
+  timeout_ms: 30000  # 30s timeout for operations
+
+# GitHub integration
+github:
+  # Uses GITHUB_TOKEN from GitHub Actions / gh cli
+  api_version: "2022-11-28"
+  
+  # Workflow triggers
+  watch_events:
+    - pull_request_opened
+    - push_to_feature_branch
+    - workflow_run_failure  # When copilot test expansion fails
+    
+  # Branch strategy
+  push_strategy: "feature_branch"  # Push to feature/* or PR branch, not main
+  auto_create_branch: true
+  branch_prefix: "codex/fix-"
+  
+  # PR/Issue polling
+  poll_interval_ms: 5000  # Check GitHub for work every 5s
+  poll_timeout_ms: 60000  # Stop polling after 60s of inactivity
+
+# Codex API settings (user already logged in via VS Code)
+codex:
+  # Use local VS Code Codex context (no token needed)
+  # Codex API endpoints are handled by VS Code extension
+  enabled: true
+  
+  # Error recovery
+  error_telemetry: true
+  fallback_to_copilot: true  # If Codex times out, let Copilot finish locally
+
+# Artifact management
+artifacts:
+  directory: "artifacts"
+  per_agent_metadata: true
+  
+  # Codex-specific artifacts
+  codex_artifacts:
+    - "codex_ir_output.json"
+    - "codex_test_results.json"
+    - "codex_changes.diff"
+  
+  # Merge strategy
+  merge_on_conflict: "codex_wins"  # Codex local changes take precedence
+  preserve_golden: true  # Don't auto-overwrite golden fixtures
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARN, ERROR
+  telemetry_enabled: true
+  track_failures: true
+  track_timeouts: true
+  track_fallbacks: true
+
+# Coordination
+coordination:
+  three_agent_mode: true  # Copilot + Codex + Gemini/GitHub
+  sync_check_interval_ms: 10000  # Check who's active every 10s
+  max_concurrent_tasks: 1  # Codex only works on one task at a time
+  escalation_timeout_ms: 120000  # If Codex stalls > 2min, Gemini takes over

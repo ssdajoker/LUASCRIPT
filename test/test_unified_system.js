@@ -78,6 +78,12 @@ class UnifiedSystemTests {
             const expectedRegex = /local my_obj = {\s*key = "value"\s*};?/;
             return expectedRegex.test(result.code);
         });
+        
+        // Test 5: Async Function declaration
+        await this.runTest('Async Function Declaration', async () => {
+            const result = await system.transpile('async function fetchData() { return 42; }');
+            return result.code.includes('local function fetchData()') && result.code.includes('return coroutine.create(function()');
+        });
 
         system.shutdown();
     }

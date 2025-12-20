@@ -75,10 +75,11 @@ class CoreTranspiler extends EventEmitter {
             { from: /===/g, to: '==' }
         ]);
         
+        // Restrict function assignment rewrites to start-of-line (with optional indentation) to avoid breaking object literals
         this.patterns.set('functions', [
-            { from: /function\s+(\w+)\s*\(([^)]*)\)\s*{/g, to: 'local function $1($2)' },
-            { from: /(\w+)\s*=\s*function\s*\(([^)]*)\)\s*{/g, to: 'local function $1($2)' },
-            { from: /(\w+)\s*:\s*function\s*\(([^)]*)\)\s*{/g, to: '$1 = function($2)' }
+            { from: /^\s*function\s+(\w+)\s*\(([^)]*)\)\s*\{/gm, to: 'local function $1($2)' },
+            { from: /^\s*(\w+)\s*=\s*function\s*\(([^)]*)\)\s*\{/gm, to: 'local function $1($2)' },
+            { from: /(\w+)\s*:\s*function\s*\(([^)]*)\)\s*\{/g, to: '$1 = function($2)' }
         ]);
         
         this.patterns.set('control', [
@@ -140,6 +141,7 @@ class CoreTranspiler extends EventEmitter {
                 }
                 return this.generateLuaFromAST(node.expression);
 
+
             case 'BinaryExpression':
             case 'LogicalExpression': {
                 const left = this.generateLuaFromAST(node.left);
@@ -174,15 +176,56 @@ class CoreTranspiler extends EventEmitter {
                 return `${id} = ${init}`;
             }
 
+            case 'ArrayPattern': {
+                // Generate destructuring pattern for arrays
+                const elements = node.elements.map((el, idx) => {
+                    if (!el) return null;  // holes in pattern
+                    if (el.type === 'RestElement') {
+                        return `...${this.generateLuaFromAST(el.argument)}`;
+                    }
+                    return this.generateLuaFromAST(el);
+                }).filter(Boolean);
+                return elements.join(', ');
+            }
+
+            case 'ObjectPattern': {
+                // Generate destructuring pattern for objects  
+                const props = node.properties.map(prop => {
+                    const key = prop.key.name || this.generateLuaFromAST(prop.key);
+                    if (prop.value.type === 'Identifier' && prop.value.name === key) {
+                        return key;  // shorthand
+                    }
+                    return `${key} = ${this.generateLuaFromAST(prop.value)}`;
+                });
+                return props.join(', ');
+            }
+
+            case 'RestElement': {
+                return `...${this.generateLuaFromAST(node.argument)}`;
+            }
+
             case 'FunctionDeclaration': {
                 const id = this.generateLuaFromAST(node.id);
                 const params = node.params.map(param => this.generateLuaFromAST(param)).join(', ');
                 const body = this.generateLuaFromAST(node.body);
-                const indentedBody = this.indentCode(body);
+                let indentedBody = this.indentCode(body);
+
+                let functionCode;
                 if (indentedBody) {
-                    return `local function ${id}(${params})\n${indentedBody}\nend`;
+                    functionCode = `local function ${id}(${params})\n${indentedBody}\nend`;
+                } else {
+                    functionCode = `local function ${id}(${params})\nend`;
                 }
-                return `local function ${id}(${params})\nend`;
+
+                if (node.async) {
+                    // Wrap in coroutine.create if it's an async function
+                    const coroutineBody = this.indentCode(indentedBody || '', 2); // Indent body further for coroutine
+                    functionCode = `local function ${id}(${params})\n` +
+                                   `  return coroutine.create(function()\n${coroutineBody}\n  end)\n` +
+                                   `end`;
+                }
+
+                return functionCode;
             }
 
             case 'ArrowFunctionExpression': {
@@ -214,13 +257,72 @@ class CoreTranspiler extends EventEmitter {
             case 'CallExpression': {
                 const callee = this.generateLuaFromAST(node.callee);
                 const args = node.arguments.map(arg => this.generateLuaFromAST(arg)).join(', ');
-                return `${callee}(${args})`;
+                const needsWrap = /^function\s*\(/.test(callee.trim());
+                const callable = needsWrap ? `(${callee})` : callee;
+                return `${callable}(${args})`;
             }
 
             case 'MemberExpression': {
                 const object = this.generateLuaFromAST(node.object);
                 const property = this.generateLuaFromAST(node.property);
                 return node.computed ? `${object}[${property}]` : `${object}.${property}`;
+            }
+
+            case 'ArrayExpression': {
+                const elements = (node.elements || []).map(el => el ? this.generateLuaFromAST(el) : 'nil');
+                return `{ ${elements.join(', ')} }`;
+            }
+
+            case 'FunctionExpression': {
+                const params = node.params.map(param => this.generateLuaFromAST(param)).join(', ');
+                let body = '';
+                if (node.body && node.body.type === 'BlockStatement') {
+                    body = this.generateLuaFromAST(node.body);
+                } else if (node.body) {
+                    body = `return ${this.generateLuaFromAST(node.body)}`;
+                }
+                const indentedBody = this.indentCode(body);
+                return body
+                    ? `function(${params})\n${indentedBody}\nend`
+                    : `function(${params})\nend`;
+            }
+
+            case 'SwitchStatement': {
+                const discVar = this.createTempVar('_switch_expr');
+                const discValue = this.generateLuaFromAST(node.discriminant) || 'nil';
+                const lines = [`local ${discVar} = ${discValue}`];
+                let hasCase = false;
+                let defaultBody = '';
+
+                (node.cases || []).forEach((caseNode, index) => {
+                    const body = (caseNode.consequent || [])
+                        .map(stmt => this.generateLuaFromAST(stmt))
+                        .filter(Boolean)
+                        .join('\n');
+                    const indentedBody = this.indentCode(body);
+
+                    if (caseNode.test) {
+                        const testLua = this.generateLuaFromAST(caseNode.test);
+                        const prefix = hasCase ? 'elseif' : 'if';
+                        lines.push(`${prefix} ${discVar} == ${testLua} then`);
+                        if (indentedBody) lines.push(indentedBody);
+                        hasCase = true;
+                    } else {
+                        defaultBody = indentedBody;
+                    }
+                });
+
+                if (defaultBody) {
+                    lines.push(hasCase ? 'else' : 'if true then');
+                    lines.push(defaultBody);
+                    hasCase = true;
+                }
+
+                if (hasCase) {
+                    lines.push('end');
+                }
+
+                return lines.filter(Boolean).join('\n');
             }
 
             case 'AssignmentExpression':
@@ -554,8 +656,7 @@ class CoreTranspiler extends EventEmitter {
         // Optimize boolean expressions
         code = code.replace(/not\s+not\s+/g, '');
         
-        // Remove redundant parentheses
-        code = code.replace(/\(\s*(\w+)\s*\)/g, '$1');
+        // Do not aggressively remove parentheses; function params and conditions rely on them
         
         return code;
     }

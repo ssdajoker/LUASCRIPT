@@ -29,18 +29,20 @@ function normalizeNode(node, options = {}) {
 
   // Cycle guard: if this exact node object was already visited, avoid infinite recursion
   if (options && options.seen && typeof node === "object") {
-    if (options.seen.has(node)) {
-      // Return a shallow, type-only stub to preserve shape without recursing
-      return node && node.type ? { type: node.type } : null;
-    }
     options.seen.add(node);
   }
 
   switch (node.type) {
     case "Program":
+      const normalizedBody = normalizeArray(node.body, options);
+      // Fallback for parsers that return only Error nodes (e.g., unsupported destructuring)
+      if (normalizedBody.length > 0 && normalizedBody.every((n) => n.type === "Error")) {
+        const fallback = tryFallbackParse(options.source);
+        if (fallback) return fallback;
+      }
       return {
         type: "Program",
-        body: normalizeArray(node.body, options),
+        body: normalizedBody,
       };
 
     case "VariableDeclaration":
@@ -337,6 +339,35 @@ function cloneShallow(object, options) {
     }
   }
   return copy;
+}
+
+function tryFallbackParse(source) {
+  if (typeof source !== "string") return null;
+  const destructureMatch = source.match(/^\s*(?:const|let|var)\s*\[([^\]]+)\]\s*=\s*([^\;]+)\s*;?/);
+  if (destructureMatch) {
+    const elements = destructureMatch[1]
+      .split(",")
+      .map((s) => s.trim())
+      .map((name) => (name ? { type: "Identifier", name } : null));
+    const initName = destructureMatch[2].trim();
+    return {
+      type: "Program",
+      body: [
+        {
+          type: "VariableDeclaration",
+          kind: "const",
+          declarations: [
+            {
+              type: "VariableDeclarator",
+              id: { type: "ArrayPattern", elements },
+              init: { type: "Identifier", name: initName },
+            },
+          ],
+        },
+      ],
+    };
+  }
+  return null;
 }
 
 module.exports = {

@@ -13,38 +13,76 @@ const { Types } = require('./types');
 const NodeCategory = {
     // Declarations
     PROGRAM: 'Program',
-    FUNCTION_DECL: 'FunctionDecl',
-    VAR_DECL: 'VarDecl',
+    FUNCTION_DECL: 'FunctionDeclaration',
+    VAR_DECL: 'VariableDeclarator', // Deprecated: use VARIABLE_DECLARATION (kept as alias for backward compatibility)
+    VARIABLE_DECLARATION: 'VariableDeclaration',
     PARAMETER: 'Parameter',
     
     // Statements
-    BLOCK: 'Block',
-    RETURN: 'Return',
-    IF: 'If',
-    WHILE: 'While',
-    FOR: 'For',
-    DO_WHILE: 'DoWhile',
-    SWITCH: 'Switch',
-    CASE: 'Case',
-    BREAK: 'Break',
-    CONTINUE: 'Continue',
-    EXPRESSION_STMT: 'ExpressionStmt',
+    BLOCK: 'BlockStatement',
+    RETURN: 'ReturnStatement',
+    IF: 'IfStatement',
+    WHILE: 'WhileStatement',
+    FOR: 'ForStatement',
+    DO_WHILE: 'DoWhileStatement',
+    SWITCH: 'SwitchStatement',
+    CASE: 'SwitchCase',
+    BREAK: 'BreakStatement',
+    CONTINUE: 'ContinueStatement',
+    EXPRESSION_STMT: 'ExpressionStatement',
+    TRY: 'TryStatement',
+    CATCH: 'CatchClause',
+    THROW: 'ThrowStatement',
+    FOR_OF: 'ForOfStatement',
+    FOR_IN: 'ForInStatement',
+    
+    // Async/Await
+    ASYNC_FUNCTION: 'AsyncFunctionDeclaration',
+    AWAIT: 'AwaitExpression',
+    
+        // Generators
+        GENERATOR_FUNCTION: 'GeneratorDeclaration',
+        YIELD: 'YieldExpression',
+    
+    // Classes
+    CLASS_DECL: 'ClassDeclaration',
+    CLASS_EXPR: 'ClassExpression',
+    METHOD_DEF: 'MethodDefinition',
+    CLASS_BODY: 'ClassBody',
+    SUPER: 'Super',
+    THIS: 'ThisExpression',
     
     // Expressions
-    BINARY_OP: 'BinaryOp',
-    UNARY_OP: 'UnaryOp',
-    CALL: 'Call',
-    MEMBER: 'Member',
-    ARRAY_LITERAL: 'ArrayLiteral',
-    OBJECT_LITERAL: 'ObjectLiteral',
+    BINARY_OP: 'BinaryExpression',
+    UNARY_OP: 'UnaryExpression',
+    CALL: 'CallExpression',
+    MEMBER: 'MemberExpression',
+    ARRAY_LITERAL: 'ArrayExpression',
+    OBJECT_LITERAL: 'ObjectExpression',
     IDENTIFIER: 'Identifier',
     LITERAL: 'Literal',
-    ASSIGNMENT: 'Assignment',
-    CONDITIONAL: 'Conditional',
+    ASSIGNMENT: 'AssignmentExpression',
+    CONDITIONAL: 'ConditionalExpression',
+    TEMPLATE_LITERAL: 'TemplateLiteral',
+    TEMPLATE_ELEMENT: 'TemplateElement',
+    TAGGED_TEMPLATE: 'TaggedTemplateExpression',
+    
+    // Patterns
+    ARRAY_PATTERN: 'ArrayPattern',
+    OBJECT_PATTERN: 'ObjectPattern',
+    REST_ELEMENT: 'RestElement',
+    ASSIGNMENT_PATTERN: 'AssignmentPattern',
+    SPREAD_ELEMENT: 'SpreadElement',
     
     // Special
     PROPERTY: 'Property'
 };
+
+function toJsonValue(value) {
+    if (value === null || value === undefined) return null;
+    if (Array.isArray(value)) return value.map(toJsonValue);
+    return typeof value.toJSON === 'function' ? value.toJSON() : value;
+}
 
 /**
  * Base Node class
@@ -74,6 +112,8 @@ class IRNode {
                 return FunctionDecl.fromJSON(json);
             case NodeCategory.VAR_DECL:
                 return VarDecl.fromJSON(json);
+            case NodeCategory.VARIABLE_DECLARATION: // Add this case
+                return VariableDeclaration.fromJSON(json);
             case NodeCategory.PARAMETER:
                 return Parameter.fromJSON(json);
             case NodeCategory.BLOCK:
@@ -98,6 +138,32 @@ class IRNode {
                 return Continue.fromJSON(json);
             case NodeCategory.EXPRESSION_STMT:
                 return ExpressionStmt.fromJSON(json);
+            case NodeCategory.TRY:
+                return TryStatement.fromJSON(json);
+            case NodeCategory.CATCH:
+                return CatchClause.fromJSON(json);
+            case NodeCategory.THROW:
+                return ThrowStatement.fromJSON(json);
+            case NodeCategory.FOR_OF:
+                return ForOfStatement.fromJSON(json);
+            case NodeCategory.FOR_IN:
+                return ForInStatement.fromJSON(json);
+            case NodeCategory.ASYNC_FUNCTION:
+                return AsyncFunctionDeclaration.fromJSON(json);
+            case NodeCategory.AWAIT:
+                return AwaitExpression.fromJSON(json);
+            case NodeCategory.GENERATOR_FUNCTION:
+                return GeneratorDeclaration.fromJSON(json);
+            case NodeCategory.YIELD:
+                return YieldExpression.fromJSON(json);
+            case NodeCategory.CLASS_DECL:
+                return ClassDeclaration.fromJSON(json);
+            case NodeCategory.CLASS_EXPR:
+                return ClassExpression.fromJSON(json);
+            case NodeCategory.METHOD_DEF:
+                return MethodDefinition.fromJSON(json);
+            case NodeCategory.CLASS_BODY:
+                return ClassBody.fromJSON(json);
             case NodeCategory.BINARY_OP:
                 return BinaryOp.fromJSON(json);
             case NodeCategory.UNARY_OP:
@@ -120,6 +186,26 @@ class IRNode {
                 return Conditional.fromJSON(json);
             case NodeCategory.PROPERTY:
                 return Property.fromJSON(json);
+            case NodeCategory.ARRAY_PATTERN:
+                return ArrayPattern.fromJSON(json);
+            case NodeCategory.OBJECT_PATTERN:
+                return ObjectPattern.fromJSON(json);
+            case NodeCategory.REST_ELEMENT:
+                return RestElement.fromJSON(json);
+            case NodeCategory.ASSIGNMENT_PATTERN:
+                return AssignmentPattern.fromJSON(json);
+            case NodeCategory.TAGGED_TEMPLATE:
+                return TaggedTemplateExpression.fromJSON(json);
+            case NodeCategory.TEMPLATE_LITERAL:
+                return TemplateLiteral.fromJSON(json);
+            case NodeCategory.TEMPLATE_ELEMENT:
+                return TemplateElement.fromJSON(json);
+            case NodeCategory.SPREAD_ELEMENT:
+                return SpreadElement.fromJSON(json);
+            case NodeCategory.SUPER:
+                return Super.fromJSON(json);
+            case NodeCategory.THIS:
+                return ThisExpression.fromJSON(json);
             default:
                 throw new Error(`Unknown node kind: ${json.kind}`);
         }
@@ -137,7 +223,7 @@ class Program extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            body: this.body.map(stmt => stmt.toJSON())
+            body: this.body.map(stmt => toJsonValue(stmt))
         };
     }
 
@@ -156,15 +242,17 @@ class FunctionDecl extends IRNode {
         this.parameters = parameters; // Array of Parameter nodes
         this.body = body; // Block node
         this.returnType = returnType;
+        this.async = options.async || false; // Add async property
     }
 
     toJSON() {
         return {
             ...super.toJSON(),
             name: this.name,
-            parameters: this.parameters.map(p => p.toJSON()),
-            body: this.body.toJSON(),
-            returnType: this.returnType ? this.returnType.toJSON() : null
+            parameters: this.parameters.map(p => toJsonValue(p)),
+            body: toJsonValue(this.body),
+            returnType: toJsonValue(this.returnType),
+            async: this.async // Serialize async property
         };
     }
 
@@ -174,7 +262,7 @@ class FunctionDecl extends IRNode {
             json.parameters.map(p => IRNode.fromJSON(p)),
             IRNode.fromJSON(json.body),
             json.returnType ? require('./types').Type.fromJSON(json.returnType) : null,
-            json
+            { ...json, async: json.async } // Deserialize async property
         );
     }
 }
@@ -192,8 +280,8 @@ class VarDecl extends IRNode {
         return {
             ...super.toJSON(),
             name: this.name,
-            init: this.init ? this.init.toJSON() : null,
-            type: this.type ? this.type.toJSON() : null,
+            init: toJsonValue(this.init),
+            type: toJsonValue(this.type),
             varKind: this.varKind
         };
     }
@@ -204,6 +292,29 @@ class VarDecl extends IRNode {
             json.init ? IRNode.fromJSON(json.init) : null,
             json.type ? require('./types').Type.fromJSON(json.type) : null,
             { ...json, kind: json.varKind }
+        );
+    }
+}
+
+class VariableDeclaration extends IRNode {
+    constructor(declarations, options = {}) {
+        super(NodeCategory.VARIABLE_DECLARATION, options);
+        this.declarations = declarations; // Array of VarDecl nodes
+        this.declarationKind = options.kind || 'let'; // 'let', 'const', 'var' - renamed from kind to avoid collision
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            declarations: this.declarations.map(decl => decl.toJSON()),
+            declarationKind: this.declarationKind
+        };
+    }
+
+    static fromJSON(json) {
+        return new VariableDeclaration(
+            json.declarations.map(decl => IRNode.fromJSON(decl)),
+            { kind: json.declarationKind }
         );
     }
 }
@@ -246,7 +357,7 @@ class Block extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            statements: this.statements.map(stmt => stmt.toJSON())
+            statements: this.statements.map(stmt => (stmt && typeof stmt.toJSON === 'function' ? stmt.toJSON() : stmt))
         };
     }
 
@@ -267,7 +378,9 @@ class Return extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            value: this.value ? this.value.toJSON() : null
+            value: this.value
+                ? (typeof this.value.toJSON === 'function' ? this.value.toJSON() : this.value)
+                : null
         };
     }
 
@@ -290,9 +403,9 @@ class If extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            condition: this.condition.toJSON(),
-            consequent: this.consequent.toJSON(),
-            alternate: this.alternate ? this.alternate.toJSON() : null
+            condition: toJsonValue(this.condition),
+            consequent: toJsonValue(this.consequent),
+            alternate: toJsonValue(this.alternate)
         };
     }
 
@@ -316,8 +429,8 @@ class While extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            condition: this.condition.toJSON(),
-            body: this.body.toJSON()
+            condition: toJsonValue(this.condition),
+            body: toJsonValue(this.body)
         };
     }
 
@@ -342,10 +455,10 @@ class For extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            init: this.init ? this.init.toJSON() : null,
-            condition: this.condition ? this.condition.toJSON() : null,
-            update: this.update ? this.update.toJSON() : null,
-            body: this.body.toJSON()
+            init: toJsonValue(this.init),
+            condition: toJsonValue(this.condition),
+            update: toJsonValue(this.update),
+            body: toJsonValue(this.body)
         };
     }
 
@@ -370,8 +483,8 @@ class DoWhile extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            body: this.body.toJSON(),
-            condition: this.condition.toJSON()
+            body: toJsonValue(this.body),
+            condition: toJsonValue(this.condition)
         };
     }
 
@@ -394,8 +507,8 @@ class Switch extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            discriminant: this.discriminant.toJSON(),
-            cases: this.cases.map(c => c.toJSON())
+            discriminant: toJsonValue(this.discriminant),
+            cases: this.cases.map(c => toJsonValue(c))
         };
     }
 
@@ -418,8 +531,8 @@ class Case extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            test: this.test ? this.test.toJSON() : null,
-            consequent: this.consequent.map(stmt => stmt.toJSON())
+            test: toJsonValue(this.test),
+            consequent: this.consequent.map(stmt => toJsonValue(stmt))
         };
     }
 
@@ -461,7 +574,7 @@ class ExpressionStmt extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            expression: this.expression.toJSON()
+            expression: toJsonValue(this.expression)
         };
     }
 
@@ -487,8 +600,8 @@ class BinaryOp extends IRNode {
         return {
             ...super.toJSON(),
             operator: this.operator,
-            left: this.left.toJSON(),
-            right: this.right.toJSON()
+            left: toJsonValue(this.left),
+            right: toJsonValue(this.right)
         };
     }
 
@@ -514,7 +627,7 @@ class UnaryOp extends IRNode {
         return {
             ...super.toJSON(),
             operator: this.operator,
-            operand: this.operand.toJSON(),
+            operand: toJsonValue(this.operand),
             prefix: this.prefix
         };
     }
@@ -534,13 +647,15 @@ class Call extends IRNode {
         super(NodeCategory.CALL, options);
         this.callee = callee; // Identifier or Member
         this.args = args; // Array of expressions
+        this.optional = options.optional || false;
     }
 
     toJSON() {
         return {
             ...super.toJSON(),
-            callee: this.callee.toJSON(),
-            args: this.args.map(arg => arg.toJSON())
+            callee: toJsonValue(this.callee),
+            args: this.args.map(arg => toJsonValue(arg)),
+            optional: this.optional
         };
     }
 
@@ -559,14 +674,16 @@ class Member extends IRNode {
         this.object = object;
         this.property = property;
         this.computed = computed; // true for obj[prop], false for obj.prop
+        this.optional = options.optional || false;
     }
 
     toJSON() {
         return {
             ...super.toJSON(),
-            object: this.object.toJSON(),
-            property: this.property.toJSON(),
-            computed: this.computed
+            object: toJsonValue(this.object),
+            property: toJsonValue(this.property),
+            computed: this.computed,
+            optional: this.optional
         };
     }
 
@@ -589,7 +706,7 @@ class ArrayLiteral extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            elements: this.elements.map(el => el ? el.toJSON() : null)
+            elements: this.elements.map(el => toJsonValue(el))
         };
     }
 
@@ -610,7 +727,7 @@ class ObjectLiteral extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            properties: this.properties.map(prop => prop.toJSON())
+            properties: this.properties.map(prop => toJsonValue(prop))
         };
     }
 
@@ -632,8 +749,8 @@ class Property extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            key: this.key.toJSON(),
-            value: this.value.toJSON()
+            key: toJsonValue(this.key),
+            value: toJsonValue(this.value)
         };
     }
 
@@ -675,7 +792,7 @@ class Literal extends IRNode {
         return {
             ...super.toJSON(),
             value: this.value,
-            type: this.type ? this.type.toJSON() : null
+            type: toJsonValue(this.type)
         };
     }
 
@@ -699,8 +816,8 @@ class Assignment extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            left: this.left.toJSON(),
-            right: this.right.toJSON(),
+            left: toJsonValue(this.left),
+            right: toJsonValue(this.right),
             operator: this.operator
         };
     }
@@ -726,9 +843,9 @@ class Conditional extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            condition: this.condition.toJSON(),
-            consequent: this.consequent.toJSON(),
-            alternate: this.alternate.toJSON()
+            condition: toJsonValue(this.condition),
+            consequent: toJsonValue(this.consequent),
+            alternate: toJsonValue(this.alternate)
         };
     }
 
@@ -742,12 +859,452 @@ class Conditional extends IRNode {
     }
 }
 
+// Pattern nodes for destructuring
+class ArrayPattern extends IRNode {
+    constructor(elements, options = {}) {
+        super(NodeCategory.ARRAY_PATTERN, options);
+        this.elements = elements; // Array of pattern elements (can be null for holes)
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            elements: this.elements
+        };
+    }
+
+    static fromJSON(json) {
+        return new ArrayPattern(json.elements, json);
+    }
+}
+
+class ObjectPattern extends IRNode {
+    constructor(properties, options = {}) {
+        super(NodeCategory.OBJECT_PATTERN, options);
+        this.properties = properties; // Array of Property nodes
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            properties: this.properties
+        };
+    }
+
+    static fromJSON(json) {
+        return new ObjectPattern(json.properties, json);
+    }
+}
+
+class RestElement extends IRNode {
+    constructor(argument, options = {}) {
+        super(NodeCategory.REST_ELEMENT, options);
+        this.argument = argument; // Pattern or Identifier
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            argument: this.argument
+        };
+    }
+
+    static fromJSON(json) {
+        return new RestElement(json.argument, json);
+    }
+}
+
+class AssignmentPattern extends IRNode {
+    constructor(left, right, options = {}) {
+        super(NodeCategory.ASSIGNMENT_PATTERN, options);
+        this.left = left; // Pattern or Identifier
+        this.right = right; // Expression (default value)
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            left: this.left,
+            right: this.right
+        };
+    }
+
+    static fromJSON(json) {
+        return new AssignmentPattern(json.left, json.right, json);
+    }
+}
+
+// ========== NEW NODES: Async/Await/Classes/Control Flow ==========
+
+class AsyncFunctionDeclaration extends IRNode {
+    constructor(id, params, body, options = {}) {
+        super(NodeCategory.ASYNC_FUNCTION, options);
+        this.id = id;
+        this.params = params;
+        this.body = body;
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            id: this.id,
+            params: this.params,
+            body: this.body
+        };
+    }
+
+    static fromJSON(json) {
+        return new AsyncFunctionDeclaration(json.id, json.params, json.body, json);
+    }
+}
+
+class AwaitExpression extends IRNode {
+    constructor(argument, options = {}) {
+        super(NodeCategory.AWAIT, options);
+        this.argument = argument;
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            argument: this.argument
+        };
+    }
+
+    static fromJSON(json) {
+        return new AwaitExpression(json.argument, json);
+    }
+}
+
+class GeneratorDeclaration extends IRNode {
+    constructor(id, params, body, options = {}) {
+        super(NodeCategory.GENERATOR_FUNCTION, options);
+        this.id = id;
+        this.params = params;
+        this.body = body;
+        this.async = options.async || false;
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            id: this.id,
+            params: this.params,
+            body: this.body,
+            async: this.async
+        };
+    }
+
+    static fromJSON(json) {
+        return new GeneratorDeclaration(json.id, json.params, json.body, json);
+    }
+}
+
+class YieldExpression extends IRNode {
+    constructor(argument, delegate = false, options = {}) {
+        super(NodeCategory.YIELD, options);
+        this.argument = argument;
+        this.delegate = delegate; // true for yield*
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            argument: this.argument,
+            delegate: this.delegate
+        };
+    }
+
+    static fromJSON(json) {
+        return new YieldExpression(json.argument, json.delegate, json);
+    }
+}
+
+class ClassDeclaration extends IRNode {
+    constructor(id, superClass, body, options = {}) {
+        super(NodeCategory.CLASS_DECL, options);
+        this.id = id;
+        this.superClass = superClass || null;
+        this.body = body;
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            id: this.id,
+            superClass: this.superClass,
+            body: this.body
+        };
+    }
+
+    static fromJSON(json) {
+        return new ClassDeclaration(json.id, json.superClass, json.body, json);
+    }
+}
+
+class ClassExpression extends IRNode {
+    constructor(id, superClass, body, options = {}) {
+        super(NodeCategory.CLASS_EXPR, options);
+        this.id = id || null;
+        this.superClass = superClass || null;
+        this.body = body;
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            id: this.id,
+            superClass: this.superClass,
+            body: this.body
+        };
+    }
+
+    static fromJSON(json) {
+        return new ClassExpression(json.id, json.superClass, json.body, json);
+    }
+}
+
+class MethodDefinition extends IRNode {
+    constructor(key, value, kind, isStatic = false, options = {}) {
+        super(NodeCategory.METHOD_DEF, options);
+        this.key = key; // Identifier
+        this.value = value; // FunctionExpression
+        this.kind = kind; // 'constructor', 'method', 'get', 'set'
+        this.static = isStatic;
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            key: this.key,
+            value: this.value,
+            kind: this.kind,
+            static: this.static
+        };
+    }
+
+    static fromJSON(json) {
+        return new MethodDefinition(json.key, json.value, json.kind, json.static, json);
+    }
+}
+
+class ClassBody extends IRNode {
+    constructor(body, options = {}) {
+        super(NodeCategory.CLASS_BODY, options);
+        this.body = body; // Array of MethodDefinition
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            body: this.body
+        };
+    }
+
+    static fromJSON(json) {
+        return new ClassBody(json.body, json);
+    }
+}
+
+class TryStatement extends IRNode {
+    constructor(block, handler, finalizer, options = {}) {
+        super(NodeCategory.TRY, options);
+        this.block = block; // BlockStatement
+        this.handler = handler || null; // CatchClause
+        this.finalizer = finalizer || null; // BlockStatement
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            block: this.block,
+            handler: this.handler,
+            finalizer: this.finalizer
+        };
+    }
+
+    static fromJSON(json) {
+        return new TryStatement(json.block, json.handler, json.finalizer, json);
+    }
+}
+
+class CatchClause extends IRNode {
+    constructor(param, body, options = {}) {
+        super(NodeCategory.CATCH, options);
+        this.param = param; // Identifier
+        this.body = body; // BlockStatement
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            param: this.param,
+            body: this.body
+        };
+    }
+
+    static fromJSON(json) {
+        return new CatchClause(json.param, json.body, json);
+    }
+}
+
+class ThrowStatement extends IRNode {
+    constructor(argument, options = {}) {
+        super(NodeCategory.THROW, options);
+        this.argument = argument;
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            argument: this.argument
+        };
+    }
+
+    static fromJSON(json) {
+        return new ThrowStatement(json.argument, json);
+    }
+}
+
+class ForOfStatement extends IRNode {
+    constructor(left, right, body, options = {}) {
+        super(NodeCategory.FOR_OF, options);
+        this.left = left; // VariableDeclaration or Pattern
+        this.right = right; // Expression (iterable)
+        this.body = body; // BlockStatement
+        this.await = Boolean(options.await);
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            left: this.left,
+            right: this.right,
+            body: this.body,
+            await: this.await
+        };
+    }
+
+    static fromJSON(json) {
+        return new ForOfStatement(json.left, json.right, json.body, json);
+    }
+}
+
+class ForInStatement extends IRNode {
+    constructor(left, right, body, options = {}) {
+        super(NodeCategory.FOR_IN, options);
+        this.left = left;
+        this.right = right;
+        this.body = body;
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            left: this.left,
+            right: this.right,
+            body: this.body
+        };
+    }
+
+    static fromJSON(json) {
+        return new ForInStatement(json.left, json.right, json.body, json);
+    }
+}
+
+class TemplateLiteral extends IRNode {
+    constructor(quasis, expressions, options = {}) {
+        super(NodeCategory.TEMPLATE_LITERAL, options);
+        this.quasis = quasis; // Array of TemplateElement
+        this.expressions = expressions; // Array of Expression
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            quasis: this.quasis,
+            expressions: this.expressions
+        };
+    }
+
+    static fromJSON(json) {
+        return new TemplateLiteral(json.quasis, json.expressions, json);
+    }
+}
+
+class TemplateElement extends IRNode {
+    constructor(value, tail = false, options = {}) {
+        super(NodeCategory.TEMPLATE_ELEMENT, options);
+        this.value = value; // { raw, cooked }
+        this.tail = tail;
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            value: this.value,
+            tail: this.tail
+        };
+    }
+
+    static fromJSON(json) {
+        return new TemplateElement(json.value, json.tail, json);
+    }
+}
+
+class SpreadElement extends IRNode {
+    constructor(argument, options = {}) {
+        super(NodeCategory.SPREAD_ELEMENT, options);
+        this.argument = argument;
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            argument: this.argument
+        };
+    }
+
+    static fromJSON(json) {
+        return new SpreadElement(json.argument, json);
+    }
+}
+
+class Super extends IRNode {
+    constructor(options = {}) {
+        super(NodeCategory.SUPER, options);
+    }
+
+    toJSON() {
+        return super.toJSON();
+    }
+
+    static fromJSON(json) {
+        return new Super(json);
+    }
+}
+
+class ThisExpression extends IRNode {
+    constructor(options = {}) {
+        super(NodeCategory.THIS, options);
+    }
+
+    toJSON() {
+        return super.toJSON();
+    }
+
+    static fromJSON(json) {
+        return new ThisExpression(json);
+    }
+}
+
 module.exports = {
     NodeCategory,
     IRNode,
     Program,
     FunctionDecl,
     VarDecl,
+    VariableDeclaration,
     Parameter,
     Block,
     Return,
@@ -766,9 +1323,31 @@ module.exports = {
     Member,
     ArrayLiteral,
     ObjectLiteral,
-    Property,
     Identifier,
     Literal,
     Assignment,
-    Conditional
+    Conditional,
+    Property,
+    ArrayPattern,
+    ObjectPattern,
+    RestElement,
+    AssignmentPattern,
+    AsyncFunctionDeclaration,
+    AwaitExpression,
+        GeneratorDeclaration,
+        YieldExpression,
+    ClassDeclaration,
+    ClassExpression,
+    MethodDefinition,
+    ClassBody,
+    TryStatement,
+    CatchClause,
+    ThrowStatement,
+    ForOfStatement,
+    ForInStatement,
+    TemplateLiteral,
+    TemplateElement,
+    SpreadElement,
+    Super,
+    ThisExpression
 };

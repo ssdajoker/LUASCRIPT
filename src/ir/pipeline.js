@@ -25,7 +25,7 @@ function parseAndLower(jsSource, options = {}) {
   const ast = parser.parse();
   const t1 = process.hrtime.bigint();
 
-  const normalized = normalizeProgram(ast, options.normalizer || {});
+  const normalized = normalizeProgram(ast, { ...(options.normalizer || {}), source: jsSource });
   const t2 = process.hrtime.bigint();
 
   const lowerer = new IRLowerer({

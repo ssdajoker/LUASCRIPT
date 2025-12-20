@@ -126,16 +126,29 @@ class LuaScriptParser {
      * @private
      */
     parseStatement() {
+        console.log('Parsing statement, current token:', this.peek());
         try {
-            if (this.match('KEYWORD')) {
+            if (this.check('KEYWORD')) {
+                const firstKeywordToken = this.peek();
+                if (firstKeywordToken.value === 'async') {
+                    const nextToken = this.tokens[this.current + 1];
+                    if (nextToken && nextToken.type === 'KEYWORD' && nextToken.value === 'function') {
+                        this.advance(); // Consume 'async'
+                        this.advance(); // Consume 'function'
+                        return this.parseFunctionDeclaration(true);
+                    }
+                }
+
+                this.advance(); // Consume the current keyword
                 const keyword = this.previous().value;
+
                 switch (keyword) {
                     case 'let':
                     case 'const':
                     case 'var':
                         return this.parseVariableDeclaration(keyword);
                     case 'function':
-                        return this.parseFunctionDeclaration();
+                        return this.parseFunctionDeclaration(false); // Not async
                     case 'return':
                         return this.parseReturnStatement();
                     case 'if':
@@ -216,7 +229,7 @@ class LuaScriptParser {
      * @returns {FunctionDeclarationNode} The AST node for the function declaration.
      * @private
      */
-    parseFunctionDeclaration() {
+    parseFunctionDeclaration(isAsync = false) {
         this.functionDepth++;
         
         const id = this.parseIdentifier();
@@ -231,7 +244,8 @@ class LuaScriptParser {
         
         return new FunctionDeclarationNode(id, params, body, {
             line: id.line,
-            column: id.column
+            column: id.column,
+            async: isAsync
         });
     }
 

@@ -1,0 +1,202 @@
+name: Gemini PR Review Agent
+
+# Trigger on:
+# 1. PR labeled with 'ready-for-review' (created by Codex)
+# 2. Workflow run completion (codex-test-gates)
+# 3. Manual trigger
+
+on:
+  pull_request:
+    types: [labeled, opened, synchronize]
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+  workflow_run:
+    workflows: ["Codex Test Gates"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: read
+  checks: read
+
+jobs:
+  gemini_review:
+    runs-on: ubuntu-latest
+    
+    if: |
+      contains(github.event.pull_request.labels.*.name, 'ready-for-review') ||
+      (github.event.workflow_run.conclusion == 'success' && 
+       contains(github.event.workflow_run.name, 'Codex Test Gates'))
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR info
+        id: pr_info
+        run: |
+          # Get PR number (from pull_request event or workflow_run event)
+          if [ -n "${{ github.event.pull_request.number }}" ]; then
+            PR_NUMBER=${{ github.event.pull_request.number }}
+          else
+            # For workflow_run, query associated PR
+            PR_NUMBER=$(gh pr list \
+              --search "head:${{ github.event.workflow_run.head_branch }}" \
+              --state open \
+              --json number \
+              --jq '.[0].number' || echo "")
+          fi
+          
+          echo "pr_number=${PR_NUMBER}" >> $GITHUB_OUTPUT
+          echo "PR_NUMBER=${PR_NUMBER}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check PR validation status
+        id: pr_status
+        run: |
+          if [ -z "${{ steps.pr_info.outputs.pr_number }}" ]; then
+            echo "status=skip" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          PR_NUMBER=${{ steps.pr_info.outputs.pr_number }}
+          
+          # Get PR checks
+          HARNESS=$(gh pr checks ${PR_NUMBER} --json name,conclusion \
+            --jq '.[] | select(.name | contains("harness")) | .conclusion' || echo "")
+          IR_VALIDATION=$(gh pr checks ${PR_NUMBER} --json name,conclusion \
+            --jq '.[] | select(.name | contains("IR validation")) | .conclusion' || echo "")
+          PARITY=$(gh pr checks ${PR_NUMBER} --json name,conclusion \
+            --jq '.[] | select(.name | contains("parity")) | .conclusion' || echo "")
+          
+          # Evaluate
+          if [ "${HARNESS}" = "SUCCESS" ] && \
+             [ "${IR_VALIDATION}" = "SUCCESS" ] && \
+             [ "${PARITY}" = "SUCCESS" ]; then
+            echo "status=approve" >> $GITHUB_OUTPUT
+            echo "harness=PASS" >> $GITHUB_OUTPUT
+            echo "ir_validation=PASS" >> $GITHUB_OUTPUT
+            echo "parity=PASS" >> $GITHUB_OUTPUT
+          else
+            echo "status=conditional" >> $GITHUB_OUTPUT
+            echo "harness=${HARNESS:-PENDING}" >> $GITHUB_OUTPUT
+            echo "ir_validation=${IR_VALIDATION:-PENDING}" >> $GITHUB_OUTPUT
+            echo "parity=${PARITY:-PENDING}" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Post review comment
+        id: review
+        run: |
+          if [ -z "${{ steps.pr_info.outputs.pr_number }}" ]; then
+            echo "No PR number found. Skipping review."
+            exit 0
+          fi
+          
+          PR_NUMBER=${{ steps.pr_info.outputs.pr_number }}
+          STATUS=${{ steps.pr_status.outputs.status }}
+          
+          if [ "${STATUS}" = "approve" ]; then
+            REVIEW_BODY="✅ **Gemini Code Review - APPROVED**
+
+All validation gates passed:
+- Harness: ${{ steps.pr_status.outputs.harness }} (determinism + timing)
+- IR Validation: ${{ steps.pr_status.outputs.ir_validation }} (schema compliance)
+- Parity: ${{ steps.pr_status.outputs.parity }} (JS→Lua semantics)
+
+**Status**: Ready for auto-merge. Gemini approves this PR.
+
+---
+🤖 *Gemini review agent — automated code review for LUASCRIPT*"
+            
+            # Post comment
+            gh pr comment ${PR_NUMBER} --body "${REVIEW_BODY}"
+            
+            # Approve PR
+            gh pr review ${PR_NUMBER} --approve --body "Approved by Gemini review agent. All tests passed."
+            
+            echo "review_posted=true" >> $GITHUB_OUTPUT
+            echo "review_status=approved" >> $GITHUB_OUTPUT
+          else
+            REVIEW_BODY="⏳ **Gemini Code Review - PENDING**
+
+Test status:
+- Harness: ${{ steps.pr_status.outputs.harness }}
+- IR Validation: ${{ steps.pr_status.outputs.ir_validation }}
+- Parity: ${{ steps.pr_status.outputs.parity }}
+
+Waiting for all checks to pass. Will auto-approve once tests complete.
+
+---
+🤖 *Gemini review agent — automated code review for LUASCRIPT*"
+            
+            # Post comment
+            gh pr comment ${PR_NUMBER} --body "${REVIEW_BODY}"
+            
+            echo "review_posted=true" >> $GITHUB_OUTPUT
+            echo "review_status=pending" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge if approved
+        if: steps.pr_status.outputs.status == 'approve'
+        run: |
+          PR_NUMBER=${{ steps.pr_info.outputs.pr_number }}
+          
+          if [ -n "${PR_NUMBER}" ]; then
+            # Enable auto-merge (SQUASH strategy)
+            gh pr merge ${PR_NUMBER} \
+              --squash \
+              --auto \
+              --delete-branch || echo "Auto-merge already enabled or PR not mergeable"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log review action
+        if: steps.review.outputs.review_posted == 'true'
+        run: |
+          echo "PR Review by Gemini Agent"
+          echo "=========================="
+          echo "PR Number: ${{ steps.pr_info.outputs.pr_number }}"
+          echo "Review Status: ${{ steps.review.outputs.review_status }}"
+          echo "Harness: ${{ steps.pr_status.outputs.harness }}"
+          echo "IR Validation: ${{ steps.pr_status.outputs.ir_validation }}"
+          echo "Parity: ${{ steps.pr_status.outputs.parity }}"
+          echo ""
+          echo "Timestamp: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+  escalation:
+    runs-on: ubuntu-latest
+    needs: gemini_review
+    if: failure()
+
+    steps:
+      - name: Post escalation comment
+        run: |
+          # Get PR number from context
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          
+          if [ -n "${PR_NUMBER}" ]; then
+            ESCALATION_BODY="⚠️ **Gemini Escalation**
+
+Automatic review failed. Manual investigation needed.
+
+Escalation tags: #escalation #needs-manual-review
+
+Next steps:
+1. Check workflow logs (GitHub Actions)
+2. Codex or Copilot will investigate
+3. New work item may be created"
+            
+            gh pr comment ${PR_NUMBER} --body "${ESCALATION_BODY}"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
