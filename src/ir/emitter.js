@@ -49,8 +49,9 @@ class IREmitter {
         );
       case "ReturnStatement":
         return this.withIndent(context, (indent) => {
-          const argument = node.argument
-            ? this.emitExpressionById(node.argument, context)
+          const argId = node.value !== undefined ? node.value : node.argument;
+          const argument = argId
+            ? this.emitExpressionById(argId, context)
             : "";
           return `${indent}return${argument ? " " + argument : ""}`;
         });
@@ -131,29 +132,120 @@ class IREmitter {
   emitVariableDeclaration(node, context) {
     const chunks = [];
     for (const declarator of node.declarations) {
-      const patternNode = context.nodes[declarator.pattern];
-      if (!patternNode || patternNode.kind !== "Identifier") {
-        throw new Error("Emitter only supports simple identifier patterns");
+      // Handle both old pattern-based and new name-based structures
+      let luaName;
+      let isPattern = false;
+      let patternNames = [];
+      
+      if (declarator.pattern) {
+        // Old structure: declarator.pattern is an ID referencing an Identifier node
+        const patternNode = context.nodes[declarator.pattern];
+        if (!patternNode || patternNode.kind !== "Identifier") {
+          throw new Error("Emitter only supports simple identifier patterns");
+        }
+        luaName = patternNode.name;
+      } else if (typeof declarator.name === 'string') {
+        // New structure: declarator.name is a direct string
+        luaName = declarator.name;
+      } else if (declarator.name && context.nodes[declarator.name]) {
+        const nameNode = context.nodes[declarator.name];
+        if (nameNode.kind === 'Identifier') {
+          luaName = nameNode.name;
+        } else if (nameNode.kind === 'ArrayPattern') {
+          // Handle array destructuring
+          isPattern = true;
+          patternNames = this.extractPatternNames(nameNode, context);
+        } else if (nameNode.kind === 'ObjectPattern') {
+          // Handle object destructuring
+          isPattern = true;
+          patternNames = this.extractPatternNames(nameNode, context);
+        } else {
+          throw new Error(`Unsupported pattern type: ${nameNode.kind}`);
+        }
+      } else {
+        throw new Error("Emitter unable to extract variable name from declarator");
       }
-      const luaName = patternNode.name;
+      
       const initExpr = declarator.init
         ? this.emitExpressionById(declarator.init, context)
         : null;
       const prefix = this.luaDeclarationPrefix(node.declarationKind || declarator.kind);
-      chunks.push(
-        this.withIndent(context, (indent) =>
-          `${indent}${prefix}${luaName}${initExpr ? " = " + initExpr : ""}`
-        )
-      );
+      
+      if (isPattern && patternNames.length > 0) {
+        // For destructuring: local a, c = arr[1], arr[3] (simplified)
+        // Or more accurately: generate temp var and extract pattern elements
+        const tempVar = `__tmp${Math.random().toString(36).substr(2, 9)}`;
+        chunks.push(
+          this.withIndent(context, (indent) =>
+            `${indent}${prefix}${tempVar}${initExpr ? " = " + initExpr : ""}`
+          )
+        );
+        // Emit each destructured variable
+        for (const varName of patternNames) {
+          chunks.push(
+            this.withIndent(context, (indent) =>
+              `${indent}${prefix}${varName}`
+            )
+          );
+        }
+      } else {
+        chunks.push(
+          this.withIndent(context, (indent) =>
+            `${indent}${prefix}${luaName}${initExpr ? " = " + initExpr : ""}`
+          )
+        );
+      }
     }
     return chunks.join(NEWLINE);
   }
 
+  extractPatternNames(patternNode, context) {
+    const names = [];
+    if (patternNode.kind === 'ArrayPattern') {
+      // Extract identifier names from array pattern elements
+      for (const elem of (patternNode.elements || [])) {
+        if (elem === null) {
+          // Hole in pattern, skip
+          continue;
+        }
+        if (typeof elem === 'string') {
+          // elem is an ID, resolve it
+          const elemNode = context.nodes[elem];
+          if (elemNode && elemNode.kind === 'Identifier') {
+            names.push(elemNode.name);
+          }
+        } else if (elem && elem.kind === 'Identifier') {
+          names.push(elem.name);
+        }
+      }
+    } else if (patternNode.kind === 'ObjectPattern') {
+      // Extract property names from object pattern
+      for (const prop of (patternNode.properties || [])) {
+        if (typeof prop === 'string') {
+          const propNode = context.nodes[prop];
+          if (propNode && propNode.kind === 'Property') {
+            const valueNode = typeof propNode.value === 'string' ? context.nodes[propNode.value] : propNode.value;
+            if (valueNode && valueNode.kind === 'Identifier') {
+              names.push(valueNode.name);
+            }
+          }
+        } else if (prop && prop.value) {
+          const valStr = typeof prop.value === 'string' ? prop.value : (prop.value.name || '');
+          if (valStr) names.push(valStr);
+        }
+      }
+    }
+    return names;
+  }
+
   emitIfStatement(node, context) {
-    const test = this.emitExpressionById(node.test, context);
-    const consequent = this.emitBlockById(node.consequent, context);
-    const alternate = node.alternate
-      ? this.emitBlockById(node.alternate, context)
+    const testId = node.test !== undefined ? node.test : node.condition;
+    const consId = node.consequent || node.consequence;
+    const altId = node.alternate || node.elseBranch;
+    const test = this.emitExpressionById(testId, context);
+    const consequent = this.emitBlockById(consId, context);
+    const alternate = altId
+      ? this.emitBlockById(altId, context)
       : null;
 
     let output = `${this.currentIndent(context)}if ${test} then${NEWLINE}${consequent}`;
@@ -167,7 +259,8 @@ class IREmitter {
   }
 
   emitWhileStatement(node, context) {
-    const test = this.emitExpressionById(node.test, context);
+    const testId = node.test !== undefined ? node.test : node.condition;
+    const test = this.emitExpressionById(testId, context);
     const body = this.emitBlockById(node.body, context);
     let output = `${this.currentIndent(context)}while ${test} do${NEWLINE}${body}`;
     output += `${NEWLINE}${this.currentIndent(context)}end`;
@@ -186,7 +279,8 @@ class IREmitter {
       }
     }
 
-    const test = node.test ? this.emitExpressionById(node.test, context) : "true";
+    const testId = node.test !== undefined ? node.test : node.condition;
+    const test = testId ? this.emitExpressionById(testId, context) : "true";
     const bodyContext = Object.assign({}, context, { indentLevel: (context.indentLevel || 0) });
     let body = this.emitBlockById(node.body, context);
 
@@ -206,22 +300,31 @@ class IREmitter {
 
   emitFunctionDeclaration(node, context) {
     const name = node.name;
-    const params = (node.params || [])
+    // Handle both node.params (old) and node.parameters (new) naming
+    const paramsArray = node.params || node.parameters || [];
+    const params = paramsArray
       .map((paramId) => {
-        const paramNode = context.nodes[paramId];
-        if (!paramNode || paramNode.kind !== "Identifier") {
-          throw new Error("Function parameters must be identifiers in emitter");
+        const paramNode = typeof paramId === 'string' ? context.nodes[paramId] : paramId;
+        if (!paramNode) {
+          throw new Error("Parameter node not found in context");
         }
-        return paramNode.name;
+        // Handle both Parameter nodes and plain Identifier nodes
+        if (paramNode.kind === "Parameter" || paramNode.kind === "Identifier") {
+          return paramNode.name;
+        }
+        throw new Error(`Unexpected parameter node kind: ${paramNode.kind}`);
       })
       .join(", ");
 
     const header = `${this.currentIndent(context)}local function ${name}(${params})`;
     let emittedBody;
+    
+    // Get the body - handle both node.body (ID) and node.body (Block node)
+    const bodyId = typeof node.body === 'string' ? node.body : (node.body && node.body.id ? node.body.id : node.body);
 
     if (node.async) {
       // Emit the body for the coroutine, which is one level deeper than the function itself
-      const coroutineBody = this.emitBlockById(node.body, context, {
+      const coroutineBody = this.emitBlockById(bodyId, context, {
         indentLevel: (context.indentLevel || 0) + 2, // Body is inside coroutine function, which is inside outer function
       });
 
@@ -230,12 +333,12 @@ class IREmitter {
                     `${coroutineBody}${this.currentIndent(context, 1)}end)${NEWLINE}`; // Adjusted end indentation and removed extra NEWLINE
     } else {
       // Standard function body
-      emittedBody = this.emitBlockById(node.body, context, {
+      emittedBody = this.emitBlockById(bodyId, context, {
         indentLevel: (context.indentLevel || 0) + 1,
       });
     }
 
-    return `${header}${NEWLINE}${emittedBody}${this.currentIndent(context)}end`;
+    return `${header}${NEWLINE}${emittedBody}${NEWLINE}${this.currentIndent(context)}end`;
   }
 
   currentIndent(context, offset = 0) {
@@ -243,7 +346,7 @@ class IREmitter {
   }
 
   emitBlockById(blockId, parentContext, overrides = {}) {
-    const blockNode = parentContext.nodes[blockId];
+    const blockNode = typeof blockId === "string" ? parentContext.nodes[blockId] : blockId;
     if (!blockNode || blockNode.kind !== "BlockStatement") {
       throw new Error(`Expected BlockStatement for id ${blockId}`);
     }
@@ -268,7 +371,7 @@ class IREmitter {
   }
 
   emitExpressionById(nodeId, context) {
-    const node = context.nodes[nodeId];
+    const node = typeof nodeId === "string" ? context.nodes[nodeId] : nodeId;
     if (!node) {
       throw new Error(`Missing node ${nodeId} referenced by expression`);
     }
@@ -285,10 +388,18 @@ class IREmitter {
         const object = this.emitExpressionById(node.object, context);
         if (node.computed) {
           const prop = this.emitExpressionById(node.property, context);
+          if (node.optional) {
+            // Optional chaining: obj?.[prop] -> (obj ~= nil and obj[prop] or nil)
+            return `(${object} ~= nil and ${object}[${prop}] or nil)`;
+          }
           return `${object}[${prop}]`;
         }
         const propNode = context.nodes[node.property];
         const propName = propNode && propNode.kind === "Identifier" ? propNode.name : this.emitExpressionById(node.property, context);
+        if (node.optional) {
+          // Optional chaining: obj?.prop -> (obj ~= nil and obj.prop or nil)
+          return `(${object} ~= nil and ${object}.${propName} or nil)`;
+        }
         return `${object}.${propName}`;
       }
       case "ArrayExpression": {
@@ -328,6 +439,10 @@ class IREmitter {
         const args = (node.arguments || [])
           .map((argId) => this.emitExpressionById(argId, context))
           .join(", ");
+        if (node.optional) {
+          // Optional call: fn?.() -> (type(fn) == "function" and fn() or nil)
+          return `(type(${callee}) == "function" and ${callee}(${args}) or nil)`;
+        }
         return `${callee}(${args})`;
       }
       case "NewExpression": {
@@ -337,6 +452,9 @@ class IREmitter {
           .map((argId) => this.emitExpressionById(argId, context))
           .join(", ");
         return `${callee}(${args}) --[[new]]`;
+      }
+      case "FunctionDeclaration": {
+        return this.emitFunctionExpression(node, context);
       }
       case "ConditionalExpression": {
         // Lua lacks ternary; use (cond) and a or b (note: not identical for falsy a)
@@ -372,7 +490,8 @@ class IREmitter {
       kind === "ArrayExpression" ||
       kind === "ObjectExpression" ||
       kind === "ArrowFunctionExpression" ||
-      kind === "FunctionExpression"
+      kind === "FunctionExpression" ||
+      kind === "FunctionDeclaration"
     );
   }
 
@@ -417,9 +536,9 @@ class IREmitter {
   }
 
   emitFunctionExpression(node, context) {
-    const params = (node.params || [])
+    const params = (node.params || node.parameters || [])
       .map((paramId) => {
-        const paramNode = context.nodes[paramId];
+        const paramNode = typeof paramId === 'string' ? context.nodes[paramId] : paramId;
         if (!paramNode || paramNode.kind !== "Identifier") {
           throw new Error("Function expression parameters must be identifiers");
         }
@@ -427,16 +546,17 @@ class IREmitter {
       })
       .join(", ");
 
-    const body = this.emitBlockById(node.body, context, {
-      indentLevel: context.indentLevel + 1,
+    const bodyId = typeof node.body === 'string' ? node.body : (node.body && node.body.id ? node.body.id : node.body);
+    const body = this.emitBlockById(bodyId, context, {
+      indentLevel: (context.indentLevel || 0) + 1,
     });
 
-    // Function expressions are anonymous (or have a name), emit similar to arrow functions
+    // Function expressions are anonymous (or may have a name), emit similar to arrow functions
     return `function(${params})${NEWLINE}${body}${NEWLINE}${this.currentIndent(context)}end`;
   }
 
   emitLiteral(node) {
-    if (node.literalKind === "string") {
+    if (node.literalKind === "string" || typeof node.value === "string") {
       return node.raw || JSON.stringify(node.value);
     }
     if (node.literalKind === "boolean") {
@@ -501,6 +621,10 @@ class IREmitter {
         return "..";
       }
     }
+    // Nullish coalescing operator
+    if (node.operator === "??") {
+      return "or";
+    }
     return this.luaOperator(node.operator);
   }
 
@@ -516,14 +640,41 @@ class IREmitter {
 
     switch (node.kind) {
       case "Literal":
-        return node.literalKind === "string";
+        // Treat string literals (by kind, inferred type, or runtime value) as string-like
+        if (node.literalKind === "string") return true;
+        if (typeof node.value === "string") return true;
+        if (node.type && (node.type.primitiveType === "string" || node.type.type === "string" || node.type.name === "string")) {
+          return true;
+        }
+        return false;
       case "TemplateLiteral":
         return true;
       case "BinaryExpression":
-        if (node.operator !== "+") {
-          return false;
+        // If operator is +, recursively check both sides
+        if (node.operator === "+") {
+          return this.isStringLike(node.left, context, depth + 1) || this.isStringLike(node.right, context, depth + 1);
         }
-        return this.isStringLike(node.left, context, depth + 1) || this.isStringLike(node.right, context, depth + 1);
+        return false;
+      case "CallExpression":
+        // Check for .toString(), .concat(), String() constructor
+        const callee = context.nodes[node.callee];
+        if (callee && callee.kind === "MemberExpression") {
+          const prop = context.nodes[callee.property];
+          if (prop && prop.kind === "Identifier" && (prop.name === "toString" || prop.name === "concat")) {
+            return true;
+          }
+        }
+        if (callee && callee.kind === "Identifier" && callee.name === "String") {
+          return true;
+        }
+        return false;
+      case "MemberExpression":
+        // String properties like .length on strings
+        const obj = context.nodes[node.object];
+        if (obj && this.isStringLike(obj, context, depth + 1)) {
+          return true;
+        }
+        return false;
       default:
         return false;
     }

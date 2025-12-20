@@ -1,0 +1,16 @@
+{
+  "all": true,
+  "extension": [".js"],
+  "include": ["src/**/*.js"],
+  "exclude": [
+    "test/**",
+    "tests/**",
+    "scripts/**",
+    "node_modules/**",
+    "artifacts/**"
+  ],
+  "reporter": ["text", "lcov"],
+  "cache": true,
+  "check-coverage": false,
+  "temp-directory": ".nyc_output"
+}

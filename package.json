@@ -41,10 +41,14 @@
     "pr": "bash scripts/pr.sh",
     "test:parity": "node tests/parity/run_parity_tests.js",
     "test:quick-ugmp": "npm run -s test:core && npm run -s test:parity && npm run -s ir:report",
+    "test:roadmap": "node tests/status/status_alignment.test.js && node tests/quality/static_warnings_budget.test.js && node tests/ci/gates_smoke.test.js && node tests/ir/consolidation_equivalence.test.js",
     "test:normalizer": "node tests/ir/normalizer.smoke.js",
     "test:determinism": "node tests/ir/determinism.test.js",
+    "test:determinism:stress": "node tests/ir/determinism_stress.test.js",
     "ir:emit:goldens": "node tests/emitter/emit_from_goldens.js",
     "test:edge": "node test/test_edge_cases_comprehensive.js",
+    "test:edge:gaps": "node tests/edge-cases/run_edge_cases.js",
+    "test:coverage": "nyc npm test",
     "codex:poll": "node scripts/codex-work-consumer.js",
     "codex:poll:once": "cross-env CODEX_ONE_SHOT=1 node scripts/codex-work-consumer.js",
     "codex:done": "node -e \"require('fs').writeFileSync('.codex/signal.txt', 'done'); console.log('✅ Signal sent: Codex will validate now')\"",
@@ -56,7 +60,20 @@
     "sync-status": "gh run list --workflow gemini-pr-review.yml --workflow codex-test-gates.yml --limit 10 | head -20",
     "coordination:status": "npm run -s sync-status && echo '' && npm run -s codex:status",
     "copilot:context": "node scripts/context_pack.js",
-    "codex:validate:local": "npm run harness && npm run ir:validate:all && npm run test:parity"
+    "codex:validate:local": "npm run harness && npm run ir:validate:all && npm run test:parity",
+    "verify": "npm run harness && npm run ir:validate:all && npm run test:parity && npm run test:determinism",
+    "lint": "npm run refactor:lint",
+    "refactor:phase3": "cross-env LUASCRIPT_USE_ENHANCED_IR=1 node tests/parity/run_phase3.js",
+    "refactor:validate": "node -e \"const {ASTValidator} = require('./src/validation/ast-validator'); const {IRValidator} = require('./src/validation/ir-validator'); console.log('✅ Validators loaded');\"",
+    "refactor:lint": "eslint src/**/*.js --max-warnings 0",
+    "refactor:fuzz": "node tests/fuzz/run-fuzzer.js",
+    "refactor:all": "npm run refactor:validate && npm run refactor:lint && npm run refactor:phase3",
+    "ci:gates": "node scripts/ci_gates.js",
+    "perf:smoke": "node scripts/perf_smoke.js",
+    "bench": "npm run benchmark",
+    "bench:full": "bash run_bench.sh",
+    "format:check": "echo 'Format check not configured; add prettier or similar'",
+    "quality": "npm run lint && npm run test:roadmap && npm run ci:gates"
   },
   "keywords": [
     "luascript",
@@ -83,7 +100,9 @@
   },
   "dependencies": {
     "@types/esprima": "^4.0.6",
+    "acorn": "^8.15.0",
     "esprima": "^4.0.1",
+    "luaparse": "^0.3.1",
     "yaml": "^2.8.2"
   },
   "devDependencies": {
@@ -91,10 +110,17 @@
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "cross-env": "^10.1.0",
+    "fast-check": "^3.18.0",
+    "eslint": "^8.57.0",
     "husky": "^8.0.0",
     "mocha": "^11.7.4",
+    "nyc": "^15.1.0",
     "tsx": "^4.7.0",
     "typescript": "^5.4.0"
+  },
+  "overrides": {
+    "glob": "^10.4.5",
+    "rimraf": "^5.0.9"
   },
   "repository": {
     "type": "git",

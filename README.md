@@ -1,5 +1,7 @@
 # LUASCRIPT - Revolutionary Mathematical Programming Language
 
+Status source of truth: see `PROJECT_STATUS.md` for current health, gaps, and roadmap.
+
 [![Status](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgwgVSb0OVIaUUU0Hft7H4pLlcbP4fkm3QX6JcV9rqBMpIARa0BGgtIJCqxGMqInJjm2EQ4xwKcBZ3QQpH9WMVSCTjiIsyiIP1IrbsSwuzqbZg3Q-6HETCDoi7l5D_d7Pcz1HoI/w1200-h630-p-k-no-nu/dash.JPG)
 [![Foundation](https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Mark_of_the_United_States_Army.svg/250px-Mark_of_the_United_States_Army.svg.png)
 [![Syntax](https://i.pinimg.com/736x/28/b0/d1/28b0d189571e22609f0e9378da7b09a4.jpg)

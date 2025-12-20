@@ -24,13 +24,10 @@ jobs:
           sudo apt-get install -y lua5.4 luajit python3
 
       - name: Install npm dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Validate installation
-        run: npm run validate:install
+      - name: Run core verification gate
+        run: npm run verify
 
-      - name: Run smoke tests
-        run: npm run test:smoke
-
-      - name: Run example integration tests
-        run: npm run test:examples
+      - name: Lint
+        run: npm run lint

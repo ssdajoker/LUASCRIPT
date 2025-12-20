@@ -1261,4 +1261,3 @@ class LuaScriptParser {
 }
 
 module.exports = { LuaScriptParser };
-# Test fix

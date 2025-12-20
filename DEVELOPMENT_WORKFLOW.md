@@ -2,6 +2,11 @@
 ## Established by Linus Torvalds - GitHub Integration Lead
 *"Talk is cheap. Show me the code." - Linus Torvalds*
 
+Status source of truth: `PROJECT_STATUS.md` (all other status docs should align with it).
+
+### Repository Structure
+```
+LUASCRIPT/
 ├── src/                    # Core transpiler implementation
 │   ├── lexer/             # Lexical analysis
 │   ├── parser/            # Syntax parsing

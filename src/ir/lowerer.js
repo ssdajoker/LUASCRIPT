@@ -109,28 +109,35 @@ class IRLowerer {
   }
 
   lowerVariableDeclaration(node) {
-    const declarations = node.declarations.map((decl) => {
-      let idNode;
+    const declarations = [];
+    node.declarations.forEach((decl) => {
+      const initRef = decl.init ? this.lowerExpression(decl.init) : null;
       
       // Handle different pattern types for id
       if (decl.id.type === 'Identifier') {
-        idNode = this.lowerIdentifier(decl.id, { binding: decl.id.name });
+        const idNode = this.lowerIdentifier(decl.id, { binding: decl.id.name });
+        declarations.push(this.builder.varDecl(decl.id.name, initRef, null, {
+          kind: node.kind,
+        }));
       } else if (decl.id.type === 'ArrayPattern') {
-        idNode = this.lowerArrayPattern(decl.id);
+        const elements = decl.id.elements || [];
+        elements.forEach((el) => {
+          if (el && el.type === 'Identifier') {
+            const localId = this.lowerIdentifier(el, { binding: el.name });
+            declarations.push(this.builder.varDecl(localId.name, null, null, { kind: node.kind }));
+          }
+        });
       } else if (decl.id.type === 'ObjectPattern') {
-        idNode = this.lowerObjectPattern(decl.id);
+        const patternNode = this.lowerObjectPattern(decl.id);
+        // Use pattern ID as the declarator name (varDecl will handle it)
+        declarations.push(this.builder.varDecl(patternNode.id, initRef, null, {
+          kind: node.kind,
+          isPattern: true,
+          patternKind: 'ObjectPattern',
+        }));
       } else {
         throw new Error(`Unsupported declarator id type: ${decl.id.type}`);
       }
-      
-      const initRef = decl.init ? this.lowerExpression(decl.init) : null;
-      
-      // For patterns, pass the pattern IR node id, not a name
-      const idParam = idNode.type === 'Identifier' ? idNode.name : idNode.id;
-      
-      return this.builder.varDecl(idParam, initRef, null, {
-        kind: node.kind,
-      });
     });
 
     return this.builder.variableDeclaration(declarations, { kind: node.kind });
@@ -240,7 +247,7 @@ class IRLowerer {
     return fn;
   }
 
-  lowerFunctionDeclaration(node, { pushToBody }) {
+  lowerFunctionDeclaration(node, { pushToBody } = {}) {
     const idNode = this.lowerIdentifier(node.id, { binding: node.id?.name });
     const params = (node.params || []).map((param) =>
       this.lowerIdentifier(param, { binding: param.name }).id
@@ -261,16 +268,23 @@ class IRLowerer {
       },
     });
 
-    return this.builder.functionDeclaration(
+    const fn = this.builder.functionDeclaration(
       idNode.name,
       params,
       bodyBlock.id,
+      null,
       {
         meta,
         async: Boolean(node.async),
         pushToModule: pushToBody !== false,
       }
     );
+
+    if (pushToBody !== false) {
+      this.builder.pushToBody(fn);
+    }
+
+    return fn;
   }
 
   lowerExpression(node) {
@@ -288,7 +302,7 @@ class IRLowerer {
       case "BinaryExpression": {
         const left = this.lowerExpression(node.left);
         const right = this.lowerExpression(node.right);
-        return this.builder.binaryOp(left, node.operator, right).id;
+        return this.builder.binaryExpression(left, node.operator, right).id;
       }
       case "LogicalExpression": {
         const left = this.lowerExpression(node.left);
@@ -311,7 +325,7 @@ class IRLowerer {
       case "CallExpression": {
         const callee = this.lowerExpression(node.callee);
         const args = (node.arguments || []).map((arg) => this.lowerExpression(arg));
-        return this.builder.callExpression(callee, args).id;
+        return this.builder.callExpression(callee, args, { optional: Boolean(node.optional) }).id;
       }
       case "NewExpression": {
         const callee = this.lowerExpression(node.callee);
@@ -323,8 +337,8 @@ class IRLowerer {
         // property can be Identifier or expression; if Identifier, we lower to Identifier and use its id.
         const propertyRef = this.lowerExpression(node.property);
         return this.builder.createMemberExpression
-          ? this.builder.createMemberExpression(objectRef, propertyRef, { computed: Boolean(node.computed) }).id
-          : this.builder.nodeFactory.createMemberExpression(objectRef, propertyRef, { computed: Boolean(node.computed) }).id;
+          ? this.builder.createMemberExpression(objectRef, propertyRef, { computed: Boolean(node.computed), optional: Boolean(node.optional) }).id
+          : this.builder.nodeFactory.createMemberExpression(objectRef, propertyRef, { computed: Boolean(node.computed), optional: Boolean(node.optional) }).id;
       }
       case "ArrayExpression": {
         const elements = (node.elements || []).map((el) => (el ? this.lowerExpression(el) : null)).filter((x) => x !== null);
@@ -350,6 +364,10 @@ class IRLowerer {
       }
       case "FunctionExpression": {
         return this.lowerFunctionExpression(node).id;
+      }
+      case "Error": {
+        // Gracefully lower parser error nodes to a nil literal to keep pipeline moving
+        return this.builder.literal(null).id;
       }
       case "FunctionDeclaration": {
         const functionNode = this.lowerFunctionDeclaration(node, {

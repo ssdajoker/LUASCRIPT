@@ -144,6 +144,10 @@ class IRBuilder {
         return this._storeNode(new nodes.Member(object, property, computed, options));
     }
 
+    callExpression(callee, args, options = {}) {
+        return this.call(callee, args, options);
+    }
+
     arrayLiteral(elements, options = {}) {
         return this._storeNode(new nodes.ArrayLiteral(elements, options));
     }
@@ -301,6 +305,42 @@ class IRBuilder {
         return this.block(statements, options);
     }
 
+    break() {
+        return this.breakStmt();
+    }
+
+    continue() {
+        return this.continueStmt();
+    }
+
+    expressionStatement(expression, options = {}) {
+        return this.expressionStmt(expression, options);
+    }
+
+    returnStatement(value = null, options = {}) {
+        return this.returnStmt(value, options);
+    }
+
+    forStatement(init, condition, update, body, options = {}) {
+        return this.forStmt(init, condition, update, body, options);
+    }
+
+    doWhileStatement(body, condition, options = {}) {
+        return this.doWhileStmt(body, condition, options);
+    }
+
+    switchStatement(discriminant, cases, options = {}) {
+        return this.switchStmt(discriminant, cases, options);
+    }
+
+    switchCase(test, consequent, options = {}) {
+        return this.caseStmt(test, consequent, options);
+    }
+
+    blockStatement(statements, options = {}) {
+        return this.block(statements, options);
+    }
+
     expressionStatement(expression, options = {}) {
         return this.expressionStmt(expression, options);
     }
@@ -339,12 +379,20 @@ class IRBuilder {
         return this.call(callee, args, options);
     }
 
+    callExpression(callee, args, options = {}) {
+        return this.call(callee, args, options);
+    }
+
     newExpression(callee, args, options = {}) {
         return this.call(callee, args, { ...options, isNew: true });
     }
 
     createMemberExpression(object, property, options = {}) {
         return this.member(object, property, options.computed || false, options);
+    }
+
+    memberExpression(object, property, computed = false, options = {}) {
+        return this.member(object, property, computed, options);
     }
 
     arrayExpression(elements, options = {}) {
@@ -355,6 +403,10 @@ class IRBuilder {
         return this.objectLiteral(properties, options);
     }
 
+    conditionalExpression(test, consequent, alternate, options = {}) {
+        return this.conditional(test, consequent, alternate, options);
+    }
+
     logicalExpression(left, operator, right, options = {}) {
         return this.binaryOp(operator, left, right, options);
     }
@@ -363,9 +415,18 @@ class IRBuilder {
         return this.assignment(left, right, operator, options);
     }
 
+    functionDecl(name, parameters, body, returnType = null, options = {}) {
+        return this.functionDeclaration(name, parameters, body, returnType, options);
+    }
+
+    functionExpression(id, parameters, body, options = {}) {
+        const name = id && id.name ? id.name : id || null;
+        return this.functionDeclaration(name, parameters, body, null, { ...options, expression: true });
+    }
+
     arrowFunctionExpression(parameters, body, options = {}) {
         // Arrow functions are similar to regular functions but with different semantics
-        return this.functionDeclaration(null, parameters, body, null, { ...options, arrow: true });
+        return this.functionDeclaration(null, parameters, body, null, { ...options, arrow: true, expression: true });
     }
 
     arrayPattern(elements, options = {}) {
