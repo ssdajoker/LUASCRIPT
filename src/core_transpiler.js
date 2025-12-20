@@ -75,7 +75,7 @@ class CoreTranspiler extends EventEmitter {
             { from: /===/g, to: '==' }
         ]);
         
-        // Restrict function assignment rewrites to start-of-line to avoid breaking object literals
+        // Restrict function assignment rewrites to start-of-line (with optional indentation) to avoid breaking object literals
         this.patterns.set('functions', [
             { from: /^\s*function\s+(\w+)\s*\(([^)]*)\)\s*\{/gm, to: 'local function $1($2)' },
             { from: /^\s*(\w+)\s*=\s*function\s*\(([^)]*)\)\s*\{/gm, to: 'local function $1($2)' },
