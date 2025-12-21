@@ -46,11 +46,11 @@ set LUASCRIPT_USE_ENHANCED_IR=1
 ### Running Enhanced Tests
 
 ```bash
-# Run enhanced pipeline tests
-npm run refactor:phase3
+# Run enhanced pipeline tests (smoke + parity + determinism)
+npm run verify:enhanced
 
-# Run with enhanced mode enabled
-LUASCRIPT_USE_ENHANCED_IR=1 npm run verify
+# Run enhanced suite while keeping base verify
+VERIFY_ENHANCED=1 npm run verify
 ```
 
 ### Verify Command Integration
@@ -62,7 +62,7 @@ The enhanced pipeline is automatically tested when running `npm run verify` with
 npm run verify
 
 # Verify with enhanced mode
-LUASCRIPT_USE_ENHANCED_IR=1 npm run verify
+VERIFY_ENHANCED=1 npm run verify
 ```
 
 ## Test Coverage

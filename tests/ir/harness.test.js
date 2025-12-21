@@ -130,11 +130,8 @@ try {
     assert.ok(lua.includes('.') || lua.includes('['), 'member access missing');
   });
 
-  // Note: array destructuring test skipped - Phase1 parser doesn't support patterns yet
-  // This will be tested in the enhanced pipeline with AST support for destructuring
-  // runCase('array destructuring with holes', 'const [a, , c] = arr;', ({ lua }) => {
-  //   assert.ok(lua.includes('a') && lua.includes('c'), 'destructured variables missing');
-  // });
+  // Note: array destructuring test remains skipped for Phase1 parser.
+  // Coverage now lives in tests/enhanced/harness_enhanced.test.js under the enhanced pipeline.
 
   const slowest = results.slice().sort((a, b) => b.durationMs - a.durationMs)[0];
   writeArtifacts({ summary: { cases: results.length, slowest }, cases: results });
