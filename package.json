@@ -88,7 +88,19 @@
     "bench": "npm run benchmark",
     "bench:full": "bash run_bench.sh",
     "format:check": "echo 'Format check not configured; add prettier or similar'",
-    "quality": "npm run lint && npm run test:roadmap && npm run ci:gates"
+    "quality": "npm run lint && npm run test:roadmap && npm run ci:gates",
+    "release": "node scripts/release-cli.js",
+    "release:patch": "node scripts/release-cli.js patch",
+    "release:minor": "node scripts/release-cli.js minor",
+    "release:major": "node scripts/release-cli.js major",
+    "release:preview": "node scripts/release-cli.js patch --dry-run",
+    "release:status": "node scripts/release-cli.js --status",
+    "release:verify": "node scripts/release-cli.js --verify",
+    "version:bump": "node scripts/version-bump.js",
+    "changelog:generate": "node scripts/changelog-generator.js",
+    "artifacts:sign": "node scripts/sign-artifacts.js",
+    "artifacts:verify": "node scripts/sign-artifacts.js --verify-all",
+    "artifacts:list": "node scripts/sign-artifacts.js --list"
   },
   "keywords": [
     "luascript",
