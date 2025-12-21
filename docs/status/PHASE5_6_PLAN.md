@@ -1,3 +1,9 @@
+# ⚠️ DEPRECATED: Phase 5-6 Plan (Legacy)
+
+**Status**: ARCHIVED (Early planning document, superseded by Phase 3 execution)
+**See instead**: [PROJECT_STATUS.md](../../PROJECT_STATUS.md) for current roadmap
+
+---
 
 # 🚀 PHASE 5-6 COMPETITIVE EXECUTION PLAN 🚀
 

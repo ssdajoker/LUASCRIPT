@@ -50,17 +50,28 @@ jobs:
       - name: Run core verification gate
         run: npm run verify
 
-      - name: Lint IR code (blocking)
+      - name: Run coverage report
+        run: npm run test:coverage || true
+        continue-on-error: true
+
+      - name: Lint IR code (blocking - 0 warnings)
         run: npx eslint src/ir/**/*.js --max-warnings 0
         continue-on-error: false
 
-      - name: Lint backend code (warning-only)
-        run: npx eslint src/backends/**/*.js --max-warnings 50 || true
-        continue-on-error: true
+      - name: Lint all code (blocking - must pass)
+        run: npm run lint
+        continue-on-error: false
 
-      - name: Lint general code (warning-only)
-        run: npx eslint src/**/*.js --max-warnings 200 || true
-        continue-on-error: true
+      - name: Upload coverage to artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.os }}-node-${{ matrix.node-version }}
+          path: |
+            coverage/
+            .nyc_output/
+          retention-days: 30
+          if-no-files-found: ignore
 
       - name: Upload test results
         if: always()
