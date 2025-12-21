@@ -1,57 +1,51 @@
 {
-  "summary": {
-    "cases": 9,
-    "slowest": {
-      "name": "simple variable declaration",
-      "durationMs": 18.9012,
-      "bytes": 11
-    }
-  },
+  "error": "optional guard missing",
   "cases": [
     {
       "name": "simple variable declaration",
-      "durationMs": 18.9012,
+      "durationMs": 14.0244,
       "bytes": 11
     },
     {
       "name": "function declaration",
-      "durationMs": 6.1234,
+      "durationMs": 16.3908,
       "bytes": 43
     },
     {
       "name": "arrow function",
-      "durationMs": 4.9208,
+      "durationMs": 8.8427,
       "bytes": 45
     },
     {
       "name": "binary expressions",
-      "durationMs": 4.3039,
+      "durationMs": 6.0054,
       "bytes": 26
     },
     {
       "name": "if statement",
-      "durationMs": 5.8556,
+      "durationMs": 5.4755,
       "bytes": 30
     },
     {
       "name": "while loop",
-      "durationMs": 2.9328,
+      "durationMs": 3.4717,
       "bytes": 31
     },
     {
       "name": "array literal",
-      "durationMs": 1.2569,
+      "durationMs": 3.0403,
       "bytes": 23
     },
     {
       "name": "object literal",
-      "durationMs": 2.3935,
+      "durationMs": 2.7686,
       "bytes": 28
     },
     {
       "name": "member access",
-      "durationMs": 2.1308,
+      "durationMs": 1.6786,
       "bytes": 22
     }
-  ]
+  ],
+  "docHint": null
 }

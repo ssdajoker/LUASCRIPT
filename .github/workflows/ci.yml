@@ -50,6 +50,12 @@ jobs:
       - name: Run core verification gate
         run: npm run verify
 
+      - name: Run enhanced pipeline smoke test
+        env:
+          LUASCRIPT_USE_ENHANCED_IR: '1'
+        run: npm run refactor:phase3
+        continue-on-error: false
+
       - name: Run coverage report
         run: npm run test:coverage || true
         continue-on-error: true

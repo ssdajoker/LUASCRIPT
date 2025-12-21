@@ -1,10 +1,10 @@
 # LUASCRIPT Project Status (Canonical)
-Last updated: 2025-12-19  
+Last updated: 2025-01-XX (Enhanced Pipeline Integration Complete)  
 Source of truth for project health, test posture, and feature gaps. Link back from `README.md` and `DEVELOPMENT_WORKFLOW.md` to avoid divergent claims.
 
 ## Snapshot
 - Baseline JS→IR→Lua pipeline (Phase1) passes harness/parity smoke; array destructuring and richer patterns are not yet supported in the Phase1 parser.
-- Enhanced pipeline (esprima + enhanced lowerer/emitter) and validation utilities exist under `src/ir/*-enhanced.js` and `src/validation/`; durability and coverage still in progress.
+- **Enhanced pipeline** (esprima + enhanced lowerer/emitter) **fully operational** with 73/73 tests passing (100%). Supports async/await, classes, destructuring, control-flow, template literals, and spread/rest operators. Enable with `LUASCRIPT_USE_ENHANCED_IR=1`. See [ENHANCED_MODE.md](ENHANCED_MODE.md) for details.
 - Test+tools entry points live in `package.json`: `npm test`, `npm run harness`, `npm run ir:validate:all`, `npm run test:parity`, `npm run refactor:phase3`, `npm run refactor:all`, `npm run test:coverage`.
 - Performance tracking via `luascript_performance_benchmark.py` and `run_bench.sh`; artifacts land in `artifacts/`.
 
@@ -16,7 +16,7 @@ Source of truth for project health, test posture, and feature gaps. Link back fr
 - Coverage: `npm run test:coverage` (nyc + test suite).
 
 ## Known Gaps / Risks
-- Pattern/destructuring support is absent in Phase1; tests are skipped accordingly. Implement in enhanced pipeline before re-enabling.
+- **✅ RESOLVED**: Pattern/destructuring support fully implemented in enhanced pipeline with 14 comprehensive tests (array, object, nested, rest, computed properties). Phase1 still lacks pattern support.
 - Static warnings backlog captured in `static_warnings*.txt`; lint/format enforcement is not yet CI-blocking.
 - Documentation has legacy, contradictory claims (e.g., Phase9/WASM “complete”). Use this file as the single status source until README/docs are aligned.
 - CI/permissions: review `GITHUB_INTEGRATION_STATUS.md` and `.github/workflows/` for current gating; determinism/fuzz gates are not enforced yet.
