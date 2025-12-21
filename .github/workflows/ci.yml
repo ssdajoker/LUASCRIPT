@@ -56,8 +56,17 @@ jobs:
         run: npm run refactor:phase3
         continue-on-error: false
 
-      - name: Run coverage report
-        run: npm run test:coverage || true
+      - name: Run coverage with quality bar check
+        run: npm run coverage:full
+        continue-on-error: false
+
+      - name: Check diff coverage (PRs only)
+        if: github.event_name == 'pull_request'
+        run: npm run coverage:diff
+        continue-on-error: false
+
+      - name: Generate coverage report
+        run: npm run coverage:report || true
         continue-on-error: true
 
       - name: Lint IR code (blocking - 0 warnings)
@@ -75,7 +84,6 @@ jobs:
           name: coverage-${{ matrix.os }}-node-${{ matrix.node-version }}
           path: |
             coverage/
-            .nyc_output/
           retention-days: 30
           if-no-files-found: ignore
 
