@@ -1,5 +1,5 @@
 # LUASCRIPT Project Status (Canonical)
-Last updated: 2025-01-XX (Enhanced Pipeline Integration Complete)  
+Last updated: 2025-01-XX (Quality Gates & Performance Tracking Active)  
 Source of truth for project health, test posture, and feature gaps. Link back from `README.md` and `DEVELOPMENT_WORKFLOW.md` to avoid divergent claims.
 
 ## Snapshot
@@ -9,6 +9,11 @@ Source of truth for project health, test posture, and feature gaps. Link back fr
 - Performance tracking via `luascript_performance_benchmark.py` and `run_bench.sh`; artifacts land in `artifacts/`.
 
 ## Health Checkpoints
+- **Quality Gates (CI-enforced)**:
+	- Status consistency: Docs must reference PROJECT_STATUS.md as source of truth
+	- Performance regression gate: ±15% tolerance on 5 core benchmarks (`.perf-baseline.json`)
+	- Coverage quality bar: Baseline thresholds (23.6% lines, 19% functions, 37% branches)
+	- Diff coverage: New code must meet 70% coverage on PRs
 - Determinism: `npm run test:determinism` (IR stability across runs).
 - IR validity: `npm run ir:validate:all` (schema + semantic checks).
 - Parity: `npm run test:parity` (JS↔Lua behavior checks).
