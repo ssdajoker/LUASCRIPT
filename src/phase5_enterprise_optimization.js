@@ -5,8 +5,8 @@
  * 32+ Developer Team Implementation - CRUNCH MODE TO $1M!
  */
 
-const { LuaScriptInterpreter } = require('./phase2_core_interpreter');
-const { ModuleLoader } = require('./phase2_core_modules');
+const { LuaScriptInterpreter } = require("./phase2_core_interpreter");
+const { ModuleLoader } = require("./phase2_core_modules");
 
 /**
  * A profiler for collecting performance metrics, such as execution time and memory usage.
@@ -121,7 +121,7 @@ class PerformanceProfiler {
         return {
             totalFunctions,
             totalCalls,
-            totalTime: totalTime.toFixed(2) + 'ms',
+            totalTime: totalTime.toFixed(2) + "ms",
             hotFunctions,
             slowFunctions,
             memoryTrend: this.getMemoryTrend()
@@ -134,7 +134,7 @@ class PerformanceProfiler {
      * @private
      */
     getMemoryTrend() {
-        if (this.memorySnapshots.length < 2) return 'insufficient_data';
+        if (this.memorySnapshots.length < 2) return "insufficient_data";
         
         const first = this.memorySnapshots[0];
         const last = this.memorySnapshots[this.memorySnapshots.length - 1];
@@ -145,7 +145,7 @@ class PerformanceProfiler {
         return {
             heapChange: heapTrend,
             rssChange: rssTrend,
-            trend: heapTrend > 0 ? 'increasing' : 'decreasing'
+            trend: heapTrend > 0 ? "increasing" : "decreasing"
         };
     }
 
@@ -268,7 +268,7 @@ class MemoryOptimizer {
      * @returns {string} The interned string.
      */
     internString(str) {
-        if (typeof str !== 'string') return str;
+        if (typeof str !== "string") return str;
         
         // Track usage
         const count = this.stringUsageCount.get(str) || 0;
@@ -359,7 +359,7 @@ class MemoryOptimizer {
         this.triggerGC();
         
         // Clear unused object pools
-        for (const [type, pool] of this.objectPools) {
+        for (const [, pool] of this.objectPools) {
             if (pool.objects.length > this.options.objectPoolSize / 2) {
                 pool.objects.splice(this.options.objectPoolSize / 2);
             }
@@ -409,13 +409,13 @@ class SecurityManager {
      */
     checkFileSystemAccess(operation, path) {
         if (!this.options.allowFileSystem) {
-            this.recordViolation('filesystem', operation, path);
+            this.recordViolation("filesystem", operation, path);
             throw new SecurityError(`File system access denied: ${operation} on ${path}`);
         }
         
         // Check for path traversal
-        if (path.includes('..') || path.includes('~')) {
-            this.recordViolation('path_traversal', operation, path);
+        if (path.includes("..") || path.includes("~")) {
+            this.recordViolation("path_traversal", operation, path);
             throw new SecurityError(`Path traversal detected: ${path}`);
         }
         
@@ -431,7 +431,7 @@ class SecurityManager {
      */
     checkNetworkAccess(operation, url) {
         if (!this.options.allowNetwork) {
-            this.recordViolation('network', operation, url);
+            this.recordViolation("network", operation, url);
             throw new SecurityError(`Network access denied: ${operation} to ${url}`);
         }
         
@@ -447,7 +447,7 @@ class SecurityManager {
      */
     checkProcessAccess(operation, command) {
         if (!this.options.allowProcess) {
-            this.recordViolation('process', operation, command);
+            this.recordViolation("process", operation, command);
             throw new SecurityError(`Process access denied: ${operation} - ${command}`);
         }
         
@@ -462,8 +462,8 @@ class SecurityManager {
      */
     checkEvalAccess(code) {
         if (!this.options.allowEval) {
-            this.recordViolation('eval', 'execute', code.substring(0, 100));
-            throw new SecurityError('Dynamic code execution denied');
+            this.recordViolation("eval", "execute", code.substring(0, 100));
+            throw new SecurityError("Dynamic code execution denied");
         }
         
         return true;
@@ -478,9 +478,9 @@ class SecurityManager {
     checkModuleAccess(moduleName) {
         if (!this.options.trustedModules.has(moduleName)) {
             // Check for potentially dangerous modules
-            const dangerousModules = ['fs', 'child_process', 'cluster', 'dgram', 'net', 'tls'];
+            const dangerousModules = ["fs", "child_process", "cluster", "dgram", "net", "tls"];
             if (dangerousModules.includes(moduleName)) {
-                this.recordViolation('module', 'require', moduleName);
+                this.recordViolation("module", "require", moduleName);
                 throw new SecurityError(`Untrusted module access denied: ${moduleName}`);
             }
         }
@@ -497,12 +497,12 @@ class SecurityManager {
      */
     checkResourceUsage(memoryUsage, executionTime) {
         if (memoryUsage > this.options.maxMemoryUsage) {
-            this.recordViolation('resource', 'memory', memoryUsage);
+            this.recordViolation("resource", "memory", memoryUsage);
             throw new SecurityError(`Memory usage limit exceeded: ${memoryUsage} bytes`);
         }
         
         if (executionTime > this.options.maxExecutionTime) {
-            this.recordViolation('resource', 'time', executionTime);
+            this.recordViolation("resource", "time", executionTime);
             throw new SecurityError(`Execution time limit exceeded: ${executionTime}ms`);
         }
         
@@ -570,8 +570,8 @@ class SecurityManager {
             !this.options.allowEval
         ].filter(Boolean).length;
         
-        const levels = ['low', 'medium', 'high', 'maximum'];
-        return levels[restrictions] || 'custom';
+        const levels = ["low", "medium", "high", "maximum"];
+        return levels[restrictions] || "custom";
     }
 
     /**
@@ -589,7 +589,7 @@ class SecurityManager {
 class SecurityError extends Error {
     constructor(message) {
         super(message);
-        this.name = 'SecurityError';
+        this.name = "SecurityError";
     }
 }
 
@@ -630,7 +630,7 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         const originalExecute = this.execute.bind(this);
         this.execute = (node) => {
             if (this.enterpriseOptions.enableProfiling) {
-                this.profiler.startTimer('execution');
+                this.profiler.startTimer("execution");
                 this.profiler.takeMemorySnapshot();
             }
             
@@ -638,13 +638,13 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
                 const result = originalExecute(node);
                 
                 if (this.enterpriseOptions.enableProfiling) {
-                    this.profiler.endTimer('execution');
+                    this.profiler.endTimer("execution");
                 }
                 
                 return result;
             } catch (error) {
                 if (this.enterpriseOptions.enableProfiling) {
-                    this.profiler.endTimer('execution');
+                    this.profiler.endTimer("execution");
                 }
                 throw error;
             }
@@ -692,14 +692,14 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
      * @private
      */
     getFunctionName(calleeNode) {
-        if (calleeNode.type === 'Identifier') {
+        if (calleeNode.type === "Identifier") {
             return calleeNode.name;
-        } else if (calleeNode.type === 'MemberExpression') {
-            const object = calleeNode.object.name || 'unknown';
-            const property = calleeNode.property.name || 'unknown';
+        } else if (calleeNode.type === "MemberExpression") {
+            const object = calleeNode.object.name || "unknown";
+            const property = calleeNode.property.name || "unknown";
             return `${object}.${property}`;
         }
-        return 'anonymous';
+        return "anonymous";
     }
 
     /**
@@ -714,7 +714,6 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         }
         
         const startTime = Date.now();
-        const startMemory = process.memoryUsage().heapUsed;
         
         try {
             const result = super.interpret(ast);
@@ -753,18 +752,18 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
             if (!node) return;
             
             // Check for eval-like operations
-            if (node.type === 'CallExpression' && 
-                node.callee.type === 'Identifier' && 
-                ['eval', 'Function'].includes(node.callee.name)) {
-                this.securityManager.checkEvalAccess('dynamic code');
+            if (node.type === "CallExpression" && 
+                node.callee.type === "Identifier" && 
+                ["eval", "Function"].includes(node.callee.name)) {
+                this.securityManager.checkEvalAccess("dynamic code");
             }
             
             // Check for require calls
-            if (node.type === 'CallExpression' && 
-                node.callee.type === 'Identifier' && 
-                node.callee.name === 'require' &&
+            if (node.type === "CallExpression" && 
+                node.callee.type === "Identifier" && 
+                node.callee.name === "require" &&
                 node.arguments.length > 0 &&
-                node.arguments[0].type === 'Literal') {
+                node.arguments[0].type === "Literal") {
                 this.securityManager.checkModuleAccess(node.arguments[0].value);
             }
             
@@ -826,20 +825,20 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         const slowFunctions = metrics.summary.slowFunctions;
         if (slowFunctions.length > 0) {
             recommendations.push({
-                type: 'performance',
-                priority: 'high',
-                message: `Optimize slow functions: ${slowFunctions.map(f => f[0]).join(', ')}`,
+                type: "performance",
+                priority: "high",
+                message: `Optimize slow functions: ${slowFunctions.map(f => f[0]).join(", ")}`,
                 details: slowFunctions
             });
         }
         
         // Check memory usage
         const memoryTrend = metrics.summary.memoryTrend;
-        if (memoryTrend.trend === 'increasing') {
+        if (memoryTrend.trend === "increasing") {
             recommendations.push({
-                type: 'memory',
-                priority: 'medium',
-                message: 'Memory usage is increasing, consider optimizing object creation',
+                type: "memory",
+                priority: "medium",
+                message: "Memory usage is increasing, consider optimizing object creation",
                 details: memoryTrend
             });
         }
@@ -848,8 +847,8 @@ class EnterpriseInterpreter extends LuaScriptInterpreter {
         const securityReport = this.securityManager.getSecurityReport();
         if (securityReport.totalViolations > 0) {
             recommendations.push({
-                type: 'security',
-                priority: 'high',
+                type: "security",
+                priority: "high",
                 message: `${securityReport.totalViolations} security violations detected`,
                 details: securityReport.violationsByType
             });

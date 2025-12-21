@@ -98,17 +98,17 @@ class MemoryManager {
             const stats = this.getDetailedStats();
             throw new Error(
                 `LUASCRIPT_MEMORY_ERROR: Memory limit exceeded (${this.maxNodes} nodes). ` +
-                `Current usage: ${stats.memoryUsage}. Top node types: ${stats.topNodeTypes.join(', ')}`
+                `Current usage: ${stats.memoryUsage}. Top node types: ${stats.topNodeTypes.join(", ")}`
             );
         }
         
         // PHASE 1: Input validation for node creation
-        if (typeof type !== 'string' || type.trim().length === 0) {
-            throw new Error('LUASCRIPT_PARSER_ERROR: Node type must be a non-empty string');
+        if (typeof type !== "string" || type.trim().length === 0) {
+            throw new Error("LUASCRIPT_PARSER_ERROR: Node type must be a non-empty string");
         }
         
-        if (typeof data !== 'object' || data === null) {
-            throw new Error('LUASCRIPT_PARSER_ERROR: Node data must be an object');
+        if (typeof data !== "object" || data === null) {
+            throw new Error("LUASCRIPT_PARSER_ERROR: Node data must be an object");
         }
         
         this.stats.allocations++;
@@ -198,9 +198,9 @@ class MemoryManager {
      * @private
      */
     selectPool(estimatedSize) {
-        if (estimatedSize <= 64) return 'small';
-        if (estimatedSize <= 256) return 'medium';
-        return 'large';
+        if (estimatedSize <= 64) return "small";
+        if (estimatedSize <= 256) return "medium";
+        return "large";
     }
 
     /**
@@ -212,7 +212,7 @@ class MemoryManager {
         if (this.currentDepth > this.maxDepth) {
             throw new Error(
                 `LUASCRIPT_PARSER_ERROR: Stack overflow - maximum depth ${this.maxDepth} exceeded. ` +
-                `This usually indicates infinite recursion or deeply nested structures.`
+                "This usually indicates infinite recursion or deeply nested structures."
             );
         }
     }
@@ -247,7 +247,7 @@ class MemoryManager {
         if (suspiciousNodes.length > 0) {
             console.warn(
                 `LUASCRIPT_MEMORY_WARNING: Detected ${suspiciousNodes.length} potentially leaked nodes. ` +
-                `Consider calling cleanup() if parsing is complete.`
+                "Consider calling cleanup() if parsing is complete."
             );
         }
     }
@@ -267,8 +267,8 @@ class MemoryManager {
                 delete node._depth;
                 
                 // If it's a pooled node, return it to the pool
-                if (node.id && node.id.startsWith('pool_')) {
-                    const poolName = node.id.split('_')[1];
+                if (node.id && node.id.startsWith("pool_")) {
+                    const poolName = node.id.split("_")[1];
                     const pool = this.memoryPools[poolName];
                     if (pool) {
                         node.inUse = false;
@@ -305,7 +305,7 @@ class MemoryManager {
                 total: pool.nodes.length,
                 allocated: pool.allocated,
                 available: pool.nodes.length - pool.allocated,
-                utilization: pool.nodes.length > 0 ? (pool.allocated / pool.nodes.length * 100).toFixed(1) + '%' : '0%'
+                utilization: pool.nodes.length > 0 ? (pool.allocated / pool.nodes.length * 100).toFixed(1) + "%" : "0%"
             };
         }
 
@@ -335,38 +335,30 @@ class MemoryManager {
                 total: pool.nodes.length,
                 allocated: pool.allocated,
                 available: pool.nodes.length - pool.allocated,
-                utilization: pool.nodes.length > 0 ? (pool.allocated / pool.nodes.length * 100).toFixed(1) + '%' : '0%',
+                utilization: pool.nodes.length > 0 ? (pool.allocated / pool.nodes.length * 100).toFixed(1) + "%" : "0%",
             };
         }
 
-        const allocationRate = this.allocationHistory.length > 1
-            ? `${(
-                this.allocationHistory.length /
-                ((Date.now() - this.allocationHistory[0].timestamp) / 1000)
-            ).toFixed(2)} nodes/sec`
-            : 'N/A';
-
         const poolHitRate = this.stats.allocations > 0
             ? `${((this.stats.poolHits / this.stats.allocations) * 100).toFixed(1)}%`
-            : '0%';
+            : "0%";
 
         return {
             ...this.getStats(),
             topNodeTypes,
             nodeTypeBreakdown: Object.fromEntries(this.nodeTypeStats),
             allocationRate: this.allocationHistory.length > 1 ? 
-                (this.allocationHistory.length / ((Date.now() - this.allocationHistory[0].timestamp) / 1000)).toFixed(2) + ' nodes/sec' : 
-                'N/A',
-            allocationRate,
+                (this.allocationHistory.length / ((Date.now() - this.allocationHistory[0].timestamp) / 1000)).toFixed(2) + " nodes/sec" : 
+                "N/A",
             peakMemory: this.stats.peakMemory,
             allocations: this.stats.allocations,
             deallocations: this.stats.deallocations,
             poolHitRate,
             poolStats,
             tonyYokaOptimizations: {
-                memoryPools: 'Active',
-                poolAllocation: 'Enabled',
-                performanceTracking: 'Enabled',
+                memoryPools: "Active",
+                poolAllocation: "Enabled",
+                performanceTracking: "Enabled",
             },
         };
     }
@@ -376,13 +368,6 @@ class MemoryManager {
  * Represents a token in the source code.
  */
 class Token {
-    /**
-     * Creates an instance of a Token.
-     * @param {string} type - The type of the token (e.g., 'IDENTIFIER', 'NUMBER').
-     * @param {*} value - The value of the token.
-     * @param {number} [line=1] - The line number where the token appears.
-     * @param {number} [column=1] - The column number where the token appears.
-     */
     constructor(type, value, line = 1, column = 1) {
         this.type = type;
         this.value = value;
@@ -421,94 +406,94 @@ class Lexer {
             const char = this.input[this.position];
             
             // Arrow function operator
-            if (char === '=' && this.peek() === '>') {
-                this.tokens.push(new Token('ARROW', '=>', this.line, this.column));
+            if (char === "=" && this.peek() === ">") {
+                this.tokens.push(new Token("ARROW", "=>", this.line, this.column));
                 this.advance(2);
                 continue;
             }
             
             // Other operators and tokens
-            if (char === '(') {
-                this.tokens.push(new Token('LPAREN', '(', this.line, this.column));
+            if (char === "(") {
+                this.tokens.push(new Token("LPAREN", "(", this.line, this.column));
                 this.advance();
-            } else if (char === ')') {
-                this.tokens.push(new Token('RPAREN', ')', this.line, this.column));
+            } else if (char === ")") {
+                this.tokens.push(new Token("RPAREN", ")", this.line, this.column));
                 this.advance();
-            } else if (char === '{') {
-                this.tokens.push(new Token('LBRACE', '{', this.line, this.column));
+            } else if (char === "{") {
+                this.tokens.push(new Token("LBRACE", "{", this.line, this.column));
                 this.advance();
-            } else if (char === '}') {
-                this.tokens.push(new Token('RBRACE', '}', this.line, this.column));
+            } else if (char === "}") {
+                this.tokens.push(new Token("RBRACE", "}", this.line, this.column));
                 this.advance();
-            } else if (char === ',') {
-                this.tokens.push(new Token('COMMA', ',', this.line, this.column));
+            } else if (char === ",") {
+                this.tokens.push(new Token("COMMA", ",", this.line, this.column));
                 this.advance();
-            } else if (char === ';') {
-                this.tokens.push(new Token('SEMICOLON', ';', this.line, this.column));
+            } else if (char === ";") {
+                this.tokens.push(new Token("SEMICOLON", ";", this.line, this.column));
                 this.advance();
-            } else if (char === '=') {
-                this.tokens.push(new Token('ASSIGN', '=', this.line, this.column));
+            } else if (char === "=") {
+                this.tokens.push(new Token("ASSIGN", "=", this.line, this.column));
                 this.advance();
-            } else if (char === '+') {
-                this.tokens.push(new Token('PLUS', '+', this.line, this.column));
+            } else if (char === "+") {
+                this.tokens.push(new Token("PLUS", "+", this.line, this.column));
                 this.advance();
-            } else if (char === '-') {
-                this.tokens.push(new Token('MINUS', '-', this.line, this.column));
+            } else if (char === "-") {
+                this.tokens.push(new Token("MINUS", "-", this.line, this.column));
                 this.advance();
-            } else if (char === '*') {
-                this.tokens.push(new Token('MULTIPLY', '*', this.line, this.column));
+            } else if (char === "*") {
+                this.tokens.push(new Token("MULTIPLY", "*", this.line, this.column));
                 this.advance();
-            } else if (char === '/') {
-                this.tokens.push(new Token('DIVIDE', '/', this.line, this.column));
+            } else if (char === "/") {
+                this.tokens.push(new Token("DIVIDE", "/", this.line, this.column));
                 this.advance();
-            } else if (char === '<') {
-                if (this.peek() === '=') {
-                    this.tokens.push(new Token('LESS_EQUAL', '<=', this.line, this.column));
+            } else if (char === "<") {
+                if (this.peek() === "=") {
+                    this.tokens.push(new Token("LESS_EQUAL", "<=", this.line, this.column));
                     this.advance(2);
                 } else {
-                    this.tokens.push(new Token('LESS', '<', this.line, this.column));
+                    this.tokens.push(new Token("LESS", "<", this.line, this.column));
                     this.advance();
                 }
-            } else if (char === '>') {
-                if (this.peek() === '=') {
-                    this.tokens.push(new Token('GREATER_EQUAL', '>=', this.line, this.column));
+            } else if (char === ">") {
+                if (this.peek() === "=") {
+                    this.tokens.push(new Token("GREATER_EQUAL", ">=", this.line, this.column));
                     this.advance(2);
                 } else {
-                    this.tokens.push(new Token('GREATER', '>', this.line, this.column));
+                    this.tokens.push(new Token("GREATER", ">", this.line, this.column));
                     this.advance();
                 }
-            } else if (char === '!') {
-                if (this.peek() === '=') {
-                    this.tokens.push(new Token('NOT_EQUAL', '!=', this.line, this.column));
+            } else if (char === "!") {
+                if (this.peek() === "=") {
+                    this.tokens.push(new Token("NOT_EQUAL", "!=", this.line, this.column));
                     this.advance(2);
                 } else {
-                    this.tokens.push(new Token('NOT', '!', this.line, this.column));
+                    this.tokens.push(new Token("NOT", "!", this.line, this.column));
                     this.advance();
                 }
-            } else if (char === '&' && this.peek() === '&') {
-                this.tokens.push(new Token('AND', '&&', this.line, this.column));
+            } else if (char === "&" && this.peek() === "&") {
+                this.tokens.push(new Token("AND", "&&", this.line, this.column));
                 this.advance(2);
-            } else if (char === '|' && this.peek() === '|') {
-                this.tokens.push(new Token('OR', '||', this.line, this.column));
+            } else if (char === "|" && this.peek() === "|") {
+                this.tokens.push(new Token("OR", "||", this.line, this.column));
                 this.advance(2);
-            } else if (char === '[') {
-                this.tokens.push(new Token('LBRACKET', '[', this.line, this.column));
+            } else if (char === "[") {
+                this.tokens.push(new Token("LBRACKET", "[", this.line, this.column));
                 this.advance();
-            } else if (char === ']') {
-                this.tokens.push(new Token('RBRACKET', ']', this.line, this.column));
+            } else if (char === "]") {
+                this.tokens.push(new Token("RBRACKET", "]", this.line, this.column));
                 this.advance();
             } else if (this.isAlpha(char)) {
                 this.tokenizeIdentifier();
             } else if (this.isDigit(char)) {
                 this.tokenizeNumber();
-            } else if (char === '"' || char === "'") {
+            } else if (char === "\"" || char === "'") {
                 this.tokenizeString();
             } else {
                 throw new Error(`Unexpected character '${char}' at line ${this.line}, column ${this.column}`);
             }
         }
         
-        this.tokens.push(new Token('EOF', null, this.line, this.column));
+        this.tokens.push(new Token("EOF", null, this.line, this.column));
         return this.tokens;
     }
 
@@ -520,7 +505,7 @@ class Lexer {
     advance(count = 1) {
         for (let i = 0; i < count; i++) {
             if (this.position < this.input.length) {
-                if (this.input[this.position] === '\n') {
+                if (this.input[this.position] === "\n") {
                     this.line++;
                     this.column = 1;
                 } else {
@@ -594,21 +579,21 @@ class Lexer {
         
         const value = this.input.substring(start, this.position);
         const keywords = {
-            'function': 'FUNCTION',
-            'return': 'RETURN',
-            'if': 'IF',
-            'else': 'ELSE',
-            'while': 'WHILE',
-            'for': 'FOR',
-            'let': 'LET',
-            'const': 'CONST',
-            'var': 'VAR',
-            'true': 'TRUE',
-            'false': 'FALSE',
-            'null': 'NULL'
+            "function": "FUNCTION",
+            "return": "RETURN",
+            "if": "IF",
+            "else": "ELSE",
+            "while": "WHILE",
+            "for": "FOR",
+            "let": "LET",
+            "const": "CONST",
+            "var": "VAR",
+            "true": "TRUE",
+            "false": "FALSE",
+            "null": "NULL"
         };
         
-        const type = keywords[value] || 'IDENTIFIER';
+        const type = keywords[value] || "IDENTIFIER";
         this.tokens.push(new Token(type, value, this.line, this.column - value.length));
     }
 
@@ -618,12 +603,12 @@ class Lexer {
      */
     tokenizeNumber() {
         const start = this.position;
-        while (this.position < this.input.length && (this.isDigit(this.input[this.position]) || this.input[this.position] === '.')) {
+        while (this.position < this.input.length && (this.isDigit(this.input[this.position]) || this.input[this.position] === ".")) {
             this.advance();
         }
         
         const value = this.input.substring(start, this.position);
-        this.tokens.push(new Token('NUMBER', parseFloat(value), this.line, this.column - value.length));
+        this.tokens.push(new Token("NUMBER", parseFloat(value), this.line, this.column - value.length));
     }
 
     /**
@@ -637,7 +622,7 @@ class Lexer {
         
         const start = this.position;
         while (this.position < this.input.length && this.input[this.position] !== quote) {
-            if (this.input[this.position] === '\\') {
+            if (this.input[this.position] === "\\") {
                 this.advance(); // Skip escape character
             }
             this.advance();
@@ -649,7 +634,7 @@ class Lexer {
         
         const value = this.input.substring(start, this.position);
         this.advance(); // Skip closing quote
-        this.tokens.push(new Token('STRING', value, this.line, this.column - value.length - 2));
+        this.tokens.push(new Token("STRING", value, this.line, this.column - value.length - 2));
     }
 }
 
@@ -688,32 +673,32 @@ class Parser {
      */
     validateConstructorInputs(tokens, memoryManager) {
         if (!Array.isArray(tokens)) {
-            throw new Error('LUASCRIPT_PARSER_ERROR: Tokens must be an array');
+            throw new Error("LUASCRIPT_PARSER_ERROR: Tokens must be an array");
         }
         
         if (tokens.length === 0) {
-            throw new Error('LUASCRIPT_PARSER_ERROR: Token array cannot be empty');
+            throw new Error("LUASCRIPT_PARSER_ERROR: Token array cannot be empty");
         }
         
         // Validate token structure
         for (let i = 0; i < tokens.length; i++) {
             const token = tokens[i];
-            if (!token || typeof token.type !== 'string') {
+            if (!token || typeof token.type !== "string") {
                 throw new Error(`LUASCRIPT_PARSER_ERROR: Invalid token at position ${i} - missing or invalid type`);
             }
-            if (typeof token.line !== 'number' || typeof token.column !== 'number') {
+            if (typeof token.line !== "number" || typeof token.column !== "number") {
                 throw new Error(`LUASCRIPT_PARSER_ERROR: Invalid token at position ${i} - missing line/column information`);
             }
         }
         
         // Ensure EOF token exists
         const lastToken = tokens[tokens.length - 1];
-        if (lastToken.type !== 'EOF') {
-            throw new Error('LUASCRIPT_PARSER_ERROR: Token array must end with EOF token');
+        if (lastToken.type !== "EOF") {
+            throw new Error("LUASCRIPT_PARSER_ERROR: Token array must end with EOF token");
         }
         
         if (memoryManager && !(memoryManager instanceof MemoryManager)) {
-            throw new Error('LUASCRIPT_PARSER_ERROR: memoryManager must be an instance of MemoryManager');
+            throw new Error("LUASCRIPT_PARSER_ERROR: memoryManager must be an instance of MemoryManager");
         }
     }
 
@@ -726,9 +711,9 @@ class Parser {
             this.memoryManager.enterScope();
             
             // PHASE 1: Enhanced program node with metadata
-            const program = this.memoryManager.allocateNode('Program', {
+            const program = this.memoryManager.allocateNode("Program", {
                 body: [],
-                sourceType: 'script',
+                sourceType: "script",
                 parsingStartTime: Date.now(),
                 parsingStrategy: { ...this.parsingStrategy }
             });
@@ -801,14 +786,14 @@ class Parser {
         }
         
         // Skip tokens until we find a likely statement boundary
-        const statementBoundaries = ['SEMICOLON', 'RBRACE', 'LET', 'CONST', 'VAR', 'FUNCTION', 'IF', 'WHILE', 'FOR', 'RETURN'];
+        const statementBoundaries = ["SEMICOLON", "RBRACE", "LET", "CONST", "VAR", "FUNCTION", "IF", "WHILE", "FOR", "RETURN"];
         
         while (!this.isAtEnd() && !statementBoundaries.includes(this.peek().type)) {
             this.advance();
         }
         
         // If we found a semicolon, skip it
-        if (this.check('SEMICOLON')) {
+        if (this.check("SEMICOLON")) {
             this.advance();
         }
     }
@@ -818,7 +803,7 @@ class Parser {
      * Ensures consistent parsing behavior across all methods
      */
     validateParsingStrategy() {
-        const requiredProperties = ['strictMode', 'allowRecovery', 'maxErrorsBeforeAbort', 'trackSourceLocations'];
+        const requiredProperties = ["strictMode", "allowRecovery", "maxErrorsBeforeAbort", "trackSourceLocations"];
         
         for (const prop of requiredProperties) {
             if (!(prop in this.parsingStrategy)) {
@@ -826,16 +811,16 @@ class Parser {
             }
         }
         
-        if (typeof this.parsingStrategy.strictMode !== 'boolean') {
-            throw new Error('LUASCRIPT_PARSER_ERROR: strictMode must be a boolean');
+        if (typeof this.parsingStrategy.strictMode !== "boolean") {
+            throw new Error("LUASCRIPT_PARSER_ERROR: strictMode must be a boolean");
         }
         
-        if (typeof this.parsingStrategy.allowRecovery !== 'boolean') {
-            throw new Error('LUASCRIPT_PARSER_ERROR: allowRecovery must be a boolean');
+        if (typeof this.parsingStrategy.allowRecovery !== "boolean") {
+            throw new Error("LUASCRIPT_PARSER_ERROR: allowRecovery must be a boolean");
         }
         
-        if (typeof this.parsingStrategy.maxErrorsBeforeAbort !== 'number' || this.parsingStrategy.maxErrorsBeforeAbort < 1) {
-            throw new Error('LUASCRIPT_PARSER_ERROR: maxErrorsBeforeAbort must be a positive number');
+        if (typeof this.parsingStrategy.maxErrorsBeforeAbort !== "number" || this.parsingStrategy.maxErrorsBeforeAbort < 1) {
+            throw new Error("LUASCRIPT_PARSER_ERROR: maxErrorsBeforeAbort must be a positive number");
         }
     }
 
@@ -847,23 +832,23 @@ class Parser {
     parseStatement() {
         this.memoryManager.enterScope();
         try {
-            if (this.match('LET', 'CONST', 'VAR')) {
+            if (this.match("LET", "CONST", "VAR")) {
                 return this.parseVariableDeclaration();
             }
             
-            if (this.match('FUNCTION')) {
+            if (this.match("FUNCTION")) {
                 return this.parseFunctionDeclaration();
             }
             
-            if (this.match('IF')) {
+            if (this.match("IF")) {
                 return this.parseIfStatement();
             }
             
-            if (this.match('WHILE')) {
+            if (this.match("WHILE")) {
                 return this.parseWhileStatement();
             }
             
-            if (this.match('RETURN')) {
+            if (this.match("RETURN")) {
                 return this.parseReturnStatement();
             }
             
@@ -895,50 +880,50 @@ class Parser {
             let params = [];
             
             // Single parameter without parentheses: x => x * 2
-            if (this.check('IDENTIFIER') && this.peekNext()?.type === 'ARROW') {
+            if (this.check("IDENTIFIER") && this.peekNext()?.type === "ARROW") {
                 const param = this.advance();
-                params = [this.memoryManager.allocateNode('Parameter', {
+                params = [this.memoryManager.allocateNode("Parameter", {
                     name: param.value
                 })];
             }
             // Multiple parameters with parentheses: (x, y) => x + y
-            else if (this.check('LPAREN')) {
+            else if (this.check("LPAREN")) {
                 this.advance(); // consume '('
                 
-                if (!this.check('RPAREN')) {
+                if (!this.check("RPAREN")) {
                     do {
-                        if (!this.check('IDENTIFIER')) {
-                            throw new Error('Expected parameter name');
+                        if (!this.check("IDENTIFIER")) {
+                            throw new Error("Expected parameter name");
                         }
                         const param = this.advance();
-                        params.push(this.memoryManager.allocateNode('Parameter', {
+                        params.push(this.memoryManager.allocateNode("Parameter", {
                             name: param.value
                         }));
-                    } while (this.match('COMMA'));
+                    } while (this.match("COMMA"));
                 }
                 
-                if (!this.match('RPAREN')) {
-                    throw new Error('Expected ")" after parameters');
+                if (!this.match("RPAREN")) {
+                    throw new Error("Expected \")\" after parameters");
                 }
             }
             
             // Check for arrow operator
-            if (this.match('ARROW')) {
+            if (this.match("ARROW")) {
                 let body;
                 
                 // Block body: (x) => { return x * 2; }
-                if (this.check('LBRACE')) {
+                if (this.check("LBRACE")) {
                     body = this.parseBlockStatement();
                 }
                 // Expression body: (x) => x * 2
                 else {
                     const expr = this.parseAssignment();
-                    body = this.memoryManager.allocateNode('ExpressionStatement', {
+                    body = this.memoryManager.allocateNode("ExpressionStatement", {
                         expression: expr
                     });
                 }
                 
-                return this.memoryManager.allocateNode('ArrowFunction', {
+                return this.memoryManager.allocateNode("ArrowFunction", {
                     params,
                     body,
                     isAsync: false
@@ -960,11 +945,11 @@ class Parser {
     parseAssignment() {
         let expr = this.parseLogicalOr();
         
-        if (this.match('ASSIGN')) {
+        if (this.match("ASSIGN")) {
             const value = this.parseAssignment();
-            return this.memoryManager.allocateNode('AssignmentExpression', {
+            return this.memoryManager.allocateNode("AssignmentExpression", {
                 left: expr,
-                operator: '=',
+                operator: "=",
                 right: value
             });
         }
@@ -980,10 +965,10 @@ class Parser {
     parseLogicalOr() {
         let expr = this.parseLogicalAnd();
         
-        while (this.match('OR')) {
+        while (this.match("OR")) {
             const operator = this.previous();
             const right = this.parseLogicalAnd();
-            expr = this.memoryManager.allocateNode('BinaryExpression', {
+            expr = this.memoryManager.allocateNode("BinaryExpression", {
                 left: expr,
                 operator: operator.value,
                 right
@@ -1001,10 +986,10 @@ class Parser {
     parseLogicalAnd() {
         let expr = this.parseEquality();
         
-        while (this.match('AND')) {
+        while (this.match("AND")) {
             const operator = this.previous();
             const right = this.parseEquality();
-            expr = this.memoryManager.allocateNode('BinaryExpression', {
+            expr = this.memoryManager.allocateNode("BinaryExpression", {
                 left: expr,
                 operator: operator.value,
                 right
@@ -1022,10 +1007,10 @@ class Parser {
     parseEquality() {
         let expr = this.parseComparison();
         
-        while (this.match('EQUAL', 'NOT_EQUAL')) {
+        while (this.match("EQUAL", "NOT_EQUAL")) {
             const operator = this.previous();
             const right = this.parseComparison();
-            expr = this.memoryManager.allocateNode('BinaryExpression', {
+            expr = this.memoryManager.allocateNode("BinaryExpression", {
                 left: expr,
                 operator: operator.value,
                 right
@@ -1043,10 +1028,10 @@ class Parser {
     parseComparison() {
         let expr = this.parseTerm();
         
-        while (this.match('GREATER', 'GREATER_EQUAL', 'LESS', 'LESS_EQUAL')) {
+        while (this.match("GREATER", "GREATER_EQUAL", "LESS", "LESS_EQUAL")) {
             const operator = this.previous();
             const right = this.parseTerm();
-            expr = this.memoryManager.allocateNode('BinaryExpression', {
+            expr = this.memoryManager.allocateNode("BinaryExpression", {
                 left: expr,
                 operator: operator.value,
                 right
@@ -1064,10 +1049,10 @@ class Parser {
     parseTerm() {
         let expr = this.parseFactor();
         
-        while (this.match('MINUS', 'PLUS')) {
+        while (this.match("MINUS", "PLUS")) {
             const operator = this.previous();
             const right = this.parseFactor();
-            expr = this.memoryManager.allocateNode('BinaryExpression', {
+            expr = this.memoryManager.allocateNode("BinaryExpression", {
                 left: expr,
                 operator: operator.value,
                 right
@@ -1085,10 +1070,10 @@ class Parser {
     parseFactor() {
         let expr = this.parseUnary();
         
-        while (this.match('DIVIDE', 'MULTIPLY')) {
+        while (this.match("DIVIDE", "MULTIPLY")) {
             const operator = this.previous();
             const right = this.parseUnary();
-            expr = this.memoryManager.allocateNode('BinaryExpression', {
+            expr = this.memoryManager.allocateNode("BinaryExpression", {
                 left: expr,
                 operator: operator.value,
                 right
@@ -1104,10 +1089,10 @@ class Parser {
      * @private
      */
     parseUnary() {
-        if (this.match('NOT', 'MINUS')) {
+        if (this.match("NOT", "MINUS")) {
             const operator = this.previous();
             const right = this.parseUnary();
-            return this.memoryManager.allocateNode('UnaryExpression', {
+            return this.memoryManager.allocateNode("UnaryExpression", {
                 operator: operator.value,
                 argument: right
             });
@@ -1124,8 +1109,9 @@ class Parser {
     parseCall() {
         let expr = this.parsePrimary();
         
+        // eslint-disable-next-line no-constant-condition
         while (true) {
-            if (this.match('LPAREN')) {
+            if (this.match("LPAREN")) {
                 expr = this.finishCall(expr);
             } else {
                 break;
@@ -1144,17 +1130,17 @@ class Parser {
     finishCall(callee) {
         const args = [];
         
-        if (!this.check('RPAREN')) {
+        if (!this.check("RPAREN")) {
             do {
                 args.push(this.parseExpression());
-            } while (this.match('COMMA'));
+            } while (this.match("COMMA"));
         }
         
-        if (!this.match('RPAREN')) {
-            throw new Error('Expected ")" after arguments');
+        if (!this.match("RPAREN")) {
+            throw new Error("Expected \")\" after arguments");
         }
         
-        return this.memoryManager.allocateNode('CallExpression', {
+        return this.memoryManager.allocateNode("CallExpression", {
             callee,
             arguments: args
         });
@@ -1167,51 +1153,51 @@ class Parser {
      * @throws {Error} If an unexpected token is found.
      */
     parsePrimary() {
-        if (this.match('TRUE')) {
-            return this.memoryManager.allocateNode('Literal', {
+        if (this.match("TRUE")) {
+            return this.memoryManager.allocateNode("Literal", {
                 value: true,
-                raw: 'true'
+                raw: "true"
             });
         }
         
-        if (this.match('FALSE')) {
-            return this.memoryManager.allocateNode('Literal', {
+        if (this.match("FALSE")) {
+            return this.memoryManager.allocateNode("Literal", {
                 value: false,
-                raw: 'false'
+                raw: "false"
             });
         }
         
-        if (this.match('NULL')) {
-            return this.memoryManager.allocateNode('Literal', {
+        if (this.match("NULL")) {
+            return this.memoryManager.allocateNode("Literal", {
                 value: null,
-                raw: 'null'
+                raw: "null"
             });
         }
         
-        if (this.match('NUMBER')) {
-            return this.memoryManager.allocateNode('Literal', {
+        if (this.match("NUMBER")) {
+            return this.memoryManager.allocateNode("Literal", {
                 value: this.previous().value,
                 raw: this.previous().value.toString()
             });
         }
         
-        if (this.match('STRING')) {
-            return this.memoryManager.allocateNode('Literal', {
+        if (this.match("STRING")) {
+            return this.memoryManager.allocateNode("Literal", {
                 value: this.previous().value,
                 raw: `"${this.previous().value}"`
             });
         }
         
-        if (this.match('IDENTIFIER')) {
-            return this.memoryManager.allocateNode('Identifier', {
+        if (this.match("IDENTIFIER")) {
+            return this.memoryManager.allocateNode("Identifier", {
                 name: this.previous().value
             });
         }
         
-        if (this.match('LPAREN')) {
+        if (this.match("LPAREN")) {
             const expr = this.parseExpression();
-            if (!this.match('RPAREN')) {
-                throw new Error('Expected ")" after expression');
+            if (!this.match("RPAREN")) {
+                throw new Error("Expected \")\" after expression");
             }
             return expr;
         }
@@ -1226,19 +1212,19 @@ class Parser {
      */
     parseVariableDeclaration() {
         const kind = this.previous().value;
-        const name = this.consume('IDENTIFIER', 'Expected variable name').value;
+        const name = this.consume("IDENTIFIER", "Expected variable name").value;
         
         let initializer = null;
-        if (this.match('ASSIGN')) {
+        if (this.match("ASSIGN")) {
             initializer = this.parseExpression();
         }
         
-        this.consume('SEMICOLON', 'Expected ";" after variable declaration');
+        this.consume("SEMICOLON", "Expected \";\" after variable declaration");
         
-        return this.memoryManager.allocateNode('VariableDeclaration', {
+        return this.memoryManager.allocateNode("VariableDeclaration", {
             kind,
             declarations: [{
-                id: this.memoryManager.allocateNode('Identifier', { name }),
+                id: this.memoryManager.allocateNode("Identifier", { name }),
                 init: initializer
             }]
         });
@@ -1250,24 +1236,24 @@ class Parser {
      * @private
      */
     parseFunctionDeclaration() {
-        const name = this.consume('IDENTIFIER', 'Expected function name').value;
+        const name = this.consume("IDENTIFIER", "Expected function name").value;
         
-        this.consume('LPAREN', 'Expected "(" after function name');
+        this.consume("LPAREN", "Expected \"(\" after function name");
         
         const params = [];
-        if (!this.check('RPAREN')) {
+        if (!this.check("RPAREN")) {
             do {
-                const param = this.consume('IDENTIFIER', 'Expected parameter name').value;
-                params.push(this.memoryManager.allocateNode('Parameter', { name: param }));
-            } while (this.match('COMMA'));
+                const param = this.consume("IDENTIFIER", "Expected parameter name").value;
+                params.push(this.memoryManager.allocateNode("Parameter", { name: param }));
+            } while (this.match("COMMA"));
         }
         
-        this.consume('RPAREN', 'Expected ")" after parameters');
+        this.consume("RPAREN", "Expected \")\" after parameters");
         
         const body = this.parseBlockStatement();
         
-        return this.memoryManager.allocateNode('FunctionDeclaration', {
-            id: this.memoryManager.allocateNode('Identifier', { name }),
+        return this.memoryManager.allocateNode("FunctionDeclaration", {
+            id: this.memoryManager.allocateNode("Identifier", { name }),
             params,
             body
         });
@@ -1279,16 +1265,16 @@ class Parser {
      * @private
      */
     parseBlockStatement() {
-        this.consume('LBRACE', 'Expected "{"');
+        this.consume("LBRACE", "Expected \"{\"");
         
         const statements = [];
-        while (!this.check('RBRACE') && !this.isAtEnd()) {
+        while (!this.check("RBRACE") && !this.isAtEnd()) {
             statements.push(this.parseStatement());
         }
         
-        this.consume('RBRACE', 'Expected "}"');
+        this.consume("RBRACE", "Expected \"}\"");
         
-        return this.memoryManager.allocateNode('BlockStatement', {
+        return this.memoryManager.allocateNode("BlockStatement", {
             body: statements
         });
     }
@@ -1299,18 +1285,18 @@ class Parser {
      * @private
      */
     parseIfStatement() {
-        this.consume('LPAREN', 'Expected "(" after "if"');
+        this.consume("LPAREN", "Expected \"(\" after \"if\"");
         const test = this.parseExpression();
-        this.consume('RPAREN', 'Expected ")" after if condition');
+        this.consume("RPAREN", "Expected \")\" after if condition");
         
         const consequent = this.parseStatement();
         let alternate = null;
         
-        if (this.match('ELSE')) {
+        if (this.match("ELSE")) {
             alternate = this.parseStatement();
         }
         
-        return this.memoryManager.allocateNode('IfStatement', {
+        return this.memoryManager.allocateNode("IfStatement", {
             test,
             consequent,
             alternate
@@ -1323,13 +1309,13 @@ class Parser {
      * @private
      */
     parseWhileStatement() {
-        this.consume('LPAREN', 'Expected "(" after "while"');
+        this.consume("LPAREN", "Expected \"(\" after \"while\"");
         const test = this.parseExpression();
-        this.consume('RPAREN', 'Expected ")" after while condition');
+        this.consume("RPAREN", "Expected \")\" after while condition");
         
         const body = this.parseStatement();
         
-        return this.memoryManager.allocateNode('WhileStatement', {
+        return this.memoryManager.allocateNode("WhileStatement", {
             test,
             body
         });
@@ -1342,13 +1328,13 @@ class Parser {
      */
     parseReturnStatement() {
         let argument = null;
-        if (!this.check('SEMICOLON')) {
+        if (!this.check("SEMICOLON")) {
             argument = this.parseExpression();
         }
         
-        this.consume('SEMICOLON', 'Expected ";" after return value');
+        this.consume("SEMICOLON", "Expected \";\" after return value");
         
-        return this.memoryManager.allocateNode('ReturnStatement', {
+        return this.memoryManager.allocateNode("ReturnStatement", {
             argument
         });
     }
@@ -1360,9 +1346,9 @@ class Parser {
      */
     parseExpressionStatement() {
         const expr = this.parseExpression();
-        this.consume('SEMICOLON', 'Expected ";" after expression');
+        this.consume("SEMICOLON", "Expected \";\" after expression");
         
-        return this.memoryManager.allocateNode('ExpressionStatement', {
+        return this.memoryManager.allocateNode("ExpressionStatement", {
             expression: expr
         });
     }
@@ -1410,7 +1396,7 @@ class Parser {
      * @private
      */
     isAtEnd() {
-        return this.peek().type === 'EOF';
+        return this.peek().type === "EOF";
     }
 
     /**
@@ -1458,6 +1444,6 @@ class Parser {
 }
 
 // Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
     module.exports = { Lexer, Parser, MemoryManager, Token };
 }

@@ -5,7 +5,6 @@
  * and compatibility with Lua emitter
  */
 
-const nodes = require('../ir/nodes');
 
 class IRValidator {
     constructor() {
@@ -18,7 +17,7 @@ class IRValidator {
         this.warnings = [];
 
         if (!ir) {
-            this.errors.push('IR must be defined');
+            this.errors.push("IR must be defined");
             return { valid: false, errors: this.errors, warnings: this.warnings };
         }
 
@@ -39,7 +38,7 @@ class IRValidator {
             return;
         }
 
-        if (typeof node !== 'object') {
+        if (typeof node !== "object") {
             return;
         }
 
@@ -50,7 +49,7 @@ class IRValidator {
 
         // Recursively visit all properties
         for (const key in node) {
-            if (node.hasOwnProperty(key) && key !== 'kind') {
+            if (Object.prototype.hasOwnProperty.call(node, key) && key !== "kind") {
                 this.visitNode(node[key]);
             }
         }
@@ -60,70 +59,65 @@ class IRValidator {
         const { kind } = node;
 
         switch (kind) {
-            case 'Program':
-                this.validateProgram(node);
-                break;
-            case 'BlockStatement':
-                this.validateBlockStatement(node);
-                break;
-            case 'FunctionDeclaration':
-                this.validateFunctionDeclaration(node);
-                break;
-            case 'AsyncFunctionDeclaration':
-                this.validateAsyncFunctionDeclaration(node);
-                break;
-            case 'ClassDeclaration':
-                this.validateClassDeclaration(node);
-                break;
-            case 'VariableDeclaration':
-                this.validateVariableDeclaration(node);
-                break;
-            case 'ReturnStatement':
-                this.validateReturnStatement(node);
-                break;
-            case 'IfStatement':
-                this.validateIfStatement(node);
-                break;
-            case 'CallExpression':
-                this.validateCallExpression(node);
-                break;
-            case 'AsyncFunctionDeclaration':
-            case 'AwaitExpression':
-            case 'ClassDeclaration':
-            case 'ClassExpression':
-            case 'TryStatement':
-            case 'ForOfStatement':
-            case 'ForInStatement':
-            case 'TemplateLiteral':
-                // New node types - validate they exist
-                if (!node.kind) {
-                    this.errors.push(`IR node missing kind property`);
-                }
-                break;
+        case "Program":
+            this.validateProgram(node);
+            break;
+        case "BlockStatement":
+            this.validateBlockStatement(node);
+            break;
+        case "FunctionDeclaration":
+            this.validateFunctionDeclaration(node);
+            break;
+        case "AsyncFunctionDeclaration":
+            this.validateAsyncFunctionDeclaration(node);
+            break;
+        case "ClassDeclaration":
+            this.validateClassDeclaration(node);
+            break;
+        case "VariableDeclaration":
+            this.validateVariableDeclaration(node);
+            break;
+        case "ReturnStatement":
+            this.validateReturnStatement(node);
+            break;
+        case "IfStatement":
+            this.validateIfStatement(node);
+            break;
+        case "CallExpression":
+            this.validateCallExpression(node);
+            break;
+        default:
+            // Unknown node type - log warning but continue
+            break;
         }
     }
 
     validateProgram(node) {
         if (!node.body || !Array.isArray(node.body)) {
-            this.errors.push('Program must have body array');
+            this.errors.push("Program must have body array");
         }
     }
 
     validateBlockStatement(node) {
-        if (!node.body || !Array.isArray(node.body)) {
-            this.errors.push('BlockStatement must have body array');
+        // IR uses 'statements', AST uses 'body'
+        const body = node.statements || node.body;
+        if (!body || !Array.isArray(body)) {
+            this.errors.push("BlockStatement must have statements or body array");
         }
     }
 
     validateFunctionDeclaration(node) {
-        if (!node.id) {
-            this.errors.push('FunctionDeclaration must have id');
+        // IR uses 'name', AST uses 'id'
+        if (!node.id && !node.name) {
+            this.errors.push("FunctionDeclaration must have id or name");
         }
-        if (!node.params || !Array.isArray(node.params)) {
-            this.errors.push('FunctionDeclaration must have params array');
+        // IR uses 'parameters', AST uses 'params'
+        const params = node.parameters || node.params;
+        if (!params || !Array.isArray(params)) {
+            this.errors.push("FunctionDeclaration must have parameters array");
         }
         if (!node.body) {
-            this.errors.push('FunctionDeclaration must have body');
+            this.errors.push("FunctionDeclaration must have body");
         }
     }
 
@@ -133,43 +127,47 @@ class IRValidator {
 
     validateClassDeclaration(node) {
         if (!node.id) {
-            this.errors.push('ClassDeclaration must have id');
+            this.errors.push("ClassDeclaration must have id");
         }
         if (!node.body || !Array.isArray(node.body)) {
-            this.errors.push('ClassDeclaration must have body array');
+            this.errors.push("ClassDeclaration must have body array");
         }
     }
 
     validateVariableDeclaration(node) {
         if (!node.declarations || !Array.isArray(node.declarations)) {
-            this.errors.push('VariableDeclaration must have declarations array');
+            this.errors.push("VariableDeclaration must have declarations array");
         }
         node.declarations.forEach(decl => {
             if (!decl.id) {
-                this.errors.push('VariableDeclarator must have id');
+                this.errors.push("VariableDeclarator must have id");
             }
         });
     }
 
-    validateReturnStatement(node) {
+    validateReturnStatement(_node) {
         // argument is optional
     }
 
     validateIfStatement(node) {
-        if (!node.test) {
-            this.errors.push('IfStatement must have test');
+        // IR uses 'condition', AST uses 'test'
+        const test = node.condition || node.test;
+        if (!test) {
+            this.errors.push("IfStatement must have condition or test");
         }
         if (!node.consequent) {
-            this.errors.push('IfStatement must have consequent');
+            this.errors.push("IfStatement must have consequent");
         }
     }
 
     validateCallExpression(node) {
         if (!node.callee) {
-            this.errors.push('CallExpression must have callee');
+            this.errors.push("CallExpression must have callee");
         }
-        if (!node.arguments || !Array.isArray(node.arguments)) {
-            this.errors.push('CallExpression must have arguments array');
+        // IR uses 'args', AST uses 'arguments'
+        const args = node.args || node.arguments;
+        if (!args || !Array.isArray(args)) {
+            this.errors.push("CallExpression must have args or arguments array");
         }
     }
 

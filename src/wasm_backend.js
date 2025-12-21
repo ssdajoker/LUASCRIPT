@@ -6,9 +6,8 @@
  * Updated to use canonical IR system
  */
 
-const fs = require('fs');
-const path = require('path');
-const { IRToWasmCompiler } = require('./backends/wasm/ir-to-wasm');
+
+const { IRToWasmCompiler } = require("./backends/wasm/ir-to-wasm");
 
 /**
  * A backend for compiling Lua code to WebAssembly (WASM).
@@ -49,8 +48,8 @@ class WASMBackend {
 
         try {
             // Check if WASM is supported
-            if (typeof WebAssembly === 'undefined') {
-                throw new Error('WebAssembly is not supported in this environment');
+            if (typeof WebAssembly === "undefined") {
+                throw new Error("WebAssembly is not supported in this environment");
             }
 
             // Initialize IR to WASM compiler
@@ -59,7 +58,7 @@ class WASMBackend {
             this.initialized = true;
             return true;
         } catch (error) {
-            console.error('WASM Backend initialization failed:', error);
+            console.error("WASM Backend initialization failed:", error);
             return false;
         }
     }
@@ -116,7 +115,7 @@ class WASMBackend {
 
         try {
             // Step 1: Parse Lua code into IR (requires lua-to-ir compiler)
-            const { LuaToIRCompiler } = require('./compilers/lua-to-ir');
+            const { LuaToIRCompiler } = require("./compilers/lua-to-ir");
             const luaCompiler = new LuaToIRCompiler();
             const ir = luaCompiler.compile(luaCode);
             
@@ -143,7 +142,7 @@ class WASMBackend {
 
         try {
             // Step 1: Parse JS code into IR
-            const { JSToIRCompiler } = require('./compilers/js-to-ir');
+            const { JSToIRCompiler } = require("./compilers/js-to-ir");
             const jsCompiler = new JSToIRCompiler();
             const ir = jsCompiler.compile(jsCode);
             
@@ -222,8 +221,8 @@ class WASMBackend {
             id: 1,
             types: [
                 { params: [], results: [] }, // void -> void
-                { params: ['i32'], results: ['i32'] }, // i32 -> i32
-                { params: ['i32', 'i32'], results: ['i32'] } // (i32, i32) -> i32
+                { params: ["i32"], results: ["i32"] }, // i32 -> i32
+                { params: ["i32", "i32"], results: ["i32"] } // (i32, i32) -> i32
             ]
         };
     }
@@ -234,7 +233,7 @@ class WASMBackend {
      * @returns {object} The function section.
      * @private
      */
-    generateFunctionSection(ir) {
+    generateFunctionSection(_ir) {
         return {
             id: 3,
             functions: [0] // At least one function using type 0
@@ -265,8 +264,8 @@ class WASMBackend {
         return {
             id: 7,
             exports: [
-                { name: 'memory', kind: 'memory', index: 0 },
-                { name: 'main', kind: 'function', index: 0 }
+                { name: "memory", kind: "memory", index: 0 },
+                { name: "main", kind: "function", index: 0 }
             ]
         };
     }
@@ -277,7 +276,7 @@ class WASMBackend {
      * @returns {object} The code section.
      * @private
      */
-    generateCodeSection(ir) {
+    generateCodeSection(_ir) {
         return {
             id: 10,
             code: [
@@ -338,12 +337,12 @@ class WASMBackend {
      */
     encodeSectionData(section) {
         switch (section.id) {
-            case 1: return this.encodeTypeSection(section);
-            case 3: return this.encodeFunctionSection(section);
-            case 5: return this.encodeMemorySection(section);
-            case 7: return this.encodeExportSection(section);
-            case 10: return this.encodeCodeSection(section);
-            default: return [];
+        case 1: return this.encodeTypeSection(section);
+        case 3: return this.encodeFunctionSection(section);
+        case 5: return this.encodeMemorySection(section);
+        case 7: return this.encodeExportSection(section);
+        case 10: return this.encodeCodeSection(section);
+        default: return [];
         }
     }
 
@@ -459,7 +458,7 @@ class WASMBackend {
      * @private
      */
     encodeString(str) {
-        const bytes = Array.from(Buffer.from(str, 'utf8'));
+        const bytes = Array.from(Buffer.from(str, "utf8"));
         return [...this.encodeU32(bytes.length), ...bytes];
     }
 
@@ -471,10 +470,10 @@ class WASMBackend {
      */
     encodeValueType(type) {
         const types = {
-            'i32': 0x7f,
-            'i64': 0x7e,
-            'f32': 0x7d,
-            'f64': 0x7c
+            "i32": 0x7f,
+            "i64": 0x7e,
+            "f32": 0x7d,
+            "f64": 0x7c
         };
         return types[type] || 0x7f;
     }
@@ -487,10 +486,10 @@ class WASMBackend {
      */
     encodeExportKind(kind) {
         const kinds = {
-            'function': 0x00,
-            'table': 0x01,
-            'memory': 0x02,
-            'global': 0x03
+            "function": 0x00,
+            "table": 0x01,
+            "memory": 0x02,
+            "global": 0x03
         };
         return kinds[kind] || 0x00;
     }
@@ -520,7 +519,7 @@ class WASMBackend {
      * @param {any[]} [args=[]] - The arguments to pass to the function.
      * @returns {Promise<object>} A promise that resolves with the execution result.
      */
-    async executeWASM(wasmModule, functionName = 'main', args = []) {
+    async executeWASM(wasmModule, functionName = "main", args = []) {
         try {
             const instance = await WebAssembly.instantiate(wasmModule, {
                 env: {
@@ -589,7 +588,7 @@ class WASMBackend {
     getStatus() {
         return {
             initialized: this.initialized,
-            wasmSupported: typeof WebAssembly !== 'undefined',
+            wasmSupported: typeof WebAssembly !== "undefined",
             options: this.options,
             memory: this.memory ? {
                 buffer: this.memory.buffer.byteLength,

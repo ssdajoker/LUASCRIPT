@@ -10,26 +10,26 @@
  * Type Categories
  */
 const TypeCategory = {
-    PRIMITIVE: 'primitive',
-    ARRAY: 'array',
-    OBJECT: 'object',
-    FUNCTION: 'function',
-    UNION: 'union',
-    OPTIONAL: 'optional',
-    VOID: 'void',
-    ANY: 'any',
-    CUSTOM: 'custom'
+    PRIMITIVE: "primitive",
+    ARRAY: "array",
+    OBJECT: "object",
+    FUNCTION: "function",
+    UNION: "union",
+    OPTIONAL: "optional",
+    VOID: "void",
+    ANY: "any",
+    CUSTOM: "custom"
 };
 
 /**
  * Primitive Types
  */
 const PrimitiveType = {
-    NUMBER: 'number',
-    STRING: 'string',
-    BOOLEAN: 'boolean',
-    NULL: 'null',
-    UNDEFINED: 'undefined'
+    NUMBER: "number",
+    STRING: "string",
+    BOOLEAN: "boolean",
+    NULL: "null",
+    UNDEFINED: "undefined"
 };
 
 /**
@@ -63,34 +63,35 @@ class Type {
 
     static fromJSON(json) {
         switch (json.category) {
-            case TypeCategory.PRIMITIVE:
-                return new TPrimitive(json.primitiveType, json);
-            case TypeCategory.ARRAY:
-                return new TArray(Type.fromJSON(json.elementType), json);
-            case TypeCategory.OBJECT:
-                const properties = {};
-                for (const [key, value] of Object.entries(json.properties || {})) {
-                    properties[key] = Type.fromJSON(value);
-                }
-                return new TObject(properties, json);
-            case TypeCategory.FUNCTION:
-                return new TFunction(
-                    json.parameters.map(Type.fromJSON),
-                    Type.fromJSON(json.returnType),
-                    json
-                );
-            case TypeCategory.UNION:
-                return new TUnion(json.types.map(Type.fromJSON), json);
-            case TypeCategory.OPTIONAL:
-                return new TOptional(Type.fromJSON(json.baseType), json);
-            case TypeCategory.VOID:
-                return new TVoid(json);
-            case TypeCategory.ANY:
-                return new TAny(json);
-            case TypeCategory.CUSTOM:
-                return new TCustom(json.name, json);
-            default:
-                throw new Error(`Unknown type category: ${json.category}`);
+        case TypeCategory.PRIMITIVE:
+            return new TPrimitive(json.primitiveType, json);
+        case TypeCategory.ARRAY:
+            return new TArray(Type.fromJSON(json.elementType), json);
+        case TypeCategory.OBJECT: {
+            const properties = {};
+            for (const [key, value] of Object.entries(json.properties || {})) {
+                properties[key] = Type.fromJSON(value);
+            }
+            return new TObject(properties, json);
+        }
+        case TypeCategory.FUNCTION:
+            return new TFunction(
+                json.parameters.map(Type.fromJSON),
+                Type.fromJSON(json.returnType),
+                json
+            );
+        case TypeCategory.UNION:
+            return new TUnion(json.types.map(Type.fromJSON), json);
+        case TypeCategory.OPTIONAL:
+            return new TOptional(Type.fromJSON(json.baseType), json);
+        case TypeCategory.VOID:
+            return new TVoid(json);
+        case TypeCategory.ANY:
+            return new TAny(json);
+        case TypeCategory.CUSTOM:
+            return new TCustom(json.name, json);
+        default:
+            throw new Error(`Unknown type category: ${json.category}`);
         }
     }
 }
@@ -187,7 +188,7 @@ class TObject extends Type {
     toString() {
         const props = Object.entries(this.properties)
             .map(([key, type]) => `${key}: ${type.toString()}`)
-            .join(', ');
+            .join(", ");
         return `{ ${props} }`;
     }
 }
@@ -222,7 +223,7 @@ class TFunction extends Type {
     }
 
     toString() {
-        const params = this.parameters.map(p => p.toString()).join(', ');
+        const params = this.parameters.map(p => p.toString()).join(", ");
         return `(${params}) => ${this.returnType.toString()}`;
     }
 }
@@ -256,7 +257,7 @@ class TUnion extends Type {
     }
 
     toString() {
-        return this.types.map(t => t.toString()).join(' | ');
+        return this.types.map(t => t.toString()).join(" | ");
     }
 }
 
@@ -294,7 +295,7 @@ class TVoid extends Type {
     }
 
     toString() {
-        return 'void';
+        return "void";
     }
 }
 
@@ -306,12 +307,12 @@ class TAny extends Type {
         super(TypeCategory.ANY, options);
     }
 
-    equals(other) {
+    equals() {
         return true; // Any is compatible with all types
     }
 
     toString() {
-        return 'any';
+        return "any";
     }
 }
 

@@ -5,13 +5,13 @@
  * Converts LUASCRIPT IR to Lua code.
  */
 
-const { NodeCategory } = require('../ir/nodes');
-const { TypeCategory, PrimitiveType } = require('../ir/types');
+const { NodeCategory } = require("../ir/nodes");
+const { TypeCategory, PrimitiveType } = require("../ir/types");
 
 class IRToLuaGenerator {
     constructor(options = {}) {
         this.options = {
-            indent: options.indent || '  ',
+            indent: options.indent || "  ",
             ...options
         };
         this.indentLevel = 0;
@@ -30,11 +30,11 @@ class IRToLuaGenerator {
      */
     visit(node) {
         if (!node || !node.kind) {
-            return '';
+            return "";
         }
 
         const methodName = `visit${node.kind}`;
-        if (typeof this[methodName] === 'function') {
+        if (typeof this[methodName] === "function") {
             return this[methodName](node);
         }
 
@@ -44,15 +44,15 @@ class IRToLuaGenerator {
     // ========== PROGRAM & DECLARATIONS ==========
 
     visitProgram(node) {
-        return node.body.map(stmt => this.visit(stmt)).join('\n');
+        return node.body.map(stmt => this.visit(stmt)).join("\n");
     }
 
     visitFunctionDecl(node) {
-        const name = node.name || '';
-        const params = node.parameters.map(p => this.visitParameter(p)).join(', ');
+        const name = node.name || "";
+        const params = node.parameters.map(p => this.visitParameter(p)).join(", ");
         
         this.indentLevel++;
-        const bodyStatements = node.body.statements.map(stmt => this.visit(stmt)).join('\n');
+        const bodyStatements = node.body.statements.map(stmt => this.visit(stmt)).join("\n");
         this.indentLevel--;
         
         if (node.name) {
@@ -64,7 +64,7 @@ class IRToLuaGenerator {
     }
 
     visitVarDecl(node) {
-        const init = node.init ? ` = ${this.visit(node.init)}` : '';
+        const init = node.init ? ` = ${this.visit(node.init)}` : "";
         return `${this.indent()}local ${node.name}${init}`;
     }
 
@@ -80,7 +80,7 @@ class IRToLuaGenerator {
         // Lua doesn't have explicit block syntax like {}
         // We'll just generate the statements with proper indentation
         this.indentLevel++;
-        const statements = node.statements.map(stmt => this.visit(stmt)).join('\n');
+        const statements = node.statements.map(stmt => this.visit(stmt)).join("\n");
         this.indentLevel--;
         
         return statements;
@@ -98,7 +98,7 @@ class IRToLuaGenerator {
         
         this.indentLevel++;
         const consequent = node.consequent.kind === NodeCategory.BLOCK
-            ? node.consequent.statements.map(stmt => this.visit(stmt)).join('\n')
+            ? node.consequent.statements.map(stmt => this.visit(stmt)).join("\n")
             : this.visit(node.consequent);
         this.indentLevel--;
         
@@ -111,7 +111,7 @@ class IRToLuaGenerator {
                 
                 this.indentLevel++;
                 const altConsequent = node.alternate.consequent.kind === NodeCategory.BLOCK
-                    ? node.alternate.consequent.statements.map(stmt => this.visit(stmt)).join('\n')
+                    ? node.alternate.consequent.statements.map(stmt => this.visit(stmt)).join("\n")
                     : this.visit(node.alternate.consequent);
                 this.indentLevel--;
                 
@@ -125,7 +125,7 @@ class IRToLuaGenerator {
             } else {
                 this.indentLevel++;
                 const alternate = node.alternate.kind === NodeCategory.BLOCK
-                    ? node.alternate.statements.map(stmt => this.visit(stmt)).join('\n')
+                    ? node.alternate.statements.map(stmt => this.visit(stmt)).join("\n")
                     : this.visit(node.alternate);
                 this.indentLevel--;
                 
@@ -143,7 +143,7 @@ class IRToLuaGenerator {
             
             this.indentLevel++;
             const consequent = node.consequent.kind === NodeCategory.BLOCK
-                ? node.consequent.statements.map(stmt => this.visit(stmt)).join('\n')
+                ? node.consequent.statements.map(stmt => this.visit(stmt)).join("\n")
                 : this.visit(node.consequent);
             this.indentLevel--;
             
@@ -157,7 +157,7 @@ class IRToLuaGenerator {
         } else {
             this.indentLevel++;
             const alternate = node.kind === NodeCategory.BLOCK
-                ? node.statements.map(stmt => this.visit(stmt)).join('\n')
+                ? node.statements.map(stmt => this.visit(stmt)).join("\n")
                 : this.visit(node);
             this.indentLevel--;
             
@@ -170,7 +170,7 @@ class IRToLuaGenerator {
         
         this.indentLevel++;
         const body = node.body.kind === NodeCategory.BLOCK
-            ? node.body.statements.map(stmt => this.visit(stmt)).join('\n')
+            ? node.body.statements.map(stmt => this.visit(stmt)).join("\n")
             : this.visit(node.body);
         this.indentLevel--;
         
@@ -183,7 +183,7 @@ class IRToLuaGenerator {
         
         this.indentLevel++;
         const body = node.body.kind === NodeCategory.BLOCK
-            ? node.body.statements.map(stmt => this.visit(stmt)).join('\n')
+            ? node.body.statements.map(stmt => this.visit(stmt)).join("\n")
             : this.visit(node.body);
         this.indentLevel--;
         
@@ -193,8 +193,8 @@ class IRToLuaGenerator {
 
     visitFor(node) {
         // Convert JavaScript for loop to Lua while loop
-        const init = node.init ? this.visit(node.init) : '';
-        const condition = node.condition ? this.visit(node.condition) : 'true';
+        const init = node.init ? this.visit(node.init) : "";
+        const condition = node.condition ? this.visit(node.condition) : "true";
         
         this.indentLevel++;
         const bodyStatements = node.body.kind === NodeCategory.BLOCK
@@ -205,10 +205,10 @@ class IRToLuaGenerator {
             bodyStatements.push(this.visit(node.update));
         }
         
-        const body = bodyStatements.join('\n');
+        const body = bodyStatements.join("\n");
         this.indentLevel--;
         
-        let result = '';
+        let result = "";
         if (init) {
             result += `${init}\n`;
         }
@@ -232,7 +232,7 @@ class IRToLuaGenerator {
                 const comparison = `${switchVar} == ${test}`;
                 
                 this.indentLevel++;
-                const consequent = caseNode.consequent.map(stmt => this.visit(stmt)).join('\n');
+                const consequent = caseNode.consequent.map(stmt => this.visit(stmt)).join("\n");
                 this.indentLevel--;
                 
                 if (i === 0) {
@@ -243,7 +243,7 @@ class IRToLuaGenerator {
             } else {
                 // Default case
                 this.indentLevel++;
-                const consequent = caseNode.consequent.map(stmt => this.visit(stmt)).join('\n');
+                const consequent = caseNode.consequent.map(stmt => this.visit(stmt)).join("\n");
                 this.indentLevel--;
                 
                 result += `\n${this.indent()}else\n${consequent}`;
@@ -254,16 +254,16 @@ class IRToLuaGenerator {
         return result;
     }
 
-    visitCase(node) {
+    visitCase(_node) {
         // Cases are handled in visitSwitch
-        throw new Error('Case nodes should be handled by visitSwitch');
+        throw new Error("Case nodes should be handled by visitSwitch");
     }
 
-    visitBreak(node) {
+    visitBreak(_node) {
         return `${this.indent()}break`;
     }
 
-    visitContinue(node) {
+    visitContinue(_node) {
         // Lua 5.1 doesn't have continue, we'll use a workaround with goto
         // For simplicity, we'll just comment it for now
         return `${this.indent()}-- continue (not directly supported in Lua 5.1)`;
@@ -281,16 +281,16 @@ class IRToLuaGenerator {
 
         // Map JavaScript operators to Lua operators
         let operator = node.operator;
-        if (operator === '===') operator = '==';
-        if (operator === '!==') operator = '~=';
-        if (operator === '!=') operator = '~=';
-        if (operator === '&&') operator = 'and';
-        if (operator === '||') operator = 'or';
-        if (operator === '+') {
+        if (operator === "===") operator = "==";
+        if (operator === "!==") operator = "~=";
+        if (operator === "!=") operator = "~=";
+        if (operator === "&&") operator = "and";
+        if (operator === "||") operator = "or";
+        if (operator === "+") {
             const leftIsString = this.isStringLike(node.left);
             const rightIsString = this.isStringLike(node.right);
             if (leftIsString || rightIsString) {
-                operator = '..';
+                operator = "..";
                 // Wrap non-string-like operands with tostring()
                 const leftOperand = leftIsString ? left : `tostring(${left})`;
                 const rightOperand = rightIsString ? right : `tostring(${right})`;
@@ -306,10 +306,10 @@ class IRToLuaGenerator {
 
         // Map JavaScript operators to Lua operators
         let operator = node.operator;
-        if (operator === '!') operator = 'not';
+        if (operator === "!") operator = "not";
 
-        if (operator === '++' || operator === '--') {
-            const op = operator === '++' ? '+' : '-';
+        if (operator === "++" || operator === "--") {
+            const op = operator === "++" ? "+" : "-";
             if (node.prefix) {
                 return `(function() ${operand} = ${operand} ${op} 1; return ${operand}; end)()`;
             } else {
@@ -327,10 +327,10 @@ class IRToLuaGenerator {
 
     visitCall(node) {
         const callee = this.visit(node.callee);
-        const args = node.args.map(arg => this.visit(arg)).join(', ');
+        const args = node.args.map(arg => this.visit(arg)).join(", ");
         
         // Map console.log to print
-        if (callee === 'console.log') {
+        if (callee === "console.log") {
             return `print(${args})`;
         }
         
@@ -349,13 +349,13 @@ class IRToLuaGenerator {
     }
 
     visitArrayLiteral(node) {
-        const elements = node.elements.map(el => el ? this.visit(el) : 'nil').join(', ');
+        const elements = node.elements.map(el => el ? this.visit(el) : "nil").join(", ");
         return `{${elements}}`;
     }
 
     visitObjectLiteral(node) {
         if (node.properties.length === 0) {
-            return '{}';
+            return "{}";
         }
         
         this.indentLevel++;
@@ -365,7 +365,7 @@ class IRToLuaGenerator {
                 : this.visit(prop.key);
             const value = this.visit(prop.value);
             return `${this.indent()}${key} = ${value}`;
-        }).join(',\n');
+        }).join(",\n");
         this.indentLevel--;
         
         return `{\n${properties}\n${this.indent()}}`;
@@ -383,12 +383,12 @@ class IRToLuaGenerator {
     }
 
     visitLiteral(node) {
-        if (typeof node.value === 'string') {
-            return `"${node.value.replace(/"/g, '\\"')}"`;
+        if (typeof node.value === "string") {
+            return `"${node.value.replace(/"/g, "\\\"")}"`;
         } else if (node.value === null || node.value === undefined) {
-            return 'nil';
-        } else if (typeof node.value === 'boolean') {
-            return node.value ? 'true' : 'false';
+            return "nil";
+        } else if (typeof node.value === "boolean") {
+            return node.value ? "true" : "false";
         }
         return String(node.value);
     }
@@ -398,7 +398,7 @@ class IRToLuaGenerator {
         const right = this.visit(node.right);
         
         // Handle compound assignment operators
-        if (node.operator !== '=') {
+        if (node.operator !== "=") {
             const op = node.operator.slice(0, -1); // Remove the '='
             return `${left} = ${left} ${op} ${right}`;
         }
@@ -436,7 +436,7 @@ class IRToLuaGenerator {
             return true;
         }
 
-        if (node.kind === NodeCategory.LITERAL && typeof node.value === 'string') {
+        if (node.kind === NodeCategory.LITERAL && typeof node.value === "string") {
             return true;
         }
 
@@ -449,14 +449,14 @@ class IRToLuaGenerator {
         }
 
         switch (type.category) {
-            case TypeCategory.PRIMITIVE:
-                return type.primitiveType === PrimitiveType.STRING;
-            case TypeCategory.OPTIONAL:
-                return this.isStringType(type.baseType);
-            case TypeCategory.UNION:
-                return Array.isArray(type.types) && type.types.every(t => this.isStringType(t));
-            default:
-                return false;
+        case TypeCategory.PRIMITIVE:
+            return type.primitiveType === PrimitiveType.STRING;
+        case TypeCategory.OPTIONAL:
+            return this.isStringType(type.baseType);
+        case TypeCategory.UNION:
+            return Array.isArray(type.types) && type.types.every(t => this.isStringType(t));
+        default:
+            return false;
         }
     }
 }

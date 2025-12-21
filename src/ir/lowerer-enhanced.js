@@ -5,8 +5,8 @@
  * Handles: async/await, classes, destructuring, control flow, templates, spread/rest
  */
 
-const nodes = require('./nodes');
-const { IRBuilder } = require('./builder');
+const nodes = require("./nodes");
+const { IRBuilder } = require("./builder");
 
 class EnhancedLowerer {
     constructor(builder = null) {
@@ -41,7 +41,7 @@ class EnhancedLowerer {
         return false;
     }
 
-    createTempVar(prefix = '__tmp') {
+    createTempVar(prefix = "__tmp") {
         return `${prefix}_${++this.tempVarCounter}`;
     }
 
@@ -60,48 +60,48 @@ class EnhancedLowerer {
         if (!node) return null;
 
         switch (node.type) {
-            case 'VariableDeclaration':
-                return this.lowerVariableDeclaration(node);
-            case 'FunctionDeclaration':
-                // Check if it's a generator function
-                if (node.generator) {
-                    return this.lowerGeneratorDeclaration(node);
-                }
-                return this.lowerFunctionDeclaration(node);
-            case 'AsyncFunctionDeclaration':
-                return this.lowerAsyncFunctionDeclaration(node);
-            case 'ClassDeclaration':
-                return this.lowerClassDeclaration(node);
-            case 'BlockStatement':
-                return this.lowerBlockStatement(node);
-            case 'ExpressionStatement':
-                return this.lowerExpressionStatement(node);
-            case 'ReturnStatement':
-                return this.lowerReturnStatement(node);
-            case 'IfStatement':
-                return this.lowerIfStatement(node);
-            case 'WhileStatement':
-                return this.lowerWhileStatement(node);
-            case 'ForStatement':
-                return this.lowerForStatement(node);
-            case 'ForOfStatement':
-                return this.lowerForOfStatement(node);
-            case 'ForInStatement':
-                return this.lowerForInStatement(node);
-            case 'DoWhileStatement':
-                return this.lowerDoWhileStatement(node);
-            case 'BreakStatement':
-                return this.builder.break();
-            case 'ContinueStatement':
-                return this.builder.continue();
-            case 'TryStatement':
-                return this.lowerTryStatement(node);
-            case 'ThrowStatement':
-                return this.lowerThrowStatement(node);
-            case 'SwitchStatement':
-                return this.lowerSwitchStatement(node);
-            default:
-                throw new Error(`Unsupported statement: ${node.type}`);
+        case "VariableDeclaration":
+            return this.lowerVariableDeclaration(node);
+        case "FunctionDeclaration":
+            // Check if it's a generator function
+            if (node.generator) {
+                return this.lowerGeneratorDeclaration(node);
+            }
+            return this.lowerFunctionDeclaration(node);
+        case "AsyncFunctionDeclaration":
+            return this.lowerAsyncFunctionDeclaration(node);
+        case "ClassDeclaration":
+            return this.lowerClassDeclaration(node);
+        case "BlockStatement":
+            return this.lowerBlockStatement(node);
+        case "ExpressionStatement":
+            return this.lowerExpressionStatement(node);
+        case "ReturnStatement":
+            return this.lowerReturnStatement(node);
+        case "IfStatement":
+            return this.lowerIfStatement(node);
+        case "WhileStatement":
+            return this.lowerWhileStatement(node);
+        case "ForStatement":
+            return this.lowerForStatement(node);
+        case "ForOfStatement":
+            return this.lowerForOfStatement(node);
+        case "ForInStatement":
+            return this.lowerForInStatement(node);
+        case "DoWhileStatement":
+            return this.lowerDoWhileStatement(node);
+        case "BreakStatement":
+            return this.builder.break();
+        case "ContinueStatement":
+            return this.builder.continue();
+        case "TryStatement":
+            return this.lowerTryStatement(node);
+        case "ThrowStatement":
+            return this.lowerThrowStatement(node);
+        case "SwitchStatement":
+            return this.lowerSwitchStatement(node);
+        default:
+            throw new Error(`Unsupported statement: ${node.type}`);
         }
     }
 
@@ -112,51 +112,90 @@ class EnhancedLowerer {
 
     lowerVariableDeclarator(node) {
         let idNode;
+        let isPattern = false;
 
-        if (node.id.type === 'Identifier') {
+        if (node.id.type === "Identifier") {
             this.addBinding(node.id.name);
             idNode = this.lowerExpression(node.id);
-        } else if (node.id.type === 'ArrayPattern') {
+        } else if (node.id.type === "ArrayPattern") {
             idNode = this.lowerArrayPattern(node.id);
-        } else if (node.id.type === 'ObjectPattern') {
+            isPattern = true;
+        } else if (node.id.type === "ObjectPattern") {
             idNode = this.lowerObjectPattern(node.id);
+            isPattern = true;
         } else {
             throw new Error(`Unsupported declarator id: ${node.id.type}`);
         }
 
         const initRef = node.init ? this.lowerExpression(node.init) : null;
-        return this.builder.varDecl(idNode.type === 'Identifier' ? idNode.name : idNode.id, initRef);
+        
+        // For patterns, pass the pattern object itself, not just a name
+        if (isPattern) {
+            return this.builder.varDecl(idNode, initRef);
+        } else {
+            return this.builder.varDecl(idNode.type === "Identifier" ? idNode.name : idNode.id, initRef);
+        }
     }
 
     lowerFunctionDeclaration(node) {
+        // Extract function name from id (which is an Identifier)
+        const funcName = node.id ? (node.id.name || node.id) : null;
+        
         this.pushScope();
         const params = (node.params || []).map(p => {
-            this.addBinding(p.name);
-            return this.lowerExpression(p);
+            if (p.type === "Identifier") {
+                this.addBinding(p.name);
+                return this.builder.identifier(p.name);
+            } else if (p.type === "RestElement") {
+                // Handle rest parameters
+                const restName = p.argument.name;
+                this.addBinding(restName);
+                return this.builder.restElement(this.builder.identifier(restName));
+            } else {
+                // Handle destructuring patterns in params
+                this.addBinding(p.name || p.id?.name);
+                return this.lowerExpression(p);
+            }
         });
         const body = this.lowerBlockStatement(node.body);
         this.popScope();
 
         return this.builder.functionDecl(
-            this.lowerExpression(node.id),
+            funcName,
             params,
             body
         );
     }
 
     lowerAsyncFunctionDeclaration(node) {
+        // Extract function name from id (which is an Identifier)
+        const funcName = node.id ? (node.id.name || node.id) : null;
+        
         this.pushScope();
         const params = (node.params || []).map(p => {
-            this.addBinding(p.name);
-            return this.lowerExpression(p);
+            if (p.type === "Identifier") {
+                this.addBinding(p.name);
+                return this.builder.identifier(p.name);
+            } else if (p.type === "RestElement") {
+                // Handle rest parameters
+                const restName = p.argument.name;
+                this.addBinding(restName);
+                return this.builder.restElement(this.builder.identifier(restName));
+            } else {
+                // Handle destructuring patterns in params
+                this.addBinding(p.name || p.id?.name);
+                return this.lowerExpression(p);
+            }
         });
         const body = this.lowerBlockStatement(node.body);
         this.popScope();
 
-        return new nodes.AsyncFunctionDeclaration(
-            this.lowerExpression(node.id),
+        return this.builder.functionDecl(
+            funcName,
             params,
-            body
+            body,
+            null,
+            { async: true }  // Mark as async
         );
     }
 
@@ -224,7 +263,7 @@ class EnhancedLowerer {
 
     lowerForOfStatement(node) {
         this.pushScope();
-        const left = node.left.type === 'VariableDeclaration'
+        const left = node.left.type === "VariableDeclaration"
             ? this.lowerVariableDeclaration(node.left)
             : this.lowerExpression(node.left);
         const right = this.lowerExpression(node.right);
@@ -236,7 +275,7 @@ class EnhancedLowerer {
 
     lowerForInStatement(node) {
         this.pushScope();
-        const left = node.left.type === 'VariableDeclaration'
+        const left = node.left.type === "VariableDeclaration"
             ? this.lowerVariableDeclaration(node.left)
             : this.lowerExpression(node.left);
         const right = this.lowerExpression(node.right);
@@ -291,118 +330,118 @@ class EnhancedLowerer {
         if (!node) return null;
 
         switch (node.type) {
-            case 'Identifier':
-                return this.builder.identifier(node.name);
-            case 'Literal':
-                return this.builder.literal(node.value, { raw: node.raw });
-            case 'BinaryExpression':
-                return this.lowerBinaryExpression(node);
-            case 'UnaryExpression':
-                return this.lowerUnaryExpression(node);
-            case 'LogicalExpression':
-                return this.lowerLogicalExpression(node);
-            case 'AssignmentExpression':
-                return this.lowerAssignmentExpression(node);
-            case 'UpdateExpression':
-                return this.lowerUpdateExpression(node);
-            case 'CallExpression':
-                return this.lowerCallExpression(node);
-            case 'MemberExpression':
-                return this.lowerMemberExpression(node);
-            case 'ConditionalExpression':
-                return this.lowerConditionalExpression(node);
-            case 'ArrayExpression':
-                return this.lowerArrayExpression(node);
-            case 'ObjectExpression':
-                return this.lowerObjectExpression(node);
-            case 'FunctionExpression':
-            case 'ArrowFunctionExpression':
-                return this.lowerFunctionExpression(node);
-            case 'TemplateLiteral':
-                return this.lowerTemplateLiteral(node);
-            case 'AwaitExpression':
-                return this.lowerAwaitExpression(node);
-                        case 'YieldExpression':
-                            return this.lowerYieldExpression(node);
-            case 'ThisExpression':
-                return new nodes.ThisExpression();
-            case 'Super':
-                return new nodes.Super();
-            case 'ClassExpression':
-                return this.lowerClassExpression(node);
-            case 'SpreadElement':
-                return this.lowerSpreadElement(node);
-            case 'ArrayPattern':
-                return this.lowerArrayPattern(node);
-            case 'ObjectPattern':
-                return this.lowerObjectPattern(node);
-            default:
-                throw new Error(`Unsupported expression: ${node.type}`);
+        case "Identifier":
+            return this.builder.identifier(node.name);
+        case "Literal":
+            return this.builder.literal(node.value, { raw: node.raw });
+        case "BinaryExpression":
+            return this.lowerBinaryExpression(node);
+        case "UnaryExpression":
+            return this.lowerUnaryExpression(node);
+        case "LogicalExpression":
+            return this.lowerLogicalExpression(node);
+        case "AssignmentExpression":
+            return this.lowerAssignmentExpression(node);
+        case "UpdateExpression":
+            return this.lowerUpdateExpression(node);
+        case "CallExpression":
+            return this.lowerCallExpression(node);
+        case "MemberExpression":
+            return this.lowerMemberExpression(node);
+        case "ConditionalExpression":
+            return this.lowerConditionalExpression(node);
+        case "ArrayExpression":
+            return this.lowerArrayExpression(node);
+        case "ObjectExpression":
+            return this.lowerObjectExpression(node);
+        case "FunctionExpression":
+        case "ArrowFunctionExpression":
+            return this.lowerFunctionExpression(node);
+        case "TemplateLiteral":
+            return this.lowerTemplateLiteral(node);
+        case "AwaitExpression":
+            return this.lowerAwaitExpression(node);
+        case "YieldExpression":
+            return this.lowerYieldExpression(node);
+        case "ThisExpression":
+            return new nodes.ThisExpression();
+        case "Super":
+            return new nodes.Super();
+        case "ClassExpression":
+            return this.lowerClassExpression(node);
+        case "SpreadElement":
+            return this.lowerSpreadElement(node);
+        case "ArrayPattern":
+            return this.lowerArrayPattern(node);
+        case "ObjectPattern":
+            return this.lowerObjectPattern(node);
+        default:
+            throw new Error(`Unsupported expression: ${node.type}`);
         }
     }
 
     lowerBinaryExpression(node) {
         const left = this.lowerExpression(node.left);
         const right = this.lowerExpression(node.right);
-            return this.builder.binaryOp(node.operator, left, right);
+        return this.builder.binaryOp(node.operator, left, right);
     }
 
     lowerUnaryExpression(node) {
         const argument = this.lowerExpression(node.argument);
-            return this.builder.unaryOp(node.operator, argument, node.prefix !== false, { prefix: node.prefix !== false });
+        return this.builder.unaryOp(node.operator, argument, node.prefix !== false, { prefix: node.prefix !== false });
     }
 
     lowerLogicalExpression(node) {
         const left = this.lowerExpression(node.left);
         const right = this.lowerExpression(node.right);
-            return this.builder.binaryOp(node.operator, left, right);
+        return this.builder.binaryOp(node.operator, left, right);
     }
 
     lowerAssignmentExpression(node) {
         const left = this.lowerExpression(node.left);
         const right = this.lowerExpression(node.right);
-            return this.builder.assignment(left, right, node.operator);
+        return this.builder.assignment(left, right, node.operator);
     }
 
     lowerUpdateExpression(node) {
         const argument = this.lowerExpression(node.argument);
-            return this.builder.updateExpression(node.operator, argument, { prefix: node.prefix });
+        return this.builder.updateExpression(node.operator, argument, { prefix: node.prefix });
     }
 
     lowerCallExpression(node) {
         const callee = this.lowerExpression(node.callee);
         const args = (node.arguments || []).map(arg => this.lowerExpression(arg));
-            return this.builder.callExpression(callee, args);
+        return this.builder.callExpression(callee, args);
     }
 
     lowerMemberExpression(node) {
         const object = this.lowerExpression(node.object);
         const property = this.lowerExpression(node.property);
-            return this.builder.memberExpression(object, property, node.computed);
+        return this.builder.memberExpression(object, property, node.computed);
     }
 
     lowerConditionalExpression(node) {
         const test = this.lowerExpression(node.test);
         const consequent = this.lowerExpression(node.consequent);
         const alternate = this.lowerExpression(node.alternate);
-            return this.builder.conditionalExpression(test, consequent, alternate);
+        return this.builder.conditionalExpression(test, consequent, alternate);
     }
 
     lowerArrayExpression(node) {
         const elements = (node.elements || []).map(el => el ? this.lowerExpression(el) : null);
-            return this.builder.arrayExpression(elements);
+        return this.builder.arrayExpression(elements);
     }
 
     lowerObjectExpression(node) {
         const properties = (node.properties || []).map(prop => this.lowerProperty(prop));
-            return this.builder.objectExpression(properties);
+        return this.builder.objectExpression(properties);
     }
 
     lowerProperty(node) {
         const key = this.lowerExpression(node.key);
         const value = this.lowerExpression(node.value);
         return this.builder.property(key, value, {
-            kind: node.kind || 'init',
+            kind: node.kind || "init",
             shorthand: node.shorthand || false,
             computed: node.computed || false
         });
@@ -479,9 +518,9 @@ class EnhancedLowerer {
     lowerArrayPattern(node) {
         const elements = (node.elements || []).map(el => {
             if (!el) return null;
-            if (el.type === 'RestElement') return this.lowerRestElement(el);
-            if (el.type === 'AssignmentPattern') return this.lowerAssignmentPattern(el);
-            if (el.type === 'Identifier') {
+            if (el.type === "RestElement") return this.lowerRestElement(el);
+            if (el.type === "AssignmentPattern") return this.lowerAssignmentPattern(el);
+            if (el.type === "Identifier") {
                 this.addBinding(el.name);
                 return this.builder.identifier(el.name);
             }
@@ -492,13 +531,27 @@ class EnhancedLowerer {
 
     lowerObjectPattern(node) {
         const properties = (node.properties || []).map(prop => {
-            if (prop.type === 'RestElement') return this.lowerRestElement(prop);
+            if (prop.type === "RestElement") return this.lowerRestElement(prop);
 
             const key = this.builder.identifier(prop.key.name);
-            const value = this.lowerExpression(prop.value);
-            if (prop.value.type === 'Identifier') {
-                this.addBinding(prop.value.name);
+            
+            // Handle property values that might be patterns or expressions
+            let value;
+            if (prop.value.type === "AssignmentPattern") {
+                // For defaults like {x = 10}, treat as special assignment pattern
+                const left = this.lowerExpression(prop.value.left);
+                const right = this.lowerExpression(prop.value.right);
+                value = this.builder.assignmentPattern(left, right);
+                if (prop.value.left.type === "Identifier") {
+                    this.addBinding(prop.value.left.name);
+                }
+            } else {
+                value = this.lowerExpression(prop.value);
+                if (prop.value.type === "Identifier") {
+                    this.addBinding(prop.value.name);
+                }
             }
+            
             return this.builder.property(key, value, { shorthand: prop.shorthand });
         });
         return this.builder.objectPattern(properties);
@@ -506,7 +559,7 @@ class EnhancedLowerer {
 
     lowerRestElement(node) {
         const argument = this.lowerExpression(node.argument);
-        if (argument.type === 'Identifier') {
+        if (argument.type === "Identifier") {
             this.addBinding(argument.name);
         }
         return this.builder.restElement(argument);
@@ -514,7 +567,7 @@ class EnhancedLowerer {
 
     lowerAssignmentPattern(node) {
         const left = this.lowerExpression(node.left);
-        if (left.type === 'Identifier') {
+        if (left.type === "Identifier") {
             this.addBinding(left.name);
         }
         const right = this.lowerExpression(node.right);

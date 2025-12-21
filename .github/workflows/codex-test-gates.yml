@@ -28,6 +28,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: 'npm'
 
       - name: Setup system dependencies
         run: |
@@ -36,6 +37,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Run core verification gate
+        id: verify
+        run: npm run verify 2>&1 | tee verify-output.log
+        continue-on-error: true
 
       - name: Run harness tests
         id: harness
@@ -47,17 +53,29 @@ jobs:
           else
             echo "result=FAIL" >> $GITHUB_OUTPUT
           fi
-
-      - name: Run IR validation
-        id: ir_validation
-        continue-on-error: true
-        run: |
-          npm run ir:validate:all 2>&1 | tee ir-validation-output.log
-          if [ ${PIPESTATUS[0]} -eq 0 ]; then
-            echo "result=PASS" >> $GITHUB_OUTPUT
-          else
-            echo "result=FAIL" >> $GITHUB_OUTPUT
+          
+          # Save results as JSON for artifact upload
+          if [ -f harness_results.json ]; then
+            cat harness_results.json
           fi
+
+      - name: Lint IR code (blocking)
+        id: lint-ir
+        run: npx eslint src/ir/**/*.js --max-warnings 0
+        continue-on-error: false
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: codex-test-results
+          path: |
+            harness-output.log
+            verify-output.log
+            ir-validation-output.log
+            harness_results.json
+          retention-days: 30
+          if-no-files-found: ignore
 
       - name: Run parity tests
         id: parity

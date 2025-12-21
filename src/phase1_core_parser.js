@@ -5,7 +5,7 @@
  * 32+ Developer Team Implementation - CRUNCH MODE!
  */
 
-const { LuaScriptLexer } = require('./phase1_core_lexer');
+const { LuaScriptLexer } = require("./phase1_core_lexer");
 const {
     ProgramNode, BlockStatementNode, ExpressionStatementNode,
     VariableDeclarationNode, VariableDeclaratorNode, FunctionDeclarationNode,
@@ -16,9 +16,9 @@ const {
     MemberExpressionNode, ArrayExpressionNode, ObjectExpressionNode,
     NewExpressionNode, ClassDeclarationNode, SwitchStatementNode, SwitchCaseNode,
     PropertyNode, ArrowFunctionExpressionNode, FunctionExpressionNode,
-    LiteralNode, IdentifierNode, ThisExpressionNode, TemplateLiteralNode,
-    TemplateElementNode, ErrorNode, ASTUtils
-} = require('./phase1_core_ast');
+    LiteralNode, IdentifierNode, ThisExpressionNode,
+    ErrorNode
+} = require("./phase1_core_ast");
 
 /**
  * The core parser for LUASCRIPT, responsible for constructing an Abstract Syntax Tree (AST) from a stream of tokens.
@@ -58,7 +58,7 @@ class LuaScriptParser {
             
             if (this.lexer.hasErrors()) {
                 this.errors.push(...this.lexer.getErrors().map(err => ({
-                    type: 'LexicalError',
+                    type: "LexicalError",
                     message: err.value,
                     line: err.line,
                     column: err.column
@@ -68,23 +68,23 @@ class LuaScriptParser {
             const program = this.parseProgram();
             
             if (!this.isAtEnd() && this.options.errorRecovery) {
-                this.addError('Unexpected tokens after end of program');
+                this.addError("Unexpected tokens after end of program");
             }
 
             return {
-                type: 'Program',
+                type: "Program",
                 body: program.body,
                 errors: this.errors,
-                sourceType: 'script'
+                sourceType: "script"
             };
         } catch (error) {
             if (this.options.errorRecovery) {
                 this.addError(error.message);
                 return {
-                    type: 'Program',
+                    type: "Program",
                     body: [],
                     errors: this.errors,
-                    sourceType: 'script'
+                    sourceType: "script"
                 };
             }
             throw error;
@@ -126,13 +126,13 @@ class LuaScriptParser {
      * @private
      */
     parseStatement() {
-        console.log('Parsing statement, current token:', this.peek());
+        console.log("Parsing statement, current token:", this.peek());
         try {
-            if (this.check('KEYWORD')) {
+            if (this.check("KEYWORD")) {
                 const firstKeywordToken = this.peek();
-                if (firstKeywordToken.value === 'async') {
+                if (firstKeywordToken.value === "async") {
                     const nextToken = this.tokens[this.current + 1];
-                    if (nextToken && nextToken.type === 'KEYWORD' && nextToken.value === 'function') {
+                    if (nextToken && nextToken.type === "KEYWORD" && nextToken.value === "function") {
                         this.advance(); // Consume 'async'
                         this.advance(); // Consume 'function'
                         return this.parseFunctionDeclaration(true);
@@ -143,38 +143,38 @@ class LuaScriptParser {
                 const keyword = this.previous().value;
 
                 switch (keyword) {
-                    case 'let':
-                    case 'const':
-                    case 'var':
-                        return this.parseVariableDeclaration(keyword);
-                    case 'function':
-                        return this.parseFunctionDeclaration(false); // Not async
-                    case 'return':
-                        return this.parseReturnStatement();
-                    case 'if':
-                        return this.parseIfStatement();
-                    case 'while':
-                        return this.parseWhileStatement();
-                    case 'for':
-                        return this.parseForStatement();
-                    case 'break':
-                        return this.parseBreakStatement();
-                    case 'continue':
-                        return this.parseContinueStatement();
-                    case 'do':
-                        return this.parseDoWhileStatement();
-                    case 'class':
-                        return this.parseClassDeclaration();
-                    case 'switch':
-                        return this.parseSwitchStatement();
-                    default:
-                        // Backtrack and parse as expression statement
-                        this.current--;
-                        return this.parseExpressionStatement();
+                case "let":
+                case "const":
+                case "var":
+                    return this.parseVariableDeclaration(keyword);
+                case "function":
+                    return this.parseFunctionDeclaration(false); // Not async
+                case "return":
+                    return this.parseReturnStatement();
+                case "if":
+                    return this.parseIfStatement();
+                case "while":
+                    return this.parseWhileStatement();
+                case "for":
+                    return this.parseForStatement();
+                case "break":
+                    return this.parseBreakStatement();
+                case "continue":
+                    return this.parseContinueStatement();
+                case "do":
+                    return this.parseDoWhileStatement();
+                case "class":
+                    return this.parseClassDeclaration();
+                case "switch":
+                    return this.parseSwitchStatement();
+                default:
+                    // Backtrack and parse as expression statement
+                    this.current--;
+                    return this.parseExpressionStatement();
                 }
             }
 
-            if (this.check('LEFT_BRACE')) {
+            if (this.check("LEFT_BRACE")) {
                 return this.parseBlockStatement();
             }
 
@@ -203,9 +203,9 @@ class LuaScriptParser {
             const id = this.parseIdentifier();
             let init = null;
             
-            if (this.match('ASSIGN')) {
+            if (this.match("ASSIGN")) {
                 init = this.parseAssignmentExpression();
-            } else if (kind === 'const') {
+            } else if (kind === "const") {
                 throw new SyntaxError(`Missing initializer in const declaration at line ${this.peek().line}`);
             }
             
@@ -214,9 +214,9 @@ class LuaScriptParser {
                 column: id.column
             }));
             
-        } while (this.match('COMMA'));
+        } while (this.match("COMMA"));
         
-        this.consume('SEMICOLON', "Expected ';' after variable declaration");
+        this.consume("SEMICOLON", "Expected ';' after variable declaration");
         
         return new VariableDeclarationNode(declarations, kind, {
             line: declarations[0].line,
@@ -234,9 +234,9 @@ class LuaScriptParser {
         
         const id = this.parseIdentifier();
         
-        this.consume('LEFT_PAREN', "Expected '(' after function name");
+        this.consume("LEFT_PAREN", "Expected '(' after function name");
         const params = this.parseParameterList();
-        this.consume('RIGHT_PAREN', "Expected ')' after parameters");
+        this.consume("RIGHT_PAREN", "Expected ')' after parameters");
         
         const body = this.parseBlockStatement();
         
@@ -262,11 +262,11 @@ class LuaScriptParser {
         }
         
         let argument = null;
-        if (!this.check('SEMICOLON') && !this.isAtEnd()) {
+        if (!this.check("SEMICOLON") && !this.isAtEnd()) {
             argument = this.parseExpression();
         }
         
-        this.consume('SEMICOLON', "Expected ';' after return statement");
+        this.consume("SEMICOLON", "Expected ';' after return statement");
         
         return new ReturnStatementNode(argument, {
             line: token.line,
@@ -282,14 +282,14 @@ class LuaScriptParser {
     parseIfStatement() {
         const token = this.previous();
         
-        this.consume('LEFT_PAREN', "Expected '(' after 'if'");
+        this.consume("LEFT_PAREN", "Expected '(' after 'if'");
         const test = this.parseExpression();
-        this.consume('RIGHT_PAREN', "Expected ')' after if condition");
+        this.consume("RIGHT_PAREN", "Expected ')' after if condition");
         
         const consequent = this.parseStatement();
         let alternate = null;
         
-        if (this.match('KEYWORD') && this.previous().value === 'else') {
+        if (this.match("KEYWORD") && this.previous().value === "else") {
             alternate = this.parseStatement();
         } else {
             this.current--; // Backtrack if not 'else'
@@ -310,9 +310,9 @@ class LuaScriptParser {
         const token = this.previous();
         this.loopDepth++;
         
-        this.consume('LEFT_PAREN', "Expected '(' after 'while'");
+        this.consume("LEFT_PAREN", "Expected '(' after 'while'");
         const test = this.parseExpression();
-        this.consume('RIGHT_PAREN', "Expected ')' after while condition");
+        this.consume("RIGHT_PAREN", "Expected ')' after while condition");
         
         const body = this.parseStatement();
         
@@ -333,11 +333,11 @@ class LuaScriptParser {
         const token = this.previous();
         this.loopDepth++;
         
-        this.consume('LEFT_PAREN', "Expected '(' after 'for'");
+        this.consume("LEFT_PAREN", "Expected '(' after 'for'");
         
         let init = null;
-        if (!this.check('SEMICOLON')) {
-            if (this.match('KEYWORD') && ['let', 'const', 'var'].includes(this.previous().value)) {
+        if (!this.check("SEMICOLON")) {
+            if (this.match("KEYWORD") && ["let", "const", "var"].includes(this.previous().value)) {
                 const kind = this.previous().value;
                 this.current--; // Backtrack to re-parse as variable declaration
                 init = this.parseVariableDeclaration(kind);
@@ -346,19 +346,19 @@ class LuaScriptParser {
                 init = this.parseExpression();
             }
         }
-        this.consume('SEMICOLON', "Expected ';' after for loop initializer");
+        this.consume("SEMICOLON", "Expected ';' after for loop initializer");
         
         let test = null;
-        if (!this.check('SEMICOLON')) {
+        if (!this.check("SEMICOLON")) {
             test = this.parseExpression();
         }
-        this.consume('SEMICOLON', "Expected ';' after for loop condition");
+        this.consume("SEMICOLON", "Expected ';' after for loop condition");
         
         let update = null;
-        if (!this.check('RIGHT_PAREN')) {
+        if (!this.check("RIGHT_PAREN")) {
             update = this.parseExpression();
         }
-        this.consume('RIGHT_PAREN', "Expected ')' after for clauses");
+        this.consume("RIGHT_PAREN", "Expected ')' after for clauses");
         
         const body = this.parseStatement();
         
@@ -382,7 +382,7 @@ class LuaScriptParser {
             throw new SyntaxError(`Break statement outside loop at line ${token.line}`);
         }
         
-        this.consume('SEMICOLON', "Expected ';' after 'break'");
+        this.consume("SEMICOLON", "Expected ';' after 'break'");
         
         return new BreakStatementNode(null, {
             line: token.line,
@@ -402,7 +402,7 @@ class LuaScriptParser {
             throw new SyntaxError(`Continue statement outside loop at line ${token.line}`);
         }
         
-        this.consume('SEMICOLON', "Expected ';' after 'continue'");
+        this.consume("SEMICOLON", "Expected ';' after 'continue'");
         
         return new ContinueStatementNode(null, {
             line: token.line,
@@ -417,15 +417,15 @@ class LuaScriptParser {
      */
     parseBlockStatement() {
         const token = this.peek();
-        this.consume('LEFT_BRACE', "Expected '{'");
+        this.consume("LEFT_BRACE", "Expected '{'");
         
         const body = [];
-        while (!this.check('RIGHT_BRACE') && !this.isAtEnd()) {
+        while (!this.check("RIGHT_BRACE") && !this.isAtEnd()) {
             const stmt = this.parseStatement();
             if (stmt) body.push(stmt);
         }
         
-        this.consume('RIGHT_BRACE', "Expected '}'");
+        this.consume("RIGHT_BRACE", "Expected '}'");
         
         return new BlockStatementNode(body, {
             line: token.line,
@@ -440,7 +440,7 @@ class LuaScriptParser {
      */
     parseExpressionStatement() {
         const expr = this.parseExpression();
-        this.consume('SEMICOLON', "Expected ';' after expression");
+        this.consume("SEMICOLON", "Expected ';' after expression");
         
         return new ExpressionStatementNode(expr, {
             line: expr.line,
@@ -465,7 +465,7 @@ class LuaScriptParser {
     parseAssignmentExpression() {
         const expr = this.parseConditionalExpression();
         
-        if (this.match('ASSIGN', 'PLUS_ASSIGN', 'MINUS_ASSIGN', 'MULTIPLY_ASSIGN', 'DIVIDE_ASSIGN')) {
+        if (this.match("ASSIGN", "PLUS_ASSIGN", "MINUS_ASSIGN", "MULTIPLY_ASSIGN", "DIVIDE_ASSIGN")) {
             const operator = this.previous().value;
             const right = this.parseAssignmentExpression();
             
@@ -486,9 +486,9 @@ class LuaScriptParser {
     parseConditionalExpression() {
         const expr = this.parseLogicalOrExpression();
         
-        if (this.match('QUESTION')) {
+        if (this.match("QUESTION")) {
             const consequent = this.parseAssignmentExpression();
-            this.consume('COLON', "Expected ':' after '?' in conditional expression");
+            this.consume("COLON", "Expected ':' after '?' in conditional expression");
             const alternate = this.parseAssignmentExpression();
             
             return new ConditionalExpressionNode(expr, consequent, alternate, {
@@ -508,7 +508,7 @@ class LuaScriptParser {
     parseLogicalOrExpression() {
         let expr = this.parseLogicalAndExpression();
         
-        while (this.match('LOGICAL_OR')) {
+        while (this.match("LOGICAL_OR")) {
             const operator = this.previous().value;
             const right = this.parseLogicalAndExpression();
             expr = new LogicalExpressionNode(operator, expr, right, {
@@ -528,7 +528,7 @@ class LuaScriptParser {
     parseLogicalAndExpression() {
         let expr = this.parseEqualityExpression();
         
-        while (this.match('LOGICAL_AND')) {
+        while (this.match("LOGICAL_AND")) {
             const operator = this.previous().value;
             const right = this.parseEqualityExpression();
             expr = new LogicalExpressionNode(operator, expr, right, {
@@ -548,7 +548,7 @@ class LuaScriptParser {
     parseEqualityExpression() {
         let expr = this.parseRelationalExpression();
         
-        while (this.match('EQUAL', 'NOT_EQUAL', 'STRICT_EQUAL', 'STRICT_NOT_EQUAL')) {
+        while (this.match("EQUAL", "NOT_EQUAL", "STRICT_EQUAL", "STRICT_NOT_EQUAL")) {
             const operator = this.previous().value;
             const right = this.parseRelationalExpression();
             expr = new BinaryExpressionNode(operator, expr, right, {
@@ -568,7 +568,7 @@ class LuaScriptParser {
     parseRelationalExpression() {
         let expr = this.parseAdditiveExpression();
         
-        while (this.match('LESS_THAN', 'GREATER_THAN', 'LESS_EQUAL', 'GREATER_EQUAL')) {
+        while (this.match("LESS_THAN", "GREATER_THAN", "LESS_EQUAL", "GREATER_EQUAL")) {
             const operator = this.previous().value;
             const right = this.parseAdditiveExpression();
             expr = new BinaryExpressionNode(operator, expr, right, {
@@ -588,7 +588,7 @@ class LuaScriptParser {
     parseAdditiveExpression() {
         let expr = this.parseMultiplicativeExpression();
         
-        while (this.match('PLUS', 'MINUS')) {
+        while (this.match("PLUS", "MINUS")) {
             const operator = this.previous().value;
             const right = this.parseMultiplicativeExpression();
             expr = new BinaryExpressionNode(operator, expr, right, {
@@ -608,7 +608,7 @@ class LuaScriptParser {
     parseMultiplicativeExpression() {
         let expr = this.parseUnaryExpression();
         
-        while (this.match('MULTIPLY', 'DIVIDE', 'MODULO')) {
+        while (this.match("MULTIPLY", "DIVIDE", "MODULO")) {
             const operator = this.previous().value;
             const right = this.parseUnaryExpression();
             expr = new BinaryExpressionNode(operator, expr, right, {
@@ -626,7 +626,7 @@ class LuaScriptParser {
      * @private
      */
     parseUnaryExpression() {
-        if (this.match('LOGICAL_NOT', 'MINUS', 'PLUS', 'BITWISE_NOT')) {
+        if (this.match("LOGICAL_NOT", "MINUS", "PLUS", "BITWISE_NOT")) {
             const operator = this.previous().value;
             const argument = this.parseUnaryExpression();
             return new UnaryExpressionNode(operator, argument, true, {
@@ -645,7 +645,7 @@ class LuaScriptParser {
      */
     parseUpdateExpression() {
         // Prefix increment/decrement
-        if (this.match('INCREMENT', 'DECREMENT')) {
+        if (this.match("INCREMENT", "DECREMENT")) {
             const operator = this.previous().value;
             const argument = this.parsePostfixExpression();
             return new UpdateExpressionNode(operator, argument, true, {
@@ -657,7 +657,7 @@ class LuaScriptParser {
         const expr = this.parsePostfixExpression();
         
         // Postfix increment/decrement
-        if (this.match('INCREMENT', 'DECREMENT')) {
+        if (this.match("INCREMENT", "DECREMENT")) {
             const operator = this.previous().value;
             return new UpdateExpressionNode(operator, expr, false, {
                 line: expr.line,
@@ -676,33 +676,34 @@ class LuaScriptParser {
     parsePostfixExpression() {
         let expr = this.parsePrimaryExpression();
         
+        // eslint-disable-next-line no-constant-condition
         while (true) {
-            if (this.match('LEFT_PAREN')) {
+            if (this.match("LEFT_PAREN")) {
                 // Function call
                 const args = this.parseArgumentList();
-                this.consume('RIGHT_PAREN', "Expected ')' after arguments");
+                this.consume("RIGHT_PAREN", "Expected ')' after arguments");
                 expr = new CallExpressionNode(expr, args, {
                     line: expr.line,
                     column: expr.column
                 });
-            } else if (this.match('KEYWORD') && this.previous().value === 'new') {
+            } else if (this.match("KEYWORD") && this.previous().value === "new") {
                 // Support minimal `new Callee(args)` syntax
                 const callee = this.parsePrimaryExpression();
                 let args = [];
-                if (this.match('LEFT_PAREN')) {
+                if (this.match("LEFT_PAREN")) {
                     args = this.parseArgumentList();
-                    this.consume('RIGHT_PAREN', "Expected ')' after arguments");
+                    this.consume("RIGHT_PAREN", "Expected ')' after arguments");
                 }
                 expr = new NewExpressionNode(callee, args, { line: callee.line, column: callee.column });
-            } else if (this.match('LEFT_BRACKET')) {
+            } else if (this.match("LEFT_BRACKET")) {
                 // Member access (computed)
                 const property = this.parseExpression();
-                this.consume('RIGHT_BRACKET', "Expected ']' after computed member expression");
+                this.consume("RIGHT_BRACKET", "Expected ']' after computed member expression");
                 expr = new MemberExpressionNode(expr, property, true, {
                     line: expr.line,
                     column: expr.column
                 });
-            } else if (this.match('DOT')) {
+            } else if (this.match("DOT")) {
                 // Member access (non-computed)
                 const property = this.parseIdentifier();
                 expr = new MemberExpressionNode(expr, property, false, {
@@ -723,44 +724,44 @@ class LuaScriptParser {
      * @private
      */
     parsePrimaryExpression() {
-        if (this.match('KEYWORD')) {
+        if (this.match("KEYWORD")) {
             const keyword = this.previous().value;
             switch (keyword) {
-                case 'true':
-                    return new LiteralNode(true, 'true', {
-                        line: this.previous().line,
-                        column: this.previous().column
-                    });
-                case 'false':
-                    return new LiteralNode(false, 'false', {
-                        line: this.previous().line,
-                        column: this.previous().column
-                    });
-                case 'null':
-                    return new LiteralNode(null, 'null', {
-                        line: this.previous().line,
-                        column: this.previous().column
-                    });
-                case 'undefined':
-                    return new LiteralNode(undefined, 'undefined', {
-                        line: this.previous().line,
-                        column: this.previous().column
-                    });
-                case 'this':
-                    return new ThisExpressionNode({
-                        line: this.previous().line,
-                        column: this.previous().column
-                    });
-                case 'function':
-                    return this.parseFunctionExpression();
-                case 'new':
-                    return this.parseNewExpression();
-                default:
-                    throw new SyntaxError(`Unexpected keyword '${keyword}' at line ${this.previous().line}`);
+            case "true":
+                return new LiteralNode(true, "true", {
+                    line: this.previous().line,
+                    column: this.previous().column
+                });
+            case "false":
+                return new LiteralNode(false, "false", {
+                    line: this.previous().line,
+                    column: this.previous().column
+                });
+            case "null":
+                return new LiteralNode(null, "null", {
+                    line: this.previous().line,
+                    column: this.previous().column
+                });
+            case "undefined":
+                return new LiteralNode(undefined, "undefined", {
+                    line: this.previous().line,
+                    column: this.previous().column
+                });
+            case "this":
+                return new ThisExpressionNode({
+                    line: this.previous().line,
+                    column: this.previous().column
+                });
+            case "function":
+                return this.parseFunctionExpression();
+            case "new":
+                return this.parseNewExpression();
+            default:
+                throw new SyntaxError(`Unexpected keyword '${keyword}' at line ${this.previous().line}`);
             }
         }
         
-        if (this.match('NUMBER')) {
+        if (this.match("NUMBER")) {
             const token = this.previous();
             return new LiteralNode(token.value, token.value.toString(), {
                 line: token.line,
@@ -768,7 +769,7 @@ class LuaScriptParser {
             });
         }
         
-        if (this.match('STRING')) {
+        if (this.match("STRING")) {
             const token = this.previous();
             return new LiteralNode(token.value, `"${token.value}"`, {
                 line: token.line,
@@ -776,11 +777,11 @@ class LuaScriptParser {
             });
         }
         
-        if (this.match('IDENTIFIER')) {
+        if (this.match("IDENTIFIER")) {
             const token = this.previous();
             
             // Check for arrow function
-            if (this.check('ARROW')) {
+            if (this.check("ARROW")) {
                 this.current--; // Backtrack
                 return this.parseArrowFunction();
             }
@@ -789,9 +790,9 @@ class LuaScriptParser {
                 line: token.line,
                 column: token.column
             });
-    }
+        }
         
-        if (this.match('LEFT_PAREN')) {
+        if (this.match("LEFT_PAREN")) {
             // Could be grouped expression or arrow function parameters
             const checkpoint = this.current;
             
@@ -803,16 +804,16 @@ class LuaScriptParser {
                 // If that fails, parse as grouped expression
                 this.current = checkpoint;
                 const expr = this.parseExpression();
-                this.consume('RIGHT_PAREN', "Expected ')' after expression");
+                this.consume("RIGHT_PAREN", "Expected ')' after expression");
                 return expr;
             }
         }
         
-        if (this.match('LEFT_BRACKET')) {
+        if (this.match("LEFT_BRACKET")) {
             return this.parseArrayExpression();
         }
         
-        if (this.match('LEFT_BRACE')) {
+        if (this.match("LEFT_BRACE")) {
             return this.parseObjectExpression();
         }
         
@@ -824,9 +825,9 @@ class LuaScriptParser {
         const start = this.previous(); // 'new'
         const callee = this.parsePrimaryExpression();
         let args = [];
-        if (this.match('LEFT_PAREN')) {
+        if (this.match("LEFT_PAREN")) {
             args = this.parseArgumentList();
-            this.consume('RIGHT_PAREN', "Expected ')' after arguments");
+            this.consume("RIGHT_PAREN", "Expected ')' after arguments");
         }
         return new NewExpressionNode(callee, args, { line: start.line, column: start.column });
     }
@@ -836,31 +837,31 @@ class LuaScriptParser {
         const token = this.previous(); // 'class'
         const id = this.parseIdentifier();
         let superClass = null;
-        if (this.match('KEYWORD') && this.previous().value === 'extends') {
+        if (this.match("KEYWORD") && this.previous().value === "extends") {
             superClass = this.parseIdentifier();
         }
-        this.consume('LEFT_BRACE', "Expected '{' for class body");
+        this.consume("LEFT_BRACE", "Expected '{' for class body");
         const body = [];
-        while (!this.check('RIGHT_BRACE') && !this.isAtEnd()) {
+        while (!this.check("RIGHT_BRACE") && !this.isAtEnd()) {
             // Allow optional 'static' modifier
             let isStatic = false;
-            if (this.check('KEYWORD') && this.peek().value === 'static') {
+            if (this.check("KEYWORD") && this.peek().value === "static") {
                 this.advance();
                 isStatic = true;
             }
             // Method name must be identifier for now
-            const nameToken = this.consume('IDENTIFIER', "Expected method name in class body");
+            const nameToken = this.consume("IDENTIFIER", "Expected method name in class body");
             const nameId = new IdentifierNode(nameToken.value, { line: nameToken.line, column: nameToken.column });
-            this.consume('LEFT_PAREN', "Expected '(' after method name");
+            this.consume("LEFT_PAREN", "Expected '(' after method name");
             const params = this.parseParameterList();
-            this.consume('RIGHT_PAREN', "Expected ')' after method parameters");
+            this.consume("RIGHT_PAREN", "Expected ')' after method parameters");
             const methodBody = this.parseBlockStatement();
-            const kind = nameToken.value === 'constructor' ? 'constructor' : 'method';
-            body.push(new (require('./phase1_core_ast').MethodDefinitionNode)(nameId, params, methodBody, { static: isStatic, kind, line: nameToken.line, column: nameToken.column }));
+            const kind = nameToken.value === "constructor" ? "constructor" : "method";
+            body.push(new (require("./phase1_core_ast").MethodDefinitionNode)(nameId, params, methodBody, { static: isStatic, kind, line: nameToken.line, column: nameToken.column }));
             // Optional semicolon between methods is not standard, but be tolerant
-            if (this.check('SEMICOLON')) this.advance();
+            if (this.check("SEMICOLON")) this.advance();
         }
-        this.consume('RIGHT_BRACE', "Expected '}' after class body");
+        this.consume("RIGHT_BRACE", "Expected '}' after class body");
         return new ClassDeclarationNode(id, superClass, body, {
             line: token.line,
             column: token.column
@@ -870,21 +871,21 @@ class LuaScriptParser {
     /** Parses a switch statement to an AST shape */
     parseSwitchStatement() {
         const token = this.previous(); // 'switch'
-        this.consume('LEFT_PAREN', "Expected '(' after 'switch'");
+        this.consume("LEFT_PAREN", "Expected '(' after 'switch'");
         const discriminant = this.parseExpression();
-        this.consume('RIGHT_PAREN', "Expected ')' after switch discriminant");
-        this.consume('LEFT_BRACE', "Expected '{' to start switch cases");
+        this.consume("RIGHT_PAREN", "Expected ')' after switch discriminant");
+        this.consume("LEFT_BRACE", "Expected '{' to start switch cases");
         const cases = [];
-        while (!this.check('RIGHT_BRACE') && !this.isAtEnd()) {
-            if (this.match('KEYWORD') && (this.previous().value === 'case' || this.previous().value === 'default')) {
-                const isDefault = this.previous().value === 'default';
+        while (!this.check("RIGHT_BRACE") && !this.isAtEnd()) {
+            if (this.match("KEYWORD") && (this.previous().value === "case" || this.previous().value === "default")) {
+                const isDefault = this.previous().value === "default";
                 let test = null;
                 if (!isDefault) {
                     test = this.parseExpression();
                 }
-                this.consume('COLON', "Expected ':' after case");
+                this.consume("COLON", "Expected ':' after case");
                 const consequent = [];
-                while (!this.check('RIGHT_BRACE') && !(this.check('KEYWORD') && ['case', 'default'].includes(this.peek().value)) && !this.isAtEnd()) {
+                while (!this.check("RIGHT_BRACE") && !(this.check("KEYWORD") && ["case", "default"].includes(this.peek().value)) && !this.isAtEnd()) {
                     // collect statements until next case/default or '}'
                     consequent.push(this.parseStatement());
                 }
@@ -894,7 +895,7 @@ class LuaScriptParser {
                 this.advance();
             }
         }
-        this.consume('RIGHT_BRACE', "Expected '}' to close switch");
+        this.consume("RIGHT_BRACE", "Expected '}' to close switch");
         return new SwitchStatementNode(discriminant, cases, { line: token.line, column: token.column });
     }
 
@@ -909,29 +910,29 @@ class LuaScriptParser {
         const startToken = this.peek();
         let params = [];
         
-        if (this.match('IDENTIFIER')) {
+        if (this.match("IDENTIFIER")) {
             // Single parameter without parentheses
             const param = this.previous();
             params = [new IdentifierNode(param.value, {
                 line: param.line,
                 column: param.column
             })];
-        } else if (this.match('LEFT_PAREN')) {
+        } else if (this.match("LEFT_PAREN")) {
             // Parameters in parentheses
-            if (!this.check('RIGHT_PAREN')) {
+            if (!this.check("RIGHT_PAREN")) {
                 params = this.parseParameterList();
             }
-            this.consume('RIGHT_PAREN', "Expected ')' after arrow function parameters");
+            this.consume("RIGHT_PAREN", "Expected ')' after arrow function parameters");
         } else {
             throw new SyntaxError(`Expected arrow function parameters at line ${this.peek().line}`);
         }
         
-        this.consume('ARROW', "Expected '=>' in arrow function");
+        this.consume("ARROW", "Expected '=>' in arrow function");
         
         let body;
         let expression = false;
         
-        if (this.check('LEFT_BRACE')) {
+        if (this.check("LEFT_BRACE")) {
             // Block body
             body = this.parseBlockStatement();
             expression = false;
@@ -959,13 +960,13 @@ class LuaScriptParser {
         this.functionDepth++;
         
         let id = null;
-        if (this.check('IDENTIFIER')) {
+        if (this.check("IDENTIFIER")) {
             id = this.parseIdentifier();
         }
         
-        this.consume('LEFT_PAREN', "Expected '(' after 'function'");
+        this.consume("LEFT_PAREN", "Expected '(' after 'function'");
         const params = this.parseParameterList();
-        this.consume('RIGHT_PAREN', "Expected ')' after parameters");
+        this.consume("RIGHT_PAREN", "Expected ')' after parameters");
         
         const body = this.parseBlockStatement();
         
@@ -985,18 +986,18 @@ class LuaScriptParser {
     parseArrayExpression() {
         const elements = [];
         
-        if (!this.check('RIGHT_BRACKET')) {
+        if (!this.check("RIGHT_BRACKET")) {
             do {
-                if (this.check('COMMA')) {
+                if (this.check("COMMA")) {
                     // Sparse array element
                     elements.push(null);
                 } else {
                     elements.push(this.parseAssignmentExpression());
                 }
-            } while (this.match('COMMA'));
+            } while (this.match("COMMA"));
         }
         
-        this.consume('RIGHT_BRACKET', "Expected ']' after array elements");
+        this.consume("RIGHT_BRACKET", "Expected ']' after array elements");
         
         return new ArrayExpressionNode(elements, {
             line: this.previous().line,
@@ -1012,14 +1013,14 @@ class LuaScriptParser {
     parseObjectExpression() {
         const properties = [];
         
-        if (!this.check('RIGHT_BRACE')) {
+        if (!this.check("RIGHT_BRACE")) {
             do {
                 const property = this.parseProperty();
                 properties.push(property);
-            } while (this.match('COMMA') && !this.check('RIGHT_BRACE'));
+            } while (this.match("COMMA") && !this.check("RIGHT_BRACE"));
         }
         
-        this.consume('RIGHT_BRACE', "Expected '}' after object properties");
+        this.consume("RIGHT_BRACE", "Expected '}' after object properties");
         
         return new ObjectExpressionNode(properties, {
             line: this.previous().line,
@@ -1036,12 +1037,12 @@ class LuaScriptParser {
         let key;
         let computed = false;
         
-        if (this.match('LEFT_BRACKET')) {
+        if (this.match("LEFT_BRACKET")) {
             // Computed property name
             key = this.parseExpression();
-            this.consume('RIGHT_BRACKET', "Expected ']' after computed property name");
+            this.consume("RIGHT_BRACKET", "Expected ']' after computed property name");
             computed = true;
-        } else if (this.match('STRING', 'NUMBER')) {
+        } else if (this.match("STRING", "NUMBER")) {
             // String or number literal key
             const token = this.previous();
             key = new LiteralNode(token.value, token.value.toString(), {
@@ -1053,8 +1054,8 @@ class LuaScriptParser {
             key = this.parseIdentifier();
         }
         // Support shorthand {a} as {a: a}
-        if (this.check('COMMA') || this.check('RIGHT_BRACE')) {
-            return new PropertyNode(key, key, 'init', {
+        if (this.check("COMMA") || this.check("RIGHT_BRACE")) {
+            return new PropertyNode(key, key, "init", {
                 line: key.line,
                 column: key.column,
                 computed,
@@ -1062,10 +1063,10 @@ class LuaScriptParser {
             });
         }
 
-        this.consume('COLON', "Expected ':' after property key");
+        this.consume("COLON", "Expected ':' after property key");
         const value = this.parseAssignmentExpression();
 
-        return new PropertyNode(key, value, 'init', {
+        return new PropertyNode(key, value, "init", {
             line: key.line,
             column: key.column,
             computed
@@ -1080,10 +1081,10 @@ class LuaScriptParser {
     parseParameterList() {
         const params = [];
         
-        if (!this.check('RIGHT_PAREN')) {
+        if (!this.check("RIGHT_PAREN")) {
             do {
                 params.push(this.parseIdentifier());
-            } while (this.match('COMMA'));
+            } while (this.match("COMMA"));
         }
         
         return params;
@@ -1097,10 +1098,10 @@ class LuaScriptParser {
     parseArgumentList() {
         const args = [];
         
-        if (!this.check('RIGHT_PAREN')) {
+        if (!this.check("RIGHT_PAREN")) {
             do {
                 args.push(this.parseAssignmentExpression());
-            } while (this.match('COMMA'));
+            } while (this.match("COMMA"));
         }
         
         return args;
@@ -1113,7 +1114,7 @@ class LuaScriptParser {
      * @throws {SyntaxError} If an identifier is not found.
      */
     parseIdentifier() {
-        if (this.match('IDENTIFIER')) {
+        if (this.match("IDENTIFIER")) {
             const token = this.previous();
             return new IdentifierNode(token.value, {
                 line: token.line,
@@ -1167,7 +1168,7 @@ class LuaScriptParser {
      * @private
      */
     isAtEnd() {
-        return this.current >= this.tokens.length || this.peek().type === 'EOF';
+        return this.current >= this.tokens.length || this.peek().type === "EOF";
     }
 
     /**
@@ -1177,7 +1178,7 @@ class LuaScriptParser {
      */
     peek() {
         if (this.current >= this.tokens.length) {
-            return { type: 'EOF', value: null, line: 0, column: 0 };
+            return { type: "EOF", value: null, line: 0, column: 0 };
         }
         return this.tokens[this.current];
     }
@@ -1214,11 +1215,11 @@ class LuaScriptParser {
         this.advance();
         
         while (!this.isAtEnd()) {
-            if (this.previous().type === 'SEMICOLON') return;
+            if (this.previous().type === "SEMICOLON") return;
             
-            if (this.peek().type === 'KEYWORD') {
+            if (this.peek().type === "KEYWORD") {
                 const keyword = this.peek().value;
-                if (['class', 'function', 'var', 'for', 'if', 'while', 'return'].includes(keyword)) {
+                if (["class", "function", "var", "for", "if", "while", "return"].includes(keyword)) {
                     return;
                 }
             }
@@ -1235,7 +1236,7 @@ class LuaScriptParser {
     addError(message) {
         const token = this.peek();
         this.errors.push({
-            type: 'SyntaxError',
+            type: "SyntaxError",
             message,
             line: token.line,
             column: token.column,

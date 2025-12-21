@@ -16,11 +16,11 @@
  * - Tony's 20 PS2/PS3-inspired performance optimizations
  */
 
-const fs = require('fs');
-const path = require('path');
-const { OptimizedLuaScriptTranspiler } = require('./optimized_transpiler');
-const { parseAndLower } = require('./ir/pipeline');
-const { emitLuaFromIR } = require('./ir/emitter');
+const fs = require("fs");
+const path = require("path");
+const { OptimizedLuaScriptTranspiler } = require("./optimized_transpiler");
+const { parseAndLower } = require("./ir/pipeline");
+const { emitLuaFromIR } = require("./ir/emitter");
 
 /**
  * The main transpiler class that orchestrates the conversion of JavaScript to Lua.
@@ -38,12 +38,12 @@ class LuaScriptTranspiler {
      * @param {boolean} [options.enableProfiling=false] - Whether to enable performance profiling.
      */
     constructor(options = {}) {
-        this.runtimeLibraryPath = path.join(__dirname, '..', 'runtime', 'runtime.lua');
+        this.runtimeLibraryPath = path.join(__dirname, "..", "runtime", "runtime.lua");
         
         // Tony Yoka's PS2/PS3 Optimization Integration
         this.options = {
             enableOptimizations: options.enableOptimizations !== false,
-            optimizationLevel: options.optimizationLevel || 'standard', // 'basic', 'standard', 'aggressive'
+            optimizationLevel: options.optimizationLevel || "standard", // 'basic', 'standard', 'aggressive'
             enableParallelProcessing: options.enableParallelProcessing !== false,
             enableCaching: options.enableCaching !== false,
             enableProfiling: options.enableProfiling !== false,
@@ -82,7 +82,7 @@ class LuaScriptTranspiler {
         this.stats.transpilationsCount++;
 
         try {
-            if (process.env.LUASCRIPT_USE_ENHANCED_IR === '1' || normalizedOptions.useEnhancedIR) {
+            if (process.env.LUASCRIPT_USE_ENHANCED_IR === "1" || normalizedOptions.useEnhancedIR) {
                 const code = this.buildRefactorStub(jsCode);
                 const duration = Number(process.hrtime.bigint() - startTime) / 1e6;
                 this.stats.totalTime += duration;
@@ -91,7 +91,7 @@ class LuaScriptTranspiler {
                     ir: null,
                     stats: {
                         duration,
-                        pipeline: 'enhanced-ir-stub',
+                        pipeline: "enhanced-ir-stub",
                         filename: normalizedOptions.filename || null,
                     },
                 };
@@ -105,10 +105,10 @@ class LuaScriptTranspiler {
             }
 
             if (this.options.enableOptimizations && this.optimizedTranspiler) {
-                console.warn('⚠️ Optimized transpilation requires async support; falling back to legacy pipeline.');
+                console.warn("⚠️ Optimized transpilation requires async support; falling back to legacy pipeline.");
             }
 
-            console.log('📝 Using legacy string-rewrite transpilation');
+            console.log("📝 Using legacy string-rewrite transpilation");
             let luaCode = jsCode;
 
             luaCode = this.fixEqualityOperators(luaCode);
@@ -122,7 +122,7 @@ class LuaScriptTranspiler {
             luaCode = this.convertObjects(luaCode);
 
             if (this.options.validateLuaBalance !== false) {
-                this.validateLuaBalanceOrThrow(luaCode, { phase: 'legacy' });
+                this.validateLuaBalanceOrThrow(luaCode, { phase: "legacy" });
             }
 
             luaCode = this.injectRuntimeLibrary(luaCode, normalizedOptions);
@@ -143,7 +143,7 @@ class LuaScriptTranspiler {
             };
 
         } catch (error) {
-            console.error('❌ TRANSPILATION ERROR:', error.message);
+            console.error("❌ TRANSPILATION ERROR:", error.message);
             throw error;
         }
     }
@@ -157,20 +157,20 @@ class LuaScriptTranspiler {
             return {};
         }
 
-        if (typeof options === 'string') {
+        if (typeof options === "string") {
             // Validate that string looks like a filename (has extension or path separator)
-            if (!options.includes('.') && !options.includes('/') && !options.includes('\\')) {
-                throw new Error('LUASCRIPT_VALIDATION_ERROR: Invalid options - string must be a valid filename with extension or path');
+            if (!options.includes(".") && !options.includes("/") && !options.includes("\\")) {
+                throw new Error("LUASCRIPT_VALIDATION_ERROR: Invalid options - string must be a valid filename with extension or path");
             }
             return { filename: options };
         }
 
         if (Array.isArray(options)) {
-            throw new Error('LUASCRIPT_VALIDATION_ERROR: Invalid options - arrays are not supported');
+            throw new Error("LUASCRIPT_VALIDATION_ERROR: Invalid options - arrays are not supported");
         }
 
-        if (typeof options !== 'object') {
-            throw new Error('LUASCRIPT_VALIDATION_ERROR: Invalid options - must be an object, null, undefined, or filename string');
+        if (typeof options !== "object") {
+            throw new Error("LUASCRIPT_VALIDATION_ERROR: Invalid options - must be an object, null, undefined, or filename string");
         }
 
         return options;
@@ -222,8 +222,8 @@ class LuaScriptTranspiler {
             lines.push(`function ${name}:method(...) return self end`);
         });
 
-        lines.push(`-- JS Source: ${jsCode.replace(/\\r?\\n/g, ' ')}`);
-        return lines.join('\\n');
+        lines.push(`-- JS Source: ${jsCode.replace(/\\r?\\n/g, " ")}`);
+        return lines.join("\\n");
     }
 
     shouldUseCanonicalPipeline(options = {}) {
@@ -236,18 +236,18 @@ class LuaScriptTranspiler {
     transpileWithCanonicalIR(jsCode, options = {}) {
         const ir = parseAndLower(jsCode, {
             sourcePath: options.filename || null,
-            metadata: { authoredBy: 'LuaScriptTranspiler' },
+            metadata: { authoredBy: "LuaScriptTranspiler" },
         });
 
         let luaCode = emitLuaFromIR(ir, {
-            indent: '  ',
+            indent: "  ",
         });
 
         // Apply post-emission heuristics to retain legacy Lua expectations
         luaCode = this.fixStringConcatenation(luaCode);
 
         if (this.options.validateLuaBalance !== false) {
-            this.validateLuaBalanceOrThrow(luaCode, { phase: 'canonical-ir' });
+            this.validateLuaBalanceOrThrow(luaCode, { phase: "canonical-ir" });
         }
 
         const finalCode = this.injectRuntimeLibrary(luaCode, options);
@@ -257,7 +257,7 @@ class LuaScriptTranspiler {
             luaSize: finalCode.length,
             optimizations: this.stats.optimizationsApplied,
             filename: options && options.filename ? options.filename : null,
-            pipeline: 'canonical-ir',
+            pipeline: "canonical-ir",
         };
 
         return {
@@ -278,43 +278,43 @@ class LuaScriptTranspiler {
         // - Line comments -- ... EOL
         // - Block comments --[[ ... ]] and with equal signs --[=[ ... ]=]
         const stack = [];
-        const matchPair = (o, c) => (o === '(' && c === ')') || (o === '{' && c === '}') || (o === '[' && c === ']');
+        const matchPair = (o, c) => (o === "(" && c === ")") || (o === "{" && c === "}") || (o === "[" && c === "]");
 
         let i = 0;
         const n = code.length;
 
         // helpers to detect long brackets [=*[ and ]=*]
         const matchLongOpen = (pos) => {
-            if (code[pos] !== '[') return 0;
+            if (code[pos] !== "[") return 0;
             let j = pos + 1;
             let eqs = 0;
-            while (j < n && code[j] === '=') { eqs++; j++; }
-            if (code[j] === '[') return eqs + 1; // levels = eqs + 1 (non-zero indicates open)
+            while (j < n && code[j] === "=") { eqs++; j++; }
+            if (code[j] === "[") return eqs + 1; // levels = eqs + 1 (non-zero indicates open)
             return 0;
         };
         const matchLongClose = (pos, levels) => {
-            if (code[pos] !== ']') return false;
+            if (code[pos] !== "]") return false;
             let j = pos + 1;
             let eqs = 0;
-            while (j < n && code[j] === '=') { eqs++; j++; }
-            return (eqs === (levels - 1)) && code[j] === ']';
+            while (j < n && code[j] === "=") { eqs++; j++; }
+            return (eqs === (levels - 1)) && code[j] === "]";
         };
 
         let inLineComment = false;
         let inBlockComment = false;
         let blockLevels = 0; // for --[=[ ... ]=] and long strings
         let inString = false;
-        let stringQuote = '';
+        let stringQuote = "";
         let inLongString = false; // [=*[ ... ]=*]
         let longLevels = 0;
 
         while (i < n) {
             const ch = code[i];
-            const next = i + 1 < n ? code[i + 1] : '';
+            const next = i + 1 < n ? code[i + 1] : "";
 
             // Handle line comment
             if (inLineComment) {
-                if (ch === '\n') inLineComment = false;
+                if (ch === "\n") inLineComment = false;
                 i++;
                 continue;
             }
@@ -344,14 +344,14 @@ class LuaScriptTranspiler {
 
             // Handle quoted strings
             if (inString) {
-                if (ch === '\\') { i += 2; continue; }
-                if (ch === stringQuote) { inString = false; stringQuote = ''; i++; continue; }
+                if (ch === "\\") { i += 2; continue; }
+                if (ch === stringQuote) { inString = false; stringQuote = ""; i++; continue; }
                 i++;
                 continue;
             }
 
             // Start of comment?
-            if (ch === '-' && next === '-') {
+            if (ch === "-" && next === "-") {
                 // Check for block comment start --[=*[ ...
                 const levels = matchLongOpen(i + 2);
                 if (levels) {
@@ -378,7 +378,7 @@ class LuaScriptTranspiler {
             }
 
             // Start of quoted string?
-            if (ch === '"' || ch === '\'') {
+            if (ch === "\"" || ch === "'") {
                 inString = true;
                 stringQuote = ch;
                 i++;
@@ -386,15 +386,15 @@ class LuaScriptTranspiler {
             }
 
             // Delimiter balancing (outside strings/comments)
-            if (ch === '(' || ch === '{' || ch === '[') {
+            if (ch === "(" || ch === "{" || ch === "[") {
                 stack.push(ch);
                 i++;
                 continue;
             }
-            if (ch === ')' || ch === '}' || ch === ']') {
+            if (ch === ")" || ch === "}" || ch === "]") {
                 const open = stack.pop();
                 if (!open || !matchPair(open, ch)) {
-                    throw new Error(`Lua delimiter imbalance at index ${i} (phase=${ctx.phase || 'n/a'})`);
+                    throw new Error(`Lua delimiter imbalance at index ${i} (phase=${ctx.phase || "n/a"})`);
                 }
                 i++;
                 continue;
@@ -404,7 +404,7 @@ class LuaScriptTranspiler {
         }
 
         if (stack.length) {
-            throw new Error(`Lua delimiter imbalance: ${stack.length} unclosed delimiters (phase=${ctx.phase || 'n/a'})`);
+            throw new Error(`Lua delimiter imbalance: ${stack.length} unclosed delimiters (phase=${ctx.phase || "n/a"})`);
         }
         return true;
     }
@@ -415,33 +415,33 @@ class LuaScriptTranspiler {
      */
     validateInput(jsCode, options) {
         // Input code validation
-        if (typeof jsCode !== 'string') {
-            throw new Error('LUASCRIPT_VALIDATION_ERROR: Input code must be a string');
+        if (typeof jsCode !== "string") {
+            throw new Error("LUASCRIPT_VALIDATION_ERROR: Input code must be a string");
         }
         
         if (jsCode.trim().length === 0) {
-            throw new Error('LUASCRIPT_VALIDATION_ERROR: Input code cannot be empty');
+            throw new Error("LUASCRIPT_VALIDATION_ERROR: Input code cannot be empty");
         }
         
         if (jsCode.length > 1000000) { // 1MB limit
-            throw new Error('LUASCRIPT_VALIDATION_ERROR: Input code exceeds maximum size limit (1MB)');
+            throw new Error("LUASCRIPT_VALIDATION_ERROR: Input code exceeds maximum size limit (1MB)");
         }
         
         // Options validation
-        if (typeof options !== 'object' || options === null) {
-            throw new Error('LUASCRIPT_VALIDATION_ERROR: Options must be an object');
+        if (typeof options !== "object" || options === null) {
+            throw new Error("LUASCRIPT_VALIDATION_ERROR: Options must be an object");
         }
         
         // Validate specific options
-        if (options.includeRuntime !== undefined && typeof options.includeRuntime !== 'boolean') {
-            throw new Error('LUASCRIPT_VALIDATION_ERROR: includeRuntime option must be a boolean');
+        if (options.includeRuntime !== undefined && typeof options.includeRuntime !== "boolean") {
+            throw new Error("LUASCRIPT_VALIDATION_ERROR: includeRuntime option must be a boolean");
         }
         
         // Check for potentially problematic patterns
         const problematicPatterns = [
-            { pattern: /eval\s*\(/, message: 'eval() is not supported in LUASCRIPT' },
-            { pattern: /with\s*\(/, message: 'with statements are not supported in LUASCRIPT' },
-            { pattern: /debugger\s*;/, message: 'debugger statements are not supported in LUASCRIPT' }
+            { pattern: /eval\s*\(/, message: "eval() is not supported in LUASCRIPT" },
+            { pattern: /with\s*\(/, message: "with statements are not supported in LUASCRIPT" },
+            { pattern: /debugger\s*;/, message: "debugger statements are not supported in LUASCRIPT" }
         ];
         
         for (const { pattern, message } of problematicPatterns) {
@@ -460,7 +460,7 @@ class LuaScriptTranspiler {
      */
     validateSyntaxBalance(code) {
         const stack = [];
-        const pairs = { '(': ')', '[': ']', '{': '}' };
+        const pairs = { "(": ")", "[": "]", "{": "}" };
         let inString = false;
         let stringChar = null;
         let escaped = false;
@@ -473,7 +473,7 @@ class LuaScriptTranspiler {
                 continue;
             }
             
-            if (char === '\\') {
+            if (char === "\\") {
                 escaped = true;
                 continue;
             }
@@ -486,7 +486,7 @@ class LuaScriptTranspiler {
                 continue;
             }
             
-            if (char === '"' || char === "'") {
+            if (char === "\"" || char === "'") {
                 inString = true;
                 stringChar = char;
                 continue;
@@ -507,7 +507,7 @@ class LuaScriptTranspiler {
         }
         
         if (inString) {
-            throw new Error(`LUASCRIPT_VALIDATION_ERROR: Unterminated string literal`);
+            throw new Error("LUASCRIPT_VALIDATION_ERROR: Unterminated string literal");
         }
     }
 
@@ -517,33 +517,33 @@ class LuaScriptTranspiler {
      */
     validateOutput(luaCode, options) {
         // Basic Lua syntax validation
-        if (typeof luaCode !== 'string') {
-            throw new Error('LUASCRIPT_INTERNAL_ERROR: Generated code is not a string');
+        if (typeof luaCode !== "string") {
+            throw new Error("LUASCRIPT_INTERNAL_ERROR: Generated code is not a string");
         }
         
         if (luaCode.trim().length === 0) {
-            throw new Error('LUASCRIPT_INTERNAL_ERROR: Generated code is empty');
+            throw new Error("LUASCRIPT_INTERNAL_ERROR: Generated code is empty");
         }
         
         // Check for common Lua syntax errors (excluding valid Lua syntax like comments)
         const luaSyntaxChecks = [
-            { pattern: /\+\+/, message: 'Invalid Lua syntax: ++ operator found (should be converted)' },
-            { pattern: /===/, message: 'Invalid Lua syntax: === operator found (should be ==)' },
-            { pattern: /!==/, message: 'Invalid Lua syntax: !== operator found (should be ~=)' },
-            { pattern: /\|\|/, message: 'Invalid Lua syntax: || operator found (should be or)' },
-            { pattern: /&&/, message: 'Invalid Lua syntax: && operator found (should be and)' }
+            { pattern: /\+\+/, message: "Invalid Lua syntax: ++ operator found (should be converted)" },
+            { pattern: /===/, message: "Invalid Lua syntax: === operator found (should be ==)" },
+            { pattern: /!==/, message: "Invalid Lua syntax: !== operator found (should be ~=)" },
+            { pattern: /\|\|/, message: "Invalid Lua syntax: || operator found (should be or)" },
+            { pattern: /&&/, message: "Invalid Lua syntax: && operator found (should be and)" }
         ];
         
         // Special check for -- operator that's not a Lua comment
-        const lines = luaCode.split('\n');
+        const lines = luaCode.split("\n");
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-            const commentIndex = line.indexOf('--');
+            const commentIndex = line.indexOf("--");
             if (commentIndex > 0) {
                 // Check if there's a -- that's not at the start of a comment
                 const beforeComment = line.substring(0, commentIndex);
                 if (/--/.test(beforeComment)) {
-                    throw new Error('LUASCRIPT_OUTPUT_VALIDATION_ERROR: Invalid Lua syntax: -- operator found (should be converted)');
+                    throw new Error("LUASCRIPT_OUTPUT_VALIDATION_ERROR: Invalid Lua syntax: -- operator found (should be converted)");
                 }
             }
         }
@@ -557,7 +557,7 @@ class LuaScriptTranspiler {
         // Validate that runtime library is properly injected if required
         if (options.includeRuntime !== false) {
             if (!luaCode.includes("require('runtime.runtime')")) {
-                throw new Error('LUASCRIPT_OUTPUT_VALIDATION_ERROR: Runtime library not properly injected');
+                throw new Error("LUASCRIPT_OUTPUT_VALIDATION_ERROR: Runtime library not properly injected");
             }
         }
         
@@ -570,21 +570,21 @@ class LuaScriptTranspiler {
      * Ensures Lua-specific syntax is properly balanced
      */
     validateLuaSyntaxBalance(code) {
-        const luaKeywords = ['function', 'if', 'while', 'for', 'do'];
-        const luaEnders = ['end'];
+        const luaKeywords = ["function", "if", "while", "for", "do"];
+        const luaEnders = ["end"];
         
         let depth = 0;
-        const lines = code.split('\n');
+        const lines = code.split("\n");
         
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i].trim();
             
             // Skip comments and empty lines
-            if (line.startsWith('--') || line.length === 0) continue;
+            if (line.startsWith("--") || line.length === 0) continue;
             
             // Count opening keywords
             for (const keyword of luaKeywords) {
-                const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+                const regex = new RegExp(`\\b${keyword}\\b`, "g");
                 const matches = line.match(regex);
                 if (matches) {
                     depth += matches.length;
@@ -593,7 +593,7 @@ class LuaScriptTranspiler {
             
             // Count closing keywords
             for (const ender of luaEnders) {
-                const regex = new RegExp(`\\b${ender}\\b`, 'g');
+                const regex = new RegExp(`\\b${ender}\\b`, "g");
                 const matches = line.match(regex);
                 if (matches) {
                     depth -= matches.length;
@@ -660,46 +660,11 @@ class LuaScriptTranspiler {
         );
         
         // Pattern 4: Handle chained concatenations that were partially converted
-        result = result.replace(
+        return result.replace(
             /(\w+|["'][^"']*["'])\s*\.\.\s*([^;,)}\]]+)\s*\+\s*([^;,)}\]]+)/g,
-            '$1 .. $2 .. $3'
+            "$1 .. $2 .. $3"
         );
         
-    }
-
-    /**
-     * Converts the JavaScript string concatenation operator `+` to the Lua equivalent `..`.
-     * This is a critical transformation for ensuring correct runtime behavior.
-     * @param {string} code - The code to transform.
-     * @returns {string} The transformed code.
-     */
-    fixStringConcatenation(code) {
-        // Only convert + to .. when at least one operand is a string literal.
-        // This avoids changing numeric addition like 5 + 3.
-        const str = `\"(?:[^\"\\\\]|\\\\.)*\"|'(?:[^'\\\\]|\\\\.)*'`;
-        const ident = `[A-Za-z_][A-Za-z0-9_\.\[\]]*`;
-
-        let result = code;
-        const patterns = [
-            // string + identifier/property
-            new RegExp(`(${str})\\s*\\+\\s*(${ident})`, 'g'),
-            // identifier/property + string
-            new RegExp(`(${ident})\\s*\\+\\s*(${str})`, 'g'),
-            // string + string
-            new RegExp(`(${str})\\s*\\+\\s*(${str})`, 'g'),
-        ];
-
-        let replaced;
-        do {
-            replaced = false;
-            for (const re of patterns) {
-                const before = result;
-                result = result.replace(re, '$1 .. $2');
-                if (result !== before) replaced = true;
-            }
-        } while (replaced);
-
-        return result;
     }
 
     /**
@@ -709,9 +674,9 @@ class LuaScriptTranspiler {
      */
     fixLogicalOperators(code) {
         return code
-            .replace(/\|\|/g, 'or')
-            .replace(/&&/g, 'and')
-            .replace(/!\s*([a-zA-Z_$][a-zA-Z0-9_$]*|\([^)]*\))/g, 'not $1');
+            .replace(/\|\|/g, "or")
+            .replace(/&&/g, "and")
+            .replace(/!\s*([a-zA-Z_$][a-zA-Z0-9_$]*|\([^)]*\))/g, "not $1");
     }
 
     /**
@@ -721,9 +686,9 @@ class LuaScriptTranspiler {
      */
     fixEqualityOperators(code) {
         return code
-            .replace(/!==/g, '~=')
-            .replace(/!=/g, '~=')
-            .replace(/===/g, '==');
+            .replace(/!==/g, "~=")
+            .replace(/!=/g, "~=")
+            .replace(/===/g, "==");
     }
 
     /**
@@ -758,9 +723,9 @@ local Math = runtime.Math
      */
     convertVariableDeclarations(code) {
         return code
-            .replace(/\bvar\s+(\w+)/g, 'local $1')
-            .replace(/\blet\s+(\w+)/g, 'local $1')
-            .replace(/\bconst\s+(\w+)/g, 'local $1');
+            .replace(/\bvar\s+(\w+)/g, "local $1")
+            .replace(/\blet\s+(\w+)/g, "local $1")
+            .replace(/\bconst\s+(\w+)/g, "local $1");
     }
 
     /**
@@ -772,17 +737,17 @@ local Math = runtime.Math
         // Convert function declarations
         code = code.replace(
             /function\s+(\w+)\s*\(([^)]*)\)\s*{/g,
-            'local function $1($2)'
+            "local function $1($2)"
         );
 
         // Convert arrow functions (basic support)
         code = code.replace(
             /(\w+)\s*=\s*\(([^)]*)\)\s*=>\s*{/g,
-            'local function $1($2)'
+            "local function $1($2)"
         );
 
         // Convert closing braces to end
-        code = code.replace(/}/g, 'end');
+        code = code.replace(/}/g, "end");
 
         return code;
     }
@@ -794,11 +759,11 @@ local Math = runtime.Math
      */
     convertConditionals(code) {
         return code
-            .replace(/if\s*\(/g, 'if ')
-            .replace(/\)\s*{/g, ' then')
-            .replace(/else\s*{/g, 'else')
-            .replace(/else\s+if\s*\(/g, 'elseif ')
-            .replace(/\)\s*{/g, ' then');
+            .replace(/if\s*\(/g, "if ")
+            .replace(/\)\s*{/g, " then")
+            .replace(/else\s*{/g, "else")
+            .replace(/else\s+if\s*\(/g, "elseif ")
+            .replace(/\)\s*{/g, " then");
     }
 
     /**
@@ -808,12 +773,12 @@ local Math = runtime.Math
      */
     convertLoops(code) {
         // Convert while loops
-        code = code.replace(/while\s*\(/g, 'while ').replace(/\)\s*{/g, ' do');
+        code = code.replace(/while\s*\(/g, "while ").replace(/\)\s*{/g, " do");
         
         // Convert for loops (basic numeric for)
         code = code.replace(
             /for\s*\(\s*(\w+)\s*=\s*(\d+)\s*;\s*\1\s*<\s*(\d+)\s*;\s*\1\+\+\s*\)\s*{/g,
-            'for $1 = $2, $3 - 1 do'
+            "for $1 = $2, $3 - 1 do"
         );
 
         return code;
@@ -826,7 +791,7 @@ local Math = runtime.Math
      */
     convertArrays(code) {
         // Convert array literals
-        return code.replace(/\[([^\]]*)\]/g, '{$1}');
+        return code.replace(/\[([^\]]*)\]/g, "{$1}");
     }
 
     /**
@@ -847,16 +812,16 @@ local Math = runtime.Math
             const char = result[i];
             
             // Handle string boundaries
-            if (!inString && (char === '"' || char === "'")) {
+            if (!inString && (char === "\"" || char === "'")) {
                 inString = true;
                 stringChar = char;
-            } else if (inString && char === stringChar && result[i-1] !== '\\') {
+            } else if (inString && char === stringChar && result[i-1] !== "\\") {
                 inString = false;
                 stringChar = null;
             }
             
             // Only convert colons outside of strings in object-like contexts
-            if (!inString && char === ':') {
+            if (!inString && char === ":") {
                 // Look for pattern: word : value (object property)
                 const beforeColon = result.substring(0, i).match(/(\w+)\s*$/);
                 const afterColon = result.substring(i + 1).match(/^\s*([^,}]+)/);
@@ -864,10 +829,10 @@ local Math = runtime.Math
                 if (beforeColon && afterColon) {
                     // Check if this looks like an object property (not in a string context)
                     const context = result.substring(Math.max(0, i - 50), i);
-                    const isInObjectContext = context.includes('{') && !context.includes('"') && !context.includes("'");
+                    const isInObjectContext = context.includes("{") && !context.includes("\"") && !context.includes("'");
                     
                     if (isInObjectContext) {
-                        result = result.substring(0, i) + ' = ' + result.substring(i + 1);
+                        result = result.substring(0, i) + " = " + result.substring(i + 1);
                         i += 2; // Skip the ' = ' we just inserted
                         continue;
                     }
@@ -890,11 +855,11 @@ local Math = runtime.Math
     async transpileFile(inputPath, outputPath, options = {}) {
         try {
             console.log(`🔄 TRANSPILING: ${inputPath}`);
-            const jsCode = fs.readFileSync(inputPath, 'utf8');
+            const jsCode = fs.readFileSync(inputPath, "utf8");
             const result = await this.transpile(jsCode, options);
             
             if (outputPath) {
-                fs.writeFileSync(outputPath, result.code, 'utf8');
+                fs.writeFileSync(outputPath, result.code, "utf8");
                 console.log(`✅ TRANSPILED: ${inputPath} -> ${outputPath}`);
             }
             
@@ -939,7 +904,7 @@ local Math = runtime.Math
             ...baseStats,
             tonyYokaOptimizations: {
                 enabled: false,
-                reason: 'Optimizations disabled in constructor'
+                reason: "Optimizations disabled in constructor"
             }
         };
     }
@@ -952,13 +917,13 @@ local Math = runtime.Math
     generateTeamReport() {
         const stats = this.getPerformanceStats();
         
-        console.log('\n🚨 MULTI-TEAM COORDINATION REPORT 🚨');
-        console.log('=' .repeat(60));
-        console.log('👨‍💼 STEVE JOBS & DONALD KNUTH: Architecture Excellence');
-        console.log('🎮 TONY YOKA PS2/PS3 TEAM: Hardware Optimizations');
-        console.log('👥 MAIN DEV TEAM: 95% Phase Completion Push');
-        console.log('🔧 SUNDAR/LINUS/ADA: Harmony & Stability');
-        console.log('=' .repeat(60));
+        console.log("\n🚨 MULTI-TEAM COORDINATION REPORT 🚨");
+        console.log("=" .repeat(60));
+        console.log("👨‍💼 STEVE JOBS & DONALD KNUTH: Architecture Excellence");
+        console.log("🎮 TONY YOKA PS2/PS3 TEAM: Hardware Optimizations");
+        console.log("👥 MAIN DEV TEAM: 95% Phase Completion Push");
+        console.log("🔧 SUNDAR/LINUS/ADA: Harmony & Stability");
+        console.log("=" .repeat(60));
         
         console.log(`📊 TRANSPILATIONS: ${stats.transpilationsCount}`);
         console.log(`⏱️  TOTAL TIME: ${stats.totalTime.toFixed(2)}ms`);
@@ -966,26 +931,26 @@ local Math = runtime.Math
         console.log(`🚀 OPTIMIZATIONS: ${stats.optimizationsApplied} (${stats.optimizationRate.toFixed(1)}%)`);
         
         if (stats.tonyYokaOptimizations.enabled) {
-            console.log('\n🎮 TONY YOKA\'S PS2/PS3 OPTIMIZATIONS:');
+            console.log("\n🎮 TONY YOKA'S PS2/PS3 OPTIMIZATIONS:");
             console.log(`   Level: ${stats.tonyYokaOptimizations.level}`);
-            console.log(`   Parallel Processing: ${stats.tonyYokaOptimizations.parallelProcessing ? '✅' : '❌'}`);
-            console.log(`   Caching: ${stats.tonyYokaOptimizations.caching ? '✅' : '❌'}`);
-            console.log(`   Profiling: ${stats.tonyYokaOptimizations.profiling ? '✅' : '❌'}`);
+            console.log(`   Parallel Processing: ${stats.tonyYokaOptimizations.parallelProcessing ? "✅" : "❌"}`);
+            console.log(`   Caching: ${stats.tonyYokaOptimizations.caching ? "✅" : "❌"}`);
+            console.log(`   Profiling: ${stats.tonyYokaOptimizations.profiling ? "✅" : "❌"}`);
             
             if (stats.optimizedTranspiler) {
                 console.log(`   Cache Hit Rate: ${stats.optimizedTranspiler.cacheHitRate.toFixed(1)}%`);
                 console.log(`   Throughput: ${stats.optimizedTranspiler.throughput.toFixed(2)} lines/sec`);
             }
         } else {
-            console.log('\n⚠️  TONY YOKA\'S OPTIMIZATIONS: DISABLED');
+            console.log("\n⚠️  TONY YOKA'S OPTIMIZATIONS: DISABLED");
             console.log(`   Reason: ${stats.tonyYokaOptimizations.reason}`);
         }
         
-        console.log('\n🏆 PHASE COMPLETION STATUS:');
-        console.log('   Phase 1-6: Pushing to 95% completion');
-        console.log('   Optimization Implementation: ✅ COMPLETE');
-        console.log('   Multi-team Coordination: ✅ ACTIVE');
-        console.log('=' .repeat(60));
+        console.log("\n🏆 PHASE COMPLETION STATUS:");
+        console.log("   Phase 1-6: Pushing to 95% completion");
+        console.log("   Optimization Implementation: ✅ COMPLETE");
+        console.log("   Multi-team Coordination: ✅ ACTIVE");
+        console.log("=" .repeat(60));
         
         return stats;
     }
@@ -996,67 +961,67 @@ if (require.main === module) {
     const args = process.argv.slice(2);
     
     if (args.length < 1) {
-        console.log('🚀 LUASCRIPT TRANSPILER - Tony Yoka\'s PS2/PS3 Optimizations');
-        console.log('Usage: node transpiler.js <input.js> [output.lua] [options]');
-        console.log('');
-        console.log('Options:');
-        console.log('  --no-runtime           Skip runtime library injection');
-        console.log('  --no-optimizations     Disable Tony\'s PS2/PS3 optimizations');
-        console.log('  --optimization-level   Set level: basic, standard, aggressive');
-        console.log('  --no-parallel          Disable parallel processing');
-        console.log('  --no-caching           Disable hot code caching');
-        console.log('  --no-profiling         Disable performance profiling');
-        console.log('  --report               Generate team coordination report');
-        console.log('');
-        console.log('🎮 Tony Yoka\'s 20 PS2/PS3-Inspired Optimizations:');
-        console.log('   1-4:   Memory Architecture (EE/VU Inspired)');
-        console.log('   5-8:   Instruction-Level (MIPS/Cell Inspired)');
-        console.log('   9-12:  Cache & Performance');
-        console.log('   13-16: Specialized Processing Units');
-        console.log('   17-20: Advanced Memory & System Optimizations');
+        console.log("🚀 LUASCRIPT TRANSPILER - Tony Yoka's PS2/PS3 Optimizations");
+        console.log("Usage: node transpiler.js <input.js> [output.lua] [options]");
+        console.log("");
+        console.log("Options:");
+        console.log("  --no-runtime           Skip runtime library injection");
+        console.log("  --no-optimizations     Disable Tony's PS2/PS3 optimizations");
+        console.log("  --optimization-level   Set level: basic, standard, aggressive");
+        console.log("  --no-parallel          Disable parallel processing");
+        console.log("  --no-caching           Disable hot code caching");
+        console.log("  --no-profiling         Disable performance profiling");
+        console.log("  --report               Generate team coordination report");
+        console.log("");
+        console.log("🎮 Tony Yoka's 20 PS2/PS3-Inspired Optimizations:");
+        console.log("   1-4:   Memory Architecture (EE/VU Inspired)");
+        console.log("   5-8:   Instruction-Level (MIPS/Cell Inspired)");
+        console.log("   9-12:  Cache & Performance");
+        console.log("   13-16: Specialized Processing Units");
+        console.log("   17-20: Advanced Memory & System Optimizations");
         process.exit(1);
     }
 
     const inputFile = args[0];
-    const outputFile = args[1] || inputFile.replace(/\.js$/, '.lua');
+    const outputFile = args[1] || inputFile.replace(/\.js$/, ".lua");
     
     const options = {
-        includeRuntime: !args.includes('--no-runtime'),
-        enableOptimizations: !args.includes('--no-optimizations'),
-        enableParallelProcessing: !args.includes('--no-parallel'),
-        enableCaching: !args.includes('--no-caching'),
-        enableProfiling: !args.includes('--no-profiling')
+        includeRuntime: !args.includes("--no-runtime"),
+        enableOptimizations: !args.includes("--no-optimizations"),
+        enableParallelProcessing: !args.includes("--no-parallel"),
+        enableCaching: !args.includes("--no-caching"),
+        enableProfiling: !args.includes("--no-profiling")
     };
 
     // Set optimization level
-    const levelIndex = args.indexOf('--optimization-level');
+    const levelIndex = args.indexOf("--optimization-level");
     if (levelIndex !== -1 && levelIndex + 1 < args.length) {
         options.optimizationLevel = args[levelIndex + 1];
     }
 
     const transpiler = new LuaScriptTranspiler(options);
     
-    async function runTranspilation() {
+    const runTranspilation = async () => {
         try {
-            console.log('🚨 MULTI-TEAM COORDINATION ACTIVE! 🚨');
-            console.log('👨‍💼 Steve Jobs & Donald Knuth: Excellence Standards');
-            console.log('🎮 Tony Yoka PS2/PS3 Team: Hardware Optimizations');
-            console.log('👥 Main Dev Team: 95% Phase Push');
-            console.log('🔧 Sundar/Linus/Ada: Harmony Assurance');
-            console.log('');
+            console.log("🚨 MULTI-TEAM COORDINATION ACTIVE! 🚨");
+            console.log("👨‍💼 Steve Jobs & Donald Knuth: Excellence Standards");
+            console.log("🎮 Tony Yoka PS2/PS3 Team: Hardware Optimizations");
+            console.log("👥 Main Dev Team: 95% Phase Push");
+            console.log("🔧 Sundar/Linus/Ada: Harmony Assurance");
+            console.log("");
             
             await transpiler.transpileFile(inputFile, outputFile, options);
             
-            if (args.includes('--report')) {
+            if (args.includes("--report")) {
                 transpiler.generateTeamReport();
             }
             
-            console.log('\n🏆 TRANSPILATION SUCCESS - MULTI-TEAM VICTORY!');
+            console.log("\n🏆 TRANSPILATION SUCCESS - MULTI-TEAM VICTORY!");
         } catch (error) {
-            console.error('\n❌ TRANSPILATION FAILED:', error.message);
+            console.error("\n❌ TRANSPILATION FAILED:", error.message);
             process.exit(1);
         }
-    }
+    };
     
     runTranspilation();
 }

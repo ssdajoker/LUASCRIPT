@@ -5,12 +5,12 @@
  * Converts LUASCRIPT IR to JavaScript code.
  */
 
-const { NodeCategory } = require('../ir/nodes');
+const { NodeCategory } = require("../ir/nodes");
 
 class IRToJSGenerator {
     constructor(options = {}) {
         this.options = {
-            indent: options.indent || '  ',
+            indent: options.indent || "  ",
             semicolons: options.semicolons !== false,
             ...options
         };
@@ -29,11 +29,11 @@ class IRToJSGenerator {
      */
     visit(node) {
         if (!node || !node.kind) {
-            return '';
+            return "";
         }
 
         const methodName = `visit${node.kind}`;
-        if (typeof this[methodName] === 'function') {
+        if (typeof this[methodName] === "function") {
             return this[methodName](node);
         }
 
@@ -43,12 +43,12 @@ class IRToJSGenerator {
     // ========== PROGRAM & DECLARATIONS ==========
 
     visitProgram(node) {
-        return node.body.map(stmt => this.visit(stmt)).join('\n');
+        return node.body.map(stmt => this.visit(stmt)).join("\n");
     }
 
     visitFunctionDecl(node) {
-        const name = node.name || '';
-        const params = node.parameters.map(p => this.visitParameter(p)).join(', ');
+        const name = node.name || "";
+        const params = node.parameters.map(p => this.visitParameter(p)).join(", ");
         const body = this.visit(node.body);
         
         if (node.name) {
@@ -60,9 +60,9 @@ class IRToJSGenerator {
     }
 
     visitVarDecl(node) {
-        const kind = node.varKind || 'let';
-        const init = node.init ? ` = ${this.visit(node.init)}` : '';
-        const semi = this.options.semicolons ? ';' : '';
+        const kind = node.varKind || "let";
+        const init = node.init ? ` = ${this.visit(node.init)}` : "";
+        const semi = this.options.semicolons ? ";" : "";
         
         return `${this.indent()}${kind} ${node.name}${init}${semi}`;
     }
@@ -78,14 +78,14 @@ class IRToJSGenerator {
 
     visitBlock(node) {
         this.indentLevel++;
-        const statements = node.statements.map(stmt => this.visit(stmt)).join('\n');
+        const statements = node.statements.map(stmt => this.visit(stmt)).join("\n");
         this.indentLevel--;
         
         return `{\n${statements}\n${this.indent()}}`;
     }
 
     visitReturn(node) {
-        const semi = this.options.semicolons ? ';' : '';
+        const semi = this.options.semicolons ? ";" : "";
         
         if (node.value) {
             return `${this.indent()}return ${this.visit(node.value)}${semi}`;
@@ -123,15 +123,15 @@ class IRToJSGenerator {
     visitDoWhile(node) {
         const body = this.visit(node.body);
         const condition = this.visit(node.condition);
-        const semi = this.options.semicolons ? ';' : '';
+        const semi = this.options.semicolons ? ";" : "";
         
         return `${this.indent()}do ${body} while (${condition})${semi}`;
     }
 
     visitFor(node) {
-        const init = node.init ? this.visit(node.init).trim().replace(/^(let|const|var)\s+/, '$1 ').replace(/;$/, '') : '';
-        const condition = node.condition ? this.visit(node.condition) : '';
-        const update = node.update ? this.visit(node.update) : '';
+        const init = node.init ? this.visit(node.init).trim().replace(/^(let|const|var)\s+/, "$1 ").replace(/;$/, "") : "";
+        const condition = node.condition ? this.visit(node.condition) : "";
+        const update = node.update ? this.visit(node.update) : "";
         const body = this.visit(node.body);
         
         return `${this.indent()}for (${init}; ${condition}; ${update}) ${body}`;
@@ -141,7 +141,7 @@ class IRToJSGenerator {
         const discriminant = this.visit(node.discriminant);
         
         this.indentLevel++;
-        const cases = node.cases.map(c => this.visitCase(c)).join('\n');
+        const cases = node.cases.map(c => this.visitCase(c)).join("\n");
         this.indentLevel--;
         
         return `${this.indent()}switch (${discriminant}) {\n${cases}\n${this.indent()}}`;
@@ -151,32 +151,32 @@ class IRToJSGenerator {
         if (node.test) {
             const test = this.visit(node.test);
             this.indentLevel++;
-            const consequent = node.consequent.map(stmt => this.visit(stmt)).join('\n');
+            const consequent = node.consequent.map(stmt => this.visit(stmt)).join("\n");
             this.indentLevel--;
             
             return `${this.indent()}case ${test}:\n${consequent}`;
         } else {
             // Default case
             this.indentLevel++;
-            const consequent = node.consequent.map(stmt => this.visit(stmt)).join('\n');
+            const consequent = node.consequent.map(stmt => this.visit(stmt)).join("\n");
             this.indentLevel--;
             
             return `${this.indent()}default:\n${consequent}`;
         }
     }
 
-    visitBreak(node) {
-        const semi = this.options.semicolons ? ';' : '';
+    visitBreak(_node) {
+        const semi = this.options.semicolons ? ";" : "";
         return `${this.indent()}break${semi}`;
     }
 
-    visitContinue(node) {
-        const semi = this.options.semicolons ? ';' : '';
+    visitContinue(_node) {
+        const semi = this.options.semicolons ? ";" : "";
         return `${this.indent()}continue${semi}`;
     }
 
     visitExpressionStmt(node) {
-        const semi = this.options.semicolons ? ';' : '';
+        const semi = this.options.semicolons ? ";" : "";
         return `${this.indent()}${this.visit(node.expression)}${semi}`;
     }
 
@@ -201,7 +201,7 @@ class IRToJSGenerator {
 
     visitCall(node) {
         const callee = this.visit(node.callee);
-        const args = node.args.map(arg => this.visit(arg)).join(', ');
+        const args = node.args.map(arg => this.visit(arg)).join(", ");
         
         // Check if this is a 'new' expression
         if (node.metadata && node.metadata.isNew) {
@@ -223,13 +223,13 @@ class IRToJSGenerator {
     }
 
     visitArrayLiteral(node) {
-        const elements = node.elements.map(el => el ? this.visit(el) : '').join(', ');
+        const elements = node.elements.map(el => el ? this.visit(el) : "").join(", ");
         return `[${elements}]`;
     }
 
     visitObjectLiteral(node) {
         if (node.properties.length === 0) {
-            return '{}';
+            return "{}";
         }
         
         this.indentLevel++;
@@ -237,7 +237,7 @@ class IRToJSGenerator {
             const key = this.visit(prop.key);
             const value = this.visit(prop.value);
             return `${this.indent()}${key}: ${value}`;
-        }).join(',\n');
+        }).join(",\n");
         this.indentLevel--;
         
         return `{\n${properties}\n${this.indent()}}`;
@@ -255,12 +255,12 @@ class IRToJSGenerator {
     }
 
     visitLiteral(node) {
-        if (typeof node.value === 'string') {
-            return `"${node.value.replace(/"/g, '\\"')}"`;
+        if (typeof node.value === "string") {
+            return `"${node.value.replace(/"/g, "\\\"")}"`;
         } else if (node.value === null) {
-            return 'null';
+            return "null";
         } else if (node.value === undefined) {
-            return 'undefined';
+            return "undefined";
         }
         return String(node.value);
     }

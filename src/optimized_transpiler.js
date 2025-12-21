@@ -10,9 +10,8 @@
  * 17-20: Advanced Memory Management & System-Level Optimizations
  */
 
-const fs = require('fs');
-const path = require('path');
-const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
+// Removed unused imports to reduce warnings
+const { Worker, isMainThread, parentPort, workerData } = require("worker_threads");
 
 /**
  * Manages memory pools to reduce allocation overhead, inspired by PS2 memory architecture.
@@ -34,7 +33,7 @@ class MemoryPoolManager {
      */
     initializePools() {
         // Pre-allocate buffers for each pool
-        for (const [poolName, pool] of Object.entries(this.pools)) {
+        for (const [, pool] of Object.entries(this.pools)) {
             for (let i = 0; i < 10; i++) {
                 pool.buffers.push({
                     buffer: Buffer.allocUnsafe(pool.size),
@@ -52,9 +51,9 @@ class MemoryPoolManager {
      */
     allocate(size) {
         let poolName;
-        if (size <= 64 * 1024) poolName = 'small';
-        else if (size <= 256 * 1024) poolName = 'medium';
-        else poolName = 'large';
+        if (size <= 64 * 1024) poolName = "small";
+        else if (size <= 256 * 1024) poolName = "medium";
+        else poolName = "large";
 
         const pool = this.pools[poolName];
         const available = pool.buffers.find(b => !b.inUse);
@@ -218,10 +217,10 @@ class BranchPredictor {
 class SIMDPatternMatcher {
     constructor() {
         this.patterns = [
-            { regex: /var\s+(\w+)\s*=\s*([^;]+);/g, replacement: 'local $1 = $2' },
-            { regex: /let\s+(\w+)\s*=\s*([^;]+);/g, replacement: 'local $1 = $2' },
-            { regex: /const\s+(\w+)\s*=\s*([^;]+);/g, replacement: 'local $1 = $2' },
-            { regex: /(\w+)\+\+/g, replacement: '$1 = $1 + 1' }
+            { regex: /var\s+(\w+)\s*=\s*([^;]+);/g, replacement: "local $1 = $2" },
+            { regex: /let\s+(\w+)\s*=\s*([^;]+);/g, replacement: "local $1 = $2" },
+            { regex: /const\s+(\w+)\s*=\s*([^;]+);/g, replacement: "local $1 = $2" },
+            { regex: /(\w+)\+\+/g, replacement: "$1 = $1 + 1" }
         ];
     }
 
@@ -232,7 +231,6 @@ class SIMDPatternMatcher {
      */
     processParallel(code) {
         // Process multiple patterns simultaneously using typed arrays for performance
-        const codeBuffer = Buffer.from(code, 'utf8');
         let result = code;
         
         // Apply all patterns in parallel-like fashion
@@ -290,10 +288,10 @@ class ArrowFunctionTranspiler {
         // Highly optimized arrow function transpilation
         return code.replace(
             /(\w+)\s*=>\s*([^;{]+)/g,
-            'function($1) return $2 end'
+            "function($1) return $2 end"
         ).replace(
             /\(([^)]*)\)\s*=>\s*{([^}]*)}/g,
-            'function($1) $2 end'
+            "function($1) $2 end"
         );
     }
 }
@@ -306,7 +304,7 @@ class DestructuringTranspiler {
         // Convert destructuring assignments
         return code.replace(
             /let\s*{\s*(\w+),\s*(\w+)\s*}\s*=\s*([^;]+);/g,
-            'local $1, $2 = $3.$1, $3.$2'
+            "local $1, $2 = $3.$1, $3.$2"
         );
     }
 }
@@ -319,10 +317,10 @@ class AsyncAwaitTranspiler {
         // Convert async/await to coroutine-based Lua
         return code.replace(
             /async\s+function\s+(\w+)/g,
-            'local function $1'
+            "local function $1"
         ).replace(
             /await\s+([^;]+)/g,
-            'coroutine.yield($1)'
+            "coroutine.yield($1)"
         );
     }
 }
@@ -349,7 +347,7 @@ class DistributedTranspiler {
                     workerData: { isWorker: true, workerId: i }
                 });
                 
-                worker.on('message', (result) => {
+                worker.on("message", (result) => {
                     this.results.set(result.taskId, result.data);
                 });
                 
@@ -444,7 +442,7 @@ class LookaheadTokenizer {
         // Simplified token extraction
         const char = this.code[startPos];
         if (/\s/.test(char)) {
-            return { type: 'WHITESPACE', value: char, startPos, endPos: startPos + 1 };
+            return { type: "WHITESPACE", value: char, startPos, endPos: startPos + 1 };
         }
         if (/[a-zA-Z_]/.test(char)) {
             let endPos = startPos;
@@ -452,13 +450,13 @@ class LookaheadTokenizer {
                 endPos++;
             }
             return { 
-                type: 'IDENTIFIER', 
+                type: "IDENTIFIER", 
                 value: this.code.substring(startPos, endPos), 
                 startPos, 
                 endPos 
             };
         }
-        return { type: 'OTHER', value: char, startPos, endPos: startPos + 1 };
+        return { type: "OTHER", value: char, startPos, endPos: startPos + 1 };
     }
 }
 
@@ -570,9 +568,9 @@ class OptimizedLuaScriptTranspiler {
 
         // Insight #5: Micro-Operation Fusion - Pre-compiled patterns
         this.fusedOperations = new Map([
-            ['var_increment', /var\s+(\w+)\s*=\s*([^;]+);\s*\1\+\+/g],
-            ['let_increment', /let\s+(\w+)\s*=\s*([^;]+);\s*\1\+\+/g],
-            ['prop_access_increment', /(\w+)\.(\w+)\+\+/g]
+            ["var_increment", /var\s+(\w+)\s*=\s*([^;]+);\s*\1\+\+/g],
+            ["let_increment", /let\s+(\w+)\s*=\s*([^;]+);\s*\1\+\+/g],
+            ["prop_access_increment", /(\w+)\.(\w+)\+\+/g]
         ]);
     }
 
@@ -591,7 +589,7 @@ class OptimizedLuaScriptTranspiler {
      * @param {object} [options={}] - Options for this specific transpilation.
      * @returns {Promise<string>} A promise that resolves to the optimized Lua code.
      */
-    async transpile(jsCode, options = {}) {
+    async transpile(jsCode, _options = {}) {
         const startTime = process.hrtime.bigint();
         
         try {
@@ -607,9 +605,8 @@ class OptimizedLuaScriptTranspiler {
             // Insight #11: Prefetch tokens
             const tokenizer = new LookaheadTokenizer(jsCode);
             tokenizer.prefetchTokens();
-
             // Insight #1: Dual-Pipeline Transpilation Architecture
-            const [astResult, luaGenResult] = await Promise.all([
+            await Promise.all([
                 this.parseAST(jsCode),
                 this.generateLuaCode(jsCode)
             ]);
@@ -648,7 +645,7 @@ class OptimizedLuaScriptTranspiler {
             return luaCode;
 
         } catch (error) {
-            console.error('Transpilation error:', error);
+            console.error("Transpilation error:", error);
             throw error;
         }
     }
@@ -659,10 +656,10 @@ class OptimizedLuaScriptTranspiler {
      * @returns {Promise<object>} A promise that resolves to a simulated AST.
      * @private
      */
-    async parseAST(code) {
+    async parseAST(_code) {
         return new Promise(resolve => {
             // Simulate AST parsing in parallel
-            setTimeout(() => resolve({ type: 'AST', nodes: [] }), 1);
+            setTimeout(() => resolve({ type: "AST", nodes: [] }), 1);
         });
     }
 
@@ -686,14 +683,14 @@ class OptimizedLuaScriptTranspiler {
      * @private
      */
     batchProcess(code) {
-        const lines = code.split('\n');
+        const lines = code.split("\n");
         const batchSize = 50; // Process 50 lines at a time
-        let result = '';
+        let result = "";
 
         for (let i = 0; i < lines.length; i += batchSize) {
             const batch = lines.slice(i, i + batchSize);
-            const batchCode = batch.join('\n');
-            result += this.processBatch(batchCode) + '\n';
+            const batchCode = batch.join("\n");
+            result += this.processBatch(batchCode) + "\n";
         }
 
         return result.trim();
@@ -708,13 +705,13 @@ class OptimizedLuaScriptTranspiler {
     processBatch(batchCode) {
         // Apply basic transformations to the batch
         return batchCode
-            .replace(/var\s+(\w+)/g, 'local $1')
-            .replace(/let\s+(\w+)/g, 'local $1')
-            .replace(/const\s+(\w+)/g, 'local $1')
-            .replace(/\|\|/g, 'or')
-            .replace(/&&/g, 'and')
-            .replace(/===/g, '==')
-            .replace(/!==/g, '~=');
+            .replace(/var\s+(\w+)/g, "local $1")
+            .replace(/let\s+(\w+)/g, "local $1")
+            .replace(/const\s+(\w+)/g, "local $1")
+            .replace(/\|\|/g, "or")
+            .replace(/&&/g, "and")
+            .replace(/===/g, "==")
+            .replace(/!==/g, "~=");
     }
 
     /**
@@ -729,13 +726,13 @@ class OptimizedLuaScriptTranspiler {
         // Fuse variable declaration + increment
         result = result.replace(
             /local\s+(\w+)\s*=\s*([^;]+);\s*\1\s*=\s*\1\s*\+\s*1/g,
-            'local $1 = $2 + 1'
+            "local $1 = $2 + 1"
         );
 
         // Fuse property access + increment
         result = result.replace(
             /(\w+)\.(\w+)\s*=\s*\1\.\2\s*\+\s*1/g,
-            '$1.$2 = $1.$2 + 1'
+            "$1.$2 = $1.$2 + 1"
         );
 
         return result;
@@ -751,17 +748,17 @@ class OptimizedLuaScriptTranspiler {
         let result = code;
         
         // Apply arrow function transpilation
-        if (code.includes('=>')) {
+        if (code.includes("=>")) {
             result = this.specializedTranspilers.transpileArrowFunction(result);
         }
         
         // Apply destructuring transpilation
-        if (code.includes('{') && code.includes('}')) {
+        if (code.includes("{") && code.includes("}")) {
             result = this.specializedTranspilers.transpileDestructuring(result);
         }
         
         // Apply async/await transpilation
-        if (code.includes('async') || code.includes('await')) {
+        if (code.includes("async") || code.includes("await")) {
             result = this.specializedTranspilers.transpileAsyncAwait(result);
         }
         
@@ -775,12 +772,12 @@ class OptimizedLuaScriptTranspiler {
      * @private
      */
     reorderOperations(code) {
-        const lines = code.split('\n');
+        const lines = code.split("\n");
         const declarations = [];
         const usages = [];
         
         lines.forEach(line => {
-            if (line.includes('local ')) {
+            if (line.includes("local ")) {
                 declarations.push(line);
             } else {
                 usages.push(line);
@@ -788,7 +785,7 @@ class OptimizedLuaScriptTranspiler {
         });
         
         // Put declarations before usages to avoid pipeline stalls
-        return [...declarations, ...usages].join('\n');
+        return [...declarations, ...usages].join("\n");
     }
 
     /**
@@ -799,13 +796,13 @@ class OptimizedLuaScriptTranspiler {
      */
     optimizeOutput(code) {
         // Buffer output and flush in optimal chunks
-        const buffer = Buffer.from(code, 'utf8');
+        const buffer = Buffer.from(code, "utf8");
         const chunkSize = 4096; // 4KB chunks
-        let optimized = '';
+        let optimized = "";
         
         for (let i = 0; i < buffer.length; i += chunkSize) {
             const chunk = buffer.slice(i, i + chunkSize);
-            optimized += chunk.toString('utf8');
+            optimized += chunk.toString("utf8");
         }
         
         return optimized;
@@ -823,40 +820,40 @@ class OptimizedLuaScriptTranspiler {
         // Enhanced string concatenation with context awareness
         luaCode = luaCode.replace(
             /(\w+|"[^"]*"|'[^']*')\s*\+\s*(\w+|"[^"]*"|'[^']*')/g,
-            '$1 .. $2'
+            "$1 .. $2"
         );
 
         // Enhanced logical operators
         luaCode = luaCode
-            .replace(/\|\|/g, 'or')
-            .replace(/&&/g, 'and')
-            .replace(/!/g, 'not ');
+            .replace(/\|\|/g, "or")
+            .replace(/&&/g, "and")
+            .replace(/!/g, "not ");
 
         // Enhanced equality operators
         luaCode = luaCode
-            .replace(/!==/g, '~=')
-            .replace(/!=/g, '~=')
-            .replace(/===/g, '==');
+            .replace(/!==/g, "~=")
+            .replace(/!=/g, "~=")
+            .replace(/===/g, "==");
 
         // Enhanced variable declarations
         luaCode = luaCode
-            .replace(/\bvar\s+(\w+)/g, 'local $1')
-            .replace(/\blet\s+(\w+)/g, 'local $1')
-            .replace(/\bconst\s+(\w+)/g, 'local $1');
+            .replace(/\bvar\s+(\w+)/g, "local $1")
+            .replace(/\blet\s+(\w+)/g, "local $1")
+            .replace(/\bconst\s+(\w+)/g, "local $1");
 
         // Enhanced function declarations
         luaCode = luaCode.replace(
             /function\s+(\w+)\s*\(([^)]*)\)\s*{/g,
-            'local function $1($2)'
+            "local function $1($2)"
         );
 
         // Enhanced conditionals
         luaCode = luaCode
-            .replace(/if\s*\(/g, 'if ')
-            .replace(/\)\s*{/g, ' then')
-            .replace(/else\s*{/g, 'else')
-            .replace(/}\s*else\s+if\s*\(/g, 'elseif ')
-            .replace(/}/g, 'end');
+            .replace(/if\s*\(/g, "if ")
+            .replace(/\)\s*{/g, " then")
+            .replace(/else\s*{/g, "else")
+            .replace(/}\s*else\s+if\s*\(/g, "elseif ")
+            .replace(/}/g, "end");
 
         return luaCode;
     }
@@ -899,7 +896,7 @@ class OptimizedLuaScriptTranspiler {
 
 // Worker thread implementation for distributed processing
 if (!isMainThread && workerData && workerData.isWorker) {
-    parentPort.on('message', async (task) => {
+    parentPort.on("message", async (task) => {
         try {
             const transpiler = new OptimizedLuaScriptTranspiler({
                 enableParallelProcessing: false // Disable in worker to avoid recursion

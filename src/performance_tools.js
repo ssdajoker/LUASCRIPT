@@ -6,8 +6,8 @@
  * Advanced performance tools with GPU acceleration and real-time monitoring
  */
 
-const { EventEmitter } = require('events');
-const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
+const { EventEmitter } = require("events");
+// Removed unused worker_threads imports to reduce warnings
 
 /**
  * A comprehensive suite of performance tools for profiling, optimizing, and monitoring LuaScript code.
@@ -47,7 +47,7 @@ class PerformanceTools extends EventEmitter {
      * @returns {Promise<void>}
      */
     async initialize() {
-        this.emit('initStart');
+        this.emit("initStart");
         
         if (this.options.enableGPU) {
             await this.gpuAccelerator.initialize();
@@ -57,26 +57,26 @@ class PerformanceTools extends EventEmitter {
             this.monitor.start();
         }
         
-        this.emit('initComplete');
+        this.emit("initComplete");
     }
 
     /**
      * Cleanly shuts down all performance tooling subsystems.
      */
     shutdown() {
-        if (this.monitor && typeof this.monitor.stop === 'function') {
+        if (this.monitor && typeof this.monitor.stop === "function") {
             this.monitor.stop();
         }
 
-        if (this.gpuAccelerator && typeof this.gpuAccelerator.shutdown === 'function') {
+        if (this.gpuAccelerator && typeof this.gpuAccelerator.shutdown === "function") {
             this.gpuAccelerator.shutdown();
         }
 
-        if (this.profiler && typeof this.profiler.shutdown === 'function') {
+        if (this.profiler && typeof this.profiler.shutdown === "function") {
             this.profiler.shutdown();
         }
 
-        if (this.optimizer && typeof this.optimizer.shutdown === 'function') {
+        if (this.optimizer && typeof this.optimizer.shutdown === "function") {
             this.optimizer.shutdown();
         }
     }
@@ -127,7 +127,7 @@ class PerformanceTools extends EventEmitter {
      * @returns {Promise<number>} A promise that resolves with a random number.
      * @private
      */
-    async executeCode(code) {
+    async executeCode(_code) {
         // Simulate code execution
         return new Promise(resolve => {
             setTimeout(() => resolve(Math.random()), Math.random() * 10);
@@ -203,7 +203,7 @@ class AdvancedProfiler {
      * @param {object} [options={}] - Profiling options.
      * @returns {Promise<object>} A promise that resolves with the detailed profile report.
      */
-    async profile(code, options = {}) {
+    async profile(code, _options = {}) {
         const profileId = this.generateProfileId();
         const startTime = process.hrtime.bigint();
         const startMemory = process.memoryUsage();
@@ -252,9 +252,9 @@ class AdvancedProfiler {
      * @returns {Promise<object>} A promise that resolves with the execution result.
      * @private
      */
-    async executeWithProfiling(code) {
+    async executeWithProfiling(_code) {
         // Simulate code execution with profiling hooks
-        this.recordFunctionCall('main', 0);
+        this.recordFunctionCall("main", 0);
         
         // Simulate various function calls
         for (let i = 0; i < 10; i++) {
@@ -263,7 +263,7 @@ class AdvancedProfiler {
             this.recordFunctionReturn(`func_${i}`, i * 100 + Math.random() * 50);
         }
         
-        this.recordFunctionReturn('main', 1000);
+        this.recordFunctionReturn("main", 1000);
         return { success: true, executedLines: 100 };
     }
 
@@ -274,7 +274,7 @@ class AdvancedProfiler {
      * @private
      */
     recordFunctionCall(name, timestamp) {
-        this.callStack.push({ name, timestamp, type: 'call' });
+        this.callStack.push({ name, timestamp, type: "call" });
     }
 
     /**
@@ -284,7 +284,7 @@ class AdvancedProfiler {
      * @private
      */
     recordFunctionReturn(name, timestamp) {
-        this.callStack.push({ name, timestamp, type: 'return' });
+        this.callStack.push({ name, timestamp, type: "return" });
     }
 
     /**
@@ -338,7 +338,7 @@ class AdvancedProfiler {
         const functionCounts = new Map();
         
         for (const call of this.callStack) {
-            if (call.type === 'call') {
+            if (call.type === "call") {
                 functionCounts.set(call.name, (functionCounts.get(call.name) || 0) + 1);
             }
         }
@@ -358,14 +358,14 @@ class AdvancedProfiler {
         const stack = [];
         
         for (const event of this.callStack) {
-            if (event.type === 'call') {
+            if (event.type === "call") {
                 if (stack.length > 0) {
                     const parent = stack[stack.length - 1];
                     if (!graph.has(parent)) graph.set(parent, new Set());
                     graph.get(parent).add(event.name);
                 }
                 stack.push(event.name);
-            } else if (event.type === 'return') {
+            } else if (event.type === "return") {
                 stack.pop();
             }
         }
@@ -432,11 +432,11 @@ class CodeOptimizer {
     }
 
     initializeOptimizations() {
-        this.optimizations.set('deadCodeElimination', this.eliminateDeadCode.bind(this));
-        this.optimizations.set('constantFolding', this.foldConstants.bind(this));
-        this.optimizations.set('functionInlining', this.inlineFunctions.bind(this));
-        this.optimizations.set('loopOptimization', this.optimizeLoops.bind(this));
-        this.optimizations.set('memoryOptimization', this.optimizeMemory.bind(this));
+        this.optimizations.set("deadCodeElimination", this.eliminateDeadCode.bind(this));
+        this.optimizations.set("constantFolding", this.foldConstants.bind(this));
+        this.optimizations.set("functionInlining", this.inlineFunctions.bind(this));
+        this.optimizations.set("loopOptimization", this.optimizeLoops.bind(this));
+        this.optimizations.set("memoryOptimization", this.optimizeMemory.bind(this));
     }
 
     async optimize(code, options = {}) {
@@ -493,8 +493,8 @@ class CodeOptimizer {
         // Remove unused declarations
         for (const declared of declaredVars) {
             if (!usedVars.has(declared)) {
-                const regex = new RegExp(`local\\s+${declared}\\s*=\\s*[^\\n]*\\n?`, 'g');
-                code = code.replace(regex, '');
+                const regex = new RegExp(`local\\s+${declared}\\s*=\\s*[^\\n]*\\n?`, "g");
+                code = code.replace(regex, "");
             }
         }
         
@@ -512,7 +512,7 @@ class CodeOptimizer {
         });
         
         // Fold string concatenations
-        code = code.replace(/"([^"]*)"\s*\.\.\s*"([^"]*)"/g, '"$1$2"');
+        code = code.replace(/"([^"]*)"\s*\.\.\s*"([^"]*)"/g, "\"$1$2\"");
         
         return code;
     }
@@ -529,14 +529,14 @@ class CodeOptimizer {
         
         // Inline function calls
         for (const [name, body] of functions) {
-            const callRegex = new RegExp(`\\b${name}\\s*\\(\\s*\\)`, 'g');
+            const callRegex = new RegExp(`\\b${name}\\s*\\(\\s*\\)`, "g");
             code = code.replace(callRegex, `(${body})`);
         }
         
         // Remove inlined function definitions
         for (const name of functions.keys()) {
-            const defRegex = new RegExp(`local\\s+function\\s+${name}\\s*\\(\\s*\\)\\s*return\\s+[^\\n]+\\s+end\\n?`, 'g');
-            code = code.replace(defRegex, '');
+            const defRegex = new RegExp(`local\\s+function\\s+${name}\\s*\\(\\s*\\)\\s*return\\s+[^\\n]+\\s+end\\n?`, "g");
+            code = code.replace(defRegex, "");
         }
         
         return code;
@@ -549,9 +549,9 @@ class CodeOptimizer {
             (match, var_, count, body) => {
                 const iterations = parseInt(count);
                 if (iterations <= 5) {
-                    let unrolled = '';
+                    let unrolled = "";
                     for (let i = 1; i <= iterations; i++) {
-                        unrolled += body.replace(new RegExp(`\\b${var_}\\b`, 'g'), String(i)) + '\n';
+                        unrolled += body.replace(new RegExp(`\\b${var_}\\b`, "g"), String(i)) + "\n";
                     }
                     return unrolled.trim();
                 }
@@ -568,7 +568,7 @@ class CodeOptimizer {
         const tempVars = new Map();
         
         code = code.replace(/local\s+(\w+)\s*=\s*([^\\n]+)/g, (match, varName, value) => {
-            if (varName.startsWith('temp_') || varName.startsWith('_')) {
+            if (varName.startsWith("temp_") || varName.startsWith("_")) {
                 const key = value.trim();
                 if (tempVars.has(key)) {
                     return `local ${varName} = ${tempVars.get(key)}`;
@@ -630,10 +630,10 @@ class GPUAccelerator {
 
     async initializeComputeShaders() {
         // Initialize compute shaders for common operations
-        this.computeShaders.set('vectorAdd', this.createVectorAddShader());
-        this.computeShaders.set('matrixMultiply', this.createMatrixMultiplyShader());
-        this.computeShaders.set('convolution', this.createConvolutionShader());
-        this.computeShaders.set('fft', this.createFFTShader());
+        this.computeShaders.set("vectorAdd", this.createVectorAddShader());
+        this.computeShaders.set("matrixMultiply", this.createMatrixMultiplyShader());
+        this.computeShaders.set("convolution", this.createConvolutionShader());
+        this.computeShaders.set("fft", this.createFFTShader());
     }
 
     async accelerate(operation, data, options = {}) {
@@ -674,20 +674,20 @@ class GPUAccelerator {
     fallbackCompute(operation, data) {
         // CPU fallback implementations
         switch (operation) {
-            case 'vectorAdd':
-                return data.map((x, i) => x + (data[i + data.length / 2] || 0));
+        case "vectorAdd":
+            return data.map((x, i) => x + (data[i + data.length / 2] || 0));
             
-            case 'matrixMultiply':
-                return this.cpuMatrixMultiply(data.a, data.b);
+        case "matrixMultiply":
+            return this.cpuMatrixMultiply(data.a, data.b);
             
-            case 'convolution':
-                return this.cpuConvolution(data.input, data.kernel);
+        case "convolution":
+            return this.cpuConvolution(data.input, data.kernel);
             
-            case 'fft':
-                return this.cpuFFT(data);
+        case "fft":
+            return this.cpuFFT(data);
             
-            default:
-                return data;
+        default:
+            return data;
         }
     }
 
@@ -700,7 +700,7 @@ class GPUAccelerator {
 
     createVectorAddShader() {
         return {
-            compute: (data, options) => {
+            compute: (data, _options) => {
                 const { a, b } = data;
                 return a.map((x, i) => x + (b[i] || 0));
             }
@@ -709,7 +709,7 @@ class GPUAccelerator {
 
     createMatrixMultiplyShader() {
         return {
-            compute: (data, options) => {
+            compute: (data, _options) => {
                 return this.cpuMatrixMultiply(data.a, data.b);
             }
         };
@@ -717,7 +717,7 @@ class GPUAccelerator {
 
     createConvolutionShader() {
         return {
-            compute: (data, options) => {
+            compute: (data, _options) => {
                 return this.cpuConvolution(data.input, data.kernel);
             }
         };
@@ -725,7 +725,7 @@ class GPUAccelerator {
 
     createFFTShader() {
         return {
-            compute: (data, options) => {
+            compute: (data, _options) => {
                 return this.cpuFFT(data);
             }
         };
@@ -802,9 +802,9 @@ class RealTimeMonitor {
         this.metrics = new Map();
         this.alerts = [];
         this.thresholds = new Map([
-            ['memory', 80], // 80% memory usage
-            ['cpu', 90],    // 90% CPU usage
-            ['errors', 10]  // 10 errors per minute
+            ["memory", 80], // 80% memory usage
+            ["cpu", 90],    // 90% CPU usage
+            ["errors", 10]  // 10 errors per minute
         ]);
         this.monitoring = false;
         this.interval = null;
@@ -833,7 +833,7 @@ class RealTimeMonitor {
         const memory = process.memoryUsage();
         const cpu = process.cpuUsage();
         
-        this.recordMetric('memory', {
+        this.recordMetric("memory", {
             timestamp,
             heapUsed: memory.heapUsed,
             heapTotal: memory.heapTotal,
@@ -841,7 +841,7 @@ class RealTimeMonitor {
             percentage: (memory.heapUsed / memory.heapTotal) * 100
         });
         
-        this.recordMetric('cpu', {
+        this.recordMetric("cpu", {
             timestamp,
             user: cpu.user,
             system: cpu.system,
@@ -882,7 +882,7 @@ class RealTimeMonitor {
             metric,
             value,
             threshold,
-            severity: value > threshold * 1.2 ? 'critical' : 'warning',
+            severity: value > threshold * 1.2 ? "critical" : "warning",
             message: `${metric} usage (${value.toFixed(2)}%) exceeds threshold (${threshold}%)`
         };
         

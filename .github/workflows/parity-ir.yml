@@ -2,9 +2,9 @@ name: Parity and IR Gates
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
   parity-ir:
@@ -12,23 +12,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then npm ci; else npm i; fi
+        run: npm ci
 
       - name: Run parity tests
+        id: parity
         run: npm run -s test:parity
 
       - name: Run IR report
+        id: ir-report
         run: npm run -s ir:report
 
       - name: Run performance tests
+        id: perf-test
         run: npm run -s test:performance > perf_results.txt 2>&1
         continue-on-error: true
 
@@ -36,17 +41,33 @@ jobs:
         id: perf-check
         run: |
           # Extract performance metrics from results
-          PERF_RESULT=$(tail -5 perf_results.txt)
-          echo "PERF_RESULT=$PERF_RESULT" >> $GITHUB_OUTPUT
-          echo "Performance check: $PERF_RESULT"
-          
-          # If regression detected (optional blocking logic can be added here)
-          if grep -Ei '\bperformance regression\b' perf_results.txt; then
-            echo "⚠️ Performance regression detected - see details below"
-            cat perf_results.txt
+          if [ -f perf_results.txt ]; then
+            PERF_RESULT=$(tail -5 perf_results.txt)
+            echo "PERF_RESULT=$PERF_RESULT" >> $GITHUB_OUTPUT
+            echo "Performance check: $PERF_RESULT"
+            
+            # If regression detected (optional blocking logic can be added here)
+            if grep -Ei '\bperformance regression\b' perf_results.txt; then
+              echo "⚠️ Performance regression detected - see details below"
+              cat perf_results.txt
+            fi
+          else
+            echo "No performance results generated"
           fi
         shell: bash
         continue-on-error: true
+
+      - name: Upload IR and performance artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-ir-reports
+          path: |
+            reports/
+            perf_results.txt
+            harness_results.json
+          retention-days: 30
+          if-no-files-found: ignore
 
       - name: Upload IR status artifact
         if: always()

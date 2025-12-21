@@ -5,8 +5,8 @@
  * Provides convenience functions for building IR nodes.
  */
 
-const nodes = require('./nodes');
-const { Types } = require('./types');
+const nodes = require("./nodes");
+const { Types } = require("./types");
 const { BalancedTernaryIdGenerator } = require("./idGenerator"); // Import idGenerator
 
 class IRBuilder {
@@ -44,7 +44,7 @@ class IRBuilder {
         this.module.body.push(node.id);
     }
 
-    build(options = {}) {
+    build() {
         // Ensure module has an ID
         if (!this.module.id) {
             this.module.id = this._generateId();
@@ -167,11 +167,11 @@ class IRBuilder {
     literal(value, type = null, options = {}) {
         if (type === null) {
             // Infer type from value
-            if (typeof value === 'number') {
+            if (typeof value === "number") {
                 type = Types.number();
-            } else if (typeof value === 'string') {
+            } else if (typeof value === "string") {
                 type = Types.string();
-            } else if (typeof value === 'boolean') {
+            } else if (typeof value === "boolean") {
                 type = Types.boolean();
             } else if (value === null) {
                 type = Types.null();
@@ -182,7 +182,7 @@ class IRBuilder {
         return this._storeNode(new nodes.Literal(value, type, options));
     }
 
-    assignment(left, right, operator = '=', options = {}) {
+    assignment(left, right, operator = "=", options = {}) {
         return this._storeNode(new nodes.Assignment(left, right, operator, options));
     }
 
@@ -203,10 +203,10 @@ class IRBuilder {
      * Create a member access (obj.prop or obj[prop])
      */
     memberAccess(objectName, propertyName, computed = false, options = {}) {
-        const object = typeof objectName === 'string' 
+        const object = typeof objectName === "string" 
             ? this.identifier(objectName) 
             : objectName;
-        const property = typeof propertyName === 'string'
+        const property = typeof propertyName === "string"
             ? this.identifier(propertyName)
             : propertyName;
         return this.member(object, property, computed, options);
@@ -216,78 +216,78 @@ class IRBuilder {
      * Create a simple assignment statement (var = value)
      */
     simpleAssignment(varName, value, options = {}) {
-        return this.assignment(this.identifier(varName), value, '=', options);
+        return this.assignment(this.identifier(varName), value, "=", options);
     }
 
     /**
      * Create arithmetic operations
      */
     add(left, right, options = {}) {
-        return this.binaryOp('+', left, right, options);
+        return this.binaryOp("+", left, right, options);
     }
 
     subtract(left, right, options = {}) {
-        return this.binaryOp('-', left, right, options);
+        return this.binaryOp("-", left, right, options);
     }
 
     multiply(left, right, options = {}) {
-        return this.binaryOp('*', left, right, options);
+        return this.binaryOp("*", left, right, options);
     }
 
     divide(left, right, options = {}) {
-        return this.binaryOp('/', left, right, options);
+        return this.binaryOp("/", left, right, options);
     }
 
     modulo(left, right, options = {}) {
-        return this.binaryOp('%', left, right, options);
+        return this.binaryOp("%", left, right, options);
     }
 
     /**
      * Create comparison operations
      */
     equals(left, right, options = {}) {
-        return this.binaryOp('==', left, right, options);
+        return this.binaryOp("==", left, right, options);
     }
 
     notEquals(left, right, options = {}) {
-        return this.binaryOp('!=', left, right, options);
+        return this.binaryOp("!=", left, right, options);
     }
 
     lessThan(left, right, options = {}) {
-        return this.binaryOp('<', left, right, options);
+        return this.binaryOp("<", left, right, options);
     }
 
     lessThanOrEqual(left, right, options = {}) {
-        return this.binaryOp('<=', left, right, options);
+        return this.binaryOp("<=", left, right, options);
     }
 
     greaterThan(left, right, options = {}) {
-        return this.binaryOp('>', left, right, options);
+        return this.binaryOp(">", left, right, options);
     }
 
     greaterThanOrEqual(left, right, options = {}) {
-        return this.binaryOp('>=', left, right, options);
+        return this.binaryOp(">=", left, right, options);
     }
 
     /**
      * Create logical operations
      */
     and(left, right, options = {}) {
-        return this.binaryOp('&&', left, right, options);
+        return this.binaryOp("&&", left, right, options);
     }
 
     or(left, right, options = {}) {
-        return this.binaryOp('||', left, right, options);
+        return this.binaryOp("||", left, right, options);
     }
 
     not(operand, options = {}) {
-        return this.unaryOp('!', operand, true, options);
+        return this.unaryOp("!", operand, true, options);
     }
 
     /**
      * Create a variable declaration with initialization
      */
-    declareAndInit(name, value, kind = 'let', type = null, options = {}) {
+    declareAndInit(name, value, kind = "let", type = null, options = {}) {
         return this.varDecl(name, value, type, { ...options, kind });
     }
 
@@ -295,7 +295,7 @@ class IRBuilder {
      * Create a constant declaration
      */
     constant(name, value, type = null, options = {}) {
-        return this.declareAndInit(name, value, 'const', type, options);
+        return this.declareAndInit(name, value, "const", type, options);
     }
 
     // ========== ALIASES FOR LOWERER COMPATIBILITY ==========
@@ -337,18 +337,6 @@ class IRBuilder {
         return this.caseStmt(test, consequent, options);
     }
 
-    blockStatement(statements, options = {}) {
-        return this.block(statements, options);
-    }
-
-    expressionStatement(expression, options = {}) {
-        return this.expressionStmt(expression, options);
-    }
-
-    returnStatement(value = null, options = {}) {
-        return this.returnStmt(value, options);
-    }
-
     ifStatement(condition, consequent, alternate = null, options = {}) {
         return this.ifStmt(condition, consequent, alternate, options);
     }
@@ -370,15 +358,10 @@ class IRBuilder {
         // We can model it as assignment with binary op
         const prefix = options.prefix !== false;
         const one = this.literal(1, Types.number());
-        const binOp = operator === '++' ? '+' : '-';
+        const binOp = operator === "++" ? "+" : "-";
         const result = this.binaryOp(binOp, argument, one);
-        return this.assignment(argument, result, '=', { ...options, updateOp: operator, prefix });
+        return this.assignment(argument, result, "=", { ...options, updateOp: operator, prefix });
     }
-
-    callExpression(callee, args, options = {}) {
-        return this.call(callee, args, options);
-    }
-
     newExpression(callee, args, options = {}) {
         return this.call(callee, args, { ...options, isNew: true });
     }
