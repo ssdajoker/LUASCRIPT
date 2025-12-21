@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+# Pre-commit hook: Lint touched files only (fast validation)
+
+# Allow bypass with HUSKY=0 or SKIP_LINT=1
+if [ "$HUSKY" = "0" ] || [ "$SKIP_LINT" = "1" ]; then
+  exit 0
+fi
+
+echo "[husky pre-commit] Running lint on staged files..."
+
+# Get list of staged .js files
+STAGED_JS=$(git diff --cached --name-only --diff-filter=ACM | grep '\.js$' || true)
+
+if [ -z "$STAGED_JS" ]; then
+  echo "[husky pre-commit] No .js files staged, skipping lint"
+  exit 0
+fi
+
+# Run ESLint only on staged files
+echo "[husky pre-commit] Linting $(echo "$STAGED_JS" | wc -l) file(s)..."
+echo "$STAGED_JS" | xargs npx eslint --max-warnings 0
+
+LINT_EXIT=$?
+
+if [ $LINT_EXIT -ne 0 ]; then
+  echo ""
+  echo "[husky pre-commit] ❌ Lint failed on staged files"
+  echo "                    Fix errors or bypass with: SKIP_LINT=1 git commit"
+  exit 1
+fi
+
+echo "[husky pre-commit] ✅ Lint passed on staged files"
+exit 0

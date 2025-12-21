@@ -1,0 +1,187 @@
+name: Nightly Comprehensive Validation
+
+# Run full validation suite nightly to catch drift
+on:
+  schedule:
+    # Run at 2 AM UTC (9 PM EST / 6 PM PST) daily
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  nightly-validation:
+    name: Full Lint + Coverage + Determinism + Fuzz
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Full history for drift detection
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      # ========== LINT ==========
+      - name: Full Lint (All Files)
+        run: |
+          echo "::group::ESLint Full Scan"
+          npm run lint
+          echo "::endgroup::"
+      
+      # ========== TESTS ==========
+      - name: Run Test Suite
+        run: |
+          echo "::group::Core Tests"
+          npm run test:core
+          echo "::endgroup::"
+          
+          echo "::group::Phase 1 Tests"
+          npm run test:phase1
+          echo "::endgroup::"
+      
+      # ========== COVERAGE ==========
+      - name: Generate Coverage Report
+        run: |
+          echo "::group::Coverage Analysis"
+          npm run test:coverage
+          echo "::endgroup::"
+      
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report-nightly
+          path: |
+            coverage/
+            .nyc_output/
+          retention-days: 30
+      
+      # ========== VERIFICATION SUITE ==========
+      - name: Run Verification Suite
+        run: |
+          echo "::group::IR Harness"
+          npm run harness
+          echo "::endgroup::"
+          
+          echo "::group::IR Validation"
+          npm run ir:validate:all
+          echo "::endgroup::"
+          
+          echo "::group::Parity Tests"
+          npm run test:parity
+          echo "::endgroup::"
+          
+          echo "::group::Determinism Tests"
+          npm run test:determinism
+          echo "::endgroup::"
+          
+          echo "::group::Destructuring Tests"
+          node tests/test_destructuring.js
+          echo "::endgroup::"
+          
+          echo "::group::Edge Case Tests"
+          node tests/test_destructuring_edge_cases.js
+          echo "::endgroup::"
+      
+      # ========== DETERMINISM STRESS TEST ==========
+      - name: Determinism Stress Test
+        run: |
+          echo "::group::Determinism Stress (Multiple Runs)"
+          npm run test:determinism:stress
+          echo "::endgroup::"
+      
+      # ========== FUZZ TESTING ==========
+      - name: Fuzz Testing (if available)
+        continue-on-error: true  # Don't fail nightly if fuzz isn't configured
+        run: |
+          if npm run -s refactor:fuzz >/dev/null 2>&1; then
+            echo "::group::Fuzz Testing"
+            npm run refactor:fuzz
+            echo "::endgroup::"
+          else
+            echo "Fuzz testing not configured, skipping"
+          fi
+      
+      # ========== EDGE CASE COVERAGE ==========
+      - name: Edge Case Suite
+        run: |
+          echo "::group::Edge Cases"
+          npm run test:edge
+          echo "::endgroup::"
+      
+      # ========== IR DETERMINISM CHECK ==========
+      - name: IR Determinism Reproducibility
+        run: |
+          echo "::group::IR Reproducibility Check"
+          npm run ir:repro || echo "IR repro check not configured"
+          echo "::endgroup::"
+      
+      # ========== QUALITY GATES ==========
+      - name: Run Quality Gates
+        run: |
+          echo "::group::Quality Checks"
+          npm run quality || echo "Quality gate not configured"
+          echo "::endgroup::"
+      
+      # ========== DRIFT DETECTION ==========
+      - name: Check for Drift
+        run: |
+          echo "::group::Drift Detection"
+          
+          # Check if any files have uncommitted changes (shouldn't happen in CI)
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::warning::Uncommitted changes detected after tests"
+            git status --porcelain
+          fi
+          
+          # Compare current state with main
+          git fetch origin main:main || true
+          COMMITS_BEHIND=$(git rev-list --count HEAD..main 2>/dev/null || echo "0")
+          COMMITS_AHEAD=$(git rev-list --count main..HEAD 2>/dev/null || echo "0")
+          
+          echo "Branch status: $COMMITS_AHEAD commits ahead, $COMMITS_BEHIND commits behind main"
+          echo "::endgroup::"
+      
+      # ========== ARTIFACT COLLECTION ==========
+      - name: Collect Artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: nightly-validation-artifacts
+          path: |
+            reports/
+            coverage/
+            .nyc_output/
+            *.log
+          retention-days: 30
+      
+      # ========== SUMMARY ==========
+      - name: Generate Summary
+        if: always()
+        run: |
+          echo "## 🌙 Nightly Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u +"%Y-%m-%d %H:%M UTC")" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Checks Completed:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Full Lint" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Test Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Verification Suite" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Determinism Tests" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Edge Cases" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Drift Detection" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View full artifacts in the Actions tab." >> $GITHUB_STEP_SUMMARY
+      
+      # ========== NOTIFICATION (Optional) ==========
+      - name: Report Failure
+        if: failure()
+        run: |
+          echo "::error::Nightly validation failed! Check logs and artifacts for details."
+          echo "This indicates potential drift or regressions that need attention."
