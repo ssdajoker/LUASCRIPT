@@ -445,7 +445,7 @@ You've completed the LUASCRIPT Gaussian Blobs GSS tutorial! You now have the kno
 - **Documentation**: See README.md in the repository
 - **Issues**: Report bugs on GitHub
 - **Examples**: Check the Examples folder
-- **Community**: Join our Discord (coming soon!)
+- **Community**: GitHub Discussions (primary community hub)
 
 **Version**: 1.0.0  
 **Last Updated**: October 2025  

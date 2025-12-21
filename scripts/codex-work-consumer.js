@@ -603,61 +603,6 @@ async function runCycle() {
     saveState();
   }
 }
-        return;
-      }
-
-      // 3. Claim work
-      if (!claimWorkItem(workItem)) {
-        log('WARN', 'Failed to claim work item');
-        return;
-      }
-
-      // 4. Create feature branch
-      const branch = createFeatureBranch(workItem);
-      if (!branch) {
-        return;
-      }
-
-      // 5. Update state
-      updateState(workItem, branch);
-
-      // 6. Wait for implementation
-      const ready = await waitForLocalImplementation();
-      if (!ready) {
-        log('INFO', 'Work cancelled by user');
-        state.status = 'idle';
-        saveState();
-        return;
-      }
-    }
-
-    // 7. Validate locally
-    const validationResults = validateLocally();
-    state.current_work.harness_result = validationResults.harness;
-    state.current_work.ir_validation = validationResults.ir_validation;
-    state.current_work.parity = validationResults.parity;
-    saveState();
-
-    // 8. Push to GitHub (if all pass)
-    if (validationResults.all_passed) {
-      pushToGitHub(state.current_work, state.current_work.local_branch, validationResults);
-    } else {
-      log('WARN', 'Skipping push: validation failed');
-      recordTelemetry('validation_failed_no_push', { work: state.current_work.issue_number });
-    }
-
-    // 9. Complete cycle
-    state.status = 'idle';
-    state.current_work = null;
-    saveState();
-    log('INFO', 'Codex cycle complete');
-  } catch (err) {
-    log('ERROR', `Unexpected error in cycle: ${err.message}`);
-    recordTelemetry('cycle_error', { error: err.message });
-    handleTimeout();
-  }
-}
-
 // ========== Execution ==========
 
 if (require.main === module) {

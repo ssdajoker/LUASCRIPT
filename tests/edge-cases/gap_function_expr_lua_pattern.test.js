@@ -27,7 +27,7 @@ const obj = {
     // Check for function definition patterns
     const hasFunctionKeyword = /function\s*\(/i.test(lua);
     const hasLocalAssignment = /local\s+\w+/i.test(lua);
-    const hasReturn = /return/i.test(lua);
+    const _hasReturn = /return/i.test(lua);
     const hasTableOrObj = /{\s*\w+\s*=|\.myFunc/i.test(lua);
     
     assert.ok(hasFunctionKeyword, 

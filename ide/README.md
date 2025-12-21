@@ -243,7 +243,7 @@ Built with passion by the LUASCRIPT team:
 
 - **Issues**: GitHub Issues
 - **Questions**: GitHub Discussions
-- **Email**: support@luascript.dev (coming soon)
+- **Email**: support@luascript.dev (via GitHub Issues & Discussions)
 
 ---
 

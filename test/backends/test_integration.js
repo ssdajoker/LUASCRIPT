@@ -1,4 +1,4 @@
-
+/* eslint-env jest */
 /**
  * Integration Tests for All Backends
  */
@@ -16,6 +16,7 @@ describe('Backend Integration', () => {
             llvm: { optimize: true }
         });
     });
+            /* eslint-env jest */
 
     test('should have all backends available', () => {
         const backends = backendManager.getAvailableBackends();

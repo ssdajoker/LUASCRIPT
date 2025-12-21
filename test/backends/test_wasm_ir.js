@@ -1,7 +1,8 @@
-
+/* eslint-env jest */
 /**
  * Test WASM Backend with Canonical IR
  */
+/* eslint-env jest */
 
 const { IRToWasmCompiler } = require('../../src/backends/wasm/ir-to-wasm');
 const { builder } = require('../../src/ir/builder');

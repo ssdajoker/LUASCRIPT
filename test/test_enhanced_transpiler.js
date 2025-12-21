@@ -11,8 +11,6 @@
  */
 
 const EnhancedLuaScriptTranspiler = require('../src/enhanced_transpiler');
-const fs = require('fs');
-const path = require('path');
 
 class EnhancedTranspilerTester {
     constructor() {

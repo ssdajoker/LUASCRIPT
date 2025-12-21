@@ -4,8 +4,11 @@
  * Tests for GPU-accelerated computation through WebAssembly GPU bindings
  * Status: PLANNED - These tests define the API surface for future implementation
  */
+/* eslint-env jest */
+/* eslint-disable no-unused-vars */
 
 const { describe, it, expect } = require('@jest/globals');
+const { performance } = require('perf_hooks');
 
 describe('GPU Execution via WASM (Future)', () => {
     // Mark all tests as pending until implementation

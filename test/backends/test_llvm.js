@@ -1,7 +1,8 @@
-
+/* eslint-env jest */
 /**
  * Test LLVM IR Backend
  */
+/* eslint-env jest */
 
 const { IRToLLVMCompiler } = require('../../src/backends/llvm');
 const { builder } = require('../../src/ir/builder');

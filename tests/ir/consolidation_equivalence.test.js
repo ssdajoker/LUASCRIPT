@@ -4,6 +4,7 @@
  * Builds a small IR twice using different method names/paths and verifies
  * validation and basic structural parity (ignoring IDs).
  */
+/* eslint-disable no-unused-vars */
 
 const assert = require('assert');
 const { IRBuilder: Builder } = require('../../src/ir/builder');

@@ -209,7 +209,7 @@ return ∏(i, 1, 10, foo(3, 4))
                 const completions = await system.getCodeCompletion(testFile, { line: 1, column: 3 });
                 return Array.isArray(completions);
             } finally {
-                try { await fs.unlink(testFile); } catch {}
+                try { await fs.unlink(testFile); } catch (err) { /* ignore cleanup errors */ }
             }
         });
         

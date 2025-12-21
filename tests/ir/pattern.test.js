@@ -2,6 +2,7 @@
  * Pattern Lowering Tests
  * Tests for ArrayPattern, ObjectPattern, RestElement, AssignmentPattern
  */
+/* eslint-env jest */
 
 const { IRLowerer } = require('../../src/ir/lowerer');
 const { IRBuilder } = require('../../src/ir/builder');

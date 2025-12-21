@@ -4,6 +4,8 @@
  * Tests for ES6 generator functions with yield expressions
  * Status: PLANNED - These tests define generator semantics
  */
+/* eslint-env jest */
+/* eslint-disable no-unused-vars */
 
 const { describe, it, expect } = require('@jest/globals');
 
