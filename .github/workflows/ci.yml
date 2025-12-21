@@ -46,9 +46,17 @@ jobs:
 
       - name: Install npm dependencies
         run: npm ci
+      - name: Check status consistency
+        run: npm run status:check
+        continue-on-error: false
+
 
       - name: Run core verification gate
         run: npm run verify
+      - name: Run performance regression gate
+        run: npm run perf:gate
+        continue-on-error: false
+
 
       - name: Run enhanced pipeline smoke test
         env:
@@ -96,5 +104,7 @@ jobs:
             harness_results.json
             reports/
             perf_results.txt
+            artifacts/perf-regression-results.json
+            .perf-baseline.json
           retention-days: 30
           if-no-files-found: ignore

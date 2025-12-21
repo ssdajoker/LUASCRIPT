@@ -54,6 +54,8 @@
     "coverage:report": "node scripts/coverage-ratchet.js report",
     "coverage:diff": "node scripts/diff-coverage.js",
     "coverage:full": "npm run test:coverage && npm run coverage:check",
+    "perf:gate": "node scripts/perf-regression-gate.js",
+    "status:check": "node scripts/status-consistency-check.js",
     "codex:poll": "node scripts/codex-work-consumer.js",
     "codex:poll:once": "cross-env CODEX_ONE_SHOT=1 node scripts/codex-work-consumer.js",
     "codex:done": "node -e \"require('fs').writeFileSync('.codex/signal.txt', 'done'); console.log('✅ Signal sent: Codex will validate now')\"",
