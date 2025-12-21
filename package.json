@@ -61,7 +61,7 @@
     "coordination:status": "npm run -s sync-status && echo '' && npm run -s codex:status",
     "copilot:context": "node scripts/context_pack.js",
     "codex:validate:local": "npm run harness && npm run ir:validate:all && npm run test:parity",
-    "verify": "npm run harness && npm run ir:validate:all && npm run test:parity && npm run test:determinism && node tests/test_destructuring.js",
+    "verify": "npm run harness && npm run ir:validate:all && npm run test:parity && npm run test:determinism && node tests/test_destructuring.js && node tests/test_destructuring_edge_cases.js",
     "lint": "npm run refactor:lint",
     "refactor:phase3": "cross-env LUASCRIPT_USE_ENHANCED_IR=1 node tests/parity/run_phase3.js",
     "refactor:validate": "node -e \"const {ASTValidator} = require('./src/validation/ast-validator'); const {IRValidator} = require('./src/validation/ir-validator'); console.log('✅ Validators loaded');\"",
