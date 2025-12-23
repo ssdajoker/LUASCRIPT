@@ -721,6 +721,13 @@ class IRToLLVMCompiler {
     return { type: LLVMType.i32, value: "0" };
   }
 
+  /**
+   * Compile arithmetic binary operation (+, -, *, /, %)
+   * @param {string} operator - The arithmetic operator
+   * @param {object} left - Left operand with type and value properties
+   * @param {object} right - Right operand with type and value properties
+   * @returns {object|null} LLVM value object with type and value, or null if operator not supported
+   */
   compileArithmeticBinary(operator, left, right) {
     const opMap = left.type === LLVMType.double ? floatArithmeticOps : integerArithmeticOps;
     const mappedOp = opMap[operator];
@@ -734,6 +741,13 @@ class IRToLLVMCompiler {
     return { type: left.type, value: resultValue };
   }
 
+  /**
+   * Compile comparison binary operation (==, !=, <, <=, >, >=)
+   * @param {string} operator - The comparison operator
+   * @param {object} left - Left operand with type and value properties
+   * @param {object} right - Right operand with type and value properties
+   * @returns {object|null} LLVM i1 (boolean) value object, or null if operator not supported
+   */
   compileComparisonBinary(operator, left, right) {
     const predicateMap = left.type === LLVMType.double ? floatComparisonPredicates : integerComparisonPredicates;
     const predicate = predicateMap[operator];
@@ -748,6 +762,13 @@ class IRToLLVMCompiler {
     return { type: LLVMType.i1, value: resultValue };
   }
 
+  /**
+   * Compile logical binary operation (&&, ||)
+   * @param {string} operator - The logical operator
+   * @param {object} left - Left operand with type and value properties
+   * @param {object} right - Right operand with type and value properties
+   * @returns {object|null} LLVM i1 (boolean) value object, or null if operator not supported
+   */
   compileLogicalBinary(operator, left, right) {
     if (operator !== "&&" && operator !== "||") {
       return null;
@@ -759,6 +780,13 @@ class IRToLLVMCompiler {
     return { type: LLVMType.i1, value: resultValue };
   }
 
+  /**
+   * Compile bitwise binary operation (&, |, ^, <<, >>)
+   * @param {string} operator - The bitwise operator
+   * @param {object} left - Left operand with type and value properties
+   * @param {object} right - Right operand with type and value properties
+   * @returns {object|null} LLVM value object with type and value, or null if operator not supported
+   */
   compileBitwiseBinary(operator, left, right) {
     const mappedOp = bitwiseOps[operator];
 
