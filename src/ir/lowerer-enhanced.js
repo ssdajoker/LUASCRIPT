@@ -128,13 +128,18 @@ class EnhancedLowerer {
         }
 
         const initRef = node.init ? this.lowerExpression(node.init) : null;
-        
+
         // For patterns, pass the pattern object itself, not just a name
         if (isPattern) {
             return this.builder.varDecl(idNode, initRef);
-        } else {
-            return this.builder.varDecl(idNode.type === "Identifier" ? idNode.name : idNode.id, initRef);
         }
+
+        // Preserve user-defined identifier names instead of auto-generated IDs
+        const identifierName =
+            (node.id && node.id.type === "Identifier" && node.id.name) ||
+            (idNode && idNode.name) ||
+            "unknown";
+        return this.builder.varDecl(identifierName, initRef);
     }
 
     lowerFunctionDeclaration(node) {
@@ -163,7 +168,9 @@ class EnhancedLowerer {
         return this.builder.functionDecl(
             funcName,
             params,
-            body
+            body,
+            null,
+            { async: !!node.async }
         );
     }
 
@@ -453,13 +460,27 @@ class EnhancedLowerer {
             this.addBinding(p.name);
             return this.lowerExpression(p);
         });
-        const body = this.lowerBlockStatement(node.body);
+
+        // Arrow functions can have an expression body; wrap it in a return statement for Lua
+        let body;
+        if (node.body && node.body.type === "BlockStatement") {
+            body = this.lowerBlockStatement(node.body);
+        } else if (node.type === "ArrowFunctionExpression") {
+            const expressionBody = this.lowerExpression(node.body);
+            body = this.builder.block([this.builder.returnStmt(expressionBody)]);
+        } else {
+            throw new Error(
+                `Invalid function node in lowerFunctionExpression: expected BlockStatement body for non-arrow function, got "${node.body && node.body.type}"`
+            );
+        }
+
         this.popScope();
 
         return this.builder.functionExpression(
             node.id ? this.lowerExpression(node.id) : null,
             params,
-            body
+            body,
+            { arrow: node.type === "ArrowFunctionExpression" }
         );
     }
 
