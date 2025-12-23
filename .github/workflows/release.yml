@@ -63,7 +63,7 @@ jobs:
           name: pre-release-validation
           path: |
             perf-*.json
-            coverage/
+            artifacts/coverage/
 
   build:
     name: Build Release Artifacts

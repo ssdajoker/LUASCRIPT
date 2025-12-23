@@ -61,8 +61,9 @@ jobs:
           path: |
             reports/
             perf_results.txt
-            coverage/
-            harness_results.json
+            artifacts/coverage/
+            artifacts/test/harness_results.json
+            artifacts/harness_results.json
           retention-days: 30
           if-no-files-found: ignore
 

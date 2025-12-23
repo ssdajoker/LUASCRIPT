@@ -73,8 +73,12 @@ function runCase(name, source, expectations) {
 function writeArtifacts(summary) {
   try {
     const outDir = path.join(process.cwd(), 'artifacts');
+    const testDir = path.join(outDir, 'test');
+    fs.mkdirSync(testDir, { recursive: true });
     fs.mkdirSync(outDir, { recursive: true });
-    fs.writeFileSync(path.join(outDir, 'harness_results.json'), JSON.stringify(summary, null, 2));
+    const payload = JSON.stringify(summary, null, 2);
+    fs.writeFileSync(path.join(outDir, 'harness_results.json'), payload);
+    fs.writeFileSync(path.join(testDir, 'harness_results.json'), payload);
     // const runInfo = {
     //   gitSha: process.env.GITHUB_SHA || null,
     //   runId: process.env.GITHUB_RUN_ID || null,

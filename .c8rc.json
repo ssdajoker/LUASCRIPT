@@ -27,5 +27,6 @@
   "per-file": false,
   "skip-full": false,
   "clean": true,
-  "temp-directory": ".nyc_output"
+  "temp-directory": "artifacts/.nyc_output",
+  "report-dir": "artifacts/coverage"
 }

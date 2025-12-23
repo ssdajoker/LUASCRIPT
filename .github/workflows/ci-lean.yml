@@ -50,7 +50,8 @@ jobs:
         with:
           name: results-node-${{ matrix.node-version }}
           path: |
-            harness_results.json
+            artifacts/test/harness_results.json
+            artifacts/harness_results.json
             reports/
             perf_results.txt
           retention-days: 7
@@ -77,9 +78,15 @@ jobs:
             let comment = '## ✅ CI Gate Results\n\n';
             
             // Check harness results
-            if (fs.existsSync('./results/harness_results.json')) {
+            const harnessPaths = [
+              './results/artifacts/test/harness_results.json',
+              './results/artifacts/harness_results.json',
+              './results/harness_results.json'
+            ];
+            const harnessPath = harnessPaths.find(p => fs.existsSync(p));
+            if (harnessPath) {
               try {
-                const harness = JSON.parse(fs.readFileSync('./results/harness_results.json', 'utf8'));
+                const harness = JSON.parse(fs.readFileSync(harnessPath, 'utf8'));
                 comment += `### Harness\n- Tests passed: ${harness.total}\n\n`;
               } catch (e) {}
             }

@@ -95,7 +95,7 @@ jobs:
         with:
           name: coverage-${{ matrix.os }}-node-${{ matrix.node-version }}
           path: |
-            coverage/
+            artifacts/coverage/
           retention-days: 30
           if-no-files-found: ignore
 
@@ -105,10 +105,11 @@ jobs:
         with:
           name: test-results-${{ matrix.os }}-node-${{ matrix.node-version }}
           path: |
-            harness_results.json
+            artifacts/test/harness_results.json
+            artifacts/harness_results.json
             reports/
-            perf_results.txt
             artifacts/perf-regression-results.json
+            perf_results.txt
             .perf-baseline.json
           retention-days: 30
           if-no-files-found: ignore

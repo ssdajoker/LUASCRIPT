@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 const CONFIG_FILE = path.join(__dirname, '../.c8rc.json');
-const SUMMARY_FILE = path.join(__dirname, '../coverage/coverage-summary.json');
+const SUMMARY_FILE = path.join(__dirname, '../artifacts/coverage/coverage-summary.json');
 const RATCHET_STATE_FILE = path.join(__dirname, '../.coverage-ratchet.json');
 
 // Ratchet configuration

@@ -84,8 +84,14 @@ Thumbs.db
 .Trashes
 
 # Test coverage
+artifacts/coverage/
+artifacts/.nyc_output/
 coverage/
 .nyc_output/
+artifacts/lint/
+artifacts/test/
+artifacts/test-output/
+artifacts/tmp/
 
 # Environment files
 .env
