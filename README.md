@@ -10,7 +10,7 @@ Status source of truth: see `PROJECT_STATUS.md` for current health, gaps, and ro
 ### Doc truth source
 - Canonical health, gaps, and roadmap: [PROJECT_STATUS.md](PROJECT_STATUS.md)
 - Phase checklist source: [CHECKLIST_PHASES.md](CHECKLIST_PHASES.md)
-- Status note: Phase 1 (baseline) is still open for pattern/destructuring support, and static warnings/lint-format enforcement remain outstanding; defer to the above for current claims and avoid optimistic completion percentages elsewhere.
+- Note: Phase 1 (baseline) is still open for pattern/destructuring support, and static warnings/lint/format enforcement remain outstanding; defer to the above for current claims and avoid optimistic completion percentages elsewhere.
 
 ## What this is
 LUASCRIPT is a JavaScript-to-Lua transpiler with an IR pipeline, parity tests, and validation gates.
