@@ -30,6 +30,11 @@ function expectThrows(fn, message) {
   );
 
   expectThrows(
+    () => IRNode.fromJSON([]),
+    "Invalid IR JSON: missing 'kind' property",
+  );
+
+  expectThrows(
     () => IRNode.fromJSON({ kind: "UnknownNode" }),
     "No fromJSON handler registered for node kind: UnknownNode",
   );
