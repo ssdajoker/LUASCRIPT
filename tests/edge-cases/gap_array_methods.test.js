@@ -27,7 +27,7 @@ const evens = arr.filter(x => x % 2 === 0);
     // Check for array/table operations
     const hasTableConstruction = /{\s*\d+.*\d+.*\d+\s*}|table\./i.test(lua);
     const hasLocalVars = (lua.match(/local\s+\w+/g) || []).length >= 3;
-    const hasFunctionCalls = /\w+\s*\(.*\)/g.test(lua);
+    const _hasFunctionCalls = /\w+\s*\(.*\)/g.test(lua);
     
     assert.ok(hasTableConstruction || hasLocalVars, 
       'Lua should contain table construction or local variable assignments');

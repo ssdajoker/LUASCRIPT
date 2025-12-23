@@ -4,6 +4,8 @@
  * Tests for TypeScript-style generics and advanced type features
  * Status: PLANNED - These tests define the type system API
  */
+/* eslint-env jest */
+/* eslint-disable no-unused-vars */
 
 const { describe, it, expect } = require('@jest/globals');
 

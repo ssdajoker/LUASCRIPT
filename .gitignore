@@ -127,6 +127,15 @@ tests/tmp/
 reports/**/tmp/
 reports/**/cache/
 
+# Performance & Artifact Management
+# Perf gate results: generated during CI pipeline, archived separately in artifact management
+artifacts/perf-regression-results.json
+artifacts/perf-*
+# Performance benchmarks: generated, not version-controlled
+*.benchmark.json
+perf-results/
+benchmarks/output/
+
 # OS/editor histories
 .history/
 .vscode/**.history/

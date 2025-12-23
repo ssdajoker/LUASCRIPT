@@ -5,11 +5,11 @@
  * Central export point for the IR system.
  */
 
-const types = require('./types');
-const nodes = require('./nodes');
-const { IRBuilder, builder } = require('./builder');
-const { IRValidator } = require('./validator');
-const { IRSerializer } = require('./serializer');
+const types = require("./types");
+const nodes = require("./nodes");
+const { IRBuilder, builder } = require("./builder");
+const { IRValidator } = require("./validator");
+const { IRSerializer } = require("./serializer");
 
 module.exports = {
     // Types

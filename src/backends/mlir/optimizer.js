@@ -9,103 +9,103 @@
  * MLIR Optimizer
  */
 class MLIROptimizer {
-    constructor(options = {}) {
-        this.options = {
-            enableAll: options.enableAll !== false,
-            passes: options.passes || [],
-            ...options
-        };
+  constructor(options = {}) {
+    this.options = {
+      enableAll: options.enableAll !== false,
+      passes: options.passes || [],
+      ...options
+    };
         
-        this.passes = this.initializePasses();
-    }
+    this.passes = this.initializePasses();
+  }
 
-    /**
+  /**
      * Initialize optimization passes
      */
-    initializePasses() {
-        const allPasses = {
-            // Canonicalization
-            'canonicalize': new CanonicalizationPass(),
+  initializePasses() {
+    const allPasses = {
+      // Canonicalization
+      "canonicalize": new CanonicalizationPass(),
             
-            // Dead code elimination
-            'dce': new DeadCodeEliminationPass(),
+      // Dead code elimination
+      "dce": new DeadCodeEliminationPass(),
             
-            // Constant folding
-            'const-fold': new ConstantFoldingPass(),
+      // Constant folding
+      "const-fold": new ConstantFoldingPass(),
             
-            // Common subexpression elimination
-            'cse': new CSEPass(),
+      // Common subexpression elimination
+      "cse": new CSEPass(),
             
-            // Inlining
-            'inline': new InliningPass(),
+      // Inlining
+      "inline": new InliningPass(),
             
-            // Loop optimization
-            'loop-opt': new LoopOptimizationPass(),
+      // Loop optimization
+      "loop-opt": new LoopOptimizationPass(),
             
-            // Memory optimization
-            'mem-opt': new MemoryOptimizationPass(),
+      // Memory optimization
+      "mem-opt": new MemoryOptimizationPass(),
             
-            // Algebraic simplification
-            'algebraic-simp': new AlgebraicSimplificationPass()
-        };
+      // Algebraic simplification
+      "algebraic-simp": new AlgebraicSimplificationPass()
+    };
 
-        if (this.options.enableAll) {
-            return Object.values(allPasses);
-        } else if (this.options.passes.length > 0) {
-            return this.options.passes.map(name => allPasses[name]).filter(Boolean);
-        } else {
-            // Default passes
-            return [
-                allPasses['const-fold'],
-                allPasses['dce'],
-                allPasses['canonicalize']
-            ];
-        }
+    if (this.options.enableAll) {
+      return Object.values(allPasses);
+    } else if (this.options.passes.length > 0) {
+      return this.options.passes.map(name => allPasses[name]).filter(Boolean);
+    } else {
+      // Default passes
+      return [
+        allPasses["const-fold"],
+        allPasses["dce"],
+        allPasses["canonicalize"]
+      ];
     }
+  }
 
-    /**
+  /**
      * Run all optimization passes
      */
-    optimize(mlirModule) {
-        let optimized = mlirModule;
-        let changed = true;
-        let iterations = 0;
-        const maxIterations = 10;
+  optimize(mlirModule) {
+    let optimized = mlirModule;
+    let changed = true;
+    let iterations = 0;
+    const maxIterations = 10;
 
-        // Run passes until fixpoint or max iterations
-        while (changed && iterations < maxIterations) {
-            changed = false;
-            iterations++;
+    // Run passes until fixpoint or max iterations
+    while (changed && iterations < maxIterations) {
+      changed = false;
+      iterations++;
 
-            for (const pass of this.passes) {
-                const result = pass.run(optimized);
-                if (result.changed) {
-                    optimized = result.module;
-                    changed = true;
-                }
-            }
+      for (const pass of this.passes) {
+        const result = pass.run(optimized);
+        if (result.changed) {
+          optimized = result.module;
+          changed = true;
         }
-
-        return {
-            module: optimized,
-            iterations: iterations,
-            changed: iterations > 1
-        };
+      }
     }
+
+    return {
+      module: optimized,
+      iterations: iterations,
+      changed: iterations > 1
+    };
+  }
 }
 
 /**
  * Base Optimization Pass
  */
 class OptimizationPass {
-    constructor(name) {
-        this.name = name;
-    }
+  constructor(name) {
+    this.name = name;
+  }
 
-    run(module) {
-        // Override in subclasses
-        return { module, changed: false };
-    }
+  run(module) {
+    // Override in subclasses
+    return { module, changed: false };
+  }
 }
 
 /**
@@ -113,16 +113,16 @@ class OptimizationPass {
  * Simplifies operations to canonical forms
  */
 class CanonicalizationPass extends OptimizationPass {
-    constructor() {
-        super('canonicalize');
-    }
+  constructor() {
+    super("canonicalize");
+  }
 
-    run(module) {
-        // Simplify operations to canonical forms
-        // Example: a + 0 -> a, a * 1 -> a, a * 0 -> 0
+  run(module) {
+    // Simplify operations to canonical forms
+    // Example: a + 0 -> a, a * 1 -> a, a * 0 -> 0
         
-        return { module, changed: false };
-    }
+    return { module, changed: false };
+  }
 }
 
 /**
@@ -130,15 +130,15 @@ class CanonicalizationPass extends OptimizationPass {
  * Removes unused operations
  */
 class DeadCodeEliminationPass extends OptimizationPass {
-    constructor() {
-        super('dce');
-    }
+  constructor() {
+    super("dce");
+  }
 
-    run(module) {
-        // Remove operations whose results are never used
+  run(module) {
+    // Remove operations whose results are never used
         
-        return { module, changed: false };
-    }
+    return { module, changed: false };
+  }
 }
 
 /**
@@ -146,16 +146,16 @@ class DeadCodeEliminationPass extends OptimizationPass {
  * Evaluates constant expressions at compile time
  */
 class ConstantFoldingPass extends OptimizationPass {
-    constructor() {
-        super('const-fold');
-    }
+  constructor() {
+    super("const-fold");
+  }
 
-    run(module) {
-        // Fold constant operations
-        // Example: 2 + 3 -> 5, 4 * 5 -> 20
+  run(module) {
+    // Fold constant operations
+    // Example: 2 + 3 -> 5, 4 * 5 -> 20
         
-        return { module, changed: false };
-    }
+    return { module, changed: false };
+  }
 }
 
 /**
@@ -163,15 +163,15 @@ class ConstantFoldingPass extends OptimizationPass {
  * Eliminates redundant computations
  */
 class CSEPass extends OptimizationPass {
-    constructor() {
-        super('cse');
-    }
+  constructor() {
+    super("cse");
+  }
 
-    run(module) {
-        // Eliminate common subexpressions
+  run(module) {
+    // Eliminate common subexpressions
         
-        return { module, changed: false };
-    }
+    return { module, changed: false };
+  }
 }
 
 /**
@@ -179,15 +179,15 @@ class CSEPass extends OptimizationPass {
  * Inlines small functions
  */
 class InliningPass extends OptimizationPass {
-    constructor() {
-        super('inline');
-    }
+  constructor() {
+    super("inline");
+  }
 
-    run(module) {
-        // Inline functions marked for inlining or small enough
+  run(module) {
+    // Inline functions marked for inlining or small enough
         
-        return { module, changed: false };
-    }
+    return { module, changed: false };
+  }
 }
 
 /**
@@ -195,15 +195,15 @@ class InliningPass extends OptimizationPass {
  * Optimizes loops (unrolling, vectorization, etc.)
  */
 class LoopOptimizationPass extends OptimizationPass {
-    constructor() {
-        super('loop-opt');
-    }
+  constructor() {
+    super("loop-opt");
+  }
 
-    run(module) {
-        // Loop optimizations: unrolling, invariant code motion, etc.
+  run(module) {
+    // Loop optimizations: unrolling, invariant code motion, etc.
         
-        return { module, changed: false };
-    }
+    return { module, changed: false };
+  }
 }
 
 /**
@@ -211,15 +211,15 @@ class LoopOptimizationPass extends OptimizationPass {
  * Optimizes memory operations
  */
 class MemoryOptimizationPass extends OptimizationPass {
-    constructor() {
-        super('mem-opt');
-    }
+  constructor() {
+    super("mem-opt");
+  }
 
-    run(module) {
-        // Memory optimizations: allocation elimination, load/store forwarding
+  run(module) {
+    // Memory optimizations: allocation elimination, load/store forwarding
         
-        return { module, changed: false };
-    }
+    return { module, changed: false };
+  }
 }
 
 /**
@@ -227,26 +227,26 @@ class MemoryOptimizationPass extends OptimizationPass {
  * Applies algebraic identities
  */
 class AlgebraicSimplificationPass extends OptimizationPass {
-    constructor() {
-        super('algebraic-simp');
-    }
+  constructor() {
+    super("algebraic-simp");
+  }
 
-    run(module) {
-        // Algebraic simplifications: (a + b) - a -> b, etc.
+  run(module) {
+    // Algebraic simplifications: (a + b) - a -> b, etc.
         
-        return { module, changed: false };
-    }
+    return { module, changed: false };
+  }
 }
 
 module.exports = { 
-    MLIROptimizer, 
-    OptimizationPass,
-    CanonicalizationPass,
-    DeadCodeEliminationPass,
-    ConstantFoldingPass,
-    CSEPass,
-    InliningPass,
-    LoopOptimizationPass,
-    MemoryOptimizationPass,
-    AlgebraicSimplificationPass
+  MLIROptimizer, 
+  OptimizationPass,
+  CanonicalizationPass,
+  DeadCodeEliminationPass,
+  ConstantFoldingPass,
+  CSEPass,
+  InliningPass,
+  LoopOptimizationPass,
+  MemoryOptimizationPass,
+  AlgebraicSimplificationPass
 };

@@ -5,83 +5,82 @@
  * Defines all node types for the canonical Intermediate Representation.
  */
 
-const { Types } = require('./types');
 
 /**
  * Node Categories
  */
 const NodeCategory = {
     // Declarations
-    PROGRAM: 'Program',
-    FUNCTION_DECL: 'FunctionDeclaration',
-    VAR_DECL: 'VariableDeclarator', // Deprecated: use VARIABLE_DECLARATION (kept as alias for backward compatibility)
-    VARIABLE_DECLARATION: 'VariableDeclaration',
-    PARAMETER: 'Parameter',
+    PROGRAM: "Program",
+    FUNCTION_DECL: "FunctionDeclaration",
+    VAR_DECL: "VariableDeclarator", // Deprecated: use VARIABLE_DECLARATION (kept as alias for backward compatibility)
+    VARIABLE_DECLARATION: "VariableDeclaration",
+    PARAMETER: "Parameter",
     
     // Statements
-    BLOCK: 'BlockStatement',
-    RETURN: 'ReturnStatement',
-    IF: 'IfStatement',
-    WHILE: 'WhileStatement',
-    FOR: 'ForStatement',
-    DO_WHILE: 'DoWhileStatement',
-    SWITCH: 'SwitchStatement',
-    CASE: 'SwitchCase',
-    BREAK: 'BreakStatement',
-    CONTINUE: 'ContinueStatement',
-    EXPRESSION_STMT: 'ExpressionStatement',
-    TRY: 'TryStatement',
-    CATCH: 'CatchClause',
-    THROW: 'ThrowStatement',
-    FOR_OF: 'ForOfStatement',
-    FOR_IN: 'ForInStatement',
+    BLOCK: "BlockStatement",
+    RETURN: "ReturnStatement",
+    IF: "IfStatement",
+    WHILE: "WhileStatement",
+    FOR: "ForStatement",
+    DO_WHILE: "DoWhileStatement",
+    SWITCH: "SwitchStatement",
+    CASE: "SwitchCase",
+    BREAK: "BreakStatement",
+    CONTINUE: "ContinueStatement",
+    EXPRESSION_STMT: "ExpressionStatement",
+    TRY: "TryStatement",
+    CATCH: "CatchClause",
+    THROW: "ThrowStatement",
+    FOR_OF: "ForOfStatement",
+    FOR_IN: "ForInStatement",
     
     // Async/Await
-    ASYNC_FUNCTION: 'AsyncFunctionDeclaration',
-    AWAIT: 'AwaitExpression',
+    ASYNC_FUNCTION: "AsyncFunctionDeclaration",
+    AWAIT: "AwaitExpression",
     
-        // Generators
-        GENERATOR_FUNCTION: 'GeneratorDeclaration',
-        YIELD: 'YieldExpression',
+    // Generators
+    GENERATOR_FUNCTION: "GeneratorDeclaration",
+    YIELD: "YieldExpression",
     
     // Classes
-    CLASS_DECL: 'ClassDeclaration',
-    CLASS_EXPR: 'ClassExpression',
-    METHOD_DEF: 'MethodDefinition',
-    CLASS_BODY: 'ClassBody',
-    SUPER: 'Super',
-    THIS: 'ThisExpression',
+    CLASS_DECL: "ClassDeclaration",
+    CLASS_EXPR: "ClassExpression",
+    METHOD_DEF: "MethodDefinition",
+    CLASS_BODY: "ClassBody",
+    SUPER: "Super",
+    THIS: "ThisExpression",
     
     // Expressions
-    BINARY_OP: 'BinaryExpression',
-    UNARY_OP: 'UnaryExpression',
-    CALL: 'CallExpression',
-    MEMBER: 'MemberExpression',
-    ARRAY_LITERAL: 'ArrayExpression',
-    OBJECT_LITERAL: 'ObjectExpression',
-    IDENTIFIER: 'Identifier',
-    LITERAL: 'Literal',
-    ASSIGNMENT: 'AssignmentExpression',
-    CONDITIONAL: 'ConditionalExpression',
-    TEMPLATE_LITERAL: 'TemplateLiteral',
-    TEMPLATE_ELEMENT: 'TemplateElement',
-    TAGGED_TEMPLATE: 'TaggedTemplateExpression',
+    BINARY_OP: "BinaryExpression",
+    UNARY_OP: "UnaryExpression",
+    CALL: "CallExpression",
+    MEMBER: "MemberExpression",
+    ARRAY_LITERAL: "ArrayExpression",
+    OBJECT_LITERAL: "ObjectExpression",
+    IDENTIFIER: "Identifier",
+    LITERAL: "Literal",
+    ASSIGNMENT: "AssignmentExpression",
+    CONDITIONAL: "ConditionalExpression",
+    TEMPLATE_LITERAL: "TemplateLiteral",
+    TEMPLATE_ELEMENT: "TemplateElement",
+    TAGGED_TEMPLATE: "TaggedTemplateExpression",
     
     // Patterns
-    ARRAY_PATTERN: 'ArrayPattern',
-    OBJECT_PATTERN: 'ObjectPattern',
-    REST_ELEMENT: 'RestElement',
-    ASSIGNMENT_PATTERN: 'AssignmentPattern',
-    SPREAD_ELEMENT: 'SpreadElement',
+    ARRAY_PATTERN: "ArrayPattern",
+    OBJECT_PATTERN: "ObjectPattern",
+    REST_ELEMENT: "RestElement",
+    ASSIGNMENT_PATTERN: "AssignmentPattern",
+    SPREAD_ELEMENT: "SpreadElement",
     
     // Special
-    PROPERTY: 'Property'
+    PROPERTY: "Property"
 };
 
 function toJsonValue(value) {
     if (value === null || value === undefined) return null;
     if (Array.isArray(value)) return value.map(toJsonValue);
-    return typeof value.toJSON === 'function' ? value.toJSON() : value;
+    return typeof value.toJSON === "function" ? value.toJSON() : value;
 }
 
 /**
@@ -106,108 +105,108 @@ class IRNode {
     static fromJSON(json) {
         // Factory method to reconstruct nodes from JSON
         switch (json.kind) {
-            case NodeCategory.PROGRAM:
-                return Program.fromJSON(json);
-            case NodeCategory.FUNCTION_DECL:
-                return FunctionDecl.fromJSON(json);
-            case NodeCategory.VAR_DECL:
-                return VarDecl.fromJSON(json);
-            case NodeCategory.VARIABLE_DECLARATION: // Add this case
-                return VariableDeclaration.fromJSON(json);
-            case NodeCategory.PARAMETER:
-                return Parameter.fromJSON(json);
-            case NodeCategory.BLOCK:
-                return Block.fromJSON(json);
-            case NodeCategory.RETURN:
-                return Return.fromJSON(json);
-            case NodeCategory.IF:
-                return If.fromJSON(json);
-            case NodeCategory.WHILE:
-                return While.fromJSON(json);
-            case NodeCategory.FOR:
-                return For.fromJSON(json);
-            case NodeCategory.DO_WHILE:
-                return DoWhile.fromJSON(json);
-            case NodeCategory.SWITCH:
-                return Switch.fromJSON(json);
-            case NodeCategory.CASE:
-                return Case.fromJSON(json);
-            case NodeCategory.BREAK:
-                return Break.fromJSON(json);
-            case NodeCategory.CONTINUE:
-                return Continue.fromJSON(json);
-            case NodeCategory.EXPRESSION_STMT:
-                return ExpressionStmt.fromJSON(json);
-            case NodeCategory.TRY:
-                return TryStatement.fromJSON(json);
-            case NodeCategory.CATCH:
-                return CatchClause.fromJSON(json);
-            case NodeCategory.THROW:
-                return ThrowStatement.fromJSON(json);
-            case NodeCategory.FOR_OF:
-                return ForOfStatement.fromJSON(json);
-            case NodeCategory.FOR_IN:
-                return ForInStatement.fromJSON(json);
-            case NodeCategory.ASYNC_FUNCTION:
-                return AsyncFunctionDeclaration.fromJSON(json);
-            case NodeCategory.AWAIT:
-                return AwaitExpression.fromJSON(json);
-            case NodeCategory.GENERATOR_FUNCTION:
-                return GeneratorDeclaration.fromJSON(json);
-            case NodeCategory.YIELD:
-                return YieldExpression.fromJSON(json);
-            case NodeCategory.CLASS_DECL:
-                return ClassDeclaration.fromJSON(json);
-            case NodeCategory.CLASS_EXPR:
-                return ClassExpression.fromJSON(json);
-            case NodeCategory.METHOD_DEF:
-                return MethodDefinition.fromJSON(json);
-            case NodeCategory.CLASS_BODY:
-                return ClassBody.fromJSON(json);
-            case NodeCategory.BINARY_OP:
-                return BinaryOp.fromJSON(json);
-            case NodeCategory.UNARY_OP:
-                return UnaryOp.fromJSON(json);
-            case NodeCategory.CALL:
-                return Call.fromJSON(json);
-            case NodeCategory.MEMBER:
-                return Member.fromJSON(json);
-            case NodeCategory.ARRAY_LITERAL:
-                return ArrayLiteral.fromJSON(json);
-            case NodeCategory.OBJECT_LITERAL:
-                return ObjectLiteral.fromJSON(json);
-            case NodeCategory.IDENTIFIER:
-                return Identifier.fromJSON(json);
-            case NodeCategory.LITERAL:
-                return Literal.fromJSON(json);
-            case NodeCategory.ASSIGNMENT:
-                return Assignment.fromJSON(json);
-            case NodeCategory.CONDITIONAL:
-                return Conditional.fromJSON(json);
-            case NodeCategory.PROPERTY:
-                return Property.fromJSON(json);
-            case NodeCategory.ARRAY_PATTERN:
-                return ArrayPattern.fromJSON(json);
-            case NodeCategory.OBJECT_PATTERN:
-                return ObjectPattern.fromJSON(json);
-            case NodeCategory.REST_ELEMENT:
-                return RestElement.fromJSON(json);
-            case NodeCategory.ASSIGNMENT_PATTERN:
-                return AssignmentPattern.fromJSON(json);
-            case NodeCategory.TAGGED_TEMPLATE:
-                return TaggedTemplateExpression.fromJSON(json);
-            case NodeCategory.TEMPLATE_LITERAL:
-                return TemplateLiteral.fromJSON(json);
-            case NodeCategory.TEMPLATE_ELEMENT:
-                return TemplateElement.fromJSON(json);
-            case NodeCategory.SPREAD_ELEMENT:
-                return SpreadElement.fromJSON(json);
-            case NodeCategory.SUPER:
-                return Super.fromJSON(json);
-            case NodeCategory.THIS:
-                return ThisExpression.fromJSON(json);
-            default:
-                throw new Error(`Unknown node kind: ${json.kind}`);
+        case NodeCategory.PROGRAM:
+            return Program.fromJSON(json);
+        case NodeCategory.FUNCTION_DECL:
+            return FunctionDecl.fromJSON(json);
+        case NodeCategory.VAR_DECL:
+            return VarDecl.fromJSON(json);
+        case NodeCategory.VARIABLE_DECLARATION: // Add this case
+            return VariableDeclaration.fromJSON(json);
+        case NodeCategory.PARAMETER:
+            return Parameter.fromJSON(json);
+        case NodeCategory.BLOCK:
+            return Block.fromJSON(json);
+        case NodeCategory.RETURN:
+            return Return.fromJSON(json);
+        case NodeCategory.IF:
+            return If.fromJSON(json);
+        case NodeCategory.WHILE:
+            return While.fromJSON(json);
+        case NodeCategory.FOR:
+            return For.fromJSON(json);
+        case NodeCategory.DO_WHILE:
+            return DoWhile.fromJSON(json);
+        case NodeCategory.SWITCH:
+            return Switch.fromJSON(json);
+        case NodeCategory.CASE:
+            return Case.fromJSON(json);
+        case NodeCategory.BREAK:
+            return Break.fromJSON(json);
+        case NodeCategory.CONTINUE:
+            return Continue.fromJSON(json);
+        case NodeCategory.EXPRESSION_STMT:
+            return ExpressionStmt.fromJSON(json);
+        case NodeCategory.TRY:
+            return TryStatement.fromJSON(json);
+        case NodeCategory.CATCH:
+            return CatchClause.fromJSON(json);
+        case NodeCategory.THROW:
+            return ThrowStatement.fromJSON(json);
+        case NodeCategory.FOR_OF:
+            return ForOfStatement.fromJSON(json);
+        case NodeCategory.FOR_IN:
+            return ForInStatement.fromJSON(json);
+        case NodeCategory.ASYNC_FUNCTION:
+            return AsyncFunctionDeclaration.fromJSON(json);
+        case NodeCategory.AWAIT:
+            return AwaitExpression.fromJSON(json);
+        case NodeCategory.GENERATOR_FUNCTION:
+            return GeneratorDeclaration.fromJSON(json);
+        case NodeCategory.YIELD:
+            return YieldExpression.fromJSON(json);
+        case NodeCategory.CLASS_DECL:
+            return ClassDeclaration.fromJSON(json);
+        case NodeCategory.CLASS_EXPR:
+            return ClassExpression.fromJSON(json);
+        case NodeCategory.METHOD_DEF:
+            return MethodDefinition.fromJSON(json);
+        case NodeCategory.CLASS_BODY:
+            return ClassBody.fromJSON(json);
+        case NodeCategory.BINARY_OP:
+            return BinaryOp.fromJSON(json);
+        case NodeCategory.UNARY_OP:
+            return UnaryOp.fromJSON(json);
+        case NodeCategory.CALL:
+            return Call.fromJSON(json);
+        case NodeCategory.MEMBER:
+            return Member.fromJSON(json);
+        case NodeCategory.ARRAY_LITERAL:
+            return ArrayLiteral.fromJSON(json);
+        case NodeCategory.OBJECT_LITERAL:
+            return ObjectLiteral.fromJSON(json);
+        case NodeCategory.IDENTIFIER:
+            return Identifier.fromJSON(json);
+        case NodeCategory.LITERAL:
+            return Literal.fromJSON(json);
+        case NodeCategory.ASSIGNMENT:
+            return Assignment.fromJSON(json);
+        case NodeCategory.CONDITIONAL:
+            return Conditional.fromJSON(json);
+        case NodeCategory.PROPERTY:
+            return Property.fromJSON(json);
+        case NodeCategory.ARRAY_PATTERN:
+            return ArrayPattern.fromJSON(json);
+        case NodeCategory.OBJECT_PATTERN:
+            return ObjectPattern.fromJSON(json);
+        case NodeCategory.REST_ELEMENT:
+            return RestElement.fromJSON(json);
+        case NodeCategory.ASSIGNMENT_PATTERN:
+            return AssignmentPattern.fromJSON(json);
+        case NodeCategory.TAGGED_TEMPLATE:
+            return TaggedTemplateExpression.fromJSON(json);
+        case NodeCategory.TEMPLATE_LITERAL:
+            return TemplateLiteral.fromJSON(json);
+        case NodeCategory.TEMPLATE_ELEMENT:
+            return TemplateElement.fromJSON(json);
+        case NodeCategory.SPREAD_ELEMENT:
+            return SpreadElement.fromJSON(json);
+        case NodeCategory.SUPER:
+            return Super.fromJSON(json);
+        case NodeCategory.THIS:
+            return ThisExpression.fromJSON(json);
+        default:
+            throw new Error(`Unknown node kind: ${json.kind}`);
         }
     }
 }
@@ -261,7 +260,7 @@ class FunctionDecl extends IRNode {
             json.name,
             json.parameters.map(p => IRNode.fromJSON(p)),
             IRNode.fromJSON(json.body),
-            json.returnType ? require('./types').Type.fromJSON(json.returnType) : null,
+            json.returnType ? require("./types").Type.fromJSON(json.returnType) : null,
             { ...json, async: json.async } // Deserialize async property
         );
     }
@@ -273,7 +272,7 @@ class VarDecl extends IRNode {
         this.name = name;
         this.init = init; // Expression node or null
         this.type = type; // Type or null
-        this.varKind = options.kind || 'let'; // 'let', 'const', 'var'
+        this.varKind = options.kind || "let"; // 'let', 'const', 'var'
     }
 
     toJSON() {
@@ -290,7 +289,7 @@ class VarDecl extends IRNode {
         return new VarDecl(
             json.name,
             json.init ? IRNode.fromJSON(json.init) : null,
-            json.type ? require('./types').Type.fromJSON(json.type) : null,
+            json.type ? require("./types").Type.fromJSON(json.type) : null,
             { ...json, kind: json.varKind }
         );
     }
@@ -300,7 +299,7 @@ class VariableDeclaration extends IRNode {
     constructor(declarations, options = {}) {
         super(NodeCategory.VARIABLE_DECLARATION, options);
         this.declarations = declarations; // Array of VarDecl nodes
-        this.declarationKind = options.kind || 'let'; // 'let', 'const', 'var' - renamed from kind to avoid collision
+        this.declarationKind = options.kind || "let"; // 'let', 'const', 'var' - renamed from kind to avoid collision
     }
 
     toJSON() {
@@ -339,7 +338,7 @@ class Parameter extends IRNode {
     static fromJSON(json) {
         return new Parameter(
             json.name,
-            json.type ? require('./types').Type.fromJSON(json.type) : null,
+            json.type ? require("./types").Type.fromJSON(json.type) : null,
             json.defaultValue ? IRNode.fromJSON(json.defaultValue) : null,
             json
         );
@@ -357,7 +356,7 @@ class Block extends IRNode {
     toJSON() {
         return {
             ...super.toJSON(),
-            statements: this.statements.map(stmt => (stmt && typeof stmt.toJSON === 'function' ? stmt.toJSON() : stmt))
+            statements: this.statements.map(stmt => (stmt && typeof stmt.toJSON === "function" ? stmt.toJSON() : stmt))
         };
     }
 
@@ -379,7 +378,7 @@ class Return extends IRNode {
         return {
             ...super.toJSON(),
             value: this.value
-                ? (typeof this.value.toJSON === 'function' ? this.value.toJSON() : this.value)
+                ? (typeof this.value.toJSON === "function" ? this.value.toJSON() : this.value)
                 : null
         };
     }
@@ -799,14 +798,14 @@ class Literal extends IRNode {
     static fromJSON(json) {
         return new Literal(
             json.value,
-            json.type ? require('./types').Type.fromJSON(json.type) : null,
+            json.type ? require("./types").Type.fromJSON(json.type) : null,
             json
         );
     }
 }
 
 class Assignment extends IRNode {
-    constructor(left, right, operator = '=', options = {}) {
+    constructor(left, right, operator = "=", options = {}) {
         super(NodeCategory.ASSIGNMENT, options);
         this.left = left; // Identifier or Member
         this.right = right; // Expression
@@ -1212,6 +1211,32 @@ class ForInStatement extends IRNode {
     }
 }
 
+
+class TaggedTemplateExpression extends IRNode {
+    constructor(tag, quasi, options = {}) {
+        super(NodeCategory.TAGGED_TEMPLATE, options);
+        this.tag = tag;
+        this.quasi = quasi;
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            tag: toJsonValue(this.tag),
+            quasi: toJsonValue(this.quasi)
+        };
+    }
+
+    static fromJSON(json) {
+        return new TaggedTemplateExpression(
+            IRNode.fromJSON(json.tag),
+            IRNode.fromJSON(json.quasi),
+            json
+        );
+    }
+}
+
+
 class TemplateLiteral extends IRNode {
     constructor(quasis, expressions, options = {}) {
         super(NodeCategory.TEMPLATE_LITERAL, options);
@@ -1334,8 +1359,8 @@ module.exports = {
     AssignmentPattern,
     AsyncFunctionDeclaration,
     AwaitExpression,
-        GeneratorDeclaration,
-        YieldExpression,
+    GeneratorDeclaration,
+    YieldExpression,
     ClassDeclaration,
     ClassExpression,
     MethodDefinition,

@@ -25,45 +25,45 @@ class EnhancedOperators {
     parseOptionalChaining(parser) {
         let object = parser.parsePrimary();
         
-        while (parser.match('OPTIONAL_CHAINING')) {
-            const operator = parser.previous();
+        while (parser.match("OPTIONAL_CHAINING")) {
+            // removed unused variable assignment
             
-            if (parser.check('IDENTIFIER')) {
+            if (parser.check("IDENTIFIER")) {
                 // Property access: obj?.prop
                 const property = parser.advance();
                 object = {
-                    type: 'OptionalMemberExpression',
+                    type: "OptionalMemberExpression",
                     object: object,
                     property: {
-                        type: 'Identifier',
+                        type: "Identifier",
                         name: property.value
                     },
                     computed: false,
                     optional: true
                 };
-            } else if (parser.match('LEFT_PAREN')) {
+            } else if (parser.match("LEFT_PAREN")) {
                 // Optional call: obj?.()
                 const args = [];
-                if (!parser.check('RIGHT_PAREN')) {
+                if (!parser.check("RIGHT_PAREN")) {
                     do {
                         args.push(parser.parseExpression());
-                    } while (parser.match('COMMA'));
+                    } while (parser.match("COMMA"));
                 }
-                parser.consume('RIGHT_PAREN', 'Expected ) after arguments');
+                parser.consume("RIGHT_PAREN", "Expected ) after arguments");
                 
                 object = {
-                    type: 'OptionalCallExpression',
+                    type: "OptionalCallExpression",
                     callee: object,
                     arguments: args,
                     optional: true
                 };
-            } else if (parser.match('LEFT_BRACKET')) {
+            } else if (parser.match("LEFT_BRACKET")) {
                 // Computed property: obj?.[expr]
                 const property = parser.parseExpression();
-                parser.consume('RIGHT_BRACKET', 'Expected ] after computed property');
+                parser.consume("RIGHT_BRACKET", "Expected ] after computed property");
                 
                 object = {
-                    type: 'OptionalMemberExpression',
+                    type: "OptionalMemberExpression",
                     object: object,
                     property: property,
                     computed: true,
@@ -82,12 +82,12 @@ class EnhancedOperators {
      * @returns {object} The AST node for the logical expression.
      */
     parseNullishCoalescing(parser, left) {
-        const operator = parser.previous();
+        // removed unused variable assignment
         const right = parser.parseLogicalOr();
         
         return {
-            type: 'LogicalExpression',
-            operator: '??',
+            type: "LogicalExpression",
+            operator: "??",
             left: left,
             right: right
         };
@@ -100,7 +100,7 @@ class EnhancedOperators {
      * @returns {string} The transpiled Lua code.
      */
     transpileOptionalChaining(node, transpiler) {
-        if (node.type === 'OptionalMemberExpression') {
+        if (node.type === "OptionalMemberExpression") {
             const object = transpiler.transpile(node.object);
             const property = node.computed 
                 ? transpiler.transpile(node.property)
@@ -114,9 +114,9 @@ class EnhancedOperators {
                 end
                 return nil
             end)()`;
-        } else if (node.type === 'OptionalCallExpression') {
+        } else if (node.type === "OptionalCallExpression") {
             const callee = transpiler.transpile(node.callee);
-            const args = node.arguments.map(arg => transpiler.transpile(arg)).join(', ');
+            const args = node.arguments.map(arg => transpiler.transpile(arg)).join(", ");
             
             return `(function()
                 local __fn = ${callee}
@@ -160,7 +160,7 @@ class EnhancedOperators {
         const chain = [];
         let current = node;
         
-        while (current && current.type === 'OptionalMemberExpression') {
+        while (current && current.type === "OptionalMemberExpression") {
             chain.unshift({
                 property: current.property,
                 computed: current.computed,
@@ -212,15 +212,15 @@ class EnhancedOperators {
         const errors = [];
         
         // Cannot use optional chaining on the left side of assignment
-        if (node.parent && node.parent.type === 'AssignmentExpression' && 
+        if (node.parent && node.parent.type === "AssignmentExpression" && 
             node.parent.left === node) {
-            errors.push('Optional chaining cannot appear in left-hand side');
+            errors.push("Optional chaining cannot appear in left-hand side");
         }
         
         // Cannot delete optional chaining expression
-        if (node.parent && node.parent.type === 'UnaryExpression' && 
-            node.parent.operator === 'delete') {
-            errors.push('Cannot delete optional chaining expression');
+        if (node.parent && node.parent.type === "UnaryExpression" && 
+            node.parent.operator === "delete") {
+            errors.push("Cannot delete optional chaining expression");
         }
         
         return errors;
@@ -233,29 +233,29 @@ class EnhancedOperators {
     testOptionalChaining() {
         const tests = [
             {
-                name: 'Simple property access',
-                input: 'obj?.prop',
-                expected: 'Safe navigation to property'
+                name: "Simple property access",
+                input: "obj?.prop",
+                expected: "Safe navigation to property"
             },
             {
-                name: 'Chained property access',
-                input: 'obj?.prop?.nested?.value',
-                expected: 'Safe navigation through chain'
+                name: "Chained property access",
+                input: "obj?.prop?.nested?.value",
+                expected: "Safe navigation through chain"
             },
             {
-                name: 'Optional call',
-                input: 'obj?.method?.()',
-                expected: 'Safe method invocation'
+                name: "Optional call",
+                input: "obj?.method?.()",
+                expected: "Safe method invocation"
             },
             {
-                name: 'Computed property',
-                input: 'obj?.[key]',
-                expected: 'Safe computed property access'
+                name: "Computed property",
+                input: "obj?.[key]",
+                expected: "Safe computed property access"
             },
             {
-                name: 'Mixed chain',
-                input: 'obj?.prop[0]?.method?.(arg)',
-                expected: 'Complex safe navigation'
+                name: "Mixed chain",
+                input: "obj?.prop[0]?.method?.(arg)",
+                expected: "Complex safe navigation"
             }
         ];
         
@@ -269,24 +269,24 @@ class EnhancedOperators {
     testNullishCoalescing() {
         const tests = [
             {
-                name: 'Simple coalescing',
-                input: 'value ?? default',
-                expected: 'Returns value if not null/undefined, else default'
+                name: "Simple coalescing",
+                input: "value ?? default",
+                expected: "Returns value if not null/undefined, else default"
             },
             {
-                name: 'Chained coalescing',
-                input: 'a ?? b ?? c',
-                expected: 'First non-nullish value'
+                name: "Chained coalescing",
+                input: "a ?? b ?? c",
+                expected: "First non-nullish value"
             },
             {
-                name: 'With optional chaining',
-                input: 'obj?.prop ?? default',
-                expected: 'Combined safe navigation and default'
+                name: "With optional chaining",
+                input: "obj?.prop ?? default",
+                expected: "Combined safe navigation and default"
             },
             {
-                name: 'Nullish assignment',
-                input: 'x ??= default',
-                expected: 'Assign only if nullish'
+                name: "Nullish assignment",
+                input: "x ??= default",
+                expected: "Assign only if nullish"
             }
         ];
         
@@ -302,23 +302,23 @@ class EnhancedOperators {
             optionalChaining: {
                 supported: this.supportedOperators.optionalChaining,
                 features: [
-                    'Property access (obj?.prop)',
-                    'Method calls (obj?.method())',
-                    'Computed properties (obj?.[key])',
-                    'Chained access (obj?.a?.b?.c)',
-                    'Mixed chains (obj?.a[0]?.b())'
+                    "Property access (obj?.prop)",
+                    "Method calls (obj?.method())",
+                    "Computed properties (obj?.[key])",
+                    "Chained access (obj?.a?.b?.c)",
+                    "Mixed chains (obj?.a[0]?.b())"
                 ]
             },
             nullishCoalescing: {
                 supported: this.supportedOperators.nullishCoalescing,
                 features: [
-                    'Basic coalescing (a ?? b)',
-                    'Chained coalescing (a ?? b ?? c)',
-                    'Nullish assignment (a ??= b)',
-                    'Combined with optional chaining (obj?.prop ?? default)'
+                    "Basic coalescing (a ?? b)",
+                    "Chained coalescing (a ?? b ?? c)",
+                    "Nullish assignment (a ??= b)",
+                    "Combined with optional chaining (obj?.prop ?? default)"
                 ]
             },
-            completion: '100%'
+            completion: "100%"
         };
     }
 }

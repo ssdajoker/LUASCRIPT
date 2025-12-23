@@ -31,36 +31,36 @@ function makeIterator(generator) {
  * @param {Function} generatorFn - The generator function body
  * @returns {Object} - Generator object with next(), return(), throw()
  */
-function createGenerator(generatorFn, ...args) {
-    let state = 'suspended';
+function createGenerator(generatorFn, ..._args) {
+    let state = "suspended";
     let value;
     
     const generator = {
         next(arg) {
-            if (state === 'completed') {
+            if (state === "completed") {
                 return { value: undefined, done: true };
             }
             
             try {
                 value = generatorFn(arg);
                 if (value === undefined) {
-                    state = 'completed';
+                    state = "completed";
                     return { value: undefined, done: true };
                 }
                 return { value, done: false };
             } catch (e) {
-                state = 'completed';
+                state = "completed";
                 throw e;
             }
         },
         
         return(value) {
-            state = 'completed';
+            state = "completed";
             return { value, done: true };
         },
         
         throw(err) {
-            state = 'completed';
+            state = "completed";
             throw err;
         }
     };

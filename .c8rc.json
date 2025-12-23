@@ -1,0 +1,31 @@
+{
+  "all": true,
+  "include": [
+    "src/**/*.js"
+  ],
+  "exclude": [
+    "test/**",
+    "tests/**",
+    "scripts/**",
+    "node_modules/**",
+    "artifacts/**",
+    "**/*.test.js",
+    "**/*.spec.js"
+  ],
+  "reporter": [
+    "text",
+    "text-summary",
+    "lcov",
+    "json",
+    "json-summary"
+  ],
+  "lines": 23.6,
+  "functions": 19,
+  "branches": 37,
+  "statements": 23.6,
+  "check-coverage": true,
+  "per-file": false,
+  "skip-full": false,
+  "clean": true,
+  "temp-directory": ".nyc_output"
+}

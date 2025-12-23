@@ -10,7 +10,6 @@
  * - Spread/rest → table.unpack
  */
 
-const nodes = require('./nodes');
 
 class EnhancedEmitter {
     constructor(options = {}) {
@@ -35,10 +34,10 @@ class EnhancedEmitter {
     }
 
     indent() {
-        return '  '.repeat(this.indentLevel);
+        return "  ".repeat(this.indentLevel);
     }
 
-    createTempVar(prefix = '__emit') {
+    createTempVar(prefix = "__emit") {
         return `${prefix}_${++this.localVarCounter}`;
     }
 
@@ -51,60 +50,60 @@ class EnhancedEmitter {
     }
 
     inAsyncGenerator() {
-        return this.contextStack.includes('async-generator');
+        return this.contextStack.includes("async-generator");
     }
 
     inAsyncFunction() {
-        return this.contextStack.includes('async-function');
+        return this.contextStack.includes("async-function");
     }
 
     emitNode(node) {
-        if (!node) return '';
+        if (!node) return "";
 
         switch (node.kind) {
-            case 'Program':
-                return this.emitProgram(node);
-            case 'BlockStatement':
-                return this.emitBlockStatement(node);
-            case 'FunctionDeclaration':
-                return this.emitFunctionDeclaration(node);
-            case 'AsyncFunctionDeclaration':
-                return this.emitAsyncFunctionDeclaration(node);
-                        case 'GeneratorDeclaration':
-                            return this.emitGeneratorDeclaration(node);
-            case 'ClassDeclaration':
-                return this.emitClassDeclaration(node);
-            case 'VariableDeclaration':
-                return this.emitVariableDeclaration(node);
-            case 'ExpressionStatement':
-                return this.emitExpressionStatement(node);
-            case 'ReturnStatement':
-                return this.emitReturnStatement(node);
-            case 'IfStatement':
-                return this.emitIfStatement(node);
-            case 'WhileStatement':
-                return this.emitWhileStatement(node);
-            case 'ForStatement':
-                return this.emitForStatement(node);
-            case 'ForOfStatement':
-                return this.emitForOfStatement(node);
-            case 'ForInStatement':
-                return this.emitForInStatement(node);
-            case 'DoWhileStatement':
-                return this.emitDoWhileStatement(node);
-            case 'BreakStatement':
-                return 'break';
-            case 'ContinueStatement':
-                return 'goto continue_loop';
-            case 'TryStatement':
-                return this.emitTryStatement(node);
-            case 'ThrowStatement':
-                return this.emitThrowStatement(node);
-            case 'SwitchStatement':
-                return this.emitSwitchStatement(node);
-            default:
-                // Try expression emission
-                return this.emitExpression(node);
+        case "Program":
+            return this.emitProgram(node);
+        case "BlockStatement":
+            return this.emitBlockStatement(node);
+        case "FunctionDeclaration":
+            return this.emitFunctionDeclaration(node);
+        case "AsyncFunctionDeclaration":
+            return this.emitAsyncFunctionDeclaration(node);
+        case "GeneratorDeclaration":
+            return this.emitGeneratorDeclaration(node);
+        case "ClassDeclaration":
+            return this.emitClassDeclaration(node);
+        case "VariableDeclaration":
+            return this.emitVariableDeclaration(node);
+        case "ExpressionStatement":
+            return this.emitExpressionStatement(node);
+        case "ReturnStatement":
+            return this.emitReturnStatement(node);
+        case "IfStatement":
+            return this.emitIfStatement(node);
+        case "WhileStatement":
+            return this.emitWhileStatement(node);
+        case "ForStatement":
+            return this.emitForStatement(node);
+        case "ForOfStatement":
+            return this.emitForOfStatement(node);
+        case "ForInStatement":
+            return this.emitForInStatement(node);
+        case "DoWhileStatement":
+            return this.emitDoWhileStatement(node);
+        case "BreakStatement":
+            return "break";
+        case "ContinueStatement":
+            return "goto continue_loop";
+        case "TryStatement":
+            return this.emitTryStatement(node);
+        case "ThrowStatement":
+            return this.emitThrowStatement(node);
+        case "SwitchStatement":
+            return this.emitSwitchStatement(node);
+        default:
+            // Try expression emission
+            return this.emitExpression(node);
         }
     }
 
@@ -121,19 +120,26 @@ class EnhancedEmitter {
             helpers.push(this.emitAsyncGeneratorHelper());
         }
 
-        return [...helpers, ...body].filter(Boolean).join('\n');
+        return [...helpers, ...body].filter(Boolean).join("\n");
     }
 
     emitBlockStatement(node) {
         // Handle both IR Block nodes (statements) and AST BlockStatement (body)
         const stmtArray = node.statements || node.body || [];
         const stmts = stmtArray.map(stmt => this.emitNode(stmt));
-        return stmts.join('\n');
+        return stmts.join("\n");
     }
 
     emitFunctionDeclaration(node) {
-        const name = node.id.name;
-        const params = (node.params || []).map(p => p.name).join(', ');
+        const name = node.name || (node.id && node.id.name) || "anonymous";
+        const params = (node.parameters || node.params || [])
+            .map(p => {
+                if (typeof p === "string") return p;
+                if (p.name) return p.name;
+                if (p.id && p.id.name) return p.id.name;
+                return "param";
+            })
+            .join(", ");
         this.indentLevel++;
         const body = this.emitBlockStatement(node.body);
         this.indentLevel--;
@@ -142,10 +148,17 @@ class EnhancedEmitter {
     }
 
     emitAsyncFunctionDeclaration(node) {
-        const name = node.id.name;
-        const params = (node.params || []).map(p => p.name).join(', ');
+        const name = node.name || (node.id && node.id.name) || "anonymous";
+        const params = (node.parameters || node.params || [])
+            .map(p => {
+                if (typeof p === "string") return p;
+                if (p.name) return p.name;
+                if (p.id && p.id.name) return p.id.name;
+                return "param";
+            })
+            .join(", ");
 
-        this.pushContext('async-function');
+        this.pushContext("async-function");
         this.indentLevel++;
         const body = this.emitBlockStatement(node.body);
         this.indentLevel--;
@@ -171,13 +184,13 @@ class EnhancedEmitter {
         for (const method of (node.body.body || [])) {
             const methodName = method.key.name;
             const isStatic = method.static;
-            const params = (method.value.params || []).map(p => p.name).join(', ');
+            const params = (method.value.params || []).map(p => p.name).join(", ");
 
             this.indentLevel++;
             const body = this.emitBlockStatement(method.value.body);
             this.indentLevel--;
 
-            if (methodName === 'constructor') {
+            if (methodName === "constructor") {
                 lines.push(`${this.indent()}function ${className}:new(${params})\n${body}\n${this.indent()}end`);
             } else if (isStatic) {
                 lines.push(`${this.indent()}function ${className}.${methodName}(${params})\n${body}\n${this.indent()}end`);
@@ -186,23 +199,39 @@ class EnhancedEmitter {
             }
         }
 
-        return lines.join('\n');
+        return lines.join("\n");
     }
 
     emitVariableDeclaration(node) {
-        const decls = (node.body || [])
-            .map(varDecl => {
-                if (typeof varDecl.init === 'string') {
-                    return `${varDecl.id} = ${varDecl.init}`;
-                } else if (varDecl.init) {
-                    return `${varDecl.id} = ${this.emitExpression(varDecl.init)}`;
-                } else {
-                    return `${varDecl.id} = nil`;
+        const statements = [];
+        
+        for (const varDecl of (node.declarations || [])) {
+            // Check if this is a pattern destructuring
+            if (varDecl.name && typeof varDecl.name === "object" && (varDecl.name.kind === "ArrayPattern" || varDecl.name.kind === "ObjectPattern")) {
+                // Pattern destructuring
+                const rhsCode = varDecl.init 
+                    ? (typeof varDecl.init === "string" ? varDecl.init : this.emitExpression(varDecl.init))
+                    : "{}";
+                
+                if (varDecl.name.kind === "ArrayPattern") {
+                    statements.push(this.emitArrayPattern(varDecl.name, rhsCode));
+                } else if (varDecl.name.kind === "ObjectPattern") {
+                    statements.push(this.emitObjectPattern(varDecl.name, rhsCode));
                 }
-            })
-            .join(', ');
-
-        return `${this.indent()}local ${decls}`;
+            } else {
+                // Simple identifier declaration
+                const varName = varDecl.name || "unknown";
+                if (typeof varDecl.init === "string") {
+                    statements.push(`${this.indent()}local ${varName} = ${varDecl.init}`);
+                } else if (varDecl.init) {
+                    statements.push(`${this.indent()}local ${varName} = ${this.emitExpression(varDecl.init)}`);
+                } else {
+                    statements.push(`${this.indent()}local ${varName} = nil`);
+                }
+            }
+        }
+        
+        return statements.join("\n");
     }
 
     emitExpressionStatement(node) {
@@ -210,12 +239,13 @@ class EnhancedEmitter {
     }
 
     emitReturnStatement(node) {
-        const value = node.argument ? this.emitExpression(node.argument) : '';
+        const value = (node.value || node.argument) ? this.emitExpression(node.value || node.argument) : "";
         return `${this.indent()}return ${value}`.trimEnd();
     }
 
     emitIfStatement(node) {
-        const test = this.emitExpression(node.test);
+        // IR uses 'condition', AST uses 'test'
+        const test = this.emitExpression(node.condition || node.test);
         this.indentLevel++;
         const consequent = this.emitBlockStatement(node.consequent);
         this.indentLevel--;
@@ -243,15 +273,15 @@ class EnhancedEmitter {
     }
 
     emitForStatement(node) {
-        const init = node.init ? this.emitNode(node.init).trim() : '';
-        const test = node.test ? this.emitExpression(node.test) : 'true';
-        const update = node.update ? this.emitExpression(node.update) : '';
+        const init = node.init ? this.emitNode(node.init).trim() : "";
+        const test = node.test ? this.emitExpression(node.test) : "true";
+        const update = node.update ? this.emitExpression(node.update) : "";
 
         this.indentLevel++;
         const body = this.emitBlockStatement(node.body);
         this.indentLevel--;
 
-        let code = init ? `${this.indent()}${init}\n` : '';
+        let code = init ? `${this.indent()}${init}\n` : "";
         code += `${this.indent()}while ${test} do\n${body}`;
         if (update) {
             code += `\n${this.indent()}  ${update}`;
@@ -305,7 +335,7 @@ class EnhancedEmitter {
             lines.push(`${base}end`);
         }
 
-        return lines.join('\n');
+        return lines.join("\n");
     }
 
     emitForInStatement(node) {
@@ -329,7 +359,7 @@ class EnhancedEmitter {
     }
 
     emitTryStatement(node) {
-        const temp = this.createTempVar('__try');
+        const temp = this.createTempVar("__try");
         const lines = [];
 
         this.indentLevel++;
@@ -339,14 +369,14 @@ class EnhancedEmitter {
         lines.push(`${this.indent()}local ${temp}_ok, ${temp}_err = pcall(function()\n${tryBody}\n${this.indent()}end)`);
 
         if (node.handler) {
-            const catchParam = node.handler.param ? node.handler.param.name : '_';
+            const catchParam = node.handler.param ? node.handler.param.name : "_";
             this.indentLevel++;
             const catchBody = this.emitBlockStatement(node.handler.body);
             this.indentLevel--;
 
             lines.push(`${this.indent()}if not ${temp}_ok then`);
             lines.push(`${this.indent()}  local ${catchParam} = ${temp}_err`);
-            lines.push(`${this.indent()}  ${catchBody.replace(this.indent(), this.indent() + '  ')}`);
+            lines.push(`${this.indent()}  ${catchBody.replace(this.indent(), this.indent() + "  ")}`);
             lines.push(`${this.indent()}end`);
         }
 
@@ -357,7 +387,7 @@ class EnhancedEmitter {
             lines.push(`${this.indent()}${finallyBody}`);
         }
 
-        return lines.join('\n');
+        return lines.join("\n");
     }
 
     emitThrowStatement(node) {
@@ -384,60 +414,60 @@ class EnhancedEmitter {
         }
 
         lines.push(`${this.indent()}end`);
-        return lines.join('\n');
+        return lines.join("\n");
     }
 
     // ========== Expression Emission ==========
     emitExpression(node) {
-        if (!node) return '';
+        if (!node) return "";
 
         switch (node.kind) {
-            case 'Identifier':
-                return node.name;
-            case 'Literal':
-                return this.emitLiteral(node);
-            case 'BinaryExpression':
-                return this.emitBinaryExpression(node);
-            case 'UnaryExpression':
-                return this.emitUnaryExpression(node);
-            case 'CallExpression':
-                return this.emitCallExpression(node);
-            case 'MemberExpression':
-                return this.emitMemberExpression(node);
-            case 'ArrayExpression':
-                return this.emitArrayExpression(node);
-            case 'ObjectExpression':
-                return this.emitObjectExpression(node);
-            case 'FunctionExpression':
-                return this.emitFunctionExpression(node);
-            case 'ConditionalExpression':
-                return this.emitConditionalExpression(node);
-            case 'AssignmentExpression':
-                return this.emitAssignmentExpression(node);
-            case 'TemplateLiteral':
-                return this.emitTemplateLiteral(node);
-            case 'AwaitExpression':
-                return this.emitAwaitExpression(node);
-                        case 'YieldExpression':
-                            return this.emitYieldExpression(node);
-            case 'SpreadElement':
-                return `...${this.emitExpression(node.argument)}`;
-            case 'ThisExpression':
-                return 'self';
-            default:
-                return '';
+        case "Identifier":
+            return node.name;
+        case "Literal":
+            return this.emitLiteral(node);
+        case "BinaryExpression":
+            return this.emitBinaryExpression(node);
+        case "UnaryExpression":
+            return this.emitUnaryExpression(node);
+        case "CallExpression":
+            return this.emitCallExpression(node);
+        case "MemberExpression":
+            return this.emitMemberExpression(node);
+        case "ArrayExpression":
+            return this.emitArrayExpression(node);
+        case "ObjectExpression":
+            return this.emitObjectExpression(node);
+        case "FunctionExpression":
+            return this.emitFunctionExpression(node);
+        case "ConditionalExpression":
+            return this.emitConditionalExpression(node);
+        case "AssignmentExpression":
+            return this.emitAssignmentExpression(node);
+        case "TemplateLiteral":
+            return this.emitTemplateLiteral(node);
+        case "AwaitExpression":
+            return this.emitAwaitExpression(node);
+        case "YieldExpression":
+            return this.emitYieldExpression(node);
+        case "SpreadElement":
+            return `...${this.emitExpression(node.argument)}`;
+        case "ThisExpression":
+            return "self";
+        default:
+            return "";
         }
     }
 
     emitLiteral(node) {
-        if (typeof node.value === 'string') {
+        if (typeof node.value === "string") {
             return JSON.stringify(node.value);
         }
-        if (typeof node.value === 'boolean') {
-            return node.value ? 'true' : 'false';
+        if (typeof node.value === "boolean") {
+            return node.value ? "true" : "false";
         }
         if (node.value === null) {
-            return 'nil';
+            return "nil";
         }
         return String(node.value);
     }
@@ -457,7 +487,9 @@ class EnhancedEmitter {
 
     emitCallExpression(node) {
         const callee = this.emitExpression(node.callee);
-        const args = (node.arguments || []).map(arg => this.emitExpression(arg)).join(', ');
+        // IR uses 'args', AST uses 'arguments'
+        const argsList = node.args || node.arguments || [];
+        const args = argsList.map(arg => this.emitExpression(arg)).join(", ");
         return `${callee}(${args})`;
     }
 
@@ -469,8 +501,8 @@ class EnhancedEmitter {
 
     emitArrayExpression(node) {
         const elements = (node.elements || [])
-            .map(el => el ? this.emitExpression(el) : 'nil')
-            .join(', ');
+            .map(el => el ? this.emitExpression(el) : "nil")
+            .join(", ");
         return `{${elements}}`;
     }
 
@@ -481,12 +513,12 @@ class EnhancedEmitter {
                 const value = this.emitExpression(prop.value);
                 return `${key} = ${value}`;
             })
-            .join(', ');
+            .join(", ");
         return `{${props}}`;
     }
 
     emitFunctionExpression(node) {
-        const params = (node.params || []).map(p => p.name).join(', ');
+        const params = (node.params || []).map(p => p.name).join(", ");
         this.indentLevel++;
         const body = this.emitBlockStatement(node.body);
         this.indentLevel--;
@@ -517,7 +549,7 @@ class EnhancedEmitter {
                 parts.push(`tostring(${this.emitExpression(node.expressions[idx])})`);
             }
         });
-        return parts.join(' .. ');
+        return parts.join(" .. ");
     }
 
     emitAwaitExpression(node) {
@@ -531,10 +563,10 @@ class EnhancedEmitter {
 
     emitGeneratorDeclaration(node) {
         const name = node.id.name;
-        const params = (node.params || []).map(p => p.name).join(', ');
+        const params = (node.params || []).map(p => p.name).join(", ");
         const isAsync = Boolean(node.async);
 
-        this.pushContext(isAsync ? 'async-generator' : 'generator');
+        this.pushContext(isAsync ? "async-generator" : "generator");
         this.indentLevel += 2;
         const body = this.emitBlockStatement(node.body);
         this.indentLevel -= 2;
@@ -577,7 +609,7 @@ class EnhancedEmitter {
         }
 
         lines.push(`${indent}end`);
-        return lines.join('\n');
+        return lines.join("\n");
     }
 
     emitYieldExpression(node) {
@@ -586,13 +618,13 @@ class EnhancedEmitter {
             const arg = this.emitExpression(node.argument);
             const indent = this.indent();
             const innerIndent = `${indent}  `;
-            const yieldValue = inAsyncGen ? '__await_value(result.value)' : 'result.value';
+            const yieldValue = inAsyncGen ? "__await_value(result.value)" : "result.value";
             if (inAsyncGen) {
                 this.needsAwaitHelper = true;
             }
 
             const lines = [
-                `(function()`,
+                "(function()",
                 `${innerIndent}local gen = ${arg}`,
                 `${innerIndent}while true do`,
                 `${innerIndent}  local result = gen:next()`,
@@ -603,10 +635,10 @@ class EnhancedEmitter {
                 `${innerIndent}end`,
                 `${indent})()`,
             ];
-            return lines.join('\n');
+            return lines.join("\n");
         }
 
-        const arg = node.argument ? this.emitExpression(node.argument) : 'nil';
+        const arg = node.argument ? this.emitExpression(node.argument) : "nil";
         const awaitedArg = inAsyncGen ? `__await_value(${arg})` : arg;
         if (inAsyncGen) {
             this.needsAwaitHelper = true;
@@ -616,57 +648,57 @@ class EnhancedEmitter {
 
     emitAwaitHelper() {
         return [
-            'local function __await_value(v)',
-            '  if type(v) == "table" and v.await then',
-            '    return v:await()',
-            '  end',
-            '  if type(v) == "function" then',
-            '    return v()',
-            '  end',
-            '  return v',
-            'end',
-        ].join('\n');
+            "local function __await_value(v)",
+            "  if type(v) == \"table\" and v.await then",
+            "    return v:await()",
+            "  end",
+            "  if type(v) == \"function\" then",
+            "    return v()",
+            "  end",
+            "  return v",
+            "end",
+        ].join("\n");
     }
 
     emitAsyncGeneratorHelper() {
         return [
-            'local function __async_generator(co)',
-            '  return {',
-            '    next = function(self, value)',
-            '      if coroutine.status(co) == "dead" then',
-            '        return { value = nil, done = true }',
-            '      end',
-            '      local ok, res = coroutine.resume(co, value)',
-            '      if not ok then error(res) end',
-            '      res = __await_value(res)',
-            '      local done = coroutine.status(co) == "dead"',
-            '      return { value = res, done = done }',
-            '    end,',
-            '    ["return"] = function(self, value)',
-            '      return { value = value, done = true }',
-            '    end,',
-            '    ["throw"] = function(self, err)',
-            '      error(err)',
-            '    end',
-            '  }',
-            'end',
-        ].join('\n');
+            "local function __async_generator(co)",
+            "  return {",
+            "    next = function(self, value)",
+            "      if coroutine.status(co) == \"dead\" then",
+            "        return { value = nil, done = true }",
+            "      end",
+            "      local ok, res = coroutine.resume(co, value)",
+            "      if not ok then error(res) end",
+            "      res = __await_value(res)",
+            "      local done = coroutine.status(co) == \"dead\"",
+            "      return { value = res, done = done }",
+            "    end,",
+            "    [\"return\"] = function(self, value)",
+            "      return { value = value, done = true }",
+            "    end,",
+            "    [\"throw\"] = function(self, err)",
+            "      error(err)",
+            "    end",
+            "  }",
+            "end",
+        ].join("\n");
     }
 
     getLuaOperator(op, left, right) {
         // Check for string concatenation
-        if (op === '+' && (this.isStringLike(left) || this.isStringLike(right))) {
-            return '..';
+        if (op === "+" && (this.isStringLike(left) || this.isStringLike(right))) {
+            return "..";
         }
         
         const map = {
-            '===': '==',
-            '!==': '~=',
-            '!=': '~=',
-            '&&': 'and',
-            '||': 'or',
-            '**': '^',
-            '??': 'or'
+            "===": "==",
+            "!==": "~=",
+            "!=": "~=",
+            "&&": "and",
+            "||": "or",
+            "**": "^",
+            "??": "or"
         };
         return map[op] || op;
     }
@@ -675,43 +707,163 @@ class EnhancedEmitter {
         if (depth > 10 || !node) return false;
         
         switch (node.kind) {
-            case 'Literal':
-                return typeof node.value === 'string';
-            case 'TemplateLiteral':
+        case "Literal":
+            return typeof node.value === "string";
+        case "TemplateLiteral":
+            return true;
+        case "BinaryExpression":
+            if (node.operator === "+") {
+                return this.isStringLike(node.left, depth + 1) || this.isStringLike(node.right, depth + 1);
+            }
+            return false;
+        case "CallExpression":
+            // Check for String(), .toString(), .concat()
+            if (node.callee && node.callee.kind === "Identifier" && node.callee.name === "String") {
                 return true;
-            case 'BinaryExpression':
-                if (node.operator === '+') {
-                    return this.isStringLike(node.left, depth + 1) || this.isStringLike(node.right, depth + 1);
-                }
-                return false;
-            case 'CallExpression':
-                // Check for String(), .toString(), .concat()
-                if (node.callee && node.callee.kind === 'Identifier' && node.callee.name === 'String') {
+            }
+            if (node.callee && node.callee.kind === "MemberExpression") {
+                const prop = node.callee.property;
+                if (prop && prop.kind === "Identifier" && (prop.name === "toString" || prop.name === "concat")) {
                     return true;
                 }
-                if (node.callee && node.callee.kind === 'MemberExpression') {
-                    const prop = node.callee.property;
-                    if (prop && prop.kind === 'Identifier' && (prop.name === 'toString' || prop.name === 'concat')) {
-                        return true;
-                    }
-                }
-                return false;
-            case 'MemberExpression':
-                // String properties might produce strings
-                return this.isStringLike(node.object, depth + 1);
-            default:
-                return false;
+            }
+            return false;
+        case "MemberExpression":
+            // String properties might produce strings
+            return this.isStringLike(node.object, depth + 1);
+        default:
+            return false;
         }
     }
 
     getLuaUnaryOperator(op) {
         const map = {
-            '!': 'not ',
-            '~': '~',
-            '-': '-',
-            '+': ''
+            "!": "not ",
+            "~": "~",
+            "-": "-",
+            "+": ""
         };
         return map[op] || op;
+    }
+
+    // ========== PATTERN EMISSION ==========
+
+    /**
+     * Emit array destructuring: [a, b, ...rest] = value
+     * Generates: local _tmp = value; local a = _tmp[1]; local b = _tmp[2]; ...
+     */
+    emitArrayPattern(pattern, rhsCode) {
+        const statements = [];
+        const tempVar = this.createTempVar("_destructure");
+        
+        // Create temp variable to hold the RHS
+        statements.push(`${this.indent()}local ${tempVar} = ${rhsCode}`);
+        
+        // Extract each element
+        (pattern.elements || []).forEach((element, index) => {
+            if (!element) return; // Skip holes
+            
+            const idx = index + 1; // Lua uses 1-based indexing
+            
+            if (element.kind === "RestElement") {
+                // Rest element: collect remaining elements
+                const restVar = element.argument.name || this.createTempVar("_rest");
+                statements.push(`${this.indent()}local ${restVar} = {}`);
+                statements.push(`${this.indent()}for i = ${idx}, #${tempVar} do`);
+                this.indentLevel++;
+                statements.push(`${this.indent()}table.insert(${restVar}, ${tempVar}[i])`);
+                this.indentLevel--;
+                statements.push(`${this.indent()}end`);
+            } else if (element.kind === "Identifier") {
+                // Simple identifier: extract directly
+                const varName = element.name;
+                statements.push(`${this.indent()}local ${varName} = ${tempVar}[${idx}]`);
+            } else if (element.kind === "AssignmentPattern") {
+                // Default value: use element.left.name as variable
+                const varName = element.left.name;
+                const defaultVal = this.emitExpression(element.right);
+                statements.push(`${this.indent()}local ${varName} = ${tempVar}[${idx}] or ${defaultVal}`);
+            } else if (element.kind === "ArrayPattern") {
+                // Nested array pattern: recursively emit
+                const nestedTemp = this.createTempVar("_nested");
+                statements.push(`${this.indent()}local ${nestedTemp} = ${tempVar}[${idx}] or {}`);
+                statements.push(this.emitArrayPattern(element, nestedTemp));
+            } else if (element.kind === "ObjectPattern") {
+                // Nested object pattern: recursively emit
+                const nestedTemp = this.createTempVar("_nested");
+                statements.push(`${this.indent()}local ${nestedTemp} = ${tempVar}[${idx}] or {}`);
+                statements.push(this.emitObjectPattern(element, nestedTemp));
+            }
+        });
+        
+        return statements.join("\n");
+    }
+
+    /**
+     * Emit object destructuring: {x, y, z: prop} = value
+     * Generates: local _tmp = value; local x = _tmp.x or _tmp['x']; local y = _tmp.y; ...
+     */
+    emitObjectPattern(pattern, rhsCode) {
+        const statements = [];
+        const tempVar = this.createTempVar("_destructure");
+        
+        // Create temp variable to hold the RHS
+        statements.push(`${this.indent()}local ${tempVar} = ${rhsCode}`);
+        
+        // Extract each property
+        (pattern.properties || []).forEach(prop => {
+            if (prop.kind === "RestElement") {
+                // Rest element: collect remaining properties
+                const restVar = prop.argument.name || this.createTempVar("_rest");
+                statements.push(`${this.indent()}local ${restVar} = {}`);
+                statements.push(`${this.indent()}for k, v in pairs(${tempVar}) do`);
+                this.indentLevel++;
+                // Exclude properties that were already destructured
+                const excludedKeys = (pattern.properties || [])
+                    .filter(p => p.kind === "Property")
+                    .map(p => `'${p.key.name}'`)
+                    .join(", ");
+                if (excludedKeys) {
+                    statements.push(`${this.indent()}if k ~= ${excludedKeys} then`);
+                    this.indentLevel++;
+                    statements.push(`${this.indent()}${restVar}[k] = v`);
+                    this.indentLevel--;
+                    statements.push(`${this.indent()}end`);
+                } else {
+                    statements.push(`${this.indent()}${restVar}[k] = v`);
+                }
+                this.indentLevel--;
+                statements.push(`${this.indent()}end`);
+            } else if (prop.kind === "Property") {
+                const keyName = prop.key.name || prop.key.value;
+                
+                // Check if the property value is an AssignmentPattern (for defaults)
+                if (prop.value.kind === "AssignmentPattern") {
+                    const varName = prop.value.left.name;
+                    const defaultVal = this.emitExpression(prop.value.right);
+                    statements.push(`${this.indent()}local ${varName} = ${tempVar}.${keyName} or ${tempVar}['${keyName}'] or ${defaultVal}`);
+                } else {
+                    const varName = prop.value.name || keyName;
+                    
+                    if (prop.value.kind === "Identifier") {
+                        // Simple identifier
+                        statements.push(`${this.indent()}local ${varName} = ${tempVar}.${keyName} or ${tempVar}['${keyName}']`);
+                    } else if (prop.value.kind === "ArrayPattern") {
+                        // Nested array destructuring
+                        const nestedTemp = this.createTempVar("_nested");
+                        statements.push(`${this.indent()}local ${nestedTemp} = ${tempVar}.${keyName} or {}`);
+                        statements.push(this.emitArrayPattern(prop.value, nestedTemp));
+                    } else if (prop.value.kind === "ObjectPattern") {
+                        // Nested object destructuring
+                        const nestedTemp = this.createTempVar("_nested");
+                        statements.push(`${this.indent()}local ${nestedTemp} = ${tempVar}.${keyName} or {}`);
+                        statements.push(this.emitObjectPattern(prop.value, nestedTemp));
+                    }
+                }
+            }
+        });
+        
+        return statements.join("\n");
     }
 }
 

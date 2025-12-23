@@ -7,15 +7,15 @@
 
 let parser = null;
 try {
-    parser = require('acorn');
+    parser = require("acorn");
 } catch (_) {
-    parser = require('esprima');
+    parser = require("esprima");
     parser.__isEsprima = true;
 }
-const { EnhancedLowerer } = require('./lowerer-enhanced');
-const { EnhancedEmitter } = require('./emitter-enhanced');
-const { ASTValidator } = require('../validation/ast-validator');
-const { IRValidator } = require('../validation/ir-validator');
+const { EnhancedLowerer } = require("./lowerer-enhanced");
+const { EnhancedEmitter } = require("./emitter-enhanced");
+const { ASTValidator } = require("../validation/ast-validator");
+const { IRValidator } = require("../validation/ir-validator");
 
 class IRPipeline {
     constructor(options = {}) {
@@ -28,7 +28,7 @@ class IRPipeline {
         this.irValidator = new IRValidator();
     }
 
-    transpile(jsCode, filename = 'unknown.js') {
+    transpile(jsCode, filename = "unknown.js") {
         try {
             // Step 1: Parse JavaScript to AST
             const ast = this.parseToAST(jsCode, filename);
@@ -38,7 +38,7 @@ class IRPipeline {
                 const astValidation = this.astValidator.validate(ast);
                 if (!astValidation.valid) {
                     return {
-                        code: '',
+                        code: "",
                         errors: astValidation.errors,
                         warnings: astValidation.warnings,
                         success: false
@@ -54,7 +54,7 @@ class IRPipeline {
                 const irValidation = this.irValidator.validate(ir);
                 if (!irValidation.valid) {
                     return {
-                        code: '',
+                        code: "",
                         errors: irValidation.errors,
                         warnings: irValidation.warnings,
                         success: false
@@ -75,7 +75,7 @@ class IRPipeline {
             };
         } catch (error) {
             return {
-                code: '',
+                code: "",
                 errors: [error.message],
                 warnings: [],
                 success: false
@@ -94,7 +94,7 @@ class IRPipeline {
             }
             return parser.parse(jsCode, {
                 ecmaVersion: 2020,
-                sourceType: 'module',
+                sourceType: "module",
                 locations: true
             });
         } catch (error) {

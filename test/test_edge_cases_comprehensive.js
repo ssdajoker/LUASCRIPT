@@ -14,7 +14,6 @@
  * - Error handling
  */
 
-const assert = require('assert');
 const LuaScriptTranspiler = require('../src/transpiler');
 
 class EdgeCaseTestSuite {

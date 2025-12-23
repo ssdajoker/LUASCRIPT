@@ -12,8 +12,7 @@
  * - Better error handling and validation
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
 
 /**
  * An enhanced version of the LuaScript transpiler with more comprehensive JavaScript feature support.
@@ -128,16 +127,16 @@ class EnhancedLuaScriptTranspiler {
      * @private
      */
     validateInput(code) {
-        if (typeof code !== 'string') {
-            throw new Error('Input must be a string');
+        if (typeof code !== "string") {
+            throw new Error("Input must be a string");
         }
         
         if (code.trim().length === 0) {
-            throw new Error('Input code cannot be empty');
+            throw new Error("Input code cannot be empty");
         }
         
         if (code.length > 10000000) { // 10MB limit
-            throw new Error('Input code exceeds maximum size limit (10MB)');
+            throw new Error("Input code exceeds maximum size limit (10MB)");
         }
     }
 
@@ -149,10 +148,10 @@ class EnhancedLuaScriptTranspiler {
     validateOutput(code) {
         // Check for common transpilation errors
         const invalidPatterns = [
-            { pattern: /\+\+/, message: '++ operator not properly converted' },
-            { pattern: /--(?!-)/, message: '-- operator not properly converted (excluding comments)' },
-            { pattern: /===/, message: '=== operator not properly converted' },
-            { pattern: /!==/, message: '!== operator not properly converted' }
+            { pattern: /\+\+/, message: "++ operator not properly converted" },
+            { pattern: /--(?!-)/, message: "-- operator not properly converted (excluding comments)" },
+            { pattern: /===/, message: "=== operator not properly converted" },
+            { pattern: /!==/, message: "!== operator not properly converted" }
         ];
         
         for (const { pattern, message } of invalidPatterns) {
@@ -174,8 +173,8 @@ class EnhancedLuaScriptTranspiler {
         let inString = false;
         let stringChar = null;
         let escaped = false;
-        let result = '';
-        let currentString = '';
+        let result = "";
+        let currentString = "";
         
         for (let i = 0; i < code.length; i++) {
             const char = code[i];
@@ -187,14 +186,14 @@ class EnhancedLuaScriptTranspiler {
                 continue;
             }
             
-            if (char === '\\') {
+            if (char === "\\") {
                 if (inString) currentString += char;
                 else result += char;
                 escaped = true;
                 continue;
             }
             
-            if (!inString && (char === '"' || char === "'" || char === '`')) {
+            if (!inString && (char === "\"" || char === "'" || char === "`")) {
                 inString = true;
                 stringChar = char;
                 currentString = char;
@@ -205,7 +204,7 @@ class EnhancedLuaScriptTranspiler {
                 result += placeholder;
                 inString = false;
                 stringChar = null;
-                currentString = '';
+                currentString = "";
             } else if (inString) {
                 currentString += char;
             } else {
@@ -268,7 +267,7 @@ class EnhancedLuaScriptTranspiler {
         
         // Pattern 2: Anything + string literal
         result = result.replace(
-            /([^;,(\[{\s+]+)\s*\+\s*(['"`])([^\2]*?)\2/g,
+            /([^;,([{\s+]+)\s*\+\s*(['"`])([^\2]*?)\2/g,
             (match, left, quote, content) => {
                 // Don't convert if left side is clearly numeric (single number)
                 if (/^\d+$/.test(left.trim())) {
@@ -281,7 +280,7 @@ class EnhancedLuaScriptTranspiler {
         // Pattern 3: Chained concatenations (only if already has ..)
         result = result.replace(
             /(\w+|['"`][^'"`]*['"`])\s*\.\.\s*([^;,)\]}]+)\s*\+\s*([^;,)\]}]+)/g,
-            '$1 .. $2 .. $3'
+            "$1 .. $2 .. $3"
         );
         
         // Restore protected parenthesized expressions
@@ -290,8 +289,8 @@ class EnhancedLuaScriptTranspiler {
             result = result.replace(placeholder, protectedExprs[i]);
         }
         
-        const leftPattern = /(['"`](?:\\.|[^'"`])*['"`])\s*\+\s*(\([^)]*\)|[^\s;,)}\]]+)/g;
-        const rightPattern = /(\([^)]*\)|[^\s;,({\[]+)\s*\+\s*(['"`](?:\\.|[^'"`])*['"`])/g;
+        const leftPattern = /(['"`](?:\\.|[^'"`])*['"`])\s*\+\s*(\([^)]*\)|[^\s;,)}]+)/g;
+        const rightPattern = /(\([^)]*\)|[^\s;,({[]+)\s*\+\s*(['"`](?:\\.|[^'"`])*['"`])/g;
 
         let previous;
         do {
@@ -315,9 +314,9 @@ class EnhancedLuaScriptTranspiler {
      */
     fixEqualityOperators(code) {
         return code
-            .replace(/!==/g, '~=')
-            .replace(/!=/g, '~=')
-            .replace(/===/g, '==');
+            .replace(/!==/g, "~=")
+            .replace(/!=/g, "~=")
+            .replace(/===/g, "==");
     }
 
     /**
@@ -330,13 +329,13 @@ class EnhancedLuaScriptTranspiler {
         let result = code;
         
         // Replace || with or
-        result = result.replace(/\|\|/g, ' or ');
+        result = result.replace(/\|\|/g, " or ");
         
         // Replace && with and
-        result = result.replace(/&&/g, ' and ');
+        result = result.replace(/&&/g, " and ");
         
         // Replace ! with not (careful with != which is already handled)
-        result = result.replace(/!\s*([a-zA-Z_$][a-zA-Z0-9_$]*|\([^)]*\))/g, 'not $1');
+        result = result.replace(/!\s*([a-zA-Z_$][a-zA-Z0-9_$]*|\([^)]*\))/g, "not $1");
         
         return result;
     }
@@ -349,10 +348,10 @@ class EnhancedLuaScriptTranspiler {
      */
     fixUnaryOperators(code) {
         // typeof operator
-        let result = code.replace(/typeof\s+(\w+)/g, 'type($1)');
+        let result = code.replace(/typeof\s+(\w+)/g, "type($1)");
         
         // void operator (convert to nil)
-        result = result.replace(/void\s+\d+/g, 'nil');
+        result = result.replace(/void\s+\d+/g, "nil");
         
         return result;
     }
@@ -367,16 +366,16 @@ class EnhancedLuaScriptTranspiler {
         let result = code;
         
         // Post-increment: x++
-        result = result.replace(/(\w+)\+\+/g, '$1 = $1 + 1');
+        result = result.replace(/(\w+)\+\+/g, "$1 = $1 + 1");
         
         // Pre-increment: ++x
-        result = result.replace(/\+\+(\w+)/g, '$1 = $1 + 1');
+        result = result.replace(/\+\+(\w+)/g, "$1 = $1 + 1");
         
         // Post-decrement: x--
-        result = result.replace(/(\w+)--/g, '$1 = $1 - 1');
+        result = result.replace(/(\w+)--/g, "$1 = $1 - 1");
         
         // Pre-decrement: --x
-        result = result.replace(/--(\w+)/g, '$1 = $1 - 1');
+        result = result.replace(/--(\w+)/g, "$1 = $1 - 1");
         
         return result;
     }
@@ -403,19 +402,19 @@ class EnhancedLuaScriptTranspiler {
         let result = code;
         
         // +=
-        result = result.replace(/(\w+)\s*\+=\s*([^;]+)/g, '$1 = $1 + $2');
+        result = result.replace(/(\w+)\s*\+=\s*([^;]+)/g, "$1 = $1 + $2");
         
         // -=
-        result = result.replace(/(\w+)\s*-=\s*([^;]+)/g, '$1 = $1 - $2');
+        result = result.replace(/(\w+)\s*-=\s*([^;]+)/g, "$1 = $1 - $2");
         
         // *=
-        result = result.replace(/(\w+)\s*\*=\s*([^;]+)/g, '$1 = $1 * $2');
+        result = result.replace(/(\w+)\s*\*=\s*([^;]+)/g, "$1 = $1 * $2");
         
         // /=
-        result = result.replace(/(\w+)\s*\/=\s*([^;]+)/g, '$1 = $1 / $2');
+        result = result.replace(/(\w+)\s*\/=\s*([^;]+)/g, "$1 = $1 / $2");
         
         // %=
-        result = result.replace(/(\w+)\s*%=\s*([^;]+)/g, '$1 = $1 % $2');
+        result = result.replace(/(\w+)\s*%=\s*([^;]+)/g, "$1 = $1 % $2");
         
         return result;
     }
@@ -433,13 +432,13 @@ class EnhancedLuaScriptTranspiler {
         result = result.replace(
             /\b(var|let|const)\s+(\w+\s*=\s*[^,;]+(?:\s*,\s*\w+\s*=\s*[^,;]+)*)/g,
             (match, keyword, declarations) => {
-                const decls = declarations.split(',').map(d => `local ${d.trim()}`);
-                return decls.join('\n');
+                const decls = declarations.split(",").map(d => `local ${d.trim()}`);
+                return decls.join("\n");
             }
         );
         
         // Handle single declarations
-        result = result.replace(/\b(var|let|const)\s+(\w+)/g, 'local $2');
+        result = result.replace(/\b(var|let|const)\s+(\w+)/g, "local $2");
         
         return result;
     }
@@ -456,21 +455,21 @@ class EnhancedLuaScriptTranspiler {
         // Named function declarations - must add 'local' prefix and remove opening brace
         result = result.replace(
             /\bfunction\s+(\w+)\s*\(([^)]*)\)\s*\{/g,
-            'local function $1($2) '
+            "local function $1($2) "
         );
         
         // Anonymous function expressions with const/let/var (before variable conversion)
         // Match: const/let/var name = function(params) { and remove opening brace
         result = result.replace(
             /\b(?:const|let|var)\s+(\w+)\s*=\s*function\s*\(([^)]*)\)\s*\{/g,
-            'const $1 = function($2) '
+            "const $1 = function($2) "
         );
         
         // Anonymous function expressions assigned to variables (after const/let/var already converted)
         // Match: local name = function(params) { and remove opening brace
         result = result.replace(
             /\blocal\s+(\w+)\s*=\s*function\s*\(([^)]*)\)\s*\{/g,
-            'local $1 = function($2) '
+            "local $1 = function($2) "
         );
 
         // Named function declarations
@@ -500,25 +499,25 @@ class EnhancedLuaScriptTranspiler {
         // Arrow function with block: const name = (params) => { body } - remove opening brace
         result = result.replace(
             /\b(?:const|let|var)\s+(\w+)\s*=\s*\(([^)]*)\)\s*=>\s*\{/g,
-            'const $1 = function($2) '
+            "const $1 = function($2) "
         );
         
         // Arrow function with single param: const name = param => { body } - remove opening brace
         result = result.replace(
             /\b(?:const|let|var)\s+(\w+)\s*=\s*(\w+)\s*=>\s*\{/g,
-            'const $1 = function($2) '
+            "const $1 = function($2) "
         );
         
         // Arrow function with expression: const name = (params) => expression
         result = result.replace(
             /\b(?:const|let|var)\s+(\w+)\s*=\s*\(([^)]*)\)\s*=>\s*([^;{]+);?/g,
-            'const $1 = function($2) return $3 end'
+            "const $1 = function($2) return $3 end"
         );
         
         // Arrow function with single param and expression: const name = param => expression
         result = result.replace(
             /\b(?:const|let|var)\s+(\w+)\s*=\s*(\w+)\s*=>\s*([^;{]+);?/g,
-            'local $1 = function($2) return $3 end'
+            "local $1 = function($2) return $3 end"
         );
 
         // Arrow function with block: (params) => { body }
@@ -552,15 +551,15 @@ class EnhancedLuaScriptTranspiler {
         let result = code;
         
         // First handle else if -> elseif (before processing if statements)
-        result = result.replace(/\}\s*else\s+if\s*\(/g, 'elseif (');
-        result = result.replace(/else\s+if\s*\(/g, 'elseif (');
+        result = result.replace(/\}\s*else\s+if\s*\(/g, "elseif (");
+        result = result.replace(/else\s+if\s*\(/g, "elseif (");
         
         // Now process if and elseif statements - convert ) { to then
-        result = result.replace(/\b(if|elseif)\s*\(([^)]+)\)\s*\{/g, '$1 $2 then');
+        result = result.replace(/\b(if|elseif)\s*\(([^)]+)\)\s*\{/g, "$1 $2 then");
         
         // else statements
-        result = result.replace(/\}\s*else\s*\{/g, 'else');
-        result = result.replace(/else\s*\{/g, 'else');
+        result = result.replace(/\}\s*else\s*\{/g, "else");
+        result = result.replace(/else\s*\{/g, "else");
         
         return result;
     }
@@ -574,7 +573,7 @@ class EnhancedLuaScriptTranspiler {
     convertTernaryOperator(code) {
         // Convert ternary to if-then-else expression, removing extra spaces
         return code.replace(
-            /(\w[\w\.\[\]]*)\s*=\s*([^?]+?)\?\s*([^:]+?)\s*:\s*([^;]+);?/g,
+            /(\w[\w.[]*)\s*=\s*([^?]+?)\?\s*([^:]+?)\s*:\s*([^;]+);?/g,
             (match, target, condition, truthy, falsy) => {
                 const trimmedCondition = condition.trim();
                 const trimmedTruthy = truthy.trim();
@@ -615,7 +614,7 @@ class EnhancedLuaScriptTranspiler {
         
         result = result.replace(
             /for\s*\(\s*(?:var|let|const)?\s*(\w+)\s*=\s*(\d+)\s*;\s*\1\s*<=\s*(\d+)\s*;\s*\1\+\+\s*\)\s*\{/g,
-            'for $1 = $2, $3 do'
+            "for $1 = $2, $3 do"
         );
 
         // For loops comparing against array length
@@ -652,21 +651,21 @@ class EnhancedLuaScriptTranspiler {
         // For-in loops (convert to pairs)
         result = result.replace(
             /for\s*\(\s*(?:var|let|const)?\s*(\w+)\s+in\s+(\w+)\s*\)\s*\{/g,
-            'for $1, _ in pairs($2) do'
+            "for $1, _ in pairs($2) do"
         );
         
         // For-of loops (convert to ipairs for arrays)
         result = result.replace(
             /for\s*\(\s*(?:var|let|const)?\s*(\w+)\s+of\s+(\w+)\s*\)\s*\{/g,
-            'for _, $1 in ipairs($2) do'
+            "for _, $1 in ipairs($2) do"
         );
         
         // While loops
-        result = result.replace(/while\s*\(([^)]+)\)\s*\{/g, 'while $1 do');
+        result = result.replace(/while\s*\(([^)]+)\)\s*\{/g, "while $1 do");
         
         // Do-while loops (convert to repeat-until)
-        result = result.replace(/do\s*\{/g, 'repeat');
-        result = result.replace(/\}\s*while\s*\(([^)]+)\);?/g, 'until not ($1)');
+        result = result.replace(/do\s*\{/g, "repeat");
+        result = result.replace(/\}\s*while\s*\(([^)]+)\);?/g, "until not ($1)");
         
         return result;
     }
@@ -685,7 +684,6 @@ class EnhancedLuaScriptTranspiler {
         result = result.replace(
             /switch\s*\(([^)]+)\)\s*\{/g,
             (match, expr) => {
-                return `local __sw_expr = ${expr} if false then`;
                 return `local __selector_expr = ${expr}; if false then`;
             }
         );
@@ -693,14 +691,14 @@ class EnhancedLuaScriptTranspiler {
         // Convert case statements
         result = result.replace(
             /case\s+([^:]+):/g,
-            'elseif __selector_expr == $1 then'
+            "elseif __selector_expr == $1 then"
         );
         
         // Convert default case
-        result = result.replace(/default:/g, 'else');
+        result = result.replace(/default:/g, "else");
         
         // Remove break statements (Lua doesn't need them)
-        result = result.replace(/break;?/g, '');
+        result = result.replace(/break;?/g, "");
         
         return result;
     }
@@ -719,7 +717,7 @@ class EnhancedLuaScriptTranspiler {
         // Convert array literals (not array access)
         // Look for [ that's preceded by = or , or ( or start of line (indicates a literal)
         // This will match [1, 2, 3] but not arr[i]
-        result = result.replace(/(^|[=,(\s])\[([^\]]*)\]/gm, '$1{$2}');
+        result = result.replace(/(^|[=,(\s])\[([^\]]*)\]/gm, "$1{$2}");
         
         return result;
     }
@@ -761,12 +759,12 @@ class EnhancedLuaScriptTranspiler {
         let result = code;
         
         // Remove semicolons FIRST (before processing lines)
-        result = result.replace(/;/g, '');
+        result = result.replace(/;/g, "");
         
         // Convert closing braces to end, but be smart about object literals
         // Strategy: Track context to know if } is closing a control structure or an object literal
         
-        let lines = result.split('\n');
+        let lines = result.split("\n");
         let processedLines = [];
         
         for (let line of lines) {
@@ -776,7 +774,7 @@ class EnhancedLuaScriptTranspiler {
             // Pattern: function(...) { or = function(...) {
             // These should have been removed already, but clean up any that remain
             if (/function\s*\([^)]*\)\s*\{/.test(line)) {
-                processedLine = processedLine.replace(/function\s*\(([^)]*)\)\s*\{/g, 'function($1) ');
+                processedLine = processedLine.replace(/function\s*\(([^)]*)\)\s*\{/g, "function($1) ");
             }
             
             // Check if line has } that should become 'end'
@@ -788,11 +786,11 @@ class EnhancedLuaScriptTranspiler {
             
             // Pattern 1: Standalone } on a line (control structure)
             if (/^\s*\}\s*$/.test(processedLine)) {
-                processedLine = processedLine.replace(/\}/g, 'end');
+                processedLine = processedLine.replace(/\}/g, "end");
             }
             // Pattern 2: } followed by else or elseif (control structure)
             else if (/\}\s*(else|elseif)/.test(processedLine)) {
-                processedLine = processedLine.replace(/\}/g, 'end');
+                processedLine = processedLine.replace(/\}/g, "end");
             }
             // Pattern 3: } at end of line (inline block closing), but NOT if it's a table literal
             // Table literal detection: line contains { followed by values, key = value, or key: value patterns
@@ -806,20 +804,20 @@ class EnhancedLuaScriptTranspiler {
                                        /local\s+\w+\s*=\s*\{[^}]*\}/.test(processedLine) || // local var = {}
                                        /\w+\s*=\s*\{[^}]*\}/.test(processedLine);           // var = {}
                 if (!isTableLiteral) {
-                    processedLine = processedLine.replace(/\}\s*$/, 'end');
+                    processedLine = processedLine.replace(/\}\s*$/, "end");
                 }
             }
             
             processedLines.push(processedLine);
         }
         
-        result = processedLines.join('\n');
+        result = processedLines.join("\n");
         
         // Fix multiple spaces
-        result = result.replace(/  +/g, ' ');
+        result = result.replace(/  +/g, " ");
         
         // Clean up extra whitespace
-        result = result.replace(/\n\s*\n\s*\n/g, '\n\n');
+        result = result.replace(/\n\s*\n\s*\n/g, "\n\n");
         
         return result;
     }
@@ -851,11 +849,11 @@ local Math = runtime.Math
      */
     transpileFile(inputPath, outputPath, options = {}) {
         try {
-            const jsCode = fs.readFileSync(inputPath, 'utf8');
+            const jsCode = fs.readFileSync(inputPath, "utf8");
             const luaCode = this.transpile(jsCode, options);
             
             if (outputPath) {
-                fs.writeFileSync(outputPath, luaCode, 'utf8');
+                fs.writeFileSync(outputPath, luaCode, "utf8");
             }
             
             return luaCode;

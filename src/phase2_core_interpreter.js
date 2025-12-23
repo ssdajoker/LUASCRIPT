@@ -5,17 +5,7 @@
  * 32+ Developer Team Implementation - CRUNCH MODE!
  */
 
-const {
-    ProgramNode, BlockStatementNode, ExpressionStatementNode,
-    VariableDeclarationNode, VariableDeclaratorNode, FunctionDeclarationNode,
-    ReturnStatementNode, IfStatementNode, WhileStatementNode, ForStatementNode,
-    BreakStatementNode, ContinueStatementNode, BinaryExpressionNode,
-    UnaryExpressionNode, AssignmentExpressionNode, UpdateExpressionNode,
-    LogicalExpressionNode, ConditionalExpressionNode, CallExpressionNode,
-    MemberExpressionNode, ArrayExpressionNode, ObjectExpressionNode,
-    PropertyNode, ArrowFunctionExpressionNode, FunctionExpressionNode,
-    LiteralNode, IdentifierNode, ThisExpressionNode
-} = require('./phase1_core_ast');
+// Removed unused AST node imports - not referenced in interpreter
 
 /**
  * Manages the lexical scope for variables and functions during interpretation.
@@ -143,8 +133,8 @@ class LuaScriptFunction {
         this.declaration = declaration;
         this.closure = closure;
         this.interpreter = interpreter;
-        this.isArrowFunction = declaration.type === 'ArrowFunctionExpression';
-        this.name = declaration.id ? declaration.id.name : '<anonymous>';
+        this.isArrowFunction = declaration.type === "ArrowFunctionExpression";
+        this.name = declaration.id ? declaration.id.name : "<anonymous>";
     }
 
     /**
@@ -166,7 +156,7 @@ class LuaScriptFunction {
         // Bind 'arguments' object for regular functions (not arrow functions)
         if (!this.isArrowFunction) {
             const argumentsObj = new LuaScriptArray(args);
-            environment.define('arguments', argumentsObj);
+            environment.define("arguments", argumentsObj);
         }
         
         const previous = this.interpreter.environment;
@@ -325,7 +315,7 @@ class LuaScriptArray {
      * @param {string} [separator=','] - The separator string.
      * @returns {string} The joined string.
      */
-    join(separator = ',') {
+    join(separator = ",") {
         return this.elements.join(separator);
     }
 
@@ -403,7 +393,7 @@ class LuaScriptArray {
         
         if (arguments.length < 2) {
             if (this.length === 0) {
-                throw new TypeError('Reduce of empty array with no initial value');
+                throw new TypeError("Reduce of empty array with no initial value");
             }
             accumulator = this.elements[0];
             startIndex = 1;
@@ -523,7 +513,7 @@ class LuaScriptObject {
      */
     toString() {
         const entries = this.entries().map(([k, v]) => `${k}: ${v}`);
-        return `{ ${entries.join(', ')} }`;
+        return `{ ${entries.join(", ")} }`;
     }
 
     /**
@@ -592,7 +582,7 @@ class LuaScriptInterpreter {
      */
     setupBuiltins() {
         // Console functions
-        this.globals.define('console', new LuaScriptObject({
+        this.globals.define("console", new LuaScriptObject({
             log: (...args) => console.log(...args),
             error: (...args) => console.error(...args),
             warn: (...args) => console.warn(...args),
@@ -600,37 +590,37 @@ class LuaScriptInterpreter {
         }));
 
         // Global functions
-        this.globals.define('print', (...args) => console.log(...args));
-        this.globals.define('parseInt', (str, radix = 10) => parseInt(str, radix));
-        this.globals.define('parseFloat', (str) => parseFloat(str));
-        this.globals.define('isNaN', (value) => isNaN(value));
-        this.globals.define('isFinite', (value) => isFinite(value));
+        this.globals.define("print", (...args) => console.log(...args));
+        this.globals.define("parseInt", (str, radix = 10) => parseInt(str, radix));
+        this.globals.define("parseFloat", (str) => parseFloat(str));
+        this.globals.define("isNaN", (value) => isNaN(value));
+        this.globals.define("isFinite", (value) => isFinite(value));
 
         // Type checking functions
-        this.globals.define('typeof', (value) => {
-            if (value === null) return 'object';
-            if (value instanceof LuaScriptArray) return 'object';
-            if (value instanceof LuaScriptObject) return 'object';
-            if (value instanceof LuaScriptFunction) return 'function';
+        this.globals.define("typeof", (value) => {
+            if (value === null) return "object";
+            if (value instanceof LuaScriptArray) return "object";
+            if (value instanceof LuaScriptObject) return "object";
+            if (value instanceof LuaScriptFunction) return "function";
             return typeof value;
         });
 
         // Array constructor
-        this.globals.define('Array', (...args) => {
-            if (args.length === 1 && typeof args[0] === 'number') {
+        this.globals.define("Array", (...args) => {
+            if (args.length === 1 && typeof args[0] === "number") {
                 return new LuaScriptArray(new Array(args[0]));
             }
             return new LuaScriptArray(args);
         });
 
         // Object constructor
-        this.globals.define('Object', (value) => {
+        this.globals.define("Object", (value) => {
             if (value == null) return new LuaScriptObject();
             return value;
         });
 
         // Math object
-        this.globals.define('Math', new LuaScriptObject({
+        this.globals.define("Math", new LuaScriptObject({
             PI: Math.PI,
             E: Math.E,
             abs: Math.abs,
@@ -648,13 +638,13 @@ class LuaScriptInterpreter {
         }));
 
         // String constructor and methods
-        this.globals.define('String', (value) => String(value));
+        this.globals.define("String", (value) => String(value));
 
         // Number constructor
-        this.globals.define('Number', (value) => Number(value));
+        this.globals.define("Number", (value) => Number(value));
 
         // Boolean constructor
-        this.globals.define('Boolean', (value) => Boolean(value));
+        this.globals.define("Boolean", (value) => Boolean(value));
     }
 
     /**
@@ -688,30 +678,30 @@ class LuaScriptInterpreter {
         if (!node) return undefined;
 
         switch (node.type) {
-            case 'Program':
-                return this.executeProgram(node);
-            case 'BlockStatement':
-                return this.executeBlockStatement(node);
-            case 'ExpressionStatement':
-                return this.evaluate(node.expression);
-            case 'VariableDeclaration':
-                return this.executeVariableDeclaration(node);
-            case 'FunctionDeclaration':
-                return this.executeFunctionDeclaration(node);
-            case 'ReturnStatement':
-                return this.executeReturnStatement(node);
-            case 'IfStatement':
-                return this.executeIfStatement(node);
-            case 'WhileStatement':
-                return this.executeWhileStatement(node);
-            case 'ForStatement':
-                return this.executeForStatement(node);
-            case 'BreakStatement':
-                throw new BreakException();
-            case 'ContinueStatement':
-                throw new ContinueException();
-            default:
-                return this.evaluate(node);
+        case "Program":
+            return this.executeProgram(node);
+        case "BlockStatement":
+            return this.executeBlockStatement(node);
+        case "ExpressionStatement":
+            return this.evaluate(node.expression);
+        case "VariableDeclaration":
+            return this.executeVariableDeclaration(node);
+        case "FunctionDeclaration":
+            return this.executeFunctionDeclaration(node);
+        case "ReturnStatement":
+            return this.executeReturnStatement(node);
+        case "IfStatement":
+            return this.executeIfStatement(node);
+        case "WhileStatement":
+            return this.executeWhileStatement(node);
+        case "ForStatement":
+            return this.executeForStatement(node);
+        case "BreakStatement":
+            throw new BreakException();
+        case "ContinueStatement":
+            throw new ContinueException();
+        default:
+            return this.evaluate(node);
         }
     }
 
@@ -759,7 +749,7 @@ class LuaScriptInterpreter {
         for (const declarator of node.declarations) {
             const name = declarator.id.name;
             const value = declarator.init ? this.evaluate(declarator.init) : undefined;
-            const isConst = node.kind === 'const';
+            const isConst = node.kind === "const";
             
             this.environment.define(name, value, isConst);
         }
@@ -855,6 +845,7 @@ class LuaScriptInterpreter {
             let result = undefined;
             
             try {
+                // eslint-disable-next-line no-constant-condition
                 while (true) {
                     // Test condition
                     if (node.test && !this.isTruthy(this.evaluate(node.test))) {
@@ -902,37 +893,37 @@ class LuaScriptInterpreter {
         if (!node) return undefined;
 
         switch (node.type) {
-            case 'Literal':
-                return node.value;
-            case 'Identifier':
-                return this.environment.get(node.name);
-            case 'ThisExpression':
-                return this.environment.get('this');
-            case 'BinaryExpression':
-                return this.evaluateBinaryExpression(node);
-            case 'UnaryExpression':
-                return this.evaluateUnaryExpression(node);
-            case 'AssignmentExpression':
-                return this.evaluateAssignmentExpression(node);
-            case 'UpdateExpression':
-                return this.evaluateUpdateExpression(node);
-            case 'LogicalExpression':
-                return this.evaluateLogicalExpression(node);
-            case 'ConditionalExpression':
-                return this.evaluateConditionalExpression(node);
-            case 'CallExpression':
-                return this.evaluateCallExpression(node);
-            case 'MemberExpression':
-                return this.evaluateMemberExpression(node);
-            case 'ArrayExpression':
-                return this.evaluateArrayExpression(node);
-            case 'ObjectExpression':
-                return this.evaluateObjectExpression(node);
-            case 'ArrowFunctionExpression':
-            case 'FunctionExpression':
-                return new LuaScriptFunction(node, this.environment, this);
-            default:
-                throw new Error(`Unknown expression type: ${node.type}`);
+        case "Literal":
+            return node.value;
+        case "Identifier":
+            return this.environment.get(node.name);
+        case "ThisExpression":
+            return this.environment.get("this");
+        case "BinaryExpression":
+            return this.evaluateBinaryExpression(node);
+        case "UnaryExpression":
+            return this.evaluateUnaryExpression(node);
+        case "AssignmentExpression":
+            return this.evaluateAssignmentExpression(node);
+        case "UpdateExpression":
+            return this.evaluateUpdateExpression(node);
+        case "LogicalExpression":
+            return this.evaluateLogicalExpression(node);
+        case "ConditionalExpression":
+            return this.evaluateConditionalExpression(node);
+        case "CallExpression":
+            return this.evaluateCallExpression(node);
+        case "MemberExpression":
+            return this.evaluateMemberExpression(node);
+        case "ArrayExpression":
+            return this.evaluateArrayExpression(node);
+        case "ObjectExpression":
+            return this.evaluateObjectExpression(node);
+        case "ArrowFunctionExpression":
+        case "FunctionExpression":
+            return new LuaScriptFunction(node, this.environment, this);
+        default:
+            throw new Error(`Unknown expression type: ${node.type}`);
         }
     }
 
@@ -947,26 +938,26 @@ class LuaScriptInterpreter {
         const right = this.evaluate(node.right);
         
         switch (node.operator) {
-            case '+': return left + right;
-            case '-': return left - right;
-            case '*': return left * right;
-            case '/': return left / right;
-            case '%': return left % right;
-            case '==': return left == right;
-            case '!=': return left != right;
-            case '===': return left === right;
-            case '!==': return left !== right;
-            case '<': return left < right;
-            case '>': return left > right;
-            case '<=': return left <= right;
-            case '>=': return left >= right;
-            case '&': return left & right;
-            case '|': return left | right;
-            case '^': return left ^ right;
-            case '<<': return left << right;
-            case '>>': return left >> right;
-            default:
-                throw new Error(`Unknown binary operator: ${node.operator}`);
+        case "+": return left + right;
+        case "-": return left - right;
+        case "*": return left * right;
+        case "/": return left / right;
+        case "%": return left % right;
+        case "==": return left == right;
+        case "!=": return left != right;
+        case "===": return left === right;
+        case "!==": return left !== right;
+        case "<": return left < right;
+        case ">": return left > right;
+        case "<=": return left <= right;
+        case ">=": return left >= right;
+        case "&": return left & right;
+        case "|": return left | right;
+        case "^": return left ^ right;
+        case "<<": return left << right;
+        case ">>": return left >> right;
+        default:
+            throw new Error(`Unknown binary operator: ${node.operator}`);
         }
     }
 
@@ -980,12 +971,12 @@ class LuaScriptInterpreter {
         const argument = this.evaluate(node.argument);
         
         switch (node.operator) {
-            case '+': return +argument;
-            case '-': return -argument;
-            case '!': return !argument;
-            case '~': return ~argument;
-            default:
-                throw new Error(`Unknown unary operator: ${node.operator}`);
+        case "+": return +argument;
+        case "-": return -argument;
+        case "!": return !argument;
+        case "~": return ~argument;
+        default:
+            throw new Error(`Unknown unary operator: ${node.operator}`);
         }
     }
 
@@ -998,44 +989,44 @@ class LuaScriptInterpreter {
     evaluateAssignmentExpression(node) {
         const value = this.evaluate(node.right);
         
-        if (node.left.type === 'Identifier') {
-            if (node.operator === '=') {
+        if (node.left.type === "Identifier") {
+            if (node.operator === "=") {
                 this.environment.set(node.left.name, value);
             } else {
                 const current = this.environment.get(node.left.name);
                 let newValue;
                 
                 switch (node.operator) {
-                    case '+=': newValue = current + value; break;
-                    case '-=': newValue = current - value; break;
-                    case '*=': newValue = current * value; break;
-                    case '/=': newValue = current / value; break;
-                    default:
-                        throw new Error(`Unknown assignment operator: ${node.operator}`);
+                case "+=": newValue = current + value; break;
+                case "-=": newValue = current - value; break;
+                case "*=": newValue = current * value; break;
+                case "/=": newValue = current / value; break;
+                default:
+                    throw new Error(`Unknown assignment operator: ${node.operator}`);
                 }
                 
                 this.environment.set(node.left.name, newValue);
                 return newValue;
             }
-        } else if (node.left.type === 'MemberExpression') {
+        } else if (node.left.type === "MemberExpression") {
             const object = this.evaluate(node.left.object);
             const property = node.left.computed ? 
                 this.evaluate(node.left.property) : 
                 node.left.property.name;
             
-            if (node.operator === '=') {
+            if (node.operator === "=") {
                 this.setProperty(object, property, value);
             } else {
                 const current = this.getProperty(object, property);
                 let newValue;
                 
                 switch (node.operator) {
-                    case '+=': newValue = current + value; break;
-                    case '-=': newValue = current - value; break;
-                    case '*=': newValue = current * value; break;
-                    case '/=': newValue = current / value; break;
-                    default:
-                        throw new Error(`Unknown assignment operator: ${node.operator}`);
+                case "+=": newValue = current + value; break;
+                case "-=": newValue = current - value; break;
+                case "*=": newValue = current * value; break;
+                case "/=": newValue = current / value; break;
+                default:
+                    throw new Error(`Unknown assignment operator: ${node.operator}`);
                 }
                 
                 this.setProperty(object, property, newValue);
@@ -1053,29 +1044,29 @@ class LuaScriptInterpreter {
      * @private
      */
     evaluateUpdateExpression(node) {
-        if (node.argument.type === 'Identifier') {
+        if (node.argument.type === "Identifier") {
             const name = node.argument.name;
             const current = this.environment.get(name);
-            const newValue = node.operator === '++' ? current + 1 : current - 1;
+            const newValue = node.operator === "++" ? current + 1 : current - 1;
             
             this.environment.set(name, newValue);
             
             return node.prefix ? newValue : current;
-        } else if (node.argument.type === 'MemberExpression') {
+        } else if (node.argument.type === "MemberExpression") {
             const object = this.evaluate(node.argument.object);
             const property = node.argument.computed ? 
                 this.evaluate(node.argument.property) : 
                 node.argument.property.name;
             
             const current = this.getProperty(object, property);
-            const newValue = node.operator === '++' ? current + 1 : current - 1;
+            const newValue = node.operator === "++" ? current + 1 : current - 1;
             
             this.setProperty(object, property, newValue);
             
             return node.prefix ? newValue : current;
         }
         
-        throw new Error('Invalid left-hand side in assignment');
+        throw new Error("Invalid left-hand side in assignment");
     }
 
     /**
@@ -1087,9 +1078,9 @@ class LuaScriptInterpreter {
     evaluateLogicalExpression(node) {
         const left = this.evaluate(node.left);
         
-        if (node.operator === '&&') {
+        if (node.operator === "&&") {
             return this.isTruthy(left) ? this.evaluate(node.right) : left;
-        } else if (node.operator === '||') {
+        } else if (node.operator === "||") {
             return this.isTruthy(left) ? left : this.evaluate(node.right);
         }
         
@@ -1119,7 +1110,7 @@ class LuaScriptInterpreter {
         const callee = this.evaluate(node.callee);
         const args = node.arguments.map(arg => this.evaluate(arg));
         
-        if (typeof callee === 'function') {
+        if (typeof callee === "function") {
             // Native JavaScript function
             return callee.apply(null, args);
         } else if (callee instanceof LuaScriptFunction) {
@@ -1195,12 +1186,12 @@ class LuaScriptInterpreter {
      */
     getProperty(object, property) {
         if (object instanceof LuaScriptArray) {
-            if (typeof property === 'number' || /^\d+$/.test(property)) {
+            if (typeof property === "number" || /^\d+$/.test(property)) {
                 return object.get(Number(property));
             }
             // Array methods
             const method = object[property];
-            if (typeof method === 'function') {
+            if (typeof method === "function") {
                 return method.bind(object);
             }
             return object[property];
@@ -1222,7 +1213,7 @@ class LuaScriptInterpreter {
      */
     setProperty(object, property, value) {
         if (object instanceof LuaScriptArray) {
-            if (typeof property === 'number' || /^\d+$/.test(property)) {
+            if (typeof property === "number" || /^\d+$/.test(property)) {
                 object.set(Number(property), value);
             } else {
                 object[property] = value;
@@ -1232,7 +1223,7 @@ class LuaScriptInterpreter {
         } else if (object != null) {
             object[property] = value;
         } else {
-            throw new TypeError('Cannot set property on null or undefined');
+            throw new TypeError("Cannot set property on null or undefined");
         }
     }
 
@@ -1244,9 +1235,9 @@ class LuaScriptInterpreter {
      */
     isTruthy(value) {
         if (value === null || value === undefined) return false;
-        if (typeof value === 'boolean') return value;
-        if (typeof value === 'number') return value !== 0 && !isNaN(value);
-        if (typeof value === 'string') return value.length > 0;
+        if (typeof value === "boolean") return value;
+        if (typeof value === "number") return value !== 0 && !isNaN(value);
+        if (typeof value === "string") return value.length > 0;
         return true;
     }
 
@@ -1256,7 +1247,7 @@ class LuaScriptInterpreter {
      */
     checkExecutionTime() {
         if (this.startTime && Date.now() - this.startTime > this.options.maxExecutionTime) {
-            throw new Error('Maximum execution time exceeded');
+            throw new Error("Maximum execution time exceeded");
         }
     }
 
@@ -1266,7 +1257,7 @@ class LuaScriptInterpreter {
      */
     checkCallStack() {
         if (this.callStack.length >= this.options.maxCallStack) {
-            throw new Error('Maximum call stack size exceeded');
+            throw new Error("Maximum call stack size exceeded");
         }
     }
 

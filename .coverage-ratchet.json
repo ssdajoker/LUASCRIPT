@@ -1,0 +1,26 @@
+{
+  "history": [
+    {
+      "timestamp": "2025-12-21T02:15:52.010Z",
+      "coverage": {
+        "lines": 23.56,
+        "functions": 19,
+        "branches": 59.32,
+        "statements": 23.56
+      },
+      "thresholds": {
+        "lines": 23.6,
+        "functions": 19,
+        "branches": 37,
+        "statements": 23.6
+      }
+    }
+  ],
+  "lastUpdate": "2025-12-21T02:15:52.007Z",
+  "highWaterMarks": {
+    "lines": 23.56,
+    "functions": 19,
+    "branches": 59.32,
+    "statements": 23.56
+  }
+}

@@ -43,19 +43,19 @@ class AdvancedFeatures {
     transform(code, features = []) {
         let result = code;
         
-        if (features.includes('oop') || this.options.enableOOP) {
+        if (features.includes("oop") || this.options.enableOOP) {
             result = this.oopTransformer.transform(result);
         }
         
-        if (features.includes('patterns') || this.options.enablePatternMatching) {
+        if (features.includes("patterns") || this.options.enablePatternMatching) {
             result = this.patternMatcher.transform(result);
         }
         
-        if (features.includes('types') || this.options.enableTypeSystem) {
+        if (features.includes("types") || this.options.enableTypeSystem) {
             result = this.typeSystem.transform(result);
         }
         
-        if (features.includes('macros') || this.options.enableMacros) {
+        if (features.includes("macros") || this.options.enableMacros) {
             result = this.macroProcessor.transform(result);
         }
         
@@ -99,13 +99,13 @@ class TypeSystem {
         code = code.replace(
             /function\s+(\w+)\s*\(([^)]*)\)\s*:\s*(\w+)/g,
             (match, name, params, returnType) => {
-                const typedParams = params.replace(/(\w+)\s*:\s*\w+/g, '$1');
+                const typedParams = params.replace(/(\w+)\s*:\s*\w+/g, "$1");
                 return `local function ${name}(${typedParams}) -- returns ${returnType}`;
             }
         );
         
         // Variable type annotations: let x: number = 5
-        code = code.replace(/let\s+(\w+)\s*:\s*\w+\s*=/g, 'local $1 =');
+        code = code.replace(/let\s+(\w+)\s*:\s*\w+\s*=/g, "local $1 =");
         
         return code;
     }
@@ -120,7 +120,7 @@ class TypeSystem {
         // Interface declarations
         code = code.replace(
             /interface\s+(\w+)\s*{([^}]*)}/g,
-            (match, name, body) => {
+            (match, name, _body) => {
                 return `-- Interface ${name}\nlocal ${name} = {}`;
             }
         );
@@ -138,7 +138,7 @@ class TypeSystem {
         // Generic functions: function identity<T>(arg: T): T
         code = code.replace(
             /function\s+(\w+)<([^>]+)>\s*\(([^)]*)\)/g,
-            'local function $1($3) -- generic: $2'
+            "local function $1($3) -- generic: $2"
         );
         
         return code;
@@ -154,7 +154,7 @@ class TypeSystem {
         // Type guards: if (typeof x === 'string')
         code = code.replace(
             /typeof\s+(\w+)\s*===\s*['"](\w+)['"]/g,
-            'type($1) == "$2"'
+            "type($1) == \"$2\""
         );
         
         return code;
@@ -211,13 +211,13 @@ class PatternMatcher {
         // Array destructuring with patterns
         code = code.replace(
             /let\s*\[\s*([^,]+),\s*\.\.\.(\w+)\s*\]\s*=\s*([^;]+);/g,
-            'local $1 = $3[1]; local $2 = {table.unpack($3, 2)}'
+            "local $1 = $3[1]; local $2 = {table.unpack($3, 2)}"
         );
         
         // Object destructuring with patterns
         code = code.replace(
             /let\s*{\s*(\w+):\s*(\w+)\s*}\s*=\s*([^;]+);/g,
-            'local $2 = $3.$1'
+            "local $2 = $3.$1"
         );
         
         return code;
@@ -268,7 +268,7 @@ class PatternMatcher {
      */
     parseMatchPatterns(body) {
         const patterns = [];
-        const lines = body.split('\n').filter(line => line.trim());
+        const lines = body.split("\n").filter(line => line.trim());
         
         for (const line of lines) {
             const match = line.match(/([^=]+)=>\s*([^,]+)/);
@@ -291,12 +291,12 @@ class PatternMatcher {
         let lua = `local _match_value = ${expr}\n`;
         
         for (let i = 0; i < cases.length; i++) {
-            const condition = i === 0 ? 'if' : 'elseif';
+            const condition = i === 0 ? "if" : "elseif";
             lua += `${condition} _match_value == ${cases[i].pattern} then\n`;
             lua += `  ${cases[i].action}\n`;
         }
         
-        lua += 'end';
+        lua += "end";
         return lua;
     }
 
@@ -311,12 +311,12 @@ class PatternMatcher {
         let lua = `local _match_expr = ${expr}\n`;
         
         for (let i = 0; i < patterns.length; i++) {
-            const condition = i === 0 ? 'if' : 'elseif';
+            const condition = i === 0 ? "if" : "elseif";
             lua += `${condition} ${this.generatePatternCondition(patterns[i].pattern)} then\n`;
             lua += `  ${patterns[i].action}\n`;
         }
         
-        lua += 'end';
+        lua += "end";
         return lua;
     }
 
@@ -328,9 +328,9 @@ class PatternMatcher {
      */
     generatePatternCondition(pattern) {
         // Simple pattern matching conditions
-        if (pattern.includes('|')) {
-            const alternatives = pattern.split('|').map(p => p.trim());
-            return alternatives.map(alt => `_match_expr == ${alt}`).join(' or ');
+        if (pattern.includes("|")) {
+            const alternatives = pattern.split("|").map(p => p.trim());
+            return alternatives.map(alt => `_match_expr == ${alt}`).join(" or ");
         }
         
         return `_match_expr == ${pattern}`;
@@ -397,14 +397,14 @@ class OOPTransformer {
      * @private
      */
     transformClassBody(className, body) {
-        let lua = '';
-        const lines = body.split('\n').filter(line => line.trim());
+        let lua = "";
+        const lines = body.split("\n").filter(line => line.trim());
         
         for (const line of lines) {
             const trimmed = line.trim();
             
             // Constructor
-            if (trimmed.startsWith('constructor(')) {
+            if (trimmed.startsWith("constructor(")) {
                 lua += this.transformConstructor(className, trimmed);
             }
             // Methods
@@ -445,7 +445,7 @@ class OOPTransformer {
             const [, methodName, params] = match;
             return `function ${className}:${methodName}(${params})\n  -- method body\nend\n`;
         }
-        return '';
+        return "";
     }
 
     /**
@@ -461,7 +461,7 @@ class OOPTransformer {
             const [, propName, value] = match;
             return `${className}.${propName} = ${value}\n`;
         }
-        return '';
+        return "";
     }
 
     /**
@@ -472,8 +472,8 @@ class OOPTransformer {
      */
     transformInheritance(code) {
         // Super calls
-        code = code.replace(/super\./g, 'self.__index.');
-        code = code.replace(/super\(/g, 'self.__index.new(');
+        code = code.replace(/super\./g, "self.__index.");
+        code = code.replace(/super\(/g, "self.__index.new(");
         
         return code;
     }
@@ -486,7 +486,7 @@ class OOPTransformer {
      */
     transformMethods(code) {
         // Method calls
-        code = code.replace(/(\w+)\.(\w+)\(/g, '$1:$2(');
+        code = code.replace(/(\w+)\.(\w+)\(/g, "$1:$2(");
         
         return code;
     }
@@ -499,7 +499,7 @@ class OOPTransformer {
      */
     transformProperties(code) {
         // Property access
-        code = code.replace(/this\.(\w+)/g, 'self.$1');
+        code = code.replace(/this\.(\w+)/g, "self.$1");
         
         return code;
     }
@@ -512,7 +512,7 @@ class OOPTransformer {
      */
     transformStatic(code) {
         // Static methods
-        code = code.replace(/static\s+(\w+)\s*\(/g, 'function $1(');
+        code = code.replace(/static\s+(\w+)\s*\(/g, "function $1(");
         
         return code;
     }
@@ -525,9 +525,9 @@ class MacroProcessor {
     constructor() {
         this.macros = new Map();
         this.builtinMacros = new Map([
-            ['DEBUG', '-- Debug mode enabled'],
-            ['ASSERT', 'assert'],
-            ['LOG', 'print']
+            ["DEBUG", "-- Debug mode enabled"],
+            ["ASSERT", "assert"],
+            ["LOG", "print"]
         ]);
     }
 
@@ -572,13 +572,13 @@ class MacroProcessor {
     expandMacros(code) {
         // Expand user-defined macros
         for (const [name, replacement] of this.macros) {
-            const regex = new RegExp(`\\b${name}\\b`, 'g');
+            const regex = new RegExp(`\\b${name}\\b`, "g");
             code = code.replace(regex, replacement);
         }
         
         // Expand built-in macros
         for (const [name, replacement] of this.builtinMacros) {
-            const regex = new RegExp(`\\b${name}\\b`, 'g');
+            const regex = new RegExp(`\\b${name}\\b`, "g");
             code = code.replace(regex, replacement);
         }
         
@@ -596,14 +596,14 @@ class MacroProcessor {
         code = code.replace(
             /#ifdef\s+(\w+)\s*\n([\s\S]*?)#endif/g,
             (match, condition, body) => {
-                return this.macros.has(condition) ? body : '';
+                return this.macros.has(condition) ? body : "";
             }
         );
         
         code = code.replace(
             /#ifndef\s+(\w+)\s*\n([\s\S]*?)#endif/g,
             (match, condition, body) => {
-                return !this.macros.has(condition) ? body : '';
+                return !this.macros.has(condition) ? body : "";
             }
         );
         

@@ -57,7 +57,7 @@ class RuntimeMemoryManager {
 
         if (bytes > 0) {
             if (this.heapSize + bytes > this.maxHeapSize) {
-                this.triggerGarbageCollection({ reason: 'hard-limit-precheck', aggressive: true });
+                this.triggerGarbageCollection({ reason: "hard-limit-precheck", aggressive: true });
 
                 if (this.heapSize + bytes > this.maxHeapSize) {
                     throw new Error(`Out of memory: heap size limit ${this.maxHeapSize} bytes exceeded`);
@@ -71,7 +71,7 @@ class RuntimeMemoryManager {
             }
 
             if (this.heapSize > this.gcHardLimit) {
-                this.triggerGarbageCollection({ reason: 'hard-limit', aggressive: true });
+                this.triggerGarbageCollection({ reason: "hard-limit", aggressive: true });
             } else if (this.heapSize > this.gcThreshold) {
                 this.maybeTriggerAdaptiveGC();
             }
@@ -97,12 +97,12 @@ class RuntimeMemoryManager {
             : this.heapSize;
 
         if (averagePeak >= this.gcThreshold) {
-            this.triggerGarbageCollection({ reason: 'threshold' });
+            this.triggerGarbageCollection({ reason: "threshold" });
         }
     }
 
     triggerGarbageCollection(options = {}) {
-        const { reason = 'manual', aggressive = false } = options;
+        const { reason = "manual", aggressive = false } = options;
 
         const beforeSize = this.heapSize;
         const reductionFactor = aggressive ? 0.5 : 0.7;
@@ -142,7 +142,7 @@ class RuntimeMemoryManager {
     cleanup() {
         this.callStack = [];
         this.heapSize = 0;
-        this.triggerGarbageCollection({ reason: 'cleanup', aggressive: true });
+        this.triggerGarbageCollection({ reason: "cleanup", aggressive: true });
     }
 }
 
@@ -234,7 +234,7 @@ class LuaScriptFunction {
         this.declaration = declaration;
         this.closure = closure;
         this.isArrow = isArrow;
-        this.name = isArrow ? '<arrow>' : (declaration.id ? declaration.id.name : '<anonymous>');
+        this.name = isArrow ? "<arrow>" : (declaration.id ? declaration.id.name : "<anonymous>");
     }
 
     /**
@@ -258,7 +258,7 @@ class LuaScriptFunction {
         try {
             interpreter.runtimeMemory.enterFunction(this.name, args);
             
-            if (this.isArrow && this.declaration.body.type === 'ExpressionStatement') {
+            if (this.isArrow && this.declaration.body.type === "ExpressionStatement") {
                 // Arrow function with expression body
                 return interpreter.evaluate(this.declaration.body.expression, environment);
             } else {
@@ -309,40 +309,40 @@ class Interpreter {
      * @private
      */
     defineBuiltins() {
-        this.globals.define('print', {
+        this.globals.define("print", {
             call: (interpreter, args) => {
-                const output = args.map(arg => this.stringify(arg)).join(' ');
+                const output = args.map(arg => this.stringify(arg)).join(" ");
                 console.log(output);
                 return null;
             }
         });
 
-        this.globals.define('type', {
+        this.globals.define("type", {
             call: (interpreter, args) => {
-                if (args.length === 0) return 'nil';
+                if (args.length === 0) return "nil";
                 const value = args[0];
-                if (value === null) return 'nil';
-                if (typeof value === 'boolean') return 'boolean';
-                if (typeof value === 'number') return 'number';
-                if (typeof value === 'string') return 'string';
-                if (typeof value === 'function' || (value && typeof value.call === 'function')) return 'function';
-                return 'object';
+                if (value === null) return "nil";
+                if (typeof value === "boolean") return "boolean";
+                if (typeof value === "number") return "number";
+                if (typeof value === "string") return "string";
+                if (typeof value === "function" || (value && typeof value.call === "function")) return "function";
+                return "object";
             }
         });
 
-        this.globals.define('tostring', {
+        this.globals.define("tostring", {
             call: (interpreter, args) => {
-                if (args.length === 0) return 'nil';
+                if (args.length === 0) return "nil";
                 return this.stringify(args[0]);
             }
         });
 
-        this.globals.define('tonumber', {
+        this.globals.define("tonumber", {
             call: (interpreter, args) => {
                 if (args.length === 0) return null;
                 const value = args[0];
-                if (typeof value === 'number') return value;
-                if (typeof value === 'string') {
+                if (typeof value === "number") return value;
+                if (typeof value === "string") {
                     const num = parseFloat(value);
                     return isNaN(num) ? null : num;
                 }
@@ -382,32 +382,32 @@ class Interpreter {
      */
     execute(statement) {
         switch (statement.type) {
-            case 'Program':
-                return this.interpret(statement.body);
+        case "Program":
+            return this.interpret(statement.body);
             
-            case 'ExpressionStatement':
-                return this.evaluate(statement.expression);
+        case "ExpressionStatement":
+            return this.evaluate(statement.expression);
             
-            case 'VariableDeclaration':
-                return this.executeVariableDeclaration(statement);
+        case "VariableDeclaration":
+            return this.executeVariableDeclaration(statement);
             
-            case 'FunctionDeclaration':
-                return this.executeFunctionDeclaration(statement);
+        case "FunctionDeclaration":
+            return this.executeFunctionDeclaration(statement);
             
-            case 'BlockStatement':
-                return this.executeBlockStatement(statement);
+        case "BlockStatement":
+            return this.executeBlockStatement(statement);
             
-            case 'IfStatement':
-                return this.executeIfStatement(statement);
+        case "IfStatement":
+            return this.executeIfStatement(statement);
             
-            case 'WhileStatement':
-                return this.executeWhileStatement(statement);
+        case "WhileStatement":
+            return this.executeWhileStatement(statement);
             
-            case 'ReturnStatement':
-                return this.executeReturnStatement(statement);
+        case "ReturnStatement":
+            return this.executeReturnStatement(statement);
             
-            default:
-                throw new Error(`Unknown statement type: ${statement.type}`);
+        default:
+            throw new Error(`Unknown statement type: ${statement.type}`);
         }
     }
 
@@ -424,29 +424,29 @@ class Interpreter {
         
         try {
             switch (expression.type) {
-                case 'Literal':
-                    return expression.value;
+            case "Literal":
+                return expression.value;
                 
-                case 'Identifier':
-                    return this.environment.get(expression.name);
+            case "Identifier":
+                return this.environment.get(expression.name);
                 
-                case 'BinaryExpression':
-                    return this.evaluateBinaryExpression(expression);
+            case "BinaryExpression":
+                return this.evaluateBinaryExpression(expression);
                 
-                case 'UnaryExpression':
-                    return this.evaluateUnaryExpression(expression);
+            case "UnaryExpression":
+                return this.evaluateUnaryExpression(expression);
                 
-                case 'AssignmentExpression':
-                    return this.evaluateAssignmentExpression(expression);
+            case "AssignmentExpression":
+                return this.evaluateAssignmentExpression(expression);
                 
-                case 'CallExpression':
-                    return this.evaluateCallExpression(expression);
+            case "CallExpression":
+                return this.evaluateCallExpression(expression);
                 
-                case 'ArrowFunction':
-                    return this.evaluateArrowFunction(expression);
+            case "ArrowFunction":
+                return this.evaluateArrowFunction(expression);
                 
-                default:
-                    throw new Error(`Unknown expression type: ${expression.type}`);
+            default:
+                throw new Error(`Unknown expression type: ${expression.type}`);
             }
         } finally {
             this.environment = previousEnv;
@@ -464,36 +464,36 @@ class Interpreter {
         const right = this.evaluate(expression.right);
         
         switch (expression.operator) {
-            case '+':
-                if (typeof left === 'string' || typeof right === 'string') {
-                    return this.stringify(left) + this.stringify(right);
-                }
-                return left + right;
-            case '-':
-                return left - right;
-            case '*':
-                return left * right;
-            case '/':
-                if (right === 0) throw new Error('Division by zero');
-                return left / right;
-            case '==':
-                return left === right;
-            case '!=':
-                return left !== right;
-            case '<':
-                return left < right;
-            case '<=':
-                return left <= right;
-            case '>':
-                return left > right;
-            case '>=':
-                return left >= right;
-            case '&&':
-                return this.isTruthy(left) && this.isTruthy(right);
-            case '||':
-                return this.isTruthy(left) || this.isTruthy(right);
-            default:
-                throw new Error(`Unknown binary operator: ${expression.operator}`);
+        case "+":
+            if (typeof left === "string" || typeof right === "string") {
+                return this.stringify(left) + this.stringify(right);
+            }
+            return left + right;
+        case "-":
+            return left - right;
+        case "*":
+            return left * right;
+        case "/":
+            if (right === 0) throw new Error("Division by zero");
+            return left / right;
+        case "==":
+            return left === right;
+        case "!=":
+            return left !== right;
+        case "<":
+            return left < right;
+        case "<=":
+            return left <= right;
+        case ">":
+            return left > right;
+        case ">=":
+            return left >= right;
+        case "&&":
+            return this.isTruthy(left) && this.isTruthy(right);
+        case "||":
+            return this.isTruthy(left) || this.isTruthy(right);
+        default:
+            throw new Error(`Unknown binary operator: ${expression.operator}`);
         }
     }
 
@@ -507,12 +507,12 @@ class Interpreter {
         const operand = this.evaluate(expression.argument);
         
         switch (expression.operator) {
-            case '-':
-                return -operand;
-            case '!':
-                return !this.isTruthy(operand);
-            default:
-                throw new Error(`Unknown unary operator: ${expression.operator}`);
+        case "-":
+            return -operand;
+        case "!":
+            return !this.isTruthy(operand);
+        default:
+            throw new Error(`Unknown unary operator: ${expression.operator}`);
         }
     }
 
@@ -525,7 +525,7 @@ class Interpreter {
     evaluateAssignmentExpression(expression) {
         const value = this.evaluate(expression.right);
         
-        if (expression.left.type === 'Identifier') {
+        if (expression.left.type === "Identifier") {
             const targetEnv = this.environment.resolve(expression.left.name);
             if (!targetEnv) {
                 throw new Error(`Undefined variable '${expression.left.name}'`);
@@ -535,7 +535,7 @@ class Interpreter {
             return value;
         }
         
-        throw new Error('Invalid assignment target');
+        throw new Error("Invalid assignment target");
     }
 
     /**
@@ -548,8 +548,8 @@ class Interpreter {
         const callee = this.evaluate(expression.callee);
         const args = expression.arguments.map(arg => this.evaluate(arg));
         
-        if (!callee || typeof callee.call !== 'function') {
-            throw new Error('Not a function');
+        if (!callee || typeof callee.call !== "function") {
+            throw new Error("Not a function");
         }
         
         return callee.call(this, args);
@@ -674,7 +674,7 @@ class Interpreter {
      */
     isTruthy(value) {
         if (value === null || value === undefined) return false;
-        if (typeof value === 'boolean') return value;
+        if (typeof value === "boolean") return value;
         return true;
     }
 
@@ -685,9 +685,9 @@ class Interpreter {
      * @private
      */
     stringify(value) {
-        if (value === null || value === undefined) return 'nil';
-        if (typeof value === 'string') return value;
-        if (typeof value === 'boolean') return value ? 'true' : 'false';
+        if (value === null || value === undefined) return "nil";
+        if (typeof value === "string") return value;
+        if (typeof value === "boolean") return value ? "true" : "false";
         return String(value);
     }
 
@@ -706,7 +706,7 @@ class Interpreter {
 
         const allocations = this.stringAllocations.get(environment) || new Map();
         const previousSize = allocations.get(name) || 0;
-        const newSize = typeof value === 'string' ? Buffer.byteLength(value, 'utf8') : 0;
+        const newSize = typeof value === "string" ? Buffer.byteLength(value, "utf8") : 0;
         const delta = newSize - previousSize;
 
         if (delta !== 0) {
@@ -750,6 +750,6 @@ class Interpreter {
 }
 
 // Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
     module.exports = { Interpreter, Environment, LuaScriptFunction, RuntimeMemoryManager };
 }

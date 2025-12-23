@@ -27,7 +27,7 @@ class AdvancedAsyncPatterns {
      * @returns {string} The transpiled Lua code for the async function.
      */
     transpileAsyncFunction(node, transpiler) {
-        const params = node.params.map(p => p.name).join(', ');
+        const params = node.params.map(p => p.name).join(", ");
         const body = transpiler.transpileBlock(node.body);
         
         return `function(${params})
@@ -433,17 +433,17 @@ return {
     testAsyncPatterns() {
         return [
             {
-                name: 'Basic async/await',
+                name: "Basic async/await",
                 code: `
                     async function fetchData() {
                         const data = await fetch('/api/data');
                         return data;
                     }
                 `,
-                expected: 'Coroutine-based async execution'
+                expected: "Coroutine-based async execution"
             },
             {
-                name: 'Promise.all',
+                name: "Promise.all",
                 code: `
                     const results = await Promise.all([
                         fetch('/api/1'),
@@ -451,20 +451,20 @@ return {
                         fetch('/api/3')
                     ]);
                 `,
-                expected: 'Parallel execution, wait for all'
+                expected: "Parallel execution, wait for all"
             },
             {
-                name: 'Promise.race',
+                name: "Promise.race",
                 code: `
                     const fastest = await Promise.race([
                         fetch('/api/1'),
                         fetch('/api/2')
                     ]);
                 `,
-                expected: 'Return first completed'
+                expected: "Return first completed"
             },
             {
-                name: 'Error handling',
+                name: "Error handling",
                 code: `
                     try {
                         const data = await fetchData();
@@ -472,10 +472,10 @@ return {
                         console.error(error);
                     }
                 `,
-                expected: 'Proper error propagation'
+                expected: "Proper error propagation"
             },
             {
-                name: 'Promise.allSettled',
+                name: "Promise.allSettled",
                 code: `
                     const results = await Promise.allSettled([
                         promise1,
@@ -483,7 +483,7 @@ return {
                         promise3
                     ]);
                 `,
-                expected: 'Wait for all, return all results'
+                expected: "Wait for all, return all results"
             }
         ];
     }
@@ -497,17 +497,17 @@ return {
             async: {
                 supported: this.asyncSupport.async,
                 features: [
-                    'async function declarations',
-                    'async arrow functions',
-                    'async methods'
+                    "async function declarations",
+                    "async arrow functions",
+                    "async methods"
                 ]
             },
             await: {
                 supported: this.asyncSupport.await,
                 features: [
-                    'await expressions',
-                    'await in loops',
-                    'await with error handling'
+                    "await expressions",
+                    "await in loops",
+                    "await with error handling"
                 ]
             },
             promiseMethods: {
@@ -516,7 +516,7 @@ return {
                 allSettled: this.asyncSupport.promiseAllSettled,
                 any: this.asyncSupport.promiseAny
             },
-            completion: '100%'
+            completion: "100%"
         };
     }
 }

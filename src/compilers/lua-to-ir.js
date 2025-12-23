@@ -4,9 +4,9 @@
  * Converts Lua AST to LUASCRIPT IR.
  */
 
-const luaparse = require('luaparse');
-const { builder } = require('../ir/builder');
-const { Types } = require('../ir/types');
+const luaparse = require("luaparse");
+const { builder } = require("../ir/builder");
+const { Types } = require("../ir/types");
 
 class LuaToIRCompiler {
     constructor(options = {}) {
@@ -42,7 +42,7 @@ class LuaToIRCompiler {
         if (!node) return null;
 
         const methodName = `convert${node.type}`;
-        if (typeof this[methodName] === 'function') {
+        if (typeof this[methodName] === "function") {
             return this[methodName](node);
         }
 
@@ -81,7 +81,7 @@ class LuaToIRCompiler {
             const name = variable.name;
             const init = node.init && node.init[index] ? this.convertNode(node.init[index]) : null;
             return this.builder.varDecl(name, init, null, {
-                kind: 'local',
+                kind: "local",
                 ...this.getLoc(variable)
             });
         });
@@ -96,27 +96,27 @@ class LuaToIRCompiler {
     }
 
     convertParameter(node) {
-        if (node.type === 'Identifier') {
+        if (node.type === "Identifier") {
             return this.builder.parameter(node.name, null, null, this.getLoc(node));
-        } else if (node.type === 'VarargLiteral') {
+        } else if (node.type === "VarargLiteral") {
             // Handle vararg parameters (...)
-            return this.builder.parameter('...', null, null, this.getLoc(node));
+            return this.builder.parameter("...", null, null, this.getLoc(node));
         }
         
         throw new Error(`Unsupported parameter type: ${node.type}`);
     }
 
     convertIdentifierName(node) {
-        if (node.type === 'Identifier') {
+        if (node.type === "Identifier") {
             return node.name;
-        } else if (node.type === 'MemberExpression') {
+        } else if (node.type === "MemberExpression") {
             // Handle obj.method style declarations
             const obj = this.convertIdentifierName(node.base);
             const prop = this.convertIdentifierName(node.identifier);
             return `${obj}.${prop}`;
         }
         
-        return node.name || 'anonymous';
+        return node.name || "anonymous";
     }
 
     convertBlock(body) {
@@ -151,10 +151,10 @@ class LuaToIRCompiler {
         for (let i = clauses.length - 1; i >= 0; i--) {
             const clause = clauses[i];
             
-            if (clause.type === 'ElseClause') {
+            if (clause.type === "ElseClause") {
                 // Else clause - just the body
                 result = this.convertBlock(clause.body);
-            } else if (clause.type === 'ElseifClause' || clause.type === 'IfClause') {
+            } else if (clause.type === "ElseifClause" || clause.type === "IfClause") {
                 const condition = this.convertNode(clause.condition);
                 const consequent = this.convertBlock(clause.body);
                 result = this.builder.ifStmt(condition, consequent, result, this.getLoc(clause));
@@ -249,7 +249,7 @@ class LuaToIRCompiler {
         const assignments = node.variables.map((variable, index) => {
             const left = this.convertNode(variable);
             const right = node.init[index] ? this.convertNode(node.init[index]) : this.builder.literal(null);
-            return this.builder.assignment(left, right, '=', this.getLoc(node));
+            return this.builder.assignment(left, right, "=", this.getLoc(node));
         });
         
         if (assignments.length === 1) {
@@ -273,10 +273,10 @@ class LuaToIRCompiler {
         
         // Map Lua operators to IR operators
         const operatorMap = {
-            'and': '&&',
-            'or': '||',
-            '..': 'concat', // String concatenation (special IR operator for Lua '..')
-            '~=': '!=',
+            "and": "&&",
+            "or": "||",
+            "..": "concat", // String concatenation (special IR operator for Lua '..')
+            "~=": "!=",
         };
         
         const operator = operatorMap[node.operator] || node.operator;
@@ -294,8 +294,8 @@ class LuaToIRCompiler {
         
         // Map Lua operators to IR operators
         const operatorMap = {
-            'not': '!',
-            '#': 'length', // Length operator
+            "not": "!",
+            "#": "length", // Length operator
         };
         
         const operator = operatorMap[node.operator] || node.operator;
@@ -331,7 +331,7 @@ class LuaToIRCompiler {
         const property = this.convertNode(node.identifier);
         
         // Lua uses : for method calls, . for property access
-        const computed = node.indexer === '[';
+        const computed = node.indexer === "[";
         
         return this.builder.member(object, property, computed, this.getLoc(node));
     }
@@ -350,15 +350,15 @@ class LuaToIRCompiler {
         
         // Check if it's an array-like table or object-like
         const isArray = fields.every(field => 
-            field.type === 'TableValue' || 
-            (field.type === 'TableKeyString' && /^\d+$/.test(field.key.name))
+            field.type === "TableValue" || 
+            (field.type === "TableKeyString" && /^\d+$/.test(field.key.name))
         );
         
         if (isArray) {
             const elements = fields.map(field => {
-                if (field.type === 'TableValue') {
+                if (field.type === "TableValue") {
                     return this.convertNode(field.value);
-                } else if (field.type === 'TableKey') {
+                } else if (field.type === "TableKey") {
                     return this.convertNode(field.value);
                 }
             });
@@ -367,13 +367,13 @@ class LuaToIRCompiler {
             const properties = fields.map(field => {
                 let key, value;
                 
-                if (field.type === 'TableKeyString') {
+                if (field.type === "TableKeyString") {
                     key = this.builder.identifier(field.key.name);
                     value = this.convertNode(field.value);
-                } else if (field.type === 'TableKey') {
+                } else if (field.type === "TableKey") {
                     key = this.convertNode(field.key);
                     value = this.convertNode(field.value);
-                } else if (field.type === 'TableValue') {
+                } else if (field.type === "TableValue") {
                     // Array-style value, use numeric key
                     key = this.builder.literal(fields.indexOf(field) + 1);
                     value = this.convertNode(field.value);
@@ -408,7 +408,7 @@ class LuaToIRCompiler {
 
     convertVarargLiteral(node) {
         // Vararg literal (...) - represent as a special identifier
-        return this.builder.identifier('...', this.getLoc(node));
+        return this.builder.identifier("...", this.getLoc(node));
     }
 
     // ========== HELPERS ==========

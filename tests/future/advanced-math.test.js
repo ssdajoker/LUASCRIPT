@@ -4,6 +4,8 @@
  * Tests for calculus notation, matrix operations, and advanced mathematical features
  * Status: PLANNED - These tests define the mathematical API surface
  */
+/* eslint-env jest */
+/* eslint-disable no-unused-vars */
 
 const { describe, it, expect } = require('@jest/globals');
 

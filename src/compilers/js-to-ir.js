@@ -5,14 +5,14 @@
  * Converts JavaScript AST to LUASCRIPT IR.
  */
 
-const acorn = require('acorn');
-const { builder } = require('../ir/builder');
-const { Types } = require('../ir/types');
+const acorn = require("acorn");
+const { builder } = require("../ir/builder");
+const { Types } = require("../ir/types");
 
 class JSToIRCompiler {
     constructor(options = {}) {
         this.options = {
-            sourceType: options.sourceType || 'module',
+            sourceType: options.sourceType || "module",
             ecmaVersion: options.ecmaVersion || 2020,
             ...options
         };
@@ -45,7 +45,7 @@ class JSToIRCompiler {
         if (!node) return null;
 
         const methodName = `convert${node.type}`;
-        if (typeof this[methodName] === 'function') {
+        if (typeof this[methodName] === "function") {
             return this[methodName](node);
         }
 
@@ -89,9 +89,9 @@ class JSToIRCompiler {
     }
 
     convertParameter(node) {
-        if (node.type === 'Identifier') {
+        if (node.type === "Identifier") {
             return this.builder.parameter(node.name, null, null, this.getLoc(node));
-        } else if (node.type === 'AssignmentPattern') {
+        } else if (node.type === "AssignmentPattern") {
             const name = node.left.name;
             const defaultValue = this.convertNode(node.right);
             return this.builder.parameter(name, null, defaultValue, this.getLoc(node));
@@ -237,11 +237,11 @@ class JSToIRCompiler {
     convertLiteral(node) {
         let type = null;
         
-        if (typeof node.value === 'number') {
+        if (typeof node.value === "number") {
             type = Types.number();
-        } else if (typeof node.value === 'string') {
+        } else if (typeof node.value === "string") {
             type = Types.string();
-        } else if (typeof node.value === 'boolean') {
+        } else if (typeof node.value === "boolean") {
             type = Types.boolean();
         } else if (node.value === null) {
             type = Types.null();
@@ -271,7 +271,7 @@ class JSToIRCompiler {
         
         // Handle expression body vs block body
         let body;
-        if (node.body.type === 'BlockStatement') {
+        if (node.body.type === "BlockStatement") {
             body = this.convertNode(node.body);
         } else {
             // Expression body - wrap in return statement
@@ -294,7 +294,7 @@ class JSToIRCompiler {
 
     convertThisExpression(node) {
         // Represent 'this' as a special identifier
-        return this.builder.identifier('this', this.getLoc(node));
+        return this.builder.identifier("this", this.getLoc(node));
     }
 
     convertNewExpression(node) {

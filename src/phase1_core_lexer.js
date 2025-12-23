@@ -24,24 +24,24 @@ class LuaScriptLexer {
         this.column = 1;
         this.tokens = [];
         this.keywords = new Set([
-            'let', 'const', 'var', 'function', 'return', 'if', 'else', 'for', 
-            'while', 'do', 'break', 'continue', 'true', 'false', 'null', 
-            'undefined', 'class', 'extends', 'super', 'this', 'new', 'try', 
-            'catch', 'finally', 'throw', 'async', 'await', 'import', 'export',
-            'switch', 'case', 'default', 'static'
+            "let", "const", "var", "function", "return", "if", "else", "for", 
+            "while", "do", "break", "continue", "true", "false", "null", 
+            "undefined", "class", "extends", "super", "this", "new", "try", 
+            "catch", "finally", "throw", "async", "await", "import", "export",
+            "switch", "case", "default", "static"
         ]);
         this.operators = new Map([
-            ['+', 'PLUS'], ['-', 'MINUS'], ['*', 'MULTIPLY'], ['/', 'DIVIDE'],
-            ['%', 'MODULO'], ['=', 'ASSIGN'], ['==', 'EQUAL'], ['===', 'STRICT_EQUAL'],
-            ['!=', 'NOT_EQUAL'], ['!==', 'STRICT_NOT_EQUAL'], ['<', 'LESS_THAN'],
-            ['>', 'GREATER_THAN'], ['<=', 'LESS_EQUAL'], ['>=', 'GREATER_EQUAL'],
-            ['&&', 'LOGICAL_AND'], ['||', 'LOGICAL_OR'], ['!', 'LOGICAL_NOT'],
-            ['&', 'BITWISE_AND'], ['|', 'BITWISE_OR'], ['^', 'BITWISE_XOR'],
-            ['~', 'BITWISE_NOT'], ['<<', 'LEFT_SHIFT'], ['>>', 'RIGHT_SHIFT'],
-            ['++', 'INCREMENT'], ['--', 'DECREMENT'], ['+=', 'PLUS_ASSIGN'],
-            ['-=', 'MINUS_ASSIGN'], ['*=', 'MULTIPLY_ASSIGN'], ['/=', 'DIVIDE_ASSIGN'],
-            ['=>', 'ARROW'], ['...', 'SPREAD'], ['?.', 'OPTIONAL_CHAINING'],
-            ['??', 'NULLISH_COALESCING'], ['??=', 'NULLISH_ASSIGN']
+            ["+", "PLUS"], ["-", "MINUS"], ["*", "MULTIPLY"], ["/", "DIVIDE"],
+            ["%", "MODULO"], ["=", "ASSIGN"], ["==", "EQUAL"], ["===", "STRICT_EQUAL"],
+            ["!=", "NOT_EQUAL"], ["!==", "STRICT_NOT_EQUAL"], ["<", "LESS_THAN"],
+            [">", "GREATER_THAN"], ["<=", "LESS_EQUAL"], [">=", "GREATER_EQUAL"],
+            ["&&", "LOGICAL_AND"], ["||", "LOGICAL_OR"], ["!", "LOGICAL_NOT"],
+            ["&", "BITWISE_AND"], ["|", "BITWISE_OR"], ["^", "BITWISE_XOR"],
+            ["~", "BITWISE_NOT"], ["<<", "LEFT_SHIFT"], [">>", "RIGHT_SHIFT"],
+            ["++", "INCREMENT"], ["--", "DECREMENT"], ["+=", "PLUS_ASSIGN"],
+            ["-=", "MINUS_ASSIGN"], ["*=", "MULTIPLY_ASSIGN"], ["/=", "DIVIDE_ASSIGN"],
+            ["=>", "ARROW"], ["...", "SPREAD"], ["?.", "OPTIONAL_CHAINING"],
+            ["??", "NULLISH_COALESCING"], ["??=", "NULLISH_ASSIGN"]
         ]);
         this.errorRecovery = options.errorRecovery !== false;
         this.strictMode = options.strictMode || false;
@@ -65,15 +65,15 @@ class LuaScriptLexer {
             const char = this.current();
             
             try {
-                if (this.isAlpha(char) || char === '_' || char === '$') {
+                if (this.isAlpha(char) || char === "_" || char === "$") {
                     this.tokenizeIdentifier();
                 } else if (this.isDigit(char)) {
                     this.tokenizeNumber();
-                } else if (char === '"' || char === "'" || char === '`') {
+                } else if (char === "\"" || char === "'" || char === "`") {
                     this.tokenizeString();
-                } else if (char === '/' && this.peek() === '/') {
+                } else if (char === "/" && this.peek() === "/") {
                     this.tokenizeLineComment();
-                } else if (char === '/' && this.peek() === '*') {
+                } else if (char === "/" && this.peek() === "*") {
                     this.tokenizeBlockComment();
                 } else if (this.isOperatorStart(char)) {
                     this.tokenizeOperator();
@@ -97,7 +97,7 @@ class LuaScriptLexer {
             }
         }
 
-        this.addToken('EOF', null);
+        this.addToken("EOF", null);
         return this.tokens;
     }
 
@@ -111,12 +111,12 @@ class LuaScriptLexer {
         const startColumn = this.column;
 
         while (this.position < this.source.length && 
-               (this.isAlphaNumeric(this.current()) || this.current() === '_' || this.current() === '$')) {
+               (this.isAlphaNumeric(this.current()) || this.current() === "_" || this.current() === "$")) {
             this.advance();
         }
 
         const value = this.source.substring(start, this.position);
-        const type = this.keywords.has(value) ? 'KEYWORD' : 'IDENTIFIER';
+        const type = this.keywords.has(value) ? "KEYWORD" : "IDENTIFIER";
         
         this.addToken(type, value, startLine, startColumn);
     }
@@ -133,15 +133,15 @@ class LuaScriptLexer {
         let hasExponent = false;
 
         // Handle hex, binary, octal literals
-        if (this.current() === '0') {
+        if (this.current() === "0") {
             this.advance();
-            if (this.current() === 'x' || this.current() === 'X') {
+            if (this.current() === "x" || this.current() === "X") {
                 this.advance();
                 return this.tokenizeHexNumber(start, startLine, startColumn);
-            } else if (this.current() === 'b' || this.current() === 'B') {
+            } else if (this.current() === "b" || this.current() === "B") {
                 this.advance();
                 return this.tokenizeBinaryNumber(start, startLine, startColumn);
-            } else if (this.current() === 'o' || this.current() === 'O') {
+            } else if (this.current() === "o" || this.current() === "O") {
                 this.advance();
                 return this.tokenizeOctalNumber(start, startLine, startColumn);
             }
@@ -153,13 +153,13 @@ class LuaScriptLexer {
             
             if (this.isDigit(char)) {
                 this.advance();
-            } else if (char === '.' && !hasDecimal && this.isDigit(this.peek())) {
+            } else if (char === "." && !hasDecimal && this.isDigit(this.peek())) {
                 hasDecimal = true;
                 this.advance();
-            } else if ((char === 'e' || char === 'E') && !hasExponent) {
+            } else if ((char === "e" || char === "E") && !hasExponent) {
                 hasExponent = true;
                 this.advance();
-                if (this.current() === '+' || this.current() === '-') {
+                if (this.current() === "+" || this.current() === "-") {
                     this.advance();
                 }
             } else {
@@ -168,7 +168,7 @@ class LuaScriptLexer {
         }
 
         const value = this.source.substring(start, this.position);
-        this.addToken('NUMBER', parseFloat(value), startLine, startColumn);
+        this.addToken("NUMBER", parseFloat(value), startLine, startColumn);
     }
 
     /**
@@ -183,7 +183,7 @@ class LuaScriptLexer {
             this.advance();
         }
         const value = this.source.substring(start, this.position);
-        this.addToken('NUMBER', parseInt(value, 16), startLine, startColumn);
+        this.addToken("NUMBER", parseInt(value, 16), startLine, startColumn);
     }
 
     /**
@@ -194,11 +194,11 @@ class LuaScriptLexer {
      * @private
      */
     tokenizeBinaryNumber(start, startLine, startColumn) {
-        while (this.position < this.source.length && (this.current() === '0' || this.current() === '1')) {
+        while (this.position < this.source.length && (this.current() === "0" || this.current() === "1")) {
             this.advance();
         }
         const value = this.source.substring(start, this.position);
-        this.addToken('NUMBER', parseInt(value.substring(2), 2), startLine, startColumn);
+        this.addToken("NUMBER", parseInt(value.substring(2), 2), startLine, startColumn);
     }
 
     /**
@@ -209,11 +209,11 @@ class LuaScriptLexer {
      * @private
      */
     tokenizeOctalNumber(start, startLine, startColumn) {
-        while (this.position < this.source.length && this.current() >= '0' && this.current() <= '7') {
+        while (this.position < this.source.length && this.current() >= "0" && this.current() <= "7") {
             this.advance();
         }
         const value = this.source.substring(start, this.position);
-        this.addToken('NUMBER', parseInt(value.substring(2), 8), startLine, startColumn);
+        this.addToken("NUMBER", parseInt(value.substring(2), 8), startLine, startColumn);
     }
 
     /**
@@ -222,12 +222,11 @@ class LuaScriptLexer {
      */
     tokenizeString() {
         const quote = this.current();
-        const start = this.position;
         const startLine = this.line;
         const startColumn = this.column;
         this.advance(); // Skip opening quote
 
-        let value = '';
+        let value = "";
         let escaped = false;
 
         while (this.position < this.source.length) {
@@ -235,36 +234,37 @@ class LuaScriptLexer {
 
             if (escaped) {
                 switch (char) {
-                    case 'n': value += '\n'; break;
-                    case 't': value += '\t'; break;
-                    case 'r': value += '\r'; break;
-                    case '\\': value += '\\'; break;
-                    case '"': value += '"'; break;
-                    case "'": value += "'"; break;
-                    case '`': value += '`'; break;
-                    case 'u': 
-                        // Unicode escape sequence
-                        this.advance();
-                        const unicode = this.source.substr(this.position, 4);
-                        if (unicode.length === 4 && /^[0-9a-fA-F]{4}$/.test(unicode)) {
-                            value += String.fromCharCode(parseInt(unicode, 16));
-                            this.position += 3; // Will be incremented by advance()
-                        } else {
-                            throw new SyntaxError(`Invalid unicode escape sequence at line ${this.line}`);
-                        }
-                        break;
-                    default:
-                        value += char;
+                case "n": value += "\n"; break;
+                case "t": value += "\t"; break;
+                case "r": value += "\r"; break;
+                case "\\": value += "\\"; break;
+                case "\"": value += "\""; break;
+                case "'": value += "'"; break;
+                case "`": value += "`"; break;
+                case "u": {
+                    // Unicode escape sequence
+                    this.advance();
+                    const unicode = this.source.substr(this.position, 4);
+                    if (unicode.length === 4 && /^[0-9a-fA-F]{4}$/.test(unicode)) {
+                        value += String.fromCharCode(parseInt(unicode, 16));
+                        this.position += 3; // Will be incremented by advance()
+                    } else {
+                        throw new SyntaxError(`Invalid unicode escape sequence at line ${this.line}`);
+                    }
+                }
+                    break;
+                default:
+                    value += char;
                 }
                 escaped = false;
-            } else if (char === '\\') {
+            } else if (char === "\\") {
                 escaped = true;
             } else if (char === quote) {
                 this.advance(); // Skip closing quote
-                this.addToken('STRING', value, startLine, startColumn);
+                this.addToken("STRING", value, startLine, startColumn);
                 return;
-            } else if (char === '\n') {
-                if (quote !== '`') {
+            } else if (char === "\n") {
+                if (quote !== "`") {
                     throw new SyntaxError(`Unterminated string literal at line ${this.line}`);
                 }
                 value += char;
@@ -289,12 +289,12 @@ class LuaScriptLexer {
         this.advance(); // Skip second /
 
         const start = this.position;
-        while (this.position < this.source.length && this.current() !== '\n') {
+        while (this.position < this.source.length && this.current() !== "\n") {
             this.advance();
         }
 
         const value = this.source.substring(start, this.position);
-        this.addToken('COMMENT', value);
+        this.addToken("COMMENT", value);
     }
 
     /**
@@ -309,14 +309,14 @@ class LuaScriptLexer {
 
         const start = this.position;
         while (this.position < this.source.length - 1) {
-            if (this.current() === '*' && this.peek() === '/') {
+            if (this.current() === "*" && this.peek() === "/") {
                 const value = this.source.substring(start, this.position);
                 this.advance(); // Skip *
                 this.advance(); // Skip /
-                this.addToken('COMMENT', value);
+                this.addToken("COMMENT", value);
                 return;
             }
-            if (this.current() === '\n') {
+            if (this.current() === "\n") {
                 this.line++;
                 this.column = 0;
             }
@@ -331,7 +331,7 @@ class LuaScriptLexer {
      * @private
      */
     tokenizeOperator() {
-        const start = this.position;
+        // const start = this.position; // removed unused variable
         const startLine = this.line;
         const startColumn = this.column;
 
@@ -349,7 +349,7 @@ class LuaScriptLexer {
         // If no operator matched, treat as single character
         const char = this.current();
         this.advance();
-        this.addToken('OPERATOR', char, startLine, startColumn);
+        this.addToken("OPERATOR", char, startLine, startColumn);
     }
 
     /**
@@ -363,20 +363,20 @@ class LuaScriptLexer {
         this.advance();
 
         const punctuationMap = {
-            '(': 'LEFT_PAREN',
-            ')': 'RIGHT_PAREN',
-            '[': 'LEFT_BRACKET',
-            ']': 'RIGHT_BRACKET',
-            '{': 'LEFT_BRACE',
-            '}': 'RIGHT_BRACE',
-            ',': 'COMMA',
-            ';': 'SEMICOLON',
-            ':': 'COLON',
-            '?': 'QUESTION',
-            '.': 'DOT'
+            "(": "LEFT_PAREN",
+            ")": "RIGHT_PAREN",
+            "[": "LEFT_BRACKET",
+            "]": "RIGHT_BRACKET",
+            "{": "LEFT_BRACE",
+            "}": "RIGHT_BRACE",
+            ",": "COMMA",
+            ";": "SEMICOLON",
+            ":": "COLON",
+            "?": "QUESTION",
+            ".": "DOT"
         };
 
-        const type = punctuationMap[char] || 'PUNCTUATION';
+        const type = punctuationMap[char] || "PUNCTUATION";
         this.addToken(type, char, startLine, startColumn);
     }
 
@@ -386,7 +386,7 @@ class LuaScriptLexer {
      * @private
      */
     current() {
-        return this.position < this.source.length ? this.source[this.position] : '\0';
+        return this.position < this.source.length ? this.source[this.position] : "\0";
     }
 
     /**
@@ -397,7 +397,7 @@ class LuaScriptLexer {
      */
     peek(offset = 1) {
         const pos = this.position + offset;
-        return pos < this.source.length ? this.source[pos] : '\0';
+        return pos < this.source.length ? this.source[pos] : "\0";
     }
 
     /**
@@ -406,7 +406,7 @@ class LuaScriptLexer {
      */
     advance() {
         if (this.position < this.source.length) {
-            if (this.source[this.position] === '\n') {
+            if (this.source[this.position] === "\n") {
                 this.line++;
                 this.column = 1;
             } else {
@@ -484,7 +484,7 @@ class LuaScriptLexer {
      */
     isOperatorStart(char) {
     // Treat ':' and '?' as punctuation (COLON/QUESTION); exclude them here
-    return '+-*/%=<>!&|^~'.includes(char);
+        return "+-*/%=<>!&|^~".includes(char);
     }
 
     /**
@@ -494,7 +494,7 @@ class LuaScriptLexer {
      * @private
      */
     isPunctuation(char) {
-        return '()[]{},.;:?'.includes(char);
+        return "()[]{},.;:?".includes(char);
     }
 
     /**
@@ -522,7 +522,7 @@ class LuaScriptLexer {
      */
     addError(message) {
         this.tokens.push({
-            type: 'ERROR',
+            type: "ERROR",
             value: message,
             line: this.line,
             column: this.column,
@@ -543,7 +543,7 @@ class LuaScriptLexer {
      * @returns {boolean} True if there are errors.
      */
     hasErrors() {
-        return this.tokens.some(token => token.type === 'ERROR');
+        return this.tokens.some(token => token.type === "ERROR");
     }
 
     /**
@@ -551,7 +551,7 @@ class LuaScriptLexer {
      * @returns {object[]} The array of error tokens.
      */
     getErrors() {
-        return this.tokens.filter(token => token.type === 'ERROR');
+        return this.tokens.filter(token => token.type === "ERROR");
     }
 }
 

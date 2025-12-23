@@ -1,20 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
-const { parseAndLower } = require('../../src/ir/pipeline');
-const { emitLuaFromIR } = require('../../src/ir/emitter');
-const { validateIR } = require('../../src/ir/validator');
-
-const results = [];
-
-const assert = require('assert');
 const http = require('http');
 const https = require('https');
 const { URL } = require('url');
 const { parseAndLower } = require('../../src/ir/pipeline');
 const { emitLuaFromIR } = require('../../src/ir/emitter');
 const { validateIR } = require('../../src/ir/validator');
-const { writeContextArtifacts } = require('../../scripts/context_pack');
 
 const results = [];
 
@@ -34,6 +26,7 @@ function fetchDocHints(query) {
         req.setTimeout(REQUEST_TIMEOUT_MS);
         const chunks = [];
         res.on('data', (c) => chunks.push(c));
+        res.on('end', () => {
           try {
             const body = Buffer.concat(chunks).toString('utf8');
             const json = JSON.parse(body);
@@ -70,7 +63,7 @@ function runCase(name, source, expectations) {
   const lua2 = emitLuaFromIR(ir2);
   assert.strictEqual(lua1, lua2, `${name} determinism mismatch between runs`);
 
-  const durationMs = Number(process.hrtime.bigint() - started) / 1_000_000;
+  const durationMs = Number(process.hrtime.bigint() - started) / 1000000;
   results.push({ name, durationMs, bytes: lua1.length });
   assert.ok(durationMs < 2000, `${name} exceeded 2000ms budget (${durationMs.toFixed(2)}ms)`);
 
@@ -82,14 +75,14 @@ function writeArtifacts(summary) {
     const outDir = path.join(process.cwd(), 'artifacts');
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, 'harness_results.json'), JSON.stringify(summary, null, 2));
-    const runInfo = {
-      gitSha: process.env.GITHUB_SHA || null,
-      runId: process.env.GITHUB_RUN_ID || null,
-      runUrl: process.env.GITHUB_RUN_ID && process.env.GITHUB_REPOSITORY
-        ? `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
-        : null,
-    };
-    writeContextArtifacts({ harnessSummary: summary, runInfo });
+    // const runInfo = {
+    //   gitSha: process.env.GITHUB_SHA || null,
+    //   runId: process.env.GITHUB_RUN_ID || null,
+    //   runUrl: process.env.GITHUB_RUN_ID && process.env.GITHUB_REPOSITORY
+    //     ? `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
+    //     : null,
+    // };
+    // writeContextArtifacts({ harnessSummary: summary, runInfo }); // Disabled: module not found
   } catch (err) {
     console.warn('Failed to write harness artifacts:', err && err.stack ? err.stack : err);
   }
@@ -137,11 +130,8 @@ try {
     assert.ok(lua.includes('.') || lua.includes('['), 'member access missing');
   });
 
-  // Note: array destructuring test skipped - Phase1 parser doesn't support patterns yet
-  // This will be tested in the enhanced pipeline with AST support for destructuring
-  // runCase('array destructuring with holes', 'const [a, , c] = arr;', ({ lua }) => {
-  //   assert.ok(lua.includes('a') && lua.includes('c'), 'destructured variables missing');
-  // });
+  // Note: array destructuring test remains skipped for Phase1 parser.
+  // Coverage now lives in tests/enhanced/harness_enhanced.test.js under the enhanced pipeline.
 
   const slowest = results.slice().sort((a, b) => b.durationMs - a.durationMs)[0];
   writeArtifacts({ summary: { cases: results.length, slowest }, cases: results });

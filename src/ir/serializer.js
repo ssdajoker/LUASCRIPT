@@ -5,7 +5,7 @@
  * Handles serialization and deserialization of IR to/from JSON.
  */
 
-const { IRNode } = require('./nodes');
+const { IRNode } = require("./nodes");
 
 class IRSerializer {
     constructor(options = {}) {
@@ -34,7 +34,7 @@ class IRSerializer {
      * Deserialize JSON string to IR
      */
     deserialize(jsonString) {
-        const json = typeof jsonString === 'string' 
+        const json = typeof jsonString === "string" 
             ? JSON.parse(jsonString) 
             : jsonString;
         
@@ -45,17 +45,17 @@ class IRSerializer {
      * Serialize IR to a file
      */
     serializeToFile(node, filepath) {
-        const fs = require('fs');
+        const fs = require("fs");
         const json = this.serialize(node);
-        fs.writeFileSync(filepath, json, 'utf8');
+        fs.writeFileSync(filepath, json, "utf8");
     }
 
     /**
      * Deserialize IR from a file
      */
     deserializeFromFile(filepath) {
-        const fs = require('fs');
-        const json = fs.readFileSync(filepath, 'utf8');
+        const fs = require("fs");
+        const json = fs.readFileSync(filepath, "utf8");
         return this.deserialize(json);
     }
 
@@ -71,7 +71,7 @@ class IRSerializer {
      * Generate a visual tree representation of IR
      */
     visualize(node, indent = 0) {
-        const spaces = '  '.repeat(indent);
+        const spaces = "  ".repeat(indent);
         const json = node.toJSON();
         
         let output = `${spaces}${json.kind}`;
@@ -82,13 +82,13 @@ class IRSerializer {
         } else if (json.operator) {
             output += ` (${json.operator})`;
         } else if (json.value !== undefined) {
-            const value = typeof json.value === 'string' 
+            const value = typeof json.value === "string" 
                 ? `"${json.value}"` 
                 : json.value;
             output += ` = ${value}`;
         }
         
-        output += '\n';
+        output += "\n";
         
         // Recursively visualize children
         if (json.body) {
@@ -201,12 +201,12 @@ class IRSerializer {
         const rootId = traverse(node);
         
         return [
-            'digraph IR {',
-            '  node [shape=box];',
+            "digraph IR {",
+            "  node [shape=box];",
             `  node${rootId} [label="${this.getDotLabel(node.toJSON())}"];`,
             ...edges,
-            '}'
-        ].join('\n');
+            "}"
+        ].join("\n");
     }
 
     /**
@@ -220,7 +220,7 @@ class IRSerializer {
         } else if (json.operator) {
             label += `\\n${json.operator}`;
         } else if (json.value !== undefined) {
-            const value = typeof json.value === 'string' 
+            const value = typeof json.value === "string" 
                 ? `"${json.value}"` 
                 : json.value;
             label += `\\n${value}`;
@@ -241,7 +241,7 @@ class IRSerializer {
                     children.push({ node: child, label: `body[${i}]` });
                 });
             } else {
-                children.push({ node: json.body, label: 'body' });
+                children.push({ node: json.body, label: "body" });
             }
         }
         
@@ -252,23 +252,23 @@ class IRSerializer {
         }
         
         if (json.condition) {
-            children.push({ node: json.condition, label: 'condition' });
+            children.push({ node: json.condition, label: "condition" });
         }
         
         if (json.consequent) {
-            children.push({ node: json.consequent, label: 'consequent' });
+            children.push({ node: json.consequent, label: "consequent" });
         }
         
         if (json.alternate) {
-            children.push({ node: json.alternate, label: 'alternate' });
+            children.push({ node: json.alternate, label: "alternate" });
         }
         
         if (json.left) {
-            children.push({ node: json.left, label: 'left' });
+            children.push({ node: json.left, label: "left" });
         }
         
         if (json.right) {
-            children.push({ node: json.right, label: 'right' });
+            children.push({ node: json.right, label: "right" });
         }
         
         return children;

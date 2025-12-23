@@ -6,8 +6,8 @@
  * Advanced Runtime with GPU Acceleration, Memory Management, and Performance Optimization
  */
 
-const { EventEmitter } = require('events');
-const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
+const { EventEmitter } = require("events");
+const { Worker, isMainThread } = require("worker_threads");
 
 /**
  * The main class for the LUASCRIPT Runtime System, providing a complete execution environment
@@ -60,7 +60,7 @@ class RuntimeSystem extends EventEmitter {
      * @returns {Promise<void>}
      */
     async initialize() {
-        this.emit('runtimeInit');
+        this.emit("runtimeInit");
         
         // Initialize GPU acceleration if available
         if (this.options.enableGPU) {
@@ -72,7 +72,7 @@ class RuntimeSystem extends EventEmitter {
             await this.initializeWorkers();
         }
         
-        this.emit('runtimeReady');
+        this.emit("runtimeReady");
     }
 
     /**
@@ -83,12 +83,12 @@ class RuntimeSystem extends EventEmitter {
      */
     async execute(luaCode, context = {}) {
         const startTime = process.hrtime.bigint();
-        const normalizedCode = typeof luaCode === 'string'
-            ? luaCode.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+        const normalizedCode = typeof luaCode === "string"
+            ? luaCode.replace(/\r\n/g, "\n").replace(/\r/g, "\n")
             : luaCode;
         
         try {
-            this.emit('executionStart', { size: normalizedCode.length });
+            this.emit("executionStart", { size: normalizedCode.length });
             
             // Create execution context
             const execContext = this.createExecutionContext(context);
@@ -112,13 +112,13 @@ class RuntimeSystem extends EventEmitter {
                 executionTime,
             };
 
-            this.emit('executionComplete', payload);
+            this.emit("executionComplete", payload);
             return payload;
             
         } catch (error) {
             const executionTime = Number(process.hrtime.bigint() - startTime) / 1e6;
             this.recordError(error, executionTime);
-            this.emit('executionError', { error: error.message, time: executionTime });
+            this.emit("executionError", { error: error.message, time: executionTime });
             throw error;
         }
     }
@@ -162,7 +162,7 @@ class RuntimeSystem extends EventEmitter {
      * @private
      */
     loadModule(moduleName) {
-        const normalizedName = moduleName.replace(/\\/g, '/');
+        const normalizedName = moduleName.replace(/\\/g, "/");
         if (this.moduleCache.has(normalizedName)) {
             return this.moduleCache.get(normalizedName);
         }
@@ -183,8 +183,8 @@ class RuntimeSystem extends EventEmitter {
                 workerData: { isWorker: true, workerId: i }
             });
             
-            worker.on('message', (result) => {
-                this.emit('workerResult', result);
+            worker.on("message", (result) => {
+                this.emit("workerResult", result);
             });
             
             this.workers.push(worker);
@@ -242,7 +242,7 @@ class RuntimeSystem extends EventEmitter {
     shutdown() {
         this.workers.forEach(worker => worker.terminate());
         this.memory.cleanup();
-        this.emit('runtimeShutdown');
+        this.emit("runtimeShutdown");
     }
 }
 
@@ -272,7 +272,7 @@ class MemoryManager {
         if (this.allocated + size > this.maxMemory) {
             this.gc(true);
             if (this.allocated + size > this.maxMemory) {
-                throw new Error('Out of memory');
+                throw new Error("Out of memory");
             }
         }
         
@@ -499,7 +499,7 @@ class JITCompiler {
      */
     eliminateDeadCode(code) {
         // Dead code elimination simulation
-        return code.replace(/local\s+\w+\s*=\s*[^;]+;\s*--\s*unused/g, '');
+        return code.replace(/local\s+\w+\s*=\s*[^;]+;\s*--\s*unused/g, "");
     }
 
     /**
@@ -509,7 +509,7 @@ class JITCompiler {
      * @private
      */
     getCodeHash(code) {
-        return require('crypto').createHash('md5').update(code).digest('hex');
+        return require("crypto").createHash("md5").update(code).digest("hex");
     }
 
     /**
@@ -577,12 +577,12 @@ class GPUAccelerator {
     gpuOperation(operation, data) {
         // Simulate GPU-accelerated operation
         switch (operation) {
-            case 'vectorAdd':
-                return data.map(x => x + 1);
-            case 'matrixMultiply':
-                return data.map(row => row.map(x => x * 2));
-            default:
-                return data;
+        case "vectorAdd":
+            return data.map(x => x + 1);
+        case "matrixMultiply":
+            return data.map(row => row.map(x => x * 2));
+        default:
+            return data;
         }
     }
 
@@ -631,8 +631,8 @@ class LuaInterpreter {
     execute(code) {
         // Simplified Lua code execution
         const statements = code
-            .split('\n')
-            .flatMap(line => line.split(';'))
+            .split("\n")
+            .flatMap(line => line.split(";"))
             .map(statement => statement.trim())
             .filter(Boolean);
 
@@ -653,12 +653,12 @@ class LuaInterpreter {
      */
     executeLine(line) {
         // Return statement
-        if (line.startsWith('return ')) {
+        if (line.startsWith("return ")) {
             return this.evaluateExpression(line.substring(7));
         }
 
         // Function definition (local)
-        if (line.startsWith('local function ')) {
+        if (line.startsWith("local function ")) {
             return this.defineFunction(line);
         }
 
@@ -670,8 +670,8 @@ class LuaInterpreter {
             return this.variables.get(name);
         }
 
-            // Function call or expression evaluation
-            return this.evaluateExpression(line);
+        // Function call or expression evaluation
+        return this.evaluateExpression(line);
     }
 
     /**
@@ -706,11 +706,11 @@ class LuaInterpreter {
         }
         
         // Simple arithmetic
-        if (expr.includes('+')) {
-            const [left, right] = expr.split('+').map(s => s.trim());
+        if (expr.includes("+")) {
+            const [left, right] = expr.split("+").map(s => s.trim());
             return this.evaluateExpression(left) + this.evaluateExpression(right);
         }
-            return expr;
+        return expr;
     }
 
     defineFunction(line) {
@@ -744,7 +744,7 @@ class LuaInterpreter {
     }
 
     parseArguments(args) {
-        const normalized = (args ?? '').trim();
+        const normalized = (args ?? "").trim();
         if (!normalized) {
             return [];
         }
@@ -753,13 +753,13 @@ class LuaInterpreter {
             .map(arg => this.evaluateExpression(arg));
     }
 
-    splitTopLevel(value, delimiter = ',') {
+    splitTopLevel(value, delimiter = ",") {
         if (!value) {
             return [];
         }
 
         const result = [];
-        let current = '';
+        let current = "";
         const stack = [];
         let inSingleQuote = false;
         let inDoubleQuote = false;
@@ -799,7 +799,7 @@ class LuaInterpreter {
                 continue;
             }
 
-            if (char === '\\') {
+            if (char === "\\") {
                 current += char;
                 isEscaped = true;
                 continue;
@@ -807,7 +807,7 @@ class LuaInterpreter {
 
             if (inSingleQuote) {
                 current += char;
-                if (char === '\'') {
+                if (char === "'") {
                     inSingleQuote = false;
                 }
                 continue;
@@ -815,7 +815,7 @@ class LuaInterpreter {
 
             if (inDoubleQuote) {
                 current += char;
-                if (char === '"') {
+                if (char === "\"") {
                     inDoubleQuote = false;
                 }
                 continue;
@@ -823,49 +823,49 @@ class LuaInterpreter {
 
             if (inBacktick) {
                 current += char;
-                if (char === '`') {
+                if (char === "`") {
                     inBacktick = false;
                 }
                 continue;
             }
 
-            if (char === '\'') {
+            if (char === "'") {
                 inSingleQuote = true;
                 current += char;
                 continue;
             }
 
-            if (char === '"') {
+            if (char === "\"") {
                 inDoubleQuote = true;
                 current += char;
                 continue;
             }
 
-            if (char === '`') {
+            if (char === "`") {
                 inBacktick = true;
                 current += char;
                 continue;
             }
 
-            if (char === '(') {
-                stack.push(')');
+            if (char === "(") {
+                stack.push(")");
                 current += char;
                 continue;
             }
 
-            if (char === '{') {
-                stack.push('}');
+            if (char === "{") {
+                stack.push("}");
                 current += char;
                 continue;
             }
 
-            if (char === '[') {
-                stack.push(']');
+            if (char === "[") {
+                stack.push("]");
                 current += char;
                 continue;
             }
 
-            if (char === ')' || char === '}' || char === ']') {
+            if (char === ")" || char === "}" || char === "]") {
                 if (stack.length === 0) {
                     const msg = `Unmatched closing delimiter '${char}' at position ${i}`;
                     pushError(msg);
@@ -888,7 +888,7 @@ class LuaInterpreter {
                 if (trimmed) {
                     result.push(trimmed);
                 }
-                current = '';
+                current = "";
                 continue;
             }
 
@@ -901,18 +901,18 @@ class LuaInterpreter {
         }
 
         if (stack.length > 0) {
-            throw new Error(pushError(`Unclosed delimiter(s) at end of input: ${stack.join(', ')}`));
+            throw new Error(pushError(`Unclosed delimiter(s) at end of input: ${stack.join(", ")}`));
         }
 
         if (inSingleQuote || inDoubleQuote || inBacktick) {
-            throw new Error(pushError('Unclosed string at end of input'));
+            throw new Error(pushError("Unclosed string at end of input"));
         }
 
         return result;
     }
 
     invokeFunction(name, args) {
-        if (name === 'print') {
+        if (name === "print") {
             console.log(...args);
             return args.length > 0 ? args[0] : null;
         }
@@ -936,7 +936,7 @@ class LuaInterpreter {
 
 /** Helper class for simulating Lua's coroutine library. */
 class CoroutineManager {
-    create(func) { return { func, status: 'suspended' }; }
+    create(func) { return { func, status: "suspended" }; }
     resume(co) { return co.func(); }
     yield(value) { return value; }
 }
@@ -945,7 +945,7 @@ class CoroutineManager {
 class TableManager {
     insert(table, value) { table.push(value); }
     remove(table, index) { return table.splice(index - 1, 1)[0]; }
-    concat(table, sep = '') { return table.join(sep); }
+    concat(table, sep = "") { return table.join(sep); }
 }
 
 /** Helper class for simulating Lua's string library. */
@@ -968,8 +968,8 @@ class MathManager {
 
 /** Helper class for simulating Lua's I/O library. */
 class IOManager {
-    write(...args) { process.stdout.write(args.join('')); }
-    read() { return ''; } // Simplified
+    write(...args) { process.stdout.write(args.join("")); }
+    read() { return ""; } // Simplified
 }
 
 module.exports = {

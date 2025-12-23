@@ -54,4 +54,4 @@ This backlog is derived from docs/UGMP.md. Each item includes owner placeholders
 - [ ] Task R1: CI license scanning for dependencies — Evidence: audit/deps_report.md
 - [ ] Task R2: Perf budget alerts in CI — Evidence: docs/UGMP.md §13
 
-Owners to be filled: Parser Lead (TBD), IR Lead (TBD), Runtime Lead (TBD), Systems Lead (TBD), Perf Lead (TBD), QA Lead (TBD), Architecture (TBD).
+**Team Model**: Single-engineer implementation with rotating focus areas; all roles initially fulfilled by core dev team, specialist contractors engaged as-needed.

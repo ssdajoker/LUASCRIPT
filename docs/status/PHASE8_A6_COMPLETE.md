@@ -1,6 +1,13 @@
+# ⚠️ DEPRECATED: Phase 8-A6 Complete (Legacy Planning Document)
+
+**Status**: ARCHIVED  
+**See instead**: [PROJECT_STATUS.md](../../PROJECT_STATUS.md) for current project status
+
+---
+
 # Phase 8 & A6 Complete Implementation Summary
 
-**Date**: September 30, 2025  
+**Date**: September 30, 2025 (Legacy, preserved for context)  
 **Branch**: fix/phase8-wasm-a6-complete  
 **Team**: Ada Lovelace's Unified Command  
 **Status**: ✅ 100% COMPLETE

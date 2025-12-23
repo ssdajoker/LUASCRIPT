@@ -5,6 +5,7 @@
  * This test suite is intentionally limited to cases that don't hang the parser.
  * Full negative testing is planned for the enhanced parser with proper error recovery.
  */
+/* eslint-disable no-unused-vars */
 
 const assert = require('assert');
 const { parseAndLower } = require('../src/ir/pipeline');

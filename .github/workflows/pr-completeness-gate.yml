@@ -1,0 +1,86 @@
+name: PR Completeness Gate
+# Enforce docs/test updates and status consistency on every PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main, develop]
+
+jobs:
+  completeness-check:
+    name: Completeness & Status Check
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Get PR files
+        id: pr-files
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get list of changed files
+          FILES=$(gh pr view ${{ github.event.pull_request.number }} --json files --jq '.files[].path' | jq -Rs 'split("\n") | map(select(length > 0))')
+          
+          # Output as JSON array
+          echo "files=$(echo $FILES | jq -c .)" >> $GITHUB_OUTPUT
+          echo "count=$(echo $FILES | jq 'length')" >> $GITHUB_OUTPUT
+
+      - name: Run completeness check
+        id: check
+        env:
+          PR_FILES: ${{ steps.pr-files.outputs.files }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_OUTPUT: ${{ github.output }}
+        run: |
+          node scripts/pr-completeness-bot.js
+
+      - name: Post PR comment
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Read results from environment or previous step
+            const comment = process.env.PR_COMMENT || 
+              '## ✅ Completeness Check\n\nNo issues detected.';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+        env:
+          PR_COMMENT: ${{ steps.check.outputs.PR_COMMENT }}
+
+      - name: Check enforcement
+        run: |
+          if [ "${{ steps.check.outputs.PR_CHECK_STATUS }}" == "false" ]; then
+            echo "❌ Completeness check failed - violations detected"
+            exit 1
+          fi
+          echo "✅ Completeness check passed"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## 📋 Completeness Gate Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **PR**: #${{ github.event.pull_request.number }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Files Changed**: ${{ steps.pr-files.outputs.count }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ${{ steps.check.outputs.PR_CHECK_STATUS == 'true' && '✅ PASSED' || '⚠️ REVIEW NEEDED' }}" >> $GITHUB_STEP_SUMMARY

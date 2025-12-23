@@ -5,10 +5,10 @@
  * 32+ Developer Team Implementation - CRUNCH MODE!
  */
 
-const fs = require('fs');
-const path = require('path');
-const { LuaScriptParser } = require('./phase1_core_parser');
-const { LuaScriptInterpreter, Environment, LuaScriptObject } = require('./phase2_core_interpreter');
+const fs = require("fs");
+const path = require("path");
+const { LuaScriptParser } = require("./phase1_core_parser");
+const { LuaScriptInterpreter, Environment, LuaScriptObject } = require("./phase2_core_interpreter");
 
 /**
  * A cache for storing loaded modules to avoid redundant loading and handle circular dependencies.
@@ -119,8 +119,8 @@ class ModuleResolver {
      */
     constructor(options = {}) {
         this.basePath = options.basePath || process.cwd();
-        this.extensions = options.extensions || ['.js', '.luascript', '.ls'];
-        this.moduleDirectories = options.moduleDirectories || ['node_modules', 'luascript_modules'];
+        this.extensions = options.extensions || [".js", ".luascript", ".ls"];
+        this.moduleDirectories = options.moduleDirectories || ["node_modules", "luascript_modules"];
         this.aliases = new Map(Object.entries(options.aliases || {}));
     }
 
@@ -143,7 +143,7 @@ class ModuleResolver {
         }
 
         // Relative path
-        if (specifier.startsWith('./') || specifier.startsWith('../')) {
+        if (specifier.startsWith("./") || specifier.startsWith("../")) {
             const resolvedPath = path.resolve(path.dirname(fromPath), specifier);
             return this.resolveFile(resolvedPath);
         }
@@ -175,17 +175,17 @@ class ModuleResolver {
         // Try as directory with index file
         if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
             for (const ext of this.extensions) {
-                const indexFile = path.join(filePath, 'index' + ext);
+                const indexFile = path.join(filePath, "index" + ext);
                 if (fs.existsSync(indexFile) && fs.statSync(indexFile).isFile()) {
                     return indexFile;
                 }
             }
 
             // Try package.json main field
-            const packageJsonPath = path.join(filePath, 'package.json');
+            const packageJsonPath = path.join(filePath, "package.json");
             if (fs.existsSync(packageJsonPath)) {
                 try {
-                    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+                    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
                     if (packageJson.main) {
                         const mainPath = path.resolve(filePath, packageJson.main);
                         return this.resolveFile(mainPath);
@@ -250,7 +250,7 @@ class ModuleResolver {
 
         // Global node_modules
         if (process.env.NODE_PATH) {
-            paths.push(path.join(process.env.NODE_PATH, 'node_modules'));
+            paths.push(path.join(process.env.NODE_PATH, "node_modules"));
         }
 
         return paths;
@@ -344,16 +344,16 @@ class ModuleLoader {
         const ext = path.extname(modulePath);
         
         switch (ext) {
-            case '.js':
-                return this.loadJavaScriptModule(modulePath);
-            case '.luascript':
-            case '.ls':
-                return this.loadLuaScriptModule(modulePath);
-            case '.json':
-                return this.loadJsonModule(modulePath);
-            default:
-                // Try to load as LuaScript by default
-                return this.loadLuaScriptModule(modulePath);
+        case ".js":
+            return this.loadJavaScriptModule(modulePath);
+        case ".luascript":
+        case ".ls":
+            return this.loadLuaScriptModule(modulePath);
+        case ".json":
+            return this.loadJsonModule(modulePath);
+        default:
+            // Try to load as LuaScript by default
+            return this.loadLuaScriptModule(modulePath);
         }
     }
 
@@ -365,7 +365,7 @@ class ModuleLoader {
      */
     loadJavaScriptModule(modulePath) {
         if (!this.options.allowNativeModules) {
-            throw new Error('Native JavaScript modules are not allowed');
+            throw new Error("Native JavaScript modules are not allowed");
         }
 
         // Clear require cache to ensure fresh load
@@ -386,7 +386,7 @@ class ModuleLoader {
      */
     loadLuaScriptModule(modulePath) {
         try {
-            const source = fs.readFileSync(modulePath, 'utf8');
+            const source = fs.readFileSync(modulePath, "utf8");
             return this.executeModule(source, modulePath);
         } catch (error) {
             throw new Error(`Failed to load LuaScript module ${modulePath}: ${error.message}`);
@@ -401,7 +401,7 @@ class ModuleLoader {
      */
     loadJsonModule(modulePath) {
         try {
-            const source = fs.readFileSync(modulePath, 'utf8');
+            const source = fs.readFileSync(modulePath, "utf8");
             return JSON.parse(source);
         } catch (error) {
             throw new Error(`Failed to load JSON module ${modulePath}: ${error.message}`);
@@ -425,7 +425,7 @@ class ModuleLoader {
         const ast = parser.parse();
         
         if (parser.hasErrors()) {
-            const errors = parser.getErrors().map(err => err.message).join('\n');
+            const errors = parser.getErrors().map(err => err.message).join("\n");
             throw new Error(`Parse errors in ${modulePath}:\n${errors}`);
         }
 
@@ -446,10 +446,10 @@ class ModuleLoader {
             )
         });
 
-        moduleEnv.define('module', moduleObject);
-        moduleEnv.define('exports', moduleExports);
-        moduleEnv.define('__filename', modulePath);
-        moduleEnv.define('__dirname', path.dirname(modulePath));
+        moduleEnv.define("module", moduleObject);
+        moduleEnv.define("exports", moduleExports);
+        moduleEnv.define("__filename", modulePath);
+        moduleEnv.define("__dirname", path.dirname(modulePath));
         
         // Set up require function for this module
         const requireFunction = (specifier) => {
@@ -464,7 +464,7 @@ class ModuleLoader {
         // Add require.cache
         requireFunction.cache = this.cache;
         
-        moduleEnv.define('require', requireFunction);
+        moduleEnv.define("require", requireFunction);
 
         // Execute the module
         const previousEnv = this.interpreter.environment;
@@ -474,8 +474,8 @@ class ModuleLoader {
             this.interpreter.interpret(ast);
             
             // Get the final exports
-            const finalExports = moduleEnv.get('exports');
-            moduleObject.set('loaded', true);
+            const finalExports = moduleEnv.get("exports");
+            moduleObject.set("loaded", true);
             
             return finalExports;
         } finally {
@@ -574,15 +574,15 @@ class ESModuleLoader extends ModuleLoader {
         const ext = path.extname(modulePath);
         
         switch (ext) {
-            case '.js':
-                return await this.loadESJavaScriptModule(modulePath);
-            case '.luascript':
-            case '.ls':
-                return await this.loadESLuaScriptModule(modulePath);
-            case '.json':
-                return this.loadJsonModule(modulePath);
-            default:
-                return await this.loadESLuaScriptModule(modulePath);
+        case ".js":
+            return await this.loadESJavaScriptModule(modulePath);
+        case ".luascript":
+        case ".ls":
+            return await this.loadESLuaScriptModule(modulePath);
+        case ".json":
+            return this.loadJsonModule(modulePath);
+        default:
+            return await this.loadESLuaScriptModule(modulePath);
         }
     }
 
@@ -594,7 +594,7 @@ class ESModuleLoader extends ModuleLoader {
      */
     async loadESJavaScriptModule(modulePath) {
         if (!this.options.allowNativeModules) {
-            throw new Error('Native JavaScript modules are not allowed');
+            throw new Error("Native JavaScript modules are not allowed");
         }
 
         try {
@@ -614,7 +614,7 @@ class ESModuleLoader extends ModuleLoader {
      */
     async loadESLuaScriptModule(modulePath) {
         try {
-            const source = fs.readFileSync(modulePath, 'utf8');
+            const source = fs.readFileSync(modulePath, "utf8");
             return await this.executeESModule(source, modulePath);
         } catch (error) {
             throw new Error(`Failed to load ES LuaScript module ${modulePath}: ${error.message}`);
@@ -638,7 +638,7 @@ class ESModuleLoader extends ModuleLoader {
         const ast = parser.parse();
         
         if (parser.hasErrors()) {
-            const errors = parser.getErrors().map(err => err.message).join('\n');
+            const errors = parser.getErrors().map(err => err.message).join("\n");
             throw new Error(`Parse errors in ${modulePath}:\n${errors}`);
         }
 
@@ -648,16 +648,16 @@ class ESModuleLoader extends ModuleLoader {
         // Set up ES module globals
         const moduleExports = new LuaScriptObject();
         
-        moduleEnv.define('import', async (specifier) => {
+        moduleEnv.define("import", async (specifier) => {
             return await this.import(specifier, modulePath);
         });
         
-        moduleEnv.define('export', (name, value) => {
+        moduleEnv.define("export", (name, value) => {
             moduleExports.set(name, value);
         });
         
-        moduleEnv.define('__filename', modulePath);
-        moduleEnv.define('__dirname', path.dirname(modulePath));
+        moduleEnv.define("__filename", modulePath);
+        moduleEnv.define("__dirname", path.dirname(modulePath));
 
         // Execute the module
         const previousEnv = this.interpreter.environment;
@@ -695,7 +695,7 @@ class ESModuleLoader extends ModuleLoader {
 
 // Built-in modules
 const builtinModules = {
-    'fs': {
+    "fs": {
         readFileSync: fs.readFileSync,
         writeFileSync: fs.writeFileSync,
         existsSync: fs.existsSync,
@@ -705,7 +705,7 @@ const builtinModules = {
         rmdirSync: fs.rmdirSync,
         unlinkSync: fs.unlinkSync
     },
-    'path': {
+    "path": {
         join: path.join,
         resolve: path.resolve,
         dirname: path.dirname,
@@ -717,15 +717,15 @@ const builtinModules = {
         sep: path.sep,
         delimiter: path.delimiter
     },
-    'util': {
-        inspect: require('util').inspect,
-        format: require('util').format,
+    "util": {
+        inspect: require("util").inspect,
+        format: require("util").format,
         isArray: Array.isArray,
-        isObject: (obj) => obj !== null && typeof obj === 'object',
-        isFunction: (fn) => typeof fn === 'function',
-        isString: (str) => typeof str === 'string',
-        isNumber: (num) => typeof num === 'number',
-        isBoolean: (bool) => typeof bool === 'boolean'
+        isObject: (obj) => obj !== null && typeof obj === "object",
+        isFunction: (fn) => typeof fn === "function",
+        isString: (str) => typeof str === "string",
+        isNumber: (num) => typeof num === "number",
+        isBoolean: (bool) => typeof bool === "boolean"
     }
 };
 

@@ -289,7 +289,7 @@ console.log(result);`,
 if (require.main === module) {
     const tester = new TranspilerTester();
 
-    async function main() {
+    const main = async () => {
         try {
             await tester.runPhase1BTests();
             const allPassed = tester.generateReport();
@@ -307,7 +307,7 @@ if (require.main === module) {
         } finally {
             tester.cleanup();
         }
-    }
+    };
 
     main().catch((error) => {
         console.error('💥 Test suite crashed:', error);

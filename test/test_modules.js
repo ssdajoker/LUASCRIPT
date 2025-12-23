@@ -129,7 +129,7 @@ test('ModuleLoader detects circular dependency via loading flag', () => {
 
 test('ModuleLoader resolves bare specifiers from moduleDirectories', () => {
   const loader = new ModuleLoader();
-  const entry = writeTemp('node_modules/utilkit/index.js', 'module.exports = "utilkit";');
+  writeTemp('node_modules/utilkit/index.js', 'module.exports = "utilkit";');
   const fromFile = writeTemp('app/main.js', 'module.exports = "main";');
   const result = loader.require('utilkit', fromFile);
   assert.strictEqual(result, 'utilkit');
@@ -210,7 +210,7 @@ test('ESModuleLoader import map aliases resolve to same cache entry', async () =
 // ---------- Integration scenarios ----------
 test('CommonJS can require JSON and export composed namespace', () => {
   const loader = new ModuleLoader();
-  const dataFile = writeTemp('combo/data.json', JSON.stringify({ flag: true }));
+  writeTemp('combo/data.json', JSON.stringify({ flag: true }));
   const file = writeTemp(
     'combo/index.js',
     `const data = require('./data.json'); module.exports = { ok: data.flag };`,

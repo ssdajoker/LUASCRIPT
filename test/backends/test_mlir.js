@@ -1,7 +1,8 @@
-
+/* eslint-env jest */
 /**
  * Test MLIR Backend
  */
+/* eslint-env jest */
 
 const { IRToMLIRCompiler, LuascriptDialect } = require('../../src/backends/mlir');
 const { builder } = require('../../src/ir/builder');

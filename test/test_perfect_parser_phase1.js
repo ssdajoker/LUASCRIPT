@@ -8,6 +8,7 @@
  * 4. Enhanced Memory Management
  * 5. Error Handling Improvements
  */
+/* eslint-disable no-unused-vars */
 
 const assert = require('assert');
 const fs = require('fs');

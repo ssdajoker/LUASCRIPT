@@ -4,6 +4,7 @@
  * PS2/PS3 Specialists + Steve Jobs + Donald Knuth Excellence
  * 32+ Developer Team Implementation - VICTORY VALIDATION!
  */
+/* eslint-disable no-unused-vars */
 
 const assert = require('assert');
 const { LuaScriptLexer } = require('../src/phase1_core_lexer');

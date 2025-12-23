@@ -15,7 +15,7 @@ describe('LLVM Backend (Future)', () => {
                     return a + b;
                 }
             `;
-            const llvm = compileTo LLVM(js);
+            const llvm = compileToLLVM(js);
             expect(llvm).toContain('define i32 @add');
             expect(llvm).toContain('add nsw i32');
             expect(llvm).toContain('ret i32');
