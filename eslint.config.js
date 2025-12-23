@@ -85,12 +85,56 @@ const recommendedCoreRules = {
   "eqeqeq": "error"
 };
 
+const tier1CoreRules = {
+  ...recommendedCoreRules,
+  "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+  "no-undef": "error",
+  "semi": ["error", "always"],
+  "quotes": ["error", "double"],
+  "indent": ["error", 2],
+  "no-console": ["warn"],
+  "complexity": ["warn", 10]
+};
+
+const tier2ExtendedRules = {
+  ...tier1CoreRules,
+  "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+  "no-undef": "warn",
+  "semi": ["warn", "always"],
+  "quotes": ["warn", "double"],
+  "indent": ["warn", 2],
+  "complexity": ["warn", 15]
+};
+
+const tier3BackendRules = {
+  ...tier2ExtendedRules,
+  "complexity": ["warn", 20]
+};
+
+const tier4GeneralRules = {
+  ...tier3BackendRules,
+  "complexity": "off",
+  "no-console": "off",
+  "no-undef": "warn"
+};
+
 export default [
   {
     ignores: ["node_modules/**", "dist/**", "build/**", "coverage/**", ".git/**"]
   },
-  
-  // Backend Code - Relaxed (must come before IR patterns to take precedence)
+
+  // General Code - Most Relaxed (base for tiering)
+  {
+    files: ["src/**/*.js", "lib/**/*.js"],
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: "commonjs",
+      globals: nodeGlobals
+    },
+    rules: tier4GeneralRules
+  },
+
+  // Backend Code - Relaxed
   {
     files: ["src/backends/**/*.js"],
     languageOptions: {
@@ -98,35 +142,7 @@ export default [
       sourceType: "commonjs",
       globals: nodeGlobals
     },
-    rules: {
-      ...recommendedCoreRules,
-      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "semi": ["warn", "always"],
-      "quotes": ["warn", "double"],
-      "indent": ["warn", 2],
-      "complexity": ["warn", 20]
-    }
-  },
-
-  // IR Core - Strict
-  {
-    files: ["src/ir/**/*.js"],
-    ignores: ["src/ir/transforms/**/*.js", "src/ir/validators/**/*.js"],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: "commonjs",
-      globals: nodeGlobals
-    },
-    rules: {
-      ...recommendedCoreRules,
-      "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-      "no-undef": "error",
-      "semi": ["error", "always"],
-      "quotes": ["error", "double"],
-      "indent": ["error", 2],
-      "no-console": ["warn"],
-      "complexity": ["warn", 10]
-    }
+    rules: tier3BackendRules
   },
 
   // IR Extended - Moderate
@@ -137,34 +153,18 @@ export default [
       sourceType: "commonjs",
       globals: nodeGlobals
     },
-    rules: {
-      ...recommendedCoreRules,
-      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "no-undef": "warn",
-      "semi": ["warn", "always"],
-      "quotes": ["warn", "double"],
-      "indent": ["warn", 2],
-      "no-console": ["warn"],
-      "complexity": ["warn", 15]
-    }
+    rules: tier2ExtendedRules
   },
 
-  // General Code - Most Relaxed (excluding backends and IR which have specific configs)
+  // IR Core - Strictest
   {
-    files: ["src/**/*.js", "lib/**/*.js"],
-    ignores: ["src/backends/**/*.js", "src/ir/**/*.js"],
+    files: ["src/ir/core/**/*.js"],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2022,
       sourceType: "commonjs",
       globals: nodeGlobals
     },
-    rules: {
-      ...recommendedCoreRules,
-      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "semi": ["warn"],
-      "quotes": ["warn"],
-      "indent": ["warn"]
-    }
+    rules: tier1CoreRules
   },
 
   // Test Files - Relaxed
