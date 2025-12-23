@@ -135,7 +135,10 @@ class EnhancedLowerer {
         }
 
         // Preserve user-defined identifier names instead of auto-generated IDs
-        const identifierName = (idNode && (idNode.name || idNode.id || idNode.identifier)) || "unknown";
+        const identifierName =
+            (node.id && node.id.type === "Identifier" && node.id.name) ||
+            (idNode && idNode.name) ||
+            "unknown";
         return this.builder.varDecl(identifierName, initRef);
     }
 
