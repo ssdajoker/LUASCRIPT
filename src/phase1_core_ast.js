@@ -244,6 +244,20 @@ class ForStatementNode extends ASTNode {
     }
 }
 
+/** Represents a for-of loop. */
+class ForOfStatementNode extends ASTNode {
+    constructor(left, right, body, properties = {}) {
+        super("ForOfStatement", properties);
+        this.left = left;
+        this.right = right;
+        this.body = body;
+
+        if (left) this.addChild(left);
+        if (right) this.addChild(right);
+        this.addChild(body);
+    }
+}
+
 /** Represents a break statement. */
 class BreakStatementNode extends ASTNode {
     constructor(label = null, properties = {}) {
@@ -259,6 +273,41 @@ class ContinueStatementNode extends ASTNode {
         super("ContinueStatement", properties);
         this.label = label;
         if (label) this.addChild(label);
+    }
+}
+
+/** Represents a throw statement. */
+class ThrowStatementNode extends ASTNode {
+    constructor(argument, properties = {}) {
+        super("ThrowStatement", properties);
+        this.argument = argument;
+        if (argument) this.addChild(argument);
+    }
+}
+
+/** Represents a catch clause. */
+class CatchClauseNode extends ASTNode {
+    constructor(param, body, properties = {}) {
+        super("CatchClause", properties);
+        this.param = param;
+        this.body = body;
+
+        if (param) this.addChild(param);
+        if (body) this.addChild(body);
+    }
+}
+
+/** Represents a try statement. */
+class TryStatementNode extends ASTNode {
+    constructor(block, handler = null, finalizer = null, properties = {}) {
+        super("TryStatement", properties);
+        this.block = block;
+        this.handler = handler;
+        this.finalizer = finalizer;
+
+        if (block) this.addChild(block);
+        if (handler) this.addChild(handler);
+        if (finalizer) this.addChild(finalizer);
     }
 }
 
@@ -339,6 +388,7 @@ class CallExpressionNode extends ASTNode {
         super("CallExpression", properties);
         this.callee = callee;
         this.arguments = args;
+        this.optional = properties.optional || false;
         this.addChild(callee);
         args.forEach(arg => this.addChild(arg));
     }
@@ -362,6 +412,7 @@ class MemberExpressionNode extends ASTNode {
         this.object = object;
         this.property = property;
         this.computed = computed; // true for obj[prop], false for obj.prop
+        this.optional = properties.optional || false;
         this.addChild(object);
         this.addChild(property);
     }
@@ -384,6 +435,24 @@ class ObjectExpressionNode extends ASTNode {
         super("ObjectExpression", nodeProperties);
         this.properties = properties;
         properties.forEach(prop => this.addChild(prop));
+    }
+}
+
+/** Represents an array pattern used in destructuring. */
+class ArrayPatternNode extends ASTNode {
+    constructor(elements = [], properties = {}) {
+        super("ArrayPattern", properties);
+        this.elements = elements;
+        elements.forEach((el) => { if (el) this.addChild(el); });
+    }
+}
+
+/** Represents an object pattern used in destructuring. */
+class ObjectPatternNode extends ASTNode {
+    constructor(propertiesList = [], properties = {}) {
+        super("ObjectPattern", properties);
+        this.properties = propertiesList;
+        propertiesList.forEach((prop) => { if (prop) this.addChild(prop); });
     }
 }
 
@@ -564,8 +633,8 @@ class ASTUtils {
     static isStatement(node) {
         const statementTypes = [
             "ExpressionStatement", "VariableDeclaration", "FunctionDeclaration",
-            "ReturnStatement", "IfStatement", "WhileStatement", "ForStatement",
-            "BreakStatement", "ContinueStatement", "BlockStatement"
+            "ReturnStatement", "IfStatement", "WhileStatement", "ForStatement", "ForOfStatement",
+            "BreakStatement", "ContinueStatement", "ThrowStatement", "TryStatement", "BlockStatement"
         ];
         return statementTypes.includes(node.type);
     }
@@ -657,8 +726,12 @@ module.exports = {
     IfStatementNode,
     WhileStatementNode,
     ForStatementNode,
+    ForOfStatementNode,
     BreakStatementNode,
     ContinueStatementNode,
+    ThrowStatementNode,
+    CatchClauseNode,
+    TryStatementNode,
     BinaryExpressionNode,
     UnaryExpressionNode,
     AssignmentExpressionNode,
@@ -670,6 +743,8 @@ module.exports = {
     MemberExpressionNode,
     ArrayExpressionNode,
     ObjectExpressionNode,
+    ArrayPatternNode,
+    ObjectPatternNode,
     PropertyNode,
     ClassDeclarationNode,
     MethodDefinitionNode,
