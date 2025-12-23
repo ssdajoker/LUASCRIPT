@@ -23,6 +23,7 @@ function main() {
 
   const text = fs.readFileSync(found.abs, 'utf8');
   const count = countWarnings(text);
+  const count = countWarnings(found.abs);
   const budget = resolveBudget(
     found.rel,
     count,
@@ -30,6 +31,8 @@ function main() {
     text
   );
   const enforce = process.env.ENFORCE_WARN_BUDGET === '1';
+  const enforce = process.env.ENFORCE_WARN_BUDGET !== '0';
+  const count = countWarnings(found.abs);
 
   console.log(`Static warnings: ${count} (file: ${found.rel})`);
   console.log(`Budget=${budget}; enforcement=${enforce ? 'on' : 'off'}`);
