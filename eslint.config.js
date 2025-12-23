@@ -82,7 +82,7 @@ const recommendedCoreRules = {
   "use-isnan": "error",
   "valid-typeof": "error",
   "require-yield": "error",
-  eqeqeq: "error"
+  "eqeqeq": "error"
 };
 
 export default [
