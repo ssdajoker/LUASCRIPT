@@ -25,11 +25,16 @@ function findWarningsFile(candidates = DEFAULT_CANDIDATES) {
   return null;
 }
 
-function countWarnings(abs) {
-  const text = fs.readFileSync(abs, 'utf8');
+function countWarnings(text) {
   return text.split(/\r?\n/).filter(l => l.trim().startsWith('not ok')).length;
 }
 
+function parseHeaderBudget(text) {
+  const firstLine = text.split(/\r?\n/)[0] || '';
+  const match = firstLine.match(/^(\d+)\.\.(\d+)$/);
+  if (!match) return null;
+  const upper = Number(match[2]);
+  return Number.isFinite(upper) ? upper : null;
 function parseHeaderBudget(abs) {
   // Read only the beginning of the file to extract the first line efficiently.
   let fd;
@@ -57,7 +62,7 @@ function parseHeaderBudget(abs) {
   }
 }
 
-function resolveBudget(rel, count, budgetOverride, absPath) {
+function resolveBudget(rel, count, budgetOverride, text) {
   if (budgetOverride !== undefined) {
     const parsed = Number(budgetOverride);
     if (!Number.isFinite(parsed)) {
@@ -70,7 +75,7 @@ function resolveBudget(rel, count, budgetOverride, absPath) {
     return FILE_BUDGETS[rel];
   }
 
-  const headerBudget = absPath ? parseHeaderBudget(absPath) : null;
+  const headerBudget = text ? parseHeaderBudget(text) : null;
   if (headerBudget !== null) return headerBudget;
 
   return count;
@@ -100,8 +105,9 @@ function main() {
     return;
   }
 
-  const count = countWarnings(found.abs);
-  const budget = resolveBudget(found.rel, count, process.env.WARN_BUDGET, found.abs);
+  const text = fs.readFileSync(found.abs, 'utf8');
+  const count = countWarnings(text);
+  const budget = resolveBudget(found.rel, count, process.env.WARN_BUDGET, text);
   const enforce = process.env.ENFORCE_WARN_BUDGET !== '0';
 
   report(found, count, budget, enforce);

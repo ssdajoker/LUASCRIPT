@@ -11,6 +11,7 @@ const {
   countWarnings,
   resolveBudget,
 } = require('../../scripts/static_warnings_gate');
+const fs = require('fs');
 
 function main() {
   const candidates = process.env.WARN_FILE ? [process.env.WARN_FILE] : DEFAULT_CANDIDATES;
@@ -20,12 +21,14 @@ function main() {
     return;
   }
 
+  const text = fs.readFileSync(found.abs, 'utf8');
+  const count = countWarnings(text);
   const count = countWarnings(found.abs);
   const budget = resolveBudget(
     found.rel,
     count,
     process.env.WARN_BUDGET,
-    found.abs
+    text
   );
   const enforce = process.env.ENFORCE_WARN_BUDGET === '1';
   const enforce = process.env.ENFORCE_WARN_BUDGET !== '0';
