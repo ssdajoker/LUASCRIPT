@@ -157,8 +157,8 @@ function addVarDeclaratorAlias(schema) {
     }
     if (!node || typeof node !== "object") return;
 
-    if (node.properties && node.properties.kind && Array.isArray(node.properties.kind.enum)) {
-      const enums = node.properties.kind.enum;
+    if (node.properties && node.properties.type && Array.isArray(node.properties.type.enum)) {
+      const enums = node.properties.type.enum;
       if (enums.includes("VariableDeclaration") && !enums.includes(alias)) {
         enums.push(alias);
       }
