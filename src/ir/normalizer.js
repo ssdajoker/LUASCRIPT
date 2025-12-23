@@ -349,6 +349,18 @@ function cloneValue(value, options) {
     return normalizeNode(value, options);
   }
   return value;
+    if (key === "type") continue;
+    // Skip back-references commonly used by some parsers to link parent nodes
+    if (key === "parent" || key === "_parent") continue;
+    if (Array.isArray(value)) {
+      copy[key] = value.map((item) => normalizeNode(item, options));
+    } else if (value && typeof value === "object" && value.type) {
+      copy[key] = normalizeNode(value, options);
+    } else {
+      copy[key] = value;
+    }
+  }
+  return copy;
 }
 
 function tryFallbackParse(source) {

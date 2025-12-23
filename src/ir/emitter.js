@@ -151,6 +151,40 @@ class IREmitter {
     const chunks = [];
     for (const declarator of node.declarations) {
       const { luaName, isPattern, patternNames } = this.resolveDeclaratorName(declarator, context);
+      // Handle both old pattern-based and new name-based structures
+      let luaName;
+      let isPattern = false;
+      let patternNames = [];
+      
+      if (declarator.pattern) {
+        // Old structure: declarator.pattern is an ID referencing an Identifier node
+        const patternNode = context.nodes[declarator.pattern];
+        if (!patternNode || patternNode.kind !== "Identifier") {
+          throw new Error("Emitter only supports simple identifier patterns");
+        }
+        luaName = patternNode.name;
+      } else if (typeof declarator.name === "string") {
+        // New structure: declarator.name is a direct string
+        luaName = declarator.name;
+      } else if (declarator.name && context.nodes[declarator.name]) {
+        const nameNode = context.nodes[declarator.name];
+        if (nameNode.kind === "Identifier") {
+          luaName = nameNode.name;
+        } else if (nameNode.kind === "ArrayPattern") {
+          // Handle array destructuring
+          isPattern = true;
+          patternNames = this.extractPatternNames(nameNode, context);
+        } else if (nameNode.kind === "ObjectPattern") {
+          // Handle object destructuring
+          isPattern = true;
+          patternNames = this.extractPatternNames(nameNode, context);
+        } else {
+          throw new Error(`Unsupported pattern type: ${nameNode.kind}`);
+        }
+      } else {
+        throw new Error("Emitter unable to extract variable name from declarator");
+      }
+      
       const initExpr = declarator.init
         ? this.emitExpressionById(declarator.init, context)
         : null;
@@ -158,6 +192,24 @@ class IREmitter {
 
       if (isPattern && patternNames.length > 0) {
         this.emitPatternBindings(prefix, initExpr, patternNames, chunks, context);
+      
+      if (isPattern && patternNames.length > 0) {
+        // For destructuring: local a, c = arr[1], arr[3] (simplified)
+        // Or more accurately: generate temp var and extract pattern elements
+        const tempVar = `__tmp${Math.random().toString(36).substr(2, 9)}`;
+        chunks.push(
+          this.withIndent(context, (indent) =>
+            `${indent}${prefix}${tempVar}${initExpr ? " = " + initExpr : ""}`
+          )
+        );
+        // Emit each destructured variable
+        for (const varName of patternNames) {
+          chunks.push(
+            this.withIndent(context, (indent) =>
+              `${indent}${prefix}${varName}`
+            )
+          );
+        }
       } else {
         chunks.push(
           this.withIndent(context, (indent) =>
@@ -285,6 +337,49 @@ class IREmitter {
     return null;
   }
 
+    }
+    return chunks.join(NEWLINE);
+  }
+
+  extractPatternNames(patternNode, context) {
+    const names = [];
+    if (patternNode.kind === "ArrayPattern") {
+      // Extract identifier names from array pattern elements
+      for (const elem of (patternNode.elements || [])) {
+        if (elem === null) {
+          // Hole in pattern, skip
+          continue;
+        }
+        if (typeof elem === "string") {
+          // elem is an ID, resolve it
+          const elemNode = context.nodes[elem];
+          if (elemNode && elemNode.kind === "Identifier") {
+            names.push(elemNode.name);
+          }
+        } else if (elem && elem.kind === "Identifier") {
+          names.push(elem.name);
+        }
+      }
+    } else if (patternNode.kind === "ObjectPattern") {
+      // Extract property names from object pattern
+      for (const prop of (patternNode.properties || [])) {
+        if (typeof prop === "string") {
+          const propNode = context.nodes[prop];
+          if (propNode && propNode.kind === "Property") {
+            const valueNode = typeof propNode.value === "string" ? context.nodes[propNode.value] : propNode.value;
+            if (valueNode && valueNode.kind === "Identifier") {
+              names.push(valueNode.name);
+            }
+          }
+        } else if (prop && prop.value) {
+          const valStr = typeof prop.value === "string" ? prop.value : (prop.value.name || "");
+          if (valStr) names.push(valStr);
+        }
+      }
+    }
+    return names;
+  }
+
   emitIfStatement(node, context) {
     const testId = node.test !== undefined ? node.test : node.condition;
     const consId = node.consequent || node.consequence;
@@ -325,6 +420,19 @@ class IREmitter {
         lines.push(this.withIndent(context, (indent) => indent + this.emitExpressionById(node.init, context)));
       }
     }
+
+    const testId = node.test !== undefined ? node.test : node.condition;
+    const test = testId ? this.emitExpressionById(testId, context) : "true";
+    let body = this.emitBlockById(node.body, context);
+
+    // Append update at end of loop body
+    if (node.update) {
+      const updateLine = this.withIndent({ ...context, indentLevel: (context.indentLevel || 0) + 1 }, (indent) =>
+        indent + this.emitExpressionById(node.update, context)
+      );
+      body = body + NEWLINE + updateLine;
+    }
+
 
     const testId = node.test !== undefined ? node.test : node.condition;
     const test = testId ? this.emitExpressionById(testId, context) : "true";
@@ -398,7 +506,135 @@ class IREmitter {
       context.indentLevel = overrides.indentLevel;
     } else {
       context.indentLevel = parentContext.indentLevel + 1;
+
+  emitBlockById(blockId, parentContext, overrides = {}) {
+    const blockNode = typeof blockId === "string" ? parentContext.nodes[blockId] : blockId;
+    if (!blockNode || blockNode.kind !== "BlockStatement") {
+      throw new Error(`Expected BlockStatement for id ${blockId}`);
     }
+
+    const context = Object.assign({}, parentContext, overrides);
+    if (overrides.indentLevel !== undefined) {
+      context.indentLevel = overrides.indentLevel;
+    } else {
+      context.indentLevel = parentContext.indentLevel + 1;
+    }
+
+    const statements = [];
+    for (const statementId of blockNode.statements || []) {
+      const statementNode = context.nodes[statementId];
+      if (!statementNode) {
+        throw new Error(`Missing node ${statementId} referenced in block ${blockId}`);
+      }
+      statements.push(this.emitStatement(statementNode, context));
+    }
+
+    return statements.join(NEWLINE);
+  }
+
+  emitExpressionById(nodeId, context) {
+    const node = typeof nodeId === "string" ? context.nodes[nodeId] : nodeId;
+    if (!node) {
+      throw new Error(`Missing node ${nodeId} referenced by expression`);
+    }
+    return this.emitExpression(node, context);
+  }
+
+  emitExpression(node, context) {
+    switch (node.kind) {
+    case "Identifier":
+      return node.name;
+    case "Literal":
+      return this.emitLiteral(node);
+    case "MemberExpression": {
+      const object = this.emitExpressionById(node.object, context);
+      if (node.computed) {
+        const prop = this.emitExpressionById(node.property, context);
+        if (node.optional) {
+          // Optional chaining: obj?.[prop] -> (obj ~= nil and obj[prop] or nil)
+          return `(${object} ~= nil and ${object}[${prop}] or nil)`;
+        }
+        return `${object}[${prop}]`;
+      }
+      const propNode = context.nodes[node.property];
+      const propName = propNode && propNode.kind === "Identifier" ? propNode.name : this.emitExpressionById(node.property, context);
+      if (node.optional) {
+        // Optional chaining: obj?.prop -> (obj ~= nil and obj.prop or nil)
+        return `(${object} ~= nil and ${object}.${propName} or nil)`;
+      }
+      return `${object}.${propName}`;
+    }
+    case "ArrayExpression": {
+      const items = (node.elements || []).map((elId) => this.emitExpressionById(elId, context)).join(", ");
+      return `{ ${items} }`;
+    }
+    case "ObjectExpression": {
+      const fields = (node.properties || []).map((propId) => this.emitPropertyById(propId, context)).join(", ");
+      return `{ ${fields} }`;
+    }
+    case "BinaryExpression":
+    case "LogicalExpression": {
+      const operator = this.luaBinaryOperator(node, context);
+      const left = this.emitGrouped(node.left, context);
+      const right = this.emitGrouped(node.right, context);
+      return `${left} ${operator} ${right}`;
+    }
+    case "AssignmentExpression":
+      return `${this.emitExpressionById(node.left, context)} ${this.luaAssignmentOperator(
+        node.operator
+      )} ${this.emitExpressionById(node.right, context)}`;
+    case "UpdateExpression": {
+      // Lua lacks ++/--. If used as expression, simulate via IIFE that performs the update and returns correct value.
+      const target = this.emitExpressionById(node.argument, context);
+      const op = node.operator === "--" ? -1 : 1;
+      if (node.prefix) {
+        // ++i -> i = i + 1; return i
+        return `(function() ${target} = ${target} + ${op}; return ${target} end)()`;
+      }
+      // i++ -> local _t = i; i = i + 1; return _t
+      return `(function() local _t = ${target}; ${target} = ${target} + ${op}; return _t end)()`;
+    }
+    case "UnaryExpression":
+      return `${this.luaUnaryOperator(node.operator)}${this.emitGrouped(node.argument, context)}`;
+    case "CallExpression": {
+      const callee = this.emitExpressionById(node.callee, context);
+      const args = (node.arguments || [])
+        .map((argId) => this.emitExpressionById(argId, context))
+        .join(", ");
+      if (node.optional) {
+        // Optional call: fn?.() -> (type(fn) == "function" and fn() or nil)
+        return `(type(${callee}) == "function" and ${callee}(${args}) or nil)`;
+      }
+      return `${callee}(${args})`;
+    }
+    case "NewExpression": {
+      // No 'new' in Lua; best-effort: call callee as a constructor
+      const callee = this.emitExpressionById(node.callee, context);
+      const args = (node.arguments || [])
+        .map((argId) => this.emitExpressionById(argId, context))
+        .join(", ");
+      return `${callee}(${args}) --[[new]]`;
+    }
+    case "FunctionDeclaration": {
+      return this.emitFunctionExpression(node, context);
+    }
+    case "ConditionalExpression": {
+      // Lua lacks ternary; use (cond) and a or b (note: not identical for falsy a)
+      const test = this.emitExpressionById(node.test, context);
+      const cons = this.emitExpressionById(node.consequent, context);
+      const alt = this.emitExpressionById(node.alternate, context);
+      return `((${test}) and (${cons}) or (${alt}))`;
+    }
+    case "ArrowFunctionExpression":
+      return this.emitArrowFunction(node, context);
+    case "FunctionExpression":
+      return this.emitFunctionExpression(node, context);
+    case "BlockStatement":
+      return "{ --[[block]] }";
+    default:
+      throw new Error(`Emitter does not support expression kind ${node.kind}`);
+    }
+  }
 
     const statements = [];
     for (const statementId of blockNode.statements || []) {
@@ -661,7 +897,159 @@ class IREmitter {
     const node = typeof nodeOrId === "object" ? nodeOrId : context.nodes[nodeOrId];
     if (!node) {
       return false;
+  isExpressionKind(kind) {
+    return (
+      kind === "Identifier" ||
+      kind === "Literal" ||
+      kind === "BinaryExpression" ||
+      kind === "LogicalExpression" ||
+      kind === "AssignmentExpression" ||
+      kind === "UnaryExpression" ||
+      kind === "UpdateExpression" ||
+      kind === "CallExpression" ||
+      kind === "MemberExpression" ||
+      kind === "NewExpression" ||
+      kind === "ConditionalExpression" ||
+      kind === "ArrayExpression" ||
+      kind === "ObjectExpression" ||
+      kind === "ArrowFunctionExpression" ||
+      kind === "FunctionExpression" ||
+      kind === "FunctionDeclaration"
+    );
+  }
+
+  emitPropertyById(propId, context) {
+    const prop = context.nodes[propId];
+    if (!prop || prop.kind !== "Property") {
+      throw new Error(`Expected Property node for ${propId}`);
     }
+    // key
+    const keyNode = context.nodes[prop.key];
+    let keyStr;
+    if (keyNode && keyNode.kind === "Identifier" && /^[_A-Za-z][_A-Za-z0-9]*$/.test(keyNode.name)) {
+      keyStr = keyNode.name;
+    } else if (keyNode && keyNode.kind === "Literal" && typeof keyNode.value === "string") {
+      keyStr = `[${JSON.stringify(keyNode.value)}]`;
+    } else {
+      keyStr = `[${this.emitExpressionById(prop.key, context)}]`;
+    }
+    const valueStr = this.emitExpressionById(prop.value, context);
+    if (keyStr.startsWith("[")) {
+      return `${keyStr} = ${valueStr}`;
+    }
+    return `${keyStr} = ${valueStr}`;
+  }
+
+  emitArrowFunction(node, context) {
+    const params = (node.params || [])
+      .map((paramId) => {
+        const paramNode = context.nodes[paramId];
+        if (!paramNode || paramNode.kind !== "Identifier") {
+          throw new Error("Arrow function parameters must be identifiers");
+        }
+        return paramNode.name;
+      })
+      .join(", ");
+
+    const body = this.emitBlockById(node.body, context, {
+      indentLevel: context.indentLevel + 1,
+    });
+
+    return `function(${params})${NEWLINE}${body}${NEWLINE}${this.currentIndent(context)}end`;
+  }
+
+  emitFunctionExpression(node, context) {
+    const params = (node.params || node.parameters || [])
+      .map((paramId) => {
+        const paramNode = typeof paramId === "string" ? context.nodes[paramId] : paramId;
+        if (!paramNode || paramNode.kind !== "Identifier") {
+          throw new Error("Function expression parameters must be identifiers");
+        }
+        return paramNode.name;
+      })
+      .join(", ");
+
+    const bodyId = typeof node.body === "string" ? node.body : (node.body && node.body.id ? node.body.id : node.body);
+    const body = this.emitBlockById(bodyId, context, {
+      indentLevel: (context.indentLevel || 0) + 1,
+    });
+
+    // Function expressions are anonymous (or may have a name), emit similar to arrow functions
+    return `function(${params})${NEWLINE}${body}${NEWLINE}${this.currentIndent(context)}end`;
+  }
+
+  emitLiteral(node) {
+    if (node.literalKind === "string" || typeof node.value === "string") {
+      return node.raw || JSON.stringify(node.value);
+    }
+    if (node.literalKind === "boolean") {
+      return node.value ? "true" : "false";
+    }
+    if (node.literalKind === "null") {
+      return "nil";
+    }
+    return typeof node.value === "number" ? String(node.value) : node.raw || "nil";
+  }
+
+  emitGrouped(nodeId, context) {
+    const expression = this.emitExpressionById(nodeId, context);
+    if (this.requiresGrouping(nodeId, context)) {
+      return `(${expression})`;
+    }
+    return expression;
+  }
+
+  requiresGrouping(nodeId, context) {
+    const node = context.nodes[nodeId];
+    if (!node) return false;
+    if (node.kind === "BinaryExpression") {
+      if (node.operator === "+" && (this.isStringLike(node.left, context) || this.isStringLike(node.right, context))) {
+        return false;
+      }
+      return true;
+    }
+    return node.kind === "LogicalExpression";
+  }
+
+  luaDeclarationPrefix(kind) {
+    switch (kind) {
+    case "var":
+    case "let":
+    case "const":
+      return "local ";
+    default:
+      return "local ";
+    }
+  }
+
+  luaOperator(operator) {
+    if (operator === "===" || operator === "==") {
+      return "==";
+    }
+    if (operator === "!==" || operator === "!=") {
+      return "~=";
+    }
+    if (operator === "&&") {
+      return "and";
+    }
+    if (operator === "||") {
+      return "or";
+    }
+    return operator;
+  }
+
+  luaBinaryOperator(node, context) {
+    if (node.kind === "BinaryExpression" && node.operator === "+") {
+      if (this.isStringLike(node.left, context) || this.isStringLike(node.right, context)) {
+        return "..";
+      }
+    }
+    // Nullish coalescing operator
+    if (node.operator === "??") {
+      return "or";
+    }
+    return this.luaOperator(node.operator);
+  }
 
     if (node.kind === "Literal") {
       return this.isLiteralString(node);
@@ -686,6 +1074,9 @@ class IREmitter {
     if (typeof node.value === "string") return true;
     if (node.type && (node.type.primitiveType === "string" || node.type.type === "string" || node.type.name === "string")) {
       return true;
+  isStringLike(nodeOrId, context, depth = 0) {
+    if (depth > 10 || !nodeOrId) {
+      return false;
     }
     return false;
   }
@@ -707,6 +1098,9 @@ class IREmitter {
     }
     if (callee && callee.kind === "Identifier" && callee.name === "String") {
       return true;
+    const node = typeof nodeOrId === "object" ? nodeOrId : context.nodes[nodeOrId];
+    if (!node) {
+      return false;
     }
     return false;
   }
@@ -717,6 +1111,48 @@ class IREmitter {
       return true;
     }
     return false;
+    switch (node.kind) {
+    case "Literal":
+      // Treat string literals (by kind, inferred type, or runtime value) as string-like
+      if (node.literalKind === "string") return true;
+      if (typeof node.value === "string") return true;
+      if (node.type && (node.type.primitiveType === "string" || node.type.type === "string" || node.type.name === "string")) {
+        return true;
+      }
+      return false;
+    case "TemplateLiteral":
+      return true;
+    case "BinaryExpression":
+      // If operator is +, recursively check both sides
+      if (node.operator === "+") {
+        return this.isStringLike(node.left, context, depth + 1) || this.isStringLike(node.right, context, depth + 1);
+      }
+      return false;
+    case "CallExpression": {
+      // Check for .toString(), .concat(), String() constructor
+      const callee = context.nodes[node.callee];
+      if (callee && callee.kind === "MemberExpression") {
+        const prop = context.nodes[callee.property];
+        if (prop && prop.kind === "Identifier" && (prop.name === "toString" || prop.name === "concat")) {
+          return true;
+        }
+      }
+      if (callee && callee.kind === "Identifier" && callee.name === "String") {
+        return true;
+      }
+      return false;
+    }
+    case "MemberExpression": {
+      // String properties like .length on strings
+      const obj = context.nodes[node.object];
+      if (obj && this.isStringLike(obj, context, depth + 1)) {
+        return true;
+      }
+      return false;
+    }
+    default:
+      return false;
+    }
   }
 
   luaAssignmentOperator(operator) {
