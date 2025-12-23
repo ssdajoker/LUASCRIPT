@@ -12,16 +12,13 @@ if ! command -v npm >/dev/null 2>&1; then
   exit 0
 fi
 
-RUN_FORMAT=${SKIP_FORMAT:-0}
-RUN_TESTS=${SKIP_TESTS:-0}
-
 if [ "$SKIP_CHECKS" = "1" ]; then
   echo "$HOOK_PREFIX Checks skipped via SKIP_CHECKS=1"
   exit 0
 fi
 
 echo "$HOOK_PREFIX Running formatting gate..."
-if [ "$RUN_FORMAT" != "1" ]; then
+if [ "$SKIP_FORMAT" != "1" ]; then
   if ! npm run -s format:check; then
     echo "$HOOK_PREFIX ❌ Formatting gate failed"
     exit 1
@@ -31,7 +28,7 @@ else
 fi
 
 echo "$HOOK_PREFIX Running smoke tests..."
-if [ "$RUN_TESTS" != "1" ]; then
+if [ "$SKIP_TESTS" != "1" ]; then
   if ! npm run -s test:smoke; then
     echo "$HOOK_PREFIX ❌ Smoke tests failed"
     exit 1
