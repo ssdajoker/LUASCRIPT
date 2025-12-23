@@ -1,8 +1,8 @@
 # Observability toggles
 
 ## Logging controls
-- `LOG_LEVEL` (default: `info`): Sets the minimum level emitted by `src/utils/logger.js`. Supported values are `error`, `warn`, `info`, `debug`, and `silent`.
-- `LOG_SILENT=1`: Completely disables log emission from the wrappers. Equivalent to setting `LOG_LEVEL=silent`.
+- `LOG_LEVEL` (default: `info`): Sets the minimum level emitted by `src/utils/logger.js`. Supported values are `error`, `warn`, `info`, `debug`, and `silent` (to suppress all logs).
+- `LOG_SILENT=1` (equivalent to `LOG_LEVEL=silent`): Completely disables log emission from the wrappers.
 - `LOG_NAMESPACES`: Comma-separated allowlist of logger namespaces (for example, `runtime,memory`). When set, only matching namespaces are emitted.
 
 Use `createLogger(namespace)` from `src/utils/logger.js` to standardize log formatting and future filtering without touching existing console calls.
