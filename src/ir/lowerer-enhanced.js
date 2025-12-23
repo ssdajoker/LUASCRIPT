@@ -56,6 +56,7 @@ class EnhancedLowerer {
   }
 
   // ========== Statement Lowering ==========
+  // eslint-disable-next-line complexity
   lowerStatement(node) {
     if (!node) return null;
 
@@ -330,6 +331,7 @@ class EnhancedLowerer {
   }
 
   // ========== Expression Lowering ==========
+  // eslint-disable-next-line complexity
   lowerExpression(node) {
     if (!node) return null;
 

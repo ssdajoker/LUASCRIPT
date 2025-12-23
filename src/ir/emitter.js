@@ -327,22 +327,18 @@ class IREmitter {
     return null;
   }
 
-    emitIfStatement(node, context) {
-      const testId = node.test !== undefined ? node.test : node.condition;
-      const consId = node.consequent || node.consequence;
-      const altId = node.alternate || node.elseBranch;
+  emitIfStatement(node, context) {
+    const testId = node.test !== undefined ? node.test : node.condition;
+    const consId = node.consequent || node.consequence;
+    const altId = node.alternate || node.elseBranch;
     const test = this.emitExpressionById(testId, context);
     const consequent = this.emitBlockById(consId, context);
-    const alternate = altId
-      ? this.emitBlockById(altId, context)
-      : null;
+    const alternate = altId ? this.emitBlockById(altId, context) : null;
 
     let output = `${this.currentIndent(context)}if ${test} then${NEWLINE}${consequent}`;
-
     if (alternate) {
       output += `${NEWLINE}${this.currentIndent(context)}else${NEWLINE}${alternate}`;
     }
-
     output += `${NEWLINE}${this.currentIndent(context)}end`;
     return output;
   }
@@ -463,99 +459,110 @@ class IREmitter {
   }
 
   emitExpression(node, context) {
-    switch (node.kind) {
-    case "Identifier":
-      return node.name;
-    case "Literal":
-      return this.emitLiteral(node);
-    case "MemberExpression": {
-      const object = this.emitExpressionById(node.object, context);
-      if (node.computed) {
-        const prop = this.emitExpressionById(node.property, context);
-        if (node.optional) {
-          // Optional chaining: obj?.[prop] -> (obj ~= nil and obj[prop] or nil)
-          return `(${object} ~= nil and ${object}[${prop}] or nil)`;
-        }
-        return `${object}[${prop}]`;
-      }
-      const propNode = context.nodes[node.property];
-      const propName = propNode && propNode.kind === "Identifier" ? propNode.name : this.emitExpressionById(node.property, context);
-      if (node.optional) {
-        // Optional chaining: obj?.prop -> (obj ~= nil and obj.prop or nil)
-        return `(${object} ~= nil and ${object}.${propName} or nil)`;
-      }
-      return `${object}.${propName}`;
-    }
-    case "ArrayExpression": {
-      const items = (node.elements || []).map((elId) => this.emitExpressionById(elId, context)).join(", ");
-      return `{ ${items} }`;
-    }
-    case "ObjectExpression": {
-      const fields = (node.properties || []).map((propId) => this.emitPropertyById(propId, context)).join(", ");
-      return `{ ${fields} }`;
-    }
-    case "BinaryExpression":
-    case "LogicalExpression": {
-      const operator = this.luaBinaryOperator(node, context);
-      const left = this.emitGrouped(node.left, context);
-      const right = this.emitGrouped(node.right, context);
-      return `${left} ${operator} ${right}`;
-    }
-    case "AssignmentExpression":
-      return `${this.emitExpressionById(node.left, context)} ${this.luaAssignmentOperator(
-        node.operator
-      )} ${this.emitExpressionById(node.right, context)}`;
-    case "UpdateExpression": {
-      // Lua lacks ++/--. If used as expression, simulate via IIFE that performs the update and returns correct value.
-      const target = this.emitExpressionById(node.argument, context);
-      const op = node.operator === "--" ? -1 : 1;
-      if (node.prefix) {
-        // ++i -> i = i + 1; return i
-        return `(function() ${target} = ${target} + ${op}; return ${target} end)()`;
-      }
-      // i++ -> local _t = i; i = i + 1; return _t
-      return `(function() local _t = ${target}; ${target} = ${target} + ${op}; return _t end)()`;
-    }
-    case "UnaryExpression":
-      return `${this.luaUnaryOperator(node.operator)}${this.emitGrouped(node.argument, context)}`;
-    case "CallExpression": {
-      const callee = this.emitExpressionById(node.callee, context);
-      const args = (node.arguments || [])
-        .map((argId) => this.emitExpressionById(argId, context))
-        .join(", ");
-      if (node.optional) {
-        // Optional call: fn?.() -> (type(fn) == "function" and fn() or nil)
-        return `(type(${callee}) == "function" and ${callee}(${args}) or nil)`;
-      }
-      return `${callee}(${args})`;
-    }
-    case "NewExpression": {
-      // No 'new' in Lua; best-effort: call callee as a constructor
-      const callee = this.emitExpressionById(node.callee, context);
-      const args = (node.arguments || [])
-        .map((argId) => this.emitExpressionById(argId, context))
-        .join(", ");
-      return `${callee}(${args}) --[[new]]`;
-    }
-    case "FunctionDeclaration": {
-      return this.emitFunctionExpression(node, context);
-    }
-    case "ConditionalExpression": {
-      // Lua lacks ternary; use (cond) and a or b (note: not identical for falsy a)
-      const test = this.emitExpressionById(node.test, context);
-      const cons = this.emitExpressionById(node.consequent, context);
-      const alt = this.emitExpressionById(node.alternate, context);
-      return `((${test}) and (${cons}) or (${alt}))`;
-    }
-    case "ArrowFunctionExpression":
-      return this.emitArrowFunction(node, context);
-    case "FunctionExpression":
-      return this.emitFunctionExpression(node, context);
-    case "BlockStatement":
-      return "{ --[[block]] }";
-    default:
+    const handler = this.getExpressionHandler(node.kind);
+    if (!handler) {
       throw new Error(`Emitter does not support expression kind ${node.kind}`);
     }
+    return handler.call(this, node, context);
+  }
+
+  getExpressionHandler(kind) {
+    return {
+      Identifier: (node) => node.name,
+      Literal: (node) => this.emitLiteral(node),
+      MemberExpression: (node, context) => this.emitMemberExpression(node, context),
+      ArrayExpression: (node, context) => this.emitArrayExpression(node, context),
+      ObjectExpression: (node, context) => this.emitObjectExpression(node, context),
+      BinaryExpression: (node, context) => this.emitBinaryLikeExpression(node, context),
+      LogicalExpression: (node, context) => this.emitBinaryLikeExpression(node, context),
+      AssignmentExpression: (node, context) => this.emitAssignmentExpression(node, context),
+      UpdateExpression: (node, context) => this.emitUpdateExpression(node, context),
+      UnaryExpression: (node, context) => this.emitUnaryExpression(node, context),
+      CallExpression: (node, context) => this.emitCallExpression(node, context),
+      NewExpression: (node, context) => this.emitNewExpression(node, context),
+      FunctionDeclaration: (node, context) => this.emitFunctionExpression(node, context),
+      ConditionalExpression: (node, context) => this.emitConditionalExpression(node, context),
+      ArrowFunctionExpression: (node, context) => this.emitArrowFunction(node, context),
+      FunctionExpression: (node, context) => this.emitFunctionExpression(node, context),
+      BlockStatement: () => "{ --[[block]] }",
+    }[kind];
+  }
+
+  emitMemberExpression(node, context) {
+    const object = this.emitExpressionById(node.object, context);
+    if (node.computed) {
+      const prop = this.emitExpressionById(node.property, context);
+      if (node.optional) {
+        return `(${object} ~= nil and ${object}[${prop}] or nil)`;
+      }
+      return `${object}[${prop}]`;
+    }
+    const propNode = context.nodes[node.property];
+    const propName = propNode && propNode.kind === "Identifier" ? propNode.name : this.emitExpressionById(node.property, context);
+    if (node.optional) {
+      return `(${object} ~= nil and ${object}.${propName} or nil)`;
+    }
+    return `${object}.${propName}`;
+  }
+
+  emitArrayExpression(node, context) {
+    const items = (node.elements || []).map((elId) => this.emitExpressionById(elId, context)).join(", ");
+    return `{ ${items} }`;
+  }
+
+  emitObjectExpression(node, context) {
+    const fields = (node.properties || []).map((propId) => this.emitPropertyById(propId, context)).join(", ");
+    return `{ ${fields} }`;
+  }
+
+  emitBinaryLikeExpression(node, context) {
+    const operator = this.luaBinaryOperator(node, context);
+    const left = this.emitGrouped(node.left, context);
+    const right = this.emitGrouped(node.right, context);
+    return `${left} ${operator} ${right}`;
+  }
+
+  emitAssignmentExpression(node, context) {
+    return `${this.emitExpressionById(node.left, context)} ${this.luaAssignmentOperator(node.operator)} ${this.emitExpressionById(node.right, context)}`;
+  }
+
+  emitUpdateExpression(node, context) {
+    const target = this.emitExpressionById(node.argument, context);
+    const op = node.operator === "--" ? -1 : 1;
+    if (node.prefix) {
+      return `(function() ${target} = ${target} + ${op}; return ${target} end)()`;
+    }
+    return `(function() local _t = ${target}; ${target} = ${target} + ${op}; return _t end)()`;
+  }
+
+  emitUnaryExpression(node, context) {
+    return `${this.luaUnaryOperator(node.operator)}${this.emitGrouped(node.argument, context)}`;
+  }
+
+  emitCallExpression(node, context) {
+    const callee = this.emitExpressionById(node.callee, context);
+    const args = (node.arguments || [])
+      .map((argId) => this.emitExpressionById(argId, context))
+      .join(", ");
+    if (node.optional) {
+      return `(type(${callee}) == "function" and ${callee}(${args}) or nil)`;
+    }
+    return `${callee}(${args})`;
+  }
+
+  emitNewExpression(node, context) {
+    const callee = this.emitExpressionById(node.callee, context);
+    const args = (node.arguments || [])
+      .map((argId) => this.emitExpressionById(argId, context))
+      .join(", ");
+    return `${callee}(${args}) --[[new]]`;
+  }
+
+  emitConditionalExpression(node, context) {
+    const test = this.emitExpressionById(node.test, context);
+    const cons = this.emitExpressionById(node.consequent, context);
+    const alt = this.emitExpressionById(node.alternate, context);
+    return `((${test}) and (${cons}) or (${alt}))`;
   }
 
   isExpressionKind(kind) {
@@ -715,7 +722,7 @@ class IREmitter {
     case "CallExpression":
       return this.isStringyCall(node, context);
     case "MemberExpression":
-      return this.isStringyMember(node, context, depth);
+      return this.isStringyMember(node, context);
     default:
       return false;
     }
@@ -751,6 +758,31 @@ class IREmitter {
           }
       }
       return false;
+    return node.literalKind === "string" || typeof node.value === "string";
+  }
+
+  isBinaryStringConcat(node, context, depth = 0) {
+    if (node.operator !== "+") return false;
+    const nextDepth = depth + 1;
+    return this.isStringLike(node.left, context, nextDepth) || this.isStringLike(node.right, context, nextDepth);
+  }
+
+  isStringyCall(node, context) {
+    if (node.callee) {
+      const callee = context.nodes[node.callee];
+      if (callee && callee.kind === "Identifier" && callee.name === "String") {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isStringyMember(node, context) {
+    const prop = context.nodes[node.property];
+    if (prop && prop.kind === "Identifier") {
+      return prop.name === "toString" || prop.name === "substring" || prop.name === "toUpperCase" || prop.name === "toLowerCase";
+    }
+    return false;
   }
 
   luaAssignmentOperator(operator) {
