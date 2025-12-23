@@ -144,6 +144,10 @@ class EnhancedEmitter {
         const body = this.emitBlockStatement(node.body);
         this.indentLevel--;
 
+        if (node.async) {
+            return this.emitAsyncFunctionDeclaration({ ...node, name });
+        }
+
         return `${this.indent()}local function ${name}(${params})\n${body}\n${this.indent()}end`;
     }
 
@@ -454,6 +458,9 @@ class EnhancedEmitter {
             return `...${this.emitExpression(node.argument)}`;
         case "ThisExpression":
             return "self";
+        case "FunctionDeclaration":
+            // Function declarations can appear as expressions when lowered from arrow functions
+            return this.emitFunctionExpression(node);
         default:
             return "";
         }
@@ -518,7 +525,8 @@ class EnhancedEmitter {
     }
 
     emitFunctionExpression(node) {
-        const params = (node.params || []).map(p => p.name).join(", ");
+        const paramList = node.params || node.parameters || [];
+        const params = paramList.map(p => p.name || p).join(", ");
         this.indentLevel++;
         const body = this.emitBlockStatement(node.body);
         this.indentLevel--;
