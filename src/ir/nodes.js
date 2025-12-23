@@ -262,6 +262,8 @@ class FunctionDecl extends IRNode {
     this.body = body; // Block node
     this.returnType = returnType;
     this.async = options.async || false; // Add async property
+    this.arrow = Boolean(options.arrow);
+    this.expression = Boolean(options.expression);
   }
 
   toJSON() {
@@ -271,7 +273,9 @@ class FunctionDecl extends IRNode {
       parameters: this.parameters.map(p => toJsonValue(p)),
       body: toJsonValue(this.body),
       returnType: toJsonValue(this.returnType),
-      async: this.async // Serialize async property
+      async: this.async, // Serialize async property
+      arrow: this.arrow,
+      expression: this.expression
     };
   }
 
@@ -281,7 +285,7 @@ class FunctionDecl extends IRNode {
       json.parameters.map(p => IRNode.fromJSON(p)),
       IRNode.fromJSON(json.body),
       json.returnType ? require("./types").Type.fromJSON(json.returnType) : null,
-      { ...json, async: json.async } // Deserialize async property
+      { ...json, async: json.async, arrow: json.arrow, expression: json.expression } // Deserialize async property
     );
   }
 }

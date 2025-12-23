@@ -55,6 +55,7 @@ class IRBuilder {
       schemaVersion: this.module.schemaVersion,
       module: this.module,
       nodes: this.nodes,
+      controlFlowGraphs: this.module.metadata.controlFlowGraphs || {},
     };
   }
 
@@ -108,6 +109,10 @@ class IRBuilder {
 
   switchStmt(discriminant, cases, options = {}) {
     return this._storeNode(new nodes.Switch(discriminant, cases, options));
+  }
+
+  tryStmt(block, handler, finalizer, options = {}) {
+    return this._storeNode(new nodes.TryStatement(block, handler, finalizer, options));
   }
 
   caseStmt(test, consequent, options = {}) {
@@ -335,6 +340,10 @@ class IRBuilder {
 
   switchCase(test, consequent, options = {}) {
     return this.caseStmt(test, consequent, options);
+  }
+
+  tryStatement(block, handler, finalizer, options = {}) {
+    return this.tryStmt(block, handler, finalizer, options);
   }
 
   ifStatement(condition, consequent, alternate = null, options = {}) {

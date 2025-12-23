@@ -2,6 +2,10 @@
 
 const { IRBuilder } = require("./builder");
 const { normalizeProgram } = require("./normalizer");
+const { LoopLowerer } = require("./loop_lowerer");
+const { TryLowerer } = require("./try_lowerer");
+const { ClassLowerer } = require("./class_lowerer");
+const { createStatementDispatch } = require("./statement_dispatch");
 
 class IRLowerer {
   constructor(options = {}) {
@@ -22,6 +26,11 @@ class IRLowerer {
       metadata,
       toolchain,
     });
+
+    this.loopLowerer = new LoopLowerer(this);
+    this.tryLowerer = new TryLowerer(this);
+    this.classLowerer = new ClassLowerer(this);
+    this.statementDispatch = createStatementDispatch(this);
   }
 
   lowerProgram(programNode) {
@@ -40,61 +49,21 @@ class IRLowerer {
     }
 
     const shouldPush = Boolean(context.pushToBody);
+    const handler = this.statementDispatch[node.type];
 
-    switch (node.type) {
-    case "BlockStatement": {
-      return this.lowerBlockStatement(node);
-    }
-    case "VariableDeclaration": {
-      const lowered = this.lowerVariableDeclaration(node);
-      if (shouldPush) this.builder.pushToBody(lowered);
+    if (handler) {
+      const lowered = handler.lower(node, { ...context, pushToBody: shouldPush });
+      if (handler.pushToBody && shouldPush && lowered) {
+        this.builder.pushToBody(lowered);
+      }
       return lowered;
     }
-    case "ExpressionStatement": {
-      const lowered = this.lowerExpressionStatement(node);
-      if (shouldPush) this.builder.pushToBody(lowered);
-      return lowered;
+
+    const lowered = this.lowerExpressionAsStatement(node);
+    if (shouldPush && lowered) {
+      this.builder.pushToBody(lowered);
     }
-    case "ReturnStatement": {
-      const lowered = this.lowerReturnStatement(node);
-      if (shouldPush) this.builder.pushToBody(lowered);
-      return lowered;
-    }
-    case "IfStatement": {
-      const lowered = this.lowerIfStatement(node);
-      if (shouldPush) this.builder.pushToBody(lowered);
-      return lowered;
-    }
-    case "WhileStatement": {
-      const lowered = this.lowerWhileStatement(node);
-      if (shouldPush) this.builder.pushToBody(lowered);
-      return lowered;
-    }
-    case "SwitchStatement": {
-      const lowered = this.lowerSwitchStatement(node);
-      if (shouldPush) this.builder.pushToBody(lowered);
-      return lowered;
-    }
-    case "ClassDeclaration": {
-      const lowered = this.lowerClassDeclaration(node);
-      if (shouldPush && lowered) this.builder.pushToBody(lowered);
-      return lowered;
-    }
-    case "TryStatement": {
-      const lowered = this.lowerTryStatement(node);
-      if (shouldPush) this.builder.pushToBody(lowered);
-      return lowered;
-    }
-    case "FunctionDeclaration": {
-      return this.lowerFunctionDeclaration(node, { pushToBody: shouldPush });
-    }
-    default: {
-      const exprId = this.lowerExpression(node);
-      const lowered = this.builder.expressionStatement(exprId);
-      if (shouldPush) this.builder.pushToBody(lowered);
-      return lowered;
-    }
-    }
+    return lowered;
   }
 
   lowerBlockStatement(node) {
@@ -165,9 +134,7 @@ class IRLowerer {
   }
 
   lowerWhileStatement(node) {
-    const testRef = this.lowerExpression(node.test);
-    const bodyBlock = this.ensureBlock(node.body);
-    return this.builder.whileStatement(testRef, bodyBlock.id);
+    return this.loopLowerer.lowerWhileStatement(node);
   }
 
   lowerSwitchStatement(node) {
@@ -204,46 +171,7 @@ class IRLowerer {
   }
 
   lowerClassDeclaration(node, { pushToBody } = {}) {
-    // Build constructor function: either class constructor method or empty body
-    const methods = node.body || [];
-    const ctor = methods.find((m) => m.kind === "constructor");
-    const idNode = this.lowerIdentifier(node.id, { binding: node.id?.name });
-    let params = [];
-    let bodyBlock;
-    if (ctor) {
-      params = (ctor.params || []).map((p) => this.lowerIdentifier(p, { binding: p.name }).id);
-      bodyBlock = this.ensureBlock(ctor.body);
-    } else {
-      bodyBlock = this.builder.blockStatement([]);
-    }
-    const fn = this.builder.functionDeclaration(idNode.name, params, bodyBlock.id, { pushToModule: false, meta: { classLike: true } });
-    if (pushToBody !== false) this.builder.pushToBody(fn);
-
-    // Prototype methods: C.prototype.method = function(...) { ... }
-    for (const m of methods) {
-      if (m.kind === "constructor") continue;
-      const keyId = this.lowerIdentifier(m.key);
-      const mParams = (m.params || []).map((p) => this.lowerIdentifier(p, { binding: p.name }).id);
-      const mBody = this.ensureBlock(m.body);
-      const funcExprId = this.builder.arrowFunctionExpression(mParams, mBody.id, {}).id; // use arrow-like function body
-
-      if (m.static) {
-        // C.key = function
-        const lhs = this.builder.createMemberExpression(idNode.id, keyId.id, { computed: false }).id;
-        const assign = this.builder.assignmentExpression(lhs, "=", funcExprId).id;
-        const stmt = this.builder.expressionStatement(assign);
-        this.builder.pushToBody(stmt);
-      } else {
-        // (C.prototype).key = function
-        const protoKey = this.builder.identifier("prototype").id;
-        const proto = this.builder.createMemberExpression(idNode.id, protoKey, { computed: false }).id;
-        const lhs = this.builder.createMemberExpression(proto, keyId.id, { computed: false }).id;
-        const assign = this.builder.assignmentExpression(lhs, "=", funcExprId).id;
-        const stmt = this.builder.expressionStatement(assign);
-        this.builder.pushToBody(stmt);
-      }
-    }
-    return fn;
+    return this.classLowerer.lowerClassDeclaration(node, { pushToBody });
   }
 
   lowerFunctionDeclaration(node, { pushToBody } = {}) {
@@ -394,6 +322,11 @@ class IRLowerer {
     }
   }
 
+  lowerExpressionAsStatement(node) {
+    const exprId = this.lowerExpression(node);
+    return this.builder.expressionStatement(exprId);
+  }
+
   lowerArrayPattern(node) {
     const elements = (node.elements || []).map((el) => 
       el ? this.lowerExpression(el) : null
@@ -426,17 +359,7 @@ class IRLowerer {
   }
 
   lowerTryStatement(node) {
-    // Ensure block/handler/finalizer are lowered to BlockStatements
-    const block = this.ensureBlock(node.block);
-    let handler = null;
-    if (node.handler) {
-      // Handler shape: { param, body }
-      const paramRef = node.handler.param ? this.lowerExpression(node.handler.param) : null;
-      const handlerBody = this.ensureBlock(node.handler.body);
-      handler = { param: paramRef, body: handlerBody.id };
-    }
-    const finalizer = node.finalizer ? this.ensureBlock(node.finalizer).id : null;
-    return this.builder.tryStatement(block.id, handler, finalizer);
+    return this.tryLowerer.lowerTryStatement(node);
   }
 
   lowerArrowFunctionExpression(node) {

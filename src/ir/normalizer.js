@@ -374,6 +374,7 @@ function cloneValue(value, options) {
     return normalizeNode(value, options);
   }
   return value;
+  }
 }
 
 function tryFallbackParse(source) {
