@@ -51,6 +51,10 @@ git push origin feature/your-feature-name
 # Create PR to develop branch
 ```
 
+**IR / emitter changes:**
+- Keep `PROJECT_STATUS.md` and `README.md` in sync when touching `src/ir/*` (lowerers, emitters, nodes). Capture new helper injection rules or IR shape changes in the status snapshot.
+- Run `npm run ir:validate:all` and `npm run test:parity` locally for IR-affecting work; include the command list in the PR description.
+
 #### 2. Code Review Requirements
 - **Mandatory reviewers**: Donald Knuth (algorithms), Steve Jobs (UX)
 - **Linus approval required** for: Core architecture, build system, CI/CD
