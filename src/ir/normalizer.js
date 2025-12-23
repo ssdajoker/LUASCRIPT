@@ -29,11 +29,18 @@ function normalizeNode(node, options = {}) {
 
   // Cycle guard: if this exact node object was already visited, avoid infinite recursion
   if (options && options.seen && typeof node === "object") {
+    if (options.seen.has(node)) {
+      return { type: "Error", message: "Circular reference detected", originalType: node.type };
+    }
     options.seen.add(node);
   }
 
-  switch (node.type) {
-  case "Program": {
+  const normalizer = normalizers[node.type] || cloneShallow;
+  return normalizer(node, options);
+}
+
+const normalizers = {
+  Program(node, options) {
     const normalizedBody = normalizeArray(node.body, options);
     // Fallback for parsers that return only Error nodes (e.g., unsupported destructuring)
     if (normalizedBody.length > 0 && normalizedBody.every((n) => n.type === "Error")) {
@@ -44,9 +51,9 @@ function normalizeNode(node, options = {}) {
       type: "Program",
       body: normalizedBody,
     };
-  }
+  },
 
-  case "VariableDeclaration":
+  VariableDeclaration(node, options) {
     return {
       type: "VariableDeclaration",
       kind: (node.kind || "var").toLowerCase(),
@@ -56,96 +63,109 @@ function normalizeNode(node, options = {}) {
         init: normalizeNode(decl.init, options),
       })),
     };
+  },
 
-  case "Identifier":
-  case "Parameter":
-    return {
-      type: "Identifier",
-      name: node.name,
-    };
+  Identifier(node) {
+    return { type: "Identifier", name: node.name };
+  },
 
-  case "Literal":
+  Parameter(node, options) {
+    return normalizers.Identifier(node, options);
+  },
+
+  Literal(node) {
     return {
       type: "Literal",
       value: node.value,
       raw: node.raw ?? JSON.stringify(node.value),
     };
+  },
 
-  case "BinaryExpression":
+  BinaryExpression(node, options) {
     return {
       type: "BinaryExpression",
       operator: node.operator,
       left: normalizeNode(node.left, options),
       right: normalizeNode(node.right, options),
     };
+  },
 
-  case "AssignmentExpression":
+  AssignmentExpression(node, options) {
     return {
       type: "AssignmentExpression",
       operator: node.operator || "=",
       left: normalizeNode(node.left, options),
       right: normalizeNode(node.right, options),
     };
+  },
 
-  case "LogicalExpression":
+  LogicalExpression(node, options) {
     return {
       type: "LogicalExpression",
       operator: node.operator,
       left: normalizeNode(node.left, options),
       right: normalizeNode(node.right, options),
     };
+  },
 
-  case "UnaryExpression":
+  UnaryExpression(node, options) {
     return {
       type: "UnaryExpression",
       operator: node.operator,
       argument: normalizeNode(node.argument, options),
       prefix: true,
     };
+  },
 
-  case "UpdateExpression":
+  UpdateExpression(node, options) {
     return {
       type: "UpdateExpression",
       operator: node.operator,
       argument: normalizeNode(node.argument, options),
       prefix: Boolean(node.prefix),
     };
+  },
 
-  case "CallExpression":
+  CallExpression(node, options) {
     return {
       type: "CallExpression",
       callee: normalizeNode(node.callee, options),
       arguments: normalizeArray(node.arguments, options),
     };
+  },
 
-  case "NewExpression":
+  NewExpression(node, options) {
     return {
       type: "NewExpression",
       callee: normalizeNode(node.callee, options),
       arguments: normalizeArray(node.arguments, options),
     };
+  },
 
-  case "MemberExpression":
+  MemberExpression(node, options) {
     return {
       type: "MemberExpression",
       object: normalizeNode(node.object, options),
       property: normalizeNode(node.property, options),
       computed: Boolean(node.computed),
     };
+  },
 
-  case "ArrayExpression":
+  ArrayExpression(node, options) {
     return {
       type: "ArrayExpression",
       elements: normalizeArray(node.elements, options),
     };
+  },
 
-  case "ObjectExpression":
+  ObjectExpression(node, options) {
     return {
       type: "ObjectExpression",
       properties: normalizeArray(node.properties, options),
     };
+  },
 
-  case "Property":
+  Property(node, options) {
     return {
       type: "Property",
       key: normalizeNode(node.key, options),
@@ -154,35 +174,40 @@ function normalizeNode(node, options = {}) {
       computed: Boolean(node.computed),
       shorthand: Boolean(node.shorthand),
     };
+  },
 
-  case "ExpressionStatement":
+  ExpressionStatement(node, options) {
     return {
       type: "ExpressionStatement",
       expression: normalizeNode(node.expression, options),
     };
+  },
 
-  case "ReturnStatement":
+  ReturnStatement(node, options) {
     return {
       type: "ReturnStatement",
       argument: normalizeNode(node.argument, options),
     };
+  },
 
-  case "IfStatement":
+  IfStatement(node, options) {
     return {
       type: "IfStatement",
       test: normalizeNode(node.test, options),
       consequent: normalizeNode(node.consequent, options),
       alternate: normalizeNode(node.alternate, options),
     };
+  },
 
-  case "WhileStatement":
+  WhileStatement(node, options) {
     return {
       type: "WhileStatement",
       test: normalizeNode(node.test, options),
       body: normalizeNode(node.body, options),
     };
+  },
 
-  case "ForStatement":
+  ForStatement(node, options) {
     return {
       type: "ForStatement",
       init: normalizeNode(node.init, options),
@@ -190,9 +215,9 @@ function normalizeNode(node, options = {}) {
       update: normalizeNode(node.update, options),
       body: normalizeNode(node.body, options),
     };
+  },
 
-  case "SwitchStatement": {
-    // Represent switch as a synthetic node that will be lowered later to If/ElseIf/Else
+  SwitchStatement(node, options) {
     return {
       type: "SwitchStatement",
       discriminant: normalizeNode(node.discriminant, options),
@@ -202,49 +227,53 @@ function normalizeNode(node, options = {}) {
         consequent: normalizeArray(c.consequent, options),
       })),
     };
-  }
+  },
 
-  case "ClassDeclaration": {
-    // Normalize to a minimal ClassDeclaration shape; lowerer will translate to prototype-like constructs
-    const methods = (node.body || []).filter((m) => m && m.type === "MethodDefinition").map((m) => ({
-      type: "MethodDefinition",
-      key: normalizeNode(m.key, options),
-      params: normalizeArray(m.params, options),
-      body: normalizeNode(m.body, options),
-      kind: m.kind || "method",
-      static: Boolean(m.static),
-    }));
+  ClassDeclaration(node, options) {
+    const methods = (node.body || [])
+      .filter((m) => m && m.type === "MethodDefinition")
+      .map((m) => ({
+        type: "MethodDefinition",
+        key: normalizeNode(m.key, options),
+        params: normalizeArray(m.params, options),
+        body: normalizeNode(m.body, options),
+        kind: m.kind || "method",
+        static: Boolean(m.static),
+      }));
     return {
       type: "ClassDeclaration",
       id: normalizeNode(node.id, options),
       superClass: normalizeNode(node.superClass, options),
       body: methods,
     };
-  }
+  },
 
-  case "ConditionalExpression":
+  ConditionalExpression(node, options) {
     return {
       type: "ConditionalExpression",
       test: normalizeNode(node.test, options),
       consequent: normalizeNode(node.consequent, options),
       alternate: normalizeNode(node.alternate, options),
     };
+  },
 
-  case "BlockStatement":
+  BlockStatement(node, options) {
     return {
       type: "BlockStatement",
       body: normalizeArray(node.body, options),
     };
+  },
 
-  case "FunctionDeclaration":
+  FunctionDeclaration(node, options) {
     return {
       type: "FunctionDeclaration",
       id: normalizeNode(node.id, options),
       params: normalizeArray(node.params, options),
       body: normalizeNode(node.body, options),
     };
+  },
 
-  case "FunctionExpression":
+  FunctionExpression(node, options) {
     return {
       type: "FunctionExpression",
       id: normalizeNode(node.id, options),
@@ -253,8 +282,9 @@ function normalizeNode(node, options = {}) {
       async: Boolean(node.async),
       generator: Boolean(node.generator),
     };
+  },
 
-  case "ArrowFunction": {
+  ArrowFunction(node, options) {
     const params = normalizeArray(node.params, options);
     let body = normalizeNode(node.body, options);
 
@@ -277,9 +307,9 @@ function normalizeNode(node, options = {}) {
       body,
       async: Boolean(node.isAsync),
     };
-  }
+  },
 
-  case "TryStatement": {
+  TryStatement(node, options) {
     const block = normalizeNode(node.block, options);
     let handler = null;
     if (node.handler) {
@@ -296,13 +326,8 @@ function normalizeNode(node, options = {}) {
       handler,
       finalizer,
     };
-  }
-
-  default:
-    // Fallback: perform a shallow clone to avoid mutating original nodes
-    return cloneShallow(node, options);
-  }
-}
+  },
+};
 
 function normalizeArray(items, options) {
   if (!Array.isArray(items)) {
@@ -350,6 +375,7 @@ function cloneValue(value, options) {
   }
   return value;
   }
+}
 
 function tryFallbackParse(source) {
   if (typeof source !== "string") return null;

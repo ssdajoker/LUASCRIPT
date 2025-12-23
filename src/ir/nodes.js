@@ -77,6 +77,8 @@ const NodeCategory = {
   PROPERTY: "Property"
 };
 
+let fromJsonHandlers;
+
 function toJsonValue(value) {
   if (value === null || value === undefined) return null;
   if (Array.isArray(value)) return value.map(toJsonValue);
@@ -103,6 +105,18 @@ class IRNode {
   }
 
   static fromJSON(json) {
+    if (json === null || json === undefined) {
+      throw new Error("Invalid IR JSON: expected a non-null object");
+    }
+
+    if (typeof json !== "object") {
+      throw new Error(`Invalid IR JSON: expected an object but received ${typeof json}`);
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(json, "kind")) {
+      throw new Error("Invalid IR JSON: missing 'kind' property");
+    }
+
     // Factory method to reconstruct nodes from JSON
     switch (json.kind) {
     case NodeCategory.PROGRAM:
@@ -206,8 +220,14 @@ class IRNode {
     case NodeCategory.THIS:
       return ThisExpression.fromJSON(json);
     default:
-      throw new Error(`Unknown node kind: ${json.kind}`);
+      throw new Error(`No fromJSON handler registered for node kind: ${json.kind}`);
+    const handler = fromJsonHandlers && fromJsonHandlers[json && json.kind];
+
+    if (!handler) {
+      throw new Error(`No fromJSON handler registered for node kind: ${json && json.kind}`);
     }
+
+    return handler(json);
   }
 }
 
@@ -1327,9 +1347,65 @@ class ThisExpression extends IRNode {
   }
 }
 
+fromJsonHandlers = Object.freeze({
+  [NodeCategory.PROGRAM]: Program.fromJSON,
+  [NodeCategory.FUNCTION_DECL]: FunctionDecl.fromJSON,
+  [NodeCategory.VAR_DECL]: VarDecl.fromJSON,
+  [NodeCategory.VARIABLE_DECLARATION]: VariableDeclaration.fromJSON,
+  [NodeCategory.PARAMETER]: Parameter.fromJSON,
+  [NodeCategory.BLOCK]: Block.fromJSON,
+  [NodeCategory.RETURN]: Return.fromJSON,
+  [NodeCategory.IF]: If.fromJSON,
+  [NodeCategory.WHILE]: While.fromJSON,
+  [NodeCategory.FOR]: For.fromJSON,
+  [NodeCategory.DO_WHILE]: DoWhile.fromJSON,
+  [NodeCategory.SWITCH]: Switch.fromJSON,
+  [NodeCategory.CASE]: Case.fromJSON,
+  [NodeCategory.BREAK]: Break.fromJSON,
+  [NodeCategory.CONTINUE]: Continue.fromJSON,
+  [NodeCategory.EXPRESSION_STMT]: ExpressionStmt.fromJSON,
+  [NodeCategory.TRY]: TryStatement.fromJSON,
+  [NodeCategory.CATCH]: CatchClause.fromJSON,
+  [NodeCategory.THROW]: ThrowStatement.fromJSON,
+  [NodeCategory.FOR_OF]: ForOfStatement.fromJSON,
+  [NodeCategory.FOR_IN]: ForInStatement.fromJSON,
+  [NodeCategory.ASYNC_FUNCTION]: AsyncFunctionDeclaration.fromJSON,
+  [NodeCategory.AWAIT]: AwaitExpression.fromJSON,
+  [NodeCategory.GENERATOR_FUNCTION]: GeneratorDeclaration.fromJSON,
+  [NodeCategory.YIELD]: YieldExpression.fromJSON,
+  [NodeCategory.CLASS_DECL]: ClassDeclaration.fromJSON,
+  [NodeCategory.CLASS_EXPR]: ClassExpression.fromJSON,
+  [NodeCategory.METHOD_DEF]: MethodDefinition.fromJSON,
+  [NodeCategory.CLASS_BODY]: ClassBody.fromJSON,
+  [NodeCategory.SUPER]: Super.fromJSON,
+  [NodeCategory.THIS]: ThisExpression.fromJSON,
+  [NodeCategory.BINARY_OP]: BinaryOp.fromJSON,
+  [NodeCategory.UNARY_OP]: UnaryOp.fromJSON,
+  [NodeCategory.CALL]: Call.fromJSON,
+  [NodeCategory.MEMBER]: Member.fromJSON,
+  [NodeCategory.ARRAY_LITERAL]: ArrayLiteral.fromJSON,
+  [NodeCategory.OBJECT_LITERAL]: ObjectLiteral.fromJSON,
+  [NodeCategory.IDENTIFIER]: Identifier.fromJSON,
+  [NodeCategory.LITERAL]: Literal.fromJSON,
+  [NodeCategory.ASSIGNMENT]: Assignment.fromJSON,
+  [NodeCategory.CONDITIONAL]: Conditional.fromJSON,
+  [NodeCategory.TEMPLATE_LITERAL]: TemplateLiteral.fromJSON,
+  [NodeCategory.TEMPLATE_ELEMENT]: TemplateElement.fromJSON,
+  [NodeCategory.TAGGED_TEMPLATE]: TaggedTemplateExpression.fromJSON,
+  [NodeCategory.ARRAY_PATTERN]: ArrayPattern.fromJSON,
+  [NodeCategory.OBJECT_PATTERN]: ObjectPattern.fromJSON,
+  [NodeCategory.REST_ELEMENT]: RestElement.fromJSON,
+  [NodeCategory.ASSIGNMENT_PATTERN]: AssignmentPattern.fromJSON,
+  [NodeCategory.SPREAD_ELEMENT]: SpreadElement.fromJSON,
+  [NodeCategory.PROPERTY]: Property.fromJSON
+});
+
+IRNode.fromJsonHandlers = fromJsonHandlers;
+
 module.exports = {
   NodeCategory,
   IRNode,
+  fromJsonHandlers,
   Program,
   FunctionDecl,
   VarDecl,
