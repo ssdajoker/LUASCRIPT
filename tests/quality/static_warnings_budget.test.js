@@ -1,43 +1,41 @@
 /**
  * Static Warnings Budget Test
  *
- * Reads static_warnings.txt and enforces a configurable budget. By default,
- * it only reports counts; set ENFORCE_WARN_BUDGET=1 to fail when exceeding WARN_BUDGET.
+ * Reads the best available static warnings snapshot and enforces a configurable budget.
+ * Prefer cleaner snapshots (near_final → clean → base) to encourage burn down.
  */
 
+const {
+  DEFAULT_CANDIDATES,
+  findWarningsFile,
+  countWarnings,
+  resolveBudget,
+} = require('../../scripts/static_warnings_gate');
 const fs = require('fs');
-const path = require('path');
-
-function readWarningsFile() {
-  const candidates = [
-    'static_warnings.txt',
-    'static_warnings_clean.txt',
-    'static_warnings_near_final.txt'
-  ];
-  for (const rel of candidates) {
-    const abs = path.join(process.cwd(), rel);
-    if (fs.existsSync(abs)) return { abs, rel };
-  }
-  return null;
-}
-
-function countLines(abs) {
-  const text = fs.readFileSync(abs, 'utf8');
-  return text.split(/\r?\n/).filter(l => l.trim().length > 0).length;
-}
 
 function main() {
-  const found = readWarningsFile();
+  const candidates = process.env.WARN_FILE ? [process.env.WARN_FILE] : DEFAULT_CANDIDATES;
+  const found = findWarningsFile(candidates);
   if (!found) {
     console.warn('⚠️ No static warnings file found; skipping budget check.');
     return;
   }
 
-  const budget = Number(process.env.WARN_BUDGET || 100000);
+  const text = fs.readFileSync(found.abs, 'utf8');
+  const count = countWarnings(text);
+  const count = countWarnings(found.abs);
+  const budget = resolveBudget(
+    found.rel,
+    count,
+    process.env.WARN_BUDGET,
+    text
+  );
   const enforce = process.env.ENFORCE_WARN_BUDGET === '1';
-  const count = countLines(found.abs);
+  const enforce = process.env.ENFORCE_WARN_BUDGET !== '0';
+  const count = countWarnings(found.abs);
 
   console.log(`Static warnings: ${count} (file: ${found.rel})`);
+  console.log(`Budget=${budget}; enforcement=${enforce ? 'on' : 'off'}`);
 
   if (enforce && count > budget) {
     console.error(`❌ Static warnings (${count}) exceed budget (${budget}).`);

@@ -17,6 +17,10 @@ function runStep(label, cmd, args, extraEnv = {}) {
   }
 }
 
+runStep('Refactor quality gates', npmCmd, ['run', '--silent', 'refactor:all'], {
+  ENFORCE_WARN_BUDGET: '1',
+});
+
 runStep('Core verification suite', npmCmd, ['run', '--silent', 'verify:core']);
 
 const runEnhanced = process.env.VERIFY_ENHANCED === '1' || process.env.LUASCRIPT_USE_ENHANCED_IR === '1';

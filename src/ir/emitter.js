@@ -25,6 +25,8 @@ class IREmitter {
     this.indentUnit = options.indent || "  ";
     this.options = options;
     this.statementDispatch = this.createStatementDispatch();
+    this.needsAwaitHelper = false;
+    this.needsAsyncGeneratorHelper = false;
   }
 
   createStatementDispatch() {
@@ -36,9 +38,11 @@ class IREmitter {
       IfStatement: (node, context) => this.emitIfStatement(node, context),
       WhileStatement: (node, context) => this.emitWhileStatement(node, context),
       ForStatement: (node, context) => this.emitForStatement(node, context),
+      ForOfStatement: (node, context) => this.emitForOfStatement(node, context),
       FunctionDeclaration: (node, context) => this.emitFunctionDeclaration(node, context),
       ClassDeclaration: (node, context) => this.emitClassDeclaration(node, context),
       BlockStatement: (node, context) => this.emitBlockStatement(node, context),
+      ThrowStatement: (node, context) => this.emitThrowStatement(node, context),
       TryStatement: (node, context) => this.emitTryStatement(node, context),
     };
   }
@@ -47,6 +51,10 @@ class IREmitter {
     if (!irModule || !irModule.module || !irModule.nodes) {
       throw new Error("Invalid IR module passed to emitter");
     }
+
+    this.needsAwaitHelper = false;
+    this.needsAsyncGeneratorHelper = false;
+    this.computeHelperNeeds(irModule);
 
     const context = {
       nodes: irModule.nodes,
@@ -66,7 +74,45 @@ class IREmitter {
       }
     }
 
-    return chunks.join(NEWLINE + NEWLINE);
+    const helpers = this.buildHelperPreamble();
+    const program = chunks.join(NEWLINE + NEWLINE);
+
+    return [...helpers, program].filter(Boolean).join(NEWLINE + NEWLINE);
+  }
+
+  computeHelperNeeds(irModule) {
+    const helperMeta = irModule.module?.metadata?.helpers || {};
+    this.needsAwaitHelper = Boolean(helperMeta.await);
+    this.needsAsyncGeneratorHelper = Boolean(helperMeta.asyncGenerator);
+
+    const nodes = Object.values(irModule.nodes || {});
+    for (const node of nodes) {
+      if (!node || typeof node !== "object") continue;
+
+      if (node.kind === "AwaitExpression" || node.kind === "AsyncFunctionDeclaration") {
+        this.needsAwaitHelper = true;
+      }
+
+      if (node.kind === "ForOfStatement" && node.await) {
+        this.needsAwaitHelper = true;
+      }
+
+      if (node.kind === "GeneratorDeclaration" && node.async) {
+        this.needsAwaitHelper = true;
+        this.needsAsyncGeneratorHelper = true;
+      }
+    }
+  }
+
+  buildHelperPreamble() {
+    const helpers = [];
+    if (this.needsAwaitHelper || this.needsAsyncGeneratorHelper) {
+      helpers.push(this.emitAwaitHelper());
+    }
+    if (this.needsAsyncGeneratorHelper) {
+      helpers.push(this.emitAsyncGeneratorHelper());
+    }
+    return helpers;
   }
 
   emitStatement(node, context) {
@@ -99,6 +145,11 @@ class IREmitter {
     return this.emitIndentedLine(context, `return${argument ? " " + argument : ""}`);
   }
 
+  emitThrowStatement(node, context) {
+    const argument = node.argument ? this.emitExpressionById(node.argument, context) : null;
+    return this.emitIndentedLine(context, `error(${argument || ""})`);
+  }
+
   emitClassDeclaration(node, context) {
     return this.emitIndentedLine(context, "--[[ClassDeclaration not yet supported]]");
   }
@@ -115,7 +166,7 @@ class IREmitter {
 
     const sections = [
       this.buildProtectedTryFunction(fnName, tryBody, baseIndent),
-      `${baseIndent}local __ok, __err = xpcall(${fnName}, function(e) return e end)`,
+      `${baseIndent}local __ok, __err = pcall(${fnName})`,
     ];
 
     const catchSection = node.handler
@@ -382,6 +433,15 @@ class IREmitter {
     return lines.join(NEWLINE);
   }
 
+  emitForOfStatement(node, context) {
+    const binding = this.resolveForBinding(node.left, context);
+    const rightRaw = this.emitExpressionById(node.right, context);
+    const right = this.compactTableLiteral(rightRaw);
+    const body = this.emitBlockById(node.body, context);
+    const indent = this.currentIndent(context);
+    return `${indent}for __k, ${binding} in pairs(${right}) do${NEWLINE}${body}${NEWLINE}${indent}end`;
+  }
+
   emitFunctionDeclaration(node, context) {
     const name = node.name;
     // Handle both node.params (old) and node.parameters (new) naming
@@ -493,14 +553,16 @@ class IREmitter {
     if (node.computed) {
       const prop = this.emitExpressionById(node.property, context);
       if (node.optional) {
-        return `(${object} ~= nil and ${object}[${prop}] or nil)`;
+        const baseIndent = this.currentIndent(context);
+        return `(function(__o)${NEWLINE}${baseIndent}  if __o ~= nil then return __o[${prop}] else return nil end${NEWLINE}${baseIndent}end)(${object})`;
       }
       return `${object}[${prop}]`;
     }
     const propNode = context.nodes[node.property];
     const propName = propNode && propNode.kind === "Identifier" ? propNode.name : this.emitExpressionById(node.property, context);
     if (node.optional) {
-      return `(${object} ~= nil and ${object}.${propName} or nil)`;
+      const baseIndent = this.currentIndent(context);
+      return `(function(__o)${NEWLINE}${baseIndent}  if __o ~= nil then return __o.${propName} else return nil end${NEWLINE}${baseIndent}end)(${object})`;
     }
     return `${object}.${propName}`;
   }
@@ -516,6 +578,12 @@ class IREmitter {
   }
 
   emitBinaryLikeExpression(node, context) {
+    if (node.operator === "??") {
+      const left = this.emitExpressionById(node.left, context);
+      const right = this.emitExpressionById(node.right, context);
+      const baseIndent = this.currentIndent(context);
+      return `(function(__v)${NEWLINE}${baseIndent}  if __v == nil then return ${right} else return __v end${NEWLINE}${baseIndent}end)(${left})`;
+    }
     const operator = this.luaBinaryOperator(node, context);
     const left = this.emitGrouped(node.left, context);
     const right = this.emitGrouped(node.right, context);
@@ -523,6 +591,18 @@ class IREmitter {
   }
 
   emitAssignmentExpression(node, context) {
+    if (node.operator === "??=") {
+      const target = this.emitExpressionById(node.left, context);
+      const value = this.emitExpressionById(node.right, context);
+      const baseIndent = this.currentIndent(context);
+      return `(function()${NEWLINE}${baseIndent}  local __val = ${target}${NEWLINE}${baseIndent}  if __val == nil then __val = ${value} end${NEWLINE}${baseIndent}  ${target} = __val${NEWLINE}${baseIndent}  return __val${NEWLINE}${baseIndent}end)()`;
+    }
+    if (["+=", "-=", "*=", "/=", "%="].includes(node.operator)) {
+      const target = this.emitExpressionById(node.left, context);
+      const value = this.emitExpressionById(node.right, context);
+      const op = node.operator[0];
+      return `${target} = ${target} ${op} ${value}`;
+    }
     return `${this.emitExpressionById(node.left, context)} ${this.luaAssignmentOperator(node.operator)} ${this.emitExpressionById(node.right, context)}`;
   }
 
@@ -631,6 +711,8 @@ class IREmitter {
 
   emitLiteral(node) {
     if (node.literalKind === "string" || typeof node.value === "string") {
+      const template = this.tryEmitTemplate(node);
+      if (template) return template;
       return node.raw || JSON.stringify(node.value);
     }
     if (node.literalKind === "boolean") {
@@ -648,6 +730,30 @@ class IREmitter {
       return `(${expression})`;
     }
     return expression;
+  }
+
+  tryEmitTemplate(node) {
+    const raw = node.raw || String(node.value || "");
+    const text = raw.startsWith("`") || raw.startsWith("\"") || raw.startsWith("'")
+      ? raw.slice(1, -1)
+      : raw;
+    if (!text.includes("${")) return null;
+
+    const parts = [];
+    const exprs = [];
+    const regex = /\$\{([^}]+)\}/g;
+    let lastIndex = 0;
+    let match;
+    while ((match = regex.exec(text))) {
+      parts.push(text.slice(lastIndex, match.index));
+      exprs.push(match[1].trim());
+      lastIndex = regex.lastIndex;
+    }
+    parts.push(text.slice(lastIndex));
+
+    const format = JSON.stringify(parts.join("%s"));
+    const args = exprs.filter(Boolean).join(", ");
+    return `string.format(${format}${args ? ", " + args : ""})`;
   }
 
   requiresGrouping(nodeId, context) {
@@ -758,6 +864,73 @@ class IREmitter {
       }
     }
     return false;
+  }
+
+  emitAwaitHelper() {
+    return [
+      "local function __await_value(v)",
+      "  if type(v) == \"table\" and v.await then",
+      "    return v:await()",
+      "  end",
+      "  if type(v) == \"function\" then",
+      "    return v()",
+      "  end",
+      "  return v",
+      "end",
+    ].join(NEWLINE);
+  }
+
+  emitAsyncGeneratorHelper() {
+    return [
+      "local function __async_generator(co)",
+      "  return {",
+      "    next = function(self, value)",
+      "      if coroutine.status(co) == \"dead\" then",
+      "        return { value = nil, done = true }",
+      "      end",
+      "      local ok, res = coroutine.resume(co, value)",
+      "      if not ok then error(res) end",
+      "      res = __await_value(res)",
+      "      local done = coroutine.status(co) == \"dead\"",
+      "      return { value = res, done = done }",
+      "    end,",
+      "    [\"return\"] = function(self, value)",
+      "      return { value = value, done = true }",
+      "    end,",
+      "    [\"throw\"] = function(self, err)",
+      "      error(err)",
+      "    end",
+      "  }",
+      "end",
+    ].join(NEWLINE);
+  resolveForBinding(left, context) {
+    if (typeof left === "string") return left;
+    const node = typeof left === "object" ? left : context.nodes[left];
+    if (!node) return "__item";
+    if (node.kind === "VariableDeclaration" && node.declarations && node.declarations.length > 0) {
+      const declId = node.declarations[0];
+      const declNode = typeof declId === "string" ? context.nodes[declId] : declId;
+      if (declNode) {
+        if (declNode.name) return declNode.name;
+        if (declNode.id) {
+          const idNode = typeof declNode.id === "string" ? context.nodes[declNode.id] : declNode.id;
+          if (idNode && idNode.name) return idNode.name;
+        }
+      }
+    }
+    if (node.kind === "Identifier" && node.name) {
+      return node.name;
+    }
+    return "__item";
+  }
+
+  compactTableLiteral(expr) {
+    if (typeof expr !== "string" || expr.indexOf("{") === -1) return expr;
+    return expr
+      .replace(/\{\s*/g, "{")
+      .replace(/\s*\}/g, "}")
+      .replace(/,\s*/g, ", ")
+      .replace(/\s+,/g, ", ");
   }
 
   luaAssignmentOperator(operator) {

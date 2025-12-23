@@ -1,4 +1,5 @@
 # 🎯 EXEC SUMMARY - CI/CD HEALTH RECOVERY SESSION
+> **Legacy/archival**: This summary captures a past session. For authoritative, current status see [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
 **Status**: ✅ COMPLETE & READY TO EXECUTE  
 **Duration**: Comprehensive assessment & planning  

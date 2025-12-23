@@ -6,12 +6,35 @@
  */
 
 const { builder } = require("./builder");
+const nodes = require("./nodes");
+const { IRBuilder } = require("./builder");
 
 class EnhancedLowerer {
   constructor(irBuilder = null) {
-    this.builder = irBuilder || builder;
+    this.builder = irBuilder || new IRBuilder();
     this.scopeStack = [{ bindings: new Set(), parent: null }];
     this.tempVarCounter = 0;
+  }
+
+  resetState() {
+    this.scopeStack = [{ bindings: new Set(), parent: null }];
+    this.tempVarCounter = 0;
+
+    if (!this.builder || typeof this.builder._storeNode !== "function") {
+      this.builder = new IRBuilder();
+      return;
+    }
+
+    // Clear any retained IR state when reusing an injected builder
+    this.builder.nodes = {};
+    this.builder.module = {
+      body: [],
+      metadata: this.builder.module?.metadata || {},
+      source: this.builder.module?.source || {},
+      directives: this.builder.module?.directives || [],
+      toolchain: this.builder.module?.toolchain || {},
+      schemaVersion: this.builder.module?.schemaVersion || "1.0.0",
+    };
   }
 
   // ========== Scope Management ==========
@@ -46,6 +69,7 @@ class EnhancedLowerer {
 
   // ========== Main Lowering Entry ==========
   lower(ast) {
+    this.resetState();
     return this.lowerProgram(ast);
   }
 
