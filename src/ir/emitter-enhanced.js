@@ -145,6 +145,7 @@ class EnhancedEmitter {
         this.indentLevel--;
 
         if (node.async) {
+            return this.emitAsyncFunctionDeclaration({ ...node, name });
             return this.emitAsyncFunctionDeclaration(node);
         }
 
@@ -460,6 +461,7 @@ class EnhancedEmitter {
             return "self";
         case "FunctionDeclaration":
             // Function declarations can appear as expressions when lowered from arrow functions
+            return this.emitFunctionExpression(node);
             if (node.expression) {
                 return this.emitFunctionExpression(node);
             }

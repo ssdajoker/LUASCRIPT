@@ -135,6 +135,7 @@ class EnhancedLowerer {
         }
 
         // Preserve user-defined identifier names instead of auto-generated IDs
+        const identifierName = (idNode && (idNode.name || idNode.id || idNode.identifier)) || "unknown";
         const identifierName =
             (node.id && node.id.type === "Identifier" && node.id.name) ||
             (idNode && idNode.name) ||
@@ -469,6 +470,7 @@ class EnhancedLowerer {
             const expressionBody = this.lowerExpression(node.body);
             body = this.builder.block([this.builder.returnStmt(expressionBody)]);
         } else {
+            body = this.lowerBlockStatement(node.body);
             throw new Error(
                 `Invalid function node in lowerFunctionExpression: expected BlockStatement body for non-arrow function, got "${node.body && node.body.type}"`
             );
