@@ -20,14 +20,14 @@ function main() {
     return;
   }
 
+  const count = countWarnings(found.abs);
   const budget = resolveBudget(
     found.rel,
-    countWarnings(found.abs),
+    count,
     process.env.WARN_BUDGET,
     found.abs
   );
   const enforce = process.env.ENFORCE_WARN_BUDGET === '1';
-  const count = countWarnings(found.abs);
 
   console.log(`Static warnings: ${count} (file: ${found.rel})`);
   console.log(`Budget=${budget}; enforcement=${enforce ? 'on' : 'off'}`);
