@@ -22,7 +22,11 @@ class TranspilerTester {
         this.testResults = [];
         this.tempDir = path.join(__dirname, 'temp');
         this.retryFlaky = process.argv.includes('--retry-flaky') || process.argv.includes('--runInBand');
-        this.seed = Number(process.env.LUASCRIPT_TEST_SEED || 1337);
+        
+        // Validate and parse test seed
+        const envSeed = process.env.LUASCRIPT_TEST_SEED;
+        const parsedSeed = envSeed !== undefined ? parseInt(envSeed, 10) : NaN;
+        this.seed = Number.isNaN(parsedSeed) ? 1337 : parsedSeed;
 
         const { reseed, restore } = installDeterministicSeed(this.seed);
         this.reseedRandom = (nextSeed = this.seed) => reseed(nextSeed);
@@ -43,7 +47,10 @@ class TranspilerTester {
         
         const attempt = async () => {
             try {
+                // Reset deterministic state for each attempt
                 this.reseedRandom();
+                this.nextTempFile = createDeterministicIdGenerator('test');
+                
                 const result = await this.transpiler.transpile(jsCode, { includeRuntime: true });
                 const luaCode = typeof result === 'string' ? result : result.code;
                 
