@@ -37,6 +37,9 @@ jobs:
       - name: Run verify gate (harness + IR validation + parity + determinism)
         run: npm run verify
 
+      - name: Run static warnings gate (Lua lint budget 0)
+        run: npm run static:warnings
+
       - name: Lint source code (warning-only for now)
         run: npm run lint || true
         continue-on-error: true

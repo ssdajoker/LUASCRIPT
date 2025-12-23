@@ -8,6 +8,7 @@ Source of truth for project health, test posture, and feature gaps. Link back fr
 - Canonical and enhanced IR builders now reset per transpilation to prevent state leakage; helper preambles are injected only when IR or metadata request async/await or async generator support. Canonical IR nodes validate JSON payloads and surface clearer factory errors (`src/ir/nodes.js`).
 - Test+tools entry points live in `package.json`: `npm test`, `npm run harness`, `npm run ir:validate:all`, `npm run test:parity`, `npm run refactor:phase3`, `npm run refactor:all`, `npm run test:coverage`.
 - Performance tracking via `luascript_performance_benchmark.py` and `run_bench.sh`; artifacts land in `artifacts/`.
+- Phase 1 linting acceptance: Lua static warnings budget is zero with a blocking gate (`npm run static:warnings`); artifacts in `static_warnings*.txt` now reflect clean runs.
 
 ## Health Checkpoints
 - **Quality Gates (CI-enforced)**:
@@ -15,6 +16,7 @@ Source of truth for project health, test posture, and feature gaps. Link back fr
 	- Performance regression gate: ±15% tolerance on 5 core benchmarks (`.perf-baseline.json`)
 	- Coverage quality bar: Baseline thresholds (23.6% lines, 19% functions, 37% branches)
 	- Diff coverage: New code must meet 70% coverage on PRs
+	- Static Lua warnings: `npm run static:warnings` (budget=0, blocking in CI)
 - Determinism: `npm run test:determinism` (IR stability across runs).
 - IR validity: `npm run ir:validate:all` (schema + semantic checks).
 - Parity: `npm run test:parity` (JS↔Lua behavior checks).
@@ -23,11 +25,13 @@ Source of truth for project health, test posture, and feature gaps. Link back fr
 
 ## Known Gaps / Risks
 - **✅ RESOLVED**: Pattern/destructuring support fully implemented in enhanced pipeline with 14 comprehensive tests (array, object, nested, rest, computed properties). Phase1 still lacks pattern support.
-- Static warnings backlog captured in `static_warnings*.txt`; lint/format enforcement is not yet CI-blocking.
+- Static warnings backlog burned down to zero; Lua lint budget enforced via `npm run static:warnings` in CI. General lint/format improvements remain tracked separately.
 - Documentation has legacy, contradictory claims (e.g., Phase9/WASM “complete”). Use this file as the single status source until README/docs are aligned.
 - CI/permissions: review `GITHUB_INTEGRATION_STATUS.md` and `.github/workflows/` for current gating; determinism/fuzz gates are not enforced yet.
 
 ## Next Steps (priority-ordered)
+1) Align docs to this canonical status; prune or annotate outdated claims in README and related status PDFs/MDs.  
+2) Harden lint/format gates (JS/Lua) and make them fully blocking in CI.  
 1) Align docs to this canonical status; prune or annotate outdated claims in README and related status PDFs/MDs (this task is in progress and will be complete upon merge).  
 2) Burn down static warnings; add lint/format gates (JS/Lua) and make them blocking in CI.  
 3) Consolidate IR builder pattern (see `GENERATOR_IMPLEMENTATION.md`) and harden validation/determinism hooks along the main pipeline.  

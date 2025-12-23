@@ -50,6 +50,10 @@ jobs:
         run: npm run status:check
         continue-on-error: false
 
+      - name: Run static warnings gate (Lua lint budget 0)
+        run: npm run static:warnings
+        continue-on-error: false
+
 
       - name: Run core verification gate
         run: npm run verify
