@@ -221,13 +221,7 @@ class IRNode {
       return ThisExpression.fromJSON(json);
     default:
       throw new Error(`No fromJSON handler registered for node kind: ${json.kind}`);
-    const handler = fromJsonHandlers && fromJsonHandlers[json && json.kind];
-
-    if (!handler) {
-      throw new Error(`No fromJSON handler registered for node kind: ${json && json.kind}`);
     }
-
-    return handler(json);
   }
 }
 
