@@ -20,12 +20,14 @@ function main() {
     return;
   }
 
+  const count = countWarnings(found.abs);
   const budget = resolveBudget(
     found.rel,
-    countWarnings(found.abs),
+    count,
     process.env.WARN_BUDGET,
     found.abs
   );
+  const enforce = process.env.ENFORCE_WARN_BUDGET === '1';
   const enforce = process.env.ENFORCE_WARN_BUDGET !== '0';
   const count = countWarnings(found.abs);
 
