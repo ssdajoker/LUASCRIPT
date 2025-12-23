@@ -8,8 +8,8 @@
 const types = require("./types");
 const nodes = require("./nodes");
 const { IRBuilder, builder } = require("./builder");
-const { IRValidator } = require("./validator");
-const { IRSerializer } = require("./serializer");
+const { IRValidator } = require("./validators/validator");
+const { IRSerializer } = require("./transforms/serializer");
 
 module.exports = {
   // Types
