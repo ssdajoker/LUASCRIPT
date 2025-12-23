@@ -352,6 +352,8 @@ function getAllowedKinds() {
     "WhileStatement",
     "DoWhileStatement",
     "ForStatement",
+    "ForOfStatement",
+    "ForInStatement",
     "ReturnStatement",
     "BreakStatement",
     "ContinueStatement",

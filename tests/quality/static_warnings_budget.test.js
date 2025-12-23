@@ -28,6 +28,8 @@ function main() {
     found.abs
   );
   const enforce = process.env.ENFORCE_WARN_BUDGET === '1';
+  const enforce = process.env.ENFORCE_WARN_BUDGET !== '0';
+  const count = countWarnings(found.abs);
 
   console.log(`Static warnings: ${count} (file: ${found.rel})`);
   console.log(`Budget=${budget}; enforcement=${enforce ? 'on' : 'off'}`);

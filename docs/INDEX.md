@@ -1,8 +1,8 @@
 ﻿# LUASCRIPT Wiki
-**Status**: ACTIVE  
-**Phase**: Current  
-**Last updated**: 2025-12-19  
-**Related**: docs/NAVIGATION.md  
+**Status**: ACTIVE
+**Phase**: Current (see PROJECT_STATUS.md for canonical snapshot)
+**Last updated**: 2025-01-XX
+**Related**: docs/NAVIGATION.md
 **See instead**: PROJECT_STATUS.md (canonical status)
 
 Welcome to the consolidated LUASCRIPT wiki. Use the links below to jump to the right section.

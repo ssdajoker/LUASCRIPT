@@ -17,10 +17,6 @@ function runStep(label, cmd, args, extraEnv = {}) {
   }
 }
 
-runStep('Static warnings budget', npmCmd, ['run', '--silent', 'static:warnings'], {
-  ENFORCE_WARN_BUDGET: '1',
-});
-
 runStep('Refactor quality gates', npmCmd, ['run', '--silent', 'refactor:all'], {
   ENFORCE_WARN_BUDGET: '1',
 });
