@@ -721,6 +721,38 @@ class IREmitter {
     }
   }
 
+  isLiteralString(node) {
+      return node.literalKind === "string" || typeof node.value === "string";
+  }
+
+  isBinaryStringConcat(node, context, depth) {
+      if (node.operator !== "+") return false;
+      return this.isStringLike(node.left, context, depth + 1) || this.isStringLike(node.right, context, depth + 1);
+  }
+
+  isStringyCall(node, context) {
+      // Check for String(x)
+      if (node.callee) {
+          const callee = context.nodes[node.callee];
+          if (callee && callee.kind === "Identifier" && callee.name === "String") {
+              return true;
+          }
+      }
+      return false;
+  }
+
+  isStringyMember(node, context, depth) {
+      // Check for .toString(), .substring(), etc.
+      // This is a heuristic
+      const prop = context.nodes[node.property];
+      if (prop && prop.kind === "Identifier") {
+          if (prop.name === "toString" || prop.name === "substring" || prop.name === "toUpperCase" || prop.name === "toLowerCase") {
+              return true;
+          }
+      }
+      return false;
+  }
+
   luaAssignmentOperator(operator) {
     return operator === "=" ? "=" : operator;
   }
