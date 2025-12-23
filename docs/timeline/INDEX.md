@@ -3,6 +3,11 @@
 **Phase**: Doc alignment + CI/quality prep (see PROJECT_STATUS.md)
 **Last updated**: 2025-01-XX (claims must match `PROJECT_STATUS.md`)
 
+### Doc truth source
+- Canonical status and gaps: [PROJECT_STATUS.md](../../PROJECT_STATUS.md)
+- Phase checklist details: [CHECKLIST_PHASES.md](../../CHECKLIST_PHASES.md)
+- Note: Phase 1 is still open for pattern/destructuring support; static warnings and lint/format enforcement remain outstanding—defer to the above before citing completion percentages.
+
 Phases and milestones from early foundation to current automation. Link deprecated plans to current equivalents.
 
 ## Project Phases
@@ -47,4 +52,3 @@ For current health, gaps, and priorities, see [PROJECT_STATUS.md](../../PROJECT_
 
 ---
 **Navigation**: ← Home | ↑ Index | Next →
-
