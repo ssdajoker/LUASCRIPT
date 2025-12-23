@@ -121,6 +121,13 @@ Following conventional commits:
 - Run the fast formatting gate: `npm run -s format:check`
 - Run the fast smoke suite: `npm run -s test:smoke`
 - Husky pre-commit runs the same format/smoke checks automatically; bypass with `SKIP_FORMAT=1` or `SKIP_TESTS=1` if needed.
+### Lint Commands & Weekly Report
+- **Tiered ESLint entrypoints** (mirrors `ESLINT_CLEANUP_GUIDE.md` budgets):  
+	- Core IR (0 warnings): `npm run lint:core`  
+	- Extended IR (≤50 warnings): `npm run lint:extended`  
+	- Backends (≤100 warnings): `npm run lint:backends`  
+	- General src sweep (≤200 warnings): `npm run lint:all`
+- **Weekly lint trend (every Monday UTC)**: run `npm run lint:all:report` (which wraps an `eslint` command to generate `reports/eslint/eslint-weekly-<DATE>.html`), then log warning/error counts in `reports/lint-dashboard.md` (also note latest figures in `PROJECT_STATUS.md`).
 
 ### Phase alignment
 - Track progress against `CHECKLIST_PHASES.md`; if a claim differs from the canonical snapshot in `PROJECT_STATUS.md`, update the snapshot first, then adjust docs/PR context.
