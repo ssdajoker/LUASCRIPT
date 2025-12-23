@@ -65,9 +65,9 @@ This document outlines the ESLint strategy, scoped rules, and cleanup approach f
 
 ### Tier 4: General Code (MOST RELAXED) 🟢
 **Location**: `src/**/*.js`, `lib/**/*.js`  
-**Status**: WARNING (max 200 warnings)  
-**Maintainers**: All developers  
-**Update Frequency**: As needed  
+**Status**: WARNING (max 200 warnings)
+**Maintainers**: All developers
+**Update Frequency**: Monthly cleanup sprint (Week 1) + per-PR check
 
 **Rules**:
 - ⚠️ Unused variables (warn)
@@ -75,8 +75,8 @@ This document outlines the ESLint strategy, scoped rules, and cleanup approach f
 - ⚠️ Quotes (warn)
 - ⚠️ Indentation (warn)
 
-**Goal**: Code consistency baseline  
-**Acceptable**: Various coding approaches  
+**Goal**: Code consistency baseline
+**Acceptable**: Various coding approaches
 
 ---
 
@@ -181,15 +181,16 @@ npm exec eslint src/**/*.js --format html --output-file lint-report.html
 
 ### Phase 4: General Code (Ongoing)
 
-**Goal**: ≤ 200 warnings in `src/**/*.js` and `lib/**/*.js`  
-**Status**: 🟢 TO DO  
-**Estimated Time**: Continuous improvement  
+**Goal**: ≤ 200 warnings in `src/**/*.js` and `lib/**/*.js`
+**Status**: 🟢 TO DO
+**Estimated Time**: Continuous improvement
 
 **Tasks**:
 1. [ ] Maintain general code quality
-2. [ ] New code reviews enforce thresholds
-3. [ ] Periodic cleanup sprints
-4. [ ] Tech debt tracking
+2. [ ] New code reviews enforce thresholds (Tier 4 lint must run in PRs with `npx eslint "src/**/*.js" "lib/**/*.js" --max-warnings 200`)
+3. [ ] Periodic cleanup sprints (first week of every month; focus on top offenders from latest Tier 4 report)
+4. [ ] Tech debt tracking (log high-complexity hotspots and indentation fixes in sprint notes)
+5. [ ] Regression guard: reject changes that raise the total Tier 4 warning count above the 200 cap
 
 ---
 
@@ -284,12 +285,15 @@ const str = "double quotes"; // not single
 
 ### Baseline Metrics (From Initial Run)
 ```
-Date: [TO BE FILLED]
-IR Core: __ errors, __ warnings
-IR Extended: __ errors, __ warnings
-Backends: __ errors, __ warnings
-General: __ errors, __ warnings
-Total: __ errors, __ warnings
+Date: 2025-12-23
+Scope: Tier 4 run with `--max-warnings 200`
+Notes: No `lib/**/*.js` files present in repo
+
+IR Core: 21 errors (indentation, unused args), 4 warnings (complexity)
+IR Extended: 0 errors, 0 warnings (n/a in this run)
+Backends: 0 errors, 0 warnings (n/a in this run)
+General (other src): 4 warnings (complexity)
+Total: 25 errors, 13 warnings
 ```
 
 ### Progress Tracking
