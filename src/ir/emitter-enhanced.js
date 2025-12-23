@@ -145,7 +145,7 @@ class EnhancedEmitter {
         this.indentLevel--;
 
         if (node.async) {
-            return this.emitAsyncFunctionDeclaration({ ...node, name, params });
+            return this.emitAsyncFunctionDeclaration(node);
         }
 
         return `${this.indent()}local function ${name}(${params})\n${body}\n${this.indent()}end`;
