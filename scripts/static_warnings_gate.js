@@ -31,11 +31,30 @@ function countWarnings(abs) {
 }
 
 function parseHeaderBudget(abs) {
-  const firstLine = fs.readFileSync(abs, 'utf8').split(/\r?\n/)[0] || '';
-  const match = firstLine.match(/^(\d+)\.\.(\d+)$/);
-  if (!match) return null;
-  const upper = Number(match[2]);
-  return Number.isFinite(upper) ? upper : null;
+  // Read only the beginning of the file to extract the first line efficiently.
+  let fd;
+  try {
+    fd = fs.openSync(abs, 'r');
+    const bufferSize = 256; // More than enough for a simple header line.
+    const buffer = Buffer.alloc(bufferSize);
+    const bytesRead = fs.readSync(fd, buffer, 0, bufferSize, 0);
+    if (bytesRead <= 0) return null;
+
+    const content = buffer.slice(0, bytesRead).toString('utf8');
+    const firstLine = content.split(/\r?\n/)[0] || '';
+    const match = firstLine.match(/^(\d+)\.\.(\d+)$/);
+    if (!match) return null;
+    const upper = Number(match[2]);
+    return Number.isFinite(upper) ? upper : null;
+  } finally {
+    if (fd !== undefined) {
+      try {
+        fs.closeSync(fd);
+      } catch (_) {
+        // Ignore close errors; they don't affect parsing result.
+      }
+    }
+  }
 }
 
 function resolveBudget(rel, count, budgetOverride, absPath) {
