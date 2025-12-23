@@ -4,6 +4,11 @@
  * Enhanced runtime with memory management and arrow function support
  */
 
+const metrics = require("./utils/metrics");
+const { createLogger } = require("./utils/logger");
+
+const memoryLogger = createLogger("runtime.memory");
+
 /**
  * Manages the runtime memory, including the call stack and heap, to prevent memory leaks and stack overflows.
  */
@@ -42,6 +47,7 @@ class RuntimeMemoryManager {
             arguments: args,
             timestamp: Date.now()
         });
+        metrics.incrementCounter("runtime.calls");
     }
 
     exitFunction() {
@@ -83,6 +89,8 @@ class RuntimeMemoryManager {
     allocateObject(obj, estimatedSize = 64) {
         this.adjustHeap(estimatedSize);
         this.allocatedObjects.add(obj);
+        metrics.incrementCounter("runtime.allocations");
+        metrics.incrementCounter("runtime.heapBytes", estimatedSize);
         return obj;
     }
 
@@ -103,6 +111,8 @@ class RuntimeMemoryManager {
 
     triggerGarbageCollection(options = {}) {
         const { reason = "manual", aggressive = false } = options;
+        const gcTimer = metrics.timeBlock("runtime.gc");
+        metrics.incrementCounter("runtime.gc.triggers");
 
         const beforeSize = this.heapSize;
         const reductionFactor = aggressive ? 0.5 : 0.7;
@@ -118,7 +128,14 @@ class RuntimeMemoryManager {
             this.gcThreshold = Math.min(ceiling, this.gcThreshold * 1.05);
         }
 
-        console.log(`GC: Freed ${freed} bytes (reason=${reason}, aggressive=${aggressive}), heap size now ${this.heapSize} bytes, next threshold ${(this.gcThreshold / this.maxHeapSize * 100).toFixed(1)}%`);
+        const timing = gcTimer.end({ reason, aggressive, freed, heapSize: this.heapSize });
+        if (metrics.PERF_ENABLE) {
+            metrics.recordEvent("runtime.gc", timing);
+        }
+        memoryLogger.info(
+            `GC freed ${freed} bytes (reason=${reason}, aggressive=${aggressive})`,
+            { heapSize: this.heapSize, nextThresholdPct: Number((this.gcThreshold / this.maxHeapSize * 100).toFixed(1)) }
+        );
     }
 
     /**
@@ -357,6 +374,8 @@ class Interpreter {
      * @returns {*} The result of the interpretation.
      */
     interpret(statements) {
+        const interpretTimer = metrics.timeBlock("runtime.interpret");
+        metrics.incrementCounter("runtime.interpret.calls");
         try {
             for (const statement of statements) {
                 this.execute(statement);
@@ -368,6 +387,10 @@ class Interpreter {
             }
             throw error;
         } finally {
+            const timing = interpretTimer.end({ statements: statements.length });
+            if (metrics.PERF_ENABLE) {
+                metrics.recordEvent("runtime.interpret.complete", timing);
+            }
             // Cleanup memory
             this.runtimeMemory.cleanup();
             this.stringAllocations = new WeakMap();
