@@ -35,7 +35,8 @@ class ClassLowerer {
         this.irLowerer.lowerIdentifier(p, { binding: p.name }).id
       );
       const mBody = this.irLowerer.ensureBlock(m.body);
-      const funcExprId = this.irLowerer.builder.arrowFunctionExpression(
+      const funcExprId = this.irLowerer.builder.functionExpression(
+        null,
         mParams,
         mBody.id,
         {}
