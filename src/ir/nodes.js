@@ -104,6 +104,7 @@ class IRNode {
     return json;
   }
 
+  // eslint-disable-next-line complexity
   static fromJSON(json) {
     if (json === null || json === undefined) {
       throw new Error("Invalid IR JSON: expected a non-null object");
