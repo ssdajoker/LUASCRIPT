@@ -213,6 +213,7 @@ class IRLowerer {
     return fn;
   }
 
+  // eslint-disable-next-line complexity
   lowerExpression(node) {
     if (!node) {
       return null;
