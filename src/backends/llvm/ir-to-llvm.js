@@ -9,6 +9,48 @@
 const { NodeCategory } = require("../../ir/nodes");
 const { TypeCategory } = require("../../ir/types");
 
+const integerArithmeticOps = {
+  "+": "add",
+  "-": "sub",
+  "*": "mul",
+  "/": "sdiv",
+  "%": "srem"
+};
+
+const floatArithmeticOps = {
+  "+": "fadd",
+  "-": "fsub",
+  "*": "fmul",
+  "/": "fdiv",
+  "%": "frem"
+};
+
+const integerComparisonPredicates = {
+  "==": "eq",
+  "!=": "ne",
+  "<": "slt",
+  "<=": "sle",
+  ">": "sgt",
+  ">=": "sge"
+};
+
+const floatComparisonPredicates = {
+  "==": "oeq",
+  "!=": "one",
+  "<": "olt",
+  "<=": "ole",
+  ">": "ogt",
+  ">=": "oge"
+};
+
+const bitwiseOps = {
+  "&": "and",
+  "|": "or",
+  "^": "xor",
+  "<<": "shl",
+  ">>": "ashr"
+};
+
 /**
  * LLVM Type System
  */
@@ -26,7 +68,7 @@ class LLVMType {
     return `${returnType} (${paramTypes.join(", ")})`;
   }
     
-  static pointer(_pointeeType) {
+  static pointer() {
     return "ptr"; // Modern LLVM uses opaque pointers
   }
     
@@ -142,7 +184,7 @@ class IRToLLVMCompiler {
     this.collectDeclarations(program);
 
     // Second pass: compile function bodies
-    this.compileFunctions(program);
+    this.compileFunctions();
 
     // Emit string constants
     this.emitStringConstants();
@@ -268,9 +310,9 @@ class IRToLLVMCompiler {
   }
 
   /**
-     * Compile all function bodies
-     */
-  compileFunctions(_program) {
+   * Compile all function bodies
+   */
+  compileFunctions() {
     this.module.push("; Function definitions");
         
     for (const funcDecl of this.functionDecls) {
@@ -650,92 +692,83 @@ class IRToLLVMCompiler {
   }
 
   /**
-     * Compile binary operation
-     */
+   * Compile binary operation
+   */
   compileBinaryOp(binOp) {
     const left = this.compileExpression(binOp.left);
     const right = this.compileExpression(binOp.right);
-        
-    const resultValue = this.builder.newValue("binop");
-    const op = binOp.operator;
 
-    // Type promotion if needed
-    let leftVal = left.value;
-    let rightVal = right.value;
-    let resultType = left.type;
-
-    // Arithmetic operations
-    if (["+", "-", "*", "/", "%"].includes(op)) {
-      if (resultType === LLVMType.i32) {
-        const opMap = {
-          "+": "add",
-          "-": "sub",
-          "*": "mul",
-          "/": "sdiv",
-          "%": "srem"
-        };
-        this.builder.emit(`${resultValue} = ${opMap[op]} ${resultType} ${leftVal}, ${rightVal}`);
-      } else if (resultType === LLVMType.double) {
-        const opMap = {
-          "+": "fadd",
-          "-": "fsub",
-          "*": "fmul",
-          "/": "fdiv",
-          "%": "frem"
-        };
-        this.builder.emit(`${resultValue} = ${opMap[op]} ${resultType} ${leftVal}, ${rightVal}`);
-      }
-      return { type: resultType, value: resultValue };
-    }
-        
-    // Comparison operations
-    if (["==", "!=", "<", "<=", ">", ">="].includes(op)) {
-      const predicateMap = {
-        "==": "eq",
-        "!=": "ne",
-        "<": "slt",
-        "<=": "sle",
-        ">": "sgt",
-        ">=": "sge"
-      };
-            
-      if (resultType === LLVMType.i32) {
-        this.builder.emit(`${resultValue} = icmp ${predicateMap[op]} ${resultType} ${leftVal}, ${rightVal}`);
-      } else if (resultType === LLVMType.double) {
-        const fpMap = {
-          "==": "oeq",
-          "!=": "one",
-          "<": "olt",
-          "<=": "ole",
-          ">": "ogt",
-          ">=": "oge"
-        };
-        this.builder.emit(`${resultValue} = fcmp ${fpMap[op]} ${resultType} ${leftVal}, ${rightVal}`);
-      }
-      return { type: LLVMType.i1, value: resultValue };
+    const arithmetic = this.compileArithmeticBinary(binOp.operator, left, right);
+    if (arithmetic) {
+      return arithmetic;
     }
 
-    // Logical operations
-    if (op === "&&" || op === "||") {
-      const opName = op === "&&" ? "and" : "or";
-      this.builder.emit(`${resultValue} = ${opName} i1 ${leftVal}, ${rightVal}`);
-      return { type: LLVMType.i1, value: resultValue };
+    const comparison = this.compileComparisonBinary(binOp.operator, left, right);
+    if (comparison) {
+      return comparison;
     }
 
-    // Bitwise operations
-    if (["&", "|", "^", "<<", ">>"].includes(op)) {
-      const opMap = {
-        "&": "and",
-        "|": "or",
-        "^": "xor",
-        "<<": "shl",
-        ">>": "ashr"
-      };
-      this.builder.emit(`${resultValue} = ${opMap[op]} ${resultType} ${leftVal}, ${rightVal}`);
-      return { type: resultType, value: resultValue };
+    const logical = this.compileLogicalBinary(binOp.operator, left, right);
+    if (logical) {
+      return logical;
+    }
+
+    const bitwise = this.compileBitwiseBinary(binOp.operator, left, right);
+    if (bitwise) {
+      return bitwise;
     }
 
     return { type: LLVMType.i32, value: "0" };
+  }
+
+  compileArithmeticBinary(operator, left, right) {
+    const opMap = left.type === LLVMType.double ? floatArithmeticOps : integerArithmeticOps;
+    const mappedOp = opMap[operator];
+
+    if (!mappedOp) {
+      return null;
+    }
+
+    const resultValue = this.builder.newValue("binop");
+    this.builder.emit(`${resultValue} = ${mappedOp} ${left.type} ${left.value}, ${right.value}`);
+    return { type: left.type, value: resultValue };
+  }
+
+  compileComparisonBinary(operator, left, right) {
+    const predicateMap = left.type === LLVMType.double ? floatComparisonPredicates : integerComparisonPredicates;
+    const predicate = predicateMap[operator];
+
+    if (!predicate) {
+      return null;
+    }
+
+    const resultValue = this.builder.newValue("binop");
+    const comparisonOp = left.type === LLVMType.double ? "fcmp" : "icmp";
+    this.builder.emit(`${resultValue} = ${comparisonOp} ${predicate} ${left.type} ${left.value}, ${right.value}`);
+    return { type: LLVMType.i1, value: resultValue };
+  }
+
+  compileLogicalBinary(operator, left, right) {
+    if (operator !== "&&" && operator !== "||") {
+      return null;
+    }
+
+    const opName = operator === "&&" ? "and" : "or";
+    const resultValue = this.builder.newValue("binop");
+    this.builder.emit(`${resultValue} = ${opName} i1 ${left.value}, ${right.value}`);
+    return { type: LLVMType.i1, value: resultValue };
+  }
+
+  compileBitwiseBinary(operator, left, right) {
+    const mappedOp = bitwiseOps[operator];
+
+    if (!mappedOp) {
+      return null;
+    }
+
+    const resultValue = this.builder.newValue("binop");
+    this.builder.emit(`${resultValue} = ${mappedOp} ${left.type} ${left.value}, ${right.value}`);
+    return { type: left.type, value: resultValue };
   }
 
   /**
