@@ -10,9 +10,9 @@ const DEFAULT_CANDIDATES = [
 ];
 
 const FILE_BUDGETS = {
-  'static_warnings_near_final.txt': 27,
-  'static_warnings_clean.txt': 71,
-  'static_warnings.txt': 324,
+  'static_warnings_near_final.txt': 0,
+  'static_warnings_clean.txt': 0,
+  'static_warnings.txt': 0,
 };
 
 function findWarningsFile(candidates = DEFAULT_CANDIDATES) {
@@ -26,7 +26,7 @@ function findWarningsFile(candidates = DEFAULT_CANDIDATES) {
 }
 
 function countWarnings(text) {
-  return text.split(/\r?\n/).filter(l => l.trim().startsWith('not ok')).length;
+  return text.split(/\r?\n/).filter(line => line.trim().startsWith('not ok')).length;
 }
 
 function parseHeaderBudget(text) {
@@ -35,31 +35,6 @@ function parseHeaderBudget(text) {
   if (!match) return null;
   const upper = Number(match[2]);
   return Number.isFinite(upper) ? upper : null;
-function parseHeaderBudget(abs) {
-  // Read only the beginning of the file to extract the first line efficiently.
-  let fd;
-  try {
-    fd = fs.openSync(abs, 'r');
-    const bufferSize = 256; // More than enough for a simple header line.
-    const buffer = Buffer.alloc(bufferSize);
-    const bytesRead = fs.readSync(fd, buffer, 0, bufferSize, 0);
-    if (bytesRead <= 0) return null;
-
-    const content = buffer.slice(0, bytesRead).toString('utf8');
-    const firstLine = content.split(/\r?\n/)[0] || '';
-    const match = firstLine.match(/^(\d+)\.\.(\d+)$/);
-    if (!match) return null;
-    const upper = Number(match[2]);
-    return Number.isFinite(upper) ? upper : null;
-  } finally {
-    if (fd !== undefined) {
-      try {
-        fs.closeSync(fd);
-      } catch (_) {
-        // Ignore close errors; they don't affect parsing result.
-      }
-    }
-  }
 }
 
 function resolveBudget(rel, count, budgetOverride, text) {
@@ -81,7 +56,25 @@ function resolveBudget(rel, count, budgetOverride, text) {
   return count;
 }
 
-function report(found, count, budget, enforce) {
+function main() {
+  const candidates = process.env.WARN_FILE ? [process.env.WARN_FILE] : DEFAULT_CANDIDATES;
+  const enforce = process.env.ENFORCE_WARN_BUDGET !== '0';
+  const found = findWarningsFile(candidates);
+
+  if (!found) {
+    const message = 'No static warnings snapshot found; enforcement requires a snapshot.';
+    if (enforce) {
+      console.error(`❌ ${message}`);
+      process.exit(1);
+    }
+    console.warn(`⚠️  ${message}`);
+    return;
+  }
+
+  const text = fs.readFileSync(found.abs, 'utf8');
+  const count = countWarnings(text);
+  const budget = resolveBudget(found.rel, count, process.env.WARN_BUDGET, text);
+
   console.log(`Static warnings: ${count} (file: ${found.rel}, budget: ${budget})`);
   if (count > budget) {
     const overage = count - budget;
@@ -89,28 +82,12 @@ function report(found, count, budget, enforce) {
     if (enforce) {
       console.error(`❌ ${message}`);
       process.exit(1);
-    } else {
-      console.warn(`⚠️  ${message}`);
     }
-  } else {
-    console.log('✅ Static warnings within budget');
-  }
-}
-
-function main() {
-  const candidates = process.env.WARN_FILE ? [process.env.WARN_FILE] : DEFAULT_CANDIDATES;
-  const found = findWarningsFile(candidates);
-  if (!found) {
-    console.warn('⚠️  No static warnings file found; skipping budget check.');
+    console.warn(`⚠️  ${message}`);
     return;
   }
 
-  const text = fs.readFileSync(found.abs, 'utf8');
-  const count = countWarnings(text);
-  const budget = resolveBudget(found.rel, count, process.env.WARN_BUDGET, text);
-  const enforce = process.env.ENFORCE_WARN_BUDGET !== '0';
-
-  report(found, count, budget, enforce);
+  console.log('✅ Static warnings within budget');
 }
 
 if (require.main === module) {

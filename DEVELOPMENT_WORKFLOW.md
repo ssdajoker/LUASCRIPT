@@ -112,6 +112,7 @@ Following conventional commits:
 
 ### Testing Requirements
 - **Core gates**: Run `npm run verify` for harness + IR validation + parity + determinism; include `npm run test:parity` and `npm run ir:validate:all` for IR changes as noted in `PROJECT_STATUS.md`.
+- **Lua static warnings**: Run `npm run static:warnings` (wraps `scripts/static_warnings_gate.js`) locally before pushing. The gate enforces a zero-warning budget and now blocks CI in both full and lean pipelines.
 - **Coverage/performance**: Follow the baselines and thresholds recorded in `PROJECT_STATUS.md` (coverage floor and ±15% performance regression gate). Update the status file if gates change.
 - **Manual/UX**: Exercise the web IDE when UI-facing changes land and note results in PR descriptions.
 

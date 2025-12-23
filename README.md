@@ -5,7 +5,7 @@ Status source of truth: see `PROJECT_STATUS.md` for current health, gaps, and ro
 ## Current status (snapshot)
 - **Canonical/Phase1 pipeline**: Passes harness/parity smoke. Pattern/destructuring support remains an open gap reserved for the enhanced path.
 - **Enhanced pipeline**: Fully operational with 73/73 tests passing under `LUASCRIPT_USE_ENHANCED_IR=1`; helper injection is conditional on coroutine usage and IR validation has stricter JSON checks.
-- **Quality gates**: Determinism, IR validation, parity, and coverage entry points live in `package.json`; static warning cleanup and lint/format enforcement remain in progress (see `PROJECT_STATUS.md` "Known gaps" and "Next steps").
+- **Quality gates**: Determinism, IR validation, parity, coverage, and static Lua warnings now ship with blocking entry points in `package.json` (see `npm run static:warnings`). Lint/format remain tracked in CI and enforced for IR code.
 
 ## What this is
 LUASCRIPT is a JavaScript-to-Lua transpiler with an IR pipeline, parity tests, and validation gates.
@@ -17,8 +17,9 @@ LUASCRIPT is a JavaScript-to-Lua transpiler with an IR pipeline, parity tests, a
 
 ### Phase checklist deltas (from `CHECKLIST_PHASES.md`)
 - **Phase 1 (Core transpiler)**: Baseline pipeline is operational and passes harness/parity smoke, but pattern/destructuring support remains open for the baseline parser.
+- **Phase 1 acceptance (linting)**: Lua static warnings are at zero with a blocking `npm run static:warnings` gate; the snapshot files in the repo reflect clean runs.
 - **Phase 2 (Runtime system)**: Runtime feature work and gating are pending; align future claims with `PROJECT_STATUS.md` before marking checklist items complete.
-- **Phase 3 (Advanced features/CI hardening)**: Current focus. Active tasks track the `PROJECT_STATUS.md` next steps: doc alignment, static warning burn-down plus lint/format gates, IR builder consolidation, feature-gap coverage, and CI determinism/parity/coverage gates.
+- **Phase 3 (Advanced features/CI hardening)**: Current focus. Active tasks track the `PROJECT_STATUS.md` next steps: doc alignment, lint/format gates, IR builder consolidation, feature-gap coverage, and CI determinism/parity/coverage gates. Static Lua warnings are fully burned down with a blocking CI gate.
 - **Phase 4 (Ecosystem integration)**: Not started; defer claims until runtime hooks from Phases 2–3 are available.
 
 ## How to use locally
