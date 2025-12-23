@@ -31,8 +31,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
-      - run: npm ci
+      - run: npm ci --prefer-offline
 
       - name: Run verify gate (harness + IR validation + parity + determinism)
         run: npm run verify
