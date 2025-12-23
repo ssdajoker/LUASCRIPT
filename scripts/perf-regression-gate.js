@@ -44,6 +44,21 @@ const BENCHMARKS = [
     name: 'object-literal',
     code: 'const obj = { a: 1, b: 2, c: 3 };',
     expectedMs: 0.9
+  },
+  {
+    name: 'if-else',
+    code: 'if (true) { let x = 1; } else { let x = 2; }',
+    expectedMs: 0.6
+  },
+  {
+    name: 'while-loop',
+    code: 'let i = 0; while (i < 10) { i++; }',
+    expectedMs: 0.7
+  },
+  {
+    name: 'for-loop',
+    code: 'for (let i = 0; i < 10; i++) { }',
+    expectedMs: 0.8
   }
 ];
 
@@ -292,8 +307,8 @@ function main() {
   
   console.log('─'.repeat(80));
   
-  // Exit with error if regressions detected (unless explicitly allowed)
-  if (regressions.length > 0 && process.env.ALLOW_REGRESSION !== '1') {
+  // Exit with error if regressions detected (unless explicitly allowed) or if any benchmark failed to run
+  if ((regressions.length > 0 && process.env.ALLOW_REGRESSION !== '1') || failed > 0) {
     console.error('\n❌ Performance regression gate FAILED');
     process.exit(1);
   } else {

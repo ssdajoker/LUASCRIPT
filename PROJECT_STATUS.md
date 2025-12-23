@@ -3,10 +3,8 @@ Last updated: 2025-01-XX (Quality Gates & Performance Tracking Active)
 Source of truth for project health, test posture, and feature gaps. Link back from `README.md` and `DEVELOPMENT_WORKFLOW.md` to avoid divergent claims.
 
 ## Snapshot
-- Baseline JS→IR→Lua pipeline (Phase1) passes harness/parity smoke; array destructuring and richer patterns are not yet supported in the Phase1 parser.
+- Baseline JS→IR→Lua pipeline (Phase1) now supports array and object destructuring. Passes harness/parity smoke.
 - **Enhanced pipeline** (esprima + enhanced lowerer/emitter) **fully operational** with 73/73 tests passing (100%). Dedicated CI job runs smoke + parity subset + determinism under `LUASCRIPT_USE_ENHANCED_IR=1`. See [ENHANCED_MODE.md](ENHANCED_MODE.md) for details.
-- **Refactoring Update**: `src/ir/emitter-enhanced.js` and `src/ir/lowerer-enhanced.js` have been refactored to remove duplicates and fix syntax errors. `src/ir/emitter.js` has been updated with missing helper methods to ensure compatibility with Phase 1 tests.
-- **Enhanced pipeline** (esprima + enhanced lowerer/emitter) **fully operational** with 73/73 tests passing (100%). Dedicated CI job runs smoke + parity subset + determinism under `LUASCRIPT_USE_ENHANCED_IR=1`. Enhanced IR lowering now preserves user identifiers across destructuring/async/generator/class constructs (see `src/ir/lowerer-enhanced.js`, `src/ir/lowerer.js`), and emitters auto-inject coroutine helpers only when required (`src/ir/emitter-enhanced.js`, `src/ir/emitter.js`). See [ENHANCED_MODE.md](ENHANCED_MODE.md) for details.
 - **Refactoring Update**: `src/ir/emitter-enhanced.js` and `src/ir/lowerer-enhanced.js` have been refactored to remove duplicates and fix syntax errors. `src/ir/emitter.js` has been updated with missing helper methods to ensure compatibility with Phase 1 tests. Canonical IR nodes now validate JSON payloads and surface clearer factory errors (`src/ir/nodes.js`).
 - Test+tools entry points live in `package.json`: `npm test`, `npm run harness`, `npm run ir:validate:all`, `npm run test:parity`, `npm run refactor:phase3`, `npm run refactor:all`, `npm run test:coverage`.
 - Performance tracking via `luascript_performance_benchmark.py` and `run_bench.sh`; artifacts land in `artifacts/`.
@@ -24,8 +22,8 @@ Source of truth for project health, test posture, and feature gaps. Link back fr
 - Coverage: `npm run test:coverage` (nyc + test suite).
 
 ## Known Gaps / Risks
-- **✅ RESOLVED**: Pattern/destructuring support fully implemented in enhanced pipeline with 14 comprehensive tests (array, object, nested, rest, computed properties). Phase1 still lacks pattern support.
-- Static warnings backlog captured in `static_warnings*.txt`; lint/format enforcement is not yet CI-blocking.
+- **✅ RESOLVED**: Pattern/destructuring support fully implemented in both Phase1 and enhanced pipelines.
+- Static warnings backlog captured in `static_warnings*.txt`; lint/format enforcement is now CI-blocking (zero tolerance).
 - Documentation has legacy, contradictory claims (e.g., Phase9/WASM “complete”). Use this file as the single status source until README/docs are aligned.
 - CI/permissions: review `GITHUB_INTEGRATION_STATUS.md` and `.github/workflows/` for current gating; determinism/fuzz gates are not enforced yet.
 

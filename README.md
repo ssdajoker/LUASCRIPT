@@ -6,8 +6,8 @@ Status source of truth: see `PROJECT_STATUS.md` for current health, gaps, and ro
 LUASCRIPT is a JavaScript-to-Lua transpiler with an IR pipeline, parity tests, and validation gates.
 
 ### IR pipelines (what changed)
-- **Canonical/Phase1 (`src/ir/lowerer.js`, `src/ir/emitter.js`)**: handles core syntax and now threads identifier-preserving destructuring + class/async/generator lowering into the IR without losing naming.
-- **Enhanced (`src/ir/lowerer-enhanced.js`, `src/ir/emitter-enhanced.js`)**: mirrors the canonical path but adds helper injection for coroutines only when async/await or async generators appear, reducing Lua preamble noise.
+- **Canonical/Phase1 (`src/ir/lowerer.js`, `src/ir/emitter.js`)**: handles core syntax and includes basic destructuring support (array/object). Threads identifier-preserving class/async/generator lowering into the IR without losing naming.
+- **Enhanced (`src/ir/lowerer-enhanced.js`, `src/ir/emitter-enhanced.js`)**: mirrors the canonical path but adds helper injection for coroutines only when async/await or async generators appear, reducing Lua preamble noise. Supports advanced patterns.
 - **Shared IR definitions (`src/ir/nodes.js`)**: stricter JSON validation and clearer factory errors to catch malformed IR earlier in CI/local runs.
 
 ## How to use locally
