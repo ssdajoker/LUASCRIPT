@@ -26,6 +26,22 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Cache npm cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-cache-${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            npm-cache-${{ runner.os }}-node-${{ matrix.node-version }}-
+
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install system dependencies (Linux)
         if: runner.os == 'Linux'
@@ -45,7 +61,8 @@ jobs:
           choco install lua python -y || $true
 
       - name: Install npm dependencies
-        run: npm ci
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline
       - name: Check status consistency
         run: npm run status:check
         continue-on-error: false
@@ -133,6 +150,22 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Cache npm cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-cache-${{ runner.os }}-node-20-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            npm-cache-${{ runner.os }}-node-20-
+
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-node-20-${{ hashFiles('package-lock.json') }}
 
       - name: Install system dependencies (Linux)
         run: |
@@ -140,7 +173,8 @@ jobs:
           sudo apt-get install -y lua5.4 luajit python3
 
       - name: Install npm dependencies
-        run: npm ci
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline
 
       - name: Run enhanced verification suite (smoke + parity subset + determinism)
         run: npm run verify:enhanced

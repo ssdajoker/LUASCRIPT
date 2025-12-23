@@ -4,9 +4,12 @@
   "description": "Complete JavaScript-to-Lua transpiler with advanced runtime optimization - Tony Yoka's Unified Team Implementation",
   "main": "src/unified_luascript.js",
   "scripts": {
-    "test": "npm run test:core && npm run test:phase1 && node tests/test_memory_management.js",
+    "test": "npm run test:quick && npm run test:runtime",
+    "test:quick": "npm run test:core && npm run test:phase1",
+    "test:runtime": "node tests/test_memory_management.js",
     "test:enhanced": "node test/test_enhanced_transpiler.js",
-    "test:all": "npm test && npm run test:edge && npm run test:enhanced && npm run test:legacy && npm run test:parity",
+    "test:full": "npm run test:quick && npm run test:runtime && npm run test:edge && npm run test:enhanced && npm run test:legacy && npm run test:parity",
+    "test:all": "npm run test:full",
     "test:phase1": "node test/test_perfect_parser_phase1.js && node test/test_perfect_parser_phase1_negative.js",
     "test:smoke": "node scripts/smoke_ci.js",
     "harness": "node tests/ir/harness.test.js",
@@ -132,7 +135,6 @@
     "acorn": "^8.15.0",
     "esprima": "^4.0.1",
     "luaparse": "^0.3.1",
-    "nyc": "^17.1.0",
     "yaml": "^2.8.2"
   },
   "devDependencies": {
