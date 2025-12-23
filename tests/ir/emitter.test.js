@@ -4,6 +4,39 @@ const assert = require("assert");
 const { parseAndLower } = require("../../src/ir/pipeline");
 const { emitLuaFromIR } = require("../../src/ir/emitter");
 
+function buildTryIR({ includeCatch = true, includeFinally = false }) {
+  const nodes = {
+    try1: { kind: "TryStatement", id: "try1", block: "block_try" },
+    block_try: { kind: "BlockStatement", id: "block_try", statements: ["call_risky"] },
+    call_risky: { kind: "ExpressionStatement", expression: "call_risky_expr" },
+    call_risky_expr: { kind: "CallExpression", callee: "risky_id", arguments: [] },
+    risky_id: { kind: "Identifier", name: "risky" },
+    cleanup_id: { kind: "Identifier", name: "cleanup" },
+    cleanup_expr: { kind: "CallExpression", callee: "cleanup_id", arguments: [] },
+    cleanup_call: { kind: "ExpressionStatement", expression: "cleanup_expr" },
+  };
+
+  if (includeCatch) {
+    nodes.try1.handler = "catch1";
+    nodes.catch1 = { kind: "CatchClause", param: "err_id", body: "block_catch" };
+    nodes.err_id = { kind: "Identifier", name: "err" };
+    nodes.block_catch = { kind: "BlockStatement", id: "block_catch", statements: ["handle_call"] };
+    nodes.handle_id = { kind: "Identifier", name: "handle" };
+    nodes.handle_expr = { kind: "CallExpression", callee: "handle_id", arguments: ["err_id"] };
+    nodes.handle_call = { kind: "ExpressionStatement", expression: "handle_expr" };
+  }
+
+  if (includeFinally) {
+    nodes.try1.finalizer = "finally1";
+    nodes.finally1 = { kind: "BlockStatement", id: "finally1", statements: ["cleanup_call"] };
+  }
+
+  return {
+    module: { body: ["try1"] },
+    nodes,
+  };
+}
+
 (function testFunctionDeclarationEmission() {
   const source = `
     function add(a, b) {
@@ -156,6 +189,55 @@ const { emitLuaFromIR } = require("../../src/ir/emitter");
 
   // Even as a statement, the current implementation uses IIFE
   assert(lua.includes("function()"), "Increment as statement uses IIFE in current implementation");
+})();
+
+(function testTryCatchEmission() {
+  const ir = buildTryIR({ includeCatch: true, includeFinally: false });
+  const lua = emitLuaFromIR(ir).trim();
+  const expected = [
+    "local function __try_try1()",
+    "  risky()",
+    "end",
+    "local __ok, __err = xpcall(__try_try1, function(e) return e end)",
+    "if (not __ok) then",
+    "  local err = __err",
+    "  handle(err)",
+    "end",
+  ].join("\n");
+
+  assert.strictEqual(lua, expected, "Try/catch emission should wrap call and bind error");
+})();
+
+(function testTryFinallyEmission() {
+  const ir = buildTryIR({ includeCatch: false, includeFinally: true });
+  const lua = emitLuaFromIR(ir).trim();
+  const expected = [
+    "local function __try_try1()",
+    "  risky()",
+    "end",
+    "local __ok, __err = xpcall(__try_try1, function(e) return e end)",
+    "  cleanup()",
+  ].join("\n");
+
+  assert.strictEqual(lua, expected, "Try/finally emission should always run finalizer");
+})();
+
+(function testTryCatchFinallyEmission() {
+  const ir = buildTryIR({ includeCatch: true, includeFinally: true });
+  const lua = emitLuaFromIR(ir).trim();
+  const expected = [
+    "local function __try_try1()",
+    "  risky()",
+    "end",
+    "local __ok, __err = xpcall(__try_try1, function(e) return e end)",
+    "if (not __ok) then",
+    "  local err = __err",
+    "  handle(err)",
+    "end",
+    "  cleanup()",
+  ].join("\n");
+
+  assert.strictEqual(lua, expected, "Try/catch/finally emission should preserve ordering");
 })();
 
 (function testNestedIncrementInExpression() {
