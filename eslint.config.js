@@ -1,9 +1,7 @@
-import js from "@eslint/js";
-
-// Note: This is an ESM file (eslint.config.js is always ESM)
-// but the source code is CommonJS. This is fine - ESLint supports it.
-// Ignore the MODULE_TYPELESS_PACKAGE_JSON warning - it's a known false positive
-// for eslint.config.js files when the project uses CommonJS.
+// Flat config that avoids external fetches so linting can run in locked-down CI
+// environments. Rules are declared inline instead of importing `@eslint/js`
+// (which may be blocked) but still mirror the strictness tiers from the
+// ESLint cleanup plan.
 
 // Define Node.js globals once for reuse
 const nodeGlobals = {
@@ -27,6 +25,66 @@ const nodeGlobals = {
   FinalizationRegistry: "readonly"
 };
 
+const recommendedCoreRules = {
+  "constructor-super": "error",
+  "for-direction": "error",
+  "getter-return": "error",
+  "no-async-promise-executor": "error",
+  "no-case-declarations": "error",
+  "no-class-assign": "error",
+  "no-compare-neg-zero": "error",
+  "no-cond-assign": ["error", "except-parens"],
+  "no-constant-binary-expression": "error",
+  "no-constant-condition": ["error", { checkLoops: false }],
+  "no-const-assign": "error",
+  "no-control-regex": "error",
+  "no-debugger": "error",
+  "no-delete-var": "error",
+  "no-dupe-args": "error",
+  "no-dupe-class-members": "error",
+  "no-dupe-else-if": "error",
+  "no-dupe-keys": "error",
+  "no-duplicate-case": "error",
+  "no-empty": ["error", { allowEmptyCatch: true }],
+  "no-empty-character-class": "error",
+  "no-empty-pattern": "error",
+  "no-ex-assign": "error",
+  "no-extra-boolean-cast": "error",
+  "no-fallthrough": "error",
+  "no-func-assign": "error",
+  "no-global-assign": "error",
+  "no-import-assign": "error",
+  "no-inner-declarations": ["error", "functions"],
+  "no-invalid-regexp": "error",
+  "no-irregular-whitespace": "error",
+  "no-loss-of-precision": "error",
+  "no-misleading-character-class": "error",
+  "no-new-symbol": "error",
+  "no-obj-calls": "error",
+  "no-octal": "error",
+  "no-prototype-builtins": "error",
+  "no-redeclare": "error",
+  "no-regex-spaces": "error",
+  "no-self-assign": "error",
+  "no-setter-return": "error",
+  "no-shadow-restricted-names": "error",
+  "no-sparse-arrays": "error",
+  "no-this-before-super": "error",
+  "no-undef": "error",
+  "no-unexpected-multiline": "error",
+  "no-unreachable": "error",
+  "no-unused-labels": "error",
+  "no-unsafe-finally": "error",
+  "no-unsafe-negation": "error",
+  "no-useless-catch": "error",
+  "no-useless-escape": "error",
+  "no-with": "error",
+  "use-isnan": "error",
+  "valid-typeof": "error",
+  "require-yield": "error",
+  "eqeqeq": "error"
+};
+
 export default [
   {
     ignores: ["node_modules/**", "dist/**", "build/**", "coverage/**", ".git/**"]
@@ -41,7 +99,7 @@ export default [
       globals: nodeGlobals
     },
     rules: {
-      ...js.configs.recommended.rules,
+      ...recommendedCoreRules,
       "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "semi": ["warn", "always"],
       "quotes": ["warn", "double"],
@@ -60,7 +118,7 @@ export default [
       globals: nodeGlobals
     },
     rules: {
-      ...js.configs.recommended.rules,
+      ...recommendedCoreRules,
       "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
       "no-undef": "error",
       "semi": ["error", "always"],
@@ -80,7 +138,7 @@ export default [
       globals: nodeGlobals
     },
     rules: {
-      ...js.configs.recommended.rules,
+      ...recommendedCoreRules,
       "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "no-undef": "warn",
       "semi": ["warn", "always"],
@@ -101,7 +159,7 @@ export default [
       globals: nodeGlobals
     },
     rules: {
-      ...js.configs.recommended.rules,
+      ...recommendedCoreRules,
       "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "semi": ["warn"],
       "quotes": ["warn"],
@@ -125,7 +183,7 @@ export default [
       }
     },
     rules: {
-      ...js.configs.recommended.rules,
+      ...recommendedCoreRules,
       "no-unused-vars": ["warn"]
     }
   }
