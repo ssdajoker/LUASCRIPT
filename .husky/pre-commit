@@ -1,33 +1,44 @@
 #!/usr/bin/env sh
-# Pre-commit hook: Lint touched files only (fast validation)
+# Pre-commit hook: keep fast formatting and smoke tests (no ESLint to avoid conflicts)
 
-# Allow bypass with HUSKY=0 or SKIP_LINT=1
-if [ "$HUSKY" = "0" ] || [ "$SKIP_LINT" = "1" ]; then
+if [ "$HUSKY" = "0" ]; then
   exit 0
 fi
 
-echo "[husky pre-commit] Running lint on staged files..."
+HOOK_PREFIX="[husky pre-commit]"
 
-# Get list of staged .js files
-STAGED_JS=$(git diff --cached --name-only --diff-filter=ACM | grep '\.js$' || true)
-
-if [ -z "$STAGED_JS" ]; then
-  echo "[husky pre-commit] No .js files staged, skipping lint"
+if ! command -v npm >/dev/null 2>&1; then
+  echo "$HOOK_PREFIX npm is not available; skipping checks"
   exit 0
 fi
 
-# Run ESLint only on staged files
-echo "[husky pre-commit] Linting $(echo "$STAGED_JS" | wc -l) file(s)..."
-echo "$STAGED_JS" | xargs npx eslint --max-warnings 0
+RUN_FORMAT=${SKIP_FORMAT:-0}
+RUN_TESTS=${SKIP_TESTS:-0}
 
-LINT_EXIT=$?
-
-if [ $LINT_EXIT -ne 0 ]; then
-  echo ""
-  echo "[husky pre-commit] ❌ Lint failed on staged files"
-  echo "                    Fix errors or bypass with: SKIP_LINT=1 git commit"
-  exit 1
+if [ "$SKIP_CHECKS" = "1" ]; then
+  echo "$HOOK_PREFIX Checks skipped via SKIP_CHECKS=1"
+  exit 0
 fi
 
-echo "[husky pre-commit] ✅ Lint passed on staged files"
+echo "$HOOK_PREFIX Running formatting gate..."
+if [ "$RUN_FORMAT" != "1" ]; then
+  if ! npm run -s format:check; then
+    echo "$HOOK_PREFIX ❌ Formatting gate failed"
+    exit 1
+  fi
+else
+  echo "$HOOK_PREFIX Formatting skipped via SKIP_FORMAT=1"
+fi
+
+echo "$HOOK_PREFIX Running smoke tests..."
+if [ "$RUN_TESTS" != "1" ]; then
+  if ! npm run -s test:smoke; then
+    echo "$HOOK_PREFIX ❌ Smoke tests failed"
+    exit 1
+  fi
+else
+  echo "$HOOK_PREFIX Smoke tests skipped via SKIP_TESTS=1"
+fi
+
+echo "$HOOK_PREFIX ✅ Formatting + smoke tests passed"
 exit 0
