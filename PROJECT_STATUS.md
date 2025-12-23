@@ -23,6 +23,10 @@ Source of truth for project health, test posture, and feature gaps. Link back fr
 - Refactor/Enhanced flow: `npm run refactor:all` (validator + lint + phase3 parity).
 - Coverage: `npm run test:coverage` (nyc + test suite).
 
+## Lint Warning Trend
+- Tiered scripts aligned to `ESLINT_CLEANUP_GUIDE.md`: `npm run lint:core` (0 warnings), `npm run lint:extended` (≤50 warnings), `npm run lint:backends` (≤100 warnings), `npm run lint:all` (≤200 warnings for general src sweep).
+- Latest Tier 4 sweep (2025-12-23, `npm exec -- eslint "src/**/*.js" --max-warnings 200`): **17 warnings / 17 errors**. HTML archive: `reports/eslint/eslint-weekly-2025-12-23.html`; full trend lives in `reports/lint-dashboard.md`.
+
 ## Known Gaps / Risks
 - **✅ RESOLVED**: Pattern/destructuring support fully implemented in enhanced pipeline with 14 comprehensive tests (array, object, nested, rest, computed properties). Phase1 still lacks pattern support.
 - Static warnings backlog burned down to zero; Lua lint budget enforced via `npm run static:warnings` in CI. General lint/format improvements remain tracked separately.
