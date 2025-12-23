@@ -12,19 +12,19 @@ const { IRValidator } = require("./validator");
 const { IRSerializer } = require("./serializer");
 
 module.exports = {
-    // Types
-    ...types,
+  // Types
+  ...types,
     
-    // Nodes
-    ...nodes,
+  // Nodes
+  ...nodes,
     
-    // Builder
-    IRBuilder,
-    builder,
+  // Builder
+  IRBuilder,
+  builder,
     
-    // Validator
-    IRValidator,
+  // Validator
+  IRValidator,
     
-    // Serializer
-    IRSerializer
+  // Serializer
+  IRSerializer
 };

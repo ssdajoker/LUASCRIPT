@@ -52,7 +52,8 @@ export default [
 
   // IR Core - Strict
   {
-    files: ["src/ir/core/**/*.js"],
+    files: ["src/ir/**/*.js"],
+    ignores: ["src/ir/transforms/**/*.js", "src/ir/validators/**/*.js"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "commonjs",
