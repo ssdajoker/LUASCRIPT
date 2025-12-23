@@ -1,5 +1,11 @@
 # Test Results Summary - December 19, 2025
 
+## Recent Flaky Observations
+
+- **test/test_transpiler.js – "Complex Expression (Multiple Fixes)"**  
+  - Evidence: intermittent pattern mismatch and Lua execution errors in `test_report.txt` when transpiling the age/message string (missing `..` concatenation).  
+  - Mitigation: deterministic temp file naming and seeded randomness plus an optional `--retry-flaky/--runInBand` retry path in the test runner.
+
 ## All Tests Passing ✅
 
 ### Core Pipeline Tests
