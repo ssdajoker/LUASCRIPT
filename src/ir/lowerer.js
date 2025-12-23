@@ -389,8 +389,8 @@ class IRLowerer {
       // But lowerExpression returns an ID.
       // If we just skip patterns in legacy lowerer to avoid crash:
       if (param.type === "ArrayPattern" || param.type === "ObjectPattern") {
-         // Create a dummy identifier to avoid crash, marking as unsupported pattern
-         return this.builder.identifier(`__pattern_${Math.random().toString(36).substr(2,5)}`).id;
+        // Create a dummy identifier to avoid crash, marking as unsupported pattern
+        return this.builder.identifier(`__pattern_${Math.random().toString(36).substr(2,5)}`).id;
       }
 
       if (param.type === "Error") {

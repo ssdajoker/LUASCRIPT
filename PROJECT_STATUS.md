@@ -32,6 +32,8 @@ Source of truth for project health, test posture, and feature gaps. Link back fr
 ## Next Steps (priority-ordered)
 1) Align docs to this canonical status; prune or annotate outdated claims in README and related status PDFs/MDs.  
 2) Harden lint/format gates (JS/Lua) and make them fully blocking in CI.  
+1) Align docs to this canonical status; prune or annotate outdated claims in README and related status PDFs/MDs (this task is in progress and will be complete upon merge).  
+2) Burn down static warnings; add lint/format gates (JS/Lua) and make them blocking in CI.  
 3) Consolidate IR builder pattern (see `GENERATOR_IMPLEMENTATION.md`) and harden validation/determinism hooks along the main pipeline.  
 4) Implement documented feature gaps (array/control-flow/function expression edges from `ENHANCED_TRANSPILER_README.md`) with tests wired into `npm run harness` + parity.  
 5) Harden CI: determinism + fuzz smoke + parity + coverage gates; pin runtime configs (`runtime_runtime.json`, `src_transpiler.json`) with schema/hash checks.

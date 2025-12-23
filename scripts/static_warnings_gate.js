@@ -30,7 +30,7 @@ function countWarnings(text) {
 }
 
 function parseHeaderBudget(text) {
-  const firstLine = text.split(/\r?\n/)[0] || '';
+  const firstLine = text.split(/\r?\n/)[0] || "";
   const match = firstLine.match(/^(\d+)\.\.(\d+)$/);
   if (!match) return null;
   const upper = Number(match[2]);

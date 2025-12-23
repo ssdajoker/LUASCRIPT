@@ -1,4 +1,5 @@
 # LUASCRIPT PROJECT - FINAL STATUS REPORT
+> **Legacy/archival**: This report is preserved for historical context and does **not** represent current project status. For up-to-date health and priorities, see [PROJECT_STATUS.md](PROJECT_STATUS.md) and [CHECKLIST_PHASES.md](CHECKLIST_PHASES.md).
 ## Mathematical Expression Excellence Achieved - Project Ready for Next Phase
 
 **Report Date**: September 29, 2025  
