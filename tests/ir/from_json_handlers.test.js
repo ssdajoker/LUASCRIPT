@@ -20,8 +20,18 @@ function expectThrows(fn, message) {
   );
 
   expectThrows(
+    () => IRNode.fromJSON(undefined),
+    "Invalid IR JSON: expected a non-null object",
+  );
+
+  expectThrows(
     () => IRNode.fromJSON(42),
     "Invalid IR JSON: expected an object but received number",
+  );
+
+  expectThrows(
+    () => IRNode.fromJSON([]),
+    "Invalid IR JSON: expected an object but received array",
   );
 
   expectThrows(

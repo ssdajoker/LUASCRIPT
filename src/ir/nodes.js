@@ -109,8 +109,8 @@ class IRNode {
       throw new Error("Invalid IR JSON: expected a non-null object");
     }
 
-    if (typeof json !== "object") {
-      throw new Error(`Invalid IR JSON: expected an object but received ${typeof json}`);
+    if (typeof json !== "object" || Array.isArray(json)) {
+      throw new Error(`Invalid IR JSON: expected an object but received ${Array.isArray(json) ? "array" : typeof json}`);
     }
 
     if (!Object.prototype.hasOwnProperty.call(json, "kind")) {
