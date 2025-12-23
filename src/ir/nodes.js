@@ -103,6 +103,18 @@ class IRNode {
   }
 
   static fromJSON(json) {
+    if (json === null || json === undefined) {
+      throw new Error("Invalid IR JSON: expected a non-null object");
+    }
+
+    if (typeof json !== "object") {
+      throw new Error(`Invalid IR JSON: expected an object but received ${typeof json}`);
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(json, "kind")) {
+      throw new Error("Invalid IR JSON: missing 'kind' property");
+    }
+
     // Factory method to reconstruct nodes from JSON
     switch (json.kind) {
     case NodeCategory.PROGRAM:
@@ -206,7 +218,7 @@ class IRNode {
     case NodeCategory.THIS:
       return ThisExpression.fromJSON(json);
     default:
-      throw new Error(`Unknown node kind: ${json.kind}`);
+      throw new Error(`No fromJSON handler registered for node kind: ${json.kind}`);
     }
   }
 }
