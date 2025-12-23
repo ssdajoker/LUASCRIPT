@@ -62,6 +62,36 @@ class Type {
   }
 
   static fromJSON(json) {
+    const handlers = {
+      [TypeCategory.PRIMITIVE]: () => new TPrimitive(json.primitiveType, json),
+      [TypeCategory.ARRAY]: () => new TArray(Type.fromJSON(json.elementType), json),
+      [TypeCategory.OBJECT]: () => new TObject(buildObjectProperties(json.properties), json),
+      [TypeCategory.FUNCTION]: () => new TFunction(
+        json.parameters.map(Type.fromJSON),
+        Type.fromJSON(json.returnType),
+        json
+      ),
+      [TypeCategory.UNION]: () => new TUnion(json.types.map(Type.fromJSON), json),
+      [TypeCategory.OPTIONAL]: () => new TOptional(Type.fromJSON(json.baseType), json),
+      [TypeCategory.VOID]: () => new TVoid(json),
+      [TypeCategory.ANY]: () => new TAny(json),
+      [TypeCategory.CUSTOM]: () => new TCustom(json.name, json)
+    };
+
+    const handler = handlers[json.category];
+    if (!handler) {
+      throw new Error(`Unknown type category: ${json.category}`);
+    }
+    return handler();
+  }
+}
+
+function buildObjectProperties(rawProperties) {
+  const properties = {};
+  for (const [key, value] of Object.entries(rawProperties || {})) {
+    properties[key] = Type.fromJSON(value);
+  }
+  return properties;
     switch (json.category) {
     case TypeCategory.PRIMITIVE:
       return new TPrimitive(json.primitiveType, json);

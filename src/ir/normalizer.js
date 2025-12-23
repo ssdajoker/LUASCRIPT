@@ -328,6 +328,27 @@ function cloneShallow(object, options) {
   }
   const copy = { type: object.type };
   for (const [key, value] of Object.entries(object)) {
+    if (shouldSkipCloneKey(key)) continue;
+    copy[key] = cloneValue(value, options);
+  }
+  return copy;
+}
+
+function shouldSkipCloneKey(key) {
+  if (key === "type") return true;
+  // Skip back-references commonly used by some parsers to link parent nodes
+  if (key === "parent" || key === "_parent") return true;
+  return false;
+}
+
+function cloneValue(value, options) {
+  if (Array.isArray(value)) {
+    return value.map((item) => normalizeNode(item, options));
+  }
+  if (value && typeof value === "object" && value.type) {
+    return normalizeNode(value, options);
+  }
+  return value;
     if (key === "type") continue;
     // Skip back-references commonly used by some parsers to link parent nodes
     if (key === "parent" || key === "_parent") continue;

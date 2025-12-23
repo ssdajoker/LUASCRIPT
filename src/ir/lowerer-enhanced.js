@@ -550,6 +550,382 @@ class EnhancedLowerer {
       if (prop.type === "RestElement") return this.lowerRestElement(prop);
 
       const key = this.builder.identifier(prop.key.name);
+        
+    this.pushScope();
+    const params = (node.params || []).map(p => {
+      if (p.type === "Identifier") {
+        this.addBinding(p.name);
+        return this.builder.identifier(p.name);
+      } else if (p.type === "RestElement") {
+        // Handle rest parameters
+        const restName = p.argument.name;
+        this.addBinding(restName);
+        return this.builder.restElement(this.builder.identifier(restName));
+      } else {
+        // Handle destructuring patterns in params
+        this.addBinding(p.name || p.id?.name);
+        return this.lowerExpression(p);
+      }
+    });
+    const body = this.lowerBlockStatement(node.body);
+    this.popScope();
+
+    return this.builder.functionDecl(
+      funcName,
+      params,
+      body,
+      null,
+      { async: true }  // Mark as async
+    );
+  }
+
+  lowerClassDeclaration(node) {
+    const superClass = node.superClass ? this.lowerExpression(node.superClass) : null;
+    const body = this.lowerClassBody(node.body);
+
+    return new nodes.ClassDeclaration(
+      this.lowerExpression(node.id),
+      superClass,
+      body
+    );
+  }
+
+  lowerClassBody(node) {
+    const methods = (node.body || []).map(method => this.lowerMethodDefinition(method));
+    return new nodes.ClassBody(methods);
+  }
+
+  lowerMethodDefinition(node) {
+    const key = this.lowerExpression(node.key);
+    const value = this.lowerExpression(node.value);
+    return new nodes.MethodDefinition(key, value, node.kind, node.static);
+  }
+
+  lowerBlockStatement(node) {
+    this.pushScope();
+    const body = (node.body || []).map(stmt => this.lowerStatement(stmt)).filter(Boolean);
+    this.popScope();
+    return this.builder.block(body);
+  }
+
+  lowerExpressionStatement(node) {
+    return this.builder.expressionStatement(this.lowerExpression(node.expression));
+  }
+
+  lowerReturnStatement(node) {
+    const argument = node.argument ? this.lowerExpression(node.argument) : null;
+    return this.builder.returnStatement(argument);
+  }
+
+  lowerIfStatement(node) {
+    const test = this.lowerExpression(node.test);
+    const consequent = this.lowerBlockStatement(node.consequent);
+    const alternate = node.alternate ? this.lowerStatement(node.alternate) : null;
+    return this.builder.ifStatement(test, consequent, alternate);
+  }
+
+  lowerWhileStatement(node) {
+    const test = this.lowerExpression(node.test);
+    const body = this.lowerBlockStatement(node.body);
+    return this.builder.whileStatement(test, body);
+  }
+
+  lowerForStatement(node) {
+    this.pushScope();
+    const init = node.init ? this.lowerStatement(node.init) : null;
+    const test = node.test ? this.lowerExpression(node.test) : null;
+    const update = node.update ? this.lowerExpression(node.update) : null;
+    const body = this.lowerBlockStatement(node.body);
+    this.popScope();
+
+    return this.builder.forStatement(init, test, update, body);
+  }
+
+  lowerForOfStatement(node) {
+    this.pushScope();
+    const left = node.left.type === "VariableDeclaration"
+      ? this.lowerVariableDeclaration(node.left)
+      : this.lowerExpression(node.left);
+    const right = this.lowerExpression(node.right);
+    const body = this.lowerBlockStatement(node.body);
+    this.popScope();
+
+    return new nodes.ForOfStatement(left, right, body, { await: Boolean(node.await) });
+  }
+
+  lowerForInStatement(node) {
+    this.pushScope();
+    const left = node.left.type === "VariableDeclaration"
+      ? this.lowerVariableDeclaration(node.left)
+      : this.lowerExpression(node.left);
+    const right = this.lowerExpression(node.right);
+    const body = this.lowerBlockStatement(node.body);
+    this.popScope();
+
+    return new nodes.ForInStatement(left, right, body);
+  }
+
+  lowerDoWhileStatement(node) {
+    const body = this.lowerBlockStatement(node.body);
+    const test = this.lowerExpression(node.test);
+    return this.builder.doWhileStatement(body, test);
+  }
+
+  lowerTryStatement(node) {
+    const block = this.lowerBlockStatement(node.block);
+    const handler = node.handler ? this.lowerCatchClause(node.handler) : null;
+    const finalizer = node.finalizer ? this.lowerBlockStatement(node.finalizer) : null;
+
+    return new nodes.TryStatement(block, handler, finalizer);
+  }
+
+  lowerCatchClause(node) {
+    this.pushScope();
+    if (node.param) this.addBinding(node.param.name);
+    const param = node.param ? this.lowerExpression(node.param) : null;
+    const body = this.lowerBlockStatement(node.body);
+    this.popScope();
+
+    return new nodes.CatchClause(param, body);
+  }
+
+  lowerThrowStatement(node) {
+    return new nodes.ThrowStatement(this.lowerExpression(node.argument));
+  }
+
+  lowerSwitchStatement(node) {
+    const discriminant = this.lowerExpression(node.discriminant);
+    const cases = (node.cases || []).map(c => this.lowerSwitchCase(c));
+    return this.builder.switchStatement(discriminant, cases);
+  }
+
+  lowerSwitchCase(node) {
+    const test = node.test ? this.lowerExpression(node.test) : null;
+    const consequent = (node.consequent || []).map(stmt => this.lowerStatement(stmt));
+    return this.builder.switchCase(test, consequent);
+  }
+
+  // ========== Expression Lowering ==========
+  lowerExpression(node) {
+    if (!node) return null;
+
+    switch (node.type) {
+    case "Identifier":
+      return this.builder.identifier(node.name);
+    case "Literal":
+      return this.builder.literal(node.value, { raw: node.raw });
+    case "BinaryExpression":
+      return this.lowerBinaryExpression(node);
+    case "UnaryExpression":
+      return this.lowerUnaryExpression(node);
+    case "LogicalExpression":
+      return this.lowerLogicalExpression(node);
+    case "AssignmentExpression":
+      return this.lowerAssignmentExpression(node);
+    case "UpdateExpression":
+      return this.lowerUpdateExpression(node);
+    case "CallExpression":
+      return this.lowerCallExpression(node);
+    case "MemberExpression":
+      return this.lowerMemberExpression(node);
+    case "ConditionalExpression":
+      return this.lowerConditionalExpression(node);
+    case "ArrayExpression":
+      return this.lowerArrayExpression(node);
+    case "ObjectExpression":
+      return this.lowerObjectExpression(node);
+    case "FunctionExpression":
+    case "ArrowFunctionExpression":
+      return this.lowerFunctionExpression(node);
+    case "TemplateLiteral":
+      return this.lowerTemplateLiteral(node);
+    case "AwaitExpression":
+      return this.lowerAwaitExpression(node);
+    case "YieldExpression":
+      return this.lowerYieldExpression(node);
+    case "ThisExpression":
+      return new nodes.ThisExpression();
+    case "Super":
+      return new nodes.Super();
+    case "ClassExpression":
+      return this.lowerClassExpression(node);
+    case "SpreadElement":
+      return this.lowerSpreadElement(node);
+    case "ArrayPattern":
+      return this.lowerArrayPattern(node);
+    case "ObjectPattern":
+      return this.lowerObjectPattern(node);
+    default:
+      throw new Error(`Unsupported expression: ${node.type}`);
+    }
+  }
+
+  lowerBinaryExpression(node) {
+    const left = this.lowerExpression(node.left);
+    const right = this.lowerExpression(node.right);
+    return this.builder.binaryOp(node.operator, left, right);
+  }
+
+  lowerUnaryExpression(node) {
+    const argument = this.lowerExpression(node.argument);
+    return this.builder.unaryOp(node.operator, argument, node.prefix !== false, { prefix: node.prefix !== false });
+  }
+
+  lowerLogicalExpression(node) {
+    const left = this.lowerExpression(node.left);
+    const right = this.lowerExpression(node.right);
+    return this.builder.binaryOp(node.operator, left, right);
+  }
+
+  lowerAssignmentExpression(node) {
+    const left = this.lowerExpression(node.left);
+    const right = this.lowerExpression(node.right);
+    return this.builder.assignment(left, right, node.operator);
+  }
+
+  lowerUpdateExpression(node) {
+    const argument = this.lowerExpression(node.argument);
+    return this.builder.updateExpression(node.operator, argument, { prefix: node.prefix });
+  }
+
+  lowerCallExpression(node) {
+    const callee = this.lowerExpression(node.callee);
+    const args = (node.arguments || []).map(arg => this.lowerExpression(arg));
+    return this.builder.callExpression(callee, args);
+  }
+
+  lowerMemberExpression(node) {
+    const object = this.lowerExpression(node.object);
+    const property = this.lowerExpression(node.property);
+    return this.builder.memberExpression(object, property, node.computed);
+  }
+
+  lowerConditionalExpression(node) {
+    const test = this.lowerExpression(node.test);
+    const consequent = this.lowerExpression(node.consequent);
+    const alternate = this.lowerExpression(node.alternate);
+    return this.builder.conditionalExpression(test, consequent, alternate);
+  }
+
+  lowerArrayExpression(node) {
+    const elements = (node.elements || []).map(el => el ? this.lowerExpression(el) : null);
+    return this.builder.arrayExpression(elements);
+  }
+
+  lowerObjectExpression(node) {
+    const properties = (node.properties || []).map(prop => this.lowerProperty(prop));
+    return this.builder.objectExpression(properties);
+  }
+
+  lowerProperty(node) {
+    const key = this.lowerExpression(node.key);
+    const value = this.lowerExpression(node.value);
+    return this.builder.property(key, value, {
+      kind: node.kind || "init",
+      shorthand: node.shorthand || false,
+      computed: node.computed || false
+    });
+  }
+
+  lowerFunctionExpression(node) {
+    this.pushScope();
+    const params = (node.params || []).map(p => {
+      this.addBinding(p.name);
+      return this.lowerExpression(p);
+    });
+
+    // Arrow functions can have an expression body; wrap it in a return statement for Lua
+    let body;
+    if (node.body && node.body.type === "BlockStatement") {
+      body = this.lowerBlockStatement(node.body);
+    } else if (node.type === "ArrowFunctionExpression") {
+      const expressionBody = this.lowerExpression(node.body);
+      body = this.builder.block([this.builder.returnStmt(expressionBody)]);
+    } else {
+      body = this.lowerBlockStatement(node.body);
+    }
+
+    this.popScope();
+
+    return this.builder.functionExpression(
+      node.id ? this.lowerExpression(node.id) : null,
+      params,
+      body,
+      { arrow: node.type === "ArrowFunctionExpression" }
+    );
+  }
+
+  lowerTemplateLiteral(node) {
+    const quasis = (node.quasis || []).map(q => new nodes.TemplateElement(
+      { raw: q.value.raw, cooked: q.value.cooked },
+      q.tail
+    ));
+    const expressions = (node.expressions || []).map(expr => this.lowerExpression(expr));
+    return new nodes.TemplateLiteral(quasis, expressions);
+  }
+
+  lowerAwaitExpression(node) {
+    const argument = this.lowerExpression(node.argument);
+    return new nodes.AwaitExpression(argument);
+  }
+
+  lowerGeneratorDeclaration(node) {
+    this.pushScope();
+    const params = (node.params || []).map(p => {
+      this.addBinding(p.name);
+      return this.lowerExpression(p);
+    });
+    const body = this.lowerBlockStatement(node.body);
+    this.popScope();
+
+    return new nodes.GeneratorDeclaration(
+      this.lowerExpression(node.id),
+      params,
+      body,
+      { async: !!node.async }
+    );
+  }
+
+  lowerYieldExpression(node) {
+    const argument = node.argument ? this.lowerExpression(node.argument) : null;
+    const delegate = node.delegate || false; // true for yield*
+    return new nodes.YieldExpression(argument, delegate);
+  }
+
+  lowerClassExpression(node) {
+    const superClass = node.superClass ? this.lowerExpression(node.superClass) : null;
+    const body = this.lowerClassBody(node.body);
+    return new nodes.ClassExpression(
+      node.id ? this.lowerExpression(node.id) : null,
+      superClass,
+      body
+    );
+  }
+
+  lowerSpreadElement(node) {
+    const argument = this.lowerExpression(node.argument);
+    return new nodes.SpreadElement(argument);
+  }
+
+  lowerArrayPattern(node) {
+    const elements = (node.elements || []).map(el => {
+      if (!el) return null;
+      if (el.type === "RestElement") return this.lowerRestElement(el);
+      if (el.type === "AssignmentPattern") return this.lowerAssignmentPattern(el);
+      if (el.type === "Identifier") {
+        this.addBinding(el.name);
+        return this.builder.identifier(el.name);
+      }
+      return this.lowerExpression(el);
+    });
+    return this.builder.arrayPattern(elements);
+  }
+
+  lowerObjectPattern(node) {
+    const properties = (node.properties || []).map(prop => {
+      if (prop.type === "RestElement") return this.lowerRestElement(prop);
+
+      const key = this.builder.identifier(prop.key.name);
     constructor(builder = null) {
         this.builder = builder || new IRBuilder();
         this.scopeStack = [{ bindings: new Set(), parent: null }];
