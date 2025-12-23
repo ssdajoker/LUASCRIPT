@@ -22,7 +22,9 @@ class TranspilerTester {
         this.testResults = [];
         this.tempDir = path.join(__dirname, 'temp');
         this.retryFlaky = process.argv.includes('--retry-flaky') || process.argv.includes('--runInBand');
-        this.seed = Number(process.env.LUASCRIPT_TEST_SEED || 1337);
+        const envSeed = process.env.LUASCRIPT_TEST_SEED;
+        const parsedSeed = envSeed !== undefined ? parseInt(envSeed, 10) : NaN;
+        this.seed = Number.isNaN(parsedSeed) ? 1337 : parsedSeed;
 
         const { reseed, restore } = installDeterministicSeed(this.seed);
         this.reseedRandom = (nextSeed = this.seed) => reseed(nextSeed);
