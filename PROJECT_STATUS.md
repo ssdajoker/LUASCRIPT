@@ -5,6 +5,7 @@ Source of truth for project health, test posture, and feature gaps. Link back fr
 ## Snapshot
 - Baseline JS→IR→Lua pipeline (Phase1) passes harness/parity smoke; array destructuring and richer patterns are not yet supported in the Phase1 parser.
 - **Enhanced pipeline** (esprima + enhanced lowerer/emitter) **fully operational** with 73/73 tests passing (100%). Dedicated CI job runs smoke + parity subset + determinism under `LUASCRIPT_USE_ENHANCED_IR=1`. See [ENHANCED_MODE.md](ENHANCED_MODE.md) for details.
+- **Refactoring Update**: `src/ir/emitter-enhanced.js` and `src/ir/lowerer-enhanced.js` have been refactored to remove duplicates and fix syntax errors. `src/ir/emitter.js` has been updated with missing helper methods to ensure compatibility with Phase 1 tests.
 - Test+tools entry points live in `package.json`: `npm test`, `npm run harness`, `npm run ir:validate:all`, `npm run test:parity`, `npm run refactor:phase3`, `npm run refactor:all`, `npm run test:coverage`.
 - Performance tracking via `luascript_performance_benchmark.py` and `run_bench.sh`; artifacts land in `artifacts/`.
 
