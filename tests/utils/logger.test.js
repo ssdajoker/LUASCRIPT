@@ -71,4 +71,16 @@ describe("logger wrapper", () => {
 
         assert.strictEqual(logs.length, 0);
     });
+
+    it("can be silenced via LOG_LEVEL=silent", () => {
+        const loggerModule = loadLoggerWithEnv({ LOG_LEVEL: "silent" });
+        const logs = captureLogs(loggerModule, "runtime", (logger) => {
+            logger.error("should-not-emit");
+            logger.warn("should-not-emit");
+            logger.info("should-not-emit");
+            logger.debug("should-not-emit");
+        });
+
+        assert.strictEqual(logs.length, 0);
+    });
 });
