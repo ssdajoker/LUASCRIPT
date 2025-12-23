@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const assert = require('assert');
+const { installDeterministicSeed } = require('./utils/deterministic');
 
 const {
   ModuleLoader,
@@ -16,6 +17,8 @@ const {
 } = require('../src/phase2_core_modules');
 
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'luascript-mod-tests-'));
+const testSeed = Number(process.env.LUASCRIPT_TEST_SEED || 1337);
+const { reseed: reseedRandom, restore: restoreRandom } = installDeterministicSeed(testSeed);
 
 function writeTemp(fileName, contents) {
   const fullPath = path.join(tempRoot, fileName);
@@ -229,15 +232,22 @@ async function run() {
   let passed = 0;
   let failed = 0;
 
-  for (const { name, fn } of tests) {
-    try {
-      await fn();
-      passed++;
-      console.log(`  PASS ${name}`);
-    } catch (error) {
-      failed++;
-      console.log(`  FAIL ${name}: ${error.message}`);
+  let index = 0;
+  try {
+    for (const { name, fn } of tests) {
+      reseedRandom(testSeed + index);
+      index += 1;
+      try {
+        await fn();
+        passed++;
+        console.log(`  PASS ${name}`);
+      } catch (error) {
+        failed++;
+        console.log(`  FAIL ${name}: ${error.message}`);
+      }
     }
+  } finally {
+    restoreRandom();
   }
 
   fs.rmSync(tempRoot, { recursive: true, force: true });
