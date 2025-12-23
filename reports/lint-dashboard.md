@@ -8,5 +8,5 @@ Tracks ESLint warning/error counts across weekly Tier 4 runs.
 
 ## How to Update
 - Run the weekly report command (see `DEVELOPMENT_WORKFLOW.md`) to generate a new HTML artifact under `reports/eslint/`.
-- Append a new row above with the date (UTC), command, warning/error counts, budget, and link to the saved HTML file.
+- Append a new row at the bottom of the table (below existing entries) with the date (UTC), command, warning/error counts, budget, and link to the saved HTML file.
 - Keep budgets aligned with `ESLINT_CLEANUP_GUIDE.md` (Tier 4 cap: 200 warnings; errors should trend toward zero).
