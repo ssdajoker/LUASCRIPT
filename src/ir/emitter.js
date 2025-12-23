@@ -25,6 +25,8 @@ class IREmitter {
     this.indentUnit = options.indent || "  ";
     this.options = options;
     this.statementDispatch = this.createStatementDispatch();
+    this.needsAwaitHelper = false;
+    this.needsAsyncGeneratorHelper = false;
   }
 
   createStatementDispatch() {
@@ -48,6 +50,10 @@ class IREmitter {
       throw new Error("Invalid IR module passed to emitter");
     }
 
+    this.needsAwaitHelper = false;
+    this.needsAsyncGeneratorHelper = false;
+    this.computeHelperNeeds(irModule);
+
     const context = {
       nodes: irModule.nodes,
       indentLevel: 0,
@@ -66,7 +72,45 @@ class IREmitter {
       }
     }
 
-    return chunks.join(NEWLINE + NEWLINE);
+    const helpers = this.buildHelperPreamble();
+    const program = chunks.join(NEWLINE + NEWLINE);
+
+    return [...helpers, program].filter(Boolean).join(NEWLINE + NEWLINE);
+  }
+
+  computeHelperNeeds(irModule) {
+    const helperMeta = irModule.module?.metadata?.helpers || {};
+    this.needsAwaitHelper = Boolean(helperMeta.await);
+    this.needsAsyncGeneratorHelper = Boolean(helperMeta.asyncGenerator);
+
+    const nodes = Object.values(irModule.nodes || {});
+    for (const node of nodes) {
+      if (!node || typeof node !== "object") continue;
+
+      if (node.kind === "AwaitExpression" || node.kind === "AsyncFunctionDeclaration") {
+        this.needsAwaitHelper = true;
+      }
+
+      if (node.kind === "ForOfStatement" && node.await) {
+        this.needsAwaitHelper = true;
+      }
+
+      if (node.kind === "GeneratorDeclaration" && node.async) {
+        this.needsAwaitHelper = true;
+        this.needsAsyncGeneratorHelper = true;
+      }
+    }
+  }
+
+  buildHelperPreamble() {
+    const helpers = [];
+    if (this.needsAwaitHelper || this.needsAsyncGeneratorHelper) {
+      helpers.push(this.emitAwaitHelper());
+    }
+    if (this.needsAsyncGeneratorHelper) {
+      helpers.push(this.emitAsyncGeneratorHelper());
+    }
+    return helpers;
   }
 
   emitStatement(node, context) {
@@ -783,6 +827,45 @@ class IREmitter {
       return prop.name === "toString" || prop.name === "substring" || prop.name === "toUpperCase" || prop.name === "toLowerCase";
     }
     return false;
+  }
+
+  emitAwaitHelper() {
+    return [
+      "local function __await_value(v)",
+      "  if type(v) == \"table\" and v.await then",
+      "    return v:await()",
+      "  end",
+      "  if type(v) == \"function\" then",
+      "    return v()",
+      "  end",
+      "  return v",
+      "end",
+    ].join(NEWLINE);
+  }
+
+  emitAsyncGeneratorHelper() {
+    return [
+      "local function __async_generator(co)",
+      "  return {",
+      "    next = function(self, value)",
+      "      if coroutine.status(co) == \"dead\" then",
+      "        return { value = nil, done = true }",
+      "      end",
+      "      local ok, res = coroutine.resume(co, value)",
+      "      if not ok then error(res) end",
+      "      res = __await_value(res)",
+      "      local done = coroutine.status(co) == \"dead\"",
+      "      return { value = res, done = done }",
+      "    end,",
+      "    [\"return\"] = function(self, value)",
+      "      return { value = value, done = true }",
+      "    end,",
+      "    [\"throw\"] = function(self, err)",
+      "      error(err)",
+      "    end",
+      "  }",
+      "end",
+    ].join(NEWLINE);
   }
 
   luaAssignmentOperator(operator) {
