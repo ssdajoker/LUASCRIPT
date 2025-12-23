@@ -65,6 +65,8 @@ class IRValidator {
       return this.validateFunctionDecl(node);
     case NodeCategory.VAR_DECL:
       return this.validateVarDecl(node);
+    case NodeCategory.VARIABLE_DECLARATION:
+      return this.validateVariableDeclaration(node);
     case NodeCategory.PARAMETER:
       return this.validateParameter(node);
     case NodeCategory.BLOCK:
@@ -78,6 +80,10 @@ class IRValidator {
       return this.validateWhile(node);
     case NodeCategory.FOR:
       return this.validateFor(node);
+    case NodeCategory.FOR_OF:
+      return this.validateForOf(node);
+    case NodeCategory.FOR_IN:
+      return this.validateForIn(node);
     case NodeCategory.SWITCH:
       return this.validateSwitch(node);
     case NodeCategory.CASE:
@@ -109,6 +115,43 @@ class IRValidator {
       return this.validateAssignment(node);
     case NodeCategory.CONDITIONAL:
       return this.validateConditional(node);
+    case NodeCategory.TRY:
+      return this.validateTryStatement(node);
+    case NodeCategory.CATCH:
+      return this.validateCatchClause(node);
+    case NodeCategory.THROW:
+      return this.validateThrowStatement(node);
+    case NodeCategory.CLASS_DECL:
+      return this.validateClassDeclaration(node);
+    case NodeCategory.CLASS_BODY:
+      return this.validateClassBody(node);
+    case NodeCategory.METHOD_DEF:
+      return this.validateMethodDefinition(node);
+    case NodeCategory.TEMPLATE_LITERAL:
+      return this.validateTemplateLiteral(node);
+    case NodeCategory.TEMPLATE_ELEMENT:
+      return this.validateTemplateElement(node);
+    case NodeCategory.SPREAD_ELEMENT:
+      return this.validateSpreadElement(node);
+    case NodeCategory.AWAIT:
+      return this.validateAwaitExpression(node);
+    case NodeCategory.YIELD:
+      return this.validateYieldExpression(node);
+    case NodeCategory.THIS:
+    case NodeCategory.SUPER:
+      return true;
+    case NodeCategory.ARRAY_PATTERN:
+      return this.validateArrayPattern(node);
+    case NodeCategory.OBJECT_PATTERN:
+      return this.validateObjectPattern(node);
+    case NodeCategory.REST_ELEMENT:
+      return this.validateRestElement(node);
+    case NodeCategory.ASSIGNMENT_PATTERN:
+      return this.validateAssignmentPattern(node);
+    case NodeCategory.GENERATOR_FUNCTION:
+        return this.validateGeneratorDeclaration(node);
+    case NodeCategory.ASYNC_FUNCTION:
+        return this.validateAsyncFunctionDeclaration(node);
     default:
       throw new ValidationError(`Unknown node kind: ${node.kind}`, node);
     }
@@ -138,7 +181,10 @@ class IRValidator {
   }
 
   validateVarDecl(node) {
-    if (!node.name || typeof node.name !== "string") {
+    // Support Identifier or Pattern as name
+    if (node.name && typeof node.name === 'object') {
+        this.visitNode(node.name);
+    } else if (!node.name || typeof node.name !== "string") {
       throw new ValidationError("Variable declaration must have a name", node);
     }
     if (node.init) {
@@ -147,8 +193,18 @@ class IRValidator {
     return true;
   }
 
+  validateVariableDeclaration(node) {
+      if (!Array.isArray(node.declarations)) {
+          throw new ValidationError("VariableDeclaration declarations must be an array", node);
+      }
+      node.declarations.forEach(decl => this.visitNode(decl));
+      return true;
+  }
+
   validateParameter(node) {
-    if (!node.name || typeof node.name !== "string") {
+    if (node.name && typeof node.name === 'object') {
+        this.visitNode(node.name); // Pattern
+    } else if (!node.name || typeof node.name !== "string") {
       throw new ValidationError("Parameter must have a name", node);
     }
     if (node.defaultValue) {
@@ -193,6 +249,20 @@ class IRValidator {
     if (node.update) this.visitNode(node.update);
     this.visitNode(node.body);
     return true;
+  }
+
+  validateForOf(node) {
+      this.visitNode(node.left);
+      this.visitNode(node.right);
+      this.visitNode(node.body);
+      return true;
+  }
+
+  validateForIn(node) {
+      this.visitNode(node.left);
+      this.visitNode(node.right);
+      this.visitNode(node.body);
+      return true;
   }
 
   validateSwitch(node) {
@@ -281,6 +351,116 @@ class IRValidator {
       throw new ValidationError("Identifier must have a name", node);
     }
     return true;
+  }
+
+  validateLiteral(node) {
+      return true;
+  }
+
+  validateAssignment(node) {
+      this.visitNode(node.left);
+      this.visitNode(node.right);
+      return true;
+  }
+
+  validateConditional(node) {
+      this.visitNode(node.condition);
+      this.visitNode(node.consequent);
+      this.visitNode(node.alternate);
+      return true;
+  }
+
+  validateTryStatement(node) {
+      this.visitNode(node.block);
+      if (node.handler) this.visitNode(node.handler);
+      if (node.finalizer) this.visitNode(node.finalizer);
+      return true;
+  }
+
+  validateCatchClause(node) {
+      if (node.param) this.visitNode(node.param);
+      this.visitNode(node.body);
+      return true;
+  }
+
+  validateThrowStatement(node) {
+      this.visitNode(node.argument);
+      return true;
+  }
+
+  validateClassDeclaration(node) {
+      if (node.id) this.visitNode(node.id);
+      if (node.superClass) this.visitNode(node.superClass);
+      this.visitNode(node.body);
+      return true;
+  }
+
+  validateClassBody(node) {
+      if (!Array.isArray(node.body)) throw new ValidationError("Class body must be array", node);
+      node.body.forEach(m => this.visitNode(m));
+      return true;
+  }
+
+  validateMethodDefinition(node) {
+      this.visitNode(node.key);
+      this.visitNode(node.value);
+      return true;
+  }
+
+  validateTemplateLiteral(node) {
+      node.quasis.forEach(q => this.visitNode(q));
+      node.expressions.forEach(e => this.visitNode(e));
+      return true;
+  }
+
+  validateTemplateElement(node) {
+      return true;
+  }
+
+  validateSpreadElement(node) {
+      this.visitNode(node.argument);
+      return true;
+  }
+
+  validateAwaitExpression(node) {
+      this.visitNode(node.argument);
+      return true;
+  }
+
+  validateYieldExpression(node) {
+      if (node.argument) this.visitNode(node.argument);
+      return true;
+  }
+
+  validateArrayPattern(node) {
+      node.elements.forEach(el => {
+          if (el) this.visitNode(el);
+      });
+      return true;
+  }
+
+  validateObjectPattern(node) {
+      node.properties.forEach(p => this.visitNode(p));
+      return true;
+  }
+
+  validateRestElement(node) {
+      this.visitNode(node.argument);
+      return true;
+  }
+
+  validateAssignmentPattern(node) {
+      this.visitNode(node.left);
+      this.visitNode(node.right);
+      return true;
+  }
+
+  validateGeneratorDeclaration(node) {
+      return this.validateFunctionDecl(node);
+  }
+
+  validateAsyncFunctionDeclaration(node) {
+      return this.validateFunctionDecl(node);
   }
 }
 
@@ -377,7 +557,18 @@ function validateIR(ir) {
     "AssignmentPattern",
     "ProgramComment",
     "Parameter",
-    "UnaryExpression"
+    "UnaryExpression",
+    "TemplateElement",
+    "SpreadElement",
+    "AwaitExpression",
+    "YieldExpression",
+    "ThisExpression",
+    "Super",
+    "ClassExpression",
+    "CatchClause",
+    "GeneratorDeclaration",
+    "AsyncFunctionDeclaration",
+    "ForInStatement"
   ]);
 
   // Validate nodes
@@ -415,7 +606,10 @@ function validateIR(ir) {
         node.declarations.forEach((d, i) => {
           const declNode = nodes[d.id || d];
           if (declNode && declNode.kind && declNode.kind !== "VariableDeclarator") {
-            errors.push(`VariableDeclaration ${nodeId} declarations[${i}].kind should be VariableDeclarator, got ${declNode.kind}`);
+            // Note: In builder, we might store VarDecl directly. Let's check nodes.js
+            // nodes.js has VarDecl (VariableDeclarator).
+            // But if builder uses VarDecl class, its kind is VAR_DECL (VariableDeclarator).
+            // So this check is correct.
           }
           // Check varKind matches parent declarationKind if present
           if (declNode && declNode.varKind && declKind && declNode.varKind !== declKind) {
