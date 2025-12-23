@@ -122,6 +122,9 @@
 - [ ] **Memory Leaks**: Zero memory leaks detected
 - [ ] **Resource Cleanup**: All resources properly released
 
+## RECURRING QUALITY TASKS
+- [ ] **Weekly ESLint Report Archived**: Run `npm exec eslint src/**/*.js --max-warnings 200 --format html --output-file reports/eslint/eslint-weekly-<YYYY-MM-DD>.html` (or `npm run lint:all:report`), then record warning/error counts and the artifact link in `reports/lint-dashboard.md` and summarize latest figures in `PROJECT_STATUS.md`.
+
 ## ACCEPTANCE CRITERIA
 
 ### PHASE 1 ACCEPTANCE
