@@ -28,6 +28,10 @@ MANIFEST
 *.swo
 *~
 
+# Allow shared editor settings
+!.vscode/
+!.vscode/settings.json
+
 # OS
 .DS_Store
 .DS_Store?
@@ -74,7 +78,6 @@ __pycache__/
 *.pyc
 
 # IDE specific
-.vscode/
 .idea/
 *.sublime-*
 

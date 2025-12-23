@@ -26,6 +26,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install system dependencies (Linux)
         if: runner.os == 'Linux'
@@ -81,12 +82,9 @@ jobs:
         run: npm run coverage:report || true
         continue-on-error: true
 
-      - name: Lint IR code (blocking - 0 warnings)
-        run: npx eslint src/ir/**/*.js --max-warnings 0
-        continue-on-error: false
-
-      - name: Lint all code (blocking - must pass)
-        run: npm run lint
+      - name: Run tiered ESLint (HTML reports)
+        shell: bash
+        run: bash scripts/lint_tiers.sh artifacts/lint-reports
         continue-on-error: false
 
       - name: Upload coverage to artifacts
@@ -114,6 +112,16 @@ jobs:
           retention-days: 30
           if-no-files-found: ignore
 
+      - name: Upload lint reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-reports-${{ matrix.os }}-node-${{ matrix.node-version }}
+          path: |
+            artifacts/lint-reports/
+          retention-days: 30
+          if-no-files-found: warn
+
   enhanced-pipeline:
     name: Enhanced Pipeline
     runs-on: ubuntu-latest
@@ -134,6 +142,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install system dependencies (Linux)
         run: |

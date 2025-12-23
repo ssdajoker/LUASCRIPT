@@ -75,6 +75,10 @@ jobs:
           mkdir -p artifacts/lint
           npx eslint src/ir/**/*.js --max-warnings 0 | tee artifacts/lint/ir-lint.log
         continue-on-error: false
+      - name: Run tiered ESLint (HTML reports)
+        id: lint-tiers
+        shell: bash
+        run: bash scripts/lint_tiers.sh artifacts/lint-reports
 
       - name: Upload test artifacts
         if: always()
@@ -88,6 +92,11 @@ jobs:
             artifacts/test/parity-output.log
             artifacts/test/harness_results.json
             artifacts/harness_results.json
+            harness-output.log
+            verify-output.log
+            ir-validation-output.log
+            harness_results.json
+            artifacts/lint-reports/
           retention-days: 30
           if-no-files-found: ignore
 
