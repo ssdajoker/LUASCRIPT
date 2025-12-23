@@ -105,7 +105,122 @@ class IRNode {
   }
 
   static fromJSON(json) {
+    if (json === null || json === undefined) {
+      throw new Error("Invalid IR JSON: expected a non-null object");
+    }
+
+    if (typeof json !== "object") {
+      throw new Error(`Invalid IR JSON: expected an object but received ${typeof json}`);
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(json, "kind")) {
+      throw new Error("Invalid IR JSON: missing 'kind' property");
+    }
+
     // Factory method to reconstruct nodes from JSON
+    switch (json.kind) {
+    case NodeCategory.PROGRAM:
+      return Program.fromJSON(json);
+    case NodeCategory.FUNCTION_DECL:
+      return FunctionDecl.fromJSON(json);
+    case NodeCategory.VAR_DECL:
+      return VarDecl.fromJSON(json);
+    case NodeCategory.VARIABLE_DECLARATION: // Add this case
+      return VariableDeclaration.fromJSON(json);
+    case NodeCategory.PARAMETER:
+      return Parameter.fromJSON(json);
+    case NodeCategory.BLOCK:
+      return Block.fromJSON(json);
+    case NodeCategory.RETURN:
+      return Return.fromJSON(json);
+    case NodeCategory.IF:
+      return If.fromJSON(json);
+    case NodeCategory.WHILE:
+      return While.fromJSON(json);
+    case NodeCategory.FOR:
+      return For.fromJSON(json);
+    case NodeCategory.DO_WHILE:
+      return DoWhile.fromJSON(json);
+    case NodeCategory.SWITCH:
+      return Switch.fromJSON(json);
+    case NodeCategory.CASE:
+      return Case.fromJSON(json);
+    case NodeCategory.BREAK:
+      return Break.fromJSON(json);
+    case NodeCategory.CONTINUE:
+      return Continue.fromJSON(json);
+    case NodeCategory.EXPRESSION_STMT:
+      return ExpressionStmt.fromJSON(json);
+    case NodeCategory.TRY:
+      return TryStatement.fromJSON(json);
+    case NodeCategory.CATCH:
+      return CatchClause.fromJSON(json);
+    case NodeCategory.THROW:
+      return ThrowStatement.fromJSON(json);
+    case NodeCategory.FOR_OF:
+      return ForOfStatement.fromJSON(json);
+    case NodeCategory.FOR_IN:
+      return ForInStatement.fromJSON(json);
+    case NodeCategory.ASYNC_FUNCTION:
+      return AsyncFunctionDeclaration.fromJSON(json);
+    case NodeCategory.AWAIT:
+      return AwaitExpression.fromJSON(json);
+    case NodeCategory.GENERATOR_FUNCTION:
+      return GeneratorDeclaration.fromJSON(json);
+    case NodeCategory.YIELD:
+      return YieldExpression.fromJSON(json);
+    case NodeCategory.CLASS_DECL:
+      return ClassDeclaration.fromJSON(json);
+    case NodeCategory.CLASS_EXPR:
+      return ClassExpression.fromJSON(json);
+    case NodeCategory.METHOD_DEF:
+      return MethodDefinition.fromJSON(json);
+    case NodeCategory.CLASS_BODY:
+      return ClassBody.fromJSON(json);
+    case NodeCategory.BINARY_OP:
+      return BinaryOp.fromJSON(json);
+    case NodeCategory.UNARY_OP:
+      return UnaryOp.fromJSON(json);
+    case NodeCategory.CALL:
+      return Call.fromJSON(json);
+    case NodeCategory.MEMBER:
+      return Member.fromJSON(json);
+    case NodeCategory.ARRAY_LITERAL:
+      return ArrayLiteral.fromJSON(json);
+    case NodeCategory.OBJECT_LITERAL:
+      return ObjectLiteral.fromJSON(json);
+    case NodeCategory.IDENTIFIER:
+      return Identifier.fromJSON(json);
+    case NodeCategory.LITERAL:
+      return Literal.fromJSON(json);
+    case NodeCategory.ASSIGNMENT:
+      return Assignment.fromJSON(json);
+    case NodeCategory.CONDITIONAL:
+      return Conditional.fromJSON(json);
+    case NodeCategory.PROPERTY:
+      return Property.fromJSON(json);
+    case NodeCategory.ARRAY_PATTERN:
+      return ArrayPattern.fromJSON(json);
+    case NodeCategory.OBJECT_PATTERN:
+      return ObjectPattern.fromJSON(json);
+    case NodeCategory.REST_ELEMENT:
+      return RestElement.fromJSON(json);
+    case NodeCategory.ASSIGNMENT_PATTERN:
+      return AssignmentPattern.fromJSON(json);
+    case NodeCategory.TAGGED_TEMPLATE:
+      return TaggedTemplateExpression.fromJSON(json);
+    case NodeCategory.TEMPLATE_LITERAL:
+      return TemplateLiteral.fromJSON(json);
+    case NodeCategory.TEMPLATE_ELEMENT:
+      return TemplateElement.fromJSON(json);
+    case NodeCategory.SPREAD_ELEMENT:
+      return SpreadElement.fromJSON(json);
+    case NodeCategory.SUPER:
+      return Super.fromJSON(json);
+    case NodeCategory.THIS:
+      return ThisExpression.fromJSON(json);
+    default:
+      throw new Error(`No fromJSON handler registered for node kind: ${json.kind}`);
     const handler = fromJsonHandlers && fromJsonHandlers[json && json.kind];
 
     if (!handler) {
