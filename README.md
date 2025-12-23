@@ -29,7 +29,8 @@ LUASCRIPT is a JavaScript-to-Lua transpiler with an IR pipeline, parity tests, a
 
 ## How to use locally
 - Install: npm ci
-- Quick gate: npm run verify (harness + IR validate + parity + determinism)
+- Quick gate (no lint): npm run verify (harness + IR validate + parity + determinism)
+- Pre-commit helpers: npm run format:check and npm run test:smoke (also run automatically via Husky)
 - Full tests: npm test
 - More scripts: see package.json
 
