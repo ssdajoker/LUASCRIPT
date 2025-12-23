@@ -27,7 +27,7 @@ function findWarningsFile(candidates = DEFAULT_CANDIDATES) {
 
 function countWarnings(abs) {
   const text = fs.readFileSync(abs, 'utf8');
-  return text.split(/\r?\n/).filter(l => l.trim().length > 0).length;
+  return text.split(/\r?\n/).filter(l => l.trim().startsWith('not ok')).length;
 }
 
 function parseHeaderBudget(abs) {
