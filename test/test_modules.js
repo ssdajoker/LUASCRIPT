@@ -17,7 +17,12 @@ const {
 } = require('../src/phase2_core_modules');
 
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'luascript-mod-tests-'));
-const testSeed = Number(process.env.LUASCRIPT_TEST_SEED || 1337);
+const defaultTestSeed = 1337;
+const envSeedRaw = process.env.LUASCRIPT_TEST_SEED;
+const testSeed =
+  envSeedRaw !== undefined && !Number.isNaN(parseInt(envSeedRaw, 10))
+    ? parseInt(envSeedRaw, 10)
+    : defaultTestSeed;
 const { reseed: reseedRandom, restore: restoreRandom } = installDeterministicSeed(testSeed);
 
 function writeTemp(fileName, contents) {
