@@ -115,7 +115,8 @@
     "changelog:generate": "node scripts/changelog-generator.js",
     "artifacts:sign": "node scripts/sign-artifacts.js",
     "artifacts:verify": "node scripts/sign-artifacts.js --verify-all",
-    "artifacts:list": "node scripts/sign-artifacts.js --list"
+    "artifacts:list": "node scripts/sign-artifacts.js --list",
+    "clean:artifacts": "node scripts/clean-artifacts.js"
   },
   "keywords": [
     "luascript",

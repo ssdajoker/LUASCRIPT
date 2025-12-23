@@ -231,7 +231,7 @@ Statements:  80%
    - Updated artifact paths
 
 3. **`.gitignore`** (implicitly):
-   - Coverage outputs: `coverage/`, `.nyc_output/`
+   - Coverage outputs: `artifacts/coverage/`, `artifacts/.nyc_output/`
    - Ratchet state: `.coverage-ratchet.json`
 
 ## How It Works

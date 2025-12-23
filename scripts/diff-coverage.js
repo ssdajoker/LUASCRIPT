@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const COVERAGE_FILE = path.join(__dirname, '../coverage/coverage-final.json');
+const COVERAGE_FILE = path.join(__dirname, '../artifacts/coverage/coverage-final.json');
 const DIFF_THRESHOLD = 70; // New code must have at least 70% coverage
 
 function getChangedFiles() {

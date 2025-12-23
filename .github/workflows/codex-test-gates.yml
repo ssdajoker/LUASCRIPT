@@ -40,25 +40,41 @@ jobs:
 
       - name: Run core verification gate
         id: verify
-        run: npm run verify 2>&1 | tee verify-output.log
+        run: |
+          set -o pipefail
+          mkdir -p artifacts/test artifacts/lint
+          npm run verify 2>&1 | tee artifacts/test/verify-output.log
         continue-on-error: true
 
       - name: Run harness tests
         id: harness
         continue-on-error: true
         run: |
-          npm run harness 2>&1 | tee harness-output.log
-          if [ ${PIPESTATUS[0]} -eq 0 ]; then
+          set -o pipefail
+          mkdir -p artifacts/test
+          npm run harness 2>&1 | tee artifacts/test/harness-output.log
+          HARNESS_STATUS=$?
+          if [ ${HARNESS_STATUS} -eq 0 ]; then
             echo "result=PASS" >> $GITHUB_OUTPUT
           else
             echo "result=FAIL" >> $GITHUB_OUTPUT
           fi
           
           # Save results as JSON for artifact upload
-          if [ -f harness_results.json ]; then
-            cat harness_results.json
-          fi
+          for candidate in artifacts/test/harness_results.json artifacts/harness_results.json; do
+            if [ -f "${candidate}" ]; then
+              cat "${candidate}"
+              break
+            fi
+          done
 
+      - name: Lint IR code (blocking)
+        id: lint-ir
+        run: |
+          set -o pipefail
+          mkdir -p artifacts/lint
+          npx eslint src/ir/**/*.js --max-warnings 0 | tee artifacts/lint/ir-lint.log
+        continue-on-error: false
       - name: Run tiered ESLint (HTML reports)
         id: lint-tiers
         shell: bash
@@ -70,6 +86,12 @@ jobs:
         with:
           name: codex-test-results
           path: |
+            artifacts/test/harness-output.log
+            artifacts/test/verify-output.log
+            artifacts/lint/ir-lint.log
+            artifacts/test/parity-output.log
+            artifacts/test/harness_results.json
+            artifacts/harness_results.json
             harness-output.log
             verify-output.log
             ir-validation-output.log
@@ -82,7 +104,9 @@ jobs:
         id: parity
         continue-on-error: true
         run: |
-          npm run test:parity 2>&1 | tee parity-output.log
+          set -o pipefail
+          mkdir -p artifacts/test
+          npm run test:parity 2>&1 | tee artifacts/test/parity-output.log
           if [ ${PIPESTATUS[0]} -eq 0 ]; then
             echo "result=PASS" >> $GITHUB_OUTPUT
           else
