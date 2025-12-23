@@ -466,7 +466,9 @@ class EnhancedLowerer {
             const expressionBody = this.lowerExpression(node.body);
             body = this.builder.block([this.builder.returnStmt(expressionBody)]);
         } else {
-            body = this.lowerBlockStatement(node.body);
+            throw new Error(
+                `Invalid function node in lowerFunctionExpression: expected BlockStatement body for non-arrow function, got "${node.body && node.body.type}"`
+            );
         }
 
         this.popScope();
