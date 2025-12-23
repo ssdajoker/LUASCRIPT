@@ -403,7 +403,7 @@ function validateOperators(nodeId, node, operatorRules) {
 }
 
 function validateSpan(nodeId, node, errors) {
-  if (node.span == null) {
+  if (node.span === null || node.span === undefined) {
     return;
   }
 
@@ -421,7 +421,7 @@ function validateSpan(nodeId, node, errors) {
 }
 
 function validateNodeMetadata(nodeId, node, nodes, errors) {
-  if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg != null && typeof node.meta.cfg !== "object") {
+  if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg !== null && node.meta.cfg !== undefined && typeof node.meta.cfg !== "object") {
     errors.push(`Node ${nodeId} FunctionDeclaration meta.cfg must be an object when present`);
   }
 
