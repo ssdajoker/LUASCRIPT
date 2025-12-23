@@ -116,6 +116,12 @@ Following conventional commits:
 - **Coverage/performance**: Follow the baselines and thresholds recorded in `PROJECT_STATUS.md` (coverage floor and ±15% performance regression gate). Update the status file if gates change.
 - **Manual/UX**: Exercise the web IDE when UI-facing changes land and note results in PR descriptions.
 
+### Quick-start workflow (non-lint)
+- Install dependencies: `npm ci`
+- Run the fast formatting gate: `npm run -s format:check`
+- Run the fast smoke suite: `npm run -s test:smoke`
+- Husky pre-commit runs the same format/smoke checks automatically; bypass with `SKIP_FORMAT=1` or `SKIP_TESTS=1` if needed.
+
 ### Phase alignment
 - Track progress against `CHECKLIST_PHASES.md`; if a claim differs from the canonical snapshot in `PROJECT_STATUS.md`, update the snapshot first, then adjust docs/PR context.
 
