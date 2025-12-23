@@ -69,6 +69,10 @@ class IRBuilder {
     return this._storeNode(new nodes.FunctionDecl(name, parameters, body, returnType, options));
   }
 
+  classDeclaration(id, superClass, body, options = {}) {
+    return this._storeNode(new nodes.ClassDeclaration(id, superClass, body, options));
+  }
+
   varDecl(name, init = null, type = null, options = {}) {
     return this._storeNode(new nodes.VarDecl(name, init, type, options));
   }
@@ -79,6 +83,10 @@ class IRBuilder {
 
   parameter(name, type = null, defaultValue = null, options = {}) {
     return this._storeNode(new nodes.Parameter(name, type, defaultValue, options));
+  }
+
+  generatorDeclaration(id, params, body, options = {}) {
+    return this._storeNode(new nodes.GeneratorDeclaration(id, params, body, options));
   }
 
   // ========== STATEMENTS ==========
@@ -103,6 +111,14 @@ class IRBuilder {
     return this._storeNode(new nodes.For(init, condition, update, body, options));
   }
 
+  forOfStatement(left, right, body, options = {}) {
+    return this._storeNode(new nodes.ForOfStatement(left, right, body, options));
+  }
+
+  forInStatement(left, right, body, options = {}) {
+    return this._storeNode(new nodes.ForInStatement(left, right, body, options));
+  }
+
   doWhileStmt(body, condition, options = {}) {
     return this._storeNode(new nodes.DoWhile(body, condition, options));
   }
@@ -115,8 +131,16 @@ class IRBuilder {
     return this._storeNode(new nodes.TryStatement(block, handler, finalizer, options));
   }
 
+  throwStatement(argument, options = {}) {
+    return this._storeNode(new nodes.ThrowStatement(argument, options));
+  }
+
   caseStmt(test, consequent, options = {}) {
     return this._storeNode(new nodes.Case(test, consequent, options));
+  }
+
+  catchClause(param, body, options = {}) {
+    return this._storeNode(new nodes.CatchClause(param, body, options));
   }
 
   breakStmt(options = {}) {
@@ -193,6 +217,38 @@ class IRBuilder {
 
   conditional(condition, consequent, alternate, options = {}) {
     return this._storeNode(new nodes.Conditional(condition, consequent, alternate, options));
+  }
+
+  thisExpression(options = {}) {
+    return this._storeNode(new nodes.ThisExpression(options));
+  }
+
+  superExpression(options = {}) {
+    return this._storeNode(new nodes.Super(options));
+  }
+
+  templateLiteral(quasis, expressions, options = {}) {
+    return this._storeNode(new nodes.TemplateLiteral(quasis, expressions, options));
+  }
+
+  templateElement(value, tail, options = {}) {
+    return this._storeNode(new nodes.TemplateElement(value, tail, options));
+  }
+
+  awaitExpression(argument, options = {}) {
+    return this._storeNode(new nodes.AwaitExpression(argument, options));
+  }
+
+  yieldExpression(argument, delegate = false, options = {}) {
+    return this._storeNode(new nodes.YieldExpression(argument, delegate, options));
+  }
+
+  classExpression(id, superClass, body, options = {}) {
+    return this._storeNode(new nodes.ClassExpression(id, superClass, body, options));
+  }
+
+  spreadElement(argument, options = {}) {
+    return this._storeNode(new nodes.SpreadElement(argument, options));
   }
 
   // ========== HELPER METHODS ==========
@@ -433,6 +489,14 @@ class IRBuilder {
     return this._storeNode(new nodes.AssignmentPattern(left, right, options));
   }
 
+  classBody(methods, options = {}) {
+    return this._storeNode(new nodes.ClassBody(methods, options));
+  }
+
+  methodDefinition(key, value, kind, isStatic, options = {}) {
+    return this._storeNode(new nodes.MethodDefinition(key, value, kind, isStatic, options));
+  }
+
   registerControlFlowGraph(cfgId, cfg) {
     // Store CFG in module metadata
     if (!this.module.metadata.controlFlowGraphs) {
@@ -449,4 +513,3 @@ module.exports = {
   IRBuilder,
   builder
 };
-

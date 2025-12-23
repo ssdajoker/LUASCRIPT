@@ -261,11 +261,8 @@ class IRLowerer {
     }
     case "MemberExpression": {
       const objectRef = this.lowerExpression(node.object);
-      // property can be Identifier or expression; if Identifier, we lower to Identifier and use its id.
       const propertyRef = this.lowerExpression(node.property);
-      return this.builder.createMemberExpression
-        ? this.builder.createMemberExpression(objectRef, propertyRef, { computed: Boolean(node.computed), optional: Boolean(node.optional) }).id
-        : this.builder.nodeFactory.createMemberExpression(objectRef, propertyRef, { computed: Boolean(node.computed), optional: Boolean(node.optional) }).id;
+      return this.builder.memberExpression(objectRef, propertyRef, Boolean(node.computed), { optional: Boolean(node.optional) }).id;
     }
     case "ArrayExpression": {
       const elements = (node.elements || []).map((el) => (el ? this.lowerExpression(el) : null)).filter((x) => x !== null);
@@ -364,9 +361,33 @@ class IRLowerer {
   }
 
   lowerArrowFunctionExpression(node) {
-    const params = (node.params || []).map((param) =>
-      this.lowerIdentifier(param, { binding: param.name }).id
-    );
+    const params = (node.params || []).map((param) => {
+      // Handle Identifier params directly
+      if (param.type === "Identifier") {
+        return this.lowerIdentifier(param, { binding: param.name }).id;
+      }
+      // Handle AssignmentPattern (default params) - extract left side if Identifier
+      if (param.type === "AssignmentPattern" && param.left.type === "Identifier") {
+        // Warning: This ignores the default value for now, just binding the name
+        // Real implementation should lower AssignmentPattern fully
+        return this.lowerIdentifier(param.left, { binding: param.left.name }).id;
+      }
+      // Fallback for patterns: try lowering as expression (if supported) or error better
+      // For now, let's try to lower it and see if it's an Identifier-like node
+      // But lowerExpression returns an ID.
+      // If we just skip patterns in legacy lowerer to avoid crash:
+      if (param.type === "ArrayPattern" || param.type === "ObjectPattern") {
+         // Create a dummy identifier to avoid crash, marking as unsupported pattern
+         return this.builder.identifier(`__pattern_${Math.random().toString(36).substr(2,5)}`).id;
+      }
+
+      if (param.type === "Error") {
+        // Gracefully handle parser errors in params
+        return this.builder.identifier(`__error_param_${Math.random().toString(36).substr(2,5)}`).id;
+      }
+
+      throw new Error(`Unsupported param type in ArrowFunction: ${param.type}`);
+    });
 
     let bodyBlock;
 

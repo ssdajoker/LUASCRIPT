@@ -6,11 +6,11 @@
  */
 
 const nodes = require("./nodes");
-const { IRBuilder } = require("./builder");
+const { builder } = require("./builder");
 
 class EnhancedLowerer {
-  constructor(builder = null) {
-    this.builder = builder || new IRBuilder();
+  constructor(irBuilder = null) {
+    this.builder = irBuilder || builder;
     this.scopeStack = [{ bindings: new Set(), parent: null }];
     this.tempVarCounter = 0;
   }
@@ -208,7 +208,7 @@ class EnhancedLowerer {
     const superClass = node.superClass ? this.lowerExpression(node.superClass) : null;
     const body = this.lowerClassBody(node.body);
 
-    return new nodes.ClassDeclaration(
+    return this.builder.classDeclaration(
       this.lowerExpression(node.id),
       superClass,
       body
@@ -217,13 +217,13 @@ class EnhancedLowerer {
 
   lowerClassBody(node) {
     const methods = (node.body || []).map(method => this.lowerMethodDefinition(method));
-    return new nodes.ClassBody(methods);
+    return this.builder.classBody(methods);
   }
 
   lowerMethodDefinition(node) {
     const key = this.lowerExpression(node.key);
     const value = this.lowerExpression(node.value);
-    return new nodes.MethodDefinition(key, value, node.kind, node.static);
+    return this.builder.methodDefinition(key, value, node.kind, node.static);
   }
 
   lowerBlockStatement(node) {
@@ -275,7 +275,7 @@ class EnhancedLowerer {
     const body = this.lowerBlockStatement(node.body);
     this.popScope();
 
-    return new nodes.ForOfStatement(left, right, body, { await: Boolean(node.await) });
+    return this.builder.forOfStatement(left, right, body, { await: Boolean(node.await) });
   }
 
   lowerForInStatement(node) {
@@ -287,7 +287,7 @@ class EnhancedLowerer {
     const body = this.lowerBlockStatement(node.body);
     this.popScope();
 
-    return new nodes.ForInStatement(left, right, body);
+    return this.builder.forInStatement(left, right, body);
   }
 
   lowerDoWhileStatement(node) {
@@ -301,7 +301,7 @@ class EnhancedLowerer {
     const handler = node.handler ? this.lowerCatchClause(node.handler) : null;
     const finalizer = node.finalizer ? this.lowerBlockStatement(node.finalizer) : null;
 
-    return new nodes.TryStatement(block, handler, finalizer);
+    return this.builder.tryStatement(block, handler, finalizer);
   }
 
   lowerCatchClause(node) {
@@ -311,11 +311,11 @@ class EnhancedLowerer {
     const body = this.lowerBlockStatement(node.body);
     this.popScope();
 
-    return new nodes.CatchClause(param, body);
+    return this.builder.catchClause(param, body);
   }
 
   lowerThrowStatement(node) {
-    return new nodes.ThrowStatement(this.lowerExpression(node.argument));
+    return this.builder.throwStatement(this.lowerExpression(node.argument));
   }
 
   lowerSwitchStatement(node) {
@@ -370,9 +370,9 @@ class EnhancedLowerer {
     case "YieldExpression":
       return this.lowerYieldExpression(node);
     case "ThisExpression":
-      return new nodes.ThisExpression();
+      return this.builder.thisExpression();
     case "Super":
-      return new nodes.Super();
+      return this.builder.superExpression();
     case "ClassExpression":
       return this.lowerClassExpression(node);
     case "SpreadElement":
@@ -485,17 +485,30 @@ class EnhancedLowerer {
   }
 
   lowerTemplateLiteral(node) {
-    const quasis = (node.quasis || []).map(q => new nodes.TemplateElement(
+    const quasis = (node.quasis || []).map(q => this.builder.templateElement(
       { raw: q.value.raw, cooked: q.value.cooked },
       q.tail
     ));
+    // Builder doesn't have templateElement yet, need to add it or fake it.
+    // Actually, IR usually handles template elements as part of TemplateLiteral node.
+    // Let's check builder.
+    // I added templateLiteral to builder, but it expects quasis and expressions.
+    // quasis in ESTree are TemplateElement nodes.
+    // I need a builder for TemplateElement or just create the object structure expected by IR.
+    // Let's create a simple object for now if builder doesn't support it fully.
+    // Or add templateElement to builder.
+
+    // For now, let's assume builder.templateLiteral handles the array of quasis.
+    // But wait, the previous code did `new nodes.TemplateElement`.
+    // I should add `templateElement` to builder or just construct the object.
+
     const expressions = (node.expressions || []).map(expr => this.lowerExpression(expr));
-    return new nodes.TemplateLiteral(quasis, expressions);
+    return this.builder.templateLiteral(quasis, expressions);
   }
 
   lowerAwaitExpression(node) {
     const argument = this.lowerExpression(node.argument);
-    return new nodes.AwaitExpression(argument);
+    return this.builder.awaitExpression(argument);
   }
 
   lowerGeneratorDeclaration(node) {
@@ -507,7 +520,7 @@ class EnhancedLowerer {
     const body = this.lowerBlockStatement(node.body);
     this.popScope();
 
-    return new nodes.GeneratorDeclaration(
+    return this.builder.generatorDeclaration(
       this.lowerExpression(node.id),
       params,
       body,
@@ -518,13 +531,13 @@ class EnhancedLowerer {
   lowerYieldExpression(node) {
     const argument = node.argument ? this.lowerExpression(node.argument) : null;
     const delegate = node.delegate || false; // true for yield*
-    return new nodes.YieldExpression(argument, delegate);
+    return this.builder.yieldExpression(argument, delegate);
   }
 
   lowerClassExpression(node) {
     const superClass = node.superClass ? this.lowerExpression(node.superClass) : null;
     const body = this.lowerClassBody(node.body);
-    return new nodes.ClassExpression(
+    return this.builder.classExpression(
       node.id ? this.lowerExpression(node.id) : null,
       superClass,
       body
@@ -533,7 +546,7 @@ class EnhancedLowerer {
 
   lowerSpreadElement(node) {
     const argument = this.lowerExpression(node.argument);
-    return new nodes.SpreadElement(argument);
+    return this.builder.spreadElement(argument);
   }
 
   lowerArrayPattern(node) {
