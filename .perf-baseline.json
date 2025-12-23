@@ -1,31 +1,46 @@
 {
-  "timestamp": "2025-12-21T02:22:04.969Z",
-  "commit": "4bfc8fe9fd5050702d2fcc4c108790bcff70aa0d",
+  "timestamp": "2025-12-23T18:15:50.987Z",
+  "commit": "baa5f3ddff2f6c992d3b719ba4cab71c59337c88",
   "benchmarks": {
     "simple-assignment": {
-      "avg": 0.018,
-      "median": 0.015,
-      "p95": 0.046
+      "avg": 0.04,
+      "median": 0.013,
+      "p95": 0.087
     },
     "function-call": {
-      "avg": 0.047,
-      "median": 0.034,
-      "p95": 0.137
+      "avg": 0.011,
+      "median": 0.01,
+      "p95": 0.017
     },
     "string-concat": {
-      "avg": 0.013,
-      "median": 0.011,
-      "p95": 0.026
+      "avg": 0.01,
+      "median": 0.01,
+      "p95": 0.015
     },
     "array-literal": {
-      "avg": 0.015,
-      "median": 0.012,
-      "p95": 0.033
+      "avg": 0.011,
+      "median": 0.01,
+      "p95": 0.014
     },
     "object-literal": {
-      "avg": 0.016,
-      "median": 0.011,
-      "p95": 0.042
+      "avg": 0.022,
+      "median": 0.014,
+      "p95": 0.067
+    },
+    "if-else": {
+      "avg": 0.014,
+      "median": 0.014,
+      "p95": 0.02
+    },
+    "while-loop": {
+      "avg": 0.014,
+      "median": 0.013,
+      "p95": 0.021
+    },
+    "for-loop": {
+      "avg": 0.012,
+      "median": 0.013,
+      "p95": 0.014
     }
   }
 }
