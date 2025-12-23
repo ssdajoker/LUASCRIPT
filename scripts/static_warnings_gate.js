@@ -56,6 +56,15 @@ function resolveBudget(rel, count, budgetOverride, text) {
   return count;
 }
 
+function reportFailure(message, enforce) {
+  if (enforce) {
+    console.error(`❌ ${message}`);
+    process.exit(1);
+  }
+
+  console.warn(`⚠️  ${message}`);
+}
+
 function main() {
   const candidates = process.env.WARN_FILE ? [process.env.WARN_FILE] : DEFAULT_CANDIDATES;
   const enforce = process.env.ENFORCE_WARN_BUDGET !== '0';
@@ -63,11 +72,7 @@ function main() {
 
   if (!found) {
     const message = 'No static warnings snapshot found; enforcement requires a snapshot.';
-    if (enforce) {
-      console.error(`❌ ${message}`);
-      process.exit(1);
-    }
-    console.warn(`⚠️  ${message}`);
+    reportFailure(message, enforce);
     return;
   }
 
@@ -79,11 +84,7 @@ function main() {
   if (count > budget) {
     const overage = count - budget;
     const message = `Static warnings exceed budget by ${overage} (count=${count}, budget=${budget})`;
-    if (enforce) {
-      console.error(`❌ ${message}`);
-      process.exit(1);
-    }
-    console.warn(`⚠️  ${message}`);
+    reportFailure(message, enforce);
     return;
   }
 
