@@ -146,6 +146,7 @@ class EnhancedEmitter {
 
         if (node.async) {
             return this.emitAsyncFunctionDeclaration({ ...node, name });
+            return this.emitAsyncFunctionDeclaration(node);
         }
 
         return `${this.indent()}local function ${name}(${params})\n${body}\n${this.indent()}end`;
@@ -461,6 +462,10 @@ class EnhancedEmitter {
         case "FunctionDeclaration":
             // Function declarations can appear as expressions when lowered from arrow functions
             return this.emitFunctionExpression(node);
+            if (node.expression) {
+                return this.emitFunctionExpression(node);
+            }
+            return "";
         default:
             return "";
         }
