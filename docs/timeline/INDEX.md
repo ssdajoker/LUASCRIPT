@@ -1,7 +1,7 @@
 ﻿# Timeline / Journey
 **Status**: ACTIVE
 **Phase**: Doc alignment + CI/quality prep (see PROJECT_STATUS.md)
-**Last updated**: 2025-01-XX
+**Last updated**: 2025-01-XX (claims must match `PROJECT_STATUS.md`)
 
 Phases and milestones from early foundation to current automation. Link deprecated plans to current equivalents.
 
@@ -9,15 +9,15 @@ Phases and milestones from early foundation to current automation. Link deprecat
 
 ### Phase 1: Baseline Pipeline (Operational with gaps)
 - **Goal**: JavaScript → IR → Lua transpilation working
-- **Status**: Core pipeline operational and passing harness/parity smoke, but Phase1 parser lacks pattern/destructuring support (handled only in enhanced pipeline)
-- **Completion**: Core path running; pattern gap remains open
-- **Docs**: [PROJECT_STATUS.md](../../PROJECT_STATUS.md)
+- **Status**: Core pipeline operational and passing harness/parity smoke; Phase1 parser lacks pattern/destructuring support (handled only in enhanced pipeline).
+- **Checklist delta**: Items in `CHECKLIST_PHASES.md` remain open for pattern/destructuring coverage and runtime validation.
+- **Docs**: [PROJECT_STATUS.md](../../PROJECT_STATUS.md), [CHECKLIST_PHASES.md](../../CHECKLIST_PHASES.md)
 
 ### Phase 2: Static Warnings & Lint Gates (In progress)
 - **Goal**: Reduce static warnings and enforce lint/format gates
-- **Status**: Backlog tracked in `static_warnings*.txt`; lint/format is not yet CI-blocking
-- **Next**: Make lint/format enforcement part of CI once warning burn-down is complete
-- **Docs**: [PROJECT_STATUS.md](../../PROJECT_STATUS.md)
+- **Status**: Backlog tracked in `static_warnings*.txt`; lint/format is not yet CI-blocking.
+- **Checklist delta**: `CHECKLIST_PHASES.md` static analysis checkbox is still open; next steps are to burn down warnings and wire blocking lint/format gates per `PROJECT_STATUS.md`.
+- **Docs**: [PROJECT_STATUS.md](../../PROJECT_STATUS.md), [CHECKLIST_PHASES.md](../../CHECKLIST_PHASES.md)
 
 ### Phase 3: Doc Alignment + Pipeline Hardening (Current focus)
 - **Goal**: Align all docs to PROJECT_STATUS and prepare CI/quality gates for enhanced pipeline parity
@@ -27,7 +27,8 @@ Phases and milestones from early foundation to current automation. Link deprecat
   - [ ] Consolidate IR builder patterns and determinism hooks
   - [ ] Implement documented feature gaps with harness/parity coverage
   - [ ] Harden CI with determinism/fuzz/parity/coverage gates
-- **Docs**: [PROJECT_STATUS.md](../../PROJECT_STATUS.md), [PHASE3_EXECUTION_PLAN.md](../../PHASE3_EXECUTION_PLAN.md)
+- **Checklist delta**: Cross-check Phase 3 boxes in `CHECKLIST_PHASES.md` against the `PROJECT_STATUS.md` Next Steps list before closing tasks.
+- **Docs**: [PROJECT_STATUS.md](../../PROJECT_STATUS.md), [PHASE3_EXECUTION_PLAN.md](../../PHASE3_EXECUTION_PLAN.md), [CHECKLIST_PHASES.md](../../CHECKLIST_PHASES.md)
 
 ### Phase 4+: Feature Implementation & Roadmap
 - **Planned**: Finish feature gaps from enhanced roadmap (array/control-flow/function expression edges) and extend coverage/performance gates
