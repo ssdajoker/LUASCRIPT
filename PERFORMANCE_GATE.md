@@ -17,6 +17,9 @@ Five core transpilation patterns are measured:
 3. **string-concat**: `"hello" .. "world"`
 4. **array-literal**: `{1, 2, 3, 4, 5}`
 5. **object-literal**: `{a = 1, b = 2, c = 3}`
+6. **if-else**: `if (true) { let x = 1; } else { let x = 2; }`
+7. **while-loop**: `let i = 0; while (i < 10) { i++; }`
+8. **for-loop**: `for (let i = 0; i < 10; i++) { }`
 
 Each benchmark:
 - Runs 5 warm-up iterations (not measured)

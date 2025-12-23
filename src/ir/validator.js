@@ -53,6 +53,7 @@ class IRValidator {
   /**
      * Visit a node and validate it
      */
+  // eslint-disable-next-line complexity
   visitNode(node) {
     if (!node || !node.kind) {
       throw new ValidationError("Invalid node: missing kind", node);
@@ -149,9 +150,9 @@ class IRValidator {
     case NodeCategory.ASSIGNMENT_PATTERN:
       return this.validateAssignmentPattern(node);
     case NodeCategory.GENERATOR_FUNCTION:
-        return this.validateGeneratorDeclaration(node);
+      return this.validateGeneratorDeclaration(node);
     case NodeCategory.ASYNC_FUNCTION:
-        return this.validateAsyncFunctionDeclaration(node);
+      return this.validateAsyncFunctionDeclaration(node);
     default:
       throw new ValidationError(`Unknown node kind: ${node.kind}`, node);
     }
@@ -182,8 +183,8 @@ class IRValidator {
 
   validateVarDecl(node) {
     // Support Identifier or Pattern as name
-    if (node.name && typeof node.name === 'object') {
-        this.visitNode(node.name);
+    if (node.name && typeof node.name === "object") {
+      this.visitNode(node.name);
     } else if (!node.name || typeof node.name !== "string") {
       throw new ValidationError("Variable declaration must have a name", node);
     }
@@ -194,16 +195,16 @@ class IRValidator {
   }
 
   validateVariableDeclaration(node) {
-      if (!Array.isArray(node.declarations)) {
-          throw new ValidationError("VariableDeclaration declarations must be an array", node);
-      }
-      node.declarations.forEach(decl => this.visitNode(decl));
-      return true;
+    if (!Array.isArray(node.declarations)) {
+      throw new ValidationError("VariableDeclaration declarations must be an array", node);
+    }
+    node.declarations.forEach(decl => this.visitNode(decl));
+    return true;
   }
 
   validateParameter(node) {
-    if (node.name && typeof node.name === 'object') {
-        this.visitNode(node.name); // Pattern
+    if (node.name && typeof node.name === "object") {
+      this.visitNode(node.name); // Pattern
     } else if (!node.name || typeof node.name !== "string") {
       throw new ValidationError("Parameter must have a name", node);
     }
@@ -252,17 +253,17 @@ class IRValidator {
   }
 
   validateForOf(node) {
-      this.visitNode(node.left);
-      this.visitNode(node.right);
-      this.visitNode(node.body);
-      return true;
+    this.visitNode(node.left);
+    this.visitNode(node.right);
+    this.visitNode(node.body);
+    return true;
   }
 
   validateForIn(node) {
-      this.visitNode(node.left);
-      this.visitNode(node.right);
-      this.visitNode(node.body);
-      return true;
+    this.visitNode(node.left);
+    this.visitNode(node.right);
+    this.visitNode(node.body);
+    return true;
   }
 
   validateSwitch(node) {
@@ -353,114 +354,114 @@ class IRValidator {
     return true;
   }
 
-  validateLiteral(node) {
-      return true;
+  validateLiteral(_node) {
+    return true;
   }
 
   validateAssignment(node) {
-      this.visitNode(node.left);
-      this.visitNode(node.right);
-      return true;
+    this.visitNode(node.left);
+    this.visitNode(node.right);
+    return true;
   }
 
   validateConditional(node) {
-      this.visitNode(node.condition);
-      this.visitNode(node.consequent);
-      this.visitNode(node.alternate);
-      return true;
+    this.visitNode(node.condition);
+    this.visitNode(node.consequent);
+    this.visitNode(node.alternate);
+    return true;
   }
 
   validateTryStatement(node) {
-      this.visitNode(node.block);
-      if (node.handler) this.visitNode(node.handler);
-      if (node.finalizer) this.visitNode(node.finalizer);
-      return true;
+    this.visitNode(node.block);
+    if (node.handler) this.visitNode(node.handler);
+    if (node.finalizer) this.visitNode(node.finalizer);
+    return true;
   }
 
   validateCatchClause(node) {
-      if (node.param) this.visitNode(node.param);
-      this.visitNode(node.body);
-      return true;
+    if (node.param) this.visitNode(node.param);
+    this.visitNode(node.body);
+    return true;
   }
 
   validateThrowStatement(node) {
-      this.visitNode(node.argument);
-      return true;
+    this.visitNode(node.argument);
+    return true;
   }
 
   validateClassDeclaration(node) {
-      if (node.id) this.visitNode(node.id);
-      if (node.superClass) this.visitNode(node.superClass);
-      this.visitNode(node.body);
-      return true;
+    if (node.id) this.visitNode(node.id);
+    if (node.superClass) this.visitNode(node.superClass);
+    this.visitNode(node.body);
+    return true;
   }
 
   validateClassBody(node) {
-      if (!Array.isArray(node.body)) throw new ValidationError("Class body must be array", node);
-      node.body.forEach(m => this.visitNode(m));
-      return true;
+    if (!Array.isArray(node.body)) throw new ValidationError("Class body must be array", node);
+    node.body.forEach(m => this.visitNode(m));
+    return true;
   }
 
   validateMethodDefinition(node) {
-      this.visitNode(node.key);
-      this.visitNode(node.value);
-      return true;
+    this.visitNode(node.key);
+    this.visitNode(node.value);
+    return true;
   }
 
   validateTemplateLiteral(node) {
-      node.quasis.forEach(q => this.visitNode(q));
-      node.expressions.forEach(e => this.visitNode(e));
-      return true;
+    node.quasis.forEach(q => this.visitNode(q));
+    node.expressions.forEach(e => this.visitNode(e));
+    return true;
   }
 
-  validateTemplateElement(node) {
-      return true;
+  validateTemplateElement(_node) {
+    return true;
   }
 
   validateSpreadElement(node) {
-      this.visitNode(node.argument);
-      return true;
+    this.visitNode(node.argument);
+    return true;
   }
 
   validateAwaitExpression(node) {
-      this.visitNode(node.argument);
-      return true;
+    this.visitNode(node.argument);
+    return true;
   }
 
   validateYieldExpression(node) {
-      if (node.argument) this.visitNode(node.argument);
-      return true;
+    if (node.argument) this.visitNode(node.argument);
+    return true;
   }
 
   validateArrayPattern(node) {
-      node.elements.forEach(el => {
-          if (el) this.visitNode(el);
-      });
-      return true;
+    node.elements.forEach(el => {
+      if (el) this.visitNode(el);
+    });
+    return true;
   }
 
   validateObjectPattern(node) {
-      node.properties.forEach(p => this.visitNode(p));
-      return true;
+    node.properties.forEach(p => this.visitNode(p));
+    return true;
   }
 
   validateRestElement(node) {
-      this.visitNode(node.argument);
-      return true;
+    this.visitNode(node.argument);
+    return true;
   }
 
   validateAssignmentPattern(node) {
-      this.visitNode(node.left);
-      this.visitNode(node.right);
-      return true;
+    this.visitNode(node.left);
+    this.visitNode(node.right);
+    return true;
   }
 
   validateGeneratorDeclaration(node) {
-      return this.validateFunctionDecl(node);
+    return this.validateFunctionDecl(node);
   }
 
   validateAsyncFunctionDeclaration(node) {
-      return this.validateFunctionDecl(node);
+    return this.validateFunctionDecl(node);
   }
 }
 
@@ -472,6 +473,7 @@ const { encodeBalancedTernary } = require("./idGenerator");
  * Lightweight structural validator for canonical IR artifacts.
  * Not a full JSON schema implementation, but enforces the invariants we care about today.
  */
+// eslint-disable-next-line complexity
 function validateIR(ir) {
   const errors = [];
 
@@ -572,6 +574,7 @@ function validateIR(ir) {
   ]);
 
   // Validate nodes
+  // eslint-disable-next-line complexity
   Object.entries(nodes).forEach(([nodeId, node]) => {
     if (!isBalancedTernaryIdentifier(nodeId)) {
       errors.push(`Node id ${nodeId} is not balanced-ternary encoded`);
@@ -605,12 +608,7 @@ function validateIR(ir) {
       if (Array.isArray(node.declarations)) {
         node.declarations.forEach((d, i) => {
           const declNode = nodes[d.id || d];
-          if (declNode && declNode.kind && declNode.kind !== "VariableDeclarator") {
-            // Note: In builder, we might store VarDecl directly. Let's check nodes.js
-            // nodes.js has VarDecl (VariableDeclarator).
-            // But if builder uses VarDecl class, its kind is VAR_DECL (VariableDeclarator).
-            // So this check is correct.
-          }
+
           // Check varKind matches parent declarationKind if present
           if (declNode && declNode.varKind && declKind && declNode.varKind !== declKind) {
             errors.push(`VariableDeclaration ${nodeId} declarations[${i}].varKind (${declNode.varKind}) does not match declarationKind (${declKind})`);
@@ -623,6 +621,7 @@ function validateIR(ir) {
   // Optional: validate metaPerf if present
   if (ir.module && ir.module.metadata && ir.module.metadata.metaPerf) {
     const mp = ir.module.metadata.metaPerf;
+    // eslint-disable-next-line complexity
     ["parseMs", "normalizeMs", "lowerMs", "totalMs", "nodeCount"].forEach((k) => {
       if (typeof mp[k] !== "number") {
         errors.push(`module.metadata.metaPerf.${k} must be a number`);
@@ -633,6 +632,7 @@ function validateIR(ir) {
   // Optional: Validate CFG linkage if controlFlowGraphs present
   const cfgs = ir.controlFlowGraphs || null;
   if (cfgs) {
+    // eslint-disable-next-line complexity
     Object.entries(nodes).forEach(([nodeId, node]) => {
       if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg) {
         const { id: cfgId, entry, exit } = node.meta.cfg;

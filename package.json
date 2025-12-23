@@ -80,7 +80,7 @@
     "lint": "npm run refactor:lint",
     "refactor:phase3": "cross-env LUASCRIPT_USE_ENHANCED_IR=1 node tests/parity/run_phase3.js",
     "refactor:validate": "node -e \"const {ASTValidator} = require('./src/validation/ast-validator'); const {IRValidator} = require('./src/validation/ir-validator'); console.log('✅ Validators loaded');\"",
-    "refactor:lint": "eslint src/**/*.js --max-warnings 200",
+    "refactor:lint": "eslint src/**/*.js --max-warnings 0",
     "refactor:fuzz": "node tests/fuzz/run-fuzzer.js",
     "refactor:all": "npm run refactor:validate && npm run refactor:lint && npm run refactor:phase3",
     "ci:gates": "node scripts/ci_gates.js",
