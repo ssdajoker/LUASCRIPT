@@ -1,4 +1,5 @@
 # 🚀 LUASCRIPT PROJECT - FINAL STATUS UPDATE
+> **Legacy/archival**: Retained for historical reference; defer to [PROJECT_STATUS.md](PROJECT_STATUS.md) for current status and gaps.
 ## The Mathematical Programming Revolution is Complete
 
 **Date**: Monday, September 29, 2025  

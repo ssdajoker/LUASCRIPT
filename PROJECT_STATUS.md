@@ -28,7 +28,7 @@ Source of truth for project health, test posture, and feature gaps. Link back fr
 - CI/permissions: review `GITHUB_INTEGRATION_STATUS.md` and `.github/workflows/` for current gating; determinism/fuzz gates are not enforced yet.
 
 ## Next Steps (priority-ordered)
-1) Align docs to this canonical status; prune or annotate outdated claims in README and related status PDFs/MDs.  
+1) Align docs to this canonical status; prune or annotate outdated claims in README and related status PDFs/MDs (doc alignment updated here—mark complete once merged).  
 2) Burn down static warnings; add lint/format gates (JS/Lua) and make them blocking in CI.  
 3) Consolidate IR builder pattern (see `GENERATOR_IMPLEMENTATION.md`) and harden validation/determinism hooks along the main pipeline.  
 4) Implement documented feature gaps (array/control-flow/function expression edges from `ENHANCED_TRANSPILER_README.md`) with tests wired into `npm run harness` + parity.  

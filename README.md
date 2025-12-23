@@ -7,6 +7,11 @@ Status source of truth: see `PROJECT_STATUS.md` for current health, gaps, and ro
 - **Enhanced pipeline**: Fully operational with 73/73 tests passing under `LUASCRIPT_USE_ENHANCED_IR=1`; helper injection is conditional on coroutine usage and IR validation has stricter JSON checks.
 - **Quality gates**: Determinism, IR validation, parity, and coverage entry points live in `package.json`; static warning cleanup and lint/format enforcement remain in progress (see `PROJECT_STATUS.md` "Known gaps" and "Next steps").
 
+### Doc truth source
+- Canonical health, gaps, and roadmap: [PROJECT_STATUS.md](PROJECT_STATUS.md)
+- Phase checklist source: [CHECKLIST_PHASES.md](CHECKLIST_PHASES.md)
+- Status note: Phase 1 (baseline) is still open for pattern/destructuring support, and static warnings/lint-format enforcement remain outstanding; defer to the above for current claims and avoid optimistic completion percentages elsewhere.
+
 ## What this is
 LUASCRIPT is a JavaScript-to-Lua transpiler with an IR pipeline, parity tests, and validation gates.
 
