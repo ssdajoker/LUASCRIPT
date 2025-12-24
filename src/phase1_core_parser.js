@@ -773,7 +773,6 @@ class LuaScriptParser {
     parsePostfixExpression() {
         let expr = this.parsePrimaryExpression();
         
-        // eslint-disable-next-line no-constant-condition
         while (true) {
             if (this.match("LEFT_PAREN")) {
                 // Function call
@@ -924,7 +923,7 @@ class LuaScriptParser {
                 // Try to parse as arrow function parameters
                 this.current--; // Backtrack to '('
                 return this.parseArrowFunction();
-            } catch (error) {
+            } catch {
                 // If that fails, parse as grouped expression
                 this.current = checkpoint;
                 const expr = this.parseExpression();

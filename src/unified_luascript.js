@@ -474,7 +474,7 @@ class UnifiedLuaScript extends EventEmitter {
 
             if (luaCode.includes("local x = 5")) score += 0;
             else score -= 20;
-        } catch (error) {
+        } catch {
             score -= 30;
         }
         
@@ -492,7 +492,7 @@ class UnifiedLuaScript extends EventEmitter {
         try {
             // Simulate execution test
             score += 0; // Runtime exists and initialized
-        } catch (error) {
+        } catch {
             score -= 30;
         }
         
@@ -511,7 +511,7 @@ class UnifiedLuaScript extends EventEmitter {
             const result = advanced.transform("class Test {}", ["oop"]);
             if (result.includes("local Test = {}")) score += 0;
             else score -= 15;
-        } catch (error) {
+        } catch {
             score -= 25;
         }
         

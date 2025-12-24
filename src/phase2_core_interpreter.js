@@ -615,7 +615,7 @@ class LuaScriptInterpreter {
 
         // Object constructor
         this.globals.define("Object", (value) => {
-            if (value == null) return new LuaScriptObject();
+            if (value === null || value === undefined) return new LuaScriptObject();
             return value;
         });
 
@@ -845,7 +845,6 @@ class LuaScriptInterpreter {
             let result = undefined;
             
             try {
-                // eslint-disable-next-line no-constant-condition
                 while (true) {
                     // Test condition
                     if (node.test && !this.isTruthy(this.evaluate(node.test))) {
@@ -943,7 +942,9 @@ class LuaScriptInterpreter {
         case "*": return left * right;
         case "/": return left / right;
         case "%": return left % right;
+        // eslint-disable-next-line eqeqeq -- emulate JavaScript loose equality semantics
         case "==": return left == right;
+        // eslint-disable-next-line eqeqeq -- emulate JavaScript loose inequality semantics
         case "!=": return left != right;
         case "===": return left === right;
         case "!==": return left !== right;
@@ -1197,7 +1198,7 @@ class LuaScriptInterpreter {
             return object[property];
         } else if (object instanceof LuaScriptObject) {
             return object.get(property);
-        } else if (object != null) {
+        } else if (object !== null && object !== undefined) {
             return object[property];
         }
         
@@ -1220,7 +1221,7 @@ class LuaScriptInterpreter {
             }
         } else if (object instanceof LuaScriptObject) {
             object.set(property, value);
-        } else if (object != null) {
+        } else if (object !== null && object !== undefined) {
             object[property] = value;
         } else {
             throw new TypeError("Cannot set property on null or undefined");

@@ -158,8 +158,10 @@ class ProductionCompiler {
                     case "*": result = left.value * right.value; break;
                     case "/": result = left.value / right.value; break;
                     case "%": result = left.value % right.value; break;
+                    // eslint-disable-next-line eqeqeq -- honor JavaScript loose equality during constant folding
                     case "==": result = left.value == right.value; break;
                     case "===": result = left.value === right.value; break;
+                    // eslint-disable-next-line eqeqeq -- honor JavaScript loose inequality during constant folding
                     case "!=": result = left.value != right.value; break;
                     case "!==": result = left.value !== right.value; break;
                     case "<": result = left.value < right.value; break;
