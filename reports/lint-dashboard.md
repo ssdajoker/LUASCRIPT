@@ -5,6 +5,7 @@ Tracks ESLint warning/error counts across weekly Tier 4 runs.
 | Date (UTC) | Scope | Command | Warnings | Errors | Budget | HTML Report | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2025-12-23 | `src/**/*.js` | `npm exec -- eslint "src/**/*.js" --max-warnings 200` | 17 | 17 | ≤200 warnings | [reports/eslint/eslint-weekly-2025-12-23.html](eslint/eslint-weekly-2025-12-23.html) | Initial weekly sweep; errors present and should be triaged in follow-up cleanup |
+| 2025-12-24 | `src/**/*.js` | `npm exec -- eslint "src/**/*.js" --max-warnings 200` | 0 | 0 | ≤200 warnings | [reports/eslint/eslint-weekly-2025-12-24.html](eslint/eslint-weekly-2025-12-24.html) | Clean sweep after indentation and equality rule fixes |
 
 ## How to Update
 - Run the weekly report command (see `DEVELOPMENT_WORKFLOW.md`) to generate a new HTML artifact under `reports/eslint/`.

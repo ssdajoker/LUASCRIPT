@@ -414,7 +414,7 @@ function tryFallbackParse(source, options = {}) {
       allowReturnOutsideFunction: true,
     });
     return normalizeNode(program, { ...options, skipFallback: true, memo: options.memo || new WeakMap() });
-  } catch (err) {
+  } catch {
     // Continue to regex-based fallbacks
   }
 

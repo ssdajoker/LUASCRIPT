@@ -903,6 +903,8 @@ class IREmitter {
       "  }",
       "end",
     ].join(NEWLINE);
+  }
+
   resolveForBinding(left, context) {
     if (typeof left === "string") return left;
     const node = typeof left === "object" ? left : context.nodes[left];
