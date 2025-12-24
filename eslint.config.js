@@ -116,7 +116,7 @@ const tier4GeneralRules = {
   "complexity": "off",
   "no-console": "off",
   "no-undef": "warn",
-  "indent": ["warn", 4]
+  "indent": "off"
 };
 
 export default [
