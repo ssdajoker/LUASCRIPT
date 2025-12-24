@@ -924,7 +924,7 @@ class LuaScriptParser {
                 // Try to parse as arrow function parameters
                 this.current--; // Backtrack to '('
                 return this.parseArrowFunction();
-            } catch (error) {
+            } catch {
                 // If that fails, parse as grouped expression
                 this.current = checkpoint;
                 const expr = this.parseExpression();

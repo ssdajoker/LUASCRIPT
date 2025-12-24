@@ -158,9 +158,9 @@ class ProductionCompiler {
                     case "*": result = left.value * right.value; break;
                     case "/": result = left.value / right.value; break;
                     case "%": result = left.value % right.value; break;
-                    case "==": result = left.value == right.value; break;
+                    case "==": result = left.value === right.value; break;
                     case "===": result = left.value === right.value; break;
-                    case "!=": result = left.value != right.value; break;
+                    case "!=": result = left.value !== right.value; break;
                     case "!==": result = left.value !== right.value; break;
                     case "<": result = left.value < right.value; break;
                     case ">": result = left.value > right.value; break;

@@ -929,7 +929,7 @@ class Parser {
                     isAsync: false
                 });
             }
-        } catch (error) {
+        } catch {
             // If arrow function parsing fails, reset and try assignment
             this.position = checkpoint;
         }

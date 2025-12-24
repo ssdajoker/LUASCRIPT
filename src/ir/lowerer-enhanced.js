@@ -5,8 +5,6 @@
  * Handles: async/await, classes, destructuring, control flow, templates, spread/rest
  */
 
-const { builder } = require("./builder");
-const nodes = require("./nodes");
 const { IRBuilder } = require("./builder");
 
 class EnhancedLowerer {
