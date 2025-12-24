@@ -621,6 +621,7 @@ function validateIR(ir) {
   // Optional: validate metaPerf if present
   if (ir.module && ir.module.metadata && ir.module.metadata.metaPerf) {
     const mp = ir.module.metadata.metaPerf;
+    // eslint-disable-next-line complexity
     ["parseMs", "normalizeMs", "lowerMs", "totalMs", "nodeCount"].forEach((k) => {
       if (typeof mp[k] !== "number") {
         errors.push(`module.metadata.metaPerf.${k} must be a number`);
