@@ -360,6 +360,27 @@ class LuaScriptLexer {
         const char = this.current();
         const startLine = this.line;
         const startColumn = this.column;
+
+        if (char === "?" && (this.peek() === "." || this.peek() === "?")) {
+            this.advance();
+            const next = this.current();
+            if (next === ".") {
+                this.advance();
+                this.addToken("OPTIONAL_CHAINING", "?.", startLine, startColumn);
+                return;
+            }
+            if (next === "?") {
+                this.advance();
+                if (this.current() === "=") {
+                    this.advance();
+                    this.addToken("NULLISH_ASSIGN", "??=", startLine, startColumn);
+                } else {
+                    this.addToken("NULLISH_COALESCING", "??", startLine, startColumn);
+                }
+                return;
+            }
+        }
+
         this.advance();
 
         const punctuationMap = {

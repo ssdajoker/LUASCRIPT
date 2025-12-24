@@ -285,7 +285,7 @@ Add to CI job:
 - name: Upload coverage to Codecov
   uses: codecov/codecov-action@v3
   with:
-    files: ./coverage/coverage-final.json
+    files: ./artifacts/coverage/coverage-final.json
 ```
 
 ---
@@ -518,4 +518,3 @@ All items checked = âœ… Pipeline Live:
 
 **Started**: 2025-12-20
 **Target completion**: Same day (Phase 2) + 1-2 days (Phase 3-4)
-

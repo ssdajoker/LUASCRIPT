@@ -12,5 +12,6 @@
   "reporter": ["text", "lcov"],
   "cache": true,
   "check-coverage": false,
-  "temp-directory": ".nyc_output"
+  "temp-directory": "artifacts/.nyc_output",
+  "report-dir": "artifacts/coverage"
 }

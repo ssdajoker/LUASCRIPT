@@ -26,6 +26,18 @@ function createStatementDispatch(irLowerer) {
       lower: (node) => irLowerer.loopLowerer.lowerWhileStatement(node),
       pushToBody: true,
     },
+    ForStatement: {
+      lower: (node) => irLowerer.loopLowerer.lowerForStatement(node),
+      pushToBody: true,
+    },
+    ForOfStatement: {
+      lower: (node) => irLowerer.loopLowerer.lowerForOfStatement(node),
+      pushToBody: true,
+    },
+    ThrowStatement: {
+      lower: (node) => irLowerer.lowerThrowStatement(node),
+      pushToBody: true,
+    },
     SwitchStatement: {
       lower: (node) => irLowerer.lowerSwitchStatement(node),
       pushToBody: true,

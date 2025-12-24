@@ -2,7 +2,7 @@
 ## Established by Linus Torvalds - GitHub Integration Lead
 *"Talk is cheap. Show me the code." - Linus Torvalds*
 
-Status source of truth: `PROJECT_STATUS.md` (all other status docs should align with it).
+Status source of truth: `PROJECT_STATUS.md` (all other status docs should align with it). Use `CHECKLIST_PHASES.md` for phase-by-phase acceptance and record deltas in `PROJECT_STATUS.md` before closing any checklist item.
 
 ### Repository Structure
 ```
@@ -111,17 +111,26 @@ Following conventional commits:
 - `chore:` Build process or auxiliary tool changes
 
 ### Testing Requirements
-- **Unit tests**: All new code must have >90% coverage
-- **Integration tests**: End-to-end transpilation tests
-- **Performance tests**: Benchmark against previous versions
-- **Manual testing**: Web IDE functionality
+- **Core gates**: Run `npm run verify` for harness + IR validation + parity + determinism; include `npm run test:parity` and `npm run ir:validate:all` for IR changes as noted in `PROJECT_STATUS.md`.
+- **Lua static warnings**: Run `npm run static:warnings` (wraps `scripts/static_warnings_gate.js`) locally before pushing. The gate enforces a zero-warning budget and now blocks CI in both full and lean pipelines.
+- **Coverage/performance**: Follow the baselines and thresholds recorded in `PROJECT_STATUS.md` (coverage floor and ±15% performance regression gate). Update the status file if gates change.
+- **Manual/UX**: Exercise the web IDE when UI-facing changes land and note results in PR descriptions.
 
-### Week 2 Core Features (94% Complete)
-#### Remaining Tasks (6%):
-1. **Memory optimization** in parser (Donald's domain)
-2. **Error message improvements** (Steve's UX focus)
-3. **Performance benchmarking integration** (Linus's infrastructure)
-4. **Documentation updates** (Team effort)
+### Quick-start workflow (non-lint)
+- Install dependencies: `npm ci`
+- Run the fast formatting gate: `npm run -s format:check`
+- Run the fast smoke suite: `npm run -s test:smoke`
+- Husky pre-commit runs the same format/smoke checks automatically; bypass with `SKIP_FORMAT=1` or `SKIP_TESTS=1` if needed.
+### Lint Commands & Weekly Report
+- **Tiered ESLint entrypoints** (mirrors `ESLINT_CLEANUP_GUIDE.md` budgets):  
+	- Core IR (0 warnings): `npm run lint:core`  
+	- Extended IR (≤50 warnings): `npm run lint:extended`  
+	- Backends (≤100 warnings): `npm run lint:backends`  
+	- General src sweep (≤200 warnings): `npm run lint:all`
+- **Weekly lint trend (every Monday UTC)**: run `npm run lint:all:report` (which wraps an `eslint` command to generate `reports/eslint/eslint-weekly-<DATE>.html`), then log warning/error counts in `reports/lint-dashboard.md` (also note latest figures in `PROJECT_STATUS.md`).
+
+### Phase alignment
+- Track progress against `CHECKLIST_PHASES.md`; if a claim differs from the canonical snapshot in `PROJECT_STATUS.md`, update the snapshot first, then adjust docs/PR context.
 
 ### Emergency Protocols
 - **Hotfixes**: Direct to main with immediate team notification

@@ -31,6 +31,7 @@ class IRLowerer {
     this.tryLowerer = new TryLowerer(this);
     this.classLowerer = new ClassLowerer(this);
     this.statementDispatch = createStatementDispatch(this);
+    this.destructuringIndex = 0;
   }
 
   lowerProgram(programNode) {
@@ -88,11 +89,17 @@ class IRLowerer {
           kind: node.kind,
         }));
       } else if (decl.id.type === "ArrayPattern") {
+        const tempName = `__ds${++this.destructuringIndex}`;
+        const tempVar = this.builder.varDecl(tempName, initRef, null, { kind: node.kind });
+        declarations.push(tempVar);
         const elements = decl.id.elements || [];
-        elements.forEach((el) => {
+        elements.forEach((el, index) => {
           if (el && el.type === "Identifier") {
             const localId = this.lowerIdentifier(el, { binding: el.name });
-            declarations.push(this.builder.varDecl(localId.name, null, null, { kind: node.kind }));
+            const tempId = this.builder.identifier(tempName).id;
+            const indexId = this.builder.literal(index).id;
+            const memberId = this.builder.memberExpression(tempId, indexId, true).id;
+            declarations.push(this.builder.varDecl(localId.name, memberId, null, { kind: node.kind }));
           }
         });
       } else if (decl.id.type === "ObjectPattern") {
@@ -119,6 +126,11 @@ class IRLowerer {
   lowerReturnStatement(node) {
     const argumentRef = node.argument ? this.lowerExpression(node.argument) : null;
     return this.builder.returnStatement(argumentRef);
+  }
+
+  lowerThrowStatement(node) {
+    const argumentRef = node.argument ? this.lowerExpression(node.argument) : null;
+    return this.builder.throwStatement(argumentRef);
   }
 
   lowerIfStatement(node) {

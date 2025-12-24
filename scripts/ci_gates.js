@@ -1,6 +1,6 @@
 /**
  * CI Gate Runner
- * 
+ *
  * Unified script to run all CI quality gates: lint, format check, tests, and validation.
  * Exits non-zero if any gate fails.
  */
@@ -9,7 +9,9 @@ const { spawnSync } = require('child_process');
 const path = require('path');
 
 const GATES = [
-  { name: 'Lint', cmd: 'npm', args: ['run', 'lint'], optional: true },
+  { name: 'Format Check', cmd: 'npm', args: ['run', 'format:check'], optional: false },
+  { name: 'Lint', cmd: 'npm', args: ['run', 'lint'], optional: false },
+  { name: 'Static Warnings Budget', cmd: 'npm', args: ['run', 'static:warnings'], optional: false },
   { name: 'IR Validation', cmd: 'npm', args: ['run', 'ir:validate:all'], optional: false },
   { name: 'Core Tests', cmd: 'npm', args: ['run', 'test:core'], optional: false },
   { name: 'Parity Tests', cmd: 'npm', args: ['run', 'test:parity'], optional: false },

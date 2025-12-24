@@ -11,9 +11,10 @@ function normalizeProgram(programNode, options = {}) {
     throw new Error("normalizeProgram expects a Program node");
   }
 
-  // Initialize a WeakSet to guard against self-referential cycles
-  const seen = options.seen || new WeakSet();
-  const opts = { ...options, seen };
+  // Memoize normalized nodes to avoid false-positive circular detections while
+  // still preventing runaway recursion on genuine cycles.
+  const memo = options.memo || new WeakMap();
+  const opts = { ...options, memo };
   return normalizeNode(programNode, opts);
 }
 
@@ -27,24 +28,36 @@ function normalizeNode(node, options = {}) {
     return normalizeArray(node, options);
   }
 
-  // Cycle guard: if this exact node object was already visited, avoid infinite recursion
-  if (options && options.seen && typeof node === "object") {
-    if (options.seen.has(node)) {
-      return { type: "Error", message: "Circular reference detected", originalType: node.type };
+  const memo = options.memo || new WeakMap();
+  if (typeof node === "object") {
+    if (memo.has(node)) {
+      return memo.get(node);
     }
-    options.seen.add(node);
   }
 
   const normalizer = normalizers[node.type] || cloneShallow;
-  return normalizer(node, options);
+
+  // Seed memo before descending to break actual cycles while still emitting a
+  // structured placeholder for repeated references.
+  if (typeof node === "object") {
+    memo.set(node, { type: node.type });
+  }
+
+  const normalized = normalizer(node, { ...options, memo });
+
+  if (typeof node === "object") {
+    memo.set(node, normalized);
+  }
+
+  return normalized;
 }
 
 const normalizers = {
   Program(node, options) {
     const normalizedBody = normalizeArray(node.body, options);
     // Fallback for parsers that return only Error nodes (e.g., unsupported destructuring)
-    if (normalizedBody.length > 0 && normalizedBody.every((n) => n.type === "Error")) {
-      const fallback = tryFallbackParse(options.source);
+    if (!options.skipFallback && normalizedBody.length > 0 && normalizedBody.every((n) => n.type === "Error")) {
+      const fallback = tryFallbackParse(options.source, options);
       if (fallback) return fallback;
     }
     return {
@@ -131,6 +144,7 @@ const normalizers = {
       type: "CallExpression",
       callee: normalizeNode(node.callee, options),
       arguments: normalizeArray(node.arguments, options),
+      optional: Boolean(node.optional),
     };
   },
 
@@ -148,6 +162,7 @@ const normalizers = {
       object: normalizeNode(node.object, options),
       property: normalizeNode(node.property, options),
       computed: Boolean(node.computed),
+      optional: Boolean(node.optional),
     };
   },
 
@@ -309,6 +324,17 @@ const normalizers = {
     };
   },
 
+  ChainExpression(node, options) {
+    return normalizeNode(node.expression, options);
+  },
+
+  ThrowStatement(node, options) {
+    return {
+      type: "ThrowStatement",
+      argument: normalizeNode(node.argument, options),
+    };
+  },
+
   TryStatement(node, options) {
     const block = normalizeNode(node.block, options);
     let handler = null;
@@ -376,8 +402,22 @@ function cloneValue(value, options) {
   return value;
 }
 
-function tryFallbackParse(source) {
+function tryFallbackParse(source, options = {}) {
   if (typeof source !== "string") return null;
+
+  try {
+    const acorn = require("acorn");
+    const program = acorn.parse(source, {
+      ecmaVersion: "latest",
+      sourceType: "script",
+      allowAwaitOutsideFunction: true,
+      allowReturnOutsideFunction: true,
+    });
+    return normalizeNode(program, { ...options, skipFallback: true, memo: options.memo || new WeakMap() });
+  } catch {
+    // Continue to regex-based fallbacks
+  }
+
   const destructureMatch = source.match(/^\s*(?:const|let|var)\s*\[([^\]]+)\]\s*=\s*([^;]+)\s*;?/);
   if (destructureMatch) {
     const elements = destructureMatch[1]

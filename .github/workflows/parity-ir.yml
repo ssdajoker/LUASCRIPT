@@ -24,6 +24,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Verify pinned runtime configs
+        run: npm run -s runtime:verify
+
+      - name: Run harness smoke
+        run: npm run -s harness
+
+      - name: Run determinism tests
+        run: npm run -s test:determinism
+
+      - name: Run fuzz smoke
+        run: node tests/fuzz/run-fuzzer.js 25
+
       - name: Run parity tests
         id: parity
         run: npm run -s test:parity
@@ -32,30 +44,14 @@ jobs:
         id: ir-report
         run: npm run -s ir:report
 
-      - name: Run performance tests
-        id: perf-test
-        run: npm run -s test:performance > perf_results.txt 2>&1
-        continue-on-error: true
+      - name: Run coverage suite
+        run: npm run -s test:coverage
 
-      - name: Compare performance to baseline
-        id: perf-check
-        run: |
-          # Extract performance metrics from results
-          if [ -f perf_results.txt ]; then
-            PERF_RESULT=$(tail -5 perf_results.txt)
-            echo "PERF_RESULT=$PERF_RESULT" >> $GITHUB_OUTPUT
-            echo "Performance check: $PERF_RESULT"
-            
-            # If regression detected (optional blocking logic can be added here)
-            if grep -Ei '\bperformance regression\b' perf_results.txt; then
-              echo "⚠️ Performance regression detected - see details below"
-              cat perf_results.txt
-            fi
-          else
-            echo "No performance results generated"
-          fi
-        shell: bash
-        continue-on-error: true
+      - name: Enforce coverage ratchet
+        run: npm run -s coverage:check
+
+      - name: Run performance gate
+        run: npm run -s perf:gate
 
       - name: Upload IR and performance artifacts
         if: always()
@@ -65,7 +61,9 @@ jobs:
           path: |
             reports/
             perf_results.txt
-            harness_results.json
+            artifacts/coverage/
+            artifacts/test/harness_results.json
+            artifacts/harness_results.json
           retention-days: 30
           if-no-files-found: ignore
 

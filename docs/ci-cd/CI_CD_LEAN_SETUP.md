@@ -278,7 +278,7 @@ Add to CI job:
 - name: Upload coverage to Codecov
   uses: codecov/codecov-action@v3
   with:
-    files: ./coverage/coverage-final.json
+    files: ./artifacts/coverage/coverage-final.json
 ```
 
 ---

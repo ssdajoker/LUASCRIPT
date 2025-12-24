@@ -57,8 +57,8 @@ jobs:
         with:
           name: coverage-report-nightly
           path: |
-            coverage/
-            .nyc_output/
+            artifacts/coverage/
+            artifacts/.nyc_output/
           retention-days: 30
       
       # ========== VERIFICATION SUITE ==========
@@ -155,8 +155,10 @@ jobs:
           name: nightly-validation-artifacts
           path: |
             reports/
-            coverage/
-            .nyc_output/
+            artifacts/coverage/
+            artifacts/.nyc_output/
+            artifacts/test/harness_results.json
+            artifacts/harness_results.json
             *.log
           retention-days: 30
       

@@ -190,7 +190,7 @@ class ModuleResolver {
                         const mainPath = path.resolve(filePath, packageJson.main);
                         return this.resolveFile(mainPath);
                     }
-                } catch (error) {
+                } catch {
                     // Ignore package.json parsing errors
                 }
             }
@@ -214,7 +214,7 @@ class ModuleResolver {
                 const modulePath = path.join(currentPath, moduleDir, moduleName);
                 try {
                     return this.resolveFile(modulePath);
-                } catch (error) {
+                } catch {
                     // Continue searching
                 }
             }
@@ -227,7 +227,7 @@ class ModuleResolver {
             const modulePath = path.join(globalPath, moduleName);
             try {
                 return this.resolveFile(modulePath);
-            } catch (error) {
+            } catch {
                 // Continue searching
             }
         }

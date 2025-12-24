@@ -544,7 +544,7 @@ class GPUAccelerator {
             // Simulate GPU initialization
             this.available = true;
             this.initialized = true;
-        } catch (error) {
+        } catch {
             this.available = false;
         }
     }

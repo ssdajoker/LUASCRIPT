@@ -615,7 +615,7 @@ class GPUAccelerator {
                 await this.initializeComputeShaders();
                 this.initialized = true;
             }
-        } catch (error) {
+        } catch {
             this.available = false;
             this.initialized = false;
         }
@@ -654,7 +654,7 @@ class GPUAccelerator {
             
             return result;
             
-        } catch (error) {
+        } catch {
             this.stats.fallbacks++;
             return this.fallbackCompute(operation, data);
         }

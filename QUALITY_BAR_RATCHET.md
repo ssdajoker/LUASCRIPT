@@ -115,17 +115,17 @@ npm run coverage:ratchet
 Coverage reports are generated in multiple formats:
 
 - **Terminal**: Text summary with progress bars
-- **HTML**: `coverage/lcov-report/index.html` (open in browser)
-- **JSON**: `coverage/coverage-summary.json` (machine-readable)
-- **LCOV**: `coverage/lcov.info` (for IDE integration)
+- **HTML**: `artifacts/coverage/lcov-report/index.html` (open in browser)
+- **JSON**: `artifacts/coverage/coverage-summary.json` (machine-readable)
+- **LCOV**: `artifacts/coverage/lcov.info` (for IDE integration)
 
 ### Viewing Coverage
 
 ```bash
 # Open HTML report
-open coverage/lcov-report/index.html       # macOS
-xdg-open coverage/lcov-report/index.html   # Linux
-start coverage/lcov-report/index.html      # Windows
+open artifacts/coverage/lcov-report/index.html       # macOS
+xdg-open artifacts/coverage/lcov-report/index.html   # Linux
+start artifacts/coverage/lcov-report/index.html      # Windows
 ```
 
 ## Ratchet State
