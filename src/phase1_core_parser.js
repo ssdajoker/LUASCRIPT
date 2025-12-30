@@ -773,7 +773,6 @@ class LuaScriptParser {
     parsePostfixExpression() {
         let expr = this.parsePrimaryExpression();
         
-        // eslint-disable-next-line no-constant-condition
         while (true) {
             if (this.match("LEFT_PAREN")) {
                 // Function call

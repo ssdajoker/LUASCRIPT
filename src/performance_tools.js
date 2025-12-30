@@ -619,6 +619,9 @@ class GPUAccelerator {
                 this.available = false;
                 this.initialized = false;
             }
+        } catch {
+            this.available = false;
+            this.initialized = false;
         }
 
     async checkGPUAvailability() {
@@ -658,6 +661,18 @@ class GPUAccelerator {
                 this.stats.fallbacks++;
                 return this.fallbackCompute(operation, data);
             }
+            
+            const result = await this.gpuCompute(operation, data, options);
+            this.stats.accelerated++;
+            
+            const endTime = process.hrtime.bigint();
+            this.stats.totalTime += Number(endTime - startTime) / 1e6;
+            
+            return result;
+            
+        } catch {
+            this.stats.fallbacks++;
+            return this.fallbackCompute(operation, data);
         }
 
     async gpuCompute(operation, data, options) {

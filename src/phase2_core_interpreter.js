@@ -845,7 +845,6 @@ class LuaScriptInterpreter {
             let result = undefined;
             
             try {
-                // eslint-disable-next-line no-constant-condition
                 while (true) {
                     // Test condition
                     if (node.test && !this.isTruthy(this.evaluate(node.test))) {
@@ -943,7 +942,9 @@ class LuaScriptInterpreter {
         case "*": return left * right;
         case "/": return left / right;
         case "%": return left % right;
+        // eslint-disable-next-line eqeqeq -- emulate JavaScript loose equality semantics
         case "==": return left == right;
+        // eslint-disable-next-line eqeqeq -- emulate JavaScript loose inequality semantics
         case "!=": return left != right;
         case "===": return left === right;
         case "!==": return left !== right;

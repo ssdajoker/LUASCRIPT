@@ -1109,7 +1109,6 @@ class Parser {
     parseCall() {
         let expr = this.parsePrimary();
         
-        // eslint-disable-next-line no-constant-condition
         while (true) {
             if (this.match("LPAREN")) {
                 expr = this.finishCall(expr);
