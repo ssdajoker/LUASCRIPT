@@ -53,7 +53,7 @@ class IRValidator {
   /**
      * Visit a node and validate it
      */
-  // eslint-disable-next-line complexity
+   
   visitNode(node) {
     if (!node || !node.kind) {
       throw new ValidationError("Invalid node: missing kind", node);
@@ -473,7 +473,7 @@ const { encodeBalancedTernary } = require("./idGenerator");
  * Lightweight structural validator for canonical IR artifacts.
  * Not a full JSON schema implementation, but enforces the invariants we care about today.
  */
-// eslint-disable-next-line complexity
+ 
 function validateIR(ir) {
   const errors = [];
 
@@ -574,7 +574,7 @@ function validateIR(ir) {
   ]);
 
   // Validate nodes
-  // eslint-disable-next-line complexity
+   
   Object.entries(nodes).forEach(([nodeId, node]) => {
     if (!isBalancedTernaryIdentifier(nodeId)) {
       errors.push(`Node id ${nodeId} is not balanced-ternary encoded`);
@@ -626,7 +626,7 @@ function validateIR(ir) {
   // Optional: validate metaPerf if present
   if (ir.module && ir.module.metadata && ir.module.metadata.metaPerf) {
     const mp = ir.module.metadata.metaPerf;
-    // eslint-disable-next-line complexity
+     
     ["parseMs", "normalizeMs", "lowerMs", "totalMs", "nodeCount"].forEach((k) => {
       if (typeof mp[k] !== "number") {
         errors.push(`module.metadata.metaPerf.${k} must be a number`);
@@ -637,7 +637,7 @@ function validateIR(ir) {
   // Optional: Validate CFG linkage if controlFlowGraphs present
   const cfgs = ir.controlFlowGraphs || null;
   if (cfgs) {
-    // eslint-disable-next-line complexity
+     
     Object.entries(nodes).forEach(([nodeId, node]) => {
       if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg) {
         const { id: cfgId, entry, exit } = node.meta.cfg;
