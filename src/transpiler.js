@@ -153,7 +153,7 @@ class LuaScriptTranspiler {
      * Accepts string filenames for backward compatibility and ensures an object is returned.
      */
     normalizeTranspileOptions(options) {
-        if (options == null) {
+        if (options === null || options === undefined) {
             return {};
         }
 

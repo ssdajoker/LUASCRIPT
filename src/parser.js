@@ -929,7 +929,7 @@ class Parser {
                     isAsync: false
                 });
             }
-        } catch (error) {
+        } catch {
             // If arrow function parsing fails, reset and try assignment
             this.position = checkpoint;
         }
@@ -1109,7 +1109,6 @@ class Parser {
     parseCall() {
         let expr = this.parsePrimary();
         
-        // eslint-disable-next-line no-constant-condition
         while (true) {
             if (this.match("LPAREN")) {
                 expr = this.finishCall(expr);

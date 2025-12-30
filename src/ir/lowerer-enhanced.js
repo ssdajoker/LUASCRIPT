@@ -6,7 +6,6 @@
  */
 
 const { builder } = require("./builder");
-const nodes = require("./nodes");
 const { IRBuilder } = require("./builder");
 
 class EnhancedLowerer {
