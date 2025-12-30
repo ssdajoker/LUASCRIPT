@@ -91,7 +91,6 @@
     "refactor:validate": "node -e \"const {ASTValidator} = require('./src/validation/ast-validator'); const {IRValidator} = require('./src/validation/ir-validator'); console.log('✅ Validators loaded');\"",
     "lint:general": "npm exec eslint \"src/**/*.js\" \"lib/**/*.js\" --ignore-pattern \"src/ir/**/*.js\" --ignore-pattern \"src/backends/**/*.js\" --max-warnings 200",
     "lint:reports": "bash scripts/lint_tiers.sh",
-    "lint": "npm run lint:core && npm run lint:extended && npm run lint:backends && npm run lint:general",
     "refactor:lint": "npm run lint:general",
     "refactor:fuzz": "node tests/fuzz/run-fuzzer.js",
     "refactor:all": "npm run refactor:validate && npm run format:check && npm run refactor:lint && npm run static:warnings && npm run refactor:phase3",
