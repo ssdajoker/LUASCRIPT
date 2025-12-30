@@ -6,6 +6,11 @@
   "[markdown]": {
     "files.trimTrailingWhitespace": false
   },
+  "eslint.run": "onSave",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": true,
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.quoteStyle": "single",
   "editor.detectIndentation": false,
