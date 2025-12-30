@@ -640,25 +640,25 @@ class GPUAccelerator {
         const startTime = process.hrtime.bigint();
         this.stats.operations++;
         
-            try {
-                if (!this.available || !this.computeShaders.has(operation)) {
-                    this.stats.fallbacks++;
-                    return this.fallbackCompute(operation, data);
-                }
-                
-                const result = await this.gpuCompute(operation, data, options);
-                this.stats.accelerated++;
-                
-                const endTime = process.hrtime.bigint();
-                this.stats.totalTime += Number(endTime - startTime) / 1e6;
-                
-                return result;
-                
-            } catch {
+        try {
+            if (!this.available || !this.computeShaders.has(operation)) {
                 this.stats.fallbacks++;
                 return this.fallbackCompute(operation, data);
             }
+            
+            const result = await this.gpuCompute(operation, data, options);
+            this.stats.accelerated++;
+            
+            const endTime = process.hrtime.bigint();
+            this.stats.totalTime += Number(endTime - startTime) / 1e6;
+            
+            return result;
+            
+        } catch {
+            this.stats.fallbacks++;
+            return this.fallbackCompute(operation, data);
         }
+    }
 
     async gpuCompute(operation, data, options) {
         const shader = this.computeShaders.get(operation);
