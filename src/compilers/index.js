@@ -9,8 +9,8 @@ const { IRToJSGenerator } = require("./ir-to-js");
 const { IRToLuaGenerator } = require("./ir-to-lua");
 
 module.exports = {
-    JSToIRCompiler,
-    LuaToIRCompiler,
-    IRToJSGenerator,
-    IRToLuaGenerator
+  JSToIRCompiler,
+  LuaToIRCompiler,
+  IRToJSGenerator,
+  IRToLuaGenerator
 };

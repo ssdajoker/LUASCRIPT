@@ -5,6 +5,7 @@
  * Handles: async/await, classes, destructuring, control flow, templates, spread/rest
  */
 
+const { builder } = require("./builder");
 const { IRBuilder } = require("./builder");
 
 class EnhancedLowerer {
@@ -77,7 +78,7 @@ class EnhancedLowerer {
   }
 
   // ========== Statement Lowering ==========
-  // eslint-disable-next-line complexity
+   
   lowerStatement(node) {
     if (!node) return null;
 
@@ -352,7 +353,7 @@ class EnhancedLowerer {
   }
 
   // ========== Expression Lowering ==========
-  // eslint-disable-next-line complexity
+   
   lowerExpression(node) {
     if (!node) return null;
 
