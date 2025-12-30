@@ -607,19 +607,22 @@ class GPUAccelerator {
         };
     }
 
-    async initialize() {
-        try {
-            // Simulate GPU initialization
-            this.available = await this.checkGPUAvailability();
-            if (this.available) {
-                await this.initializeComputeShaders();
-                this.initialized = true;
+        async initialize() {
+            try {
+                // Simulate GPU initialization
+                this.available = await this.checkGPUAvailability();
+                if (this.available) {
+                    await this.initializeComputeShaders();
+                    this.initialized = true;
+                }
+            } catch {
+                this.available = false;
+                this.initialized = false;
             }
         } catch {
             this.available = false;
             this.initialized = false;
         }
-    }
 
     async checkGPUAvailability() {
         // Simulate GPU availability check
@@ -640,8 +643,21 @@ class GPUAccelerator {
         const startTime = process.hrtime.bigint();
         this.stats.operations++;
         
-        try {
-            if (!this.available || !this.computeShaders.has(operation)) {
+            try {
+                if (!this.available || !this.computeShaders.has(operation)) {
+                    this.stats.fallbacks++;
+                    return this.fallbackCompute(operation, data);
+                }
+                
+                const result = await this.gpuCompute(operation, data, options);
+                this.stats.accelerated++;
+                
+                const endTime = process.hrtime.bigint();
+                this.stats.totalTime += Number(endTime - startTime) / 1e6;
+                
+                return result;
+                
+            } catch {
                 this.stats.fallbacks++;
                 return this.fallbackCompute(operation, data);
             }
@@ -658,7 +674,6 @@ class GPUAccelerator {
             this.stats.fallbacks++;
             return this.fallbackCompute(operation, data);
         }
-    }
 
     async gpuCompute(operation, data, options) {
         const shader = this.computeShaders.get(operation);
