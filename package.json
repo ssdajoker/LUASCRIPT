@@ -86,7 +86,6 @@
     "lint:backends": "npm exec -- eslint \"src/backends/**/*.js\" --max-warnings 100",
     "lint:all": "npm exec -- eslint \"src/**/*.js\" --max-warnings 200",
     "lint:all:report": "bash -lc 'mkdir -p reports/eslint && npm exec -- eslint \"src/**/*.js\" --max-warnings 200 --format html --output-file reports/eslint/eslint-weekly-$(date -u +%Y-%m-%d).html'",
-    "lint": "npm run refactor:lint",
     "refactor:phase3": "cross-env LUASCRIPT_USE_ENHANCED_IR=1 node tests/parity/run_phase3.js",
     "refactor:validate": "node -e \"const {ASTValidator} = require('./src/validation/ast-validator'); const {IRValidator} = require('./src/validation/ir-validator'); console.log('✅ Validators loaded');\"",
     "lint:general": "npm exec eslint \"src/**/*.js\" \"lib/**/*.js\" --ignore-pattern \"src/ir/**/*.js\" --ignore-pattern \"src/backends/**/*.js\" --max-warnings 200",
