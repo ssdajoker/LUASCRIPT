@@ -790,6 +790,72 @@ class LuaScriptParser {
         if (this.match("LEFT_PAREN")) {
           args = this.parseArgumentList();
           this.consume("RIGHT_PAREN", "Expected ')' after arguments");
+    parsePostfixExpression() {
+        let expr = this.parsePrimaryExpression();
+        
+        while (true) {
+            if (this.match("LEFT_PAREN")) {
+                // Function call
+                const args = this.parseArgumentList();
+                this.consume("RIGHT_PAREN", "Expected ')' after arguments");
+                expr = new CallExpressionNode(expr, args, {
+                    line: expr.line,
+                    column: expr.column
+                });
+            } else if (this.match("KEYWORD") && this.previous().value === "new") {
+                // Support minimal `new Callee(args)` syntax
+                const callee = this.parsePrimaryExpression();
+                let args = [];
+                if (this.match("LEFT_PAREN")) {
+                    args = this.parseArgumentList();
+                    this.consume("RIGHT_PAREN", "Expected ')' after arguments");
+                }
+                expr = new NewExpressionNode(callee, args, { line: callee.line, column: callee.column });
+            } else if (this.match("LEFT_BRACKET")) {
+                // Member access (computed)
+                const property = this.parseExpression();
+                this.consume("RIGHT_BRACKET", "Expected ']' after computed member expression");
+                expr = new MemberExpressionNode(expr, property, true, {
+                    line: expr.line,
+                    column: expr.column
+                });
+            } else if (this.match("DOT")) {
+                // Member access (non-computed)
+                const property = this.parseIdentifier();
+                expr = new MemberExpressionNode(expr, property, false, {
+                    line: expr.line,
+                    column: expr.column
+                });
+            } else if (this.match("OPTIONAL_CHAINING")) {
+                if (this.check("LEFT_PAREN")) {
+                    this.advance();
+                    const args = this.parseArgumentList();
+                    this.consume("RIGHT_PAREN", "Expected ')' after optional call arguments");
+                    expr = new CallExpressionNode(expr, args, {
+                        line: expr.line,
+                        column: expr.column,
+                        optional: true
+                    });
+                } else if (this.check("LEFT_BRACKET")) {
+                    this.advance();
+                    const property = this.parseExpression();
+                    this.consume("RIGHT_BRACKET", "Expected ']' after optional computed member expression");
+                    expr = new MemberExpressionNode(expr, property, true, {
+                        line: expr.line,
+                        column: expr.column,
+                        optional: true
+                    });
+                } else {
+                    const property = this.parseIdentifier();
+                    expr = new MemberExpressionNode(expr, property, false, {
+                        line: expr.line,
+                        column: expr.column,
+                        optional: true
+                    });
+                }
+            } else {
+                break;
+            }
         }
         expr = new NewExpressionNode(callee, args, { line: callee.line, column: callee.column });
       } else if (this.match("LEFT_BRACKET")) {
@@ -932,6 +998,18 @@ class LuaScriptParser {
         return expr;
       }
     }
+            try {
+                // Try to parse as arrow function parameters
+                this.current--; // Backtrack to '('
+                return this.parseArrowFunction();
+            } catch {
+                // If that fails, parse as grouped expression
+                this.current = checkpoint;
+                const expr = this.parseExpression();
+                this.consume("RIGHT_PAREN", "Expected ')' after expression");
+                return expr;
+            }
+        }
         
     if (this.match("LEFT_BRACKET")) {
       return this.parseArrayExpression();

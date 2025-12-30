@@ -914,6 +914,15 @@ class Parser {
         // Block body: (x) => { return x * 2; }
         if (this.check("LBRACE")) {
           body = this.parseBlockStatement();
+                return this.memoryManager.allocateNode("ArrowFunction", {
+                    params,
+                    body,
+                    isAsync: false
+                });
+            }
+        } catch {
+            // If arrow function parsing fails, reset and try assignment
+            this.position = checkpoint;
         }
         // Expression body: (x) => x * 2
         else {
@@ -1116,6 +1125,18 @@ class Parser {
       } else {
         break;
       }
+    parseCall() {
+        let expr = this.parsePrimary();
+        
+        while (true) {
+            if (this.match("LPAREN")) {
+                expr = this.finishCall(expr);
+            } else {
+                break;
+            }
+        }
+        
+        return expr;
     }
         
     return expr;

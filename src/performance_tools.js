@@ -645,6 +645,73 @@ class GPUAccelerator {
         this.stats.fallbacks++;
         return this.fallbackCompute(operation, data);
       }
+    constructor() {
+        this.available = false;
+        this.initialized = false;
+        this.computeShaders = new Map();
+        this.buffers = new Map();
+        this.stats = {
+            operations: 0,
+            accelerated: 0,
+            fallbacks: 0,
+            totalTime: 0
+        };
+    }
+
+        async initialize() {
+            try {
+                // Simulate GPU initialization
+                this.available = await this.checkGPUAvailability();
+                if (this.available) {
+                    await this.initializeComputeShaders();
+                    this.initialized = true;
+                }
+            } catch {
+                this.available = false;
+                this.initialized = false;
+            }
+        } catch {
+            this.available = false;
+            this.initialized = false;
+        }
+
+    async checkGPUAvailability() {
+        // Simulate GPU availability check
+        return new Promise(resolve => {
+            setTimeout(() => resolve(Math.random() > 0.3), 100);
+        });
+    }
+
+    async initializeComputeShaders() {
+        // Initialize compute shaders for common operations
+        this.computeShaders.set("vectorAdd", this.createVectorAddShader());
+        this.computeShaders.set("matrixMultiply", this.createMatrixMultiplyShader());
+        this.computeShaders.set("convolution", this.createConvolutionShader());
+        this.computeShaders.set("fft", this.createFFTShader());
+    }
+
+    async accelerate(operation, data, options = {}) {
+        const startTime = process.hrtime.bigint();
+        this.stats.operations++;
+        
+            try {
+                if (!this.available || !this.computeShaders.has(operation)) {
+                    this.stats.fallbacks++;
+                    return this.fallbackCompute(operation, data);
+                }
+                
+                const result = await this.gpuCompute(operation, data, options);
+                this.stats.accelerated++;
+                
+                const endTime = process.hrtime.bigint();
+                this.stats.totalTime += Number(endTime - startTime) / 1e6;
+                
+                return result;
+                
+            } catch {
+                this.stats.fallbacks++;
+                return this.fallbackCompute(operation, data);
+            }
             
       const result = await this.gpuCompute(operation, data, options);
       this.stats.accelerated++;
@@ -676,6 +743,27 @@ class GPUAccelerator {
     switch (operation) {
     case "vectorAdd":
       return data.map((x, i) => x + (data[i + data.length / 2] || 0));
+        } catch {
+            this.stats.fallbacks++;
+            return this.fallbackCompute(operation, data);
+        }
+
+    async gpuCompute(operation, data, options) {
+        const shader = this.computeShaders.get(operation);
+        
+        // Simulate GPU computation
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(shader.compute(data, options));
+            }, Math.random() * 50);
+        });
+    }
+
+    fallbackCompute(operation, data) {
+        // CPU fallback implementations
+        switch (operation) {
+        case "vectorAdd":
+            return data.map((x, i) => x + (data[i + data.length / 2] || 0));
             
     case "matrixMultiply":
       return this.cpuMatrixMultiply(data.a, data.b);

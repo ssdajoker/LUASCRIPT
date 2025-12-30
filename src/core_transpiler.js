@@ -185,6 +185,77 @@ class CoreTranspiler extends EventEmitter {
       }
       return `local ${declarations.join(", ")}`;
     }
+        case "VariableDeclaration": {
+            // Check if any declaration uses destructuring
+            const hasDestructuring = node.declarations.some(d =>
+                d.id.type === "ArrayPattern" || d.id.type === "ObjectPattern");
+
+            if (hasDestructuring) {
+                const parts = [];
+                for (const decl of node.declarations) {
+                    if (decl.id.type === "ArrayPattern") {
+                        const tempVar = this.createTempVar("_destructure");
+                        const init = decl.init ? this.generateLuaFromAST(decl.init) : "{}";
+                        parts.push(`local ${tempVar} = ${init}`);
+
+                        decl.id.elements.forEach((el, index) => {
+                            if (!el) return; // Skip holes
+                            if (el.type === "Identifier") {
+                                parts.push(`local ${el.name} = ${tempVar}[${index + 1}]`);
+                            } else if (el.type === "RestElement") {
+                                // Simple rest support: slice from index to end (requires table.slice helper or loop)
+                                // For basic Phase 1, we might skip complex rest or assume a helper exists.
+                                // Using a simplified approach:
+                                // local rest = { table.unpack(tempVar, index + 1) }
+                                parts.push(`local ${el.argument.name} = { table.unpack(${tempVar}, ${index + 1}) }`);
+                            }
+                        });
+                    } else if (decl.id.type === "ObjectPattern") {
+                        const tempVar = this.createTempVar("_destructure");
+                        const init = decl.init ? this.generateLuaFromAST(decl.init) : "{}";
+                        parts.push(`local ${tempVar} = ${init}`);
+
+                        decl.id.properties.forEach(prop => {
+                            if (prop.type === "RestElement") {
+                                // Object rest is complex in Lua without a helper function to exclude keys
+                                // Skipping for basic Phase 1 or using a placeholder
+                                return;
+                            }
+
+                            const key = prop.key.type === "Identifier" && !prop.computed
+                                ? `"${prop.key.name}"`
+                                : this.generateLuaFromAST(prop.key);
+
+                            const target = prop.value.type === "Identifier"
+                                ? prop.value.name
+                                : this.generateLuaFromAST(prop.value); // Nested pattern?
+
+                            // If target is a pattern, we'd need recursion. Assuming Identifier for Phase 1.
+                            if (prop.value.type === "Identifier") {
+                                // Lua: tempVar["key"] or tempVar.key
+                                if (prop.key.type === "Identifier" && !prop.computed) {
+                                    parts.push(`local ${target} = ${tempVar}.${prop.key.name}`);
+                                } else {
+                                    parts.push(`local ${target} = ${tempVar}[${key}]`);
+                                }
+                            }
+                        });
+                    } else {
+                        // Standard variable declaration
+                        parts.push(this.generateLuaFromAST(decl));
+                    }
+                }
+                return parts.join("\n");
+            }
+
+            const declarations = node.declarations
+                .map(decl => this.generateLuaFromAST(decl))
+                .filter(Boolean);
+            if (!declarations.length) {
+                return "";
+            }
+            return `local ${declarations.join(", ")}`;
+        }
 
     case "VariableDeclarator": {
       const id = this.generateLuaFromAST(node.id);
@@ -198,6 +269,16 @@ class CoreTranspiler extends EventEmitter {
         if (!el) return null;  // holes in pattern
         if (el.type === "RestElement") {
           return `...${this.generateLuaFromAST(el.argument)}`;
+        case "ArrayPattern": {
+            // This case is likely only reached if ArrayPattern is not handled in VariableDeclaration
+            // e.g., in function params or assignment expression.
+            // For now, we return a list of identifiers as a fallback, but correct handling depends on context.
+            const elements = node.elements.map((el, _idx) => {
+                if (!el) return null;
+                if (el.type === "RestElement") return el.argument.name;
+                return this.generateLuaFromAST(el);
+            }).filter(Boolean);
+            return elements.join(", ");
         }
         return this.generateLuaFromAST(el);
       }).filter(Boolean);
@@ -210,6 +291,13 @@ class CoreTranspiler extends EventEmitter {
         const key = prop.key.name || this.generateLuaFromAST(prop.key);
         if (prop.value.type === "Identifier" && prop.value.name === key) {
           return key;  // shorthand
+        case "ObjectPattern": {
+            // Fallback for function params or assignment
+            const props = node.properties.map(prop => {
+                if (prop.type === "RestElement") return prop.argument.name;
+                return prop.value.type === "Identifier" ? prop.value.name : this.generateLuaFromAST(prop.value);
+            });
+            return props.join(", ");
         }
         return `${key} = ${this.generateLuaFromAST(prop.value)}`;
       });

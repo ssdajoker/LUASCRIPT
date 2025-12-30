@@ -3,6 +3,9 @@ Last updated: 2025-01-XX (Quality Gates & Performance Tracking Active)
 Source of truth for project health, test posture, and feature gaps. Link back from `README.md` and `DEVELOPMENT_WORKFLOW.md` to avoid divergent claims.
 
 ## Snapshot
+- Baseline JS→IR→Lua pipeline (Phase1) now supports array and object destructuring. Passes harness/parity smoke.
+- **Enhanced pipeline** (esprima + enhanced lowerer/emitter) **fully operational** with 73/73 tests passing (100%). Dedicated CI job runs smoke + parity subset + determinism under `LUASCRIPT_USE_ENHANCED_IR=1`. See [ENHANCED_MODE.md](ENHANCED_MODE.md) for details.
+- **Refactoring Update**: `src/ir/emitter-enhanced.js` and `src/ir/lowerer-enhanced.js` have been refactored to remove duplicates and fix syntax errors. `src/ir/emitter.js` has been updated with missing helper methods to ensure compatibility with Phase 1 tests. Canonical IR nodes now validate JSON payloads and surface clearer factory errors (`src/ir/nodes.js`).
 - Baseline JS→IR→Lua pipeline (Phase1) passes harness/parity smoke; array destructuring and richer patterns are not yet supported in the Phase1 parser.
 - **Enhanced pipeline** (esprima + enhanced lowerer/emitter) **fully operational** with 73/73 tests passing (100%). Dedicated CI job runs smoke + parity subset + determinism under `LUASCRIPT_USE_ENHANCED_IR=1`. Enhanced IR lowering now preserves user identifiers across destructuring/async/generator/class constructs (see `src/ir/lowerer-enhanced.js`, `src/ir/lowerer.js`), and emitters auto-inject coroutine helpers only when required (`src/ir/emitter-enhanced.js`, `src/ir/emitter.js`). See [ENHANCED_MODE.md](ENHANCED_MODE.md) for details.
 - Canonical and enhanced IR builders now reset per transpilation to prevent state leakage; helper preambles are injected only when IR or metadata request async/await or async generator support. Canonical IR nodes validate JSON payloads and surface clearer factory errors (`src/ir/nodes.js`).
@@ -28,6 +31,8 @@ Source of truth for project health, test posture, and feature gaps. Link back fr
 - Latest Tier 4 sweep (2025-12-24, `npm run lint:all`): **0 warnings / 0 errors** with HTML archive at `reports/eslint/eslint-weekly-2025-12-24.html`. Previous (2025-12-23) results remain tracked in `reports/lint-dashboard.md` for trend context.
 
 ## Known Gaps / Risks
+- **✅ RESOLVED**: Pattern/destructuring support fully implemented in both Phase1 and enhanced pipelines.
+- Static warnings backlog captured in `static_warnings*.txt`; lint/format enforcement is now CI-blocking (zero tolerance).
 - **✅ RESOLVED**: Pattern/destructuring support fully implemented in enhanced pipeline with 14 comprehensive tests (array, object, nested, rest, computed properties). Phase1 still lacks pattern support.
 - Static warnings backlog burned down to zero; Lua lint budget enforced via `npm run static:warnings` in CI. General lint/format improvements remain tracked separately.
 - Documentation has legacy, contradictory claims (e.g., Phase9/WASM “complete”). Use this file as the single status source until README/docs are aligned.

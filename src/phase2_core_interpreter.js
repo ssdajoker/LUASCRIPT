@@ -648,6 +648,74 @@ class LuaScriptInterpreter {
   }
 
   /**
+    setupBuiltins() {
+        // Console functions
+        this.globals.define("console", new LuaScriptObject({
+            log: (...args) => console.log(...args),
+            error: (...args) => console.error(...args),
+            warn: (...args) => console.warn(...args),
+            info: (...args) => console.info(...args)
+        }));
+
+        // Global functions
+        this.globals.define("print", (...args) => console.log(...args));
+        this.globals.define("parseInt", (str, radix = 10) => parseInt(str, radix));
+        this.globals.define("parseFloat", (str) => parseFloat(str));
+        this.globals.define("isNaN", (value) => isNaN(value));
+        this.globals.define("isFinite", (value) => isFinite(value));
+
+        // Type checking functions
+        this.globals.define("typeof", (value) => {
+            if (value === null) return "object";
+            if (value instanceof LuaScriptArray) return "object";
+            if (value instanceof LuaScriptObject) return "object";
+            if (value instanceof LuaScriptFunction) return "function";
+            return typeof value;
+        });
+
+        // Array constructor
+        this.globals.define("Array", (...args) => {
+            if (args.length === 1 && typeof args[0] === "number") {
+                return new LuaScriptArray(new Array(args[0]));
+            }
+            return new LuaScriptArray(args);
+        });
+
+        // Object constructor
+        this.globals.define("Object", (value) => {
+            if (value === null || value === undefined) return new LuaScriptObject();
+            return value;
+        });
+
+        // Math object
+        this.globals.define("Math", new LuaScriptObject({
+            PI: Math.PI,
+            E: Math.E,
+            abs: Math.abs,
+            ceil: Math.ceil,
+            floor: Math.floor,
+            round: Math.round,
+            max: Math.max,
+            min: Math.min,
+            pow: Math.pow,
+            sqrt: Math.sqrt,
+            random: Math.random,
+            sin: Math.sin,
+            cos: Math.cos,
+            tan: Math.tan
+        }));
+
+        // String constructor and methods
+        this.globals.define("String", (value) => String(value));
+
+        // Number constructor
+        this.globals.define("Number", (value) => Number(value));
+
+        // Boolean constructor
+        this.globals.define("Boolean", (value) => Boolean(value));
+    }
+
+    /**
      * Interprets the given AST.
      * @param {object} ast - The root node of the AST to interpret.
      * @returns {*} The result of the interpretation.
@@ -851,6 +919,23 @@ class LuaScriptInterpreter {
           if (node.test && !this.isTruthy(this.evaluate(node.test))) {
             break;
           }
+            try {
+                while (true) {
+                    // Test condition
+                    if (node.test && !this.isTruthy(this.evaluate(node.test))) {
+                        break;
+                    }
+                    
+                    // Execute body
+                    try {
+                        result = this.execute(node.body);
+                    } catch (error) {
+                        if (error instanceof ContinueException) {
+                            // Continue to update
+                        } else {
+                            throw error;
+                        }
+                    }
                     
           // Execute body
           try {
@@ -962,6 +1047,33 @@ class LuaScriptInterpreter {
   }
 
   /**
+        switch (node.operator) {
+        case "+": return left + right;
+        case "-": return left - right;
+        case "*": return left * right;
+        case "/": return left / right;
+        case "%": return left % right;
+        // eslint-disable-next-line eqeqeq -- emulate JavaScript loose equality semantics
+        case "==": return left == right;
+        // eslint-disable-next-line eqeqeq -- emulate JavaScript loose inequality semantics
+        case "!=": return left != right;
+        case "===": return left === right;
+        case "!==": return left !== right;
+        case "<": return left < right;
+        case ">": return left > right;
+        case "<=": return left <= right;
+        case ">=": return left >= right;
+        case "&": return left & right;
+        case "|": return left | right;
+        case "^": return left ^ right;
+        case "<<": return left << right;
+        case ">>": return left >> right;
+        default:
+            throw new Error(`Unknown binary operator: ${node.operator}`);
+        }
+    }
+
+    /**
      * Evaluates a unary expression.
      * @param {object} node - The unary expression node.
      * @returns {*} The result of the operation.
@@ -1199,6 +1311,24 @@ class LuaScriptInterpreter {
       return object.get(property);
     } else if (object !== null && object !== undefined) {
       return object[property];
+    getProperty(object, property) {
+        if (object instanceof LuaScriptArray) {
+            if (typeof property === "number" || /^\d+$/.test(property)) {
+                return object.get(Number(property));
+            }
+            // Array methods
+            const method = object[property];
+            if (typeof method === "function") {
+                return method.bind(object);
+            }
+            return object[property];
+        } else if (object instanceof LuaScriptObject) {
+            return object.get(property);
+        } else if (object !== null && object !== undefined) {
+            return object[property];
+        }
+        
+        return undefined;
     }
         
     return undefined;
@@ -1228,6 +1358,23 @@ class LuaScriptInterpreter {
   }
 
   /**
+    setProperty(object, property, value) {
+        if (object instanceof LuaScriptArray) {
+            if (typeof property === "number" || /^\d+$/.test(property)) {
+                object.set(Number(property), value);
+            } else {
+                object[property] = value;
+            }
+        } else if (object instanceof LuaScriptObject) {
+            object.set(property, value);
+        } else if (object !== null && object !== undefined) {
+            object[property] = value;
+        } else {
+            throw new TypeError("Cannot set property on null or undefined");
+        }
+    }
+
+    /**
      * Determines if a value is truthy.
      * @param {*} value - The value to check.
      * @returns {boolean} True if the value is truthy.

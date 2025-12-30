@@ -156,6 +156,18 @@ class LuaScriptTranspiler {
     if (options === null || options === undefined) {
       return {};
     }
+    normalizeTranspileOptions(options) {
+        if (options === null || options === undefined) {
+            return {};
+        }
+
+        if (typeof options === "string") {
+            // Validate that string looks like a filename (has extension or path separator)
+            if (!options.includes(".") && !options.includes("/") && !options.includes("\\")) {
+                throw new Error("LUASCRIPT_VALIDATION_ERROR: Invalid options - string must be a valid filename with extension or path");
+            }
+            return { filename: options };
+        }
 
     if (typeof options === "string") {
       // Validate that string looks like a filename (has extension or path separator)

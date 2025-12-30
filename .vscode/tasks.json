@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "lint:ci",
+      "type": "npm",
+      "script": "lint:ci",
+      "group": "build",
+      "problemMatcher": [
+        "$eslint-stylish"
+      ],
+      "presentation": {
+        "reveal": "always"
+      }
+    }
+  ]
+}

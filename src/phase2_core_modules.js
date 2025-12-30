@@ -178,6 +178,28 @@ class ModuleResolver {
         const indexFile = path.join(filePath, "index" + ext);
         if (fs.existsSync(indexFile) && fs.statSync(indexFile).isFile()) {
           return indexFile;
+        // Try as directory with index file
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
+            for (const ext of this.extensions) {
+                const indexFile = path.join(filePath, "index" + ext);
+                if (fs.existsSync(indexFile) && fs.statSync(indexFile).isFile()) {
+                    return indexFile;
+                }
+            }
+
+            // Try package.json main field
+            const packageJsonPath = path.join(filePath, "package.json");
+            if (fs.existsSync(packageJsonPath)) {
+                try {
+                    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+                    if (packageJson.main) {
+                        const mainPath = path.resolve(filePath, packageJson.main);
+                        return this.resolveFile(mainPath);
+                    }
+                } catch {
+                    // Ignore package.json parsing errors
+                }
+            }
         }
       }
 
@@ -216,6 +238,30 @@ class ModuleResolver {
           return this.resolveFile(modulePath);
         } catch {
           // Continue searching
+    resolveModule(moduleName, fromPath) {
+        let currentPath = path.dirname(fromPath);
+
+        while (currentPath !== path.dirname(currentPath)) {
+            for (const moduleDir of this.moduleDirectories) {
+                const modulePath = path.join(currentPath, moduleDir, moduleName);
+                try {
+                    return this.resolveFile(modulePath);
+                } catch {
+                    // Continue searching
+                }
+            }
+            currentPath = path.dirname(currentPath);
+        }
+
+        // Try global module directories
+        const globalPaths = this.getGlobalPaths();
+        for (const globalPath of globalPaths) {
+            const modulePath = path.join(globalPath, moduleName);
+            try {
+                return this.resolveFile(modulePath);
+            } catch {
+                // Continue searching
+            }
         }
       }
       currentPath = path.dirname(currentPath);
