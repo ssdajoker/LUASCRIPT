@@ -9,44 +9,44 @@
  * including support for async/await and various Promise methods.
  */
 class AdvancedAsyncPatterns {
-    constructor() {
-        this.asyncSupport = {
-            async: true,
-            await: true,
-            promiseAll: true,
-            promiseRace: true,
-            promiseAllSettled: true,
-            promiseAny: true
-        };
-    }
+  constructor() {
+    this.asyncSupport = {
+      async: true,
+      await: true,
+      promiseAll: true,
+      promiseRace: true,
+      promiseAllSettled: true,
+      promiseAny: true
+    };
+  }
 
-    /**
+  /**
      * Transpiles an async function AST node into a Lua function that returns a coroutine-wrapped execution.
      * @param {object} node - The AST node for the async function.
      * @param {object} transpiler - The transpiler instance.
      * @returns {string} The transpiled Lua code for the async function.
      */
-    transpileAsyncFunction(node, transpiler) {
-        const params = node.params.map(p => p.name).join(", ");
-        const body = transpiler.transpileBlock(node.body);
+  transpileAsyncFunction(node, transpiler) {
+    const params = node.params.map(p => p.name).join(", ");
+    const body = transpiler.transpileBlock(node.body);
         
-        return `function(${params})
+    return `function(${params})
     return coroutine.wrap(function()
         ${body}
     end)()
 end`;
-    }
+  }
 
-    /**
+  /**
      * Transpiles an await expression AST node into a Lua construct that yields and resumes a coroutine.
      * @param {object} node - The AST node for the await expression.
      * @param {object} transpiler - The transpiler instance.
      * @returns {string} The transpiled Lua code for the await expression.
      */
-    transpileAwaitExpression(node, transpiler) {
-        const argument = transpiler.transpile(node.argument);
+  transpileAwaitExpression(node, transpiler) {
+    const argument = transpiler.transpile(node.argument);
         
-        return `(function()
+    return `(function()
     local __promise = ${argument}
     if type(__promise) == "function" then
         return __promise()
@@ -62,14 +62,14 @@ end`;
     end
     return __promise
 end)()`;
-    }
+  }
 
-    /**
+  /**
      * Generates the Lua implementation of Promise.all.
      * @returns {string} The Lua code for Promise.all.
      */
-    generatePromiseAll() {
-        return `
+  generatePromiseAll() {
+    return `
 -- Promise.all implementation
 local function promise_all(promises)
     return {
@@ -119,14 +119,14 @@ local function promise_all(promises)
     }
 end
 `;
-    }
+  }
 
-    /**
+  /**
      * Generates the Lua implementation of Promise.race.
      * @returns {string} The Lua code for Promise.race.
      */
-    generatePromiseRace() {
-        return `
+  generatePromiseRace() {
+    return `
 -- Promise.race implementation
 local function promise_race(promises)
     return {
@@ -167,14 +167,14 @@ local function promise_race(promises)
     }
 end
 `;
-    }
+  }
 
-    /**
+  /**
      * Generates the Lua implementation of Promise.allSettled.
      * @returns {string} The Lua code for Promise.allSettled.
      */
-    generatePromiseAllSettled() {
-        return `
+  generatePromiseAllSettled() {
+    return `
 -- Promise.allSettled implementation
 local function promise_allSettled(promises)
     return {
@@ -220,14 +220,14 @@ local function promise_allSettled(promises)
     }
 end
 `;
-    }
+  }
 
-    /**
+  /**
      * Generates the Lua implementation of Promise.any.
      * @returns {string} The Lua code for Promise.any.
      */
-    generatePromiseAny() {
-        return `
+  generatePromiseAny() {
+    return `
 -- Promise.any implementation
 local function promise_any(promises)
     return {
@@ -279,14 +279,14 @@ local function promise_any(promises)
     }
 end
 `;
-    }
+  }
 
-    /**
+  /**
      * Generates the complete Lua runtime code for all asynchronous features, including a Promise implementation.
      * @returns {string} The complete async runtime code.
      */
-    generateAsyncRuntime() {
-        return `
+  generateAsyncRuntime() {
+    return `
 -- LUASCRIPT Advanced Async Runtime
 -- Promise implementation
 local Promise = {}
@@ -424,101 +424,101 @@ return {
     promise_any = promise_any
 }
 `;
-    }
+  }
 
-    /**
+  /**
      * Provides a set of test cases for the advanced async patterns.
      * @returns {object[]} An array of test case objects.
      */
-    testAsyncPatterns() {
-        return [
-            {
-                name: "Basic async/await",
-                code: `
+  testAsyncPatterns() {
+    return [
+      {
+        name: "Basic async/await",
+        code: `
                     async function fetchData() {
                         const data = await fetch('/api/data');
                         return data;
                     }
                 `,
-                expected: "Coroutine-based async execution"
-            },
-            {
-                name: "Promise.all",
-                code: `
+        expected: "Coroutine-based async execution"
+      },
+      {
+        name: "Promise.all",
+        code: `
                     const results = await Promise.all([
                         fetch('/api/1'),
                         fetch('/api/2'),
                         fetch('/api/3')
                     ]);
                 `,
-                expected: "Parallel execution, wait for all"
-            },
-            {
-                name: "Promise.race",
-                code: `
+        expected: "Parallel execution, wait for all"
+      },
+      {
+        name: "Promise.race",
+        code: `
                     const fastest = await Promise.race([
                         fetch('/api/1'),
                         fetch('/api/2')
                     ]);
                 `,
-                expected: "Return first completed"
-            },
-            {
-                name: "Error handling",
-                code: `
+        expected: "Return first completed"
+      },
+      {
+        name: "Error handling",
+        code: `
                     try {
                         const data = await fetchData();
                     } catch (error) {
                         console.error(error);
                     }
                 `,
-                expected: "Proper error propagation"
-            },
-            {
-                name: "Promise.allSettled",
-                code: `
+        expected: "Proper error propagation"
+      },
+      {
+        name: "Promise.allSettled",
+        code: `
                     const results = await Promise.allSettled([
                         promise1,
                         promise2,
                         promise3
                     ]);
                 `,
-                expected: "Wait for all, return all results"
-            }
-        ];
-    }
+        expected: "Wait for all, return all results"
+      }
+    ];
+  }
 
-    /**
+  /**
      * Gets the current support status for all advanced async features.
      * @returns {object} An object detailing the support status of each feature.
      */
-    getStatus() {
-        return {
-            async: {
-                supported: this.asyncSupport.async,
-                features: [
-                    "async function declarations",
-                    "async arrow functions",
-                    "async methods"
-                ]
-            },
-            await: {
-                supported: this.asyncSupport.await,
-                features: [
-                    "await expressions",
-                    "await in loops",
-                    "await with error handling"
-                ]
-            },
-            promiseMethods: {
-                all: this.asyncSupport.promiseAll,
-                race: this.asyncSupport.promiseRace,
-                allSettled: this.asyncSupport.promiseAllSettled,
-                any: this.asyncSupport.promiseAny
-            },
-            completion: "100%"
-        };
-    }
+  getStatus() {
+    return {
+      async: {
+        supported: this.asyncSupport.async,
+        features: [
+          "async function declarations",
+          "async arrow functions",
+          "async methods"
+        ]
+      },
+      await: {
+        supported: this.asyncSupport.await,
+        features: [
+          "await expressions",
+          "await in loops",
+          "await with error handling"
+        ]
+      },
+      promiseMethods: {
+        all: this.asyncSupport.promiseAll,
+        race: this.asyncSupport.promiseRace,
+        allSettled: this.asyncSupport.promiseAllSettled,
+        any: this.asyncSupport.promiseAny
+      },
+      completion: "100%"
+    };
+  }
 }
 
 module.exports = { AdvancedAsyncPatterns };

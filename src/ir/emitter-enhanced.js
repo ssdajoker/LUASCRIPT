@@ -57,7 +57,7 @@ class EnhancedEmitter {
     return this.contextStack.includes("async-function");
   }
 
-  // eslint-disable-next-line complexity
+   
   emitNode(node) {
     if (!node) return "";
 
@@ -434,7 +434,7 @@ class EnhancedEmitter {
   }
 
   // ========== Expression Emission ==========
-  // eslint-disable-next-line complexity
+   
   emitExpression(node) {
     if (!node) return "";
 
@@ -840,7 +840,7 @@ class EnhancedEmitter {
     statements.push(`${this.indent()}local ${tempVar} = ${rhsCode}`);
         
     // Extract each property
-    // eslint-disable-next-line complexity
+     
     (pattern.properties || []).forEach(prop => {
       if (prop.kind === "RestElement") {
         // Rest element: collect remaining properties
