@@ -597,15 +597,15 @@ class GPUAccelerator {
     constructor() {
         this.available = false;
         this.initialized = false;
-            this.computeShaders = new Map();
-            this.buffers = new Map();
-            this.stats = {
-                operations: 0,
-                accelerated: 0,
-                fallbacks: 0,
-                totalTime: 0
-            };
-        }
+        this.computeShaders = new Map();
+        this.buffers = new Map();
+        this.stats = {
+            operations: 0,
+            accelerated: 0,
+            fallbacks: 0,
+            totalTime: 0
+        };
+    }
 
         async initialize() {
             try {
