@@ -1053,6 +1053,7 @@ class LuaScriptInterpreter {
         case "*": return left * right;
         case "/": return left / right;
         case "%": return left % right;
+        case "==": return left == right;
         // eslint-disable-next-line eqeqeq -- emulate JavaScript loose equality semantics
         case "==": return left == right;
         // eslint-disable-next-line eqeqeq -- emulate JavaScript loose inequality semantics
