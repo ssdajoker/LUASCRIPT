@@ -3,109 +3,109 @@
     "cases": 20,
     "slowest": {
       "name": "simple variable declaration",
-      "durationMs": 9.6513,
+      "durationMs": 10.5734,
       "bytes": 11
     }
   },
   "cases": [
     {
       "name": "simple variable declaration",
-      "durationMs": 9.6513,
+      "durationMs": 10.5734,
       "bytes": 11
     },
     {
       "name": "function declaration",
-      "durationMs": 2.8453,
+      "durationMs": 3.7807,
       "bytes": 43
     },
     {
       "name": "arrow function",
-      "durationMs": 1.5562,
+      "durationMs": 2.1939,
       "bytes": 45
     },
     {
       "name": "binary expressions",
-      "durationMs": 1.0143,
+      "durationMs": 3.3305,
       "bytes": 26
     },
     {
       "name": "if statement",
-      "durationMs": 2.4032,
+      "durationMs": 6.154,
       "bytes": 30
     },
     {
       "name": "while loop",
-      "durationMs": 1.2741,
+      "durationMs": 3.3429,
       "bytes": 31
     },
     {
       "name": "array literal",
-      "durationMs": 0.7692,
+      "durationMs": 1.5288,
       "bytes": 23
     },
     {
       "name": "object literal",
-      "durationMs": 2.0736,
+      "durationMs": 2.3381,
       "bytes": 28
     },
     {
       "name": "member access",
-      "durationMs": 0.8186,
+      "durationMs": 2.2356,
       "bytes": 22
     },
     {
       "name": "optional chaining + nullish coalesce",
-      "durationMs": 0.9247,
+      "durationMs": 1.7321,
       "bytes": 169
     },
     {
       "name": "nullish assignment",
-      "durationMs": 0.3631,
+      "durationMs": 0.7889,
       "bytes": 100
     },
     {
       "name": "for-of emission",
-      "durationMs": 1.7352,
+      "durationMs": 4.4466,
       "bytes": 122
     },
     {
       "name": "for-of array literal",
-      "durationMs": 2.0768,
+      "durationMs": 4.7224,
       "bytes": 117
     },
     {
       "name": "template literal basic",
-      "durationMs": 1.1503,
+      "durationMs": 3.4939,
       "bytes": 87
     },
     {
       "name": "array destructuring",
-      "durationMs": 1.0489,
+      "durationMs": 2.568,
       "bytes": 105
     },
     {
       "name": "arrow function expression body",
-      "durationMs": 0.4381,
+      "durationMs": 1.1554,
       "bytes": 45
     },
     {
       "name": "arrow function block body",
-      "durationMs": 0.6428,
+      "durationMs": 1.9458,
       "bytes": 63
     },
     {
       "name": "computed property names",
-      "durationMs": 0.631,
+      "durationMs": 1.7271,
       "bytes": 40
     },
     {
       "name": "try-catch block",
-      "durationMs": 2.7033,
+      "durationMs": 4.3819,
       "bytes": 188
     },
     {
       "name": "switch statement",
-      "durationMs": 2.2075,
+      "durationMs": 3.6448,
       "bytes": 92
     }
   ]

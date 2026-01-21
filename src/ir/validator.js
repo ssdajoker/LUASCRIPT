@@ -1,7 +1,7 @@
 
 /**
  * LUASCRIPT IR Validator
- * 
+ *
  * Validates IR nodes for correctness and type consistency.
  */
 

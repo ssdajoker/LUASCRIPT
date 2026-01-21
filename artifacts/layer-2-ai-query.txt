@@ -1,0 +1,26 @@
+LAYER 2: SEMANTIC CORRECTNESS
+
+I'm building a JavaScript-to-Lua transpiler. Layer 1 (quality gates) is complete.
+Now I need to implement Layer 2: Semantic Correctness.
+
+Current status:
+- Harness: 73/73 tests passing
+- Basic transpilation works
+- Need to ensure JavaScript semantics match Lua output
+
+Specific tasks for Layer 2:
+1. Operator Precedence: Ensure mixed expressions like "2 + 3 * 4" evaluate correctly
+2. Type Coercion: Handle string + number ("5" + 3 should be "53")
+3. Scope Resolution: Closures, hoisting, lexical vs dynamic scope
+4. This Binding: Function context in different call patterns
+
+Questions:
+1. What test files should I create for semantic correctness?
+2. Where in src/ir/emitter.js should I add type coercion logic?
+3. How do I handle JavaScript hoisting in Lua (which doesn't hoist)?
+4. What are the top 5 semantic gotchas to test?
+
+Please provide:
+- Test file structure (tests/semantic/*.test.js)
+- Code locations to modify
+- Specific Lua patterns for JS semantics
