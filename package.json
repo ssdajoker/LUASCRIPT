@@ -115,7 +115,10 @@
     "clean:artifacts": "node scripts/clean-artifacts.js",
     "test:operators": "node tests/semantic/operators.test.js",
     "test:coercion": "node tests/semantic/coercion.test.js",
-    "test:scope": "node tests/semantic/scope.test.js"
+    "test:scope": "node tests/semantic/scope.test.js",
+    "test:async": "node tests/es6/async.test.js",
+    "test:destructuring": "node tests/es6/destructuring.test.js",
+    "test:classes": "node tests/es6/classes.test.js"
   },
   "keywords": [
     "luascript",
