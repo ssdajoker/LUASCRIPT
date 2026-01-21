@@ -3,10 +3,10 @@
 /**
  * 🔍 INTELLIGENT IR SCHEMA DEBUGGER
  * Deep dive validation debugging with root cause analysis
- * 
+ *
  * This tool goes beyond just "validation failed" - it finds EXACTLY
  * which node and field caused the failure, and why.
- * 
+ *
  * Usage: node scripts/debug-ir-schema.js [testname]
  */
 
@@ -55,7 +55,7 @@ if (testName) {
         console.log('💡 Run "npm run harness" first to generate IR files');
         process.exit(1);
     }
-    
+
     irFiles = fs.readdirSync(IR_DIR)
         .filter(f => f.endsWith('.ir.json'))
         .map(f => path.join(IR_DIR, f));
@@ -72,26 +72,26 @@ const failures = [];
 for (const irFile of irFiles) {
     const testName = path.basename(irFile, '.ir.json');
     let ir;
-    
+
     try {
         ir = JSON.parse(fs.readFileSync(irFile, 'utf8'));
     } catch (error) {
         console.error(`❌ ${testName}: Invalid JSON - ${error.message}`);
         continue;
     }
-    
+
     const valid = validate(ir);
-    
+
     if (!valid) {
         console.error(`❌ ${testName}: Schema validation failed`);
         failures.push({ testName, irFile, ir, errors: validate.errors });
-        
+
         // Show first few errors
         const preview = validate.errors.slice(0, 3);
         preview.forEach(err => {
             console.log(`   ${err.instancePath || '/'}: ${err.message}`);
         });
-        
+
         if (validate.errors.length > 3) {
             console.log(`   ... and ${validate.errors.length - 3} more errors`);
         }
@@ -155,7 +155,7 @@ errors.forEach(err => {
     if (match) {
         const nodeId = match[1];
         const node = ir.nodes[nodeId];
-        
+
         if (node && !problematicNodes.find(n => n.id === nodeId)) {
             problematicNodes.push({ id: nodeId, node });
         }
@@ -190,11 +190,11 @@ let violationsFound = false;
 
 Object.keys(ir.nodes).forEach(nodeId => {
     const node = ir.nodes[nodeId];
-    
+
     nodeRefFields.forEach(field => {
         if (field in node) {
             const value = node[field];
-            
+
             // Should be string (matching pattern), null, or not present
             if (value !== null && typeof value !== 'string') {
                 console.error(`❌ ${nodeId}.${field}: ${typeof value} (expected string or null)`);
@@ -233,7 +233,7 @@ errors.forEach(err => {
             fixStrategy: 'Change field name from "expression" to "isExpression" to avoid conflict with schema NodeRef expectations'
         });
     }
-    
+
     if (err.keyword === 'additionalProperties') {
         rootCauses.push({
             issue: 'Unexpected field in node',

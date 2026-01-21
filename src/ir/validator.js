@@ -709,4 +709,3 @@ module.exports = {
   decodeBalancedTernaryString,
   encodeBalancedTernary,
 };
-module.exports = require("./validators/validator");
