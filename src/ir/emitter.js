@@ -902,6 +902,7 @@ class IREmitter {
       "    end",
       "  }",
       "end",
+    ].join(NEWLINE);  }
     ].join(NEWLINE);
   }
 
