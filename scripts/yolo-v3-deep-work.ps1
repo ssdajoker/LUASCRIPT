@@ -62,7 +62,7 @@ Be specific with file paths, line numbers, and actual code snippets.
 "@
 
     # Save detailed AI query
-    $queryFile = "artifacts/layer-$($Layer.Id)-deep-work-query.txt"
+    $queryFile = Join-Path "artifacts" "layer-$($Layer.Id)-deep-work-query.txt"
     $aiPrompt | Out-File $queryFile -Encoding UTF8
     Write-Layer "📋 AI Deep-Work Query: $queryFile" -Color "Yellow"
 
@@ -71,7 +71,7 @@ Be specific with file paths, line numbers, and actual code snippets.
     Write-Layer "   (This will guide actual implementation)" -Color "Gray"
 
     # Create detailed implementation stub
-    $implFile = "artifacts/layer-$($Layer.Id)-implementation-plan.md"
+    $implFile = Join-Path "artifacts" "layer-$($Layer.Id)-implementation-plan.md"
     $implPlan = @"
 # Layer $($Layer.Id): $($Layer.Name) - Implementation Plan
 
@@ -130,7 +130,7 @@ npm run harness && npm run ir:validate:all $([string]::Join(" ", ($Layer.Tests |
             $testsFailed++
 
             # Save failure details
-            $failFile = "artifacts/layer-$($Layer.Id)-$test-failures.txt"
+            $failFile = Join-Path "artifacts" "layer-$($Layer.Id)-$test-failures.txt"
             $testOutput | Out-File $failFile -Encoding UTF8
             Write-Layer "    📝 Failures saved: $failFile" -Color "Yellow"
         }
