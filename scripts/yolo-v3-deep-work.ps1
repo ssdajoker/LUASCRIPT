@@ -27,16 +27,16 @@ function Write-Layer {
 
 function Invoke-DeepLayerWork {
     param([hashtable]$Layer)
-    
+
     Write-Layer ""
     Write-Layer "╔═══════════════════════════════════════════════════════════════╗" -Color "Cyan"
     Write-Layer "║  LAYER $($Layer.Id): $($Layer.Name)" -Color "Cyan"
     Write-Layer "║  Deep Implementation Mode" -Color "Cyan"
     Write-Layer "╚═══════════════════════════════════════════════════════════════╝" -Color "Cyan"
     Write-Layer ""
-    
+
     $timestamp = (Get-Date).ToString('HH:mm:ss')
-    
+
     # Generate comprehensive AI request
     $aiPrompt = @"
 Layer: $($Layer.Name)
@@ -65,11 +65,11 @@ Be specific with file paths, line numbers, and actual code snippets.
     $queryFile = "artifacts/layer-$($Layer.Id)-deep-work-query.txt"
     $aiPrompt | Out-File $queryFile -Encoding UTF8
     Write-Layer "📋 AI Deep-Work Query: $queryFile" -Color "Yellow"
-    
+
     # Generate AI suggestions
     Write-Layer "🤖 Generating AI implementation suggestions..." -Color "Cyan"
     Write-Layer "   (This will guide actual implementation)" -Color "Gray"
-    
+
     # Create detailed implementation stub
     $implFile = "artifacts/layer-$($Layer.Id)-implementation-plan.md"
     $implPlan = @"
@@ -107,20 +107,20 @@ npm run harness && npm run ir:validate:all $([string]::Join(" ", ($Layer.Tests |
 - src/transforms/ (language transformations)
 - tests/ (test cases)
 "@
-    
+
     $implPlan | Out-File $implFile -Encoding UTF8
     Write-Layer "📄 Implementation Plan: $implFile" -Color "Yellow"
-    
+
     # Actually run the tests to see what's failing
     Write-Layer ""
     Write-Layer "Running existing tests to identify gaps..." -Color "Cyan"
-    
+
     $testsPassed = 0
     $testsFailed = 0
-    
+
     foreach ($test in $Layer.Tests) {
         Write-Layer "  Testing: $test" -Color "Gray"
-        
+
         $testOutput = & npm run $test 2>&1
         if ($LASTEXITCODE -eq 0) {
             Write-Layer "    ✅ PASS" -Color "Green"
@@ -128,17 +128,17 @@ npm run harness && npm run ir:validate:all $([string]::Join(" ", ($Layer.Tests |
         } else {
             Write-Layer "    ❌ FAIL - needs implementation" -Color "Red"
             $testsFailed++
-            
+
             # Save failure details
             $failFile = "artifacts/layer-$($Layer.Id)-$test-failures.txt"
             $testOutput | Out-File $failFile -Encoding UTF8
             Write-Layer "    📝 Failures saved: $failFile" -Color "Yellow"
         }
     }
-    
+
     Write-Layer ""
     Write-Layer "Test Results: $testsPassed passed, $testsFailed failed" -Color "$(if ($testsFailed -eq 0) { 'Green' } else { 'Yellow' })"
-    
+
     if ($testsFailed -eq 0) {
         Write-Layer "✅ Layer $($Layer.Id) COMPLETE - All tests passing!" -Color "Green"
         return $true
@@ -183,13 +183,13 @@ for ($iteration = 1; $iteration -le $MaxIterations; $iteration++) {
         Write-Layer "Timeout reached" -Color "Yellow"
         break
     }
-    
+
     Write-Layer ""
     Write-Layer "─────────────────────────────────────────────────────────────" -Color "Gray"
     Write-Layer " Deep Work Iteration $iteration / $MaxIterations" -Color "Cyan"
     Write-Layer "─────────────────────────────────────────────────────────────" -Color "Gray"
     Write-Layer ""
-    
+
     # Create layer object (simplified for deep work)
     $layer = @{
         Id = $TargetLayer
@@ -230,19 +230,19 @@ for ($iteration = 1; $iteration -le $MaxIterations; $iteration++) {
         }
         Priority = "HIGH"
     }
-    
+
     # Do deep work on this layer
     $complete = Invoke-DeepLayerWork -Layer $layer
-    
+
     if ($complete) {
         Write-Layer ""
         Write-Layer "Layer $TargetLayer is now complete!" -Color "Green"
         Write-Layer "Ready to move to next layer (Layer $($TargetLayer + 1))" -Color "Green"
-        
+
         # Commit progress
         & git add -A 2>&1 | Out-Null
         & git commit -m "🚀 YOLO v3 Deep Work: Layer $TargetLayer complete" --no-verify 2>&1 | Out-Null
-        
+
         $TargetLayer++
         if ($TargetLayer -gt 10) {
             Write-Layer ""
@@ -253,7 +253,7 @@ for ($iteration = 1; $iteration -le $MaxIterations; $iteration++) {
             break
         }
     }
-    
+
     # Wait before next iteration
     Start-Sleep -Seconds 3
 }
