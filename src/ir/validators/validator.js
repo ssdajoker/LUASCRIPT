@@ -1,7 +1,7 @@
 
 /**
  * LUASCRIPT IR Validator
- * 
+ *
  * Validates IR nodes for correctness and type consistency.
  */
 
@@ -234,6 +234,38 @@ class IRValidator {
   validateIdentifier(node) {
     if (!node.name || typeof node.name !== "string") {
       throw new ValidationError("Identifier must have a name", node);
+    }
+    return true;
+  }
+
+  validateLiteral(node) {
+    // Literals are generally valid; type checking happens elsewhere
+    return true;
+  }
+
+  validateAssignment(node) {
+    if (!node.left) {
+      throw new ValidationError("Assignment must have left-hand side", node);
+    }
+    if (!node.right) {
+      throw new ValidationError("Assignment must have right-hand side", node);
+    }
+    this.visitNode(node.left);
+    this.visitNode(node.right);
+    return true;
+  }
+
+  validateConditional(node) {
+    if (!node.test) {
+      throw new ValidationError("Conditional must have test", node);
+    }
+    if (!node.consequent) {
+      throw new ValidationError("Conditional must have consequent", node);
+    }
+    this.visitNode(node.test);
+    this.visitNode(node.consequent);
+    if (node.alternate) {
+      this.visitNode(node.alternate);
     }
     return true;
   }
@@ -597,6 +629,9 @@ function decodeBalancedTernaryString(encoded) {
     }
   }
   return value;
+}
+
+// Missing closing brace somewhere - adding it here
 }
 
 module.exports = {

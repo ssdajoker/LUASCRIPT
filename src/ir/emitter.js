@@ -462,7 +462,7 @@ class IREmitter {
 
     const header = `${this.currentIndent(context)}local function ${name}(${params})`;
     let emittedBody;
-    
+
     // Get the body - handle both node.body (ID) and node.body (Block node)
     const bodyId = typeof node.body === "string" ? node.body : (node.body && node.body.id ? node.body.id : node.body);
 
