@@ -1,0 +1,25 @@
+name: GitHub App Dynamic Auth
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Operation mode (review/rescue/yolo)"
+        required: true
+        default: "review"
+
+jobs:
+  auth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate short-lived token
+        id: token
+        uses: actions/github-app-token@v1
+        with:
+          app_id: ${{ secrets.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          installation_id: ${{ secrets.GH_APP_INSTALLATION_ID }}
+
+      - name: Print mode & token (safe subset)
+        run: |
+          echo "Mode: ${{ github.event.inputs.mode }}"
+          echo "Token starts with: $(echo ${{ steps.token.outputs.token }} | cut -c1-6)..."

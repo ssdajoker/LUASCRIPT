@@ -903,25 +903,39 @@ class IREmitter {
       "  }",
       "end",
     ].join(NEWLINE);  }
+    ].join(NEWLINE);
+  }
+
   resolveForBinding(left, context) {
     if (typeof left === "string") return left;
     const node = typeof left === "object" ? left : context.nodes[left];
     if (!node) return "__item";
-    if (node.kind === "VariableDeclaration" && node.declarations && node.declarations.length > 0) {
-      const declId = node.declarations[0];
-      const declNode = typeof declId === "string" ? context.nodes[declId] : declId;
-      if (declNode) {
-        if (declNode.name) return declNode.name;
-        if (declNode.id) {
-          const idNode = typeof declNode.id === "string" ? context.nodes[declNode.id] : declNode.id;
-          if (idNode && idNode.name) return idNode.name;
-        }
-      }
-    }
     if (node.kind === "Identifier" && node.name) {
       return node.name;
     }
-    return "__item";
+    if (node.kind !== "VariableDeclaration") {
+      return "__item";
+    }
+
+    const resolved = this.resolveDeclarationName(node, context);
+    return resolved || "__item";
+  }
+
+  resolveDeclarationName(node, context) {
+    if (!node.declarations || node.declarations.length === 0) {
+      return null;
+    }
+
+    const declId = node.declarations[0];
+    const declNode = typeof declId === "string" ? context.nodes[declId] : declId;
+    if (!declNode) return null;
+    if (declNode.name) return declNode.name;
+    if (!declNode.id) return null;
+
+    const idNode = typeof declNode.id === "string" ? context.nodes[declNode.id] : declNode.id;
+    if (idNode && idNode.name) return idNode.name;
+
+    return null;
   }
 
   compactTableLiteral(expr) {

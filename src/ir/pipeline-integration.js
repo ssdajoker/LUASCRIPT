@@ -8,7 +8,7 @@
 let parser = null;
 try {
   parser = require("acorn");
-} catch (_) {
+} catch {
   parser = require("esprima");
   parser.__isEsprima = true;
 }

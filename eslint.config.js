@@ -115,7 +115,8 @@ const tier4GeneralRules = {
   ...tier3BackendRules,
   "complexity": "off",
   "no-console": "off",
-  "no-undef": "warn"
+  "no-undef": "warn",
+  "indent": "off"
 };
 
 export default [
@@ -126,12 +127,24 @@ export default [
   // General Code - Most Relaxed (base for tiering)
   {
     files: ["src/**/*.js", "lib/**/*.js"],
+    ignores: ["src/ir/**", "src/backends/**"],
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: "commonjs",
       globals: nodeGlobals
     },
     rules: tier4GeneralRules
+  },
+
+  // IR General - Moderate (default for IR files outside core/transform/validators)
+  {
+    files: ["src/ir/**/*.js"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "commonjs",
+      globals: nodeGlobals
+    },
+    rules: tier2ExtendedRules
   },
 
   // Backend Code - Relaxed
