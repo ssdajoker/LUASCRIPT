@@ -1,7 +1,7 @@
 
 /**
  * LUASCRIPT IR Node Definitions
- * 
+ *
  * Defines all node types for the canonical Intermediate Representation.
  */
 
@@ -16,7 +16,7 @@ const NodeCategory = {
   VAR_DECL: "VariableDeclarator", // Deprecated: use VARIABLE_DECLARATION (kept as alias for backward compatibility)
   VARIABLE_DECLARATION: "VariableDeclaration",
   PARAMETER: "Parameter",
-    
+
   // Statements
   BLOCK: "BlockStatement",
   RETURN: "ReturnStatement",
@@ -34,15 +34,15 @@ const NodeCategory = {
   THROW: "ThrowStatement",
   FOR_OF: "ForOfStatement",
   FOR_IN: "ForInStatement",
-    
+
   // Async/Await
   ASYNC_FUNCTION: "AsyncFunctionDeclaration",
   AWAIT: "AwaitExpression",
-    
+
   // Generators
   GENERATOR_FUNCTION: "GeneratorDeclaration",
   YIELD: "YieldExpression",
-    
+
   // Classes
   CLASS_DECL: "ClassDeclaration",
   CLASS_EXPR: "ClassExpression",
@@ -50,7 +50,7 @@ const NodeCategory = {
   CLASS_BODY: "ClassBody",
   SUPER: "Super",
   THIS: "ThisExpression",
-    
+
   // Expressions
   BINARY_OP: "BinaryExpression",
   UNARY_OP: "UnaryExpression",
@@ -65,14 +65,14 @@ const NodeCategory = {
   TEMPLATE_LITERAL: "TemplateLiteral",
   TEMPLATE_ELEMENT: "TemplateElement",
   TAGGED_TEMPLATE: "TaggedTemplateExpression",
-    
+
   // Patterns
   ARRAY_PATTERN: "ArrayPattern",
   OBJECT_PATTERN: "ObjectPattern",
   REST_ELEMENT: "RestElement",
   ASSIGNMENT_PATTERN: "AssignmentPattern",
   SPREAD_ELEMENT: "SpreadElement",
-    
+
   // Special
   PROPERTY: "Property"
 };
@@ -97,10 +97,10 @@ class IRNode {
 
   toJSON() {
     const json = { kind: this.kind };
-        
+
     if (this.loc) json.loc = this.loc;
     if (Object.keys(this.metadata).length > 0) json.metadata = this.metadata;
-        
+
     return json;
   }
 
@@ -258,7 +258,7 @@ class FunctionDecl extends IRNode {
     this.returnType = returnType;
     this.async = options.async || false; // Add async property
     this.arrow = Boolean(options.arrow);
-    this.expression = Boolean(options.expression);
+    this.isExpression = Boolean(options.expression);
   }
 
   toJSON() {
@@ -270,7 +270,7 @@ class FunctionDecl extends IRNode {
       returnType: toJsonValue(this.returnType),
       async: this.async, // Serialize async property
       arrow: this.arrow,
-      expression: this.expression
+      isExpression: this.isExpression
     };
   }
 
@@ -280,7 +280,7 @@ class FunctionDecl extends IRNode {
       json.parameters.map(p => IRNode.fromJSON(p)),
       IRNode.fromJSON(json.body),
       json.returnType ? require("./types").Type.fromJSON(json.returnType) : null,
-      { ...json, async: json.async, arrow: json.arrow, expression: json.expression } // Deserialize async property
+      { ...json, async: json.async, arrow: json.arrow, expression: json.isExpression || json.expression } // Deserialize async property (support both old and new)
     );
   }
 }
