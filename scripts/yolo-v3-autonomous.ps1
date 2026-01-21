@@ -72,15 +72,15 @@ $totalProgressMade = $false
 while ((Get-Date) -lt $endTime) {
     $cycleNumber++
     $remainingMinutes = [int](($endTime - (Get-Date)).TotalMinutes)
-    
+
     Write-Host ""
     Write-Host "════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
     Write-Host " OVERNIGHT CYCLE $cycleNumber - $remainingMinutes minutes remaining" -ForegroundColor Cyan
     Write-Host "════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
     Write-Host ""
-    
+
     Write-OvernightLog "Starting cycle $cycleNumber (${remainingMinutes}m remaining)"
-    
+
     try {
         # Run YOLO v3 layered mode
         $params = @{
@@ -89,22 +89,22 @@ while ((Get-Date) -lt $endTime) {
             EnableAI = $true
             Verbose = $false
         }
-        
+
         Write-Host "  Launching YOLO v3 Layered Mode..." -ForegroundColor Yellow
-        
+
         # Capture output
         $output = & ".\scripts\yolo-v3-layered.ps1" @params 2>&1
         $exitCode = $LASTEXITCODE
-        
+
         # Log output
         $output | ForEach-Object {
             Write-OvernightLog "  [v3] $_"
         }
-        
+
         if ($exitCode -eq 0) {
             Write-OvernightLog "✅ Cycle $cycleNumber completed successfully"
             $totalProgressMade = $true
-            
+
             # Check if a layer was completed
             if ($output -match "Layer (\d+) complete") {
                 $completedLayer = $matches[1]
@@ -119,7 +119,7 @@ while ((Get-Date) -lt $endTime) {
         } else {
             Write-OvernightLog "⚠️  Cycle $cycleNumber exited with code $exitCode"
         }
-        
+
         # Check if all layers complete
         if ($output -match "ALL LAYERS COMPLETE") {
             Write-Host ""
@@ -131,19 +131,19 @@ while ((Get-Date) -lt $endTime) {
             Write-OvernightLog "🎉 ALL 10 LAYERS COMPLETE!"
             break
         }
-        
+
         # Pause between cycles
         Start-Sleep -Seconds 30
-        
+
     } catch {
         $errorMsg = $_.Exception.Message
         Write-OvernightLog "Error in cycle $cycleNumber - $errorMsg"
         Write-Host "  Error: $errorMsg" -ForegroundColor Red
-        
+
         # Continue despite errors (overnight mode is resilient)
         Start-Sleep -Seconds 60
     }
-    
+
     # Safety check: Don't run forever if stuck
     if ($cycleNumber -ge 50) {
         Write-OvernightLog "Maximum cycles (50) reached - stopping"

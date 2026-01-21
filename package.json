@@ -118,7 +118,8 @@
     "test:scope": "node tests/semantic/scope.test.js",
     "test:async": "node tests/es6/async.test.js",
     "test:destructuring": "node tests/es6/destructuring.test.js",
-    "test:classes": "node tests/es6/classes.test.js"
+    "test:classes": "node tests/es6/classes.test.js",
+    "test:generators": "node tests/advanced-es6/generators.test.js"
   },
   "keywords": [
     "luascript",
