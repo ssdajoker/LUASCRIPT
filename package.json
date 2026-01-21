@@ -119,7 +119,16 @@
     "test:async": "node tests/es6/async.test.js",
     "test:destructuring": "node tests/es6/destructuring.test.js",
     "test:classes": "node tests/es6/classes.test.js",
-    "test:generators": "node tests/advanced-es6/generators.test.js"
+    "test:generators": "node tests/advanced-es6/generators.test.js",
+    "test:modern": "node tests/modern-js/modern.test.js",
+    "yolo:coordinator": "powershell -File scripts/yolo-coordinator-simple.ps1",
+    "yolo:agent": "node scripts/yolo-agent-implementation.js",
+    "yolo:multi-layer": "powershell -File scripts/yolo-multi-layer-loop.ps1",
+    "yolo:theater": "node scripts/yolo-theater.js",
+    "yolo:agent-evolved": "node scripts/yolo-agent-evolved.js",
+    "yolo:evolved": "npm run yolo:theater & npm run yolo:multi-layer",
+    "yolo:autonomous": "powershell -File scripts/yolo-v3-autonomous.ps1",
+    "yolo:deepwork": "powershell -File scripts/yolo-v3-deep-work.ps1"
   },
   "keywords": [
     "luascript",

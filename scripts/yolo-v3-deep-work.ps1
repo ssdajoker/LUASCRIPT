@@ -129,19 +129,9 @@ npm run harness && npm run ir:validate:all $([string]::Join(" ", ($Layer.Tests |
             Write-Layer "    ❌ FAIL - needs implementation" -Color "Red"
             $testsFailed++
 
-            # Save failure details
-            $failFile = Join-Path "artifacts" "layer-$($Layer.Id)-$test-failures.txt"
-            $testOutput | Out-File $failFile -Encoding UTF8
-            Write-Layer "    📝 Failures saved: $failFile" -Color "Yellow"
-        }
-    }
-
-    Write-Layer ""
-    Write-Layer "Test Results: $testsPassed passed, $testsFailed failed" -Color "$(if ($testsFailed -eq 0) { 'Green' } else { 'Yellow' })"
-
-    if ($testsFailed -eq 0) {
-        Write-Layer "✅ Layer $($Layer.Id) COMPLETE - All tests passing!" -Color "Green"
-        return $true
+            # Save failure details - sanitize filename
+            $safeTestName = $test -replace ':', '-'
+            $failFile = Join-Path "artifacts" "layer-$($Layer.Id)-$safeTestName-failures.txt"
     } else {
         Write-Layer "⏳ Layer $($Layer.Id) IN PROGRESS - $testsFailed tests need implementation" -Color "Yellow"
         Write-Layer ""
