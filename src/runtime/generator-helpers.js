@@ -13,15 +13,15 @@
  * @returns {Object} - Iterator protocol object
  */
 function makeIterator(generator) {
-    return {
-        [Symbol.iterator]() {
-            return {
-                next() {
-                    return generator.next();
-                }
-            };
+  return {
+    [Symbol.iterator]() {
+      return {
+        next() {
+          return generator.next();
         }
-    };
+      };
+    }
+  };
 }
 
 /**
@@ -32,40 +32,40 @@ function makeIterator(generator) {
  * @returns {Object} - Generator object with next(), return(), throw()
  */
 function createGenerator(generatorFn, ..._args) {
-    let state = "suspended";
-    let value;
+  let state = "suspended";
+  let value;
     
-    const generator = {
-        next(arg) {
-            if (state === "completed") {
-                return { value: undefined, done: true };
-            }
+  const generator = {
+    next(arg) {
+      if (state === "completed") {
+        return { value: undefined, done: true };
+      }
             
-            try {
-                value = generatorFn(arg);
-                if (value === undefined) {
-                    state = "completed";
-                    return { value: undefined, done: true };
-                }
-                return { value, done: false };
-            } catch (e) {
-                state = "completed";
-                throw e;
-            }
-        },
-        
-        return(value) {
-            state = "completed";
-            return { value, done: true };
-        },
-        
-        throw(err) {
-            state = "completed";
-            throw err;
+      try {
+        value = generatorFn(arg);
+        if (value === undefined) {
+          state = "completed";
+          return { value: undefined, done: true };
         }
-    };
+        return { value, done: false };
+      } catch (e) {
+        state = "completed";
+        throw e;
+      }
+    },
+        
+    return(value) {
+      state = "completed";
+      return { value, done: true };
+    },
+        
+    throw(err) {
+      state = "completed";
+      throw err;
+    }
+  };
     
-    return generator;
+  return generator;
 }
 
 /**
@@ -76,14 +76,14 @@ function createGenerator(generatorFn, ..._args) {
  * @returns {any} - Final return value from delegated generator
  */
 function* delegateGenerator(generator) {
-    let result;
-    while (true) {
-        result = generator.next();
-        if (result.done) {
-            return result.value;
-        }
-        yield result.value;
+  let result;
+  while (true) {
+    result = generator.next();
+    if (result.done) {
+      return result.value;
     }
+    yield result.value;
+  }
 }
 
 /**
@@ -91,13 +91,13 @@ function* delegateGenerator(generator) {
  * Creates an async generator that can use await
  */
 async function* createAsyncGenerator(generatorFn, ...args) {
-    // Async generators combine promises with iteration
-    yield* generatorFn(...args);
+  // Async generators combine promises with iteration
+  yield* generatorFn(...args);
 }
 
 module.exports = {
-    makeIterator,
-    createGenerator,
-    delegateGenerator,
-    createAsyncGenerator
+  makeIterator,
+  createGenerator,
+  delegateGenerator,
+  createAsyncGenerator
 };

@@ -34,6 +34,22 @@ function createStatementDispatch(irLowerer) {
       lower: (node) => irLowerer.loopLowerer.lowerForOfStatement(node),
       pushToBody: true,
     },
+    ForInStatement: {
+      lower: (node) => irLowerer.loopLowerer.lowerForInStatement(node),
+      pushToBody: true,
+    },
+    DoWhileStatement: {
+      lower: (node) => irLowerer.loopLowerer.lowerDoWhileStatement(node),
+      pushToBody: true,
+    },
+    BreakStatement: {
+      lower: () => irLowerer.builder.break(),
+      pushToBody: true,
+    },
+    ContinueStatement: {
+      lower: () => irLowerer.builder.continue(),
+      pushToBody: true,
+    },
     ThrowStatement: {
       lower: (node) => irLowerer.lowerThrowStatement(node),
       pushToBody: true,
@@ -51,7 +67,22 @@ function createStatementDispatch(irLowerer) {
       pushToBody: true,
     },
     FunctionDeclaration: {
-      lower: (node, context) => irLowerer.lowerFunctionDeclaration(node, { pushToBody: context.pushToBody }),
+      lower: (node, context) => {
+        // Check if it's async
+        if (node.async) {
+          return irLowerer.lowerAsyncFunctionDeclaration(node, { pushToBody: context.pushToBody });
+        }
+        // Check if it's a generator
+        if (node.generator) {
+          return irLowerer.lowerGeneratorDeclaration(node, { pushToBody: context.pushToBody });
+        }
+        // Regular function declaration
+        return irLowerer.lowerFunctionDeclaration(node, { pushToBody: context.pushToBody });
+      },
+      pushToBody: false,
+    },
+    AsyncFunctionDeclaration: {
+      lower: (node, context) => irLowerer.lowerAsyncFunctionDeclaration(node, { pushToBody: context.pushToBody }),
       pushToBody: false,
     },
   };

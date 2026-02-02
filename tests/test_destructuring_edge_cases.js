@@ -180,7 +180,7 @@ class DestructuringEdgeCaseTests {
         this.test(
             'Array of objects destructuring',
             'let [{id: uid, name: userName}, {id: aid, role}] = users;',
-            [/local uid = _destructure_\d+/, /local userName = _destructure_\d+/]
+            [/local uid = _nested_\d+\.id/, /local userName = _nested_\d+\.name/]
         );
 
         this.test(

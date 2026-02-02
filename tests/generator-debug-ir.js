@@ -4,7 +4,6 @@
 
 const esprima = require('esprima');
 const { EnhancedLowerer } = require('../src/ir/lowerer-enhanced');
-const util = require('util');
 
 const code = `
 function* counter() {

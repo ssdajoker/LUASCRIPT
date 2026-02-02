@@ -18,7 +18,10 @@ const TypeCategory = {
   OPTIONAL: "optional",
   VOID: "void",
   ANY: "any",
-  CUSTOM: "custom"
+  CUSTOM: "custom",
+  PROMISE: "promise",
+  FUTURE: "future",
+  ASYNC_FUNCTION: "async_function"
 };
 
 /**
@@ -73,6 +76,9 @@ class Type {
       ),
       [TypeCategory.UNION]: () => new TUnion(json.types.map(Type.fromJSON), json),
       [TypeCategory.OPTIONAL]: () => new TOptional(Type.fromJSON(json.baseType), json),
+      [TypeCategory.PROMISE]: () => new TPromise(Type.fromJSON(json.elementType), json),
+      [TypeCategory.FUTURE]: () => new TFuture(Type.fromJSON(json.elementType), json),
+      [TypeCategory.ASYNC_FUNCTION]: () => new TAsyncFunction(Type.fromJSON(json.returnType), json),
       [TypeCategory.VOID]: () => new TVoid(json),
       [TypeCategory.ANY]: () => new TAny(json),
       [TypeCategory.CUSTOM]: () => new TCustom(json.name, json)
@@ -285,6 +291,105 @@ class TOptional extends Type {
 }
 
 /**
+ * Promise Type - Represents Promise<T> (JavaScript Promise)
+ */
+class TPromise extends Type {
+  constructor(elementType, options = {}) {
+    super(TypeCategory.PROMISE, options);
+    this.elementType = elementType || new TAny();
+  }
+
+  equals(other) {
+    if (!super.equals(other)) return false;
+    return this.elementType.equals(other.elementType);
+  }
+
+  isCompatibleWith(other) {
+    if (super.isCompatibleWith(other)) return true;
+    // Promise can be assigned to Future in some contexts
+    if (other.category === TypeCategory.FUTURE) {
+      return this.elementType.isCompatibleWith(other.elementType);
+    }
+    return false;
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      elementType: this.elementType.toJSON()
+    };
+  }
+
+  toString() {
+    return `Promise<${this.elementType.toString()}>`;
+  }
+}
+
+/**
+ * Future Type - Represents Future<T> (Dart Future, similar to Promise)
+ */
+class TFuture extends Type {
+  constructor(elementType, options = {}) {
+    super(TypeCategory.FUTURE, options);
+    this.elementType = elementType || new TAny();
+  }
+
+  equals(other) {
+    if (!super.equals(other)) return false;
+    return this.elementType.equals(other.elementType);
+  }
+
+  isCompatibleWith(other) {
+    if (super.isCompatibleWith(other)) return true;
+    // Future can be assigned to Promise in some contexts
+    if (other.category === TypeCategory.PROMISE) {
+      return this.elementType.isCompatibleWith(other.elementType);
+    }
+    return false;
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      elementType: this.elementType.toJSON()
+    };
+  }
+
+  toString() {
+    return `Future<${this.elementType.toString()}>`;
+  }
+}
+
+/**
+ * Async Function Type - Represents the return type of async functions
+ */
+class TAsyncFunction extends Type {
+  constructor(returnType, options = {}) {
+    super(TypeCategory.ASYNC_FUNCTION, options);
+    // Async functions always return Promise-like types
+    this.returnType = returnType;
+    this.isAwaitableType = true;
+  }
+
+  equals(other) {
+    if (!super.equals(other)) return false;
+    return this.returnType.equals(other.returnType);
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      returnType: this.returnType.toJSON(),
+      isAwaitableType: this.isAwaitableType
+    };
+  }
+
+  toString() {
+    return `async () => ${this.returnType.toString()}`;
+  }
+}
+
+/**
  * Void Type
  */
 class TVoid extends Type {
@@ -353,6 +458,9 @@ const Types = {
   function: (parameters, returnType) => new TFunction(parameters, returnType),
   union: (...types) => new TUnion(types),
   optional: (baseType) => new TOptional(baseType),
+  promise: (elementType) => new TPromise(elementType),
+  future: (elementType) => new TFuture(elementType),
+  asyncFunction: (returnType) => new TAsyncFunction(returnType),
   void: () => new TVoid(),
   any: () => new TAny(),
   custom: (name) => new TCustom(name)
@@ -368,6 +476,9 @@ module.exports = {
   TFunction,
   TUnion,
   TOptional,
+  TPromise,
+  TFuture,
+  TAsyncFunction,
   TVoid,
   TAny,
   TCustom,

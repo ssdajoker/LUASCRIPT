@@ -9,7 +9,6 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 const VersionBump = require('../scripts/version-bump');
 const ChangelogGenerator = require('../scripts/changelog-generator');
 const ArtifactSigner = require('../scripts/sign-artifacts');

@@ -10,6 +10,8 @@ const nodes = require("./nodes");
 const { IRBuilder, builder } = require("./builder");
 const { IRValidator } = require("./validators/validator");
 const { IRSerializer } = require("./transforms/serializer");
+const { PythonPhaseBPipeline } = require("./pipeline_python_phase_b");
+const { PythonPhaseBEmitter } = require("./emitter_python_phase_b");
 
 module.exports = {
   // Types
@@ -26,5 +28,9 @@ module.exports = {
   IRValidator,
     
   // Serializer
-  IRSerializer
+  IRSerializer,
+
+  // Phase B Python pipeline
+  PythonPhaseBPipeline,
+  PythonPhaseBEmitter
 };

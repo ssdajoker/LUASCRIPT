@@ -1,0 +1,50 @@
+=== Test 1: Default Parameter ===
+Parsing statement, current token: { type: 'KEYWORD', value: 'function', line: 1, column: 1, position: 8 }
+Parsing statement, current token: { type: 'KEYWORD', value: 'return', line: 2, column: 5, position: 43 }
+Parsing statement, current token: { type: 'RIGHT_BRACE', value: '}', line: 3, column: 3, position: 64 }
+IR module body: [
+  { id: 'node_1', kind: 'ExpressionStatement' },
+  { id: 'node_1TT', kind: 'ReturnStatement' },
+  { id: 'node_1T1', kind: 'ExpressionStatement' }
+]
+
+First node: ExpressionStmt {
+  kind: 'ExpressionStatement',
+  loc: null,
+  metadata: {},
+  expression: 'node_0',
+  id: 'node_1'
+}
+
+Lua output:
+nil
+
+return "Hello " .. name
+
+nil
+
+
+=== Test 2: Rest Parameters ===
+Parsing statement, current token: { type: 'KEYWORD', value: 'function', line: 1, column: 1, position: 8 }
+Parsing statement, current token: { type: 'KEYWORD', value: 'return', line: 2, column: 5, position: 37 }
+Parsing statement, current token: { type: 'RIGHT_BRACE', value: '}', line: 3, column: 3, position: 50 }
+IR module body: [
+  { id: 'node_1', kind: 'ExpressionStatement' },
+  { id: 'node_10', kind: 'ReturnStatement' },
+  { id: 'node_1TT', kind: 'ExpressionStatement' }
+]
+
+Lua output:
+nil
+
+return numbers
+
+nil
+
+
+=== Test 3: Spread in Call ===
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+IR module body: [ { id: 'node_1TT', kind: 'VariableDeclaration' } ]
+
+Lua output:
+local result = sum()

@@ -4,7 +4,6 @@
  * Quick test to verify generator implementation works before running full test suite
  */
 
-const { IRBuilder } = require('../src/ir/builder');
 const { EnhancedLowerer } = require('../src/ir/lowerer-enhanced');
 const { EnhancedEmitter } = require('../src/ir/emitter-enhanced');
 const esprima = require('esprima');

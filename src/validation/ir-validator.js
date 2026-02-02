@@ -86,6 +86,24 @@ class IRValidator {
         case "CallExpression":
             this.validateCallExpression(node);
             break;
+        case "TryStatement":
+            this.validateTryStatement(node);
+            break;
+        case "CatchClause":
+            this.validateCatchClause(node);
+            break;
+        case "FinallyClause":
+            this.validateFinallyClause(node);
+            break;
+        case "ThrowStatement":
+            this.validateThrowStatement(node);
+            break;
+        case "ImportDeclaration":
+            this.validateImportDeclaration(node);
+            break;
+        case "ExportDeclaration":
+            this.validateExportDeclaration(node);
+            break;
         default:
             // Unknown node type - log warning but continue
             break;
@@ -186,6 +204,65 @@ class IRValidator {
             return false;
         }
         return nodes.every(n => this.validateNodeReference(n, nodeType));
+    }
+
+    // ========== EXCEPTION HANDLING & MODULE SYSTEM (CLARITY SUPER CANON) ==========
+
+    validateTryStatement(node) {
+        if (!node.block) {
+            this.errors.push("TryStatement must have a block");
+        }
+        if (!node.handler && !node.finalizer) {
+            this.errors.push("TryStatement must have handler (CatchClause) and/or finalizer (FinallyClause)");
+        }
+    }
+
+    validateCatchClause(node) {
+        if (!node.body) {
+            this.errors.push("CatchClause must have a body");
+        }
+        if (node.param && typeof node.param !== "string" && typeof node.param !== "object") {
+            this.errors.push("CatchClause param must be a string or identifier object");
+        }
+    }
+
+    validateFinallyClause(node) {
+        if (!node.body) {
+            this.errors.push("FinallyClause must have a body");
+        }
+    }
+
+    validateThrowStatement(node) {
+        if (!node.argument) {
+            this.errors.push("ThrowStatement must have an argument");
+        }
+    }
+
+    validateImportDeclaration(node) {
+        if (!node.source || typeof node.source !== "string") {
+            this.errors.push("ImportDeclaration must have a string source");
+        }
+        if (!Array.isArray(node.specifiers)) {
+            this.errors.push("ImportDeclaration specifiers must be an array");
+        }
+        if (node.importKind && !["value", "type", "typeof"].includes(node.importKind)) {
+            this.errors.push("ImportDeclaration importKind must be 'value', 'type', or 'typeof'");
+        }
+    }
+
+    validateExportDeclaration(node) {
+        if (!Array.isArray(node.specifiers)) {
+            this.errors.push("ExportDeclaration specifiers must be an array");
+        }
+        if (node.source && typeof node.source !== "string") {
+            this.errors.push("ExportDeclaration source must be a string");
+        }
+        if (node.exportKind && !["value", "type"].includes(node.exportKind)) {
+            this.errors.push("ExportDeclaration exportKind must be 'value' or 'type'");
+        }
+        if (!node.specifiers.length && !node.declaration) {
+            this.errors.push("ExportDeclaration must have either specifiers or a declaration");
+        }
     }
 }
 

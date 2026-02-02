@@ -1,3 +1,4 @@
+/* eslint-env jest */
 "use strict";
 
 const assert = require("assert");
@@ -53,7 +54,7 @@ function expectThrows(fn, message) {
 })();
 /* eslint-env jest */
 
-const { IRNode, NodeCategory, fromJsonHandlers } = require('../../src/ir/nodes');
+const { NodeCategory, fromJsonHandlers } = require('../../src/ir/nodes');
 
 describe('IRNode.fromJSON handler map', () => {
     test('includes a handler for every NodeCategory', () => {

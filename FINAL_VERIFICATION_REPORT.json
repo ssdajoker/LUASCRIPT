@@ -1,0 +1,284 @@
+{
+  "timestamp": "2026-02-02T07:24:00.106Z",
+  "summary": {
+    "total_tests": 23,
+    "total_passed": 22,
+    "pass_rate": "95.7%",
+    "system_health": "91.3%",
+    "memory_leaks": "NONE DETECTED",
+    "critical_issues": 0,
+    "medium_issues": 2
+  },
+  "parsing_results": {
+    "PHP": {
+      "passed": 6,
+      "failed": 0,
+      "tests": [
+        {
+          "name": "Variable",
+          "code": "$x = 10;",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "String concat",
+          "code": "\"Hello\" . \"World\"",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Array",
+          "code": "[1, 2, 3]",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Function call",
+          "code": "echo \"test\";",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Ternary",
+          "code": "$x ? \"yes\" : \"no\"",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Null coalesce",
+          "code": "$x ?? \"default\"",
+          "expected": true,
+          "actual": true
+        }
+      ]
+    },
+    "Dart": {
+      "passed": 7,
+      "failed": 0,
+      "tests": [
+        {
+          "name": "Variable",
+          "code": "var x = 10;",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "String",
+          "code": "\"Hello Dart\"",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "List",
+          "code": "[1, 2, 3]",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Map",
+          "code": "{\"key\": \"value\"}",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Function call",
+          "code": "print(\"hello\");",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Cascade",
+          "code": "obj..method1()..method2()",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Null coalesce",
+          "code": "x ?? \"default\"",
+          "expected": true,
+          "actual": true
+        }
+      ]
+    },
+    "Ruby": {
+      "passed": 4,
+      "failed": 1,
+      "tests": [
+        {
+          "name": "Variable",
+          "code": "x = 10",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "String",
+          "code": "\"Hello\"",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Array",
+          "code": "[1, 2, 3]",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Hash",
+          "code": "{a: 1, b: 2}",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Function call",
+          "code": "puts \"hello\"",
+          "expected": true,
+          "actual": false,
+          "error": "Expected '(' (got \"hello\")"
+        }
+      ]
+    },
+    "Python": {
+      "passed": 5,
+      "failed": 0,
+      "tests": [
+        {
+          "name": "Variable",
+          "code": "x = 10",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "String",
+          "code": "\"Hello\"",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "List",
+          "code": "[1, 2, 3]",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Dict",
+          "code": "{\"a\": 1, \"b\": 2}",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "name": "Function call",
+          "code": "print(\"hello\")",
+          "expected": true,
+          "actual": true
+        }
+      ]
+    }
+  },
+  "memory_results": {
+    "PHP": {
+      "first": 5,
+      "last": 5,
+      "growth": "0.0",
+      "stable": true
+    },
+    "Dart": {
+      "first": 4,
+      "last": 4,
+      "growth": "0.0",
+      "stable": true
+    },
+    "Ruby": {
+      "first": 0,
+      "last": 0,
+      "growth": "N/A",
+      "stable": true
+    },
+    "Python": {
+      "first": 11,
+      "last": 11,
+      "growth": "0.0",
+      "stable": true
+    }
+  },
+  "issues": [
+    {
+      "id": 1,
+      "severity": "LOW",
+      "component": "PHP Parser",
+      "title": "Debug messages for ternary/null coalesce operators",
+      "description": "Parser shows \"Unknown token in parsePrimary\" debug messages for ? and : tokens when parsing ternary and null coalesce expressions. These are cosmetic and don't affect functionality.",
+      "status": "COSMETIC",
+      "recommendation": "Suppress debug messages or add proper handling for PUNCT tokens in parsePrimary"
+    },
+    {
+      "id": 2,
+      "severity": "MEDIUM",
+      "component": "PHP Parser",
+      "title": "Slow performance on foreach blocks",
+      "description": "PHP parser shows 6.7ms avg parse time for medium code with foreach loops (vs 0.2-0.3ms for other parsers). Causes repeated \"Unknown token\" messages for { } blocks.",
+      "status": "PERFORMANCE",
+      "recommendation": "Optimize block parsing, add better foreach statement support"
+    },
+    {
+      "id": 3,
+      "severity": "LOW",
+      "component": "Dart Parser",
+      "title": "Cascade operator parsing creates multiple statements",
+      "description": "Code like \"obj..method1()..method2()\" is parsed as multiple expression statements instead of a single cascade expression. AST is still created but not semantically correct.",
+      "status": "SEMANTIC",
+      "recommendation": "Implement proper cascade operator handling in parsePostfix()"
+    },
+    {
+      "id": 4,
+      "severity": "MEDIUM",
+      "component": "All Parsers",
+      "title": "No object pool reuse across parses",
+      "description": "ObjectPool is created but never reused. Each parse increments objectCount from the tokenize() reset, but returned nodes are never pushed back to the pool.",
+      "status": "OPTIMIZATION",
+      "recommendation": "Implement proper node pooling with returnNode() calls or reset pool between parses"
+    },
+    {
+      "id": 5,
+      "severity": "LOW",
+      "component": "Ruby Parser",
+      "title": "Memory stats return 0 objects",
+      "description": "Ruby parser's getMemoryStats() returns 0 objects because it doesn't track object creation like PHP and Dart do.",
+      "status": "INCOMPLETE",
+      "recommendation": "Add memory tracking to Ruby parser constructor"
+    },
+    {
+      "id": 6,
+      "severity": "INFO",
+      "component": "Base Parser",
+      "title": "Tokenizer change affects multiple token types",
+      "description": "Changed `:` and `?` from OPERATOR to PUNCT in base_parser tokenizeC_Family. This may affect other C-family parsers.",
+      "status": "CHANGE",
+      "recommendation": "Test all C-family parsers (Java, Kotlin, TypeScript, etc.) to ensure compatibility"
+    }
+  ],
+  "health_score": {
+    "Parsing Correctness": {
+      "score": "95.7",
+      "weight": 0.4
+    },
+    "Memory Stability": {
+      "score": 100,
+      "weight": 0.3
+    },
+    "Performance": {
+      "score": 75,
+      "weight": 0.2
+    },
+    "Code Quality": {
+      "score": 80,
+      "weight": 0.1
+    }
+  },
+  "recommendations": [
+    "PHP Parser: Optimize foreach block parsing",
+    "All Parsers: Implement proper object pooling",
+    "Dart Parser: Fix cascade operator semantics",
+    "Ruby Parser: Add memory tracking",
+    "Base Parser: Test tokenizer changes on other C-family parsers"
+  ]
+}

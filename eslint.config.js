@@ -118,7 +118,7 @@ const tier4GeneralRules = {
   "no-undef": "warn"
 };
 
-export default [
+module.exports = [
   {
     ignores: ["node_modules/**", "dist/**", "build/**", "coverage/**", ".git/**"]
   },
@@ -169,7 +169,7 @@ export default [
 
   // Test Files - Relaxed
   {
-    files: ["**/*.test.js", "**/__tests__/**/*.js", "test/**/*.js"],
+    files: ["**/*.test.js", "**/__tests__/**/*.js", "test/**/*.js", "tests/**/*.js"],
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: "commonjs",
@@ -177,14 +177,17 @@ export default [
         ...nodeGlobals,
         describe: "readonly",
         it: "readonly",
+        test: "readonly",
         expect: "readonly",
         beforeEach: "readonly",
-        afterEach: "readonly"
+        afterEach: "readonly",
+        beforeAll: "readonly",
+        afterAll: "readonly"
       }
     },
     rules: {
       ...recommendedCoreRules,
-      "no-unused-vars": ["warn"]
+      "no-unused-vars": "warn"
     }
   }
 ];

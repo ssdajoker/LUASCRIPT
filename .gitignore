@@ -148,3 +148,47 @@ benchmarks/output/
 # OS/editor histories
 .history/
 .vscode/**.history/
+
+# ============================================================================
+# FILE HANDLING SAFETY - PREVENT EMPTY/PROBLEMATIC FILES
+# ============================================================================
+# Added to prevent "File is empty or binary" errors during development
+# See .tools/FILE_HANDLING_GUIDE.md for details
+
+# Test output files (often created empty or with encoding issues)
+*_results.txt
+*-output.txt
+*-results.txt
+gate_results.txt
+test_output.txt
+test-output.txt
+
+# Debug/trace files (temporary debugging artifacts)
+debug_*.txt
+debug_*.js
+trace_*.txt
+trace_*.js
+debug-*.txt
+debug-*.js
+
+# Temporary audit/lint output (regenerated, may be empty)
+audit/*.txt
+audit_upstream/*.txt
+!audit/README.md
+!audit_upstream/README.md
+
+# Python type stubs (intentionally empty marker files)
+py.typed
+
+# Empty __init__.py files (auto-generated)
+# Note: Comment this if you need to track specific __init__.py files
+# **/__pycache__/__init__.py
+
+# Windows/PowerShell output encoding issues
+*.err
+*.stderr.txt
+*.stdout.txt
+
+# Build tool temporary output
+*.build.log
+*.install.log

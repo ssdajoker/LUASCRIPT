@@ -112,6 +112,28 @@ const normalizers = {
     };
   },
 
+  AssignmentPattern(node, options) {
+    return {
+      type: "AssignmentPattern",
+      left: normalizeNode(node.left, options),
+      right: normalizeNode(node.right, options),
+    };
+  },
+
+  RestElement(node, options) {
+    return {
+      type: "RestElement",
+      argument: normalizeNode(node.argument, options),
+    };
+  },
+
+  SpreadElement(node, options) {
+    return {
+      type: "SpreadElement",
+      argument: normalizeNode(node.argument, options),
+    };
+  },
+
   LogicalExpression(node, options) {
     return {
       type: "LogicalExpression",
@@ -232,6 +254,33 @@ const normalizers = {
     };
   },
 
+  ForOfStatement(node, options) {
+    return {
+      type: "ForOfStatement",
+      left: normalizeNode(node.left, options),
+      right: normalizeNode(node.right, options),
+      body: normalizeNode(node.body, options),
+      await: Boolean(node.await),
+    };
+  },
+
+  ForInStatement(node, options) {
+    return {
+      type: "ForInStatement",
+      left: normalizeNode(node.left, options),
+      right: normalizeNode(node.right, options),
+      body: normalizeNode(node.body, options),
+    };
+  },
+
+  DoWhileStatement(node, options) {
+    return {
+      type: "DoWhileStatement",
+      body: normalizeNode(node.body, options),
+      test: normalizeNode(node.test, options),
+    };
+  },
+
   SwitchStatement(node, options) {
     return {
       type: "SwitchStatement",
@@ -254,6 +303,7 @@ const normalizers = {
         body: normalizeNode(m.body, options),
         kind: m.kind || "method",
         static: Boolean(m.static),
+        async: Boolean(m.async),
       }));
     return {
       type: "ClassDeclaration",
@@ -285,6 +335,8 @@ const normalizers = {
       id: normalizeNode(node.id, options),
       params: normalizeArray(node.params, options),
       body: normalizeNode(node.body, options),
+      async: Boolean(node.async),
+      generator: Boolean(node.generator),
     };
   },
 
@@ -320,7 +372,22 @@ const normalizers = {
       type: "ArrowFunctionExpression",
       params,
       body,
-      async: Boolean(node.isAsync),
+      async: Boolean(node.isAsync || node.async),
+    };
+  },
+
+  AwaitExpression(node, options) {
+    return {
+      type: "AwaitExpression",
+      argument: normalizeNode(node.argument, options),
+    };
+  },
+
+  YieldExpression(node, options) {
+    return {
+      type: "YieldExpression",
+      argument: normalizeNode(node.argument, options),
+      delegate: Boolean(node.delegate),
     };
   },
 

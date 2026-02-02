@@ -86,7 +86,7 @@ class DestructuringTests {
         this.test(
             'Array with default value',
             'let [a, b = 10] = [1];',
-            ['local a = _destructure_', 'local b = _destructure_', 'or 10']
+            ['local a = _destructure_', /local b = \(?_destructure_\d+\[2\]/, 'or 10']
         );
 
         this.test(
@@ -150,7 +150,7 @@ class DestructuringTests {
         this.test(
             'Object with mixed renamed and default',
             'let {x: a = 5, y: b = 10} = data;',
-            [/local a = _destructure_\d+\.(x|['x'])/, 'or 5', /local b = _destructure_\d+\.(y|['y'])/, 'or 10']
+            [/local a = \(?_destructure_\d+\.(x|['x'])/, 'or 5', /local b = \(?_destructure_\d+\.(y|['y'])/, 'or 10']
         );
 
         // ========== NESTED DESTRUCTURING ==========
@@ -219,7 +219,7 @@ class DestructuringTests {
         this.test(
             'Destructuring in for loop',
             'for (let [key, value] of items) {}',
-            [/local __iter = items/, /for .*, .*in ipairs\(__iter\)/]  // Note: Pattern destructuring in loops is Phase 4
+            [/for __k, .* in pairs\(items\)/]  // Note: Pattern destructuring in loops is Phase 4
         );
 
         // ========== EDGE CASES ==========

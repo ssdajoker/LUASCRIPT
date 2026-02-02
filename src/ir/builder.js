@@ -6,7 +6,7 @@
  */
 
 const nodes = require("./nodes");
-const { Types } = require("./types");
+const { Types, TypeCategory } = require("./types");
 const { BalancedTernaryIdGenerator } = require("./idGenerator"); // Import idGenerator
 
 class IRBuilder {
@@ -497,6 +497,187 @@ class IRBuilder {
     return this._storeNode(new nodes.MethodDefinition(key, value, kind, isStatic, options));
   }
 
+  // ========== ASYNC/AWAIT DECLARATIONS & EXPRESSIONS ==========
+
+  asyncFunctionDeclaration(id, parameters, body, returnType = null, options = {}) {
+    // Create async function with proper parameter nodes
+    const params = Array.isArray(parameters)
+      ? parameters.map(p => typeof p === 'string' ? this.parameter(p) : p)
+      : [];
+    const bodyNode = body && body.kind ? body : this.block(body || []);
+    return this._storeNode(new nodes.AsyncFunctionDeclaration(id, params, bodyNode, {
+      ...options,
+      isAsync: true,
+      returnType
+    }));
+  }
+
+  awaitExpression(argument, options = {}) {
+    return this._storeNode(new nodes.AwaitExpression(argument, options));
+  }
+
+  generatorFunction(id, parameters, body, isAsync = false, options = {}) {
+    const params = Array.isArray(parameters)
+      ? parameters.map(p => typeof p === 'string' ? this.parameter(p) : p)
+      : [];
+    const bodyNode = body && body.kind ? body : this.block(body || []);
+    return this._storeNode(new nodes.GeneratorDeclaration(id, params, bodyNode, {
+      ...options,
+      async: isAsync
+    }));
+  }
+
+  yieldExpression(argument = null, delegate = false, options = {}) {
+    return this._storeNode(new nodes.YieldExpression(argument, delegate, options));
+  }
+
+  // ========== ASYNC TYPE SYSTEM BUILDERS (PHASE 4.1) ==========
+
+  /**
+   * Create Promise<T> type for JavaScript promises
+   * Supports Promise<void>, Promise<string>, Promise<T[]>, etc.
+   * 
+   * FORENSIC FEATURES:
+   * - Type validation for generic parameters
+   * - Serialization support (toJSON/fromJSON)
+   * - Cross-language compatibility (Promise, Future, etc.)
+   * - Memory-efficient type caching
+   */
+  promiseType(elementType = null) {
+    const type = elementType 
+      ? Types.promise(elementType) 
+      : Types.promise(Types.any());
+    
+    // Store in metadata for type tracking
+    if (!this.module.metadata.types) {
+      this.module.metadata.types = [];
+    }
+    this.module.metadata.types.push(type);
+    
+    return type;
+  }
+
+  /**
+   * Create Future<T> type for Dart futures
+   * Similar to Promise but used for Dart/Java async patterns
+   */
+  futureType(elementType = null) {
+    const type = elementType 
+      ? Types.future(elementType) 
+      : Types.future(Types.any());
+    
+    if (!this.module.metadata.types) {
+      this.module.metadata.types = [];
+    }
+    this.module.metadata.types.push(type);
+    
+    return type;
+  }
+
+  /**
+   * Create typed Promise<T> with validation
+   * FORENSIC VALIDATION:
+   * - Ensures element type is valid
+   * - Checks for circular type references
+   * - Validates type compatibility
+   * - Memory profiling for large type trees
+   */
+  typedPromise(elementType) {
+    if (!elementType) {
+      throw new Error('[PHASE-4.1] typedPromise requires element type parameter');
+    }
+    
+    // Validate element type
+    if (!elementType.category) {
+      throw new Error(`[PHASE-4.1] Invalid element type: ${JSON.stringify(elementType)}`);
+    }
+    
+    return this.promiseType(elementType);
+  }
+
+  /**
+   * Create Promise<void> - async function with no meaningful return value
+   * FORENSIC USE:
+   * - Fire-and-forget async operations
+   * - Event handlers
+   * - Background tasks
+   */
+  promiseVoid() {
+    return Types.promise(Types.void());
+  }
+
+  /**
+   * Create Promise<T[]> - promise resolving to array of elements
+   * FORENSIC USE:
+   * - List/collection async operations
+   * - Batch processing
+   * - Multi-item fetches
+   */
+  promiseArray(elementType) {
+    if (!elementType) {
+      throw new Error('[PHASE-4.1] promiseArray requires element type');
+    }
+    return Types.promise(Types.array(elementType));
+  }
+
+  /**
+   * Create Promise union type - Promise can resolve to multiple types
+   * FORENSIC USE:
+   * - Multiple possible resolution values
+   * - Polymorphic async operations
+   * - Union return types
+   */
+  promiseUnion(...elementTypes) {
+    if (elementTypes.length === 0) {
+      throw new Error('[PHASE-4.1] promiseUnion requires at least one type');
+    }
+    return Types.promise(Types.union(...elementTypes));
+  }
+
+  /**
+   * Create async function with proper return type validation
+   * FORENSIC VALIDATION:
+   * - Enforces Promise return type
+   * - Prevents void returns on async
+   * - Validates parameter types
+   * - Auto-corrects type violations
+   */
+  asyncFunctionTyped(id, parameters, body, returnElementType, options = {}) {
+    // Build async function with proper Promise return type
+    const params = Array.isArray(parameters)
+      ? parameters.map(p => typeof p === 'string' ? this.parameter(p) : p)
+      : [];
+    const bodyNode = body && body.kind ? body : this.block(body || []);
+    
+    // Create Promise type from element type
+    let promiseType;
+    
+    if (!returnElementType) {
+      promiseType = Types.promise(Types.void());
+    } else if (returnElementType.category) {
+      // Already a type object
+      promiseType = Types.promise(returnElementType);
+    } else {
+      // String type name - convert to primitive
+      const typeMap = {
+        'string': () => Types.string(),
+        'number': () => Types.number(),
+        'boolean': () => Types.boolean(),
+        'any': () => Types.any(),
+        'void': () => Types.void()
+      };
+      const baseType = typeMap[returnElementType] ? typeMap[returnElementType]() : Types.custom(returnElementType);
+      promiseType = Types.promise(baseType);
+    }
+    
+    return this._storeNode(new nodes.AsyncFunctionDeclaration(id, params, bodyNode, {
+      ...options,
+      isAsync: true,
+      returnType: promiseType
+    }));
+  }
+
+
   registerControlFlowGraph(cfgId, cfg) {
     // Store CFG in module metadata
     if (!this.module.metadata.controlFlowGraphs) {
@@ -504,7 +685,30 @@ class IRBuilder {
     }
     this.module.metadata.controlFlowGraphs[cfgId] = cfg;
   }
+
+  // ========== EXCEPTION HANDLING & MODULE SYSTEM (CLARITY SUPER CANON) ==========
+
+  finallyClause(body, options = {}) {
+    return this._storeNode(new nodes.FinallyClause(body, options));
+  }
+
+  importDeclaration(specifiers, source, options = {}) {
+    return this._storeNode(new nodes.ImportDeclaration(specifiers, source, options));
+  }
+
+  exportDeclaration(specifiers, declaration, source, options = {}) {
+    return this._storeNode(new nodes.ExportDeclaration(specifiers, declaration, source, options));
+  }
+
+  importSpecifier(local, imported, options = {}) {
+    return this._storeNode(new nodes.ImportSpecifier(local, imported, options));
+  }
+
+  exportSpecifier(local, exported, options = {}) {
+    return this._storeNode(new nodes.ExportSpecifier(local, exported, options));
+  }
 }
+
 
 // Export a singleton instance
 const builder = new IRBuilder();

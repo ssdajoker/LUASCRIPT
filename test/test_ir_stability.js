@@ -36,6 +36,7 @@ const lowerer = new EnhancedLowerer(builder);
 
 try {
   const ir = lowerer.lower(mockProgram);
+  assert.ok(ir, 'Lowered IR should be defined');
   console.log('✅ IR Lowering successful');
 
   // 2. Test Validator Hardening

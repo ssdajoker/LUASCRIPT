@@ -282,6 +282,10 @@ describe('Extension API Backward Compatibility', function() {
   });
 
   describe('ExtensionRegistry', function() {
+    it('should expose ExtensionLoader constructor', function() {
+      assert.strictEqual(typeof ExtensionLoader, 'function');
+    });
+
     it('should register transforms', function() {
       const registry = new ExtensionRegistry();
       const transform = new MockBasicTransform();

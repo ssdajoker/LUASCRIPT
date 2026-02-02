@@ -174,7 +174,7 @@ function Test-Gate {
         }
     } else {
         Remove-Job -Job $job -Force
-        Write-Host "  ⏱️ $Name (timeout after ${Timeout}s)" -ForegroundColor Yellow
+        Write-Host ronsimeout after ${Timeout}s)" -ForegroundColor Yellow
         return @{ Passed = $false; Output = "Timeout"; Timeout = $true }
     }
 }

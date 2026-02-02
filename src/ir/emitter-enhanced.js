@@ -19,9 +19,11 @@ class EnhancedEmitter {
     this.contextStack = [];
     this.needsAwaitHelper = false;
     this.needsAsyncGeneratorHelper = false;
+    this.nodesMap = null; // For consolidated IR format
   }
 
   resetState() {
+    this.nodesMap = null;
     this.contextStack = [];
     this.needsAwaitHelper = false;
     this.needsAsyncGeneratorHelper = false;
@@ -30,6 +32,9 @@ class EnhancedEmitter {
 
   emit(ir) {
     this.resetState();
+    if (ir && ir.nodes) {
+      this.nodesMap = ir.nodes;
+    }
     return this.emitNode(ir);
   }
 
@@ -61,6 +66,10 @@ class EnhancedEmitter {
   emitNode(node) {
     if (!node) return "";
 
+    // Handle consolidated IR format at root level
+    if (node.module && node.nodes && !node.kind) {
+      return this.emitProgram(node);
+    }
     switch (node.kind) {
     case "Program":
       return this.emitProgram(node);
@@ -109,9 +118,22 @@ class EnhancedEmitter {
   }
 
   emitProgram(node) {
-    const body = (node.body || [])
-      .map(stmt => this.emitNode(stmt))
-      .filter(Boolean);
+    // Handle both IR formats:
+    // Consolidated: { schemaVersion, module: { body: [...] }, nodes: {...} }
+    // Legacy: { body: [...] }
+    let statements = [];
+    if (node.module && node.module.body && node.nodes) {
+      // Consolidated IR format with node references
+      statements = node.module.body.map(nodeId => {
+        const actualNode = this.resolveNode(nodeId);
+        return this.emitNode(actualNode);
+      }).filter(Boolean);
+    } else {
+      // Legacy format
+      statements = (node.body || [])
+        .map(stmt => this.emitNode(stmt))
+        .filter(Boolean);
+    }
 
     const helpers = [];
     if (this.needsAwaitHelper || this.needsAsyncGeneratorHelper) {
@@ -121,28 +143,36 @@ class EnhancedEmitter {
       helpers.push(this.emitAsyncGeneratorHelper());
     }
 
-    return [...helpers, ...body].filter(Boolean).join("\n");
+    return [...helpers, ...statements].filter(Boolean).join("\n");
   }
 
   emitBlockStatement(node) {
+    if (!node) {
+      return "";
+    }
     // Handle both IR Block nodes (statements) and AST BlockStatement (body)
     const stmtArray = node.statements || node.body || [];
-    const stmts = stmtArray.map(stmt => this.emitNode(stmt));
-    return stmts.join("\n");
+    const stmts = stmtArray.map(stmtId => {
+      const resolvedNode = this.resolveNode(stmtId);
+      return resolvedNode ? this.emitNode(resolvedNode) : "";
+    });
+    return stmts.filter(Boolean).join("\n");
   }
 
   emitFunctionDeclaration(node) {
     const name = node.name || (node.id && node.id.name) || "anonymous";
     const params = (node.parameters || node.params || [])
       .map(p => {
+        const paramNode = this.resolveNode(p);
+        if (paramNode && paramNode.name) return paramNode.name;
+        if (p && p.name) return p.name;
+        if (p && p.id && p.id.name) return p.id.name;
         if (typeof p === "string") return p;
-        if (p.name) return p.name;
-        if (p.id && p.id.name) return p.id.name;
         return "param";
       })
       .join(", ");
     this.indentLevel++;
-    const body = this.emitBlockStatement(node.body);
+    const body = this.emitBlockStatement(this.resolveNode(node.body));
     this.indentLevel--;
 
     if (node.async) {
@@ -165,7 +195,7 @@ class EnhancedEmitter {
 
     this.pushContext("async-function");
     this.indentLevel++;
-    const body = this.emitBlockStatement(node.body);
+    const body = this.emitBlockStatement(this.resolveNode(node.body));
     this.indentLevel--;
     this.popContext();
 
@@ -192,7 +222,7 @@ class EnhancedEmitter {
       const params = (method.value.params || []).map(p => p.name).join(", ");
 
       this.indentLevel++;
-      const body = this.emitBlockStatement(method.value.body);
+      const body = this.emitBlockStatement(this.resolveNode(method.value.body));
       this.indentLevel--;
 
       if (methodName === "constructor") {
@@ -242,6 +272,11 @@ class EnhancedEmitter {
   emitSimpleDeclaration(varDecl) {
     const varName = varDecl.name || "unknown";
     if (typeof varDecl.init === "string") {
+      const initNode = this.resolveNode(varDecl.init);
+      if (initNode && typeof initNode !== "string") {
+        return `${this.indent()}local ${varName} = ${this.emitExpression(initNode)}`;
+      }
+      // Fallback: use string directly (shouldn't normally happen)
       return `${this.indent()}local ${varName} = ${varDecl.init}`;
     }
     if (varDecl.init) {
@@ -263,14 +298,14 @@ class EnhancedEmitter {
     // IR uses 'condition', AST uses 'test'
     const test = this.emitExpression(node.condition || node.test);
     this.indentLevel++;
-    const consequent = this.emitBlockStatement(node.consequent);
+    const consequent = this.emitBlockStatement(this.resolveNode(node.consequent));
     this.indentLevel--;
 
     let code = `${this.indent()}if ${test} then\n${consequent}`;
 
     if (node.alternate) {
       this.indentLevel++;
-      const alternate = this.emitBlockStatement(node.alternate);
+      const alternate = this.emitBlockStatement(this.resolveNode(node.alternate));
       this.indentLevel--;
       code += `\n${this.indent()}else\n${alternate}`;
     }
@@ -282,7 +317,7 @@ class EnhancedEmitter {
   emitWhileStatement(node) {
     const test = this.emitExpression(node.test);
     this.indentLevel++;
-    const body = this.emitBlockStatement(node.body);
+    const body = this.emitBlockStatement(this.resolveNode(node.body));
     this.indentLevel--;
 
     return `${this.indent()}while ${test} do\n${body}\n${this.indent()}end`;
@@ -294,7 +329,7 @@ class EnhancedEmitter {
     const update = node.update ? this.emitExpression(node.update) : "";
 
     this.indentLevel++;
-    const body = this.emitBlockStatement(node.body);
+    const body = this.emitBlockStatement(this.resolveNode(node.body));
     this.indentLevel--;
 
     let code = init ? `${this.indent()}${init}\n` : "";
@@ -314,7 +349,7 @@ class EnhancedEmitter {
 
     const originalIndent = this.indentLevel;
     this.indentLevel = originalIndent + 2;
-    const body = this.emitBlockStatement(node.body);
+    const body = this.emitBlockStatement(this.resolveNode(node.body));
     this.indentLevel = originalIndent;
 
     const base = this.indent();
@@ -331,27 +366,15 @@ class EnhancedEmitter {
       lines.push(body);
       lines.push(`${iterIndent}end`);
       lines.push(`${base}else`);
-      lines.push(`${iterIndent}for _, __item in ipairs(__iter) do`);
+      lines.push(`${iterIndent}for __k, __item in pairs(__iter) do`);
       lines.push(`${iterIndent}  local ${left} = __await_value(__item)`);
       lines.push(body);
       lines.push(`${iterIndent}end`);
       lines.push(`${base}end`);
-    } else {
-      lines.push(`${base}if type(__iter) == "table" and __iter.next then`);
-      lines.push(`${iterIndent}while true do`);
-      lines.push(`${iterIndent}  local __res = __iter:next()`);
-      lines.push(`${iterIndent}  if __res.done then break end`);
-      lines.push(`${iterIndent}  local ${left} = __res.value`);
-      lines.push(body);
-      lines.push(`${iterIndent}end`);
-      lines.push(`${base}else`);
-      lines.push(`${iterIndent}for _, ${left} in ipairs(__iter) do`);
-      lines.push(body);
-      lines.push(`${iterIndent}end`);
-      lines.push(`${base}end`);
+      return lines.join("\n");
     }
 
-    return lines.join("\n");
+    return `${base}for __k, ${left} in pairs(${right}) do\n${body}\n${base}end`;
   }
 
   emitForInStatement(node) {
@@ -359,7 +382,7 @@ class EnhancedEmitter {
     const right = this.emitExpression(node.right);
 
     this.indentLevel++;
-    const body = this.emitBlockStatement(node.body);
+    const body = this.emitBlockStatement(this.resolveNode(node.body));
     this.indentLevel--;
 
     return `${this.indent()}for ${left}, _ in pairs(${right}) do\n${body}\n${this.indent()}end`;
@@ -367,7 +390,7 @@ class EnhancedEmitter {
 
   emitDoWhileStatement(node) {
     this.indentLevel++;
-    const body = this.emitBlockStatement(node.body);
+    const body = this.emitBlockStatement(this.resolveNode(node.body));
     this.indentLevel--;
 
     const test = this.emitExpression(node.test);
@@ -379,7 +402,7 @@ class EnhancedEmitter {
     const lines = [];
 
     this.indentLevel++;
-    const tryBody = this.emitBlockStatement(node.body);
+    const tryBody = this.emitBlockStatement(this.resolveNode(node.body));
     this.indentLevel--;
 
     lines.push(`${this.indent()}local ${temp}_ok, ${temp}_err = pcall(function()\n${tryBody}\n${this.indent()}end)`);
@@ -387,7 +410,7 @@ class EnhancedEmitter {
     if (node.handler) {
       const catchParam = node.handler.param ? node.handler.param.name : "_";
       this.indentLevel++;
-      const catchBody = this.emitBlockStatement(node.handler.body);
+      const catchBody = this.emitBlockStatement(this.resolveNode(node.handler.body));
       this.indentLevel--;
 
       lines.push(`${this.indent()}if not ${temp}_ok then`);
@@ -398,7 +421,7 @@ class EnhancedEmitter {
 
     if (node.finalizer) {
       this.indentLevel++;
-      const finallyBody = this.emitBlockStatement(node.finalizer);
+      const finallyBody = this.emitBlockStatement(this.resolveNode(node.finalizer));
       this.indentLevel--;
       lines.push(`${this.indent()}${finallyBody}`);
     }
@@ -436,6 +459,10 @@ class EnhancedEmitter {
   // ========== Expression Emission ==========
   // eslint-disable-next-line complexity
   emitExpression(node) {
+        // Resolve node references in consolidated IR
+        if (typeof node === "string") {
+          node = this.resolveNode(node);
+        }
     if (!node) return "";
 
     switch (node.kind) {
@@ -500,23 +527,64 @@ class EnhancedEmitter {
   }
 
   emitUnaryExpression(node) {
-    const arg = this.emitExpression(node.argument);
+    const operand = node.argument || node.operand;
+    const arg = this.emitExpression(operand);
     const op = this.getLuaUnaryOperator(node.operator);
     return node.prefix ? `${op}${arg}` : `${arg}${op}`;
   }
 
   emitCallExpression(node) {
-    const callee = this.emitExpression(node.callee);
-    // IR uses 'args', AST uses 'arguments'
+    // Resolve callee for method mapping
+    const calleeNode = this.resolveNode(node.callee);
     const argsList = node.args || node.arguments || [];
+
+    if (calleeNode && calleeNode.kind === "MemberExpression" && !calleeNode.computed) {
+      const targetObj = this.emitExpression(calleeNode.object);
+      const propNode = this.resolveNode(calleeNode.property);
+      const methodName = (propNode && propNode.name) ? propNode.name : this.emitExpression(propNode);
+      const args = argsList.map(arg => this.emitExpression(arg));
+
+      switch (methodName) {
+      case "push":
+        if (args.length === 0) return `${targetObj}`;
+        if (args.length === 1) return `table.insert(${targetObj}, ${args[0]})`;
+        return args.map(arg => `table.insert(${targetObj}, ${arg})`).join("; ");
+      case "pop":
+        return `table.remove(${targetObj})`;
+      case "shift":
+        return `table.remove(${targetObj}, 1)`;
+      case "unshift":
+        if (args.length === 0) return `${targetObj}`;
+        if (args.length === 1) return `table.insert(${targetObj}, 1, ${args[0]})`;
+        return args.map(arg => `table.insert(${targetObj}, 1, ${arg})`).join("; ");
+      default:
+        break;
+      }
+    }
+
+    const callee = this.emitExpression(node.callee);
     const args = argsList.map(arg => this.emitExpression(arg)).join(", ");
     return `${callee}(${args})`;
   }
 
   emitMemberExpression(node) {
     const obj = this.emitExpression(node.object);
-    const prop = this.emitExpression(node.property);
-    return node.computed ? `${obj}[${prop}]` : `${obj}.${prop}`;
+    const propNode = this.resolveNode(node.property);
+    const prop = this.emitExpression(propNode);
+    if (!node.computed) {
+      const propName = propNode && propNode.name ? propNode.name : prop;
+      if (propName === "length") {
+        return `#${obj}`;
+      }
+      return `${obj}.${propName}`;
+    }
+    if (propNode && propNode.kind === "BinaryExpression") {
+      const left = this.emitExpression(propNode.left);
+      const right = this.emitExpression(propNode.right);
+      const op = this.getLuaOperator(propNode.operator, propNode.left, propNode.right);
+      return `${obj}[${left} ${op} ${right}]`;
+    }
+    return `${obj}[${prop}]`;
   }
 
   emitArrayExpression(node) {
@@ -528,9 +596,21 @@ class EnhancedEmitter {
 
   emitObjectExpression(node) {
     const props = (node.properties || [])
-      .map(prop => {
-        const key = prop.key.name || this.emitExpression(prop.key);
-        const value = this.emitExpression(prop.value);
+      .map(propRef => {
+        const prop = this.resolveNode(propRef) || propRef;
+        const keyNode = this.resolveNode(prop.key);
+        const valueNode = this.resolveNode(prop.value);
+        let key;
+        if (prop.computed) {
+          key = `[${this.emitExpression(keyNode)}]`;
+        } else if (keyNode && keyNode.name) {
+          key = keyNode.name;
+        } else if (keyNode && keyNode.value !== undefined) {
+          key = JSON.stringify(keyNode.value);
+        } else {
+          key = this.emitExpression(keyNode || prop.key);
+        }
+        const value = this.emitExpression(valueNode || prop.value);
         return `${key} = ${value}`;
       })
       .join(", ");
@@ -539,19 +619,25 @@ class EnhancedEmitter {
 
   emitFunctionExpression(node) {
     const paramList = node.params || node.parameters || [];
-    const params = paramList.map(p => p.name || p).join(", ");
+    const params = paramList.map((p) => {
+      const paramNode = this.resolveNode(p);
+      if (paramNode && paramNode.name) return paramNode.name;
+      if (p && p.name) return p.name;
+      if (typeof p === "string") return p;
+      return "param";
+    }).join(", ");
     this.indentLevel++;
-    const body = this.emitBlockStatement(node.body);
+    const body = this.emitBlockStatement(this.resolveNode(node.body));
     this.indentLevel--;
 
     return `function(${params})\n${body}\n${this.indent()}end`;
   }
 
   emitConditionalExpression(node) {
-    const test = this.emitExpression(node.test);
+    const test = this.emitExpression(node.condition ?? node.test);
     const cons = this.emitExpression(node.consequent);
     const alt = this.emitExpression(node.alternate);
-    return `(${test} and ${cons} or ${alt})`;
+    return `${test} and ${cons} or ${alt}`;
   }
 
   emitAssignmentExpression(node) {
@@ -584,12 +670,20 @@ class EnhancedEmitter {
 
   emitGeneratorDeclaration(node) {
     const name = node.id.name;
-    const params = (node.params || []).map(p => p.name).join(", ");
+    const params = (node.params || [])
+      .map((p) => {
+        const paramNode = this.resolveNode(p);
+        if (paramNode && paramNode.name) return paramNode.name;
+        if (p && p.name) return p.name;
+        if (typeof p === "string") return p;
+        return "param";
+      })
+      .join(", ");
     const isAsync = Boolean(node.async);
 
     this.pushContext(isAsync ? "async-generator" : "generator");
     this.indentLevel += 2;
-    const body = this.emitBlockStatement(node.body);
+    const body = this.emitBlockStatement(this.resolveNode(node.body));
     this.indentLevel -= 2;
     this.popContext();
 
@@ -894,6 +988,17 @@ class EnhancedEmitter {
     });
         
     return statements.join("\n");
+  }
+
+  /**
+   * Resolve node reference (string ID) or return node as-is
+   * Handles both consolidated IR (string references) and legacy IR (node objects)
+   */
+  resolveNode(nodeOrRef) {
+    if (typeof nodeOrRef === "string" && this.nodesMap) {
+      return this.nodesMap[nodeOrRef];
+    }
+    return nodeOrRef;
   }
 }
 

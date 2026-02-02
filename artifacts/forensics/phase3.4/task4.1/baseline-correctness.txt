@@ -1,0 +1,17 @@
+
+> luascript@1.0.0 test:core
+> node -e "const {UnifiedSystemTests} = require('./test/test_unified_system.js'); const suite = new UnifiedSystemTests(); suite.testBasicTranspilation().then(() => suite.testRuntimeExecution()).then(() => console.log('Core tests complete'));"
+
+
+≡ƒô¥ Testing Basic Transpilation...
+  Γ£à Variable Declaration (67ms)
+  Γ£à Function Declaration (8ms)
+  Γ£à Arrow Function (7ms)
+  Γ£à Object Literal (6ms)
+  Γ£à Async Function Declaration (3ms)
+
+≡ƒöº Testing Runtime Execution...
+  Γ£à Basic Execution (6ms)
+  Γ£à Function Execution (11ms)
+  Γ£à Unicode Function Call with Nested Arguments (2ms)
+Core tests complete

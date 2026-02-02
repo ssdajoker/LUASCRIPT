@@ -1,0 +1,58 @@
+=== BUILDER.JS FIX INSTRUCTIONS ===
+
+The file has methods OUTSIDE the class at line 688.
+
+**PROBLEM:**
+Line 687: `}` - Class closing brace
+Line 688-707: Methods outside class (SYNTAX ERROR!)
+
+**FIX: Replace lines 680-720 with this:**
+
+```javascript
+      isAsync: true,
+      returnType: promiseType
+    }));
+  }
+
+  registerControlFlowGraph(cfgId, cfg) {
+    // Store CFG in module metadata
+    if (!this.module.metadata.controlFlowGraphs) {
+      this.module.metadata.controlFlowGraphs = {};
+    }
+    this.module.metadata.controlFlowGraphs[cfgId] = cfg;
+  }
+
+  // ========== EXCEPTION HANDLING & MODULE SYSTEM (CLARITY SUPER CANON) ==========
+
+  finallyClause(body, options = {}) {
+    return this._storeNode(new nodes.FinallyClause(body, options));
+  }
+
+  importDeclaration(specifiers, source, options = {}) {
+    return this._storeNode(new nodes.ImportDeclaration(specifiers, source, options));
+  }
+
+  exportDeclaration(specifiers, declaration, source, options = {}) {
+    return this._storeNode(new nodes.ExportDeclaration(specifiers, declaration, source, options));
+  }
+
+  importSpecifier(local, imported, options = {}) {
+    return this._storeNode(new nodes.ImportSpecifier(local, imported, options));
+  }
+
+  exportSpecifier(local, exported, options = {}) {
+    return this._storeNode(new nodes.ExportSpecifier(local, exported, options));
+  }
+}
+
+
+// Export a singleton instance
+const builder = new IRBuilder();
+
+module.exports = {
+  IRBuilder,
+  builder
+};
+```
+
+**CRITICAL:** The closing `}` for IRBuilder class must come AFTER all methods, not before!

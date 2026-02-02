@@ -187,9 +187,9 @@ async function main() {
 
     currentCase = 'array destructuring';
     runCase(currentCase, 'function pick(foo) { const [a, , c] = foo; return a + c; }', ({ lua }) => {
-      assert.ok(lua.includes('local __ds1 = foo'), 'array destruct temp missing');
-      assert.ok(lua.includes('__ds1[0]'), 'first element access missing');
-      assert.ok(lua.includes('__ds1[2]'), 'third element access missing');
+      assert.ok(lua.includes('local _destructure_1 = foo'), 'array destruct temp missing');
+      assert.ok(lua.includes('_destructure_1[1]'), 'first element access missing');
+      assert.ok(lua.includes('_destructure_1[3]'), 'third element access missing');
       assert.ok(lua.match(/return a \+ c/), 'return expression missing');
     });
 

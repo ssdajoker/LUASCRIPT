@@ -216,9 +216,11 @@ runner.test('RuntimeMemoryManager tracks heap allocation', () => {
     
     const obj1 = rmm.allocateObject({ data: 'test' }, 100);
     runner.assertEqual(rmm.heapSize, 100);
+    runner.assertTrue(!!obj1, 'First allocation returns an object');
     
     const obj2 = rmm.allocateObject({ data: 'test2' }, 200);
     runner.assertEqual(rmm.heapSize, 300);
+    runner.assertTrue(!!obj2, 'Second allocation returns an object');
 });
 
 runner.test('RuntimeMemoryManager enforces heap limit', () => {

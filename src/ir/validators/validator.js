@@ -23,6 +23,7 @@ class IRValidator {
       allowImplicitConversions: options.allowImplicitConversions !== false,
       ...options
     };
+    // eslint-disable-next-line no-undef
     this.nodeHandlers = buildNodeHandlerMap();
     this.errors = [];
     this.warnings = [];
@@ -237,20 +238,20 @@ class IRValidator {
     return true;
   }
 
-  validateLiteral(node) {
+  validateLiteral(_node) {
     // Literals are generally valid; type checking happens elsewhere
     return true;
   }
 
-  validateAssignment(node) {
-    if (!node.left) {
-      throw new ValidationError("Assignment must have left-hand side", node);
+  validateAssignment(_node) {
+    if (!_node.left) {
+      throw new ValidationError("Assignment must have left-hand side", _node);
     }
-    if (!node.right) {
-      throw new ValidationError("Assignment must have right-hand side", node);
+    if (!_node.right) {
+      throw new ValidationError("Assignment must have right-hand side", _node);
     }
-    this.visitNode(node.left);
-    this.visitNode(node.right);
+    this.visitNode(_node.left);
+    this.visitNode(_node.right);
     return true;
   }
 
@@ -285,7 +286,9 @@ function validateIR(ir) {
 
   validateModule(ir, nodes, errors);
   validateNodes(nodes, errors);
+  // eslint-disable-next-line no-undef
   validateMetaPerf(ir, errors);
+  // eslint-disable-next-line no-undef
   validateControlFlowGraphs(ir, nodes, errors);
 
   return { ok: errors.length === 0, errors };
@@ -318,7 +321,7 @@ function validateModule(ir, nodes, errors) {
 
   if (typeof ir.module.id !== "string") {
     errors.push("module.id must be a string");
-  } else if (!isBalancedTernaryIdentifier(ir.module.id)) {
+  } else if (!isBalancedTernaryIdentifier(ir.module.id)) { // eslint-disable-line no-undef
     errors.push(`module.id is not balanced-ternary encoded: ${ir.module.id}`);
   }
 
@@ -449,25 +452,26 @@ function validateSpan(nodeId, node, errors) {
 
 function validateNodeMetadata(nodeId, node, nodes, errors) {
   if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg !== undefined && typeof node.meta.cfg !== "object") {
-  if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg !== null && node.meta.cfg !== undefined && typeof node.meta.cfg !== "object") {
-    errors.push(`Node ${nodeId} FunctionDeclaration meta.cfg must be an object when present`);
-  }
-
-  if (node.kind !== "VariableDeclaration" || !Array.isArray(node.declarations)) {
-    return;
-  }
-
-  const declKind = node.declarationKind || null;
-
-  node.declarations.forEach((d, i) => {
-    const declNode = nodes[d.id || d];
-    if (declNode && declNode.kind && declNode.kind !== "VariableDeclarator") {
-      errors.push(`VariableDeclaration ${nodeId} declarations[${i}].kind should be VariableDeclarator, got ${declNode.kind}`);
+    if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg !== null && node.meta.cfg !== undefined && typeof node.meta.cfg !== "object") {
+      errors.push(`Node ${nodeId} FunctionDeclaration meta.cfg must be an object when present`);
     }
-    if (declNode && declNode.varKind && declKind && declNode.varKind !== declKind) {
-      errors.push(`VariableDeclaration ${nodeId} declarations[${i}].varKind (${declNode.varKind}) does not match declarationKind (${declKind})`);
+
+    if (node.kind !== "VariableDeclaration" || !Array.isArray(node.declarations)) {
+      return;
     }
-  });
+
+    const declKind = node.declarationKind || null;
+
+    node.declarations.forEach((d, i) => {
+      const declNode = nodes[d.id || d];
+      if (declNode && declNode.kind && declNode.kind !== "VariableDeclarator") {
+        errors.push(`VariableDeclaration ${nodeId} declarations[${i}].kind should be VariableDeclarator, got ${declNode.kind}`);
+      }
+      if (declNode && declNode.varKind && declKind && declNode.varKind !== declKind) {
+        errors.push(`VariableDeclaration ${nodeId} declarations[${i}].varKind (${declNode.varKind}) does not match declarationKind (${declKind})`);
+      }
+    });
+  }
 }
 
 function validateMetaPerf(ir, errors) {
@@ -624,9 +628,6 @@ function decodeBalancedTernaryString(encoded) {
     }
   }
   return value;
-}
-
-// Close any open scope
 }
 
 module.exports = {

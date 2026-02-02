@@ -83,7 +83,7 @@ async function runCommand(cmd, description = '') {
 async function runTests(tests, layer) {
     // Handle both string and array input
     const testArray = Array.isArray(tests) ? tests : [tests];
-    
+
     agentThink(`Running ${testArray.length} test(s)...`);
     logActivity('test_start', { tests: testArray, message: `🧪 Testing Layer ${layer}: ${testArray.join(', ')}` });
     updateStatus({ phase: 'Testing', progress: 70 });

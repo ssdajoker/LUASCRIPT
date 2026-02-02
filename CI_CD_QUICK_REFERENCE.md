@@ -72,26 +72,37 @@ npm run lint:fix
 
 #### **Understand Why a PR is Blocked**
 ```
-PR Blocked? Check:
+PR Blocked? FORENSIC DIAGNOSIS REQUIRED:
 
 1. ❌ "Lint IR code" failed?
-   → Too many lint errors in src/ir/
-   → See ESLINT_CLEANUP_GUIDE.md
+   → STOP: Run forensic triage
+   → Execute: npm run diagnose:lint
+   → See FORENSIC_DIAGNOSTIC_PROCEDURES.md
+   → Generate forensic report before fixing
 
 2. ❌ "Run core verification gate" failed?
-   → Run: npm run verify
-   → Check IR structure integrity
+   → STOP: Run forensic triage
+   → Execute: npm run diagnose:verify
+   → Check: node src/utils/diagnostic-framework.js
+   → Examine IR structure with root cause analysis
 
 3. ❌ "Harness tests" failed?
-   → Run: npm run harness
-   → Check transpiler output
+   → STOP: Run forensic triage
+   → Execute: npm run diagnose:harness
+   → Analyze transpiler output differences
+   → Document failure patterns
 
 4. ❌ "Status checks" failed?
-   → All above must pass
+   → STOP: Full forensic analysis
+   → All gate failures require diagnosis
+   → See FORENSIC_DIAGNOSTIC_PROCEDURES.md
 
 5. ✅ All green?
+   → Forensic reports archived in artifacts/forensics/
    → Auto-merge in progress (if enabled)
    → Or wait for code review
+
+🔬 FORENSIC RULE: Never bypass a gate. Fix the root cause.
 ```
 
 ---
@@ -104,6 +115,30 @@ PR Blocked? Check:
 | **Auto-Merge** | 🔴 BLOCKED | Wait for lint fixes |
 | **CI Workflows** | ✅ UPDATED | Ready to use |
 | **Performance Tracking** | ✅ ACTIVE | Monitor in artifacts |
+
+---
+
+## 🎯 QUALITY GATE HIERARCHY
+
+### 🔬 Forensic Diagnosis Gate (WEIGHT: 8) 🆕
+**Trigger**: ANY gate failure  
+**Purpose**: Root cause analysis before "fix" is accepted  
+**Requirements**:
+- Deep diagnostic analysis using YOLO v2.0 + diagnostic-framework.js
+- Evidence artifacts (logs, IR dumps, stack traces)
+- Forensic report (JSON + Markdown) documenting root cause
+- Specific fix proposal with verification plan
+**Status**: ✅ ACTIVE - Enforced on all failures  
+**Owner**: Forensic Team / AI Agents  
+
+**Forensic Process**:
+```
+Gate Failure → STOP → Triage → Root Cause Analysis → Evidence Collection
+    → Fix Proposal → Execute First Fix → Verify → Document → Commit
+```
+
+**Anti-Pattern (BLOCKED)**: Changing gate requirements to pass without fixing root cause  
+**Correct Pattern**: Fix the underlying problem, then verify gate passes naturally
 
 ---
 

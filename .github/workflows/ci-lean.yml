@@ -41,9 +41,20 @@ jobs:
       - name: Run static warnings gate (Lua lint budget 0)
         run: npm run static:warnings
 
-      - name: Lint source code (general tier budget)
-        run: npm run lint:general || true
-        continue-on-error: true
+      - name: Run format gate
+        run: npm run format:check
+
+      - name: Lint source code (core tier)
+        run: npm run lint:core
+
+      - name: Lint source code (extended tier)
+        run: npm run lint:extended
+
+      - name: Lint source code (backends tier)
+        run: npm run lint:backends
+
+      - name: Lint source code (overall budget)
+        run: npm run lint:all
 
       - name: Upload results
         if: always()

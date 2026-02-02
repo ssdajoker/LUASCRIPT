@@ -31,15 +31,16 @@ class ClassLowerer {
     for (const m of methods) {
       if (m.kind === "constructor") continue;
       const keyId = this.irLowerer.lowerIdentifier(m.key);
-      const mParams = (m.params || []).map((p) =>
-        this.irLowerer.lowerIdentifier(p, { binding: p.name }).id
-      );
+      const { params: mParams, prelude: preludeStatements } = this.irLowerer.lowerFunctionParams(m.params || []);
       const mBody = this.irLowerer.ensureBlock(m.body);
+      if (preludeStatements.length > 0) {
+        this.irLowerer.prependStatementsToBlock(mBody, preludeStatements);
+      }
       const funcExprId = this.irLowerer.builder.functionExpression(
         null,
         mParams,
         mBody.id,
-        {}
+        { async: Boolean(m.async) }
       ).id;
 
       if (m.static) {

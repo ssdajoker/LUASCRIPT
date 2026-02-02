@@ -39,6 +39,11 @@ class IREmitter {
       WhileStatement: (node, context) => this.emitWhileStatement(node, context),
       ForStatement: (node, context) => this.emitForStatement(node, context),
       ForOfStatement: (node, context) => this.emitForOfStatement(node, context),
+      ForInStatement: (node, context) => this.emitForInStatement(node, context),
+      DoWhileStatement: (node, context) => this.emitDoWhileStatement(node, context),
+      BreakStatement: (node, context) => this.emitBreakStatement(node, context),
+      ContinueStatement: (node, context) => this.emitContinueStatement(node, context),
+      SwitchStatement: (node, context) => this.emitSwitchStatement(node, context),
       FunctionDeclaration: (node, context) => this.emitFunctionDeclaration(node, context),
       ClassDeclaration: (node, context) => this.emitClassDeclaration(node, context),
       BlockStatement: (node, context) => this.emitBlockStatement(node, context),
@@ -230,6 +235,13 @@ class IREmitter {
   }
 
   emitFinallySection(finalizerId, context) {
+    // Handle FinallyClause nodes by extracting their body
+    const finalizerNode = typeof finalizerId === "string" ? context.nodes[finalizerId] : finalizerId;
+    if (finalizerNode && finalizerNode.kind === "FinallyClause") {
+      // FinallyClause has a body property that contains the BlockStatement ID
+      return this.emitBlockById(finalizerNode.body, context);
+    }
+    // Fall back to treating it as a BlockStatement ID
     return this.emitBlockById(finalizerId, context);
   }
 
@@ -379,14 +391,39 @@ class IREmitter {
   }
 
   emitIfStatement(node, context) {
-    const testId = node.test !== undefined ? node.test : node.condition;
-    const consId = node.consequent || node.consequence;
-    const altId = node.alternate || node.elseBranch;
-    const test = this.emitExpressionById(testId, context);
-    const consequent = this.emitBlockById(consId, context);
-    const alternate = altId ? this.emitBlockById(altId, context) : null;
+    const clauses = [];
+    let current = node;
+    let alternate = null;
 
-    let output = `${this.currentIndent(context)}if ${test} then${NEWLINE}${consequent}`;
+    while (current && current.kind === "IfStatement") {
+      const testId = current.test !== undefined ? current.test : current.condition;
+      const consId = current.consequent || current.consequence;
+      const test = this.emitExpressionById(testId, context);
+      const consequent = this.emitBlockById(consId, context);
+      clauses.push({ test, consequent });
+
+      const altId = current.alternate || current.elseBranch;
+      if (!altId) {
+        alternate = null;
+        break;
+      }
+      const altNode = typeof altId === "string" ? context.nodes[altId] : altId;
+      if (altNode && altNode.kind === "IfStatement") {
+        current = altNode;
+        continue;
+      }
+      alternate = this.emitBlockById(altId, context);
+      break;
+    }
+
+    if (clauses.length === 0) {
+      return "";
+    }
+
+    let output = `${this.currentIndent(context)}if ${clauses[0].test} then${NEWLINE}${clauses[0].consequent}`;
+    for (let i = 1; i < clauses.length; i++) {
+      output += `${NEWLINE}${this.currentIndent(context)}elseif ${clauses[i].test} then${NEWLINE}${clauses[i].consequent}`;
+    }
     if (alternate) {
       output += `${NEWLINE}${this.currentIndent(context)}else${NEWLINE}${alternate}`;
     }
@@ -429,6 +466,7 @@ class IREmitter {
 
     let output = `${this.currentIndent(context)}while ${test} do${NEWLINE}${body}`;
     output += `${NEWLINE}${this.currentIndent(context)}end`;
+    lines.push(`${this.currentIndent(context)}-- for`);
     lines.push(output);
     return lines.join(NEWLINE);
   }
@@ -440,6 +478,36 @@ class IREmitter {
     const body = this.emitBlockById(node.body, context);
     const indent = this.currentIndent(context);
     return `${indent}for __k, ${binding} in pairs(${right}) do${NEWLINE}${body}${NEWLINE}${indent}end`;
+  }
+
+  emitForInStatement(node, context) {
+    const binding = this.resolveForBinding(node.left, context);
+    const rightRaw = this.emitExpressionById(node.right, context);
+    const right = this.compactTableLiteral(rightRaw);
+    const body = this.emitBlockById(node.body, context);
+    const indent = this.currentIndent(context);
+    return `${indent}for ${binding} in pairs(${right}) do${NEWLINE}${body}${NEWLINE}${indent}end`;
+  }
+
+  emitDoWhileStatement(node, context) {
+    const body = this.emitBlockById(node.body, context);
+    const testId = node.test !== undefined ? node.test : node.condition;
+    const test = testId ? this.emitExpressionById(testId, context) : "true";
+    const indent = this.currentIndent(context);
+    return `${indent}repeat${NEWLINE}${body}${NEWLINE}${indent}until not (${test})`;
+  }
+
+  emitBreakStatement(_node, context) {
+    return this.currentIndent(context) + "break";
+  }
+
+  emitContinueStatement(_node, context) {
+    return this.currentIndent(context) + "-- continue";
+  }
+
+  emitSwitchStatement(node, context) {
+    // Switch is lowered to if/elseif chain in IR; this is a fallback.
+    return this.emitIfStatement(node, context);
   }
 
   emitFunctionDeclaration(node, context) {
@@ -466,7 +534,7 @@ class IREmitter {
     // Get the body - handle both node.body (ID) and node.body (Block node)
     const bodyId = typeof node.body === "string" ? node.body : (node.body && node.body.id ? node.body.id : node.body);
 
-    if (node.async) {
+    if (node.async || node.generator) {
       // Emit the body for the coroutine, which is one level deeper than the function itself
       const coroutineBody = this.emitBlockById(bodyId, context, {
         indentLevel: (context.indentLevel || 0) + 2, // Body is inside coroutine function, which is inside outer function
@@ -544,6 +612,10 @@ class IREmitter {
       ConditionalExpression: (node, context) => this.emitConditionalExpression(node, context),
       ArrowFunctionExpression: (node, context) => this.emitArrowFunction(node, context),
       FunctionExpression: (node, context) => this.emitFunctionExpression(node, context),
+      AwaitExpression: (node, context) => this.emitAwaitExpression(node, context),
+      YieldExpression: (node, context) => this.emitYieldExpression(node, context),
+      ThisExpression: (node, context) => this.emitThisExpression(node, context),
+      SpreadElement: (node, context) => this.emitSpreadElement(node, context),
       BlockStatement: () => "{ --[[block]] }",
     }[kind];
   }
@@ -569,7 +641,7 @@ class IREmitter {
 
   emitArrayExpression(node, context) {
     const items = (node.elements || []).map((elId) => this.emitExpressionById(elId, context)).join(", ");
-    return `{ ${items} }`;
+    return items ? `{ ${items} }` : "{}";
   }
 
   emitObjectExpression(node, context) {
@@ -621,7 +693,7 @@ class IREmitter {
 
   emitCallExpression(node, context) {
     const callee = this.emitExpressionById(node.callee, context);
-    const args = (node.arguments || [])
+    const args = (node.arguments || node.args || [])
       .map((argId) => this.emitExpressionById(argId, context))
       .join(", ");
     if (node.optional) {
@@ -632,14 +704,15 @@ class IREmitter {
 
   emitNewExpression(node, context) {
     const callee = this.emitExpressionById(node.callee, context);
-    const args = (node.arguments || [])
+    const args = (node.arguments || node.args || [])
       .map((argId) => this.emitExpressionById(argId, context))
       .join(", ");
     return `${callee}(${args}) --[[new]]`;
   }
 
   emitConditionalExpression(node, context) {
-    const test = this.emitExpressionById(node.test, context);
+    const testId = node.test !== undefined ? node.test : node.condition;
+    const test = this.emitExpressionById(testId, context);
     const cons = this.emitExpressionById(node.consequent, context);
     const alt = this.emitExpressionById(node.alternate, context);
     return `((${test}) and (${cons}) or (${alt}))`;
@@ -675,12 +748,26 @@ class IREmitter {
     const params = (node.params || [])
       .map((paramId) => {
         const paramNode = context.nodes[paramId];
-        if (!paramNode || paramNode.kind !== "Identifier") {
-          throw new Error("Arrow function parameters must be identifiers");
+        if (!paramNode) {
+          throw new Error("Arrow function parameter node not found");
         }
-        return paramNode.name;
+        if (paramNode.kind === "Identifier" || paramNode.kind === "Parameter") {
+          return paramNode.name;
+        }
+        throw new Error("Arrow function parameters must be identifiers");
       })
       .join(", ");
+
+    if (node.async || node.generator) {
+      const coroutineBody = this.emitBlockById(node.body, context, {
+        indentLevel: (context.indentLevel || 0) + 2,
+      });
+      const indent = this.currentIndent(context);
+      return `function(${params})${NEWLINE}` +
+        `${indent}  return coroutine.create(function()${NEWLINE}` +
+        `${coroutineBody}${indent}  end)${NEWLINE}` +
+        `${indent}end`;
+    }
 
     const body = this.emitBlockById(node.body, context, {
       indentLevel: context.indentLevel + 1,
@@ -693,14 +780,28 @@ class IREmitter {
     const params = (node.params || node.parameters || [])
       .map((paramId) => {
         const paramNode = typeof paramId === "string" ? context.nodes[paramId] : paramId;
-        if (!paramNode || paramNode.kind !== "Identifier") {
-          throw new Error("Function expression parameters must be identifiers");
+        if (!paramNode) {
+          throw new Error("Function expression parameter node not found");
         }
-        return paramNode.name;
+        if (paramNode.kind === "Identifier" || paramNode.kind === "Parameter") {
+          return paramNode.name;
+        }
+        throw new Error("Function expression parameters must be identifiers");
       })
       .join(", ");
 
     const bodyId = typeof node.body === "string" ? node.body : (node.body && node.body.id ? node.body.id : node.body);
+    if (node.async || node.generator) {
+      const coroutineBody = this.emitBlockById(bodyId, context, {
+        indentLevel: (context.indentLevel || 0) + 2,
+      });
+      const indent = this.currentIndent(context);
+      return `function(${params})${NEWLINE}` +
+        `${indent}  return coroutine.create(function()${NEWLINE}` +
+        `${coroutineBody}${indent}  end)${NEWLINE}` +
+        `${indent}end`;
+    }
+
     const body = this.emitBlockById(bodyId, context, {
       indentLevel: (context.indentLevel || 0) + 1,
     });
@@ -931,6 +1032,31 @@ class IREmitter {
       .replace(/\s*\}/g, "}")
       .replace(/,\s*/g, ", ")
       .replace(/\s+,/g, ", ");
+  }
+
+  emitThisExpression(node, context) {
+    // In Lua, 'this' can be represented as a special reference
+    // For now, we'll emit it as a special identifier that maps to self
+    return "self";
+  }
+
+  emitAwaitExpression(node, context) {
+    const argument = node.argument ? this.emitExpressionById(node.argument, context) : "nil";
+    return `coroutine.yield(${argument})`;
+  }
+
+  emitYieldExpression(node, context) {
+    const argument = node.argument ? this.emitExpressionById(node.argument, context) : "nil";
+    return `coroutine.yield(${argument})`;
+  }
+
+  emitSpreadElement(node, context) {
+    // Spread operator in Lua: unpack(array)
+    if (node.argument) {
+      const arg = this.emitExpressionById(node.argument, context);
+      return `unpack(${arg})`;
+    }
+    return "unpack()";
   }
 
   luaAssignmentOperator(operator) {

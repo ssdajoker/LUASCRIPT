@@ -318,6 +318,8 @@ class Fuzzer {
             try {
                 // Convert AST to JavaScript code string for transpilation
                 const jsCode = this.astToCode(ast);
+                // Validate generated JavaScript is syntactically correct
+                esprima.parseScript(jsCode);
                 const result = this.pipeline.transpile(jsCode, `fuzz_${i}.js`);
 
                 if (result.success) {

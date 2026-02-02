@@ -120,6 +120,8 @@ class IRValidator {
       return this.validateTryStatement(node);
     case NodeCategory.CATCH:
       return this.validateCatchClause(node);
+    case NodeCategory.FINALLY:
+      return this.validateFinallyClause(node);
     case NodeCategory.THROW:
       return this.validateThrowStatement(node);
     case NodeCategory.CLASS_DECL:
@@ -384,6 +386,14 @@ class IRValidator {
     return true;
   }
 
+  validateFinallyClause(node) {
+    if (!node.body) {
+      throw new ValidationError("FinallyClause must have a body", node);
+    }
+    this.visitNode(node.body);
+    return true;
+  }
+
   validateThrowStatement(node) {
     this.visitNode(node.argument);
     return true;
@@ -568,6 +578,7 @@ function validateIR(ir) {
     "Super",
     "ClassExpression",
     "CatchClause",
+    "FinallyClause",
     "GeneratorDeclaration",
     "AsyncFunctionDeclaration",
     "ForInStatement"
@@ -587,7 +598,7 @@ function validateIR(ir) {
     }
 
     // Basic span shape validation (if present)
-    if (node.span != null) {
+    if (node.span !== null && node.span !== undefined) {
       const s = node.span;
       if (!s.start || !s.end) {
         errors.push(`Node ${nodeId} has malformed span (missing start/end)`);
@@ -598,7 +609,7 @@ function validateIR(ir) {
     }
 
     // Validate FunctionDeclaration meta.cfg shape when present
-    if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg != null && typeof node.meta.cfg !== "object") {
+    if (node.kind === "FunctionDeclaration" && node.meta && node.meta.cfg !== null && typeof node.meta.cfg !== "object") {
       errors.push(`Node ${nodeId} FunctionDeclaration meta.cfg must be an object when present`);
     }
 

@@ -13,12 +13,15 @@ class TryLowerer {
         ? this.irLowerer.lowerExpression(node.handler.param)
         : null;
       const handlerBody = this.irLowerer.ensureBlock(node.handler.body);
-      handler = { param: paramRef, body: handlerBody.id };
+      // Create proper CatchClause node using builder
+      handler = this.irLowerer.builder.catchClause(paramRef, handlerBody.id);
     }
-    const finalizer = node.finalizer
-      ? this.irLowerer.ensureBlock(node.finalizer).id
-      : null;
-    return this.irLowerer.builder.tryStatement(block.id, handler, finalizer);
+    let finalizer = null;
+    if (node.finalizer) {
+      const finalizerBody = this.irLowerer.ensureBlock(node.finalizer);
+      finalizer = this.irLowerer.builder.finallyClause(finalizerBody.id);
+    }
+    return this.irLowerer.builder.tryStmt(block.id, handler ? handler.id : null, finalizer ? finalizer.id : null);
   }
 }
 

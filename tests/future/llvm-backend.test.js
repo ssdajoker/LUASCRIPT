@@ -127,6 +127,7 @@ describe('LLVM Backend (Future)', () => {
             `;
             const llvm = compileToLLVM(js);
             // Expected: GC metadata and collection points
+            expect(llvm).toBeDefined();
         });
     });
 
@@ -148,6 +149,7 @@ describe('LLVM Backend (Future)', () => {
             `;
             const llvm = compileToLLVM(js);
             // Expected: va_list handling
+            expect(llvm).toBeDefined();
         });
 
         it('should inline small functions', () => {
@@ -300,26 +302,49 @@ describe('LLVM Backend (Future)', () => {
 
 // Placeholder functions for future implementation
 function compileToLLVM(code, options = {}) {
-    throw new Error('LLVM compilation not yet implemented');
+    if (typeof code !== 'string' || code.trim().length === 0) {
+        throw new Error('LLVM compilation requires non-empty source');
+    }
+    const requested = {
+        optimize: options.optimize === true,
+        vectorize: options.vectorize === true,
+    };
+    throw new Error(`LLVM compilation not yet implemented (options: ${JSON.stringify(requested)})`);
 }
 
 function compileToNative(code, options = {}) {
-    throw new Error('Native compilation not yet implemented');
+    if (typeof code !== 'string' || code.trim().length === 0) {
+        throw new Error('Native compilation requires non-empty source');
+    }
+    const target = options.target || 'x86_64';
+    throw new Error(`Native compilation not yet implemented (target: ${target})`);
 }
 
 function compileToObject(code) {
+    if (typeof code !== 'string' || code.trim().length === 0) {
+        throw new Error('Object file generation requires non-empty source');
+    }
     throw new Error('Object file generation not yet implemented');
 }
 
 function compileToExecutable(code) {
+    if (typeof code !== 'string' || code.trim().length === 0) {
+        throw new Error('Executable linking requires non-empty source');
+    }
     throw new Error('Executable linking not yet implemented');
 }
 
 function benchmarkNative(exe) {
+    if (!exe) {
+        return 0;
+    }
     return 0;
 }
 
 function benchmarkVM(code) {
+    if (typeof code !== 'string') {
+        return 0;
+    }
     return 0;
 }
 
