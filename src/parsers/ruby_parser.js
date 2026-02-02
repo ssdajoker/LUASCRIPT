@@ -83,22 +83,23 @@ class RubyParser {
       line = line.replace(/#.*$/, "");
 
       // Basic tokenization (simplified)
+      // NOTE: Patterns must not have ^ anchor - we add it per pattern
+      // NOTE: Order matters - longer patterns first!
       const tokenPatterns = [
-        { type: "KEYWORD", pattern: /\b(def|end|class|if|elsif|else|unless|while|until|for|in|do|return|yield|break|next|case|when|then|begin|rescue|ensure|module|puts|print|require|super|self|true|false|nil|and|or|not)\b/gi },
-        { type: "IDENTIFIER", pattern: /[a-zA-Z_]\w*/ },
-        { type: "NUMBER", pattern: /\d+(\.\d+)?/ },
-        { type: "STRING", pattern: /"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/ },
-        { type: "OPERATOR", pattern: /[+\-*/%&|^<>=!~]+|==|!=|<=|>=|&&|\|\||\.\.|\*\*/ },
-        { type: "PUNCTUATION", pattern: /[(){}[\],;:.]/ },
-        { type: "WHITESPACE", pattern: /\s+/ },
+        { type: "KEYWORD", regex: /^(?:\b(?:def|end|class|if|elsif|else|unless|while|until|for|in|do|return|yield|break|next|case|when|then|begin|rescue|ensure|module|puts|print|require|super|self|true|false|nil|and|or|not)\b)/i },
+        { type: "OPERATOR", regex: /^(?:===|==|!=|<=|>=|<=>|&&|\|\||\.\.|\*\*|[+\-*/%&|^<>=!~]+)/ },
+        { type: "IDENTIFIER", regex: /^[a-zA-Z_]\w*/ },
+        { type: "NUMBER", regex: /^\d+(?:\.\d+)?/ },
+        { type: "STRING", regex: /^(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/ },
+        { type: "PUNCTUATION", regex: /^[(){}[\],;:.]/ },
+        { type: "WHITESPACE", regex: /^\s+/ },
       ];
 
       let pos = 0;
       while (pos < line.length) {
         let matched = false;
 
-        for (const { type, pattern } of tokenPatterns) {
-          const regex = new RegExp(`^${pattern.source}`, "i");
+        for (const { type, regex } of tokenPatterns) {
           const match = line.slice(pos).match(regex);
 
           if (match) {
@@ -138,6 +139,13 @@ class RubyParser {
   }
 
   parseStatement() {
+    if (this.isAtEnd()) return null;
+
+    // Skip optional semicolons (statement separators)
+    while (!this.isAtEnd() && this.peek()?.value === ";") {
+      this.consume(";", "Expected ';'");
+    }
+
     if (this.isAtEnd()) return null;
 
     const token = this.peek();
@@ -224,6 +232,10 @@ class RubyParser {
   parseIfStatement() {
     this.consume("if", "Expected 'if'");
     const test = this.parseExpression();
+    // Skip optional semicolon after condition
+    if (this.peek()?.value === ";") {
+      this.consume(";", "Expected ';'");
+    }
     const consequent = this.parseBlockUntilElseOrEnd();
 
     let alternate = null;
@@ -252,8 +264,11 @@ class RubyParser {
   parseWhileStatement() {
     this.consume("while", "Expected 'while'");
     const test = this.parseExpression();
-    const body = this.parseBlockUntilEnd();
-    this.consume("end", "Expected 'end'");
+    // Skip optional semicolon after condition
+    if (this.peek()?.value === ";") {
+      this.consume(";", "Expected ';'");
+    }
+    const body = this.parseBlockUntilEnd();  // This already consumes 'end'
 
     return {
       type: "WhileStatement",
@@ -281,8 +296,7 @@ class RubyParser {
 
     this.consume("in", "Expected 'in'");
     const right = this.parseExpression();
-    const body = this.parseBlockUntilEnd();
-    this.consume("end", "Expected 'end'");
+    const body = this.parseBlockUntilEnd();  // This already consumes 'end'
 
     return {
       type: "ForOfStatement",
@@ -358,7 +372,7 @@ class RubyParser {
   parseAssignment() {
     let expr = this.parseLogical();
 
-    if (this.peek()?.type === "OPERATOR" && this.peek()?.value?.includes("=")) {
+    if (this.peek()?.type === "OPERATOR" && this.peek()?.value === "=") {
       const op = this.consume(null, "Expected operator").value;
       const right = this.parseExpression();
 
