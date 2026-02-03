@@ -78,10 +78,10 @@ class RubyPerformanceOptimizer {
     const reachableCode = [];
     let foundTerminator = false;
 
-    // First pass: identify used variables
-    ir.nodes.forEach(node => {
+    // First pass: identify used variables (use for loop, not forEach)
+    for (const node of ir.nodes) {
       this.collectUsedVariables(node, usedVariables);
-    });
+    }
 
     // Second pass: remove unreachable and unused
     for (const node of ir.nodes) {
@@ -98,9 +98,10 @@ class RubyPerformanceOptimizer {
         continue;
       }
 
-      // Remove unused variable declarations
-      if (node.type === "VariableDeclaration" || node.type === "Assignment") {
-        const varName = node.name || (node.left && node.left.name);
+      // Don't remove VariableDeclarations (keep for debugging/side effects)
+      // Only remove Assignments that are unused
+      if (node.type === "Assignment") {
+        const varName = node.left && node.left.name;
         if (varName && !usedVariables.has(varName) && !this.hasSideEffects(node)) {
           this.stats.deadCodeRemoved++;
           continue;
