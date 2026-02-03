@@ -248,7 +248,7 @@ class PythonMemoryProfiler {
       message,
       maxMemoryMB: parseFloat(report.overallStats.maxMemoryMB),
       maxAllowedMB: report.overallStats.maxAllowedMB,
-      percentOfLimit: (parseFloat(report.overallStats.maxMemoryMB) / report.overallStats.maxAllowedMB * 100).toFixed(1) + '%',
+      percentOfLimit: (parseFloat(report.overallStats.maxMemoryMB) / report.overallStats.maxAllowedMB * 100).toFixed(1) + "%",
     };
   }
 
@@ -271,7 +271,7 @@ class PythonMemoryProfiler {
           leaks.push({
             between: `${phaseNames[i]} -> ${phaseNames[i + 1]}`,
             growthMB: growthMB.toFixed(2),
-            severity: growthMB > 5 ? 'HIGH' : 'MEDIUM',
+            severity: growthMB > 5 ? "HIGH" : "MEDIUM",
           });
         }
       }
@@ -281,8 +281,8 @@ class PythonMemoryProfiler {
       detected: leaks.length > 0,
       leaks,
       recommendation: leaks.length > 0 
-        ? 'Check memory cleanup in phase transitions'
-        : 'No memory leaks detected',
+        ? "Check memory cleanup in phase transitions"
+        : "No memory leaks detected",
     };
   }
 
@@ -299,11 +299,11 @@ class PythonMemoryProfiler {
   forceGC() {
     if (global.gc) {
       global.gc();
-      return { success: true, message: 'Garbage collection performed' };
+      return { success: true, message: "Garbage collection performed" };
     }
     return { 
       success: false, 
-      message: 'GC not available. Run with --expose-gc flag',
+      message: "GC not available. Run with --expose-gc flag",
     };
   }
 
@@ -332,13 +332,13 @@ class PythonMemoryProfiler {
         allowed: sloCheck.maxAllowedMB,
         percent: sloCheck.percentOfLimit,
       },
-      sloStatus: sloCheck.passed ? 'PASS' : 'FAIL',
-      leakStatus: leakCheck.detected ? 'LEAKS_DETECTED' : 'CLEAN',
+      sloStatus: sloCheck.passed ? "PASS" : "FAIL",
+      leakStatus: leakCheck.detected ? "LEAKS_DETECTED" : "CLEAN",
       phaseCount: Object.keys(this.phases).length,
       recommendations: [
-        !sloCheck.passed && 'Reduce memory overhead or increase SLO',
-        leakCheck.detected && 'Investigate memory leaks in phase transitions',
-        report.allocations.byCategory && 'Review allocation patterns',
+        !sloCheck.passed && "Reduce memory overhead or increase SLO",
+        leakCheck.detected && "Investigate memory leaks in phase transitions",
+        report.allocations.byCategory && "Review allocation patterns",
       ].filter(Boolean),
     };
   }

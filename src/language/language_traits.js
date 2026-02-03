@@ -22,9 +22,9 @@ class LanguageTraits {
    */
   initializeLanguageFamilies() {
     this.families = {
-      'C-Family': {
-        description: 'Imperative, compiled, static typing, manual memory',
-        members: ['C', 'C++', 'C#', 'Objective-C', 'C--'],
+      "C-Family": {
+        description: "Imperative, compiled, static typing, manual memory",
+        members: ["C", "C++", "C#", "Objective-C", "C--"],
         characteristics: {
           imperative: true,
           static: true,
@@ -41,9 +41,9 @@ class LanguageTraits {
           enums: true,
         },
       },
-      'Dynamic Script': {
-        description: 'Dynamic, interpreted, weak typing, garbage collected',
-        members: ['Python', 'JavaScript', 'Ruby', 'Lua'],
+      "Dynamic Script": {
+        description: "Dynamic, interpreted, weak typing, garbage collected",
+        members: ["Python", "JavaScript", "Ruby", "Lua"],
         characteristics: {
           imperative: true,
           dynamic: true,
@@ -59,9 +59,9 @@ class LanguageTraits {
           prototypalOrDuckTyping: true,
         },
       },
-      'Functional': {
-        description: 'Immutable data, pure functions, pattern matching',
-        members: ['OCaml', 'Haskell', 'Elm', 'Gleam', 'F#'],
+      "Functional": {
+        description: "Immutable data, pure functions, pattern matching",
+        members: ["OCaml", "Haskell", "Elm", "Gleam", "F#"],
         characteristics: {
           functional: true,
           immutable: true,
@@ -76,9 +76,9 @@ class LanguageTraits {
           recursion: true,
         },
       },
-      'JVM-Based': {
-        description: 'Bytecode compiled, JVM runtime, static typing',
-        members: ['Java', 'Kotlin', 'Scala'],
+      "JVM-Based": {
+        description: "Bytecode compiled, JVM runtime, static typing",
+        members: ["Java", "Kotlin", "Scala"],
         characteristics: {
           bytecodeCompiled: true,
           jvmRuntime: true,
@@ -122,7 +122,7 @@ class LanguageTraits {
         variadic: true,
         overloading: false,
       },
-      'C++': {
+      "C++": {
         functions: true,
         classes: true,
         inheritance: true,
@@ -143,7 +143,7 @@ class LanguageTraits {
         variadic: true,
         overloading: true,
       },
-      'C#': {
+      "C#": {
         functions: true,
         classes: true,
         inheritance: true,
@@ -164,7 +164,7 @@ class LanguageTraits {
         variadic: true,
         overloading: true,
       },
-      'Objective-C': {
+      "Objective-C": {
         functions: true,
         classes: true,
         inheritance: true,
@@ -185,7 +185,7 @@ class LanguageTraits {
         variadic: true,
         overloading: false,
       },
-      'C--': {
+      "C--": {
         functions: true,
         classes: false,
         inheritance: false,
@@ -278,96 +278,96 @@ class LanguageTraits {
   initializeOperatorPrecedence() {
     // C-family precedence (C, C++, C#, Objective-C, C--)
     this.precedence = {
-      'C-Family': {
-        '()': 14,         // Function call, array subscript
-        '.': 14,          // Member access
-        '->': 14,         // Pointer member access
-        '++': 13,         // Postfix increment
-        '--': 13,         // Postfix decrement
-        '!': 12,          // Logical NOT
-        '~': 12,          // Bitwise NOT
-        '+': 12,          // Unary plus
-        '-': 12,          // Unary minus
-        '++': 12,         // Prefix increment
-        '--': 12,         // Prefix decrement
-        '*': 12,          // Dereference, multiply
-        '&': 12,          // Address-of, bitwise AND
-        'sizeof': 12,     // Sizeof
-        'type': 12,       // Type cast
-        '*': 11,          // Multiplication
-        '/': 11,          // Division
-        '%': 11,          // Modulo
-        '+': 10,          // Addition
-        '-': 10,          // Subtraction
-        '<<': 9,          // Left shift
-        '>>': 9,          // Right shift
-        '<': 8,           // Less than
-        '>': 8,           // Greater than
-        '<=': 8,          // Less than or equal
-        '>=': 8,          // Greater than or equal
-        '==': 7,          // Equal
-        '!=': 7,          // Not equal
-        '&': 6,           // Bitwise AND
-        '^': 5,           // Bitwise XOR
-        '|': 4,           // Bitwise OR
-        '&&': 3,          // Logical AND
-        '||': 2,          // Logical OR
-        '?:': 1,          // Ternary conditional
-        '=': 0,           // Assignment operators
-        '+=': 0,
-        '-=': 0,
-        '*=': 0,
-        '/=': 0,
-        ',': -1,          // Comma operator
+      "C-Family": {
+        "()": 14,         // Function call, array subscript
+        ".": 14,          // Member access
+        "->": 14,         // Pointer member access
+        "++": 13,         // Postfix/Prefix increment (unified)
+        "--": 13,         // Postfix/Prefix decrement (unified)
+        "!": 12,          // Logical NOT
+        "~": 12,          // Bitwise NOT
+        "+": 12,          // Unary plus / Addition (unified)
+        "-": 12,          // Unary minus / Subtraction (unified)
+        // "++": 12,         // Prefix increment (duplicate removed)
+        // "--": 12,         // Prefix decrement (duplicate removed)
+        "*": 12,          // Dereference/multiply (unified)
+        "&": 12,          // Address-of/bitwise AND (unified)
+        "sizeof": 12,     // Sizeof
+        "type": 12,       // Type cast
+        // "*": 11,          // Multiplication (duplicate removed)
+        "/": 11,          // Division
+        "%": 11,          // Modulo
+        // "+": 10,          // Addition (duplicate removed)
+        // "-": 10,          // Subtraction (duplicate removed)
+        "<<": 9,          // Left shift
+        ">>": 9,          // Right shift
+        "<": 8,           // Less than
+        ">": 8,           // Greater than
+        "<=": 8,          // Less than or equal
+        ">=": 8,          // Greater than or equal
+        "==": 7,          // Equal
+        "!=": 7,          // Not equal
+        // "&": 6,           // Bitwise AND (duplicate removed)
+        "^": 5,           // Bitwise XOR
+        "|": 4,           // Bitwise OR
+        "&&": 3,          // Logical AND
+        "||": 2,          // Logical OR
+        "?:": 1,          // Ternary conditional
+        "=": 0,           // Assignment operators
+        "+=": 0,
+        "-=": 0,
+        "*=": 0,
+        "/=": 0,
+        ",": -1,          // Comma operator
       },
-      'Dynamic Script': {
-        '()': 14,         // Function call
-        '[]': 13,         // Array subscript
-        '.': 13,          // Member access
-        '!': 12,          // Logical NOT
-        '~': 12,          // Bitwise NOT
-        '+': 12,          // Unary plus
-        '-': 12,          // Unary minus
-        '*': 11,          // Multiplication
-        '/': 11,          // Division
-        '%': 11,          // Modulo
-        '+': 10,          // Addition
-        '-': 10,          // Subtraction
-        '<<': 9,          // Left shift
-        '>>': 9,          // Right shift
-        '<': 8,           // Less than
-        '>': 8,           // Greater than
-        '==': 7,          // Equal (loose)
-        '!=': 7,          // Not equal (loose)
-        '===': 7,         // Equal (strict, JS only)
-        '!==': 7,         // Not equal (strict, JS only)
-        '&': 6,           // Bitwise AND
-        '^': 5,           // Bitwise XOR
-        '|': 4,           // Bitwise OR
-        '&&': 3,          // Logical AND
-        '||': 2,          // Logical OR
-        '?:': 1,          // Ternary conditional
-        '=': 0,           // Assignment
-        '+=': 0,
-        '-=': 0,
-        '**': 13,         // Exponentiation (JS)
+      "Dynamic Script": {
+        "()":14,         // Function call
+        "[]": 13,         // Array subscript
+        ".": 13,          // Member access
+        "!": 12,          // Logical NOT
+        "~": 12,          // Bitwise NOT
+        "+": 12,          // Unary plus / Addition (unified)
+        "-": 12,          // Unary minus / Subtraction (unified)
+        "*": 11,          // Multiplication
+        "/": 11,          // Division
+        "%": 11,          // Modulo
+        // "+": 10,          // Addition (duplicate removed)
+        // "-": 10,          // Subtraction (duplicate removed)
+        "<<": 9,          // Left shift
+        ">>": 9,          // Right shift
+        "<": 8,           // Less than
+        ">": 8,           // Greater than
+        "==": 7,          // Equal (loose)
+        "!=": 7,          // Not equal (loose)
+        "===": 7,         // Equal (strict, JS only)
+        "!==": 7,         // Not equal (strict, JS only)
+        "&": 6,           // Bitwise AND
+        "^": 5,           // Bitwise XOR
+        "|": 4,           // Bitwise OR
+        "&&": 3,          // Logical AND
+        "||": 2,          // Logical OR
+        "?:": 1,          // Ternary conditional
+        "=": 0,           // Assignment
+        "+=": 0,
+        "-=": 0,
+        "**": 13,         // Exponentiation (JS)
       },
-      'Functional': {
-        'apply': 14,      // Function application
-        '|': 13,          // Pipe
-        '^': 12,          // Exponentiation
-        '*': 11,          // Multiplication
-        '/': 11,          // Division
-        '%': 11,          // Modulo
-        '+': 10,          // Addition
-        '-': 10,          // Subtraction
-        '::': 9,          // Cons (list construction)
-        '==': 8,          // Equal
-        '<': 8,           // Less than
-        '>': 8,           // Greater than
-        '&&': 3,          // Logical AND
-        '||': 2,          // Logical OR
-        ',': 0,           // Tuple construction
+      "Functional": {
+        "apply": 14,      // Function application
+        "|": 13,          // Pipe
+        "^": 12,          // Exponentiation
+        "*": 11,          // Multiplication
+        "/": 11,          // Division
+        "%": 11,          // Modulo
+        "+": 10,          // Addition
+        "-": 10,          // Subtraction
+        "::": 9,          // Cons (list construction)
+        "==": 8,          // Equal
+        "<": 8,           // Less than
+        ">": 8,           // Greater than
+        "&&": 3,          // Logical AND
+        "||": 2,          // Logical OR
+        ",": 0,           // Tuple construction
       },
     };
   }
@@ -378,44 +378,44 @@ class LanguageTraits {
   initializeKeywords() {
     this.keywords = {
       C: [
-        'auto', 'break', 'case', 'char', 'const', 'continue', 'default', 'do',
-        'double', 'else', 'enum', 'extern', 'float', 'for', 'goto', 'if',
-        'inline', 'int', 'long', 'register', 'restrict', 'return', 'short',
-        'signed', 'sizeof', 'static', 'struct', 'switch', 'typedef', 'union',
-        'unsigned', 'void', 'volatile', 'while', '_Bool', '_Complex', '_Imaginary'
+        "auto", "break", "case", "char", "const", "continue", "default", "do",
+        "double", "else", "enum", "extern", "float", "for", "goto", "if",
+        "inline", "int", "long", "register", "restrict", "return", "short",
+        "signed", "sizeof", "static", "struct", "switch", "typedef", "union",
+        "unsigned", "void", "volatile", "while", "_Bool", "_Complex", "_Imaginary"
       ],
-      'C++': [
-        'alignas', 'alignof', 'and', 'and_eq', 'asm', 'auto', 'bitand', 'bitor',
-        'bool', 'break', 'case', 'catch', 'char', 'char8_t', 'char16_t', 'char32_t',
-        'class', 'compl', 'concept', 'const', 'consteval', 'constexpr', 'constinit',
-        'const_cast', 'continue', 'co_await', 'co_return', 'co_yield', 'decltype',
-        'default', 'delete', 'do', 'double', 'dynamic_cast', 'else', 'enum',
-        'explicit', 'export', 'extern', 'false', 'float', 'for', 'friend', 'goto',
-        'if', 'inline', 'int', 'long', 'mutable', 'namespace', 'new', 'noexcept',
-        'not', 'not_eq', 'nullptr', 'operator', 'or', 'or_eq', 'private', 'protected',
-        'public', 'register', 'reinterpret_cast', 'requires', 'return', 'short',
-        'signed', 'sizeof', 'static', 'static_assert', 'static_cast', 'struct',
-        'switch', 'template', 'this', 'thread_local', 'throw', 'true', 'try',
-        'typedef', 'typeid', 'typename', 'union', 'unsigned', 'using', 'virtual',
-        'void', 'volatile', 'wchar_t', 'while', 'xor', 'xor_eq'
+      "C++": [
+        "alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor",
+        "bool", "break", "case", "catch", "char", "char8_t", "char16_t", "char32_t",
+        "class", "compl", "concept", "const", "consteval", "constexpr", "constinit",
+        "const_cast", "continue", "co_await", "co_return", "co_yield", "decltype",
+        "default", "delete", "do", "double", "dynamic_cast", "else", "enum",
+        "explicit", "export", "extern", "false", "float", "for", "friend", "goto",
+        "if", "inline", "int", "long", "mutable", "namespace", "new", "noexcept",
+        "not", "not_eq", "nullptr", "operator", "or", "or_eq", "private", "protected",
+        "public", "register", "reinterpret_cast", "requires", "return", "short",
+        "signed", "sizeof", "static", "static_assert", "static_cast", "struct",
+        "switch", "template", "this", "thread_local", "throw", "true", "try",
+        "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual",
+        "void", "volatile", "wchar_t", "while", "xor", "xor_eq"
       ],
       Python: [
-        'False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await',
-        'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except',
-        'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is',
-        'lambda', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return', 'try',
-        'while', 'with', 'yield'
+        "False", "None", "True", "and", "as", "assert", "async", "await",
+        "break", "class", "continue", "def", "del", "elif", "else", "except",
+        "finally", "for", "from", "global", "if", "import", "in", "is",
+        "lambda", "nonlocal", "not", "or", "pass", "raise", "return", "try",
+        "while", "with", "yield"
       ],
       JavaScript: [
-        'abstract', 'arguments', 'await', 'boolean', 'break', 'byte', 'case',
-        'catch', 'char', 'class', 'const', 'continue', 'debugger', 'default',
-        'delete', 'do', 'double', 'else', 'enum', 'eval', 'export', 'extends',
-        'false', 'final', 'finally', 'float', 'for', 'function', 'goto', 'if',
-        'implements', 'import', 'in', 'instanceof', 'int', 'interface', 'let',
-        'long', 'native', 'new', 'null', 'package', 'private', 'protected',
-        'public', 'return', 'short', 'static', 'super', 'switch', 'synchronized',
-        'this', 'throw', 'throws', 'transient', 'true', 'try', 'typeof', 'var',
-        'void', 'volatile', 'while', 'with', 'yield'
+        "abstract", "arguments", "await", "boolean", "break", "byte", "case",
+        "catch", "char", "class", "const", "continue", "debugger", "default",
+        "delete", "do", "double", "else", "enum", "eval", "export", "extends",
+        "false", "final", "finally", "float", "for", "function", "goto", "if",
+        "implements", "import", "in", "instanceof", "int", "interface", "let",
+        "long", "native", "new", "null", "package", "private", "protected",
+        "public", "return", "short", "static", "super", "switch", "synchronized",
+        "this", "throw", "throws", "transient", "true", "try", "typeof", "var",
+        "void", "volatile", "while", "with", "yield"
       ],
     };
   }
@@ -425,7 +425,7 @@ class LanguageTraits {
    */
   initializeScopeRules() {
     this.scopeRules = {
-      'C-Family': {
+      "C-Family": {
         blockScoped: true,
         functionScoped: false,
         globalScope: true,
@@ -433,7 +433,7 @@ class LanguageTraits {
         shadowing: true,
         hoisting: false,
       },
-      'Dynamic Script': {
+      "Dynamic Script": {
         blockScoped: false,
         functionScoped: true,
         globalScope: true,
@@ -441,7 +441,7 @@ class LanguageTraits {
         shadowing: true,
         hoisting: true,
       },
-      'Functional': {
+      "Functional": {
         blockScoped: false,
         functionScoped: true,
         globalScope: true,

@@ -800,7 +800,7 @@ class TypeScriptParser extends BaseParser {
     return {
       objectCount: this.objectCount,
       maxObjects: this.maxObjects,
-      utilization: ((this.objectCount / this.maxObjects) * 100).toFixed(1) + '%',
+      utilization: ((this.objectCount / this.maxObjects) * 100).toFixed(1) + "%",
       pool: this.pool.getStats(),
     };
   }

@@ -5,7 +5,7 @@
  * Integrates security validator into the quality gate pipeline
  */
 
-const PythonSecurityValidator = require('../quality/python_security_validator.js');
+const PythonSecurityValidator = require("../quality/python_security_validator.js");
 
 class PythonPhaseESecurityIntegration {
   constructor(options = {}) {
@@ -35,7 +35,7 @@ class PythonPhaseESecurityIntegration {
       return {
         passed: true,
         skipped: true,
-        reason: 'Security gate disabled',
+        reason: "Security gate disabled",
       };
     }
 
@@ -58,7 +58,7 @@ class PythonPhaseESecurityIntegration {
       return {
         passed: false,
         error: error.message,
-        errorType: 'SecurityValidationError',
+        errorType: "SecurityValidationError",
       };
     }
   }
@@ -103,7 +103,7 @@ class PythonPhaseESecurityIntegration {
 
     if (this.options.warnOnMedium && report.counts.medium > 0) {
       warnings.push({
-        type: 'MEDIUM_ISSUES',
+        type: "MEDIUM_ISSUES",
         count: report.counts.medium,
         message: `${report.counts.medium} medium-severity security issues detected`,
       });
@@ -111,7 +111,7 @@ class PythonPhaseESecurityIntegration {
 
     if (this.options.warnOnLow && report.counts.low > 0) {
       warnings.push({
-        type: 'LOW_ISSUES',
+        type: "LOW_ISSUES",
         count: report.counts.low,
         message: `${report.counts.low} low-severity security issues detected`,
       });
@@ -128,7 +128,7 @@ class PythonPhaseESecurityIntegration {
 
     if (report.counts.critical > 0) {
       blockers.push({
-        type: 'CRITICAL_ISSUES',
+        type: "CRITICAL_ISSUES",
         count: report.counts.critical,
         message: `BLOCKING: ${report.counts.critical} critical-severity security issues detected`,
       });
@@ -136,7 +136,7 @@ class PythonPhaseESecurityIntegration {
 
     if (this.options.failOnHigh && report.counts.high > 0) {
       blockers.push({
-        type: 'HIGH_ISSUES',
+        type: "HIGH_ISSUES",
         count: report.counts.high,
         message: `BLOCKING: ${report.counts.high} high-severity security issues detected`,
       });
@@ -150,7 +150,7 @@ class PythonPhaseESecurityIntegration {
    */
   getFormattedReport() {
     if (!this.report) {
-      return 'No security validation performed';
+      return "No security validation performed";
     }
 
     return this.validator.formatReport(this.report);
@@ -165,7 +165,7 @@ class PythonPhaseESecurityIntegration {
     }
 
     return {
-      securityStatus: this.report.valid ? 'PASS' : 'FAIL',
+      securityStatus: this.report.valid ? "PASS" : "FAIL",
       overallSeverity: this.report.severity,
       issueCount: {
         critical: this.report.counts.critical,
@@ -184,17 +184,17 @@ class PythonPhaseESecurityIntegration {
   generatePipelineReport() {
     if (!this.report) {
       return {
-        gate: 'SECURITY',
-        status: 'SKIPPED',
-        reason: 'No validation performed',
+        gate: "SECURITY",
+        status: "SKIPPED",
+        reason: "No validation performed",
       };
     }
 
     const gateResult = this.evaluateGate(this.report);
 
     return {
-      gate: 'SECURITY',
-      status: gateResult.passed ? 'PASS' : 'FAIL',
+      gate: "SECURITY",
+      status: gateResult.passed ? "PASS" : "FAIL",
       severity: this.report.severity,
       metrics: this.getMetrics(),
       issues: this.report.issues,
@@ -212,14 +212,14 @@ class PythonPhaseESecurityIntegration {
 
     return {
       ...report,
-      format: 'SARIF', // Security Analysis Results Format
-      tool: 'PythonSecurityValidator',
-      version: '1.0.0',
+      format: "SARIF", // Security Analysis Results Format
+      tool: "PythonSecurityValidator",
+      version: "1.0.0",
       runs: [{
         tool: {
           driver: {
-            name: 'Python Security Validator',
-            version: '1.0.0',
+            name: "Python Security Validator",
+            version: "1.0.0",
           },
         },
         results: this.report.issues.map(issue => ({
@@ -231,7 +231,7 @@ class PythonPhaseESecurityIntegration {
           locations: [{
             physicalLocation: {
               artifactLocation: {
-                uri: 'python-code',
+                uri: "python-code",
               },
               region: {
                 startLine: issue.location.line,

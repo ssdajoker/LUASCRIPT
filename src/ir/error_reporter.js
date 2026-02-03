@@ -6,23 +6,23 @@
  * Error Severity Levels
  */
 const ErrorSeverity = {
-  Error: 'error',
-  Warning: 'warning',
-  Info: 'info',
+  Error: "error",
+  Warning: "warning",
+  Info: "info",
 };
 
 /**
  * Error Categories
  */
 const ErrorCategory = {
-  TypeMismatch: 'type_mismatch',
-  ConstraintViolation: 'constraint_violation',
-  SemanticError: 'semantic_error',
-  UndefinedReference: 'undefined_reference',
-  InvalidOperation: 'invalid_operation',
-  UnreachableCode: 'unreachable_code',
-  DeprecatedFeature: 'deprecated_feature',
-  StyleViolation: 'style_violation',
+  TypeMismatch: "type_mismatch",
+  ConstraintViolation: "constraint_violation",
+  SemanticError: "semantic_error",
+  UndefinedReference: "undefined_reference",
+  InvalidOperation: "invalid_operation",
+  UnreachableCode: "unreachable_code",
+  DeprecatedFeature: "deprecated_feature",
+  StyleViolation: "style_violation",
 };
 
 /**
@@ -103,14 +103,14 @@ class ErrorReporter {
    */
   getBySeverity(severity) {
     switch (severity) {
-      case ErrorSeverity.Error:
-        return this.errors;
-      case ErrorSeverity.Warning:
-        return this.warnings;
-      case ErrorSeverity.Info:
-        return this.infos;
-      default:
-        return [];
+    case ErrorSeverity.Error:
+      return this.errors;
+    case ErrorSeverity.Warning:
+      return this.warnings;
+    case ErrorSeverity.Info:
+      return this.infos;
+    default:
+      return [];
     }
   }
 
@@ -165,7 +165,7 @@ class ErrorReporter {
       const prefix = this.getSeverityPrefix(report.severity);
       const location = report.location
         ? ` at ${report.location.file}:${report.location.line}:${report.location.column}`
-        : '';
+        : "";
 
       lines.push(`${prefix} [${report.category}]${location}: ${report.message}`);
 
@@ -178,16 +178,16 @@ class ErrorReporter {
       }
 
       if (report.related.length > 0) {
-        lines.push(`  Related:`);
+        lines.push("  Related:");
         for (const rel of report.related) {
           lines.push(`    - ${rel}`);
         }
       }
 
-      lines.push('');
+      lines.push("");
     }
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -218,14 +218,14 @@ class ErrorReporter {
    */
   getSeverityPrefix(severity) {
     switch (severity) {
-      case ErrorSeverity.Error:
-        return 'ERROR';
-      case ErrorSeverity.Warning:
-        return 'WARNING';
-      case ErrorSeverity.Info:
-        return 'INFO';
-      default:
-        return 'UNKNOWN';
+    case ErrorSeverity.Error:
+      return "ERROR";
+    case ErrorSeverity.Warning:
+      return "WARNING";
+    case ErrorSeverity.Info:
+      return "INFO";
+    default:
+      return "UNKNOWN";
     }
   }
 

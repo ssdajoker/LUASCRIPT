@@ -112,7 +112,7 @@ class ObjectPool {
       capacity: this.capacity,
       available: this.available.length,
       inUse: this.inUse.size,
-      utilization: (this.inUse.size / this.capacity * 100).toFixed(1) + '%',
+      utilization: (this.inUse.size / this.capacity * 100).toFixed(1) + "%",
       stats: this.stats,
     };
   }
@@ -125,12 +125,12 @@ class ObjectPool {
   getEstimatedMemoryBytes() {
     // Estimate memory usage per object type (rough estimates)
     const typeSize = {
-      'string': 50,      // 40 bytes overhead + avg content
-      'list': 56,        // List object overhead
-      'dict': 240,       // Dict object overhead
-      'tuple': 40,       // Tuple object overhead
-      'set': 224,        // Set object overhead
-      'object': 60,      // Generic object overhead
+      "string": 50,      // 40 bytes overhead + avg content
+      "list": 56,        // List object overhead
+      "dict": 240,       // Dict object overhead
+      "tuple": 40,       // Tuple object overhead
+      "set": 224,        // Set object overhead
+      "object": 60,      // Generic object overhead
     };
 
     const perObject = typeSize[this.type] || 60;
@@ -164,7 +164,7 @@ class PythonPoolManager {
   }
 
   initializePools() {
-    const poolTypes = ['string', 'list', 'dict', 'tuple', 'set', 'object'];
+    const poolTypes = ["string", "list", "dict", "tuple", "set", "object"];
     
     poolTypes.forEach(type => {
       this.pools[type] = new ObjectPool(type, this.options.maxPoolCapacity);
@@ -180,7 +180,7 @@ class PythonPoolManager {
     this.globalStats.totalAcquisitions++;
 
     if (this.options.enableStatsTracking) {
-      this.recordAllocation(type, 'acquire');
+      this.recordAllocation(type, "acquire");
     }
 
     return obj;
@@ -195,7 +195,7 @@ class PythonPoolManager {
     this.globalStats.totalReleases++;
 
     if (this.options.enableStatsTracking) {
-      this.recordAllocation(obj.type, 'release');
+      this.recordAllocation(obj.type, "release");
     }
   }
 
@@ -249,7 +249,7 @@ class PythonPoolManager {
       currentMB: currentMB.toFixed(2),
       maxAllowedMB: maxAllowed,
       withinLimit: currentMB <= maxAllowed,
-      percentOfLimit: (currentMB / maxAllowed * 100).toFixed(1) + '%',
+      percentOfLimit: (currentMB / maxAllowed * 100).toFixed(1) + "%",
     };
   }
 
@@ -289,8 +289,8 @@ class PythonPoolManager {
         totalReuses: totalReuses,
         totalEvictions: totalEvictions,
         reuseRate: this.globalStats.totalAcquisitions > 0
-          ? (totalReuses / this.globalStats.totalAcquisitions * 100).toFixed(1) + '%'
-          : '0%',
+          ? (totalReuses / this.globalStats.totalAcquisitions * 100).toFixed(1) + "%"
+          : "0%",
       },
       memory: {
         currentMB: this.globalStats.currentMemoryMB.toFixed(2),
@@ -346,13 +346,13 @@ class PythonPoolManager {
 
   getCapacityRecommendation(reuseRatio, evictions) {
     if (reuseRatio > 0.8 && evictions > 100) {
-      return 'INCREASE_CAPACITY';
+      return "INCREASE_CAPACITY";
     } else if (reuseRatio < 0.1 && evictions === 0) {
-      return 'DECREASE_CAPACITY';
+      return "DECREASE_CAPACITY";
     } else if (reuseRatio > 0.5) {
-      return 'OPTIMAL';
+      return "OPTIMAL";
     } else {
-      return 'MONITOR';
+      return "MONITOR";
     }
   }
 
@@ -367,8 +367,8 @@ class PythonPoolManager {
 
     return {
       reuseRate: stats.globalStats.reuseRate,
-      estimatedGCReductionPercent: (gcReductionPercent).toFixed(1) + '%',
-      estimatedSpeedupPercent: (gcReductionPercent * 0.3).toFixed(1) + '%',  // Rough estimate
+      estimatedGCReductionPercent: (gcReductionPercent).toFixed(1) + "%",
+      estimatedSpeedupPercent: (gcReductionPercent * 0.3).toFixed(1) + "%",  // Rough estimate
       memoryOverheadMB: memoryOverhead.toFixed(2),
       memoryWithinSLO: stats.memory.withinLimit,
       recommendation: this.getOverallRecommendation(reuseRate, memoryOverhead),
@@ -378,20 +378,20 @@ class PythonPoolManager {
   getOverallRecommendation(reuseRate, memoryMB) {
     if (!this.options.enablePooling) {
       if (reuseRate > 0.3) {
-        return 'ENABLE_POOLING_RECOMMENDED';
+        return "ENABLE_POOLING_RECOMMENDED";
       }
-      return 'POOLING_NOT_BENEFICIAL';
+      return "POOLING_NOT_BENEFICIAL";
     }
 
     if (memoryMB > this.options.maxMemoryOverheadMB) {
-      return 'REDUCE_POOL_SIZES';
+      return "REDUCE_POOL_SIZES";
     } else if (reuseRate < 0.1) {
-      return 'DISABLE_POOLING';
+      return "DISABLE_POOLING";
     } else if (reuseRate > 0.6) {
-      return 'INCREASE_POOL_SIZES';
+      return "INCREASE_POOL_SIZES";
     }
 
-    return 'POOLING_ACTIVE';
+    return "POOLING_ACTIVE";
   }
 }
 

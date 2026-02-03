@@ -16,18 +16,18 @@ class SecurityValidators {
    */
   constructor(options = {}) {
     this.blockedIdentifiers = options.blockedIdentifiers || [
-      '__proto__',
-      'prototype',
-      'constructor'
+      "__proto__",
+      "prototype",
+      "constructor"
     ];
 
     this.blockedCallNames = options.blockedCallNames || [
-      'eval',
-      'Function',
-      'exec',
-      'spawn',
-      'spawnSync',
-      'constructor'
+      "eval",
+      "Function",
+      "exec",
+      "spawn",
+      "spawnSync",
+      "constructor"
     ];
 
     this.maxStringLength = options.maxStringLength || 10000;
@@ -47,25 +47,25 @@ class SecurityValidators {
    */
   validate(node) {
     const result = { ok: true, violations: [], warnings: [] };
-    if (!node || typeof node !== 'object') {
+    if (!node || typeof node !== "object") {
       return result;
     }
 
     this.stats.checked++;
 
-    if (node.type === 'Identifier') {
+    if (node.type === "Identifier") {
       this._checkIdentifier(node, result);
     }
 
-    if (node.type === 'MemberExpression') {
+    if (node.type === "MemberExpression") {
       this._checkMemberExpression(node, result);
     }
 
-    if (node.type === 'CallExpression') {
+    if (node.type === "CallExpression") {
       this._checkCallExpression(node, result);
     }
 
-    if (node.type === 'Literal' || node.type === 'StringLiteral') {
+    if (node.type === "Literal" || node.type === "StringLiteral") {
       this._checkStringLiteral(node, result);
     }
 
@@ -103,46 +103,46 @@ class SecurityValidators {
   }
 
   _checkIdentifier(node, result) {
-    const name = node.name || '';
+    const name = node.name || "";
     if (this.blockedIdentifiers.includes(name)) {
-      this._recordViolation('blockedIdentifier', `Blocked identifier: ${name}`, node, result);
+      this._recordViolation("blockedIdentifier", `Blocked identifier: ${name}`, node, result);
     }
   }
 
   _checkMemberExpression(node, result) {
-    const propName = node.property?.name || node.property?.value || '';
+    const propName = node.property?.name || node.property?.value || "";
     if (this.blockedIdentifiers.includes(propName)) {
-      this._recordViolation('blockedProperty', `Blocked property access: ${propName}`, node, result);
+      this._recordViolation("blockedProperty", `Blocked property access: ${propName}`, node, result);
     }
   }
 
   _checkCallExpression(node, result) {
     let callName = null;
-    if (node.callee?.type === 'Identifier') {
+    if (node.callee?.type === "Identifier") {
       callName = node.callee.name;
-    } else if (node.callee?.type === 'MemberExpression') {
+    } else if (node.callee?.type === "MemberExpression") {
       callName = node.callee.property?.name || node.callee.property?.value || null;
     }
 
     if (callName && this.blockedCallNames.includes(callName)) {
-      this._recordViolation('blockedCall', `Blocked call: ${callName}`, node, result);
+      this._recordViolation("blockedCall", `Blocked call: ${callName}`, node, result);
     }
 
-    if (node.callee?.type === 'MemberExpression') {
+    if (node.callee?.type === "MemberExpression") {
       this._checkMemberExpression(node.callee, result);
     }
   }
 
   _checkStringLiteral(node, result) {
-    const value = node.value ?? node.raw ?? '';
-    const strValue = typeof value === 'string' ? value : '';
+    const value = node.value ?? node.raw ?? "";
+    const strValue = typeof value === "string" ? value : "";
 
-    if (strValue.includes('\u0000') || strValue.includes('\0')) {
-      this._recordWarning('nullByte', 'String contains null byte', node, result);
+    if (strValue.includes("\u0000") || strValue.includes("\0")) {
+      this._recordWarning("nullByte", "String contains null byte", node, result);
     }
 
     if (strValue.length > this.maxStringLength) {
-      this._recordWarning('largeLiteral', `String literal exceeds ${this.maxStringLength} chars`, node, result);
+      this._recordWarning("largeLiteral", `String literal exceeds ${this.maxStringLength} chars`, node, result);
     }
   }
 
@@ -159,6 +159,6 @@ class SecurityValidators {
   }
 }
 
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = { SecurityValidators };
 }

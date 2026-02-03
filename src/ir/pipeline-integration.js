@@ -175,7 +175,7 @@ class IRPipeline {
 
     if (!allMatch) {
       throw new Error(
-        `Determinism verification failed: IR differs across runs. ` +
+        "Determinism verification failed: IR differs across runs. " +
         `Hashes: ${hashes.join(", ")}`
       );
     }

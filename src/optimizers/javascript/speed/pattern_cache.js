@@ -18,7 +18,7 @@
  * @module src/optimizers/javascript/speed/pattern_cache
  */
 
-const { CacheManager } = require('./cache_manager');
+const { CacheManager } = require("./cache_manager");
 
 class PatternCache {
   /**
@@ -130,7 +130,7 @@ class PatternCache {
    * @returns {string}
    */
   createDestructuringKey(patternAst) {
-    const type = patternAst?.type || 'UnknownPattern';
+    const type = patternAst?.type || "UnknownPattern";
     const shape = this._hashPatternShape(patternAst);
     return `destruct_${type}_${shape}`;
   }
@@ -153,7 +153,7 @@ class PatternCache {
    * @returns {string}
    */
   createArrayMethodKey(callAst) {
-    const method = this._extractArrayMethodName(callAst) || 'unknown';
+    const method = this._extractArrayMethodName(callAst) || "unknown";
     const args = callAst?.arguments?.length || 0;
     const callbackShape = this._hashCallbackShape(callAst?.arguments?.[0]);
     return `array_${method}_args${args}_${callbackShape}`;
@@ -165,8 +165,8 @@ class PatternCache {
    */
   getStats() {
     const totalRequests = this.stats.hits + this.stats.misses;
-    const hitRate = totalRequests > 0 ? (this.stats.hits / totalRequests * 100).toFixed(1) : '0';
-    const reuseRate = this.stats.compiled > 0 ? (this.stats.reused / (this.stats.reused + this.stats.compiled) * 100).toFixed(1) : '0';
+    const hitRate = totalRequests > 0 ? (this.stats.hits / totalRequests * 100).toFixed(1) : "0";
+    const reuseRate = this.stats.compiled > 0 ? (this.stats.reused / (this.stats.reused + this.stats.compiled) * 100).toFixed(1) : "0";
 
     return {
       ...this.stats,
@@ -192,7 +192,7 @@ class PatternCache {
   clearCache() {
     this.cache.clear();
     Object.keys(this.stats).forEach(key => {
-      if (typeof this.stats[key] === 'number') {
+      if (typeof this.stats[key] === "number") {
         this.stats[key] = 0;
       }
     });
@@ -207,7 +207,7 @@ class PatternCache {
       cacheSizeMB: ((this.stats.compiled || 0) * 0.001).toFixed(2),
       patternsCompiled: this.stats.compiled,
       patternsReused: this.stats.reused,
-      speedupFactor: this.stats.compiled > 0 ? (this.stats.reused / this.stats.compiled).toFixed(2) : '1.00',
+      speedupFactor: this.stats.compiled > 0 ? (this.stats.reused / this.stats.compiled).toFixed(2) : "1.00",
       patterns: this.stats.patterns
     };
   }
@@ -215,7 +215,7 @@ class PatternCache {
   // ----- Private helper methods -----
 
   _compileDestructuringPattern(patternAst, context) {
-    const type = patternAst?.type || 'Pattern';
+    const type = patternAst?.type || "Pattern";
     const itemCount = Array.isArray(patternAst?.elements)
       ? patternAst.elements.length
       : Array.isArray(patternAst?.properties)
@@ -232,44 +232,44 @@ class PatternCache {
   }
 
   _compileArrayMethodPattern(callAst, context) {
-    const method = this._extractArrayMethodName(callAst) || 'arrayMethod';
+    const method = this._extractArrayMethodName(callAst) || "arrayMethod";
     const args = callAst?.arguments?.length || 0;
     return `-- array method ${method} (${args} args)`;
   }
 
   _hashPatternShape(patternAst) {
-    if (!patternAst) return 'empty';
-    if (patternAst.type === 'ArrayPattern') {
+    if (!patternAst) return "empty";
+    if (patternAst.type === "ArrayPattern") {
       return `arr_${(patternAst.elements || []).length}`;
     }
-    if (patternAst.type === 'ObjectPattern') {
+    if (patternAst.type === "ObjectPattern") {
       return `obj_${(patternAst.properties || []).length}`;
     }
-    return `unknown_${patternAst.type || 'none'}`;
+    return `unknown_${patternAst.type || "none"}`;
   }
 
   _hashTemplateHead(templateAst) {
-    const raw = templateAst?.quasis?.[0]?.value?.raw || '';
-    return raw.substring(0, 12).replace(/\s+/g, '_') || 'empty';
+    const raw = templateAst?.quasis?.[0]?.value?.raw || "";
+    return raw.substring(0, 12).replace(/\s+/g, "_") || "empty";
   }
 
   _extractArrayMethodName(callAst) {
     const callee = callAst?.callee;
     if (!callee) return null;
-    if (callee.type === 'MemberExpression') {
+    if (callee.type === "MemberExpression") {
       return callee.property?.name || callee.property?.value || null;
     }
     return callee.name || null;
   }
 
   _hashCallbackShape(callbackAst) {
-    if (!callbackAst) return 'nocb';
-    const type = callbackAst.type || 'Unknown';
+    if (!callbackAst) return "nocb";
+    const type = callbackAst.type || "Unknown";
     const params = callbackAst.params?.length || 0;
     return `${type}_${params}`;
   }
 }
 
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = { PatternCache };
 }

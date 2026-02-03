@@ -93,7 +93,7 @@ class JSONParser {
       return this.parseObject();
     } else if (char === "[") {
       return this.parseArray();
-    } else if (char === '"') {
+    } else if (char === "\"") {
       return this.parseString();
     } else if (char === "t" || char === "f") {
       return this.parseBoolean();
@@ -123,7 +123,7 @@ class JSONParser {
       this.skipWhitespace();
       
       // Key must be a string in JSON
-      if (this.peek() !== '"') {
+      if (this.peek() !== "\"") {
         throw new Error(`Expected string key at line ${this.line}, column ${this.column}`);
       }
 
@@ -193,13 +193,13 @@ class JSONParser {
    * Handles escape sequences: \", \\, \/, \b, \f, \n, \r, \t, \uXXXX
    */
   parseString() {
-    this.consume('"', "Expected '\"'");
+    this.consume("\"", "Expected '\"'");
     let value = "";
 
     while (this.position < this.source.length) {
       const char = this.source[this.position];
 
-      if (char === '"') {
+      if (char === "\"") {
         this.position++;
         this.column++;
         return this.createNode("JSONString", { value });
@@ -213,39 +213,39 @@ class JSONParser {
 
         const escaped = this.source[this.position];
         switch (escaped) {
-          case '"':
-          case "\\":
-          case "/":
-            value += escaped;
-            break;
-          case "b":
-            value += "\b";
-            break;
-          case "f":
-            value += "\f";
-            break;
-          case "n":
-            value += "\n";
-            break;
-          case "r":
-            value += "\r";
-            break;
-          case "t":
-            value += "\t";
-            break;
-          case "u": {
-            // Unicode escape: \uXXXX
-            const hex = this.source.substr(this.position + 1, 4);
-            if (!/^[0-9a-fA-F]{4}$/.test(hex)) {
-              throw new Error(`Invalid Unicode escape at line ${this.line}, column ${this.column}`);
-            }
-            value += String.fromCharCode(parseInt(hex, 16));
-            this.position += 4;
-            this.column += 4;
-            break;
+        case "\"":
+        case "\\":
+        case "/":
+          value += escaped;
+          break;
+        case "b":
+          value += "\b";
+          break;
+        case "f":
+          value += "\f";
+          break;
+        case "n":
+          value += "\n";
+          break;
+        case "r":
+          value += "\r";
+          break;
+        case "t":
+          value += "\t";
+          break;
+        case "u": {
+          // Unicode escape: \uXXXX
+          const hex = this.source.substr(this.position + 1, 4);
+          if (!/^[0-9a-fA-F]{4}$/.test(hex)) {
+            throw new Error(`Invalid Unicode escape at line ${this.line}, column ${this.column}`);
           }
-          default:
-            throw new Error(`Invalid escape sequence '\\${escaped}' at line ${this.line}, column ${this.column}`);
+          value += String.fromCharCode(parseInt(hex, 16));
+          this.position += 4;
+          this.column += 4;
+          break;
+        }
+        default:
+          throw new Error(`Invalid escape sequence '\\${escaped}' at line ${this.line}, column ${this.column}`);
         }
         
         this.position++;
@@ -454,43 +454,43 @@ class JSONParser {
     if (!node) return "null";
 
     switch (node.type) {
-      case "JSONDocument":
-        return this.astToJSON(node.body);
+    case "JSONDocument":
+      return this.astToJSON(node.body);
       
-      case "JSONObject": {
-        if (!node.properties || node.properties.length === 0) {
-          return "{}";
-        }
-        const pairs = node.properties.map(prop => {
-          const key = JSON.stringify(prop.key);
-          const value = this.astToJSON(prop.value);
-          return `${key}:${value}`;
-        });
-        return `{${pairs.join(",")}}`;
+    case "JSONObject": {
+      if (!node.properties || node.properties.length === 0) {
+        return "{}";
       }
+      const pairs = node.properties.map(prop => {
+        const key = JSON.stringify(prop.key);
+        const value = this.astToJSON(prop.value);
+        return `${key}:${value}`;
+      });
+      return `{${pairs.join(",")}}`;
+    }
 
-      case "JSONArray": {
-        if (!node.elements || node.elements.length === 0) {
-          return "[]";
-        }
-        const values = node.elements.map(elem => this.astToJSON(elem));
-        return `[${values.join(",")}]`;
+    case "JSONArray": {
+      if (!node.elements || node.elements.length === 0) {
+        return "[]";
       }
+      const values = node.elements.map(elem => this.astToJSON(elem));
+      return `[${values.join(",")}]`;
+    }
 
-      case "JSONString":
-        return JSON.stringify(node.value);
+    case "JSONString":
+      return JSON.stringify(node.value);
 
-      case "JSONNumber":
-        return node.rawValue || String(node.value);
+    case "JSONNumber":
+      return node.rawValue || String(node.value);
 
-      case "JSONBoolean":
-        return String(node.value);
+    case "JSONBoolean":
+      return String(node.value);
 
-      case "JSONNull":
-        return "null";
+    case "JSONNull":
+      return "null";
 
-      default:
-        throw new Error(`Unknown JSON node type: ${node.type}`);
+    default:
+      throw new Error(`Unknown JSON node type: ${node.type}`);
     }
   }
 }

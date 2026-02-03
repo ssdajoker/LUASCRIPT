@@ -2,7 +2,7 @@
 // Phase B: Type Constraint Solver
 // Solves type constraints and ensures type safety across the canonical IR.
 
-const { IRTypeKind, IRType } = require('./canonical_ir_schema');
+const { IRTypeKind, IRType } = require("./canonical_ir_schema");
 
 /**
  * Type Constraint Solver
@@ -55,7 +55,7 @@ class TypeConstraintSolver {
     for (const constraint of this.constraints) {
       if (!this.solveConstraint(constraint)) {
         this.errors.push({
-          type: 'constraint_violation',
+          type: "constraint_violation",
           message: `Type constraint not satisfied: ${JSON.stringify(constraint)}`,
           constraint,
         });
@@ -77,21 +77,21 @@ class TypeConstraintSolver {
     const { kind, left, right } = constraint;
 
     switch (kind) {
-      case 'equality':
-        return this.solveEqualityConstraint(left, right);
-      case 'subtype':
-        return this.solveSubtypeConstraint(left, right);
-      case 'assignable':
-        return this.solveAssignableConstraint(left, right);
-      case 'callable':
-        return this.solveCallableConstraint(left, right);
-      default:
-        this.warnings.push({
-          type: 'unknown_constraint',
-          message: `Unknown constraint kind: ${kind}`,
-          constraint,
-        });
-        return true;
+    case "equality":
+      return this.solveEqualityConstraint(left, right);
+    case "subtype":
+      return this.solveSubtypeConstraint(left, right);
+    case "assignable":
+      return this.solveAssignableConstraint(left, right);
+    case "callable":
+      return this.solveCallableConstraint(left, right);
+    default:
+      this.warnings.push({
+        type: "unknown_constraint",
+        message: `Unknown constraint kind: ${kind}`,
+        constraint,
+      });
+      return true;
     }
   }
 
@@ -223,10 +223,10 @@ class TypeConstraintSolver {
     if (this.unify(t1, t2)) return true;
 
     // Any is supertype of all
-    if (t2.kind === IRTypeKind.Primitive && t2.name === 'any') return true;
+    if (t2.kind === IRTypeKind.Primitive && t2.name === "any") return true;
 
     // Null/undefined subtypes
-    if (t1.kind === IRTypeKind.Primitive && (t1.name === 'null' || t1.name === 'undefined')) {
+    if (t1.kind === IRTypeKind.Primitive && (t1.name === "null" || t1.name === "undefined")) {
       return t2.kind === IRTypeKind.Optional;
     }
 
@@ -278,7 +278,7 @@ class TypeConstraintSolver {
     if (!from || !to) return false;
 
     // Numeric conversions
-    const numericTypes = ['i8', 'i16', 'i32', 'i64', 'u8', 'u16', 'u32', 'u64', 'f32', 'f64'];
+    const numericTypes = ["i8", "i16", "i32", "i64", "u8", "u16", "u32", "u64", "f32", "f64"];
     if (from.kind === IRTypeKind.Primitive && to.kind === IRTypeKind.Primitive) {
       if (numericTypes.includes(from.name) && numericTypes.includes(to.name)) {
         return true; // Allow with potential loss warning
@@ -286,7 +286,7 @@ class TypeConstraintSolver {
     }
 
     // String conversions
-    if (to.kind === IRTypeKind.Primitive && to.name === 'string') {
+    if (to.kind === IRTypeKind.Primitive && to.name === "string") {
       return true; // Most types can convert to string
     }
 
@@ -306,7 +306,7 @@ class TypeConstraintSolver {
           varInfo.inferred = true;
         } else {
           this.warnings.push({
-            type: 'type_inference_failed',
+            type: "type_inference_failed",
             message: `Could not infer type for variable: ${name}`,
             variable: name,
           });

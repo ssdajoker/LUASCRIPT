@@ -15,6 +15,14 @@ console.log('\n' + '='.repeat(80));
 console.log('🔍 CLARITY SUPER CANON PHASE VERIFICATION SUITE');
 console.log('='.repeat(80) + '\n');
 
+const pythonCode = `
+def process_data():
+    temp_list = [1, 2, 3]
+    result = sum(temp_list)
+    del temp_list
+    return result
+`;
+
 // ============================================================================
 // PHASE D: MEMORY & PERFORMANCE VERIFICATION
 // ============================================================================
@@ -44,14 +52,6 @@ try {
   const gcDetector = new GarbageCollectionDetector();
   
   // Analyze Python code
-  const pythonCode = `
-def process_data():
-    temp_list = [1, 2, 3]
-    result = sum(temp_list)
-    del temp_list
-    return result
-  `;
-  
   const gcAnalysis = gcDetector.analyze(pythonCode);
   assert.ok(gcAnalysis, 'Should perform GC analysis');
   assert.ok(Array.isArray(gcAnalysis.opportunities), 'Should identify GC opportunities');

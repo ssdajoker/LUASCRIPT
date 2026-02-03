@@ -12,10 +12,10 @@
 const NodeCategory = {
   // Declarations
   PROGRAM: "Program",
-    IMPORT_DECL: "ImportDeclaration",
-    EXPORT_DECL: "ExportDeclaration",
-    IMPORT_SPECIFIER: "ImportSpecifier",
-    EXPORT_SPECIFIER: "ExportSpecifier",
+  IMPORT_DECL: "ImportDeclaration",
+  EXPORT_DECL: "ExportDeclaration",
+  IMPORT_SPECIFIER: "ImportSpecifier",
+  EXPORT_SPECIFIER: "ExportSpecifier",
   FUNCTION_DECL: "FunctionDeclaration",
   VAR_DECL: "VariableDeclarator", // Deprecated: use VARIABLE_DECLARATION (kept as alias for backward compatibility)
   VARIABLE_DECLARATION: "VariableDeclaration",
@@ -35,7 +35,7 @@ const NodeCategory = {
   EXPRESSION_STMT: "ExpressionStatement",
   TRY: "TryStatement",
   CATCH: "CatchClause",
-    FINALLY: "FinallyClause",
+  FINALLY: "FinallyClause",
   THROW: "ThrowStatement",
   FOR_OF: "ForOfStatement",
   FOR_IN: "ForInStatement",
@@ -127,14 +127,14 @@ class IRNode {
     switch (json.kind) {
     case NodeCategory.PROGRAM:
       return Program.fromJSON(json);
-        case NodeCategory.IMPORT_DECL:
-          return ImportDeclaration.fromJSON(json);
-        case NodeCategory.EXPORT_DECL:
-          return ExportDeclaration.fromJSON(json);
-        case NodeCategory.IMPORT_SPECIFIER:
-          return ImportSpecifier.fromJSON(json);
-        case NodeCategory.EXPORT_SPECIFIER:
-          return ExportSpecifier.fromJSON(json);
+    case NodeCategory.IMPORT_DECL:
+      return ImportDeclaration.fromJSON(json);
+    case NodeCategory.EXPORT_DECL:
+      return ExportDeclaration.fromJSON(json);
+    case NodeCategory.IMPORT_SPECIFIER:
+      return ImportSpecifier.fromJSON(json);
+    case NodeCategory.EXPORT_SPECIFIER:
+      return ExportSpecifier.fromJSON(json);
     case NodeCategory.FUNCTION_DECL:
       return FunctionDecl.fromJSON(json);
     case NodeCategory.VAR_DECL:
@@ -169,8 +169,8 @@ class IRNode {
       return TryStatement.fromJSON(json);
     case NodeCategory.CATCH:
       return CatchClause.fromJSON(json);
-        case NodeCategory.FINALLY:
-          return FinallyClause.fromJSON(json);
+    case NodeCategory.FINALLY:
+      return FinallyClause.fromJSON(json);
     case NodeCategory.THROW:
       return ThrowStatement.fromJSON(json);
     case NodeCategory.FOR_OF:
@@ -264,95 +264,95 @@ class Program extends IRNode {
   }
 }
 
-  class ImportDeclaration extends IRNode {
-    constructor(specifiers, source, options = {}) {
-      super(NodeCategory.IMPORT_DECL, options);
-      this.specifiers = specifiers || []; // Array of ImportSpecifier
-      this.source = source; // String - module path
-      this.importKind = options.importKind || "value"; // "value" | "type" | "typeof"
-    }
-
-    toJSON() {
-      return {
-        ...super.toJSON(),
-        specifiers: this.specifiers,
-        source: this.source,
-        importKind: this.importKind
-      };
-    }
-
-    static fromJSON(json) {
-      return new ImportDeclaration(json.specifiers, json.source, json);
-    }
+class ImportDeclaration extends IRNode {
+  constructor(specifiers, source, options = {}) {
+    super(NodeCategory.IMPORT_DECL, options);
+    this.specifiers = specifiers || []; // Array of ImportSpecifier
+    this.source = source; // String - module path
+    this.importKind = options.importKind || "value"; // "value" | "type" | "typeof"
   }
 
-  class ExportDeclaration extends IRNode {
-    constructor(specifiers, declaration, source, options = {}) {
-      super(NodeCategory.EXPORT_DECL, options);
-      this.specifiers = specifiers || []; // Array of ExportSpecifier
-      this.declaration = declaration || null; // FunctionDecl, ClassDecl, VariableDeclaration, etc.
-      this.source = source || null; // String - for re-exports
-      this.exportKind = options.exportKind || "value"; // "value" | "type"
-      this.default = Boolean(options.default); // true for default exports
-    }
-
-    toJSON() {
-      return {
-        ...super.toJSON(),
-        specifiers: this.specifiers,
-        declaration: this.declaration,
-        source: this.source,
-        exportKind: this.exportKind,
-        default: this.default
-      };
-    }
-
-    static fromJSON(json) {
-      return new ExportDeclaration(json.specifiers, json.declaration, json.source, json);
-    }
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      specifiers: this.specifiers,
+      source: this.source,
+      importKind: this.importKind
+    };
   }
 
-  class ImportSpecifier extends IRNode {
-    constructor(local, imported, options = {}) {
-      super(NodeCategory.IMPORT_SPECIFIER, options);
-      this.local = local; // Identifier - local binding name
-      this.imported = imported || local; // Identifier - imported name (default: same as local)
-      this.type = options.type || "named"; // "default" | "named" | "namespace"
-    }
+  static fromJSON(json) {
+    return new ImportDeclaration(json.specifiers, json.source, json);
+  }
+}
 
-    toJSON() {
-      return {
-        ...super.toJSON(),
-        local: this.local,
-        imported: this.imported,
-        type: this.type
-      };
-    }
-
-    static fromJSON(json) {
-      return new ImportSpecifier(json.local, json.imported, json);
-    }
+class ExportDeclaration extends IRNode {
+  constructor(specifiers, declaration, source, options = {}) {
+    super(NodeCategory.EXPORT_DECL, options);
+    this.specifiers = specifiers || []; // Array of ExportSpecifier
+    this.declaration = declaration || null; // FunctionDecl, ClassDecl, VariableDeclaration, etc.
+    this.source = source || null; // String - for re-exports
+    this.exportKind = options.exportKind || "value"; // "value" | "type"
+    this.default = Boolean(options.default); // true for default exports
   }
 
-  class ExportSpecifier extends IRNode {
-    constructor(local, exported, options = {}) {
-      super(NodeCategory.EXPORT_SPECIFIER, options);
-      this.local = local; // Identifier - local name
-      this.exported = exported || local; // Identifier - exported name (default: same as local)
-    }
-
-    toJSON() {
-      return {
-        ...super.toJSON(),
-        local: this.local,
-        exported: this.exported
-      };
-    }
-
-    static fromJSON(json) {
-      return new ExportSpecifier(json.local, json.exported, json);
-    }
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      specifiers: this.specifiers,
+      declaration: this.declaration,
+      source: this.source,
+      exportKind: this.exportKind,
+      default: this.default
+    };
   }
+
+  static fromJSON(json) {
+    return new ExportDeclaration(json.specifiers, json.declaration, json.source, json);
+  }
+}
+
+class ImportSpecifier extends IRNode {
+  constructor(local, imported, options = {}) {
+    super(NodeCategory.IMPORT_SPECIFIER, options);
+    this.local = local; // Identifier - local binding name
+    this.imported = imported || local; // Identifier - imported name (default: same as local)
+    this.type = options.type || "named"; // "default" | "named" | "namespace"
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      local: this.local,
+      imported: this.imported,
+      type: this.type
+    };
+  }
+
+  static fromJSON(json) {
+    return new ImportSpecifier(json.local, json.imported, json);
+  }
+}
+
+class ExportSpecifier extends IRNode {
+  constructor(local, exported, options = {}) {
+    super(NodeCategory.EXPORT_SPECIFIER, options);
+    this.local = local; // Identifier - local name
+    this.exported = exported || local; // Identifier - exported name (default: same as local)
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      local: this.local,
+      exported: this.exported
+    };
+  }
+
+  static fromJSON(json) {
+    return new ExportSpecifier(json.local, json.exported, json);
+  }
+}
 
 class FunctionDecl extends IRNode {
   constructor(name, parameters, body, returnType = null, options = {}) {
@@ -1095,27 +1095,27 @@ class AsyncFunctionDeclaration extends IRNode {
    * - Type compatibility across languages (Promise in JS, Future in Dart, etc.)
    */
   _validateAsyncReturnType() {
-    const { TVoid, TypeCategory } = require('./types');
+    const { TVoid, TypeCategory } = require("./types");
     
     // Rule 1: If no return type specified, create implicit Promise<void>
     if (!this.returnType) {
-      const { Types } = require('./types');
+      const { Types } = require("./types");
       this.returnType = Types.promise(Types.void());
       return;
     }
 
     // Rule 2: Check if return type is void (INVALID for async functions)
     if (this.returnType.category === TypeCategory.VOID) {
-      const errorMsg = `[ASYNC-003-VALIDATOR] Async function '${this.id?.name || 'anonymous'}' has invalid return type 'void'. ` +
-        `Async functions must return Promise<T>, Future<T>, or other awaitable types. ` +
-        `Use Promise<void> or Promise<undefined> instead.`;
+      const errorMsg = `[ASYNC-003-VALIDATOR] Async function '${this.id?.name || "anonymous"}' has invalid return type 'void'. ` +
+        "Async functions must return Promise<T>, Future<T>, or other awaitable types. " +
+        "Use Promise<void> or Promise<undefined> instead.";
       
       // Store validation error but don't throw (allow error recovery)
       this.validationErrors = this.validationErrors || [];
       this.validationErrors.push(errorMsg);
       
       // Auto-correct to Promise<void>
-      const { Types } = require('./types');
+      const { Types } = require("./types");
       this.returnType = Types.promise(Types.void());
     }
 
@@ -1123,9 +1123,9 @@ class AsyncFunctionDeclaration extends IRNode {
     const awaitableCategories = [TypeCategory.PROMISE, TypeCategory.FUTURE, TypeCategory.ASYNC_FUNCTION, TypeCategory.ANY];
     
     if (!awaitableCategories.includes(this.returnType.category)) {
-      const warningMsg = `[ASYNC-003-WARNING] Async function '${this.id?.name || 'anonymous'}' ` +
+      const warningMsg = `[ASYNC-003-WARNING] Async function '${this.id?.name || "anonymous"}' ` +
         `has non-awaitable return type '${this.returnType.toString()}'. ` +
-        `Consider wrapping in Promise<T> for cross-language compatibility.`;
+        "Consider wrapping in Promise<T> for cross-language compatibility.";
       
       this.validationWarnings = this.validationWarnings || [];
       this.validationWarnings.push(warningMsg);
@@ -1356,23 +1356,23 @@ class CatchClause extends IRNode {
   }
 }
 
-  class FinallyClause extends IRNode {
-    constructor(body, options = {}) {
-      super(NodeCategory.FINALLY, options);
-      this.body = body; // BlockStatement
-    }
-
-    toJSON() {
-      return {
-        ...super.toJSON(),
-        body: this.body
-      };
-    }
-
-    static fromJSON(json) {
-      return new FinallyClause(json.body, json);
-    }
+class FinallyClause extends IRNode {
+  constructor(body, options = {}) {
+    super(NodeCategory.FINALLY, options);
+    this.body = body; // BlockStatement
   }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      body: this.body
+    };
+  }
+
+  static fromJSON(json) {
+    return new FinallyClause(json.body, json);
+  }
+}
 
 class ThrowStatement extends IRNode {
   constructor(argument, options = {}) {
@@ -1610,10 +1610,10 @@ module.exports = {
   IRNode,
   fromJsonHandlers,
   Program,
-    ImportDeclaration,
-    ExportDeclaration,
-    ImportSpecifier,
-    ExportSpecifier,
+  ImportDeclaration,
+  ExportDeclaration,
+  ImportSpecifier,
+  ExportSpecifier,
   FunctionDecl,
   VarDecl,
   VariableDeclaration,
@@ -1654,7 +1654,7 @@ module.exports = {
   ClassBody,
   TryStatement,
   CatchClause,
-    FinallyClause,
+  FinallyClause,
   ThrowStatement,
   ForOfStatement,
   ForInStatement,

@@ -91,12 +91,12 @@ function analyzeFfiCalls(ir) {
  * Patterns: ffi.call('func', ...), external_call(...)
  */
 function isFfiCall(node) {
-  if (node.type !== 'Call') return false;
+  if (node.type !== "Call") return false;
 
   // Pattern 1: ffi.call('funcName', ...)
-  if (node.callee?.type === 'Member' &&
-      node.callee.object?.name === 'ffi' &&
-      node.callee.property === 'call') {
+  if (node.callee?.type === "Member" &&
+      node.callee.object?.name === "ffi" &&
+      node.callee.property === "call") {
     return true;
   }
 
@@ -118,12 +118,12 @@ function isFfiCall(node) {
  * Patterns: ffi.callback(jsFunc)
  */
 function isFfiCallback(node) {
-  if (node.type !== 'Call') return false;
+  if (node.type !== "Call") return false;
 
   return (
-    node.callee?.type === 'Member' &&
-    node.callee.object?.name === 'ffi' &&
-    node.callee.property === 'callback'
+    node.callee?.type === "Member" &&
+    node.callee.object?.name === "ffi" &&
+    node.callee.property === "callback"
   );
 }
 
@@ -150,7 +150,7 @@ function analyzeSingleFfiCall(node) {
   const safetyLevel = validateSafety(node, parsed);
 
   return {
-    nodeId: node._nodeId || 'unknown',
+    nodeId: node._nodeId || "unknown",
     signature: signature,
     overhead: categorizeOverhead(overhead),
     overheadMicros: overhead,
@@ -173,13 +173,13 @@ function extractFfiSignature(node) {
   }
 
   // Try to infer from function name argument
-  if (node.arguments && node.arguments[0]?.type === 'Literal') {
+  if (node.arguments && node.arguments[0]?.type === "Literal") {
     const funcName = node.arguments[0].value;
     // Look up in FFI registry (would be populated separately)
     return `void ${funcName}()`;  // Default if unknown
   }
 
-  return 'void unknown()';
+  return "void unknown()";
 }
 
 /**
@@ -192,8 +192,8 @@ function parseFfiSignature(signature) {
   
   if (!match) {
     return {
-      returnType: 'void',
-      name: 'unknown',
+      returnType: "void",
+      name: "unknown",
       parameters: []
     };
   }
@@ -202,14 +202,14 @@ function parseFfiSignature(signature) {
   
   // Parse parameters
   const parameters = paramStr
-    .split(',')
+    .split(",")
     .map(p => p.trim())
     .filter(p => p)
     .map(param => {
       const parts = param.split(/\s+/);
       return {
         type: parts[0],
-        name: parts[1] || 'arg'
+        name: parts[1] || "arg"
       };
     });
 
@@ -245,9 +245,9 @@ function estimateOverhead(parsed) {
  * Categorize overhead as 'low', 'medium', or 'high'
  */
 function categorizeOverhead(overheadMicros) {
-  if (overheadMicros < 75) return 'low';
-  if (overheadMicros < 150) return 'medium';
-  return 'high';
+  if (overheadMicros < 75) return "low";
+  if (overheadMicros < 150) return "medium";
+  return "high";
 }
 
 /**
@@ -300,37 +300,37 @@ function isInlineCandidate(node, parsed) {
 function validateSafety(node, parsed) {
   // Check for pointer parameters (potential memory issues)
   for (const param of parsed.parameters) {
-    if (param.type.includes('*') || param.type.includes('ptr')) {
-      return 'unsafe';  // Pointer parameters require careful analysis
+    if (param.type.includes("*") || param.type.includes("ptr")) {
+      return "unsafe";  // Pointer parameters require careful analysis
     }
   }
   
   // Check for buffer/array parameters
-  if (parsed.parameters.some(p => p.type.includes('[]'))) {
-    return 'unsafe';  // Array parameters need bounds checking
+  if (parsed.parameters.some(p => p.type.includes("[]"))) {
+    return "unsafe";  // Array parameters need bounds checking
   }
   
   // Simple types are safe
-  return 'safe';
+  return "safe";
 }
 
 /**
  * Check if type is complex (struct, pointer, array)
  */
 function isComplexType(type) {
-  return type.includes('*') || 
-         type.includes('struct') || 
-         type.includes('[]') ||
-         type.includes('ptr');
+  return type.includes("*") || 
+         type.includes("struct") || 
+         type.includes("[]") ||
+         type.includes("ptr");
 }
 
 /**
  * Check if type is string (needs encoding conversion)
  */
 function isStringType(type) {
-  return type === 'char*' || 
-         type === 'string' || 
-         type.includes('str');
+  return type === "char*" || 
+         type === "string" || 
+         type.includes("str");
 }
 
 /**
@@ -338,12 +338,12 @@ function isStringType(type) {
  */
 function hasSideEffects(node) {
   // Check function name for common side-effect patterns
-  const funcName = node.callee?.name || '';
+  const funcName = node.callee?.name || "";
   
   const sideEffectPatterns = [
-    'write', 'read', 'print', 'log', 'send', 'recv',
-    'open', 'close', 'create', 'delete', 'modify',
-    'set', 'put', 'post', 'update'
+    "write", "read", "print", "log", "send", "recv",
+    "open", "close", "create", "delete", "modify",
+    "set", "put", "post", "update"
   ];
   
   return sideEffectPatterns.some(pattern => 
@@ -358,9 +358,9 @@ function analyzeFfiCallback(node) {
   const captured = extractCapturedVariables(node);
   
   return {
-    nodeId: node._nodeId || 'unknown',
+    nodeId: node._nodeId || "unknown",
     capturedVariables: captured,
-    safetyLevel: captured.length > 5 ? 'unsafe' : 'safe'
+    safetyLevel: captured.length > 5 ? "unsafe" : "safe"
   };
 }
 
@@ -369,7 +369,7 @@ function analyzeFfiCallback(node) {
  */
 function extractCapturedVariables(node) {
   // Simplified: would need proper closure analysis
-  if (node.arguments && node.arguments[0]?.type === 'Function') {
+  if (node.arguments && node.arguments[0]?.type === "Function") {
     const func = node.arguments[0];
     // Would analyze function body for free variables
     return [];  // Placeholder
@@ -429,7 +429,7 @@ function generateRecommendations(analysis) {
   }
   
   // Warn about unsafe calls
-  const unsafeCalls = analysis.ffiCalls.filter(c => c.safetyLevel === 'unsafe');
+  const unsafeCalls = analysis.ffiCalls.filter(c => c.safetyLevel === "unsafe");
   if (unsafeCalls.length > 0) {
     recommendations.push(
       `SAFETY: ${unsafeCalls.length} FFI calls require manual review (pointers/arrays)`
@@ -471,18 +471,18 @@ function applyFfiOptimizations(ir, analysis) {
  * Traverse IR tree and apply function to each node
  */
 function traverseIR(node, fn) {
-  if (!node || typeof node !== 'object') return;
+  if (!node || typeof node !== "object") return;
   
   fn(node);
   
   // Traverse children
   for (const key in node) {
-    if (key.startsWith('_')) continue;  // Skip metadata
+    if (key.startsWith("_")) continue;  // Skip metadata
     
     const child = node[key];
     if (Array.isArray(child)) {
       child.forEach(c => traverseIR(c, fn));
-    } else if (typeof child === 'object') {
+    } else if (typeof child === "object") {
       traverseIR(child, fn);
     }
   }

@@ -13,7 +13,7 @@ const { performance } = require("perf_hooks");
 function stableStringify(value, seen = new WeakSet()) {
   if (value === null || value === undefined) return String(value);
   if (typeof value !== "object") return JSON.stringify(value);
-  if (seen.has(value)) return '"[Circular]"';
+  if (seen.has(value)) return "\"[Circular]\"";
   seen.add(value);
 
   // Handle Map

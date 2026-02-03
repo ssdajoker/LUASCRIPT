@@ -150,7 +150,7 @@ class PythonExtendedFeaturesEnhancer {
           return true;
         }
         
-        if (node.expression && typeof node.expression === 'object') {
+        if (node.expression && typeof node.expression === "object") {
           if (node.expression.type === "YieldExpression") {
             return true;
           }

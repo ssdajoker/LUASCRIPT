@@ -299,8 +299,8 @@ class CacheManager {
       l1Size: this.l1Cache.size,
       l2Size: this.l2Cache.size,
       l3Size: this.l3Cache.size(),
-      hitRate: totalLookups > 0 ? (totalHits / totalLookups * 100).toFixed(2) + '%' : '0%',
-      l1HitRate: this.stats.totalGets > 0 ? (this.stats.l1Hits / this.stats.totalGets * 100).toFixed(2) + '%' : '0%',
+      hitRate: totalLookups > 0 ? (totalHits / totalLookups * 100).toFixed(2) + "%" : "0%",
+      l1HitRate: this.stats.totalGets > 0 ? (this.stats.l1Hits / this.stats.totalGets * 100).toFixed(2) + "%" : "0%",
       totalLookups,
       totalHits,
       totalMisses
@@ -345,6 +345,6 @@ class CacheManager {
 }
 
 // Export for use in Node.js and browsers
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = { CacheManager, LRUCache };
 }

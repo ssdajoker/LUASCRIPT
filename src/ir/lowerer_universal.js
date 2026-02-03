@@ -8,8 +8,8 @@
  * instantiation, operator overload resolution, and control flow normalization
  */
 
-const LanguageTraits = require('../language/language_traits');
-const TypeSystemBridge = require('./type_system_bridge');
+const LanguageTraits = require("../language/language_traits");
+const TypeSystemBridge = require("./type_system_bridge");
 
 class UniversalLowerer {
   constructor(options = {}) {
@@ -65,24 +65,24 @@ class UniversalLowerer {
    */
   runPass(passName, node, language, context) {
     switch (passName) {
-      case 'macroExpansion':
-        return this.expandMacros(node, language, context);
-      case 'templateInstantiation':
-        return this.instantiateTemplates(node, language, context);
-      case 'operatorOverloadResolution':
-        return this.resolveOperatorOverloads(node, language, context);
-      case 'typeCoercionInsertion':
-        return this.insertTypeCoercions(node, language, context);
-      case 'controlFlowNormalization':
-        return this.normalizeControlFlow(node, language, context);
-      case 'decoratorExpansion':
-        return this.expandDecorators(node, language, context);
-      case 'comprehensionLowering':
-        return this.lowerComprehensions(node, language, context);
-      case 'asyncAwaitTransformation':
-        return this.transformAsyncAwait(node, language, context);
-      default:
-        return node;
+    case "macroExpansion":
+      return this.expandMacros(node, language, context);
+    case "templateInstantiation":
+      return this.instantiateTemplates(node, language, context);
+    case "operatorOverloadResolution":
+      return this.resolveOperatorOverloads(node, language, context);
+    case "typeCoercionInsertion":
+      return this.insertTypeCoercions(node, language, context);
+    case "controlFlowNormalization":
+      return this.normalizeControlFlow(node, language, context);
+    case "decoratorExpansion":
+      return this.expandDecorators(node, language, context);
+    case "comprehensionLowering":
+      return this.lowerComprehensions(node, language, context);
+    case "asyncAwaitTransformation":
+      return this.transformAsyncAwait(node, language, context);
+    default:
+      return node;
     }
   }
 
@@ -94,7 +94,7 @@ class UniversalLowerer {
     if (!node) return node;
 
     // Only C/C++ support macros
-    if (language !== 'C' && language !== 'C++') {
+    if (language !== "C" && language !== "C++") {
       return node;
     }
 
@@ -102,13 +102,13 @@ class UniversalLowerer {
       return node.map(n => this.expandMacros(n, language, context));
     }
 
-    if (typeof node !== 'object') return node;
+    if (typeof node !== "object") return node;
 
     const result = { ...node };
 
-    if (node.type === 'MacroDefinition') {
+    if (node.type === "MacroDefinition") {
       result.expanded = {
-        type: 'FunctionDefinition',
+        type: "FunctionDefinition",
         name: `__macro_${node.name}`,
         parameters: node.parameters || [],
         body: node.body,
@@ -116,9 +116,9 @@ class UniversalLowerer {
       };
     }
 
-    if (node.type === 'MacroCall') {
+    if (node.type === "MacroCall") {
       result.expanded = {
-        type: 'FunctionCall',
+        type: "FunctionCall",
         name: `__macro_${node.name}`,
         arguments: node.arguments || [],
       };
@@ -126,7 +126,7 @@ class UniversalLowerer {
 
     // Recursively expand children
     for (const [key, value] of Object.entries(result)) {
-      if (key === 'expanded') continue;
+      if (key === "expanded") continue;
       result[key] = this.expandMacros(value, language, context);
     }
 
@@ -141,8 +141,8 @@ class UniversalLowerer {
     if (!node) return node;
 
     // Check if language supports generics
-    const supports = this.languageTraits.hasCapability(language, 'generics');
-    if (!supports && !['C++', 'C#', 'OCaml'].includes(language)) {
+    const supports = this.languageTraits.hasCapability(language, "generics");
+    if (!supports && !["C++", "C#", "OCaml"].includes(language)) {
       return node;
     }
 
@@ -150,20 +150,20 @@ class UniversalLowerer {
       return node.map(n => this.instantiateTemplates(n, language, context));
     }
 
-    if (typeof node !== 'object') return node;
+    if (typeof node !== "object") return node;
 
     const result = { ...node };
 
-    if (node.type === 'TemplateDefinition' || node.type === 'GenericDefinition') {
+    if (node.type === "TemplateDefinition" || node.type === "GenericDefinition") {
       // Store template definition in context
       if (!context.templates) context.templates = {};
       context.templates[node.name] = node;
 
-      result.type = 'TemplateDefinition';
+      result.type = "TemplateDefinition";
       result.stored = true;
     }
 
-    if (node.type === 'TemplateInstantiation') {
+    if (node.type === "TemplateInstantiation") {
       // Look up template definition
       const template = context.templates?.[node.name];
       if (template) {
@@ -175,7 +175,7 @@ class UniversalLowerer {
 
     // Recursively instantiate children
     for (const [key, value] of Object.entries(result)) {
-      if (key === 'templateDefinition') continue;
+      if (key === "templateDefinition") continue;
       result[key] = this.instantiateTemplates(value, language, context);
     }
 
@@ -190,7 +190,7 @@ class UniversalLowerer {
     if (!node) return node;
 
     // C++ and C# support operator overloading
-    if (!['C++', 'C#'].includes(language)) {
+    if (!["C++", "C#"].includes(language)) {
       return node;
     }
 
@@ -198,19 +198,19 @@ class UniversalLowerer {
       return node.map(n => this.resolveOperatorOverloads(n, language, context));
     }
 
-    if (typeof node !== 'object') return node;
+    if (typeof node !== "object") return node;
 
     const result = { ...node };
 
-    if (node.type === 'BinaryOp' && node.overload) {
-      result.type = 'FunctionCall';
+    if (node.type === "BinaryOp" && node.overload) {
+      result.type = "FunctionCall";
       result.name = `__op_${node.operator}`;
       result.arguments = [node.left, node.right];
       result.originalOperator = node.operator;
     }
 
-    if (node.type === 'UnaryOp' && node.overload) {
-      result.type = 'FunctionCall';
+    if (node.type === "UnaryOp" && node.overload) {
+      result.type = "FunctionCall";
       result.name = `__op_${node.operator}_unary`;
       result.arguments = [node.operand];
       result.originalOperator = node.operator;
@@ -235,12 +235,12 @@ class UniversalLowerer {
       return node.map(n => this.insertTypeCoercions(n, language, context));
     }
 
-    if (typeof node !== 'object') return node;
+    if (typeof node !== "object") return node;
 
     const result = { ...node };
 
     // For binary operations, check operand types
-    if (node.type === 'BinaryOp' && node.left && node.right) {
+    if (node.type === "BinaryOp" && node.left && node.right) {
       const leftType = node.left.type;
       const rightType = node.right.type;
 
@@ -249,7 +249,7 @@ class UniversalLowerer {
         const canConvert = this.typeSystem.canConvert(leftType, rightType);
         if (canConvert) {
           result.left = {
-            type: 'TypeCoercion',
+            type: "TypeCoercion",
             from: leftType,
             to: rightType,
             value: node.left,
@@ -277,18 +277,18 @@ class UniversalLowerer {
       return node.map(n => this.normalizeControlFlow(n, language, context));
     }
 
-    if (typeof node !== 'object') return node;
+    if (typeof node !== "object") return node;
 
     const result = { ...node };
 
     // Flatten nested ternary operators
-    if (node.type === 'ConditionalExpression' && node.condition?.type === 'ConditionalExpression') {
+    if (node.type === "ConditionalExpression" && node.condition?.type === "ConditionalExpression") {
       result.normalized = true;
       result.flattenedConditions = [];
 
       // Extract conditions in order
       let current = node;
-      while (current.type === 'ConditionalExpression') {
+      while (current.type === "ConditionalExpression") {
         result.flattenedConditions.push({
           condition: current.condition,
           consequent: current.consequent,
@@ -299,7 +299,7 @@ class UniversalLowerer {
     }
 
     // Break complex loops into simpler forms
-    if (node.type === 'ForStatement') {
+    if (node.type === "ForStatement") {
       result.normalized = true;
       result.initialization = node.init;
       result.condition = node.test;
@@ -323,7 +323,7 @@ class UniversalLowerer {
     if (!node) return node;
 
     // Only Python/JavaScript/TypeScript support decorators
-    if (!['Python', 'JavaScript', 'TypeScript', 'C#'].includes(language)) {
+    if (!["Python", "JavaScript", "TypeScript", "C#"].includes(language)) {
       return node;
     }
 
@@ -331,21 +331,21 @@ class UniversalLowerer {
       return node.map(n => this.expandDecorators(n, language, context));
     }
 
-    if (typeof node !== 'object') return node;
+    if (typeof node !== "object") return node;
 
     const result = { ...node };
 
-    if (node.type === 'Decorator') {
+    if (node.type === "Decorator") {
       result.expanded = true;
       result.name = node.name;
 
       // Handle standard decorators
-      if (node.name === 'property') {
-        result.pattern = 'getter_setter_pair';
-      } else if (node.name === 'staticmethod') {
-        result.pattern = 'static_binding';
-      } else if (node.name === 'classmethod') {
-        result.pattern = 'class_binding';
+      if (node.name === "property") {
+        result.pattern = "getter_setter_pair";
+      } else if (node.name === "staticmethod") {
+        result.pattern = "static_binding";
+      } else if (node.name === "classmethod") {
+        result.pattern = "class_binding";
       }
     }
 
@@ -365,7 +365,7 @@ class UniversalLowerer {
     if (!node) return node;
 
     // Only languages with comprehension support
-    if (!this.languageTraits.hasCapability(language, 'comprehensions')) {
+    if (!this.languageTraits.hasCapability(language, "comprehensions")) {
       return node;
     }
 
@@ -373,37 +373,37 @@ class UniversalLowerer {
       return node.map(n => this.lowerComprehensions(n, language, context));
     }
 
-    if (typeof node !== 'object') return node;
+    if (typeof node !== "object") return node;
 
     const result = { ...node };
 
-    if (node.type === 'ListComprehension') {
+    if (node.type === "ListComprehension") {
       result.lowered = true;
-      result.pattern = 'for_loop';
+      result.pattern = "for_loop";
       result.forLoop = {
-        type: 'ForStatement',
+        type: "ForStatement",
         variable: node.variable,
         iterable: node.iterable,
         body: {
-          type: 'ExpressionStatement',
+          type: "ExpressionStatement",
           expression: {
-            type: 'FunctionCall',
-            name: 'append',
-            object: { type: 'Identifier', name: '__result' },
+            type: "FunctionCall",
+            name: "append",
+            object: { type: "Identifier", name: "__result" },
             arguments: [node.expression],
           },
         },
       };
       result.initialization = {
-        type: 'VariableDeclaration',
-        name: '__result',
-        init: { type: 'ArrayLiteral', elements: [] },
+        type: "VariableDeclaration",
+        name: "__result",
+        init: { type: "ArrayLiteral", elements: [] },
       };
     }
 
-    if (node.type === 'DictComprehension' || node.type === 'SetComprehension') {
+    if (node.type === "DictComprehension" || node.type === "SetComprehension") {
       result.lowered = true;
-      result.pattern = 'for_loop';
+      result.pattern = "for_loop";
       // Similar transformation for dict/set
     }
 
@@ -423,7 +423,7 @@ class UniversalLowerer {
     if (!node) return node;
 
     // Only languages with async support
-    if (!this.languageTraits.hasCapability(language, 'async')) {
+    if (!this.languageTraits.hasCapability(language, "async")) {
       return node;
     }
 
@@ -431,26 +431,26 @@ class UniversalLowerer {
       return node.map(n => this.transformAsyncAwait(n, language, context));
     }
 
-    if (typeof node !== 'object') return node;
+    if (typeof node !== "object") return node;
 
     const result = { ...node };
 
-    if (node.type === 'AsyncFunctionDeclaration') {
+    if (node.type === "AsyncFunctionDeclaration") {
       result.transformed = true;
-      result.pattern = 'promise_based';
+      result.pattern = "promise_based";
       result.originalAsync = true;
       
       // Create state machine representation
       result.stateMachine = {
-        type: 'StateMachine',
+        type: "StateMachine",
         states: this.extractStatesFromAsync(node.body),
         initialState: 0,
       };
     }
 
-    if (node.type === 'AwaitExpression') {
+    if (node.type === "AwaitExpression") {
       result.transformed = true;
-      result.pattern = 'then_chain';
+      result.pattern = "then_chain";
       result.promiseValue = node.argument;
       result.continuationLabel = `__await_${Math.random()}`;
     }
@@ -477,17 +477,17 @@ class UniversalLowerer {
     const extractAwaitPoints = (node) => {
       if (!node) return;
 
-      if (node.type === 'AwaitExpression') {
+      if (node.type === "AwaitExpression") {
         states.push({
           index: stateIndex++,
-          type: 'await',
+          type: "await",
           value: node.argument,
         });
       }
 
       if (Array.isArray(node)) {
         node.forEach(extractAwaitPoints);
-      } else if (typeof node === 'object') {
+      } else if (typeof node === "object") {
         Object.values(node).forEach(extractAwaitPoints);
       }
     };
@@ -495,7 +495,7 @@ class UniversalLowerer {
     extractAwaitPoints(body);
 
     if (states.length === 0) {
-      states.push({ index: 0, type: 'sync', value: body });
+      states.push({ index: 0, type: "sync", value: body });
     }
 
     return states;

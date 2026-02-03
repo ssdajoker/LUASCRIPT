@@ -27,47 +27,47 @@ class TypeConverter {
    */
   _initializeTypeMap() {
     // JavaScript ↔ Lua type mappings
-    this.typeMap.set('js-lua', {
-      'number': { lua: 'number', cost: 5, safe: true },
-      'boolean': { lua: 'boolean', cost: 2, safe: true },
-      'string': { lua: 'string', cost: 10, safe: true },
-      'object': { lua: 'table', cost: 15, safe: true },
-      'array': { lua: 'table', cost: 15, safe: true },
-      'int32': { lua: 'integer', cost: 3, safe: true },
-      'uint32': { lua: 'number', cost: 5, safe: true },
-      'float64': { lua: 'number', cost: 5, safe: true },
-      'null': { lua: 'nil', cost: 1, safe: true }
+    this.typeMap.set("js-lua", {
+      "number": { lua: "number", cost: 5, safe: true },
+      "boolean": { lua: "boolean", cost: 2, safe: true },
+      "string": { lua: "string", cost: 10, safe: true },
+      "object": { lua: "table", cost: 15, safe: true },
+      "array": { lua: "table", cost: 15, safe: true },
+      "int32": { lua: "integer", cost: 3, safe: true },
+      "uint32": { lua: "number", cost: 5, safe: true },
+      "float64": { lua: "number", cost: 5, safe: true },
+      "null": { lua: "nil", cost: 1, safe: true }
     });
 
     // Lua ↔ JavaScript type mappings
-    this.typeMap.set('lua-js', {
-      'number': { js: 'number', cost: 5, safe: true },
-      'boolean': { js: 'boolean', cost: 2, safe: true },
-      'string': { js: 'string', cost: 10, safe: true },
-      'table': { js: 'object', cost: 15, safe: true },
-      'integer': { js: 'number', cost: 3, safe: true },
-      'nil': { js: 'null', cost: 1, safe: true }
+    this.typeMap.set("lua-js", {
+      "number": { js: "number", cost: 5, safe: true },
+      "boolean": { js: "boolean", cost: 2, safe: true },
+      "string": { js: "string", cost: 10, safe: true },
+      "table": { js: "object", cost: 15, safe: true },
+      "integer": { js: "number", cost: 3, safe: true },
+      "nil": { js: "null", cost: 1, safe: true }
     });
 
     // JavaScript ↔ OCaml type mappings
-    this.typeMap.set('js-ocaml', {
-      'number': { ocaml: 'float', cost: 5, safe: true },
-      'boolean': { ocaml: 'bool', cost: 2, safe: true },
-      'string': { ocaml: 'string', cost: 10, safe: true },
-      'object': { ocaml: 'record', cost: 20, safe: false },
-      'array': { ocaml: 'array', cost: 15, safe: true },
-      'int32': { ocaml: 'int', cost: 3, safe: true },
-      'null': { ocaml: 'option', cost: 5, safe: true }
+    this.typeMap.set("js-ocaml", {
+      "number": { ocaml: "float", cost: 5, safe: true },
+      "boolean": { ocaml: "bool", cost: 2, safe: true },
+      "string": { ocaml: "string", cost: 10, safe: true },
+      "object": { ocaml: "record", cost: 20, safe: false },
+      "array": { ocaml: "array", cost: 15, safe: true },
+      "int32": { ocaml: "int", cost: 3, safe: true },
+      "null": { ocaml: "option", cost: 5, safe: true }
     });
 
     // Lua ↔ OCaml type mappings
-    this.typeMap.set('lua-ocaml', {
-      'number': { ocaml: 'float', cost: 5, safe: true },
-      'boolean': { ocaml: 'bool', cost: 2, safe: true },
-      'string': { ocaml: 'string', cost: 10, safe: true },
-      'table': { ocaml: 'record', cost: 20, safe: false },
-      'integer': { ocaml: 'int', cost: 3, safe: true },
-      'nil': { ocaml: 'option', cost: 5, safe: true }
+    this.typeMap.set("lua-ocaml", {
+      "number": { ocaml: "float", cost: 5, safe: true },
+      "boolean": { ocaml: "bool", cost: 2, safe: true },
+      "string": { ocaml: "string", cost: 10, safe: true },
+      "table": { ocaml: "record", cost: 20, safe: false },
+      "integer": { ocaml: "int", cost: 3, safe: true },
+      "nil": { ocaml: "option", cost: 5, safe: true }
     });
   }
 
@@ -77,8 +77,8 @@ class TypeConverter {
    * @returns {Object} Conversion strategy and recommendations
    */
   analyzeTypeConversion(ir) {
-    if (!ir || typeof ir !== 'object') {
-      throw new Error('Invalid IR provided');
+    if (!ir || typeof ir !== "object") {
+      throw new Error("Invalid IR provided");
     }
 
     const startTime = process.hrtime.bigint();
@@ -172,10 +172,10 @@ class TypeConverter {
           call.parameters.forEach((param, pIdx) => {
             ops.push({
               id: `ffi-${idx}-${pIdx}`,
-              source: 'js',
+              source: "js",
               sourceType: param.type,
-              target: call.target || 'lua',
-              targetType: this._mapType(param.type, 'js', call.target || 'lua'),
+              target: call.target || "lua",
+              targetType: this._mapType(param.type, "js", call.target || "lua"),
               dataSize: this._estimateTypeSize(param.type),
               frequency: call.frequency || 1,
               isCritical: false
@@ -214,13 +214,13 @@ class TypeConverter {
    * @private
    */
   _estimateTypeSize(type) {
-    if (type.includes('int32')) return 4;
-    if (type.includes('int64') || type.includes('float64')) return 8;
-    if (type.includes('int16')) return 2;
-    if (type.includes('int8') || type.includes('char')) return 1;
-    if (type.includes('buffer') || type.includes('arraybuffer')) return 8192;
-    if (type.includes('object')) return 4096;
-    if (type.includes('array')) return 2048;
+    if (type.includes("int32")) return 4;
+    if (type.includes("int64") || type.includes("float64")) return 8;
+    if (type.includes("int16")) return 2;
+    if (type.includes("int8") || type.includes("char")) return 1;
+    if (type.includes("buffer") || type.includes("arraybuffer")) return 8192;
+    if (type.includes("object")) return 4096;
+    if (type.includes("array")) return 2048;
     return 256;
   }
 
@@ -253,21 +253,21 @@ class TypeConverter {
     }
 
     // Check for numeric precision loss
-    if ((operation.sourceType.includes('float') || operation.sourceType.includes('double')) &&
-        (operation.targetType.includes('int'))) {
-      warnings.push('Potential precision loss: float to integer conversion');
+    if ((operation.sourceType.includes("float") || operation.sourceType.includes("double")) &&
+        (operation.targetType.includes("int"))) {
+      warnings.push("Potential precision loss: float to integer conversion");
     }
 
     // Check for overflow risk
-    if (operation.sourceType === 'uint32' && operation.targetType === 'int32') {
-      warnings.push('Range overflow risk: uint32 to int32 conversion');
+    if (operation.sourceType === "uint32" && operation.targetType === "int32") {
+      warnings.push("Range overflow risk: uint32 to int32 conversion");
     }
 
     const safety = {
       safe: issues.length === 0,
       issues,
       warnings,
-      riskLevel: issues.length > 0 ? 'high' : (warnings.length > 0 ? 'medium' : 'low')
+      riskLevel: issues.length > 0 ? "high" : (warnings.length > 0 ? "medium" : "low")
     };
 
     this.safetyCache.set(cacheKey, safety);
@@ -289,16 +289,16 @@ class TypeConverter {
     let percentLoss = 0;
 
     // Analyze specific conversions
-    if (operation.sourceType === 'float64' && operation.targetType === 'float32') {
+    if (operation.sourceType === "float64" && operation.targetType === "float32") {
       preserved = false;
       percentLoss = 0.01; // ~1 bit loss in mantissa
-    } else if (operation.sourceType === 'uint64' && operation.targetType === 'int32') {
+    } else if (operation.sourceType === "uint64" && operation.targetType === "int32") {
       preserved = false;
       percentLoss = 50; // Significant loss
-    } else if (operation.sourceType === 'double' && operation.targetType === 'int') {
+    } else if (operation.sourceType === "double" && operation.targetType === "int") {
       preserved = false;
       percentLoss = 100; // Complete loss of fractional part
-    } else if (operation.sourceType.includes('int') && operation.targetType.includes('int')) {
+    } else if (operation.sourceType.includes("int") && operation.targetType.includes("int")) {
       // Integer to integer usually preserves if target is wider or equal
       if (this._getTypeWidth(operation.sourceType) <= this._getTypeWidth(operation.targetType)) {
         preserved = true;
@@ -312,7 +312,7 @@ class TypeConverter {
     const result = {
       preserved,
       percentLoss,
-      recommendation: preserved ? 'safe' : 'validate input range'
+      recommendation: preserved ? "safe" : "validate input range"
     };
 
     this.precisionMetrics.set(cacheKey, result);
@@ -324,12 +324,12 @@ class TypeConverter {
    * @private
    */
   _getTypeWidth(type) {
-    if (type.includes('8')) return 8;
-    if (type.includes('16')) return 16;
-    if (type.includes('32')) return 32;
-    if (type.includes('64')) return 64;
-    if (type === 'int' || type === 'integer') return 32;
-    if (type === 'float' || type === 'number') return 64;
+    if (type.includes("8")) return 8;
+    if (type.includes("16")) return 16;
+    if (type.includes("32")) return 32;
+    if (type.includes("64")) return 64;
+    if (type === "int" || type === "integer") return 32;
+    if (type === "float" || type === "number") return 64;
     return 32;
   }
 
@@ -338,35 +338,35 @@ class TypeConverter {
    * @private
    */
   _buildConversionStrategy(operation, safety, precision) {
-    if (safety.riskLevel === 'high') {
+    if (safety.riskLevel === "high") {
       return {
-        approach: 'validate-before-convert',
+        approach: "validate-before-convert",
         steps: [
-          'Validate input range',
-          'Apply range check',
-          'Convert with bounds checking',
-          'Validate output'
+          "Validate input range",
+          "Apply range check",
+          "Convert with bounds checking",
+          "Validate output"
         ],
         overhead: 25 // microseconds
       };
     }
 
-    if (safety.riskLevel === 'medium' || !precision.preserved) {
+    if (safety.riskLevel === "medium" || !precision.preserved) {
       return {
-        approach: 'convert-with-check',
+        approach: "convert-with-check",
         steps: [
-          'Check for edge cases',
-          'Convert',
-          'Verify result'
+          "Check for edge cases",
+          "Convert",
+          "Verify result"
         ],
         overhead: 15
       };
     }
 
     return {
-      approach: 'direct-convert',
+      approach: "direct-convert",
       steps: [
-        'Direct type cast'
+        "Direct type cast"
       ],
       overhead: 5
     };
@@ -390,20 +390,20 @@ class TypeConverter {
    */
   _getTypeComplexity(sourceType, targetType) {
     // Simple types: low complexity
-    const simpleTypes = ['int32', 'uint32', 'float64', 'boolean', 'nil', 'number'];
+    const simpleTypes = ["int32", "uint32", "float64", "boolean", "nil", "number"];
     
     if (simpleTypes.includes(sourceType) && simpleTypes.includes(targetType)) {
       return 1;
     }
 
     // Strings and enums: medium complexity
-    if (sourceType === 'string' || targetType === 'string') {
+    if (sourceType === "string" || targetType === "string") {
       return 2;
     }
 
     // Objects/records/tables: high complexity
-    if ((sourceType.includes('object') || sourceType.includes('table') || sourceType.includes('record')) &&
-        (targetType.includes('object') || targetType.includes('table') || targetType.includes('record'))) {
+    if ((sourceType.includes("object") || sourceType.includes("table") || sourceType.includes("record")) &&
+        (targetType.includes("object") || targetType.includes("table") || targetType.includes("record"))) {
       return 4;
     }
 
@@ -424,11 +424,11 @@ class TypeConverter {
     let safeCount = 0;
 
     for (const conv of conversions) {
-      if (conv.safety.safe && conv.strategy.approach === 'direct-convert') {
+      if (conv.safety.safe && conv.strategy.approach === "direct-convert") {
         // Direct conversions can achieve ~15% reduction through optimization
         totalReduction += 15 * (conv.strategy.overhead / 25);
         safeCount++;
-      } else if (conv.safety.riskLevel === 'medium') {
+      } else if (conv.safety.riskLevel === "medium") {
         // Medium-risk can achieve ~5% reduction
         totalReduction += 5 * (conv.strategy.overhead / 25);
       }
@@ -453,21 +453,21 @@ class TypeConverter {
     // Overall recommendation
     if (safeCount === conversions.length) {
       recommendations.push({
-        priority: 'high',
-        text: 'All conversions are type-safe. Proceed with optimization.',
-        action: 'apply-direct-conversion'
+        priority: "high",
+        text: "All conversions are type-safe. Proceed with optimization.",
+        action: "apply-direct-conversion"
       });
     } else if (riskyCount > 0 && safeCount > 0) {
       recommendations.push({
-        priority: 'medium',
+        priority: "medium",
         text: `${riskyCount} risky conversions detected. Apply validation for these types.`,
-        action: 'apply-selective-validation'
+        action: "apply-selective-validation"
       });
     } else {
       recommendations.push({
-        priority: 'high',
-        text: 'All conversions require validation. Apply comprehensive checks.',
-        action: 'apply-comprehensive-validation'
+        priority: "high",
+        text: "All conversions require validation. Apply comprehensive checks.",
+        action: "apply-comprehensive-validation"
       });
     }
 
@@ -475,9 +475,9 @@ class TypeConverter {
     const precisionRisk = conversions.filter(c => !c.precision.preserved).length;
     if (precisionRisk > 0) {
       recommendations.push({
-        priority: 'medium',
+        priority: "medium",
         text: `${precisionRisk} conversions may lose precision. Verify acceptable.`,
-        action: 'validate-precision-requirements'
+        action: "validate-precision-requirements"
       });
     }
 

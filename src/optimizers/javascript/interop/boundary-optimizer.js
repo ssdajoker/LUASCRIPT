@@ -17,7 +17,7 @@
  * - Maintains side effect ordering (critical for correctness)
  */
 
-const { analyzeFfiCalls } = require('./ffi-analyzer.js');
+const { analyzeFfiCalls } = require("./ffi-analyzer.js");
 
 /**
  * Analyze and optimize language boundaries in IR
@@ -137,7 +137,7 @@ function detectBoundaries(ir, ffiAnalysis) {
 function inferBoundaryType(ffiCall) {
   // Default to js-lua (most common in our codebase)
   // In production, would infer from context or metadata
-  return 'js-lua';
+  return "js-lua";
 }
 
 /**
@@ -243,10 +243,10 @@ function findLoops(ir) {
   const loops = [];
   
   traverseIR(ir, (node) => {
-    if (node.type === 'Loop' || 
-        node.type === 'ForStatement' || 
-        node.type === 'WhileStatement' ||
-        node.type === 'DoWhileStatement') {
+    if (node.type === "Loop" || 
+        node.type === "ForStatement" || 
+        node.type === "WhileStatement" ||
+        node.type === "DoWhileStatement") {
       loops.push(node);
     }
   });
@@ -282,7 +282,7 @@ function isBoundaryInvariant(boundary, loop) {
   // 2. It has no side effects that depend on iteration
   
   // For now, conservative: only consider invariant if explicitly marked
-  return boundary.batchable && !boundary.nodeId?.includes('loop');
+  return boundary.batchable && !boundary.nodeId?.includes("loop");
 }
 
 /**
@@ -412,18 +412,18 @@ function applyBoundaryOptimizations(ir, analysis) {
  * Traverse IR tree and apply function to each node
  */
 function traverseIR(node, fn) {
-  if (!node || typeof node !== 'object') return;
+  if (!node || typeof node !== "object") return;
   
   fn(node);
   
   // Traverse children
   for (const key in node) {
-    if (key.startsWith('_')) continue;  // Skip metadata
+    if (key.startsWith("_")) continue;  // Skip metadata
     
     const child = node[key];
     if (Array.isArray(child)) {
       child.forEach(c => traverseIR(c, fn));
-    } else if (typeof child === 'object') {
+    } else if (typeof child === "object") {
       traverseIR(child, fn);
     }
   }

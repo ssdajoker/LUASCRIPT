@@ -13,7 +13,7 @@
  * - Class method binding
  */
 
-const UniversalLowerer = require('./lowerer_universal');
+const UniversalLowerer = require("./lowerer_universal");
 
 /**
  * Object Pool for memory-efficient IR node creation
@@ -72,7 +72,7 @@ class PythonLowerer {
    */
   lower(ast) {
     if (!ast || !ast.body) {
-      throw new Error('Invalid Python AST: missing body');
+      throw new Error("Invalid Python AST: missing body");
     }
 
     // Reset memory tracking for new lowering operation
@@ -90,15 +90,15 @@ class PythonLowerer {
 
     // Run universal lowering passes
     const universalIR = this.universalLowerer.lower({
-      type: 'Module',
+      type: "Module",
       body: irNodes,
-    }, 'Python');
+    }, "Python");
 
-    return this.createNode('IRModule', {
+    return this.createNode("IRModule", {
       module: {
-        name: 'main',
-        language: 'Python',
-        phase: 'A',
+        name: "main",
+        language: "Python",
+        phase: "A",
       },
       nodes: universalIR.body,
     });
@@ -111,36 +111,36 @@ class PythonLowerer {
     if (!stmt) return null;
 
     switch (stmt.type) {
-      case 'ClassDeclaration':
-        return this.lowerClassDeclaration(stmt);
-      case 'FunctionDeclaration':
-        return this.lowerFunctionDeclaration(stmt);
-      case 'IfStatement':
-        return this.lowerIfStatement(stmt);
-      case 'ForStatement':
-        return this.lowerForStatement(stmt);
-      case 'WhileStatement':
-        return this.lowerWhileStatement(stmt);
-      case 'WithStatement':
-        return this.lowerWithStatement(stmt);
-      case 'TryStatement':
-        return this.lowerTryStatement(stmt);
-      case 'ReturnStatement':
-        return this.lowerReturnStatement(stmt);
-      case 'RaiseStatement':
-        return this.lowerRaiseStatement(stmt);
-      case 'ExpressionStatement':
-        return this.lowerExpressionStatement(stmt);
-      case 'PassStatement':
-        return this.lowerPassStatement(stmt);
-      case 'BreakStatement':
-        return this.lowerBreakStatement(stmt);
-      case 'ContinueStatement':
-        return this.lowerContinueStatement(stmt);
-      default:
-        return this.createNode(stmt.type, {
-          canonical: true,
-        });
+    case "ClassDeclaration":
+      return this.lowerClassDeclaration(stmt);
+    case "FunctionDeclaration":
+      return this.lowerFunctionDeclaration(stmt);
+    case "IfStatement":
+      return this.lowerIfStatement(stmt);
+    case "ForStatement":
+      return this.lowerForStatement(stmt);
+    case "WhileStatement":
+      return this.lowerWhileStatement(stmt);
+    case "WithStatement":
+      return this.lowerWithStatement(stmt);
+    case "TryStatement":
+      return this.lowerTryStatement(stmt);
+    case "ReturnStatement":
+      return this.lowerReturnStatement(stmt);
+    case "RaiseStatement":
+      return this.lowerRaiseStatement(stmt);
+    case "ExpressionStatement":
+      return this.lowerExpressionStatement(stmt);
+    case "PassStatement":
+      return this.lowerPassStatement(stmt);
+    case "BreakStatement":
+      return this.lowerBreakStatement(stmt);
+    case "ContinueStatement":
+      return this.lowerContinueStatement(stmt);
+    default:
+      return this.createNode(stmt.type, {
+        canonical: true,
+      });
     }
   }
 
@@ -149,7 +149,7 @@ class PythonLowerer {
    * Handles decorators and method binding
    */
   lowerClassDeclaration(stmt) {
-    const irClass = this.createNode('ClassDefinition', {
+    const irClass = this.createNode("ClassDefinition", {
       name: stmt.name,
       baseClasses: stmt.bases ? stmt.bases.map(b => b.name) : [],
       methods: [],
@@ -159,7 +159,7 @@ class PythonLowerer {
 
     // Process decorators if present
     if (stmt.decorators) {
-      irClass.decorators = stmt.decorators.map(d => this.createNode('Decorator', {
+      irClass.decorators = stmt.decorators.map(d => this.createNode("Decorator", {
         name: d.name,
         expanded: this.expandDecorator(d.name),
       }));
@@ -168,27 +168,27 @@ class PythonLowerer {
     // Process class body
     if (stmt.body) {
       for (const item of stmt.body) {
-        if (item.type === 'FunctionDeclaration') {
+        if (item.type === "FunctionDeclaration") {
           const method = this.lowerFunctionDeclaration(item);
           method.isMethod = true;
           
           // Check for @property, @staticmethod, @classmethod
           if (item.decorators) {
             for (const deco of item.decorators) {
-              if (deco.name === 'property') {
-                method.kind = 'get';
+              if (deco.name === "property") {
+                method.kind = "get";
                 irClass.properties.push(method);
-              } else if (deco.name === 'staticmethod') {
+              } else if (deco.name === "staticmethod") {
                 method.isStatic = true;
                 irClass.methods.push(method);
-              } else if (deco.name === 'classmethod') {
+              } else if (deco.name === "classmethod") {
                 method.isClassMethod = true;
                 irClass.methods.push(method);
               }
             }
           }
 
-          if (!item.decorators || !item.decorators.some(d => d.name === 'property')) {
+          if (!item.decorators || !item.decorators.some(d => d.name === "property")) {
             irClass.methods.push(method);
           }
         }
@@ -203,7 +203,7 @@ class PythonLowerer {
    * Handles decorators and async functions
    */
   lowerFunctionDeclaration(stmt) {
-    const irFunc = this.createNode('FunctionDefinition', {
+    const irFunc = this.createNode("FunctionDefinition", {
       name: stmt.name,
       parameters: this.lowerParameters(stmt.params),
       returnType: stmt.returnType ? stmt.returnType.name : null,
@@ -214,7 +214,7 @@ class PythonLowerer {
 
     // Process decorators
     if (stmt.decorators) {
-      irFunc.decorators = stmt.decorators.map(d => this.createNode('Decorator', {
+      irFunc.decorators = stmt.decorators.map(d => this.createNode("Decorator", {
         name: d.name,
         expanded: this.expandDecorator(d.name),
       }));
@@ -235,11 +235,11 @@ class PythonLowerer {
   lowerParameters(params) {
     if (!params) return [];
 
-    return params.map(param => this.createNode('Parameter', {
+    return params.map(param => this.createNode("Parameter", {
       name: param.name,
       typeAnnotation: param.annotation ? param.annotation.name : null,
       default: param.default || null,
-      kind: 'regular',
+      kind: "regular",
     }));
   }
 
@@ -260,11 +260,11 @@ class PythonLowerer {
    */
   containsYield(node) {
     if (!node) return false;
-    if (node.type === 'YieldExpression') return true;
+    if (node.type === "YieldExpression") return true;
     if (Array.isArray(node)) {
       return node.some(n => this.containsYield(n));
     }
-    if (typeof node === 'object') {
+    if (typeof node === "object") {
       return Object.values(node).some(v => this.containsYield(v));
     }
     return false;
@@ -275,8 +275,8 @@ class PythonLowerer {
    * Convert yield to generator protocol
    */
   lowerGeneratorBody(body) {
-    return this.createNode('GeneratorBody', {
-      protocol: 'iterator',
+    return this.createNode("GeneratorBody", {
+      protocol: "iterator",
       states: this.extractGeneratorStates(body),
       original: body,
     });
@@ -292,8 +292,8 @@ class PythonLowerer {
     const extractStates = (node) => {
       if (!node) return;
 
-      if (node.type === 'YieldExpression') {
-        states.push(this.createNode('yield', {
+      if (node.type === "YieldExpression") {
+        states.push(this.createNode("yield", {
           index: stateIndex++,
           value: node.argument,
         }));
@@ -301,7 +301,7 @@ class PythonLowerer {
 
       if (Array.isArray(node)) {
         node.forEach(extractStates);
-      } else if (typeof node === 'object') {
+      } else if (typeof node === "object") {
         Object.values(node).forEach(extractStates);
       }
     };
@@ -314,7 +314,7 @@ class PythonLowerer {
    * Lower if statement
    */
   lowerIfStatement(stmt) {
-    return this.createNode('IfStatement', {
+    return this.createNode("IfStatement", {
       condition: stmt.condition,
       consequent: stmt.consequent ? stmt.consequent.map(s => this.lowerStatement(s)) : [],
       alternate: stmt.alternate ? stmt.alternate.map(s => this.lowerStatement(s)) : [],
@@ -330,7 +330,7 @@ class PythonLowerer {
       return this.lowerComprehension(stmt);
     }
 
-    return this.createNode('ForStatement', {
+    return this.createNode("ForStatement", {
       variable: stmt.target,
       iterable: stmt.iter,
       body: stmt.body ? stmt.body.map(s => this.lowerStatement(s)) : [],
@@ -350,8 +350,8 @@ class PythonLowerer {
    * Lower comprehension
    */
   lowerComprehension(stmt) {
-    return this.createNode('ComprehensionExpression', {
-      pattern: 'list_comprehension',
+    return this.createNode("ComprehensionExpression", {
+      pattern: "list_comprehension",
       variable: stmt.target,
       iterable: stmt.iter,
       condition: stmt.condition || null,
@@ -363,7 +363,7 @@ class PythonLowerer {
    * Lower while statement
    */
   lowerWhileStatement(stmt) {
-    return this.createNode('WhileStatement', {
+    return this.createNode("WhileStatement", {
       condition: stmt.test,
       body: stmt.body ? stmt.body.map(s => this.lowerStatement(s)) : [],
       orelse: stmt.orelse ? stmt.orelse.map(s => this.lowerStatement(s)) : [],
@@ -376,15 +376,15 @@ class PythonLowerer {
    */
   lowerWithStatement(stmt) {
     // with expr as var: body -> try: body finally: expr.__exit__()
-    return this.createNode('TryStatement', {
+    return this.createNode("TryStatement", {
       body: stmt.body ? stmt.body.map(s => this.lowerStatement(s)) : [],
       handlers: [],
       orelse: [],
       finalbody: [
-        this.createNode('ExpressionStatement', {
-          expression: this.createNode('MethodCall', {
+        this.createNode("ExpressionStatement", {
+          expression: this.createNode("MethodCall", {
             object: stmt.context_expr,
-            method: '__exit__',
+            method: "__exit__",
             arguments: [],
           }),
         }),
@@ -398,7 +398,7 @@ class PythonLowerer {
    * Lower try statement
    */
   lowerTryStatement(stmt) {
-    return this.createNode('TryStatement', {
+    return this.createNode("TryStatement", {
       body: stmt.body ? stmt.body.map(s => this.lowerStatement(s)) : [],
       handlers: stmt.handlers ? stmt.handlers.map(h => this.lowerExceptionHandler(h)) : [],
       orelse: stmt.orelse ? stmt.orelse.map(s => this.lowerStatement(s)) : [],
@@ -410,7 +410,7 @@ class PythonLowerer {
    * Lower exception handler
    */
   lowerExceptionHandler(handler) {
-    return this.createNode('ExceptionHandler', {
+    return this.createNode("ExceptionHandler", {
       exceptionType: handler.type,
       variable: handler.name,
       body: handler.body ? handler.body.map(s => this.lowerStatement(s)) : [],
@@ -421,7 +421,7 @@ class PythonLowerer {
    * Lower return statement
    */
   lowerReturnStatement(stmt) {
-    return this.createNode('ReturnStatement', {
+    return this.createNode("ReturnStatement", {
       argument: stmt.value || null,
     });
   }
@@ -430,7 +430,7 @@ class PythonLowerer {
    * Lower raise statement
    */
   lowerRaiseStatement(stmt) {
-    return this.createNode('RaiseStatement', {
+    return this.createNode("RaiseStatement", {
       exception: stmt.exception || null,
     });
   }
@@ -439,7 +439,7 @@ class PythonLowerer {
    * Lower expression statement
    */
   lowerExpressionStatement(stmt) {
-    return this.createNode('ExpressionStatement', {
+    return this.createNode("ExpressionStatement", {
       expression: stmt.expression,
     });
   }
@@ -448,21 +448,21 @@ class PythonLowerer {
    * Lower pass statement
    */
   lowerPassStatement(stmt) {
-    return this.createNode('PassStatement', {});
+    return this.createNode("PassStatement", {});
   }
 
   /**
    * Lower break statement
    */
   lowerBreakStatement(stmt) {
-    return this.createNode('BreakStatement', {});
+    return this.createNode("BreakStatement", {});
   }
 
   /**
    * Lower continue statement
    */
   lowerContinueStatement(stmt) {
-    return this.createNode('ContinueStatement', {});
+    return this.createNode("ContinueStatement", {});
   }
 
   /**
@@ -470,23 +470,23 @@ class PythonLowerer {
    */
   expandDecorator(decoratorName) {
     const standardDecorators = {
-      'property': {
-        type: 'PropertyDecorator',
-        creates: 'getter_setter',
+      "property": {
+        type: "PropertyDecorator",
+        creates: "getter_setter",
       },
-      'staticmethod': {
-        type: 'StaticDecorator',
-        bindsTo: 'class',
+      "staticmethod": {
+        type: "StaticDecorator",
+        bindsTo: "class",
       },
-      'classmethod': {
-        type: 'ClassMethodDecorator',
-        bindsTo: 'class',
+      "classmethod": {
+        type: "ClassMethodDecorator",
+        bindsTo: "class",
         passesClass: true,
       },
     };
 
     return standardDecorators[decoratorName] || {
-      type: 'CustomDecorator',
+      type: "CustomDecorator",
       name: decoratorName,
     };
   }
@@ -512,7 +512,7 @@ class PythonLowerer {
     return {
       objectCount: this.objectCount,
       maxObjects: this.maxObjects,
-      utilization: ((this.objectCount / this.maxObjects) * 100).toFixed(1) + '%',
+      utilization: ((this.objectCount / this.maxObjects) * 100).toFixed(1) + "%",
       pool: this.pool.getStats(),
     };
   }

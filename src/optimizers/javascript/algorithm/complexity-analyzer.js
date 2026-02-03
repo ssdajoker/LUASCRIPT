@@ -51,7 +51,7 @@ class ComplexityAnalyzer {
   analyzeComplexity(ir, _options = {}) {
     if (!ir || !ir.body) {
       return {
-        overall: 'O(1)',
+        overall: "O(1)",
         functions: [],
         analysis: {
           totalFunctions: 0,
@@ -63,7 +63,7 @@ class ComplexityAnalyzer {
     }
 
     const results = {
-      overall: 'O(1)',
+      overall: "O(1)",
       functions: [],
       analysis: {
         totalFunctions: 0,
@@ -86,12 +86,12 @@ class ComplexityAnalyzer {
    * Find and analyze all functions
    */
   analyzeFunctions(node, results, depth = 0) {
-    if (!node || typeof node !== 'object') {
+    if (!node || typeof node !== "object") {
       return;
     }
 
     // Check if this is a function
-    if (node.type === 'FunctionDeclaration' || node.type === 'FunctionExpression' || node.type === 'ArrowFunctionExpression') {
+    if (node.type === "FunctionDeclaration" || node.type === "FunctionExpression" || node.type === "ArrowFunctionExpression") {
       const funcAnalysis = this.analyzeSingleFunction(node);
       results.functions.push(funcAnalysis);
       results.analysis.totalFunctions++;
@@ -108,7 +108,7 @@ class ComplexityAnalyzer {
 
     // Recurse into children
     for (const key in node) {
-      if (key === 'type' || key === 'loc' || key === 'range') {
+      if (key === "type" || key === "loc" || key === "range") {
         continue;
       }
 
@@ -117,7 +117,7 @@ class ComplexityAnalyzer {
         for (const item of child) {
           this.analyzeFunctions(item, results, depth + 1);
         }
-      } else if (typeof child === 'object') {
+      } else if (typeof child === "object") {
         this.analyzeFunctions(child, results, depth + 1);
       }
     }
@@ -127,7 +127,7 @@ class ComplexityAnalyzer {
    * Analyze single function's complexity
    */
   analyzeSingleFunction(funcNode) {
-    const name = funcNode.id ? funcNode.id.name || funcNode.id : '<anonymous>';
+    const name = funcNode.id ? funcNode.id.name || funcNode.id : "<anonymous>";
     
     // Count loops and nesting
     const loopAnalysis = this.analyzeLoops(funcNode.body);
@@ -163,16 +163,16 @@ class ComplexityAnalyzer {
       patterns: []
     };
 
-    if (!node || typeof node !== 'object') {
+    if (!node || typeof node !== "object") {
       return result;
     }
 
     // Check if this is a loop
-    const isLoop = node.type === 'ForStatement' || 
-                   node.type === 'WhileStatement' || 
-                   node.type === 'DoWhileStatement' ||
-                   node.type === 'ForInStatement' ||
-                   node.type === 'ForOfStatement';
+    const isLoop = node.type === "ForStatement" || 
+                   node.type === "WhileStatement" || 
+                   node.type === "DoWhileStatement" ||
+                   node.type === "ForInStatement" ||
+                   node.type === "ForOfStatement";
 
     if (isLoop) {
       result.count = 1;
@@ -192,7 +192,7 @@ class ComplexityAnalyzer {
     } else {
       // Recurse into children without increasing nesting
       for (const key in node) {
-        if (key === 'type' || key === 'loc' || key === 'range') {
+        if (key === "type" || key === "loc" || key === "range") {
           continue;
         }
 
@@ -204,7 +204,7 @@ class ComplexityAnalyzer {
             result.maxNesting = Math.max(result.maxNesting, childAnalysis.maxNesting);
             result.patterns.push(...childAnalysis.patterns);
           }
-        } else if (typeof child === 'object') {
+        } else if (typeof child === "object") {
           const childAnalysis = this.analyzeLoops(child, currentNesting);
           result.count += childAnalysis.count;
           result.maxNesting = Math.max(result.maxNesting, childAnalysis.maxNesting);
@@ -222,13 +222,13 @@ class ComplexityAnalyzer {
   detectRecursion(funcNode, funcName) {
     const result = {
       isRecursive: false,
-      type: 'none',
+      type: "none",
       callCount: 0,
-      reason: ''
+      reason: ""
     };
 
     // Skip anonymous functions (can't call themselves by name easily)
-    if (!funcName || funcName === '<anonymous>') {
+    if (!funcName || funcName === "<anonymous>") {
       return result;
     }
 
@@ -241,13 +241,13 @@ class ComplexityAnalyzer {
 
       // Classify recursion type
       if (calls.length === 1) {
-        result.type = 'linear-recursive';
-        result.reason = 'Single recursive call (likely O(n) depth)';
+        result.type = "linear-recursive";
+        result.reason = "Single recursive call (likely O(n) depth)";
       } else if (calls.length === 2) {
-        result.type = 'binary-recursive';
-        result.reason = 'Two recursive calls (likely O(2^n) exponential)';
+        result.type = "binary-recursive";
+        result.reason = "Two recursive calls (likely O(2^n) exponential)";
       } else {
-        result.type = 'multi-recursive';
+        result.type = "multi-recursive";
         result.reason = `${calls.length} recursive calls (exponential growth)`;
       }
     }
@@ -261,20 +261,20 @@ class ComplexityAnalyzer {
   findFunctionCalls(node, funcName) {
     const calls = [];
 
-    if (!node || typeof node !== 'object') {
+    if (!node || typeof node !== "object") {
       return calls;
     }
 
-    if (node.type === 'CallExpression' && 
+    if (node.type === "CallExpression" && 
         node.callee && 
-        node.callee.type === 'Identifier' && 
+        node.callee.type === "Identifier" && 
         node.callee.name === funcName) {
       calls.push(node);
     }
 
     // Recurse into children
     for (const key in node) {
-      if (key === 'type' || key === 'loc' || key === 'range') {
+      if (key === "type" || key === "loc" || key === "range") {
         continue;
       }
 
@@ -283,7 +283,7 @@ class ComplexityAnalyzer {
         for (const item of child) {
           calls.push(...this.findFunctionCalls(item, funcName));
         }
-      } else if (typeof child === 'object') {
+      } else if (typeof child === "object") {
         calls.push(...this.findFunctionCalls(child, funcName));
       }
     }
@@ -297,23 +297,23 @@ class ComplexityAnalyzer {
   classifyComplexity(loopAnalysis, recursionAnalysis) {
     // Recursive cases
     if (recursionAnalysis.isRecursive) {
-      if (recursionAnalysis.type === 'binary-recursive' || recursionAnalysis.callCount > 1) {
-        return 'O(2^n)'; // Exponential
+      if (recursionAnalysis.type === "binary-recursive" || recursionAnalysis.callCount > 1) {
+        return "O(2^n)"; // Exponential
       } else {
-        return 'O(n)'; // Linear recursion
+        return "O(n)"; // Linear recursion
       }
     }
 
     // Loop-based complexity
     if (loopAnalysis.maxNesting === 0) {
-      return 'O(1)'; // No loops, constant time
+      return "O(1)"; // No loops, constant time
     } else if (loopAnalysis.maxNesting === 1) {
       // Single loop - check for divide-and-conquer hints
-      return 'O(n)'; // Linear
+      return "O(n)"; // Linear
     } else if (loopAnalysis.maxNesting === 2) {
-      return 'O(n²)'; // Quadratic
+      return "O(n²)"; // Quadratic
     } else if (loopAnalysis.maxNesting === 3) {
-      return 'O(n³)'; // Cubic
+      return "O(n³)"; // Cubic
     } else {
       return `O(n^${loopAnalysis.maxNesting})`; // Polynomial
     }
@@ -324,17 +324,17 @@ class ComplexityAnalyzer {
    */
   determineWorstCase(functions) {
     const complexityOrder = {
-      'O(1)': 1,
-      'O(log n)': 2,
-      'O(n)': 3,
-      'O(n log n)': 4,
-      'O(n²)': 5,
-      'O(n³)': 6,
-      'O(2^n)': 7,
-      'O(n!)': 8
+      "O(1)": 1,
+      "O(log n)": 2,
+      "O(n)": 3,
+      "O(n log n)": 4,
+      "O(n²)": 5,
+      "O(n³)": 6,
+      "O(2^n)": 7,
+      "O(n!)": 8
     };
 
-    let worst = 'O(1)';
+    let worst = "O(1)";
     let worstRank = 1;
 
     for (const func of functions) {
@@ -359,7 +359,7 @@ class ComplexityAnalyzer {
     }
 
     if (loopAnalysis.maxNesting === 0) {
-      return 'O(1): No loops detected, constant time operations';
+      return "O(1): No loops detected, constant time operations";
     } else if (loopAnalysis.maxNesting === 1) {
       return `O(n): Single loop detected (${loopAnalysis.count} total loops)`;
     } else if (loopAnalysis.maxNesting === 2) {
@@ -374,14 +374,14 @@ class ComplexityAnalyzer {
    */
   verifyComplexityPreservation(originalComplexity, optimizedComplexity) {
     const complexityOrder = {
-      'O(1)': 1,
-      'O(log n)': 2,
-      'O(n)': 3,
-      'O(n log n)': 4,
-      'O(n²)': 5,
-      'O(n³)': 6,
-      'O(2^n)': 7,
-      'O(n!)': 8
+      "O(1)": 1,
+      "O(log n)": 2,
+      "O(n)": 3,
+      "O(n log n)": 4,
+      "O(n²)": 5,
+      "O(n³)": 6,
+      "O(2^n)": 7,
+      "O(n!)": 8
     };
 
     const originalRank = complexityOrder[originalComplexity] || 99;
@@ -393,7 +393,7 @@ class ComplexityAnalyzer {
       degraded: optimizedRank > originalRank,
       originalComplexity,
       optimizedComplexity,
-      verdict: optimizedRank <= originalRank ? 'PASS' : 'FAIL',
+      verdict: optimizedRank <= originalRank ? "PASS" : "FAIL",
       forensicReason: this.explainComplexityChange(originalRank, optimizedRank, originalComplexity, optimizedComplexity)
     };
   }

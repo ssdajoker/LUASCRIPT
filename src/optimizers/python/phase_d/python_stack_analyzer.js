@@ -82,16 +82,16 @@ class VariableInfo {
   get estimatedBytes() {
     // Rough memory estimates for common types
     const sizes = {
-      'int': 28,
-      'float': 24,
-      'bool': 28,
-      'str': 49 + (0 * 1),  // Add average string size
-      'bytes': 33,
-      'list': 56,
-      'dict': 240,
-      'tuple': 40,
-      'set': 224,
-      'object': 60,
+      "int": 28,
+      "float": 24,
+      "bool": 28,
+      "str": 49 + (0 * 1),  // Add average string size
+      "bytes": 33,
+      "list": 56,
+      "dict": 240,
+      "tuple": 40,
+      "set": 224,
+      "object": 60,
     };
 
     return sizes[this.type] || 60;
@@ -164,45 +164,45 @@ class PythonStackAnalyzer {
   }
 
   visitNode(node, depth = 0) {
-    if (!node || typeof node !== 'object') return;
+    if (!node || typeof node !== "object") return;
 
     // Function entry
-    if (node.type === 'FunctionDef') {
+    if (node.type === "FunctionDef") {
       this.enterFunction(node, depth);
     }
 
     // Track assignments and variable uses
-    if (node.type === 'Assign') {
+    if (node.type === "Assign") {
       this.trackAssignment(node);
     }
 
-    if (node.type === 'Name') {
+    if (node.type === "Name") {
       this.trackVariableUse(node);
     }
 
     // Track function calls
-    if (node.type === 'Call') {
+    if (node.type === "Call") {
       this.trackCall(node);
     }
 
     // Track returns
-    if (node.type === 'Return') {
+    if (node.type === "Return") {
       this.trackReturn(node);
     }
 
     // Recursively visit children
     for (const key in node) {
-      if (node.hasOwnProperty(key) && key !== 'type') {
+      if (Object.prototype.hasOwnProperty.call(node, key) && key !== "type") {
         if (Array.isArray(node[key])) {
           node[key].forEach(child => this.visitNode(child, depth));
-        } else if (typeof node[key] === 'object') {
+        } else if (typeof node[key] === "object") {
           this.visitNode(node[key], depth);
         }
       }
     }
 
     // Function exit
-    if (node.type === 'FunctionDef') {
+    if (node.type === "FunctionDef") {
       this.exitFunction();
     }
   }
@@ -232,8 +232,8 @@ class PythonStackAnalyzer {
     // Check for excessive stack depth
     if (this.callStack.length > this.options.maxStackDepth * 0.8) {
       this.issues.push({
-        type: 'deep_call_stack',
-        severity: 'MEDIUM',
+        type: "deep_call_stack",
+        severity: "MEDIUM",
         message: `Function ${node.name} has deep call stack (depth: ${this.callStack.length})`,
         location: node.name,
       });
@@ -250,7 +250,7 @@ class PythonStackAnalyzer {
 
     const targets = node.targets || [];
     targets.forEach(target => {
-      if (target.type === 'Name') {
+      if (target.type === "Name") {
         const varName = target.id;
         if (!this.currentFrame.hasVariable(varName)) {
           const info = new VariableInfo(varName, this.inferType(node.value));
@@ -265,7 +265,7 @@ class PythonStackAnalyzer {
   }
 
   trackVariableUse(node) {
-    if (!this.currentFrame || node.ctx?.type !== 'Load') return;
+    if (!this.currentFrame || node.ctx?.type !== "Load") return;
 
     const varName = node.id;
     if (this.currentFrame.hasVariable(varName)) {
@@ -281,7 +281,7 @@ class PythonStackAnalyzer {
     // Check if variables are passed as arguments (escape)
     const args = node.args || [];
     args.forEach(arg => {
-      if (arg.type === 'Name' && this.currentFrame.hasVariable(arg.id)) {
+      if (arg.type === "Name" && this.currentFrame.hasVariable(arg.id)) {
         const info = this.currentFrame.getVariable(arg.id);
         info.escapes = true;
         this.stats.escapedVariables++;
@@ -292,8 +292,8 @@ class PythonStackAnalyzer {
     const callName = node.func?.id || node.func?.attr;
     if (callName === this.currentFrame.functionName) {
       this.issues.push({
-        type: 'recursion',
-        severity: 'LOW',
+        type: "recursion",
+        severity: "LOW",
         message: `Function ${this.currentFrame.functionName} is recursive`,
         location: this.currentFrame.functionName,
       });
@@ -304,7 +304,7 @@ class PythonStackAnalyzer {
     if (!this.currentFrame || !node.value) return;
 
     // Mark returned variables as escaped
-    if (node.value.type === 'Name' && this.currentFrame.hasVariable(node.value.id)) {
+    if (node.value.type === "Name" && this.currentFrame.hasVariable(node.value.id)) {
       const info = this.currentFrame.getVariable(node.value.id);
       info.escapes = true;
       this.stats.escapedVariables++;
@@ -349,7 +349,7 @@ class PythonStackAnalyzer {
       const varCount = frame.getTotalVariableCount();
       if (varCount > 1000) {
         issues.push({
-          type: 'unbounded_variable_growth',
+          type: "unbounded_variable_growth",
           frame: frame.functionName,
           count: varCount,
         });
@@ -358,7 +358,7 @@ class PythonStackAnalyzer {
       // Check for deep nesting
       if (frame.depth > 100) {
         issues.push({
-          type: 'deep_nesting',
+          type: "deep_nesting",
           frame: frame.functionName,
           depth: frame.depth,
         });
@@ -368,7 +368,7 @@ class PythonStackAnalyzer {
       const stackBytes = frame.getEstimatedStackBytes();
       if (stackBytes > 100000) {  // 100KB
         issues.push({
-          type: 'large_stack_frame',
+          type: "large_stack_frame",
           frame: frame.functionName,
           bytes: stackBytes,
         });
@@ -387,34 +387,34 @@ class PythonStackAnalyzer {
 
     if (stats.peakStackBytes > 10000000) {  // 10MB
       recommendations.push({
-        severity: 'CRITICAL',
-        message: 'Peak stack usage exceeds 10MB',
-        action: 'Reduce variable allocations or use generators',
+        severity: "CRITICAL",
+        message: "Peak stack usage exceeds 10MB",
+        action: "Reduce variable allocations or use generators",
       });
     }
 
     if (stats.maxStackDepth > 500) {
       recommendations.push({
-        severity: 'HIGH',
-        message: 'Maximum stack depth exceeds 500',
-        action: 'Refactor recursive functions to iterative',
+        severity: "HIGH",
+        message: "Maximum stack depth exceeds 500",
+        action: "Refactor recursive functions to iterative",
       });
     }
 
     if (stats.escapedVariables / Math.max(1, stats.totalVariables) > 0.5) {
       recommendations.push({
-        severity: 'MEDIUM',
-        message: 'More than 50% of variables escape their scope',
-        action: 'Consider passing by reference or using closures',
+        severity: "MEDIUM",
+        message: "More than 50% of variables escape their scope",
+        action: "Consider passing by reference or using closures",
       });
     }
 
     const o1Check = stats.O1Verified;
     if (!o1Check.isO1) {
       recommendations.push({
-        severity: 'MEDIUM',
+        severity: "MEDIUM",
         message: `${o1Check.issues.length} O(1) violations detected`,
-        action: 'Fix reported stack inefficiencies',
+        action: "Fix reported stack inefficiencies",
       });
     }
 
@@ -422,29 +422,29 @@ class PythonStackAnalyzer {
   }
 
   inferType(node) {
-    if (!node || typeof node !== 'object') return null;
+    if (!node || typeof node !== "object") return null;
 
     const typeMap = {
-      'Num': 'int',
-      'Str': 'str',
-      'List': 'list',
-      'Dict': 'dict',
-      'Set': 'set',
-      'Tuple': 'tuple',
-      'Constant': this.inferConstantType(node),
-      'Call': 'object',  // Generic object for now
-      'BinOp': 'object',
-      'Name': null,      // Unknown
+      "Num": "int",
+      "Str": "str",
+      "List": "list",
+      "Dict": "dict",
+      "Set": "set",
+      "Tuple": "tuple",
+      "Constant": this.inferConstantType(node),
+      "Call": "object",  // Generic object for now
+      "BinOp": "object",
+      "Name": null,      // Unknown
     };
 
     return typeMap[node.type] || null;
   }
 
   inferConstantType(node) {
-    if (typeof node.value === 'number') return 'int';
-    if (typeof node.value === 'string') return 'str';
-    if (typeof node.value === 'boolean') return 'bool';
-    if (node.value === null) return 'object';
+    if (typeof node.value === "number") return "int";
+    if (typeof node.value === "string") return "str";
+    if (typeof node.value === "boolean") return "bool";
+    if (node.value === null) return "object";
     return null;
   }
 
@@ -462,10 +462,10 @@ class PythonStackAnalyzer {
       frame.variables.forEach(varInfo => {
         if (varInfo.references === 1 && varInfo.lifetime < 10) {
           suggestions.push({
-            type: 'inline_variable',
+            type: "inline_variable",
             frame: frame.functionName,
             variable: varInfo.name,
-            reason: 'Short-lived with few uses',
+            reason: "Short-lived with few uses",
           });
         }
       });
@@ -474,10 +474,10 @@ class PythonStackAnalyzer {
       frame.variables.forEach(varInfo => {
         if (varInfo.references === 0) {
           suggestions.push({
-            type: 'remove_variable',
+            type: "remove_variable",
             frame: frame.functionName,
             variable: varInfo.name,
-            reason: 'Unused variable',
+            reason: "Unused variable",
           });
         }
       });
@@ -485,10 +485,10 @@ class PythonStackAnalyzer {
       // Suggest variable coalescing
       if (varCount > 50) {
         suggestions.push({
-          type: 'coalesce_variables',
+          type: "coalesce_variables",
           frame: frame.functionName,
           count: varCount,
-          reason: 'High variable count',
+          reason: "High variable count",
         });
       }
     });

@@ -217,7 +217,7 @@ const LanguageTraits = {
     syntax: {
       statementTerminator: "\\n",
       blockDelimiters: { open: ":", close: "dedent" },
-      commentStyles: ["#", '"""...."""'],
+      commentStyles: ["#", "\"\"\"....\"\"\""],
       caseInsensitive: false,
       requiresSemicolons: false,
       indentationSignificant: true

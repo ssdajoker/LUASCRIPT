@@ -459,10 +459,10 @@ class EnhancedEmitter {
   // ========== Expression Emission ==========
   // eslint-disable-next-line complexity
   emitExpression(node) {
-        // Resolve node references in consolidated IR
-        if (typeof node === "string") {
-          node = this.resolveNode(node);
-        }
+    // Resolve node references in consolidated IR
+    if (typeof node === "string") {
+      node = this.resolveNode(node);
+    }
     if (!node) return "";
 
     switch (node.kind) {

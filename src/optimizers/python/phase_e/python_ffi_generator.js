@@ -15,13 +15,13 @@
 class PythonFFIGenerator {
   constructor(options = {}) {
     this.options = {
-      targetLanguage: options.targetLanguage || 'c',
+      targetLanguage: options.targetLanguage || "c",
       useCTypes: options.useCTypes !== false,
       generateHeaders: options.generateHeaders !== false,
       generateWrappers: options.generateWrappers !== false,
       safetyChecks: options.safetyChecks !== false,
       nullTerminatedStrings: options.nullTerminatedStrings !== false,
-      errorHandling: options.errorHandling || 'exceptions', // exceptions, return_codes, both
+      errorHandling: options.errorHandling || "exceptions", // exceptions, return_codes, both
       ...options,
     };
 
@@ -56,7 +56,7 @@ class PythonFFIGenerator {
       };
     } catch (error) {
       this.errors.push({
-        type: 'GENERATION_ERROR',
+        type: "GENERATION_ERROR",
         message: error.message,
         stack: error.stack,
       });
@@ -75,21 +75,21 @@ class PythonFFIGenerator {
     if (!node) return;
 
     switch (node.type) {
-      case 'FunctionDef':
-        this._analyzeFunctionDef(node);
-        break;
+    case "FunctionDef":
+      this._analyzeFunctionDef(node);
+      break;
 
-      case 'ClassDef':
-        this._analyzeClassDef(node);
-        break;
+    case "ClassDef":
+      this._analyzeClassDef(node);
+      break;
 
-      case 'Assign':
-        this._analyzeAssign(node);
-        break;
+    case "Assign":
+      this._analyzeAssign(node);
+      break;
 
-      case 'Call':
-        this._analyzeCall(node);
-        break;
+    case "Call":
+      this._analyzeCall(node);
+      break;
     }
 
     // Recurse through children
@@ -119,7 +119,7 @@ class PythonFFIGenerator {
       pythonName: node.name,
       cName: this._pythonToCName(node.name),
       parameters: [],
-      returnType: 'PyObject*', // Default
+      returnType: "PyObject*", // Default
       decorators: node.decorator_list || [],
       isExported: this._hasExportDecorator(node),
       isCallback: this._hasCallbackDecorator(node),
@@ -131,7 +131,7 @@ class PythonFFIGenerator {
       node.args.args.forEach(arg => {
         func.parameters.push({
           name: arg.arg,
-          pythonType: arg.annotation ? this._extractType(arg.annotation) : 'Any',
+          pythonType: arg.annotation ? this._extractType(arg.annotation) : "Any",
           cType: this._pythonTypeToCType(arg.annotation),
           isPointer: this._requiresPointer(arg.annotation),
         });
@@ -162,18 +162,18 @@ class PythonFFIGenerator {
     // Analyze class body for fields and methods
     if (node.body) {
       node.body.forEach(item => {
-        if (item.type === 'FunctionDef') {
-          if (item.name === '__init__') {
+        if (item.type === "FunctionDef") {
+          if (item.name === "__init__") {
             // Extract fields from __init__
             this._extractFieldsFromInit(item, struct);
-          } else if (!item.name.startsWith('_')) {
+          } else if (!item.name.startsWith("_")) {
             // Public method
             struct.methods.push({
               name: item.name,
               cName: `${struct.cName}_${this._pythonToCName(item.name)}`,
             });
           }
-        } else if (item.type === 'AnnAssign') {
+        } else if (item.type === "AnnAssign") {
           // Type-annotated field
           struct.fields.push({
             name: item.target.id,
@@ -196,10 +196,10 @@ class PythonFFIGenerator {
     // Track module-level variables that might be exported
     if (node.targets && node.targets[0] && node.targets[0].id) {
       const varName = node.targets[0].id;
-      if (varName.startsWith('EXPORT_') || varName === '__all__') {
+      if (varName.startsWith("EXPORT_") || varName === "__all__") {
         // Track for export
         this.types.set(varName, {
-          type: 'module_export',
+          type: "module_export",
           value: node.value,
         });
       }
@@ -214,20 +214,20 @@ class PythonFFIGenerator {
       const attr = node.func.attr;
       
       // Detect ctypes.CDLL, ctypes.windll, etc.
-      if (attr === 'CDLL' || attr === 'WinDLL' || attr === 'OleDLL') {
+      if (attr === "CDLL" || attr === "WinDLL" || attr === "OleDLL") {
         this.bindings.push({
-          type: 'library_load',
+          type: "library_load",
           library: this._extractStringValue(node.args[0]),
           mode: attr,
         });
       }
 
       // Detect ctypes function declarations
-      if (attr === 'CFUNCTYPE' || attr === 'WINFUNCTYPE') {
+      if (attr === "CFUNCTYPE" || attr === "WINFUNCTYPE") {
         this.bindings.push({
-          type: 'function_type',
+          type: "function_type",
           callback: true,
-          convention: attr === 'CFUNCTYPE' ? 'cdecl' : 'stdcall',
+          convention: attr === "CFUNCTYPE" ? "cdecl" : "stdcall",
         });
       }
     }
@@ -239,10 +239,10 @@ class PythonFFIGenerator {
   _inferTypes() {
     this.functions.forEach(func => {
       func.parameters.forEach(param => {
-        if (param.pythonType === 'Any') {
+        if (param.pythonType === "Any") {
           // Try to infer from usage
-          param.pythonType = 'object';
-          param.cType = 'PyObject*';
+          param.pythonType = "object";
+          param.cType = "PyObject*";
         }
       });
     });
@@ -263,7 +263,7 @@ class PythonFFIGenerator {
         };
 
         this.bindings.push({
-          type: 'function',
+          type: "function",
           function: func,
           ctype: ctype,
         });
@@ -279,7 +279,7 @@ class PythonFFIGenerator {
       };
 
       this.bindings.push({
-        type: 'struct',
+        type: "struct",
         struct: struct,
         ctype: ctype,
       });
@@ -317,32 +317,32 @@ class PythonFFIGenerator {
     // Wrapper signature
     lines.push(`static ${func.returnType} ${wrapperName}(`);
     
-    const paramList = func.parameters.map(p => `${p.cType} ${p.name}`).join(', ');
-    lines.push(`    ${paramList || 'void'}`);
-    lines.push(`) {`);
+    const paramList = func.parameters.map(p => `${p.cType} ${p.name}`).join(", ");
+    lines.push(`    ${paramList || "void"}`);
+    lines.push(") {");
 
     // Safety checks
     if (this.options.safetyChecks) {
       func.parameters.forEach(param => {
         if (param.isPointer) {
           lines.push(`    if (${param.name} == NULL) {`);
-          if (this.options.errorHandling === 'exceptions' || this.options.errorHandling === 'both') {
+          if (this.options.errorHandling === "exceptions" || this.options.errorHandling === "both") {
             lines.push(`        PyErr_SetString(PyExc_ValueError, "Null pointer: ${param.name}");`);
           }
-          if (this.options.errorHandling === 'return_codes' || this.options.errorHandling === 'both') {
-            lines.push(`        return NULL;`);
+          if (this.options.errorHandling === "return_codes" || this.options.errorHandling === "both") {
+            lines.push("        return NULL;");
           }
-          lines.push(`    }`);
+          lines.push("    }");
         }
       });
     }
 
     // Call original function
-    const argList = func.parameters.map(p => p.name).join(', ');
+    const argList = func.parameters.map(p => p.name).join(", ");
     lines.push(`    return ${func.cName}(${argList});`);
-    lines.push(`}`);
+    lines.push("}");
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -355,18 +355,18 @@ class PythonFFIGenerator {
     lines.push(`lib.${func.cName}.restype = ${this._cTypeToPythonCType(func.returnType)}`);
     
     if (func.parameters.length > 0) {
-      const argtypes = func.parameters.map(p => this._cTypeToPythonCType(p.cType)).join(', ');
+      const argtypes = func.parameters.map(p => this._cTypeToPythonCType(p.cType)).join(", ");
       lines.push(`lib.${func.cName}.argtypes = [${argtypes}]`);
     }
 
-    lines.push('');
-    lines.push(`def ${func.pythonName}(${func.parameters.map(p => p.name).join(', ')}):`);
-    lines.push(`    """${func.docstring || 'FFI wrapper for ' + func.cName}"""`);
+    lines.push("");
+    lines.push(`def ${func.pythonName}(${func.parameters.map(p => p.name).join(", ")}):`);
+    lines.push(`    """${func.docstring || "FFI wrapper for " + func.cName}"""`);
     
-    const callArgs = func.parameters.map(p => p.name).join(', ');
+    const callArgs = func.parameters.map(p => p.name).join(", ");
     lines.push(`    return lib.${func.cName}(${callArgs})`);
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -377,15 +377,15 @@ class PythonFFIGenerator {
 
     lines.push(`class ${struct.pythonName}(ctypes.Structure):`);
     lines.push(`    """FFI binding for C struct ${struct.cName}"""`);
-    lines.push(`    _fields_ = [`);
+    lines.push("    _fields_ = [");
     
     struct.fields.forEach(field => {
       lines.push(`        ("${field.name}", ${this._cTypeToPythonCType(field.cType)}),`);
     });
     
-    lines.push(`    ]`);
+    lines.push("    ]");
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -394,11 +394,11 @@ class PythonFFIGenerator {
   _getHeaderCode() {
     const lines = [];
 
-    lines.push('#ifndef PYTHON_FFI_BINDINGS_H');
-    lines.push('#define PYTHON_FFI_BINDINGS_H');
-    lines.push('');
-    lines.push('#include <Python.h>');
-    lines.push('');
+    lines.push("#ifndef PYTHON_FFI_BINDINGS_H");
+    lines.push("#define PYTHON_FFI_BINDINGS_H");
+    lines.push("");
+    lines.push("#include <Python.h>");
+    lines.push("");
 
     // Struct declarations
     this.structs.forEach(struct => {
@@ -407,21 +407,21 @@ class PythonFFIGenerator {
         lines.push(`    ${field.cType} ${field.name};`);
       });
       lines.push(`} ${struct.cName};`);
-      lines.push('');
+      lines.push("");
     });
 
     // Function declarations
     this.functions.forEach(func => {
       if (func.isExported) {
-        const paramList = func.parameters.map(p => `${p.cType} ${p.name}`).join(', ');
-        lines.push(`${func.returnType} ${func.cName}(${paramList || 'void'});`);
+        const paramList = func.parameters.map(p => `${p.cType} ${p.name}`).join(", ");
+        lines.push(`${func.returnType} ${func.cName}(${paramList || "void"});`);
       }
     });
 
-    lines.push('');
-    lines.push('#endif // PYTHON_FFI_BINDINGS_H');
+    lines.push("");
+    lines.push("#endif // PYTHON_FFI_BINDINGS_H");
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -433,11 +433,11 @@ class PythonFFIGenerator {
     this.functions.forEach(func => {
       if (func.wrapper) {
         lines.push(func.wrapper);
-        lines.push('');
+        lines.push("");
       }
     });
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -457,31 +457,31 @@ class PythonFFIGenerator {
    * Convert Python name to C-compatible name
    */
   _pythonToCName(name) {
-    return name.replace(/[^a-zA-Z0-9_]/g, '_');
+    return name.replace(/[^a-zA-Z0-9_]/g, "_");
   }
 
   /**
    * Convert Python type annotation to C type
    */
   _pythonTypeToCType(annotation) {
-    if (!annotation) return 'PyObject*';
+    if (!annotation) return "PyObject*";
 
     const typeMap = {
-      'int': 'long',
-      'float': 'double',
-      'str': 'const char*',
-      'bool': 'int',
-      'bytes': 'const char*',
-      'list': 'PyObject*',
-      'dict': 'PyObject*',
-      'tuple': 'PyObject*',
-      'set': 'PyObject*',
-      'None': 'void',
-      'Any': 'PyObject*',
+      "int": "long",
+      "float": "double",
+      "str": "const char*",
+      "bool": "int",
+      "bytes": "const char*",
+      "list": "PyObject*",
+      "dict": "PyObject*",
+      "tuple": "PyObject*",
+      "set": "PyObject*",
+      "None": "void",
+      "Any": "PyObject*",
     };
 
     const typeName = this._extractType(annotation);
-    return typeMap[typeName] || 'PyObject*';
+    return typeMap[typeName] || "PyObject*";
   }
 
   /**
@@ -489,29 +489,29 @@ class PythonFFIGenerator {
    */
   _cTypeToPythonCType(cType) {
     const typeMap = {
-      'long': 'ctypes.c_long',
-      'int': 'ctypes.c_int',
-      'short': 'ctypes.c_short',
-      'char': 'ctypes.c_char',
-      'double': 'ctypes.c_double',
-      'float': 'ctypes.c_float',
-      'const char*': 'ctypes.c_char_p',
-      'char*': 'ctypes.c_char_p',
-      'void': 'None',
-      'PyObject*': 'ctypes.py_object',
+      "long": "ctypes.c_long",
+      "int": "ctypes.c_int",
+      "short": "ctypes.c_short",
+      "char": "ctypes.c_char",
+      "double": "ctypes.c_double",
+      "float": "ctypes.c_float",
+      "const char*": "ctypes.c_char_p",
+      "char*": "ctypes.c_char_p",
+      "void": "None",
+      "PyObject*": "ctypes.py_object",
     };
 
-    return typeMap[cType] || 'ctypes.c_void_p';
+    return typeMap[cType] || "ctypes.c_void_p";
   }
 
   /**
    * Extract type from annotation node
    */
   _extractType(annotation) {
-    if (!annotation) return 'Any';
+    if (!annotation) return "Any";
     if (annotation.id) return annotation.id;
     if (annotation.value && annotation.value.id) return annotation.value.id;
-    return 'Any';
+    return "Any";
   }
 
   /**
@@ -519,7 +519,7 @@ class PythonFFIGenerator {
    */
   _requiresPointer(annotation) {
     const type = this._extractType(annotation);
-    return ['str', 'bytes', 'list', 'dict', 'tuple', 'set'].includes(type);
+    return ["str", "bytes", "list", "dict", "tuple", "set"].includes(type);
   }
 
   /**
@@ -528,8 +528,8 @@ class PythonFFIGenerator {
   _hasExportDecorator(node) {
     if (!node.decorator_list) return false;
     return node.decorator_list.some(dec => 
-      (dec.id && dec.id === 'export') || 
-      (dec.func && dec.func.id === 'export')
+      (dec.id && dec.id === "export") || 
+      (dec.func && dec.func.id === "export")
     );
   }
 
@@ -539,8 +539,8 @@ class PythonFFIGenerator {
   _hasCallbackDecorator(node) {
     if (!node.decorator_list) return false;
     return node.decorator_list.some(dec => 
-      (dec.id && dec.id === 'callback') || 
-      (dec.func && dec.func.id === 'callback')
+      (dec.id && dec.id === "callback") || 
+      (dec.func && dec.func.id === "callback")
     );
   }
 
@@ -550,11 +550,11 @@ class PythonFFIGenerator {
   _extractDocstring(node) {
     if (node.body && node.body.length > 0) {
       const first = node.body[0];
-      if (first.type === 'Expr' && first.value.type === 'Str') {
+      if (first.type === "Expr" && first.value.type === "Str") {
         return first.value.s;
       }
     }
-    return '';
+    return "";
   }
 
   /**
@@ -564,12 +564,12 @@ class PythonFFIGenerator {
     if (!initNode.body) return;
 
     initNode.body.forEach(stmt => {
-      if (stmt.type === 'Assign' && stmt.targets[0].value && stmt.targets[0].value.id === 'self') {
+      if (stmt.type === "Assign" && stmt.targets[0].value && stmt.targets[0].value.id === "self") {
         const fieldName = stmt.targets[0].attr;
         struct.fields.push({
           name: fieldName,
-          pythonType: 'Any',
-          cType: 'PyObject*',
+          pythonType: "Any",
+          cType: "PyObject*",
         });
       }
     });
@@ -579,10 +579,10 @@ class PythonFFIGenerator {
    * Extract string value from node
    */
   _extractStringValue(node) {
-    if (!node) return '';
-    if (node.type === 'Str') return node.s;
-    if (node.type === 'Constant' && typeof node.value === 'string') return node.value;
-    return '';
+    if (!node) return "";
+    if (node.type === "Str") return node.s;
+    if (node.type === "Constant" && typeof node.value === "string") return node.value;
+    return "";
   }
 
   /**

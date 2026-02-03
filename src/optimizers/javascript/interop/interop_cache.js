@@ -11,10 +11,10 @@ class InteropCache {
     this.options = {
       maxSize: options.maxSize || 1000,
       ttl: options.ttl || 3600000, // 1 hour default
-      serializeFormat: options.serializeFormat || 'json', // json or msgpack
+      serializeFormat: options.serializeFormat || "json", // json or msgpack
       enableCompression: options.enableCompression !== false,
       enableMetrics: options.enableMetrics !== false,
-      runtimes: options.runtimes || ['v8', 'spidermonkey', 'jsc', 'chakra']
+      runtimes: options.runtimes || ["v8", "spidermonkey", "jsc", "chakra"]
     };
 
     this.cache = new Map();
@@ -38,31 +38,31 @@ class InteropCache {
    * Initialize runtime capability profiles
    */
   _initializeRuntimeProfiles() {
-    this.runtimeProfiles.set('v8', {
-      name: 'V8 (Node.js/Chrome)',
-      features: ['async', 'proxy', 'weakmap', 'bigint', 'privatefields'],
-      optimizations: ['tiered-compilation', 'speculative-optimization', 'inlining'],
+    this.runtimeProfiles.set("v8", {
+      name: "V8 (Node.js/Chrome)",
+      features: ["async", "proxy", "weakmap", "bigint", "privatefields"],
+      optimizations: ["tiered-compilation", "speculative-optimization", "inlining"],
       constraints: { maxObjectSize: 512 * 1024 * 1024 }
     });
 
-    this.runtimeProfiles.set('spidermonkey', {
-      name: 'SpiderMonkey (Firefox)',
-      features: ['async', 'proxy', 'weakmap', 'bigint'],
-      optimizations: ['jit', 'inline-caches', 'type-specialization'],
+    this.runtimeProfiles.set("spidermonkey", {
+      name: "SpiderMonkey (Firefox)",
+      features: ["async", "proxy", "weakmap", "bigint"],
+      optimizations: ["jit", "inline-caches", "type-specialization"],
       constraints: { maxObjectSize: 256 * 1024 * 1024 }
     });
 
-    this.runtimeProfiles.set('jsc', {
-      name: 'JavaScriptCore (Safari)',
-      features: ['async', 'proxy', 'weakmap', 'bigint'],
-      optimizations: ['dfg', 'ftl', 'speculative-optimization'],
+    this.runtimeProfiles.set("jsc", {
+      name: "JavaScriptCore (Safari)",
+      features: ["async", "proxy", "weakmap", "bigint"],
+      optimizations: ["dfg", "ftl", "speculative-optimization"],
       constraints: { maxObjectSize: 128 * 1024 * 1024 }
     });
 
-    this.runtimeProfiles.set('chakra', {
-      name: 'Chakra (Edge Legacy)',
-      features: ['async', 'proxy', 'weakmap'],
-      optimizations: ['simple-jit', 'full-jit', 'inline-caches'],
+    this.runtimeProfiles.set("chakra", {
+      name: "Chakra (Edge Legacy)",
+      features: ["async", "proxy", "weakmap"],
+      optimizations: ["simple-jit", "full-jit", "inline-caches"],
       constraints: { maxObjectSize: 256 * 1024 * 1024 }
     });
   }
@@ -71,10 +71,10 @@ class InteropCache {
    * Generate normalized cache key for AST nodes or code
    */
   _generateKey(input, runtime = null) {
-    const crypto = require('crypto');
+    const crypto = require("crypto");
     // Normalize the input for consistent hashing - NEVER include runtime in base key
-    let keyInput = typeof input === 'string' ? input : JSON.stringify(input);
-    const hash = crypto.createHash('sha256').update(keyInput).digest('hex').substring(0, 16);
+    let keyInput = typeof input === "string" ? input : JSON.stringify(input);
+    const hash = crypto.createHash("sha256").update(keyInput).digest("hex").substring(0, 16);
     return hash;
   }
 
@@ -108,9 +108,9 @@ class InteropCache {
       runtime,
       optimization,
       compatible: compatible || [],
-      size: typeof result === 'object' ? JSON.stringify(result).length : 0,
+      size: typeof result === "object" ? JSON.stringify(result).length : 0,
       created: new Date().toISOString(),
-      input: typeof input === 'string' ? input : JSON.stringify(input)
+      input: typeof input === "string" ? input : JSON.stringify(input)
     });
 
     // Track shared optimizations
@@ -224,21 +224,21 @@ class InteropCache {
    * Export cache for cross-process/cross-environment use
    */
   export(options = {}) {
-    const { includeMetadata = true, format = 'json' } = options;
+    const { includeMetadata = true, format = "json" } = options;
 
     const exportData = {
-      version: '1.0',
+      version: "1.0",
       timestamp: new Date().toISOString(),
       cache: Array.from(this.cache.entries()).map(([k, v]) => [
         k, 
-        typeof v === 'string' ? v : JSON.stringify(v)
+        typeof v === "string" ? v : JSON.stringify(v)
       ]),
       metadata: includeMetadata ? Array.from(this.metadata.entries()) : undefined,
       metrics: this.metrics,
       runtimeProfiles: Array.from(this.runtimeProfiles.entries())
     };
 
-    if (format === 'json') {
+    if (format === "json") {
       return JSON.stringify(exportData);
     }
     return exportData;
@@ -250,7 +250,7 @@ class InteropCache {
   import(data, options = {}) {
     const { merge = true } = options;
 
-    let importData = typeof data === 'string' ? JSON.parse(data) : data;
+    let importData = typeof data === "string" ? JSON.parse(data) : data;
 
     if (!merge) {
       this.cache.clear();
@@ -261,7 +261,7 @@ class InteropCache {
     for (const [key, value] of importData.cache) {
       // Try to parse JSON strings back to objects
       try {
-        this.cache.set(key, typeof value === 'string' ? JSON.parse(value) : value);
+        this.cache.set(key, typeof value === "string" ? JSON.parse(value) : value);
       } catch {
         // If not JSON, store as-is
         this.cache.set(key, value);
@@ -306,13 +306,13 @@ class InteropCache {
     return {
       size: this.cache.size,
       maxSize: this.options.maxSize,
-      utilization: ((this.cache.size / this.options.maxSize) * 100).toFixed(2) + '%',
+      utilization: ((this.cache.size / this.options.maxSize) * 100).toFixed(2) + "%",
       hits: this.metrics.hits,
       misses: this.metrics.misses,
-      hitRate: hitRate + '%',
+      hitRate: hitRate + "%",
       stores: this.metrics.stores,
       evictions: this.metrics.evictions,
-      compressionRatio: (this.metrics.compressionRatio * 100).toFixed(2) + '%',
+      compressionRatio: (this.metrics.compressionRatio * 100).toFixed(2) + "%",
       crossRuntimeUses: this.metrics.crossRuntimeUses,
       avgKeySize: this.cache.size > 0 ? 
         Math.round(Array.from(this.cache.keys()).reduce((sum, k) => sum + k.length, 0) / this.cache.size) : 0

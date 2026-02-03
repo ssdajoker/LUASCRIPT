@@ -20,7 +20,7 @@
  * @module src/optimizers/javascript/speed/function_cache
  */
 
-const { CacheManager } = require('./cache_manager');
+const { CacheManager } = require("./cache_manager");
 
 /**
  * Function declaration caching system
@@ -112,9 +112,9 @@ class FunctionCache {
    * @private
    */
   createFunctionKey(fnAst) {
-    const name = fnAst.id?.name || '__anonymous__';
-    const isAsync = fnAst.async ? 'async' : '';
-    const isGenerator = fnAst.generator ? 'gen' : '';
+    const name = fnAst.id?.name || "__anonymous__";
+    const isAsync = fnAst.async ? "async" : "";
+    const isGenerator = fnAst.generator ? "gen" : "";
     const paramSignature = this._getParameterSignature(fnAst);
     
     return `fn_${name}_${isAsync}${isGenerator}_${paramSignature}`;
@@ -128,7 +128,7 @@ class FunctionCache {
    */
   _getParameterSignature(fnAst) {
     if (!fnAst.params || fnAst.params.length === 0) {
-      return 'noparams';
+      return "noparams";
     }
     
     const params = fnAst.params;
@@ -136,12 +136,12 @@ class FunctionCache {
     
     // Check for special parameter types
     for (const param of params) {
-      if (param.type === 'AssignmentPattern') {
-        sig += '_defaults';
-      } else if (param.type === 'RestElement') {
-        sig += '_rest';
-      } else if (param.type === 'ArrayPattern' || param.type === 'ObjectPattern') {
-        sig += '_destruct';
+      if (param.type === "AssignmentPattern") {
+        sig += "_defaults";
+      } else if (param.type === "RestElement") {
+        sig += "_rest";
+      } else if (param.type === "ArrayPattern" || param.type === "ObjectPattern") {
+        sig += "_destruct";
       }
     }
     
@@ -157,8 +157,8 @@ class FunctionCache {
   _compileFunctionDeclaration(fnAst, context) {
     // Placeholder for actual transpilation
     // In real implementation, this calls the transpiler
-    const name = fnAst.id?.name || '';
-    const params = (fnAst.params || []).map(p => p.name || 'arg').join(', ');
+    const name = fnAst.id?.name || "";
+    const params = (fnAst.params || []).map(p => p.name || "arg").join(", ");
     const bodyLines = this._estimateBodyLineCount(fnAst.body);
     
     return `local function ${name}(${params})\n  -- ${bodyLines} lines\nend`;
@@ -182,11 +182,11 @@ class FunctionCache {
       this.stats.patterns.generator++;
     } else if (fnAst.async) {
       this.stats.patterns.async++;
-    } else if (fnAst.type === 'ArrowFunctionExpression') {
+    } else if (fnAst.type === "ArrowFunctionExpression") {
       this.stats.patterns.arrow++;
-    } else if (fnAst.params?.some(p => p.type === 'RestElement')) {
+    } else if (fnAst.params?.some(p => p.type === "RestElement")) {
       this.stats.patterns.rest++;
-    } else if (fnAst.params?.some(p => p.type === 'ArrayPattern' || p.type === 'ObjectPattern')) {
+    } else if (fnAst.params?.some(p => p.type === "ArrayPattern" || p.type === "ObjectPattern")) {
       this.stats.patterns.destructured++;
     } else {
       this.stats.patterns.simple++;
@@ -259,7 +259,7 @@ class FunctionCache {
     }
     
     this.stats.patterns.async++;
-    const compiled = `async function ${asyncAst.id?.name || ''}(${this._paramList(asyncAst.params)}) -- async body end`;
+    const compiled = `async function ${asyncAst.id?.name || ""}(${this._paramList(asyncAst.params)}) -- async body end`;
     
     this.cache.set(key, compiled, 1);
     this.stats.compiled++;
@@ -283,7 +283,7 @@ class FunctionCache {
     }
     
     this.stats.patterns.generator++;
-    const compiled = `function* ${genAst.id?.name || ''}(${this._paramList(genAst.params)}) -- generator body end`;
+    const compiled = `function* ${genAst.id?.name || ""}(${this._paramList(genAst.params)}) -- generator body end`;
     
     this.cache.set(key, compiled, 1);
     this.stats.compiled++;
@@ -298,7 +298,7 @@ class FunctionCache {
    * @returns {string} Transpiled Lua code
    */
   cacheDestructuredFunction(fnAst, context) {
-    const destructParams = fnAst.params.filter(p => p.type === 'ArrayPattern' || p.type === 'ObjectPattern');
+    const destructParams = fnAst.params.filter(p => p.type === "ArrayPattern" || p.type === "ObjectPattern");
     const key = `destruct_${fnAst.id?.name}_${this._hashPatterns(destructParams)}`;
     
     const cached = this.cache.get(key);
@@ -322,7 +322,7 @@ class FunctionCache {
    */
   _compileDestructuredParams(fnAst) {
     // Placeholder for destructuring compilation
-    const name = fnAst.id?.name || '';
+    const name = fnAst.id?.name || "";
     const paramCount = fnAst.params.length;
     
     return `local function ${name}(destructured_params_${paramCount})\n  -- destructure here\nend`;
@@ -335,7 +335,7 @@ class FunctionCache {
    * @returns {string} Transpiled Lua code
    */
   cacheRestFunction(fnAst, context) {
-    const restParams = fnAst.params.filter(p => p.type === 'RestElement');
+    const restParams = fnAst.params.filter(p => p.type === "RestElement");
     const key = `rest_${fnAst.id?.name}_${restParams.length}`;
     
     const cached = this.cache.get(key);
@@ -345,7 +345,7 @@ class FunctionCache {
     }
     
     this.stats.patterns.rest++;
-    const compiled = `local function ${fnAst.id?.name || ''}(...) -- rest params end`;
+    const compiled = `local function ${fnAst.id?.name || ""}(...) -- rest params end`;
     
     this.cache.set(key, compiled, 1);
     this.stats.compiled++;
@@ -359,8 +359,8 @@ class FunctionCache {
    */
   getStats() {
     const totalRequests = this.stats.hits + this.stats.misses;
-    const hitRate = totalRequests > 0 ? (this.stats.hits / totalRequests * 100).toFixed(1) : '0';
-    const reuseRate = this.stats.compiled > 0 ? (this.stats.reused / (this.stats.reused + this.stats.compiled) * 100).toFixed(1) : '0';
+    const hitRate = totalRequests > 0 ? (this.stats.hits / totalRequests * 100).toFixed(1) : "0";
+    const reuseRate = this.stats.compiled > 0 ? (this.stats.reused / (this.stats.reused + this.stats.compiled) * 100).toFixed(1) : "0";
     
     return {
       ...this.stats,
@@ -406,7 +406,7 @@ class FunctionCache {
     this.cache.clear();
     this.closureMap.clear();
     Object.keys(this.stats).forEach(key => {
-      if (typeof this.stats[key] === 'number') {
+      if (typeof this.stats[key] === "number") {
         this.stats[key] = 0;
       }
     });
@@ -421,31 +421,31 @@ class FunctionCache {
       cacheSizeMB: (this.closureMap.size * 0.1).toFixed(2), // Rough estimate
       functionsCompiled: this.stats.compiled,
       functionsReused: this.stats.reused,
-      speedupFactor: this.stats.compiled > 0 ? (this.stats.reused / this.stats.compiled).toFixed(2) : '1.00',
+      speedupFactor: this.stats.compiled > 0 ? (this.stats.reused / this.stats.compiled).toFixed(2) : "1.00",
       patterns: this.stats.patterns
     };
   }
 
   // Helper methods
   _paramList(params) {
-    return (params || []).map(p => p.name || 'arg').join(', ');
+    return (params || []).map(p => p.name || "arg").join(", ");
   }
 
   _bodyHash(body) {
-    if (!body) return 'empty';
-    return `body_${(body.toString() || '').substring(0, 8)}`;
+    if (!body) return "empty";
+    return `body_${(body.toString() || "").substring(0, 8)}`;
   }
 
   _hashBody(body) {
-    return (body?.toString() || '').substring(0, 16);
+    return (body?.toString() || "").substring(0, 16);
   }
 
   _hashPatterns(patterns) {
-    return patterns.map(p => p.type).join('_');
+    return patterns.map(p => p.type).join("_");
   }
 }
 
 // Export for use
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = { FunctionCache };
 }

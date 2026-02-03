@@ -87,11 +87,14 @@ class RubyParser {
       // NOTE: Order matters - longer patterns first!
       const tokenPatterns = [
         { type: "KEYWORD", regex: /^(?:\b(?:def|end|class|if|elsif|else|unless|while|until|for|in|do|return|yield|break|next|case|when|then|begin|rescue|ensure|module|puts|print|require|super|self|true|false|nil|and|or|not)\b)/i },
-        { type: "OPERATOR", regex: /^(?:===|==|!=|<=|>=|<=>|&&|\|\||\.\.|\*\*|[+\-*/%&|^<>=!~]+)/ },
+        { type: "SYMBOL", regex: /^:[a-zA-Z_]\w*/ },  // Match :symbol (must come before COLON)
+        { type: "HASH_ROCKET", regex: /^=>/ },  // Match => (must come before OPERATOR)
+        { type: "BLOCK_PIPE", regex: /^\|/ },  // Match | for block parameters (BEFORE OPERATOR)
+        { type: "OPERATOR", regex: /^(?:===|==|!=|<=|>=|<=>|&&|\|\||\.\.|\*\*|[+\-*/%&^<>=!~]+)/ },  // Removed | from here
         { type: "IDENTIFIER", regex: /^[a-zA-Z_]\w*/ },
         { type: "NUMBER", regex: /^\d+(?:\.\d+)?/ },
         { type: "STRING", regex: /^(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/ },
-        { type: "PUNCTUATION", regex: /^[(){}[\],;:.]/ },
+        { type: "PUNCTUATION", regex: /^[(){}[\],;:.]/ },  // Removed | from here too
         { type: "WHITESPACE", regex: /^\s+/ },
       ];
 
@@ -494,10 +497,14 @@ class RubyParser {
         this.consume(".", "Expected '.'");
         const prop = { type: "Identifier", name: this.consume(null, "Expected property name").value };
 
+        // Check if this is a method call (with or without parentheses)
+        let isMethodCall = false;
+        let args = [];
+        
         if (this.peek()?.value === "(") {
-          // Method call
+          // Method call WITH parentheses: .map(...)
           this.consume("(", "Expected '('");
-          const args = [];
+          isMethodCall = true;
           while (this.peek()?.value !== ")") {
             args.push(this.parseExpression());
             if (this.peek()?.value === ",") {
@@ -505,7 +512,13 @@ class RubyParser {
             }
           }
           this.consume(")", "Expected ')'");
+        } else if (this.peek()?.value === "{") {
+          // Method call WITHOUT parentheses followed by block: .map { ... }
+          isMethodCall = true;
+        }
 
+        if (isMethodCall) {
+          // It's a method call
           expr = {
             type: "CallExpression",
             callee: {
@@ -516,7 +529,14 @@ class RubyParser {
             },
             arguments: args,
           };
+          
+          // Check for block after method call: .map { |x| x * 2 }
+          if (this.peek()?.value === "{") {
+            const block = this.parseRubyBlock();
+            expr.block = block;
+          }
         } else {
+          // Property access, not method call
           expr = {
             type: "MemberExpression",
             object: expr,
@@ -552,12 +572,68 @@ class RubyParser {
           callee: expr,
           arguments: args,
         };
+        
+        // Check for block after function call
+        if (this.peek()?.value === "{") {
+          const block = this.parseRubyBlock();
+          expr.block = block;
+        }
       } else {
         break;
       }
     }
 
     return expr;
+  }
+  
+  /**
+   * Parse Ruby block: { |x| x * 2 } or { |a, b| a + b }
+   * @returns {object} BlockExpression node
+   */
+  parseRubyBlock() {
+    this.consume("{", "Expected '{'");
+    
+    const params = [];
+    
+    // Parse block parameters: |x| or |a, b|
+    if (this.peek()?.type === "BLOCK_PIPE") {
+      this.consume(null, "Expected '|'");  // consume first |
+      
+      while (this.peek()?.type !== "BLOCK_PIPE") {
+        if (this.isAtEnd()) {
+          throw new Error("Unexpected end of input in block parameters");
+        }
+        const param = this.consume(null, "Expected parameter name").value;
+        params.push({ type: "Identifier", name: param });
+        
+        if (this.peek()?.value === ",") {
+          this.consume(",", "Expected ','");
+        }
+      }
+      
+      this.consume(null, "Expected '|'");  // consume closing |
+    }
+    
+    // Parse block body (single expression or multiple statements)
+    const body = [];
+    while (!this.isAtEnd() && this.peek()?.value !== "}") {
+      body.push(this.parseExpression());
+      // Allow optional semicolons or commas between statements
+      if (this.peek()?.value === ";" || this.peek()?.value === ",") {
+        this.advance();
+      }
+    }
+    
+    this.consume("}", "Expected '}'");
+    
+    return {
+      type: "BlockExpression",
+      params,
+      body: {
+        type: "BlockStatement",
+        body,
+      },
+    };
   }
 
   parsePrimary() {
@@ -584,6 +660,17 @@ class RubyParser {
         type: "Literal",
         value: stringValue,
         raw: value,
+      };
+    }
+    
+    // Handle Ruby symbols: :symbol_name
+    if (token.type === "SYMBOL") {
+      const symbolValue = this.consume(null, "Expected symbol").value;
+      return {
+        type: "SymbolLiteral",
+        value: symbolValue,  // Keep the : prefix
+        name: symbolValue.slice(1),  // Without : for lookups
+        raw: symbolValue,
       };
     }
 
@@ -629,9 +716,25 @@ class RubyParser {
       const properties = [];
       while (this.peek()?.value !== "}") {
         const key = this.parseExpression();
-        this.consume(":", "Expected ':'");
+        
+        // Support both : and => for hash separators
+        // Ruby uses => (hash rocket) especially with symbol keys: { :name => "John" }
+        if (this.peek()?.type === "HASH_ROCKET") {
+          this.consume(null, "Expected '=>'");
+        } else if (this.peek()?.value === ":") {
+          this.consume(":", "Expected ':'");
+        } else {
+          throw new Error(`Expected ':' or '=>' in hash literal, got ${this.peek()?.value}`);
+        }
+        
         const value = this.parseExpression();
-        properties.push({ key, value });
+        properties.push({ 
+          type: "Property",
+          key, 
+          value,
+          kind: "init",
+        });
+        
         if (this.peek()?.value === ",") {
           this.consume(",", "Expected ','");
         }
@@ -703,6 +806,12 @@ class RubyParser {
 
   isAtEnd() {
     return this.current >= this.tokens.length;
+  }
+  
+  advance() {
+    if (!this.isAtEnd()) {
+      this.current++;
+    }
   }
 
   /**

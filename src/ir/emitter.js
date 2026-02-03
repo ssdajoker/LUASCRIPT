@@ -688,7 +688,17 @@ class IREmitter {
   }
 
   emitUnaryExpression(node, context) {
-    return `${this.luaUnaryOperator(node.operator)}${this.emitGrouped(node.argument, context)}`;
+    // Handle both AST UnaryExpression (argument) and IR UnaryOp (operand)
+    const argId = node.argument || node.operand;
+    if (!argId) {
+      throw new Error(`UnaryExpression missing operand for operator ${node.operator}`);
+    }
+    
+    if (node.operator === "typeof") {
+      // typeof is a function call in Lua: type(value)
+      return `type(${this.emitGrouped(argId, context)})`;
+    }
+    return `${this.luaUnaryOperator(node.operator)}${this.emitGrouped(argId, context)}`;
   }
 
   emitCallExpression(node, context) {
@@ -1064,10 +1074,22 @@ class IREmitter {
   }
 
   luaUnaryOperator(operator) {
-    if (operator === "!") {
+    switch (operator) {
+    case "!":
       return "not ";
+    case "typeof":
+      return "type";
+    case "~":
+      return "~";  // Lua bitwise NOT
+    case "-":
+      return "-";  // Unary minus
+    case "+":
+      return "";   // Unary plus (no-op in Lua)
+    case "void":
+      return "nil"; // void in Lua is nil
+    default:
+      return operator;
     }
-    return operator;
   }
 
   indentContext(context, offset = 1) {

@@ -17,10 +17,10 @@
  * - Type safety validation
  */
 
-const { PythonPhaseDPipeline } = require('./pipeline_python_phase_d.js');
-const { PythonPhaseESecurityIntegration } = require('../optimizers/python/phase_e/python_phase_e_security_integration.js');
-const { PythonFFIGenerator } = require('../optimizers/python/phase_e/python_ffi_generator.js');
-const { PythonBufferOverflowDetector } = require('../optimizers/python/phase_e/python_buffer_overflow_detector.js');
+const { PythonPhaseDPipeline } = require("./pipeline_python_phase_d.js");
+const { PythonPhaseESecurityIntegration } = require("../optimizers/python/phase_e/python_phase_e_security_integration.js");
+const { PythonFFIGenerator } = require("../optimizers/python/phase_e/python_ffi_generator.js");
+const { PythonBufferOverflowDetector } = require("../optimizers/python/phase_e/python_buffer_overflow_detector.js");
 
 class PythonPhaseEPipeline extends PythonPhaseDPipeline {
   constructor(options = {}) {
@@ -32,7 +32,7 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
       enableFFI: options.enableFFI !== false,
       enableBufferChecks: options.enableBufferChecks !== false,
       failOnCriticalSecurity: options.failOnCriticalSecurity !== false,
-      ffiTargetLanguage: options.ffiTargetLanguage || 'c',
+      ffiTargetLanguage: options.ffiTargetLanguage || "c",
       ...options,
     };
 
@@ -68,7 +68,7 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
   /**
    * Transpile with full Phase A-B-C-D-E pipeline
    */
-  transpile(source, filename = 'python-code.py') {
+  transpile(source, filename = "python-code.py") {
     try {
       // Run Phase D pipeline (includes A, B, C, D)
       const phaseDResult = super.transpile(source, filename);
@@ -90,7 +90,7 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
       return {
         success: false,
         error: error.message,
-        phase: 'E',
+        phase: "E",
         stack: error.stack,
       };
     }
@@ -118,7 +118,7 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
 
         if (!result.security.passed && this.options.failOnCriticalSecurity) {
           result.success = false;
-          result.failureReason = 'SECURITY_GATE_FAILED';
+          result.failureReason = "SECURITY_GATE_FAILED";
         }
       }
 
@@ -134,11 +134,11 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
       if (this.options.enableBufferChecks && phaseEIR) {
         result.bufferAnalysis = this._detectBufferOverflows(phaseEIR);
         this.phaseEStats.bufferIssues = result.bufferAnalysis.issues?.length || 0;
-        this.phaseEStats.bufferCheckPassed = result.bufferAnalysis.severity !== 'CRITICAL';
+        this.phaseEStats.bufferCheckPassed = result.bufferAnalysis.severity !== "CRITICAL";
 
-        if (result.bufferAnalysis.severity === 'CRITICAL' && this.options.failOnCriticalSecurity) {
+        if (result.bufferAnalysis.severity === "CRITICAL" && this.options.failOnCriticalSecurity) {
           result.success = false;
-          result.failureReason = 'BUFFER_OVERFLOW_DETECTED';
+          result.failureReason = "BUFFER_OVERFLOW_DETECTED";
         }
       }
 
@@ -211,23 +211,23 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
     // Security gate
     if (this.options.enableSecurity) {
       gates.security = {
-        name: 'Security Validation',
+        name: "Security Validation",
         passed: phaseEResult.security?.passed || false,
-        status: phaseEResult.security?.passed ? 'PASS' : 'FAIL',
-        severity: phaseEResult.security?.severity || 'NONE',
+        status: phaseEResult.security?.passed ? "PASS" : "FAIL",
+        severity: phaseEResult.security?.severity || "NONE",
         issues: phaseEResult.security?.issues?.length || 0,
       };
     }
 
     // Buffer overflow gate
     if (this.options.enableBufferChecks) {
-      const severity = phaseEResult.bufferAnalysis?.severity || 'NONE';
-      const isPassed = severity !== 'CRITICAL' && severity !== 'HIGH';
+      const severity = phaseEResult.bufferAnalysis?.severity || "NONE";
+      const isPassed = severity !== "CRITICAL" && severity !== "HIGH";
       
       gates.bufferOverflow = {
-        name: 'Buffer Overflow Detection',
+        name: "Buffer Overflow Detection",
         passed: isPassed,
-        status: isPassed ? 'PASS' : 'FAIL',
+        status: isPassed ? "PASS" : "FAIL",
         severity: severity,
         issues: phaseEResult.bufferAnalysis?.issues?.length || 0,
       };
@@ -236,9 +236,9 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
     // FFI generation gate (informational)
     if (this.options.enableFFI) {
       gates.ffi = {
-        name: 'FFI Binding Generation',
+        name: "FFI Binding Generation",
         passed: phaseEResult.ffi?.success || false,
-        status: phaseEResult.ffi?.success ? 'PASS' : 'WARN',
+        status: phaseEResult.ffi?.success ? "PASS" : "WARN",
         bindingsGenerated: phaseEResult.ffi?.stats?.bindingsGenerated || 0,
       };
     }
@@ -246,9 +246,9 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
     // Overall Phase E gate
     const allPassed = Object.values(gates).every(gate => gate.passed);
     gates.overall = {
-      name: 'Phase E Overall',
+      name: "Phase E Overall",
       passed: allPassed,
-      status: allPassed ? 'PASS' : 'FAIL',
+      status: allPassed ? "PASS" : "FAIL",
       gatesChecked: Object.keys(gates).length - 1, // Exclude overall
     };
 
@@ -282,7 +282,7 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
       ...phaseDStats,
       phaseE: this.getPhaseEStats(),
       overallPipeline: {
-        phases: ['A', 'B', 'C', 'D', 'E'],
+        phases: ["A", "B", "C", "D", "E"],
         allPhasesComplete: true,
       },
     };
@@ -298,7 +298,7 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
         issues: this.phaseEStats.bufferIssues,
         passed: this.phaseEStats.bufferCheckPassed,
       },
-      overallStatus: this.phaseEStats.securityGatePassed && this.phaseEStats.bufferCheckPassed ? 'SECURE' : 'AT_RISK',
+      overallStatus: this.phaseEStats.securityGatePassed && this.phaseEStats.bufferCheckPassed ? "SECURE" : "AT_RISK",
     };
   }
 
@@ -347,15 +347,15 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
     const phaseEStats = this.getPhaseEStats();
 
     return {
-      pipeline: 'Python Phase A-B-C-D-E',
-      version: '1.0.0',
+      pipeline: "Python Phase A-B-C-D-E",
+      version: "1.0.0",
       timestamp: new Date().toISOString(),
       phases: {
-        phaseA: { status: 'COMPLETE', name: 'IR Generation' },
-        phaseB: { status: 'COMPLETE', name: 'Canonicalization' },
-        phaseC: { status: 'COMPLETE', name: 'Speed Optimization' },
-        phaseD: { status: 'COMPLETE', name: 'Memory & Performance' },
-        phaseE: { status: 'COMPLETE', name: 'Security & Interoperability' },
+        phaseA: { status: "COMPLETE", name: "IR Generation" },
+        phaseB: { status: "COMPLETE", name: "Canonicalization" },
+        phaseC: { status: "COMPLETE", name: "Speed Optimization" },
+        phaseD: { status: "COMPLETE", name: "Memory & Performance" },
+        phaseE: { status: "COMPLETE", name: "Security & Interoperability" },
       },
       qualityGates: this.verifyQualityGates(),
       security: securityReport,
@@ -374,14 +374,14 @@ class PythonPhaseEPipeline extends PythonPhaseDPipeline {
     const gates = this.verifyQualityGates();
     
     if (!gates.overallPassed) {
-      return 'FAILED';
+      return "FAILED";
     }
 
     if (this.phaseEStats.securityIssues > 0 || this.phaseEStats.bufferIssues > 0) {
-      return 'PASSED_WITH_WARNINGS';
+      return "PASSED_WITH_WARNINGS";
     }
 
-    return 'PASSED';
+    return "PASSED";
   }
 
   /**

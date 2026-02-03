@@ -84,7 +84,7 @@ class MemoryPoolManager {
 
     if (beforeSize > pool.size()) {
       this.stats.reused++;
-      if (typeof reset === 'function') {
+      if (typeof reset === "function") {
         reset(item);
       }
     } else {
@@ -103,7 +103,7 @@ class MemoryPoolManager {
   release(type, item, reset) {
     const pool = this._getPool(type);
 
-    if (typeof reset === 'function') {
+    if (typeof reset === "function") {
       reset(item);
     }
 
@@ -145,7 +145,7 @@ class MemoryPoolManager {
     }
 
     Object.keys(this.stats).forEach(key => {
-      if (typeof this.stats[key] === 'number') {
+      if (typeof this.stats[key] === "number") {
         this.stats[key] = 0;
       }
     });
@@ -182,6 +182,6 @@ class MemoryPoolManager {
   }
 }
 
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = { MemoryPoolManager };
 }

@@ -502,7 +502,7 @@ class IRBuilder {
   asyncFunctionDeclaration(id, parameters, body, returnType = null, options = {}) {
     // Create async function with proper parameter nodes
     const params = Array.isArray(parameters)
-      ? parameters.map(p => typeof p === 'string' ? this.parameter(p) : p)
+      ? parameters.map(p => typeof p === "string" ? this.parameter(p) : p)
       : [];
     const bodyNode = body && body.kind ? body : this.block(body || []);
     return this._storeNode(new nodes.AsyncFunctionDeclaration(id, params, bodyNode, {
@@ -512,23 +512,15 @@ class IRBuilder {
     }));
   }
 
-  awaitExpression(argument, options = {}) {
-    return this._storeNode(new nodes.AwaitExpression(argument, options));
-  }
-
   generatorFunction(id, parameters, body, isAsync = false, options = {}) {
     const params = Array.isArray(parameters)
-      ? parameters.map(p => typeof p === 'string' ? this.parameter(p) : p)
+      ? parameters.map(p => typeof p === "string" ? this.parameter(p) : p)
       : [];
     const bodyNode = body && body.kind ? body : this.block(body || []);
     return this._storeNode(new nodes.GeneratorDeclaration(id, params, bodyNode, {
       ...options,
       async: isAsync
     }));
-  }
-
-  yieldExpression(argument = null, delegate = false, options = {}) {
-    return this._storeNode(new nodes.YieldExpression(argument, delegate, options));
   }
 
   // ========== ASYNC TYPE SYSTEM BUILDERS (PHASE 4.1) ==========
@@ -584,7 +576,7 @@ class IRBuilder {
    */
   typedPromise(elementType) {
     if (!elementType) {
-      throw new Error('[PHASE-4.1] typedPromise requires element type parameter');
+      throw new Error("[PHASE-4.1] typedPromise requires element type parameter");
     }
     
     // Validate element type
@@ -615,7 +607,7 @@ class IRBuilder {
    */
   promiseArray(elementType) {
     if (!elementType) {
-      throw new Error('[PHASE-4.1] promiseArray requires element type');
+      throw new Error("[PHASE-4.1] promiseArray requires element type");
     }
     return Types.promise(Types.array(elementType));
   }
@@ -629,7 +621,7 @@ class IRBuilder {
    */
   promiseUnion(...elementTypes) {
     if (elementTypes.length === 0) {
-      throw new Error('[PHASE-4.1] promiseUnion requires at least one type');
+      throw new Error("[PHASE-4.1] promiseUnion requires at least one type");
     }
     return Types.promise(Types.union(...elementTypes));
   }
@@ -645,7 +637,7 @@ class IRBuilder {
   asyncFunctionTyped(id, parameters, body, returnElementType, options = {}) {
     // Build async function with proper Promise return type
     const params = Array.isArray(parameters)
-      ? parameters.map(p => typeof p === 'string' ? this.parameter(p) : p)
+      ? parameters.map(p => typeof p === "string" ? this.parameter(p) : p)
       : [];
     const bodyNode = body && body.kind ? body : this.block(body || []);
     
@@ -660,11 +652,11 @@ class IRBuilder {
     } else {
       // String type name - convert to primitive
       const typeMap = {
-        'string': () => Types.string(),
-        'number': () => Types.number(),
-        'boolean': () => Types.boolean(),
-        'any': () => Types.any(),
-        'void': () => Types.void()
+        "string": () => Types.string(),
+        "number": () => Types.number(),
+        "boolean": () => Types.boolean(),
+        "any": () => Types.any(),
+        "void": () => Types.void()
       };
       const baseType = typeMap[returnElementType] ? typeMap[returnElementType]() : Types.custom(returnElementType);
       promiseType = Types.promise(baseType);

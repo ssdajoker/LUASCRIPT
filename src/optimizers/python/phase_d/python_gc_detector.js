@@ -23,16 +23,16 @@ class GCPattern {
 
   calculateSeverity(type) {
     const severities = {
-      'cycle': 'HIGH',
-      'container_mutation': 'MEDIUM',
-      'exception': 'MEDIUM',
-      'closure': 'LOW',
-      'generator': 'LOW',
-      'circular_import': 'HIGH',
-      'large_allocation': 'MEDIUM',
-      'unbounded_growth': 'HIGH',
+      "cycle": "HIGH",
+      "container_mutation": "MEDIUM",
+      "exception": "MEDIUM",
+      "closure": "LOW",
+      "generator": "LOW",
+      "circular_import": "HIGH",
+      "large_allocation": "MEDIUM",
+      "unbounded_growth": "HIGH",
     };
-    return severities[type] || 'UNKNOWN';
+    return severities[type] || "UNKNOWN";
   }
 
   addInstance(instance) {
@@ -174,7 +174,7 @@ class PythonGCDetector {
   }
 
   visitNode(node, context = {}) {
-    if (!node || typeof node !== 'object') return;
+    if (!node || typeof node !== "object") return;
 
     // Detect cycles
     if (this.options.enableCycleDetection) {
@@ -198,10 +198,10 @@ class PythonGCDetector {
 
     // Recursively visit children
     for (const key in node) {
-      if (node.hasOwnProperty(key) && key !== 'type') {
+      if (Object.prototype.hasOwnProperty.call(node, key) && key !== "type") {
         if (Array.isArray(node[key])) {
           node[key].forEach(child => this.visitNode(child, context));
-        } else if (typeof node[key] === 'object') {
+        } else if (typeof node[key] === "object") {
           this.visitNode(node[key], context);
         }
       }
@@ -210,17 +210,17 @@ class PythonGCDetector {
 
   detectCycles(node, context) {
     // Detect reference cycles: a = b; b = a
-    if (node.type === 'Assign') {
+    if (node.type === "Assign") {
       const targets = node.targets || [];
       const value = node.value;
 
       targets.forEach(target => {
-        if (target.type === 'Name') {
+        if (target.type === "Name") {
           // Check if value references target
           if (this.containsReference(value, target.id)) {
-            this.addPattern(new GCPattern('cycle', {
+            this.addPattern(new GCPattern("cycle", {
               ...context,
-              kind: 'direct_cycle',
+              kind: "direct_cycle",
               variable: target.id,
             }));
           }
@@ -229,15 +229,15 @@ class PythonGCDetector {
     }
 
     // Detect container cycles: list.append(list), dict[key] = dict
-    if (node.type === 'Expr' && node.value?.type === 'Call') {
+    if (node.type === "Expr" && node.value?.type === "Call") {
       const call = node.value;
-      if (call.func?.attr === 'append' || call.func?.attr === 'extend') {
+      if (call.func?.attr === "append" || call.func?.attr === "extend") {
         const container = call.func?.value?.id;
         const arg = call.args?.[0]?.id;
         if (container && arg && this.isSameOrAlias(container, arg)) {
-          this.addPattern(new GCPattern('cycle', {
+          this.addPattern(new GCPattern("cycle", {
             ...context,
-            kind: 'container_self_reference',
+            kind: "container_self_reference",
             container,
           }));
         }
@@ -245,8 +245,8 @@ class PythonGCDetector {
     }
 
     // Detect circular imports
-    if (node.type === 'Import' || node.type === 'ImportFrom') {
-      this.addPattern(new GCPattern('circular_import', {
+    if (node.type === "Import" || node.type === "ImportFrom") {
+      this.addPattern(new GCPattern("circular_import", {
         ...context,
         module: node.module,
       }));
@@ -255,11 +255,11 @@ class PythonGCDetector {
 
   trackContainerMutations(node, context) {
     // Track list/dict/set mutations that trigger GC
-    if (node.type === 'Call') {
+    if (node.type === "Call") {
       const funcName = node.func?.attr;
       
-      if (['append', 'extend', 'insert', 'remove', 'pop', 'clear'].includes(funcName)) {
-        this.addPattern(new GCPattern('container_mutation', {
+      if (["append", "extend", "insert", "remove", "pop", "clear"].includes(funcName)) {
+        this.addPattern(new GCPattern("container_mutation", {
           ...context,
           method: funcName,
           container: node.func?.value?.id,
@@ -268,10 +268,10 @@ class PythonGCDetector {
     }
 
     // Track large allocations
-    if (node.type === 'Call' && (node.func?.id === 'list' || node.func?.id === 'dict')) {
+    if (node.type === "Call" && (node.func?.id === "list" || node.func?.id === "dict")) {
       const sizeArg = node.args?.[0];
-      if (sizeArg?.type === 'Num' && sizeArg.value > 10000) {
-        this.addPattern(new GCPattern('large_allocation', {
+      if (sizeArg?.type === "Num" && sizeArg.value > 10000) {
+        this.addPattern(new GCPattern("large_allocation", {
           ...context,
           size: sizeArg.value,
         }));
@@ -281,22 +281,22 @@ class PythonGCDetector {
 
   analyzeClosures(node, context) {
     // Detect closures that capture references
-    if (node.type === 'FunctionDef' || node.type === 'Lambda') {
+    if (node.type === "FunctionDef" || node.type === "Lambda") {
       const freeVars = this.extractFreeVariables(node);
       
       if (freeVars.length > 0) {
-        this.addPattern(new GCPattern('closure', {
+        this.addPattern(new GCPattern("closure", {
           ...context,
-          function: node.name || 'lambda',
+          function: node.name || "lambda",
           freeVars,
         }));
       }
     }
 
     // Detect generators
-    if (node.type === 'FunctionDef') {
+    if (node.type === "FunctionDef") {
       if (this.containsYield(node)) {
-        this.addPattern(new GCPattern('generator', {
+        this.addPattern(new GCPattern("generator", {
           ...context,
           function: node.name,
         }));
@@ -306,33 +306,33 @@ class PythonGCDetector {
 
   analyzeEscape(node, context) {
     // Analyze if object references escape local scope
-    if (node.type === 'Return') {
+    if (node.type === "Return") {
       const returnValue = node.value;
-      if (returnValue?.type === 'Name') {
-        this.addPattern(new GCPattern('escape', {
+      if (returnValue?.type === "Name") {
+        this.addPattern(new GCPattern("escape", {
           ...context,
           variable: returnValue.id,
-          escapeType: 'return',
+          escapeType: "return",
         }));
       }
     }
 
     // Track unbounded growth (e.g., while True: list.append())
-    if (node.type === 'While' && node.test?.type === 'Constant' && node.test.value === true) {
+    if (node.type === "While" && node.test?.type === "Constant" && node.test.value === true) {
       if (this.containsContainerGrowth(node.body)) {
-        this.addPattern(new GCPattern('unbounded_growth', {
+        this.addPattern(new GCPattern("unbounded_growth", {
           ...context,
-          loop: 'infinite_while',
+          loop: "infinite_while",
         }));
       }
     }
 
     // Track global variable mutations
-    if (node.type === 'Global') {
-      this.addPattern(new GCPattern('escape', {
+    if (node.type === "Global") {
+      this.addPattern(new GCPattern("escape", {
         ...context,
         variables: node.names,
-        escapeType: 'global_mutation',
+        escapeType: "global_mutation",
       }));
     }
   }
@@ -370,9 +370,9 @@ class PythonGCDetector {
 
   getStats() {
     const bySeverity = {
-      'HIGH': 0,
-      'MEDIUM': 0,
-      'LOW': 0,
+      "HIGH": 0,
+      "MEDIUM": 0,
+      "LOW": 0,
     };
 
     this.patterns.forEach(p => {
@@ -390,43 +390,43 @@ class PythonGCDetector {
     const recommendations = [];
     const stats = this.getStats();
 
-    if (stats.bySeverity['HIGH'] > 5) {
+    if (stats.bySeverity["HIGH"] > 5) {
       recommendations.push({
-        severity: 'CRITICAL',
-        message: 'High number of GC-triggering patterns detected',
-        action: 'Consider redesigning object allocation strategy',
+        severity: "CRITICAL",
+        message: "High number of GC-triggering patterns detected",
+        action: "Consider redesigning object allocation strategy",
       });
     }
 
-    if (stats.patterns['cycle'] && stats.patterns['cycle'] > 3) {
+    if (stats.patterns["cycle"] && stats.patterns["cycle"] > 3) {
       recommendations.push({
-        severity: 'HIGH',
-        message: 'Multiple reference cycles detected',
-        action: 'Use weakref module to break cycles',
+        severity: "HIGH",
+        message: "Multiple reference cycles detected",
+        action: "Use weakref module to break cycles",
       });
     }
 
-    if (stats.patterns['unbounded_growth']) {
+    if (stats.patterns["unbounded_growth"]) {
       recommendations.push({
-        severity: 'HIGH',
-        message: 'Unbounded growth patterns detected',
-        action: 'Implement cleanup or use generators instead',
+        severity: "HIGH",
+        message: "Unbounded growth patterns detected",
+        action: "Implement cleanup or use generators instead",
       });
     }
 
-    if (stats.patterns['large_allocation'] && stats.patterns['large_allocation'] > 1) {
+    if (stats.patterns["large_allocation"] && stats.patterns["large_allocation"] > 1) {
       recommendations.push({
-        severity: 'MEDIUM',
-        message: 'Multiple large allocations detected',
-        action: 'Use object pooling or streaming',
+        severity: "MEDIUM",
+        message: "Multiple large allocations detected",
+        action: "Use object pooling or streaming",
       });
     }
 
-    if (stats.patterns['closure'] && stats.patterns['closure'] > 10) {
+    if (stats.patterns["closure"] && stats.patterns["closure"] > 10) {
       recommendations.push({
-        severity: 'MEDIUM',
-        message: 'Many closures detected',
-        action: 'Consider using classes instead of closures',
+        severity: "MEDIUM",
+        message: "Many closures detected",
+        action: "Consider using classes instead of closures",
       });
     }
 
@@ -435,18 +435,18 @@ class PythonGCDetector {
 
   // Helper methods
   containsReference(node, varName, visited = new Set()) {
-    if (!node || typeof node !== 'object' || visited.has(node)) return false;
+    if (!node || typeof node !== "object" || visited.has(node)) return false;
     visited.add(node);
 
-    if (node.type === 'Name' && node.id === varName) return true;
+    if (node.type === "Name" && node.id === varName) return true;
 
     for (const key in node) {
-      if (node.hasOwnProperty(key) && key !== 'type') {
+      if (Object.prototype.hasOwnProperty.call(node, key) && key !== "type") {
         if (Array.isArray(node[key])) {
           if (node[key].some(child => this.containsReference(child, varName, visited))) {
             return true;
           }
-        } else if (typeof node[key] === 'object') {
+        } else if (typeof node[key] === "object") {
           if (this.containsReference(node[key], varName, visited)) {
             return true;
           }
@@ -474,23 +474,23 @@ class PythonGCDetector {
   }
 
   collectDefinitions(node, set) {
-    if (!node || typeof node !== 'object') return;
+    if (!node || typeof node !== "object") return;
 
-    if (node.type === 'Assign') {
+    if (node.type === "Assign") {
       node.targets?.forEach(t => {
-        if (t.type === 'Name') set.add(t.id);
+        if (t.type === "Name") set.add(t.id);
       });
     }
 
-    if (node.type === 'FunctionDef' || node.type === 'Lambda') {
+    if (node.type === "FunctionDef" || node.type === "Lambda") {
       node.args?.args?.forEach(arg => set.add(arg.arg || arg));
     }
 
     for (const key in node) {
-      if (node.hasOwnProperty(key) && key !== 'type') {
+      if (Object.prototype.hasOwnProperty.call(node, key) && key !== "type") {
         if (Array.isArray(node[key])) {
           node[key].forEach(child => this.collectDefinitions(child, set));
-        } else if (typeof node[key] === 'object') {
+        } else if (typeof node[key] === "object") {
           this.collectDefinitions(node[key], set);
         }
       }
@@ -498,17 +498,17 @@ class PythonGCDetector {
   }
 
   collectReferences(node, set) {
-    if (!node || typeof node !== 'object') return;
+    if (!node || typeof node !== "object") return;
 
-    if (node.type === 'Name' && node.id) {
+    if (node.type === "Name" && node.id) {
       set.add(node.id);
     }
 
     for (const key in node) {
-      if (node.hasOwnProperty(key) && key !== 'type') {
+      if (Object.prototype.hasOwnProperty.call(node, key) && key !== "type") {
         if (Array.isArray(node[key])) {
           node[key].forEach(child => this.collectReferences(child, set));
-        } else if (typeof node[key] === 'object') {
+        } else if (typeof node[key] === "object") {
           this.collectReferences(node[key], set);
         }
       }
@@ -516,15 +516,15 @@ class PythonGCDetector {
   }
 
   containsYield(node) {
-    if (!node || typeof node !== 'object') return false;
+    if (!node || typeof node !== "object") return false;
 
-    if (node.type === 'Yield' || node.type === 'YieldFrom') return true;
+    if (node.type === "Yield" || node.type === "YieldFrom") return true;
 
     for (const key in node) {
-      if (node.hasOwnProperty(key) && key !== 'type') {
+      if (Object.prototype.hasOwnProperty.call(node, key) && key !== "type") {
         if (Array.isArray(node[key])) {
           if (node[key].some(child => this.containsYield(child))) return true;
-        } else if (typeof node[key] === 'object') {
+        } else if (typeof node[key] === "object") {
           if (this.containsYield(node[key])) return true;
         }
       }
@@ -537,11 +537,11 @@ class PythonGCDetector {
     if (!Array.isArray(nodes)) return false;
 
     return nodes.some(node => {
-      if (!node || typeof node !== 'object') return false;
+      if (!node || typeof node !== "object") return false;
 
-      if (node.type === 'Expr' && node.value?.type === 'Call') {
+      if (node.type === "Expr" && node.value?.type === "Call") {
         const call = node.value;
-        if (['append', 'extend', 'add'].includes(call.func?.attr)) {
+        if (["append", "extend", "add"].includes(call.func?.attr)) {
           return true;
         }
       }

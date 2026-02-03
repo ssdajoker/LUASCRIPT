@@ -22,12 +22,12 @@ class SecurityHardeners {
     this.blockPrototypePollution = options.blockPrototypePollution !== false;
     this.blockProcessAccess = options.blockProcessAccess !== false;
     this.blockedModules = options.blockedModules || [
-      'child_process',
-      'fs',
-      'net',
-      'dgram',
-      'worker_threads',
-      'vm'
+      "child_process",
+      "fs",
+      "net",
+      "dgram",
+      "worker_threads",
+      "vm"
     ];
     this.maxLiteralLength = options.maxLiteralLength || 10000;
     this.maxNodes = options.maxNodes || 100000;
@@ -48,7 +48,7 @@ class SecurityHardeners {
    */
   hardenNode(node) {
     const result = { ok: true, violations: [], warnings: [] };
-    if (!node || typeof node !== 'object') {
+    if (!node || typeof node !== "object") {
       return result;
     }
 
@@ -67,19 +67,19 @@ class SecurityHardeners {
     const visited = new Set();
 
     const walk = (node, depth) => {
-      if (!node || typeof node !== 'object') return;
+      if (!node || typeof node !== "object") return;
       if (visited.has(node)) return;
 
       visited.add(node);
       this.stats.nodesVisited++;
 
       if (this.stats.nodesVisited > this.maxNodes) {
-        this._recordViolation('maxNodes', `Node count exceeded ${this.maxNodes}`, node, result);
+        this._recordViolation("maxNodes", `Node count exceeded ${this.maxNodes}`, node, result);
         return;
       }
 
       if (depth > this.maxDepth) {
-        this._recordViolation('maxDepth', `Traversal depth exceeded ${this.maxDepth}`, node, result);
+        this._recordViolation("maxDepth", `Traversal depth exceeded ${this.maxDepth}`, node, result);
         return;
       }
 
@@ -93,7 +93,7 @@ class SecurityHardeners {
       }
 
       for (const value of Object.values(node)) {
-        if (typeof value === 'object' && value !== null) {
+        if (typeof value === "object" && value !== null) {
           walk(value, depth + 1);
         }
       }
@@ -123,19 +123,19 @@ class SecurityHardeners {
   }
 
   _applyNodeRules(node, result) {
-    if (node.type === 'Identifier') {
+    if (node.type === "Identifier") {
       this._checkIdentifier(node, result);
     }
 
-    if (node.type === 'MemberExpression') {
+    if (node.type === "MemberExpression") {
       this._checkMemberExpression(node, result);
     }
 
-    if (node.type === 'CallExpression') {
+    if (node.type === "CallExpression") {
       this._checkCallExpression(node, result);
     }
 
-    if (node.type === 'Literal' || node.type === 'StringLiteral') {
+    if (node.type === "Literal" || node.type === "StringLiteral") {
       this._checkStringLiteral(node, result);
     }
   }
@@ -143,23 +143,23 @@ class SecurityHardeners {
   _checkIdentifier(node, result) {
     if (!this.blockPrototypePollution) return;
 
-    const name = node.name || '';
-    if (['__proto__', 'prototype', 'constructor'].includes(name)) {
-      this._recordViolation('prototypePollution', `Blocked identifier: ${name}`, node, result);
+    const name = node.name || "";
+    if (["__proto__", "prototype", "constructor"].includes(name)) {
+      this._recordViolation("prototypePollution", `Blocked identifier: ${name}`, node, result);
     }
   }
 
   _checkMemberExpression(node, result) {
-    const propName = node.property?.name || node.property?.value || '';
+    const propName = node.property?.name || node.property?.value || "";
 
-    if (this.blockPrototypePollution && ['__proto__', 'prototype', 'constructor'].includes(propName)) {
-      this._recordViolation('prototypePollution', `Blocked property access: ${propName}`, node, result);
+    if (this.blockPrototypePollution && ["__proto__", "prototype", "constructor"].includes(propName)) {
+      this._recordViolation("prototypePollution", `Blocked property access: ${propName}`, node, result);
     }
 
     if (this.blockProcessAccess) {
       const base = this._getMemberBaseName(node);
-      if (base === 'process') {
-        this._recordViolation('processAccess', `Blocked process access: ${propName || 'process'}`, node, result);
+      if (base === "process") {
+        this._recordViolation("processAccess", `Blocked process access: ${propName || "process"}`, node, result);
       }
     }
   }
@@ -167,42 +167,42 @@ class SecurityHardeners {
   _checkCallExpression(node, result) {
     let callName = null;
 
-    if (node.callee?.type === 'Identifier') {
+    if (node.callee?.type === "Identifier") {
       callName = node.callee.name;
-    } else if (node.callee?.type === 'MemberExpression') {
+    } else if (node.callee?.type === "MemberExpression") {
       callName = node.callee.property?.name || node.callee.property?.value || null;
       this._checkMemberExpression(node.callee, result);
     }
 
-    if (!this.allowDynamicExecution && (callName === 'eval' || callName === 'Function')) {
-      this._recordViolation('dynamicExecution', `Blocked call: ${callName}`, node, result);
+    if (!this.allowDynamicExecution && (callName === "eval" || callName === "Function")) {
+      this._recordViolation("dynamicExecution", `Blocked call: ${callName}`, node, result);
     }
 
-    if (callName === 'require') {
+    if (callName === "require") {
       const mod = node.arguments?.[0]?.value;
-      if (typeof mod === 'string' && this.blockedModules.includes(mod)) {
-        this._recordViolation('blockedModule', `Blocked require: ${mod}`, node, result);
+      if (typeof mod === "string" && this.blockedModules.includes(mod)) {
+        this._recordViolation("blockedModule", `Blocked require: ${mod}`, node, result);
       }
     }
   }
 
   _checkStringLiteral(node, result) {
-    const value = node.value ?? node.raw ?? '';
-    const strValue = typeof value === 'string' ? value : '';
+    const value = node.value ?? node.raw ?? "";
+    const strValue = typeof value === "string" ? value : "";
 
-    if (strValue.includes('\u0000') || strValue.includes('\0')) {
-      this._recordWarning('nullByte', 'String contains null byte', node, result);
+    if (strValue.includes("\u0000") || strValue.includes("\0")) {
+      this._recordWarning("nullByte", "String contains null byte", node, result);
     }
 
     if (strValue.length > this.maxLiteralLength) {
-      this._recordWarning('largeLiteral', `String literal exceeds ${this.maxLiteralLength} chars`, node, result);
+      this._recordWarning("largeLiteral", `String literal exceeds ${this.maxLiteralLength} chars`, node, result);
     }
   }
 
   _getMemberBaseName(node) {
     let current = node;
-    while (current?.type === 'MemberExpression' && current.object) {
-      if (current.object.type === 'Identifier') {
+    while (current?.type === "MemberExpression" && current.object) {
+      if (current.object.type === "Identifier") {
         return current.object.name;
       }
       current = current.object;
@@ -223,6 +223,6 @@ class SecurityHardeners {
   }
 }
 
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = { SecurityHardeners };
 }

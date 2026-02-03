@@ -26,52 +26,52 @@ class MemoryModelAbstraction {
     this.locations = {
       // Stack allocation (automatic, LIFO)
       stack: {
-        name: 'Stack',
+        name: "Stack",
         automatic: true,
-        lifetime: 'scope',
+        lifetime: "scope",
         alignment: 8,
-        restrictions: ['size bounded', 'scope-bound'],
-        speedCategory: 'fastest',
+        restrictions: ["size bounded", "scope-bound"],
+        speedCategory: "fastest",
       },
 
       // Heap allocation (manual or GC-managed)
       heap: {
-        name: 'Heap',
+        name: "Heap",
         automatic: false,
-        lifetime: 'explicit',
+        lifetime: "explicit",
         alignment: 16,
-        restrictions: ['fragmentation', 'GC overhead'],
-        speedCategory: 'slow',
+        restrictions: ["fragmentation", "GC overhead"],
+        speedCategory: "slow",
       },
 
       // Register allocation (zero-overhead)
       register: {
-        name: 'Register',
+        name: "Register",
         automatic: true,
-        lifetime: 'expression',
-        alignment: 'natural',
-        restrictions: ['limited count', 'caller/callee save'],
-        speedCategory: 'fastest',
+        lifetime: "expression",
+        alignment: "natural",
+        restrictions: ["limited count", "caller/callee save"],
+        speedCategory: "fastest",
       },
 
       // Thread-local storage
       threadLocal: {
-        name: 'Thread-Local Storage',
+        name: "Thread-Local Storage",
         automatic: true,
-        lifetime: 'thread',
-        alignment: 'natural',
-        restrictions: ['thread-bound', 'no sharing'],
-        speedCategory: 'fast',
+        lifetime: "thread",
+        alignment: "natural",
+        restrictions: ["thread-bound", "no sharing"],
+        speedCategory: "fast",
       },
 
       // Global/static allocation
       global: {
-        name: 'Global/Static',
+        name: "Global/Static",
         automatic: true,
-        lifetime: 'program',
-        alignment: 'natural',
-        restrictions: ['initialization order', 'no destruction'],
-        speedCategory: 'fast',
+        lifetime: "program",
+        alignment: "natural",
+        restrictions: ["initialization order", "no destruction"],
+        speedCategory: "fast",
       },
     };
   }
@@ -83,42 +83,42 @@ class MemoryModelAbstraction {
     this.lifetimeRules = {
       // Scope-based (C/C++ stack)
       scoped: {
-        rule: 'Allocation destroyed at scope end',
-        languages: ['C', 'C++', 'C#', 'Objective-C'],
-        tracking: 'deterministic',
-        verification: 'compile-time',
+        rule: "Allocation destroyed at scope end",
+        languages: ["C", "C++", "C#", "Objective-C"],
+        tracking: "deterministic",
+        verification: "compile-time",
       },
 
       // GC-managed (Python, JavaScript, Lua)
       managed: {
-        rule: 'Allocation tracked by garbage collector',
-        languages: ['Python', 'JavaScript', 'Lua'],
-        tracking: 'automatic',
-        verification: 'runtime',
+        rule: "Allocation tracked by garbage collector",
+        languages: ["Python", "JavaScript", "Lua"],
+        tracking: "automatic",
+        verification: "runtime",
       },
 
       // Reference counted (C++ shared_ptr, Python refcount)
       refCounted: {
-        rule: 'Deallocation when reference count reaches 0',
-        languages: ['C++', 'Python'],
-        tracking: 'explicit-hybrid',
-        verification: 'runtime',
+        rule: "Deallocation when reference count reaches 0",
+        languages: ["C++", "Python"],
+        tracking: "explicit-hybrid",
+        verification: "runtime",
       },
 
       // Manual (C malloc/free)
       manual: {
-        rule: 'Explicit allocation and deallocation',
-        languages: ['C', 'C--'],
-        tracking: 'manual',
-        verification: 'analysis',
+        rule: "Explicit allocation and deallocation",
+        languages: ["C", "C--"],
+        tracking: "manual",
+        verification: "analysis",
       },
 
       // Static (global variables)
       static_: {
-        rule: 'Allocation at program start, deallocation at end',
-        languages: ['all'],
-        tracking: 'implicit',
-        verification: 'compile-time',
+        rule: "Allocation at program start, deallocation at end",
+        languages: ["all"],
+        tracking: "implicit",
+        verification: "compile-time",
       },
     };
   }
@@ -129,43 +129,43 @@ class MemoryModelAbstraction {
   initializeMemorySafety() {
     this.safetyLevels = {
       unsafe: {
-        name: 'Unsafe',
+        name: "Unsafe",
         allowsUncheckedCasts: true,
         allowsRawPointers: true,
         allowsManualMemory: true,
         requiresAnnotation: false,
-        languages: ['C', 'C++'],
+        languages: ["C", "C++"],
       },
 
       safe: {
-        name: 'Safe',
+        name: "Safe",
         allowsUncheckedCasts: false,
         allowsRawPointers: false,
         allowsManualMemory: false,
         requiresAnnotation: true,
-        languages: ['Python', 'JavaScript', 'C#'],
+        languages: ["Python", "JavaScript", "C#"],
       },
 
       bounded: {
-        name: 'Bounded',
+        name: "Bounded",
         allowsUncheckedCasts: false,
         allowsRawPointers: true,
         allowsManualMemory: true,
         requiresAnnotation: true,
-        languages: ['Objective-C', 'C++'],
+        languages: ["Objective-C", "C++"],
       },
     };
 
     this.safetyAnnotations = {
-      'unsafe': 'Code is unchecked, potential memory errors',
-      'safe': 'Memory safety enforced by runtime/type system',
-      'bounded': 'Bounded scope for unsafe operations',
-      'owned': 'Exclusive ownership of allocation',
-      'borrowed': 'Temporary access (non-owning)',
-      'shared': 'Shared access (read-only or reference-counted)',
-      'pinned': 'Address cannot change (for self-referential structures)',
-      'gc': 'Managed by garbage collector',
-      'rc': 'Reference-counted',
+      "unsafe": "Code is unchecked, potential memory errors",
+      "safe": "Memory safety enforced by runtime/type system",
+      "bounded": "Bounded scope for unsafe operations",
+      "owned": "Exclusive ownership of allocation",
+      "borrowed": "Temporary access (non-owning)",
+      "shared": "Shared access (read-only or reference-counted)",
+      "pinned": "Address cannot change (for self-referential structures)",
+      "gc": "Managed by garbage collector",
+      "rc": "Reference-counted",
     };
   }
 
@@ -176,16 +176,16 @@ class MemoryModelAbstraction {
    * @returns {object} Canonical IR allocation
    */
   canonicalizeAllocation(allocation, language) {
-    let location = 'heap'; // default
+    let location = "heap"; // default
 
-    if (language === 'C' || language === 'C++' || language === 'Objective-C') {
+    if (language === "C" || language === "C++" || language === "Objective-C") {
       if (allocation.isStack || allocation.automatic) {
-        location = 'stack';
+        location = "stack";
       } else if (allocation.isGlobal || allocation.isStatic) {
-        location = 'global';
+        location = "global";
       }
-    } else if (language === 'Python' || language === 'JavaScript' || language === 'Lua') {
-      location = 'heap'; // Always GC-managed
+    } else if (language === "Python" || language === "JavaScript" || language === "Lua") {
+      location = "heap"; // Always GC-managed
     }
 
     return {
@@ -193,7 +193,7 @@ class MemoryModelAbstraction {
       language,
       original: allocation,
       size: allocation.size || null,
-      alignment: allocation.alignment || 'natural',
+      alignment: allocation.alignment || "natural",
       lifetime: this.getLifetime(allocation, language),
       safety: this.getSafetyLevel(allocation, language),
     };
@@ -204,38 +204,38 @@ class MemoryModelAbstraction {
    */
   getLifetime(allocation, language) {
     if (allocation.isStatic || allocation.isGlobal) {
-      return { rule: 'static_', duration: 'program' };
+      return { rule: "static_", duration: "program" };
     }
 
-    if (language === 'Python' || language === 'JavaScript' || language === 'Lua') {
-      return { rule: 'managed', duration: 'gc' };
+    if (language === "Python" || language === "JavaScript" || language === "Lua") {
+      return { rule: "managed", duration: "gc" };
     }
 
     if (allocation.isStack || allocation.automatic) {
-      return { rule: 'scoped', duration: 'scope' };
+      return { rule: "scoped", duration: "scope" };
     }
 
-    if (language === 'C' || language === 'C--') {
-      return { rule: 'manual', duration: 'explicit' };
+    if (language === "C" || language === "C--") {
+      return { rule: "manual", duration: "explicit" };
     }
 
-    return { rule: 'managed', duration: 'gc' };
+    return { rule: "managed", duration: "gc" };
   }
 
   /**
    * Get safety level for allocation
    */
   getSafetyLevel(allocation, language) {
-    if (language === 'C' || language === 'C++') {
-      return allocation.isUnsafe ? 'unsafe' : 'bounded';
+    if (language === "C" || language === "C++") {
+      return allocation.isUnsafe ? "unsafe" : "bounded";
     }
-    if (language === 'Python' || language === 'JavaScript' || language === 'Lua') {
-      return 'safe';
+    if (language === "Python" || language === "JavaScript" || language === "Lua") {
+      return "safe";
     }
-    if (language === 'C#' || language === 'Objective-C') {
-      return 'safe';
+    if (language === "C#" || language === "Objective-C") {
+      return "safe";
     }
-    return 'safe';
+    return "safe";
   }
 
   /**
@@ -255,24 +255,24 @@ class MemoryModelAbstraction {
     };
 
     for (const use of uses) {
-      if (use.type === 'return') {
+      if (use.type === "return") {
         escapes.returnsFromFunction = true;
       }
-      if (use.type === 'functionCall' && use.isExternal) {
+      if (use.type === "functionCall" && use.isExternal) {
         escapes.passedToUnknownFunction = true;
       }
-      if (use.type === 'globalStore') {
+      if (use.type === "globalStore") {
         escapes.storedInGlobal = true;
       }
-      if (use.type === 'heapStore') {
+      if (use.type === "heapStore") {
         escapes.storedInHeap = true;
       }
-      if (use.type === 'threadSend') {
+      if (use.type === "threadSend") {
         escapes.passedToAnotherThread = true;
       }
     }
 
-    const escapeLevel = Object.values(escapes).some(v => v) ? 'global' : 'local';
+    const escapeLevel = Object.values(escapes).some(v => v) ? "global" : "local";
 
     return {
       allocation: allocation.name,
@@ -286,18 +286,18 @@ class MemoryModelAbstraction {
    * Get optimization opportunities based on escape level
    */
   getEscapeOptimizations(escapeLevel) {
-    if (escapeLevel === 'local') {
+    if (escapeLevel === "local") {
       return [
-        'stack allocation',
-        'no reference counting needed',
-        'can be inlined',
-        'can be stack-copy passed',
+        "stack allocation",
+        "no reference counting needed",
+        "can be inlined",
+        "can be stack-copy passed",
       ];
     }
     return [
-      'must use heap allocation',
-      'reference counting may apply',
-      'inlining limited',
+      "must use heap allocation",
+      "reference counting may apply",
+      "inlining limited",
     ];
   }
 
@@ -338,20 +338,20 @@ class MemoryModelAbstraction {
    * @returns {object} Normalized pointer
    */
   normalizePointerSemantics(pointerType, language) {
-    const isReference = language === 'C++' && pointerType.isReference;
-    const isSmartPointer = language === 'C++' && pointerType.isSmartPtr;
+    const isReference = language === "C++" && pointerType.isReference;
+    const isSmartPointer = language === "C++" && pointerType.isSmartPtr;
     
-    let ownership = 'borrowed';
+    let ownership = "borrowed";
     if (isSmartPointer) {
-      ownership = pointerType.pointerType === 'unique_ptr' ? 'owned' : 'shared';
+      ownership = pointerType.pointerType === "unique_ptr" ? "owned" : "shared";
     } else if (isReference) {
-      ownership = 'borrowed';
-    } else if (language === 'Python' || language === 'JavaScript') {
-      ownership = 'shared'; // GC-managed
+      ownership = "borrowed";
+    } else if (language === "Python" || language === "JavaScript") {
+      ownership = "shared"; // GC-managed
     }
 
     return {
-      canonical: 'pointer',
+      canonical: "pointer",
       pointeeType: pointerType.pointeeType,
       ownership,
       nullability: pointerType.nullable !== false,
@@ -364,10 +364,10 @@ class MemoryModelAbstraction {
    * Determine pointer safety level
    */
   getPointerSafety(pointerType, language) {
-    if (language === 'C') return 'unchecked';
-    if (language === 'C++' && pointerType.isSmartPtr) return 'checked';
-    if (language === 'Python' || language === 'JavaScript') return 'safe';
-    return 'default';
+    if (language === "C") return "unchecked";
+    if (language === "C++" && pointerType.isSmartPtr) return "checked";
+    if (language === "Python" || language === "JavaScript") return "safe";
+    return "default";
   }
 
   /**
@@ -424,16 +424,16 @@ class MemoryModelAbstraction {
     const issues = [];
 
     for (const access of accesses) {
-      if (access.type === 'bufferAccess' && access.boundChecked === false) {
+      if (access.type === "bufferAccess" && access.boundChecked === false) {
         issues.push(`Unchecked buffer access: ${access.name}[${access.index}]`);
       }
-      if (access.type === 'nullPointerDereference') {
+      if (access.type === "nullPointerDereference") {
         issues.push(`Potential null pointer dereference: ${access.name}`);
       }
-      if (access.type === 'useAfterFree') {
+      if (access.type === "useAfterFree") {
         issues.push(`Use after free: ${access.name}`);
       }
-      if (access.type === 'raceCondition') {
+      if (access.type === "raceCondition") {
         issues.push(`Data race: ${access.name}`);
       }
     }

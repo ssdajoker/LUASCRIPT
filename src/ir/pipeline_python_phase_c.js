@@ -153,7 +153,7 @@ class PythonPhaseCPipeline {
         optimizedIR = deadCodeResult;
         const stats = this.optimizer.getStats();
         report.passes.push({
-          name: 'Dead Code Elimination',
+          name: "Dead Code Elimination",
           removed: stats.deadCodeRemoved || 0,
         });
         report.totalOptimizations += stats.deadCodeRemoved || 0;
@@ -165,7 +165,7 @@ class PythonPhaseCPipeline {
         optimizedIR = foldResult;
         const stats = this.optimizer.getStats();
         report.passes.push({
-          name: 'Constant Folding',
+          name: "Constant Folding",
           folded: stats.constantsFolded || 0,
         });
         report.totalOptimizations += stats.constantsFolded || 0;
@@ -177,7 +177,7 @@ class PythonPhaseCPipeline {
         optimizedIR = loopResult;
         const stats = this.optimizer.getStats();
         report.passes.push({
-          name: 'Loop Optimization',
+          name: "Loop Optimization",
           optimized: stats.loopsOptimized || 0,
         });
         report.totalOptimizations += stats.loopsOptimized || 0;
@@ -188,7 +188,7 @@ class PythonPhaseCPipeline {
         const strengthResult = this.applyStrengthReduction(optimizedIR);
         optimizedIR = strengthResult.ir;
         report.passes.push({
-          name: 'Strength Reduction',
+          name: "Strength Reduction",
           reduced: strengthResult.count,
         });
         report.totalOptimizations += strengthResult.count;
@@ -224,41 +224,41 @@ class PythonPhaseCPipeline {
     const optimizedIR = JSON.parse(JSON.stringify(ir)); // Deep copy
 
     const visitNode = (node) => {
-      if (!node || typeof node !== 'object') return node;
+      if (!node || typeof node !== "object") return node;
 
       // Optimize binary operations
-      if (node.type === 'BinOp') {
+      if (node.type === "BinOp") {
         // x ** 2 → x * x
-        if (node.op === '**' && node.right?.type === 'Num' && node.right.value === 2) {
-          node.op = '*';
+        if (node.op === "**" && node.right?.type === "Num" && node.right.value === 2) {
+          node.op = "*";
           node.right = JSON.parse(JSON.stringify(node.left));
           count++;
         }
 
         // x * 0 → 0
-        if (node.op === '*' && node.right?.type === 'Num' && node.right.value === 0) {
-          return { type: 'Num', value: 0 };
+        if (node.op === "*" && node.right?.type === "Num" && node.right.value === 0) {
+          return { type: "Num", value: 0 };
         }
 
         // x * 1 → x
-        if (node.op === '*' && node.right?.type === 'Num' && node.right.value === 1) {
+        if (node.op === "*" && node.right?.type === "Num" && node.right.value === 1) {
           count++;
           return node.left;
         }
 
         // x / 1 → x
-        if (node.op === '/' && node.right?.type === 'Num' && node.right.value === 1) {
+        if (node.op === "/" && node.right?.type === "Num" && node.right.value === 1) {
           count++;
           return node.left;
         }
 
         // x + 0 → x or 0 + x → x
-        if (node.op === '+') {
-          if (node.right?.type === 'Num' && node.right.value === 0) {
+        if (node.op === "+") {
+          if (node.right?.type === "Num" && node.right.value === 0) {
             count++;
             return node.left;
           }
-          if (node.left?.type === 'Num' && node.left.value === 0) {
+          if (node.left?.type === "Num" && node.left.value === 0) {
             count++;
             return node.right;
           }
@@ -267,10 +267,10 @@ class PythonPhaseCPipeline {
 
       // Recursively visit child nodes
       for (const key in node) {
-        if (node.hasOwnProperty(key) && key !== 'type') {
+        if (Object.prototype.hasOwnProperty.call(node, key) && key !== "type") {
           if (Array.isArray(node[key])) {
             node[key] = node[key].map(child => visitNode(child));
-          } else if (typeof node[key] === 'object') {
+          } else if (typeof node[key] === "object") {
             node[key] = visitNode(node[key]);
           }
         }
@@ -314,8 +314,8 @@ class PythonPhaseCPipeline {
       hits: this.stats.cacheHits,
       misses: this.stats.cacheMisses,
       hitRate: this.stats.totalTranspilations > 0 
-        ? (this.stats.cacheHits / this.stats.totalTranspilations * 100).toFixed(1) + '%'
-        : '0%',
+        ? (this.stats.cacheHits / this.stats.totalTranspilations * 100).toFixed(1) + "%"
+        : "0%",
     };
   }
 

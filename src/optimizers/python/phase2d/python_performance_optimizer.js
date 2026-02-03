@@ -107,7 +107,7 @@ class PythonPerformanceOptimizer {
    * Collect all variables used in a node
    */
   collectUsedVariables(node, used) {
-    if (!node || typeof node !== 'object') return;
+    if (!node || typeof node !== "object") return;
 
     if (node.type === "Identifier" && node.name) {
       used.add(node.name);
@@ -119,11 +119,11 @@ class PythonPerformanceOptimizer {
 
     // Recursively check all properties
     for (const key in node) {
-      if (key !== 'type' && key !== 'name') {
+      if (key !== "type" && key !== "name") {
         const value = node[key];
         if (Array.isArray(value)) {
           value.forEach(item => this.collectUsedVariables(item, used));
-        } else if (typeof value === 'object') {
+        } else if (typeof value === "object") {
           this.collectUsedVariables(value, used);
         }
       }
@@ -352,8 +352,8 @@ class PythonPerformanceOptimizer {
       cacheHits: this.stats.cacheHits,
       cacheMisses: this.stats.cacheMisses,
       cacheHitRate: this.stats.cacheHits + this.stats.cacheMisses > 0 
-        ? (this.stats.cacheHits / (this.stats.cacheHits + this.stats.cacheMisses) * 100).toFixed(1) + '%'
-        : 'N/A',
+        ? (this.stats.cacheHits / (this.stats.cacheHits + this.stats.cacheMisses) * 100).toFixed(1) + "%"
+        : "N/A",
       totalOptimizations: this.stats.deadCodeRemoved + 
                          this.stats.constantsFolded + 
                          this.stats.loopsOptimized,

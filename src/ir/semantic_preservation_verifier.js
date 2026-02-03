@@ -2,7 +2,7 @@
 // Phase B: Semantic Preservation Verification Framework
 // Verifies that IR transformations preserve the original program semantics.
 
-const crypto = require('crypto');
+const crypto = require("crypto");
 
 /**
  * Semantic Preservation Verifier
@@ -56,7 +56,7 @@ class SemanticPreservationVerifier {
    */
   checkStructuralEquivalence(original, transformed) {
     const check = {
-      name: 'structural_equivalence',
+      name: "structural_equivalence",
       passed: true,
       details: {},
     };
@@ -69,7 +69,7 @@ class SemanticPreservationVerifier {
       if (transformedStats[key] < value) {
         check.passed = false;
         this.errors.push({
-          type: 'structural_mismatch',
+          type: "structural_mismatch",
           message: `Transformed IR has fewer ${key}: ${transformedStats[key]} < ${value}`,
         });
       }
@@ -91,12 +91,12 @@ class SemanticPreservationVerifier {
     };
 
     const traverse = node => {
-      if (!node || typeof node !== 'object') return;
+      if (!node || typeof node !== "object") return;
 
-      if (node.type === 'Function') stats.functions++;
-      if (node.type === 'Class') stats.classes++;
-      if (node.type === 'Variable') stats.variables++;
-      if (node.type && node.type !== 'Module' && node.type !== 'Block') {
+      if (node.type === "Function") stats.functions++;
+      if (node.type === "Class") stats.classes++;
+      if (node.type === "Variable") stats.variables++;
+      if (node.type && node.type !== "Module" && node.type !== "Block") {
         stats.statements++;
       }
 
@@ -104,7 +104,7 @@ class SemanticPreservationVerifier {
       for (const key of Object.keys(node)) {
         if (Array.isArray(node[key])) {
           node[key].forEach(traverse);
-        } else if (typeof node[key] === 'object') {
+        } else if (typeof node[key] === "object") {
           traverse(node[key]);
         }
       }
@@ -120,7 +120,7 @@ class SemanticPreservationVerifier {
    */
   checkTypePreservation(original, transformed) {
     const check = {
-      name: 'type_preservation',
+      name: "type_preservation",
       passed: true,
       details: {},
     };
@@ -133,7 +133,7 @@ class SemanticPreservationVerifier {
       if (!transformedTypes.has(name)) {
         check.passed = false;
         this.errors.push({
-          type: 'type_lost',
+          type: "type_lost",
           message: `Type information lost for: ${name}`,
         });
       }
@@ -154,7 +154,7 @@ class SemanticPreservationVerifier {
     const types = new Map();
 
     const traverse = node => {
-      if (!node || typeof node !== 'object') return;
+      if (!node || typeof node !== "object") return;
 
       if (node.name && node.type) {
         types.set(node.name, node.type);
@@ -168,7 +168,7 @@ class SemanticPreservationVerifier {
       for (const key of Object.keys(node)) {
         if (Array.isArray(node[key])) {
           node[key].forEach(traverse);
-        } else if (typeof node[key] === 'object') {
+        } else if (typeof node[key] === "object") {
           traverse(node[key]);
         }
       }
@@ -184,7 +184,7 @@ class SemanticPreservationVerifier {
    */
   checkControlFlowPreservation(original, transformed) {
     const check = {
-      name: 'control_flow_preservation',
+      name: "control_flow_preservation",
       passed: true,
       details: {},
     };
@@ -195,7 +195,7 @@ class SemanticPreservationVerifier {
     // Simplified check: same number of branches and loops
     if (originalCFG.branchCount !== transformedCFG.branchCount) {
       this.warnings.push({
-        type: 'control_flow_mismatch',
+        type: "control_flow_mismatch",
         message: `Branch count differs: ${originalCFG.branchCount} vs ${transformedCFG.branchCount}`,
       });
     }
@@ -215,17 +215,17 @@ class SemanticPreservationVerifier {
     };
 
     const traverse = node => {
-      if (!node || typeof node !== 'object') return;
+      if (!node || typeof node !== "object") return;
 
-      if (node.type === 'If') cfg.branchCount++;
-      if (node.type === 'While' || node.type === 'For') cfg.loopCount++;
-      if (node.type === 'Return') cfg.returnCount++;
+      if (node.type === "If") cfg.branchCount++;
+      if (node.type === "While" || node.type === "For") cfg.loopCount++;
+      if (node.type === "Return") cfg.returnCount++;
 
       // Traverse children
       for (const key of Object.keys(node)) {
         if (Array.isArray(node[key])) {
           node[key].forEach(traverse);
-        } else if (typeof node[key] === 'object') {
+        } else if (typeof node[key] === "object") {
           traverse(node[key]);
         }
       }
@@ -241,7 +241,7 @@ class SemanticPreservationVerifier {
    */
   checkSideEffectPreservation(original, transformed) {
     const check = {
-      name: 'side_effect_preservation',
+      name: "side_effect_preservation",
       passed: true,
       details: {},
     };
@@ -254,7 +254,7 @@ class SemanticPreservationVerifier {
       if (!transformedEffects.includes(effect)) {
         check.passed = false;
         this.errors.push({
-          type: 'side_effect_lost',
+          type: "side_effect_lost",
           message: `Side effect lost: ${effect}`,
         });
       }
@@ -275,24 +275,24 @@ class SemanticPreservationVerifier {
     const effects = [];
 
     const traverse = node => {
-      if (!node || typeof node !== 'object') return;
+      if (!node || typeof node !== "object") return;
 
       // Assignments, calls, throws are side effects
-      if (node.type === 'Assignment') {
-        effects.push(`assign:${node.target?.name || 'unknown'}`);
+      if (node.type === "Assignment") {
+        effects.push(`assign:${node.target?.name || "unknown"}`);
       }
-      if (node.type === 'Call') {
-        effects.push(`call:${node.callee?.name || 'unknown'}`);
+      if (node.type === "Call") {
+        effects.push(`call:${node.callee?.name || "unknown"}`);
       }
-      if (node.type === 'Throw') {
-        effects.push(`throw:${node.value || 'unknown'}`);
+      if (node.type === "Throw") {
+        effects.push(`throw:${node.value || "unknown"}`);
       }
 
       // Traverse children
       for (const key of Object.keys(node)) {
         if (Array.isArray(node[key])) {
           node[key].forEach(traverse);
-        } else if (typeof node[key] === 'object') {
+        } else if (typeof node[key] === "object") {
           traverse(node[key]);
         }
       }
@@ -308,7 +308,7 @@ class SemanticPreservationVerifier {
    */
   checkValuePreservation(original, transformed, context) {
     const check = {
-      name: 'value_preservation',
+      name: "value_preservation",
       passed: true,
       details: {},
     };
@@ -320,7 +320,7 @@ class SemanticPreservationVerifier {
     for (const [key, value] of originalValues) {
       if (!transformedValues.has(key) || transformedValues.get(key) !== value) {
         this.warnings.push({
-          type: 'literal_mismatch',
+          type: "literal_mismatch",
           message: `Literal value mismatch for ${key}`,
         });
       }
@@ -342,9 +342,9 @@ class SemanticPreservationVerifier {
     let counter = 0;
 
     const traverse = node => {
-      if (!node || typeof node !== 'object') return;
+      if (!node || typeof node !== "object") return;
 
-      if (node.type === 'Literal' && node.value !== undefined) {
+      if (node.type === "Literal" && node.value !== undefined) {
         literals.set(`literal_${counter++}`, node.value);
       }
 
@@ -352,7 +352,7 @@ class SemanticPreservationVerifier {
       for (const key of Object.keys(node)) {
         if (Array.isArray(node[key])) {
           node[key].forEach(traverse);
-        } else if (typeof node[key] === 'object') {
+        } else if (typeof node[key] === "object") {
           traverse(node[key]);
         }
       }
@@ -368,7 +368,7 @@ class SemanticPreservationVerifier {
    */
   computeSemanticHash(ir) {
     const normalized = this.normalizeForHashing(ir);
-    return crypto.createHash('sha256').update(JSON.stringify(normalized)).digest('hex');
+    return crypto.createHash("sha256").update(JSON.stringify(normalized)).digest("hex");
   }
 
   /**
@@ -376,19 +376,19 @@ class SemanticPreservationVerifier {
    * - Remove non-semantic fields
    */
   normalizeForHashing(ir) {
-    if (!ir || typeof ir !== 'object') return ir;
+    if (!ir || typeof ir !== "object") return ir;
 
     const normalized = Array.isArray(ir) ? [] : {};
 
     for (const [key, value] of Object.entries(ir)) {
       // Skip non-semantic fields
-      if (key === 'location' || key === 'sourceMap' || key === 'comments') {
+      if (key === "location" || key === "sourceMap" || key === "comments") {
         continue;
       }
 
       if (Array.isArray(value)) {
         normalized[key] = value.map(v => this.normalizeForHashing(v));
-      } else if (typeof value === 'object' && value !== null) {
+      } else if (typeof value === "object" && value !== null) {
         normalized[key] = this.normalizeForHashing(value);
       } else {
         normalized[key] = value;

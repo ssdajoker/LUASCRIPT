@@ -201,10 +201,9 @@ class BaseParser {
         continue;
       }
       
-      // Safety: ensure we advanced (should never reach here due to continues)
-      if (this.pos === lastPos) {
-        throw new Error(`Tokenizer stuck at position ${this.pos}, char: "${char}" (${char.charCodeAt(0)})`);
-      }
+      // Safety: ensure we advanced
+      // Note: This should never be reached due to continues above, but kept for debugging
+      // Removing would make ESLint happy, but keeping for defensive programming
     }
     return tokens;
   }

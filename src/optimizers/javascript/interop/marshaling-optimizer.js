@@ -25,8 +25,8 @@ class MarshalingOptimizer {
    * @returns {Object} Optimization report
    */
   analyzeMarshaling(ir) {
-    if (!ir || typeof ir !== 'object') {
-      throw new Error('Invalid IR provided');
+    if (!ir || typeof ir !== "object") {
+      throw new Error("Invalid IR provided");
     }
 
     const startTime = process.hrtime.bigint();
@@ -89,9 +89,9 @@ class MarshalingOptimizer {
               paramName: param.name,
               paramType: param.type,
               paramSize: this._estimateTypeSize(param.type),
-              isArray: param.type.includes('[]'),
-              isObject: param.type.includes('{}'),
-              direction: param.direction || 'in',
+              isArray: param.type.includes("[]"),
+              isObject: param.type.includes("{}"),
+              direction: param.direction || "in",
               frequency: call.frequency || 1
             });
           });
@@ -109,10 +109,10 @@ class MarshalingOptimizer {
   _detectZeroCopyOpportunities(calls) {
     const opportunities = [];
     const zeroCopyTypes = new Set([
-      'int32', 'uint32', 'int64', 'uint64',
-      'float32', 'float64',
-      'buffer', 'arraybuffer',
-      'typed_array'
+      "int32", "uint32", "int64", "uint64",
+      "float32", "float64",
+      "buffer", "arraybuffer",
+      "typed_array"
     ]);
 
     for (const call of calls) {
@@ -121,11 +121,11 @@ class MarshalingOptimizer {
       if (this.detectionCache.has(cacheKey)) {
         if (this.detectionCache.get(cacheKey)) {
           opportunities.push({
-            type: 'zero-copy',
+            type: "zero-copy",
             paramType: call.paramType,
             paramName: call.paramName,
             reduction: 50, // 50% overhead reduction for zero-copy
-            safety: 'safe',
+            safety: "safe",
             applicability: this._assessZeroCopySafety(call)
           });
         }
@@ -137,22 +137,22 @@ class MarshalingOptimizer {
         if (isSafe) {
           this.detectionCache.set(cacheKey, true);
           opportunities.push({
-            type: 'zero-copy',
+            type: "zero-copy",
             paramType: call.paramType,
             paramName: call.paramName,
             reduction: 50,
-            safety: 'safe',
+            safety: "safe",
             applicability: 100
           });
         }
-      } else if (call.paramType === 'buffer' || call.paramType === 'arraybuffer') {
+      } else if (call.paramType === "buffer" || call.paramType === "arraybuffer") {
         this.detectionCache.set(cacheKey, true);
         opportunities.push({
-          type: 'zero-copy',
+          type: "zero-copy",
           paramType: call.paramType,
           paramName: call.paramName,
           reduction: 60, // Even better for buffers
-          safety: 'safe',
+          safety: "safe",
           applicability: 100
         });
       } else {
@@ -173,16 +173,16 @@ class MarshalingOptimizer {
     // 2. Type requires padding/alignment adjustment
     // 3. Bidirectional transfer (in/out)
 
-    if (call.direction === 'inout') {
+    if (call.direction === "inout") {
       return false;
     }
 
-    if (call.paramType.includes('endian')) {
+    if (call.paramType.includes("endian")) {
       return false;
     }
 
     // Types that are safe for zero-copy
-    const safeTypes = ['int32', 'uint32', 'float64', 'buffer', 'arraybuffer', 'typed_array'];
+    const safeTypes = ["int32", "uint32", "float64", "buffer", "arraybuffer", "typed_array"];
     return safeTypes.includes(call.paramType);
   }
 
@@ -211,7 +211,7 @@ class MarshalingOptimizer {
       if (callList.length >= 2) {
         // Only recommend pooling if there are multiple candidates
         opportunities.push({
-          type: 'buffer-pooling',
+          type: "buffer-pooling",
           paramType: type,
           candidates: callList.length,
           reduction: 30, // 30% reduction through pooling
@@ -251,12 +251,12 @@ class MarshalingOptimizer {
       // 2. Called frequently (> 10 times)
       // 3. Multiple instances would benefit
 
-      const [paramType, sizeStr] = key.split('-');
+      const [paramType, sizeStr] = key.split("-");
       const size = parseInt(sizeStr, 10);
 
       if (size > 2048 && data.totalFrequency > 10 && data.count >= 2) {
         opportunities.push({
-          type: 'shared-memory',
+          type: "shared-memory",
           paramType: paramType,
           instances: data.count,
           totalFrequency: data.totalFrequency,
@@ -299,13 +299,13 @@ class MarshalingOptimizer {
    * @private
    */
   _estimateTypeSize(type) {
-    if (type.includes('int32') || type.includes('float32')) return 4;
-    if (type.includes('int64') || type.includes('float64') || type.includes('double')) return 8;
-    if (type.includes('int16') || type.includes('short')) return 2;
-    if (type.includes('int8') || type.includes('char')) return 1;
-    if (type.includes('buffer') || type.includes('arraybuffer')) return 8192; // Assume 8KB
-    if (type.includes('object') || type.includes('{}')) return 4096; // Assume 4KB
-    if (type.includes('[]')) return 2048; // Assume 2KB array
+    if (type.includes("int32") || type.includes("float32")) return 4;
+    if (type.includes("int64") || type.includes("float64") || type.includes("double")) return 8;
+    if (type.includes("int16") || type.includes("short")) return 2;
+    if (type.includes("int8") || type.includes("char")) return 1;
+    if (type.includes("buffer") || type.includes("arraybuffer")) return 8192; // Assume 8KB
+    if (type.includes("object") || type.includes("{}")) return 4096; // Assume 4KB
+    if (type.includes("[]")) return 2048; // Assume 2KB array
     return 256; // Default fallback
   }
 
@@ -316,7 +316,7 @@ class MarshalingOptimizer {
   _buildOptimizationStrategy(opportunities) {
     const strategy = {
       prioritized: [],
-      estimatedImpact: 'moderate'
+      estimatedImpact: "moderate"
     };
 
     // Sort by reduction percentage (highest first)
@@ -333,11 +333,11 @@ class MarshalingOptimizer {
     // Estimate overall impact
     const avgReduction = sorted.reduce((sum, opp) => sum + opp.reduction, 0) / sorted.length;
     if (avgReduction > 40) {
-      strategy.estimatedImpact = 'high';
+      strategy.estimatedImpact = "high";
     } else if (avgReduction > 25) {
-      strategy.estimatedImpact = 'moderate';
+      strategy.estimatedImpact = "moderate";
     } else {
-      strategy.estimatedImpact = 'low';
+      strategy.estimatedImpact = "low";
     }
 
     return strategy;
@@ -349,11 +349,11 @@ class MarshalingOptimizer {
    */
   _getStrategyDescription(type) {
     const descriptions = {
-      'zero-copy': 'Pass compatible types directly without copying',
-      'buffer-pooling': 'Reuse pre-allocated buffers for frequent transfers',
-      'shared-memory': 'Use shared memory regions for large, frequent data'
+      "zero-copy": "Pass compatible types directly without copying",
+      "buffer-pooling": "Reuse pre-allocated buffers for frequent transfers",
+      "shared-memory": "Use shared memory regions for large, frequent data"
     };
-    return descriptions[type] || 'Apply optimization strategy';
+    return descriptions[type] || "Apply optimization strategy";
   }
 
   /**
@@ -363,7 +363,7 @@ class MarshalingOptimizer {
    */
   calculateMarshalingOverhead(dataSize) {
     if (dataSize <= 0) {
-      throw new Error('Data size must be positive');
+      throw new Error("Data size must be positive");
     }
 
     const baseOverhead = 50; // 50 microseconds base
@@ -387,7 +387,7 @@ class MarshalingOptimizer {
    */
   estimateReductionImpact(originalOverhead, optimizations = []) {
     if (originalOverhead <= 0) {
-      throw new Error('Original overhead must be positive');
+      throw new Error("Original overhead must be positive");
     }
 
     let reducedOverhead = originalOverhead;
@@ -412,8 +412,8 @@ class MarshalingOptimizer {
    * @returns {Object} Safety assessment
    */
   validateMarshalingSafety(marshalingOp) {
-    if (!marshalingOp || typeof marshalingOp !== 'object') {
-      throw new Error('Invalid marshaling operation');
+    if (!marshalingOp || typeof marshalingOp !== "object") {
+      throw new Error("Invalid marshaling operation");
     }
 
     const issues = [];
@@ -421,18 +421,18 @@ class MarshalingOptimizer {
 
     // Check for type compatibility
     if (!marshalingOp.sourceType || !marshalingOp.targetType) {
-      issues.push('Missing type information');
+      issues.push("Missing type information");
     }
 
     // Check for alignment issues
     if (marshalingOp.alignment && marshalingOp.alignment < 4) {
-      warnings.push('Suboptimal alignment detected');
+      warnings.push("Suboptimal alignment detected");
     }
 
     // Check for endianness mismatch
     if (marshalingOp.sourceEndian && marshalingOp.targetEndian) {
       if (marshalingOp.sourceEndian !== marshalingOp.targetEndian) {
-        warnings.push('Endianness conversion required');
+        warnings.push("Endianness conversion required");
       }
     }
 
@@ -440,7 +440,7 @@ class MarshalingOptimizer {
       safe: issues.length === 0,
       issues,
       warnings,
-      recommendation: issues.length === 0 ? 'Proceed with optimization' : 'Review issues before proceeding'
+      recommendation: issues.length === 0 ? "Proceed with optimization" : "Review issues before proceeding"
     };
   }
 

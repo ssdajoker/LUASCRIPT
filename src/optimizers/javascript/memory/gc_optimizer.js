@@ -13,7 +13,7 @@
  * @module src/optimizers/javascript/memory/gc_optimizer
  */
 
-const v8 = require('v8');
+const v8 = require("v8");
 
 class GCOptimizer {
   /**
@@ -153,11 +153,11 @@ class GCOptimizer {
   }
 
   _registerDefaultGates() {
-    this.registerGate('heapUsageHigh', (sample) => sample.heapUsagePct >= this.heapUsageThreshold);
-    this.registerGate('rssHigh', (sample) => sample.rss >= this.rssLimitBytes);
+    this.registerGate("heapUsageHigh", (sample) => sample.heapUsagePct >= this.heapUsageThreshold);
+    this.registerGate("rssHigh", (sample) => sample.rss >= this.rssLimitBytes);
   }
 }
 
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = { GCOptimizer };
 }

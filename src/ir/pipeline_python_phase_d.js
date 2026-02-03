@@ -38,9 +38,9 @@ class PythonPhaseDPipeline {
     // Phase D memory optimization components
     this.poolManager = this.options.enablePooling 
       ? new PythonPoolManager({ 
-          enablePooling: true,
-          maxMemoryOverheadMB: this.options.maxMemoryOverheadMB,
-        })
+        enablePooling: true,
+        maxMemoryOverheadMB: this.options.maxMemoryOverheadMB,
+      })
       : null;
 
     this.gcDetector = this.options.enableGCDetection 
@@ -53,9 +53,9 @@ class PythonPhaseDPipeline {
 
     this.memoryProfiler = this.options.enableMemoryProfiling 
       ? new PythonMemoryProfiler({ 
-          enableProfiling: true,
-          maxMemoryOverheadMB: this.options.maxMemoryOverheadMB,
-        })
+        enableProfiling: true,
+        maxMemoryOverheadMB: this.options.maxMemoryOverheadMB,
+      })
       : null;
 
     this.stats = {
@@ -224,8 +224,8 @@ class PythonPhaseDPipeline {
         sloPassedCount: this.stats.memorySLOPassed,
         sloFailedCount: this.stats.memorySLOFailed,
         sloPassRate: this.stats.totalTranspilations > 0
-          ? (this.stats.memorySLOPassed / this.stats.totalTranspilations * 100).toFixed(1) + '%'
-          : '0%',
+          ? (this.stats.memorySLOPassed / this.stats.totalTranspilations * 100).toFixed(1) + "%"
+          : "0%",
       },
     };
   }
@@ -302,12 +302,12 @@ class PythonPhaseDPipeline {
     // Check for excessive GC patterns
     if (this.stats.gcPatternsDetected > 10) {
       gates.gcPatterns = {
-        status: 'FAIL',
+        status: "FAIL",
         message: `Too many GC patterns detected (${this.stats.gcPatternsDetected})`,
       };
     } else {
       gates.gcPatterns = {
-        status: 'PASS',
+        status: "PASS",
         message: `GC patterns within limit (${this.stats.gcPatternsDetected})`,
       };
     }
@@ -315,12 +315,12 @@ class PythonPhaseDPipeline {
     // Check stack efficiency
     if (this.stats.stackIssuesDetected > 5) {
       gates.stackEfficiency = {
-        status: 'FAIL',
+        status: "FAIL",
         message: `Stack efficiency issues detected (${this.stats.stackIssuesDetected})`,
       };
     } else {
       gates.stackEfficiency = {
-        status: 'PASS',
+        status: "PASS",
         message: `Stack operations efficient (${this.stats.stackIssuesDetected} issues)`,
       };
     }
@@ -331,7 +331,7 @@ class PythonPhaseDPipeline {
       const reuseRate = parseFloat(poolStats.globalStats.reuseRate);
       
       gates.poolingEfficiency = {
-        status: reuseRate > 20 ? 'PASS' : 'WARN',
+        status: reuseRate > 20 ? "PASS" : "WARN",
         reuseRate: poolStats.globalStats.reuseRate,
         message: reuseRate > 20 
           ? `Pooling effective (${poolStats.globalStats.reuseRate} reuse rate)`
@@ -341,8 +341,8 @@ class PythonPhaseDPipeline {
 
     return {
       allPassed: gates.memoryOverhead?.passed !== false 
-        && gates.gcPatterns.status === 'PASS'
-        && gates.stackEfficiency.status === 'PASS',
+        && gates.gcPatterns.status === "PASS"
+        && gates.stackEfficiency.status === "PASS",
       gates,
     };
   }

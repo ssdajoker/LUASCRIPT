@@ -23,55 +23,55 @@ class TypeSystemBridge {
     // Primitive type equivalences
     this.primitiveEquivalences = {
       // Integers (with size variants)
-      'int': { canonical: 'i32', sizeBytes: 4, signed: true, family: 'integer' },
-      'uint': { canonical: 'u32', sizeBytes: 4, signed: false, family: 'integer' },
-      'short': { canonical: 'i16', sizeBytes: 2, signed: true, family: 'integer' },
-      'ushort': { canonical: 'u16', sizeBytes: 2, signed: false, family: 'integer' },
-      'long': { canonical: 'i64', sizeBytes: 8, signed: true, family: 'integer' },
-      'ulong': { canonical: 'u64', sizeBytes: 8, signed: false, family: 'integer' },
-      'int8': { canonical: 'i8', sizeBytes: 1, signed: true, family: 'integer' },
-      'uint8': { canonical: 'u8', sizeBytes: 1, signed: false, family: 'integer' },
-      'int16': { canonical: 'i16', sizeBytes: 2, signed: true, family: 'integer' },
-      'uint16': { canonical: 'u16', sizeBytes: 2, signed: false, family: 'integer' },
-      'int32': { canonical: 'i32', sizeBytes: 4, signed: true, family: 'integer' },
-      'uint32': { canonical: 'u32', sizeBytes: 4, signed: false, family: 'integer' },
-      'int64': { canonical: 'i64', sizeBytes: 8, signed: true, family: 'integer' },
-      'uint64': { canonical: 'u64', sizeBytes: 8, signed: false, family: 'integer' },
-      'byte': { canonical: 'u8', sizeBytes: 1, signed: false, family: 'integer' },
-      'sbyte': { canonical: 'i8', sizeBytes: 1, signed: true, family: 'integer' },
+      "int": { canonical: "i32", sizeBytes: 4, signed: true, family: "integer" },
+      "uint": { canonical: "u32", sizeBytes: 4, signed: false, family: "integer" },
+      "short": { canonical: "i16", sizeBytes: 2, signed: true, family: "integer" },
+      "ushort": { canonical: "u16", sizeBytes: 2, signed: false, family: "integer" },
+      "long": { canonical: "i64", sizeBytes: 8, signed: true, family: "integer" },
+      "ulong": { canonical: "u64", sizeBytes: 8, signed: false, family: "integer" },
+      "int8": { canonical: "i8", sizeBytes: 1, signed: true, family: "integer" },
+      "uint8": { canonical: "u8", sizeBytes: 1, signed: false, family: "integer" },
+      "int16": { canonical: "i16", sizeBytes: 2, signed: true, family: "integer" },
+      "uint16": { canonical: "u16", sizeBytes: 2, signed: false, family: "integer" },
+      "int32": { canonical: "i32", sizeBytes: 4, signed: true, family: "integer" },
+      "uint32": { canonical: "u32", sizeBytes: 4, signed: false, family: "integer" },
+      "int64": { canonical: "i64", sizeBytes: 8, signed: true, family: "integer" },
+      "uint64": { canonical: "u64", sizeBytes: 8, signed: false, family: "integer" },
+      "byte": { canonical: "u8", sizeBytes: 1, signed: false, family: "integer" },
+      "sbyte": { canonical: "i8", sizeBytes: 1, signed: true, family: "integer" },
 
       // Floating point
-      'float': { canonical: 'f32', sizeBytes: 4, family: 'float' },
-      'double': { canonical: 'f64', sizeBytes: 8, family: 'float' },
-      'decimal': { canonical: 'f128', sizeBytes: 16, family: 'float' },
+      "float": { canonical: "f32", sizeBytes: 4, family: "float" },
+      "double": { canonical: "f64", sizeBytes: 8, family: "float" },
+      "decimal": { canonical: "f128", sizeBytes: 16, family: "float" },
 
       // Boolean
-      'bool': { canonical: 'bool', sizeBytes: 1, family: 'boolean' },
-      'boolean': { canonical: 'bool', sizeBytes: 1, family: 'boolean' },
+      "bool": { canonical: "bool", sizeBytes: 1, family: "boolean" },
+      "boolean": { canonical: "bool", sizeBytes: 1, family: "boolean" },
 
       // Character
-      'char': { canonical: 'i8', sizeBytes: 1, family: 'char' },
-      'wchar': { canonical: 'i16', sizeBytes: 2, family: 'char' },
+      "char": { canonical: "i8", sizeBytes: 1, family: "char" },
+      "wchar": { canonical: "i16", sizeBytes: 2, family: "char" },
 
       // String (reference types)
-      'string': { canonical: 'string', sizeBytes: null, family: 'string', refType: true },
-      'cstring': { canonical: 'pointer<i8>', sizeBytes: null, family: 'string', refType: true },
+      "string": { canonical: "string", sizeBytes: null, family: "string", refType: true },
+      "cstring": { canonical: "pointer<i8>", sizeBytes: null, family: "string", refType: true },
 
       // Void
-      'void': { canonical: 'void', sizeBytes: 0, family: 'void' },
+      "void": { canonical: "void", sizeBytes: 0, family: "void" },
 
       // Python-specific (mapped to equivalents)
-      'Any': { canonical: 'any', sizeBytes: null, family: 'any' },
-      'None': { canonical: 'void', sizeBytes: 0, family: 'void' },
-      'NoneType': { canonical: 'void', sizeBytes: 0, family: 'void' },
+      "Any": { canonical: "any", sizeBytes: null, family: "any" },
+      "None": { canonical: "void", sizeBytes: 0, family: "void" },
+      "NoneType": { canonical: "void", sizeBytes: 0, family: "void" },
     };
 
     // Language-specific type mappings
     this.languageMappings = {
       C: this.buildCTypeMap(),
-      'C++': this.buildCppTypeMap(),
-      'C#': this.buildCsharpTypeMap(),
-      'Objective-C': this.buildObjCTypeMap(),
+      "C++": this.buildCppTypeMap(),
+      "C#": this.buildCsharpTypeMap(),
+      "Objective-C": this.buildObjCTypeMap(),
       Python: this.buildPythonTypeMap(),
       JavaScript: this.buildJavaScriptTypeMap(),
     };
@@ -79,22 +79,22 @@ class TypeSystemBridge {
 
   buildCTypeMap() {
     return {
-      'int': 'i32',
-      'unsigned int': 'u32',
-      'short': 'i16',
-      'unsigned short': 'u16',
-      'long': 'i64',
-      'unsigned long': 'u64',
-      'long long': 'i64',
-      'unsigned long long': 'u64',
-      'float': 'f32',
-      'double': 'f64',
-      'char': 'i8',
-      'signed char': 'i8',
-      'unsigned char': 'u8',
-      '_Bool': 'bool',
-      'void': 'void',
-      'void *': 'pointer<void>',
+      "int": "i32",
+      "unsigned int": "u32",
+      "short": "i16",
+      "unsigned short": "u16",
+      "long": "i64",
+      "unsigned long": "u64",
+      "long long": "i64",
+      "unsigned long long": "u64",
+      "float": "f32",
+      "double": "f64",
+      "char": "i8",
+      "signed char": "i8",
+      "unsigned char": "u8",
+      "_Bool": "bool",
+      "void": "void",
+      "void *": "pointer<void>",
     };
   }
 
@@ -102,32 +102,32 @@ class TypeSystemBridge {
     const cMap = this.buildCTypeMap();
     return {
       ...cMap,
-      'bool': 'bool',
-      'std::string': 'string',
-      'std::vector': 'array',
-      'std::map': 'map',
-      'std::pair': 'tuple',
+      "bool": "bool",
+      "std::string": "string",
+      "std::vector": "array",
+      "std::map": "map",
+      "std::pair": "tuple",
     };
   }
 
   buildCsharpTypeMap() {
     return {
-      'int': 'i32',
-      'uint': 'u32',
-      'short': 'i16',
-      'ushort': 'u16',
-      'long': 'i64',
-      'ulong': 'u64',
-      'float': 'f32',
-      'double': 'f64',
-      'byte': 'u8',
-      'sbyte': 'i8',
-      'char': 'i16',
-      'bool': 'bool',
-      'void': 'void',
-      'string': 'string',
-      'object': 'any',
-      'decimal': 'f128',
+      "int": "i32",
+      "uint": "u32",
+      "short": "i16",
+      "ushort": "u16",
+      "long": "i64",
+      "ulong": "u64",
+      "float": "f32",
+      "double": "f64",
+      "byte": "u8",
+      "sbyte": "i8",
+      "char": "i16",
+      "bool": "bool",
+      "void": "void",
+      "string": "string",
+      "object": "any",
+      "decimal": "f128",
     };
   }
 
@@ -135,45 +135,45 @@ class TypeSystemBridge {
     const cMap = this.buildCTypeMap();
     return {
       ...cMap,
-      'id': 'any',
-      'Class': 'type',
-      'SEL': 'pointer<i8>',
-      'NSString *': 'string',
-      'NSArray *': 'array',
-      'NSDictionary *': 'map',
-      'BOOL': 'bool',
+      "id": "any",
+      "Class": "type",
+      "SEL": "pointer<i8>",
+      "NSString *": "string",
+      "NSArray *": "array",
+      "NSDictionary *": "map",
+      "BOOL": "bool",
     };
   }
 
   buildPythonTypeMap() {
     return {
-      'int': 'i64',
-      'float': 'f64',
-      'bool': 'bool',
-      'str': 'string',
-      'bytes': 'array<u8>',
-      'list': 'array',
-      'dict': 'map',
-      'tuple': 'tuple',
-      'set': 'set',
-      'frozenset': 'set',
-      'None': 'void',
-      'Any': 'any',
-      'object': 'any',
+      "int": "i64",
+      "float": "f64",
+      "bool": "bool",
+      "str": "string",
+      "bytes": "array<u8>",
+      "list": "array",
+      "dict": "map",
+      "tuple": "tuple",
+      "set": "set",
+      "frozenset": "set",
+      "None": "void",
+      "Any": "any",
+      "object": "any",
     };
   }
 
   buildJavaScriptTypeMap() {
     return {
-      'number': 'f64',
-      'string': 'string',
-      'boolean': 'bool',
-      'object': 'map',
-      'array': 'array',
-      'function': 'function',
-      'undefined': 'void',
-      'null': 'void',
-      'any': 'any',
+      "number": "f64",
+      "string": "string",
+      "boolean": "bool",
+      "object": "map",
+      "array": "array",
+      "function": "function",
+      "undefined": "void",
+      "null": "void",
+      "any": "any",
     };
   }
 
@@ -183,16 +183,16 @@ class TypeSystemBridge {
   initializeConversionRules() {
     this.conversions = {
       // Widening conversions (always safe)
-      'i8': ['i16', 'i32', 'i64', 'f32', 'f64'],
-      'i16': ['i32', 'i64', 'f32', 'f64'],
-      'i32': ['i64', 'f64'],
-      'i64': ['f64'],
-      'u8': ['u16', 'u32', 'u64', 'f32', 'f64'],
-      'u16': ['u32', 'u64', 'f32', 'f64'],
-      'u32': ['u64', 'f64'],
-      'u64': ['f64'],
-      'f32': ['f64'],
-      'bool': ['i32', 'f64'],
+      "i8": ["i16", "i32", "i64", "f32", "f64"],
+      "i16": ["i32", "i64", "f32", "f64"],
+      "i32": ["i64", "f64"],
+      "i64": ["f64"],
+      "u8": ["u16", "u32", "u64", "f32", "f64"],
+      "u16": ["u32", "u64", "f32", "f64"],
+      "u32": ["u64", "f64"],
+      "u64": ["f64"],
+      "f32": ["f64"],
+      "bool": ["i32", "f64"],
     };
   }
 
@@ -204,10 +204,10 @@ class TypeSystemBridge {
    */
   mapType(languageType, language) {
     // Handle pointer/array syntax
-    const stripped = languageType.replace(/[\*\[\]&]/g, '');
-    const isPointer = languageType.includes('*');
-    const isReference = languageType.includes('&');
-    const isArray = languageType.includes('[');
+    const stripped = languageType.replace(/[*[\]&]/g, "");
+    const isPointer = languageType.includes("*");
+    const isReference = languageType.includes("&");
+    const isArray = languageType.includes("[");
 
     const mapping = this.languageMappings[language] || {};
     const canonical = mapping[stripped] || mapping[languageType];
@@ -217,7 +217,7 @@ class TypeSystemBridge {
       return {
         canonical: `type<${languageType}>`,
         language,
-        category: 'user-defined',
+        category: "user-defined",
         isPointer,
         isReference,
         isArray,
@@ -227,7 +227,7 @@ class TypeSystemBridge {
     return {
       canonical,
       language,
-      category: 'primitive',
+      category: "primitive",
       isPointer,
       isReference,
       isArray,
@@ -362,7 +362,7 @@ class TypeSystemBridge {
    */
   getUnionType(memberTypes) {
     return {
-      canonical: `union<${memberTypes.join(',')}>`,
+      canonical: `union<${memberTypes.join(",")}>`,
       memberTypes,
       isUnion: true,
     };
