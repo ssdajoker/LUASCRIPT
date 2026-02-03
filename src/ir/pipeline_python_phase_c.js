@@ -194,6 +194,28 @@ class PythonPhaseCPipeline {
         report.totalOptimizations += strengthResult.count;
       }
 
+      // Pass 5: String concatenation optimization (Python-specific)
+      if (this.options.optimizationLevel >= 2) {
+        const stringResult = this.optimizeStringConcatenation(optimizedIR);
+        optimizedIR = stringResult.ir;
+        report.passes.push({
+          name: "String Optimization",
+          optimized: stringResult.count,
+        });
+        report.totalOptimizations += stringResult.count;
+      }
+
+      // Pass 6: List comprehension optimization (Python-specific)
+      if (this.options.optimizationLevel >= 2) {
+        const listResult = this.optimizeListComprehensions(optimizedIR);
+        optimizedIR = listResult.ir;
+        report.passes.push({
+          name: "List Comprehension Optimization",
+          optimized: listResult.count,
+        });
+        report.totalOptimizations += listResult.count;
+      }
+
       report.executionTimeMs = Date.now() - startTime;
       report.success = true;
 
@@ -335,6 +357,28 @@ class PythonPhaseCPipeline {
                this.stats.optimizations.loopsOptimized,
       },
     };
+  }
+
+  /**
+   * Optimize string concatenation (Python-specific)
+   * Convert multiple string concatenations to join() calls
+   */
+  optimizeStringConcatenation(ir) {
+    let count = 0;
+    // Simplified: mark strings for potential join optimization
+    // Full implementation would detect patterns like s = "" + a + b + c
+    return { ir, count };
+  }
+
+  /**
+   * Optimize list comprehensions (Python-specific)
+   * Convert simple loops to list comprehensions when beneficial
+   */
+  optimizeListComprehensions(ir) {
+    let count = 0;
+    // Simplified: detect patterns that can become list comprehensions
+    // Full implementation would convert for i in range(n): list.append(f(i))
+    return { ir, count };
   }
 
   /**

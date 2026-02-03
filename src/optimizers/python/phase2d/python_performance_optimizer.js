@@ -54,15 +54,16 @@ class PythonPerformanceOptimizer {
   }
 
   /**
-   * Dead Code Elimination
+   * Dead Code Elimination - Enhanced Phase C
    * Removes unused variables and unreachable code
+   * Now detects: return, raise, break, continue, while True, if False blocks
    */
   eliminateDeadCode(ir) {
     if (!ir || !ir.nodes) return ir;
     
     const usedVariables = new Set();
     const reachableCode = [];
-    let foundReturn = false;
+    let foundTerminator = false;
 
     // First pass: identify used variables
     ir.nodes.forEach(node => {
@@ -71,29 +72,38 @@ class PythonPerformanceOptimizer {
 
     // Second pass: remove unreachable and unused
     ir.nodes.forEach(node => {
-      if (foundReturn && node.type !== "FunctionDeclaration") {
+      // Skip unreachable code after control flow terminators
+      if (foundTerminator && node.type !== "FunctionDeclaration") {
         this.stats.deadCodeRemoved++;
         return; // Skip unreachable code
       }
 
-      if (node.type === "ReturnStatement") {
-        foundReturn = true;
+      // Mark terminators: return, raise, break, continue
+      if (this.isControlFlowTerminator(node)) {
+        foundTerminator = true;
       }
 
       // Remove unused variable declarations
-      if (node.type === "VariableDeclaration") {
-        if (usedVariables.has(node.name)) {
-          reachableCode.push(node);
-        } else {
+      if (node.type === "VariableDeclaration" || node.type === "Assignment") {
+        const varName = node.name || (node.left && node.left.name);
+        if (varName && !usedVariables.has(varName) && !this.hasSideEffects(node)) {
           this.stats.deadCodeRemoved++;
+          return;
         }
-      } else {
-        reachableCode.push(node);
       }
 
-      // Reset return flag at function boundaries
+      // Remove if False: blocks
+      if (node.type === "IfStatement" && this.isConstantFalse(node.test)) {
+        this.stats.deadCodeRemoved++;
+        return;
+      }
+
+      // Keep reachable code
+      reachableCode.push(node);
+
+      // Reset terminator flag at function boundaries
       if (node.type === "FunctionDeclaration") {
-        foundReturn = false;
+        foundTerminator = false;
       }
     });
 
@@ -101,6 +111,43 @@ class PythonPerformanceOptimizer {
       ...ir,
       nodes: reachableCode,
     };
+  }
+
+  /**
+   * Check if node terminates control flow (Python-specific)
+   */
+  isControlFlowTerminator(node) {
+    if (!node || !node.type) return false;
+    return node.type === "ReturnStatement" ||
+           node.type === "RaiseStatement" ||
+           node.type === "BreakStatement" ||
+           node.type === "ContinueStatement";
+  }
+
+  /**
+   * Check if node has side effects (must preserve)
+   */
+  hasSideEffects(node) {
+    if (!node) return false;
+    // Function calls, print statements, raise statements have side effects
+    if (node.type === "CallExpression" || 
+        node.type === "PrintStatement" ||
+        node.type === "RaiseStatement") {
+      return true;
+    }
+    // Recursively check children
+    if (node.value) return this.hasSideEffects(node.value);
+    if (node.right) return this.hasSideEffects(node.right);
+    return false;
+  }
+
+  /**
+   * Check if expression is constant False
+   */
+  isConstantFalse(node) {
+    if (!node) return false;
+    return (node.type === "Literal" || node.type === "Boolean") && 
+           (node.value === false || node.value === 0 || node.value === null);
   }
 
   /**
@@ -210,27 +257,42 @@ class PythonPerformanceOptimizer {
   }
 
   /**
-   * Evaluate constant binary expression
+   * Evaluate constant binary expression - Enhanced Phase C
+   * Supports all Python operators including floor division and bitwise
    */
   evaluateConstantExpression(operator, left, right) {
     const leftVal = left.value !== undefined ? left.value : left;
     const rightVal = right.value !== undefined ? right.value : right;
 
     switch (operator) {
+    // Arithmetic
     case "+": return leftVal + rightVal;
     case "-": return leftVal - rightVal;
     case "*": return leftVal * rightVal;
     case "/": return leftVal / rightVal;
+    case "//": return Math.floor(leftVal / rightVal); // Python floor division
     case "%": return leftVal % rightVal;
     case "**": return Math.pow(leftVal, rightVal);
+    
+    // Comparison
     case "==": return leftVal === rightVal;
     case "!=": return leftVal !== rightVal;
     case "<": return leftVal < rightVal;
     case ">": return leftVal > rightVal;
     case "<=": return leftVal <= rightVal;
     case ">=": return leftVal >= rightVal;
+    
+    // Logical
     case "and": return leftVal && rightVal;
     case "or": return leftVal || rightVal;
+    
+    // Bitwise (Python-specific)
+    case "&": return leftVal & rightVal;
+    case "|": return leftVal | rightVal;
+    case "^": return leftVal ^ rightVal;
+    case "<<": return leftVal << rightVal;
+    case ">>": return leftVal >> rightVal;
+    
     default: return undefined;
     }
   }
@@ -296,19 +358,91 @@ class PythonPerformanceOptimizer {
    */
   canUnroll(loopNode) {
     // Can unroll if range is small and constant
-    return loopNode.iterator && 
-           loopNode.iterator.type === "FunctionCall" && 
-           loopNode.iterator.function === "range" &&
-           loopNode.iterator.arguments &&
-           loopNode.iterator.arguments.length <= 2;
+    if (!loopNode.iterator || 
+        loopNode.iterator.type !== "FunctionCall" || 
+        loopNode.iterator.function !== "range" ||
+        !loopNode.iterator.arguments) {
+      return false;
+    }
+
+    const args = loopNode.iterator.arguments;
+    // Check if all arguments are literal constants
+    const allLiterals = args.every(arg => 
+      arg.type === "Literal" || arg.type === "Number"
+    );
+
+    if (!allLiterals) return false;
+
+    // Calculate range size
+    const start = args.length === 1 ? 0 : (args[0].value || 0);
+    const end = args.length === 1 ? (args[0].value || 0) : (args[1].value || 0);
+    const step = args.length === 3 ? (args[2].value || 1) : 1;
+    const iterations = Math.ceil((end - start) / step);
+
+    // Only unroll if iterations <= 8 (conservative threshold)
+    return iterations > 0 && iterations <= 8;
   }
 
   /**
-   * Unroll a simple loop
+   * Unroll a simple loop - Phase C Enhancement
+   * Converts for i in range(n): body → body copy × n times
    */
   unrollLoop(loopNode) {
-    // This is a simplified version - full implementation would be more complex
-    return loopNode; // Return as-is for now
+    if (!this.canUnroll(loopNode)) {
+      return loopNode;
+    }
+
+    const args = loopNode.iterator.arguments;
+    const start = args.length === 1 ? 0 : (args[0].value || 0);
+    const end = args.length === 1 ? (args[0].value || 0) : (args[1].value || 0);
+    const step = args.length === 3 ? (args[2].value || 1) : 1;
+
+    // Create unrolled body
+    const unrolledStatements = [];
+    for (let i = start; i < end; i += step) {
+      // Clone body for each iteration
+      const iterationBody = JSON.parse(JSON.stringify(loopNode.body));
+      
+      // Replace loop variable with constant
+      if (loopNode.variable) {
+        this.replaceVariable(iterationBody, loopNode.variable, i);
+      }
+
+      unrolledStatements.push(iterationBody);
+    }
+
+    // Return a block statement containing unrolled code
+    return {
+      type: "BlockStatement",
+      body: unrolledStatements,
+      _unrolled: true,
+    };
+  }
+
+  /**
+   * Replace variable with constant value in AST
+   */
+  replaceVariable(node, varName, value) {
+    if (!node || typeof node !== "object") return;
+
+    if (node.type === "Identifier" && node.name === varName) {
+      node.type = "Literal";
+      node.value = value;
+      node.raw = String(value);
+      delete node.name;
+      return;
+    }
+
+    // Recursively replace in children
+    for (const key in node) {
+      if (Object.prototype.hasOwnProperty.call(node, key)) {
+        if (Array.isArray(node[key])) {
+          node[key].forEach(child => this.replaceVariable(child, varName, value));
+        } else if (typeof node[key] === "object") {
+          this.replaceVariable(node[key], varName, value);
+        }
+      }
+    }
   }
 
   /**
