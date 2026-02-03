@@ -90,6 +90,7 @@ class LuaScriptTranspiler {
     this.luaOptimizer = new LuaPeepholeOptimizer({
       trimTrailingWhitespace: options.trimTrailingWhitespace !== false,
       compactBlankLines: options.compactBlankLines !== false,
+      removeRedundantSemicolons: options.removeRedundantSemicolons !== false,
       maxConsecutiveBlankLines: Number.isInteger(options.maxConsecutiveBlankLines)
         ? options.maxConsecutiveBlankLines
         : 1,

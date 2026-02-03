@@ -12,6 +12,7 @@
 
 // Removed unused imports to reduce warnings
 const { Worker, isMainThread, parentPort, workerData } = require("worker_threads");
+const { LuaPeepholeOptimizer } = require("./optimizers/lua/phase_f/lua_optimizer");
 
 /**
  * Manages memory pools to reduce allocation overhead, inspired by PS2 memory architecture.
@@ -550,6 +551,7 @@ class OptimizedLuaScriptTranspiler {
       enableParallelProcessing: options.enableParallelProcessing !== false,
       enableCaching: options.enableCaching !== false,
       enableProfiling: options.enableProfiling !== false,
+      enableLuaOptimizations: options.enableLuaOptimizations !== false,
       workerCount: options.workerCount || 4,
       ...options
     };
@@ -561,6 +563,14 @@ class OptimizedLuaScriptTranspiler {
     this.simdMatcher = new SIMDPatternMatcher();
     this.specializedTranspilers = new SpecializedTranspilers();
     this.performanceMonitor = new PerformanceMonitor();
+    this.luaOptimizer = new LuaPeepholeOptimizer({
+      trimTrailingWhitespace: options.trimTrailingWhitespace !== false,
+      compactBlankLines: options.compactBlankLines !== false,
+      removeRedundantSemicolons: options.removeRedundantSemicolons !== false,
+      maxConsecutiveBlankLines: Number.isInteger(options.maxConsecutiveBlankLines)
+        ? options.maxConsecutiveBlankLines
+        : 1,
+    });
         
     if (this.options.enableParallelProcessing) {
       this.distributedTranspiler = new DistributedTranspiler(this.options.workerCount);
@@ -795,8 +805,16 @@ class OptimizedLuaScriptTranspiler {
      * @private
      */
   optimizeOutput(code) {
+    let output = code;
+    if (this.options.enableLuaOptimizations && this.luaOptimizer) {
+      const result = this.luaOptimizer.optimize(output, { phase: "optimized-transpiler" });
+      if (result && result.code) {
+        output = result.code;
+      }
+    }
+
     // Buffer output and flush in optimal chunks
-    const buffer = Buffer.from(code, "utf8");
+    const buffer = Buffer.from(output, "utf8");
     const chunkSize = 4096; // 4KB chunks
     let optimized = "";
         

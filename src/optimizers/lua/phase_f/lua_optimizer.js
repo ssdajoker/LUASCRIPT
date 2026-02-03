@@ -13,6 +13,7 @@ class LuaPeepholeOptimizer {
     this.options = {
       trimTrailingWhitespace: options.trimTrailingWhitespace !== false,
       compactBlankLines: options.compactBlankLines !== false,
+      removeRedundantSemicolons: options.removeRedundantSemicolons !== false,
       maxConsecutiveBlankLines: Number.isInteger(options.maxConsecutiveBlankLines)
         ? options.maxConsecutiveBlankLines
         : 1,
@@ -26,6 +27,7 @@ class LuaPeepholeOptimizer {
       linesProcessed: 0,
       trailingWhitespaceTrimmed: 0,
       blankLinesCollapsed: 0,
+      redundantSemicolonsRemoved: 0,
       optimizationsApplied: 0,
     };
   }
@@ -66,6 +68,14 @@ class LuaPeepholeOptimizer {
         }
       }
 
+      if (safeToModify && this.options.removeRedundantSemicolons) {
+        const withoutSemicolons = nextLine.replace(/;+\s*$/g, "");
+        if (withoutSemicolons !== nextLine) {
+          nextLine = withoutSemicolons;
+          this.stats.redundantSemicolonsRemoved += 1;
+        }
+      }
+
       if (safeToModify && this.options.compactBlankLines) {
         if (nextLine.trim() === "") {
           blankRun += 1;
@@ -97,10 +107,14 @@ class LuaPeepholeOptimizer {
     }
 
     const optimized = output.join("\n");
-    const applied = this.stats.trailingWhitespaceTrimmed > 0 || this.stats.blankLinesCollapsed > 0;
+    const applied = this.stats.trailingWhitespaceTrimmed > 0
+      || this.stats.blankLinesCollapsed > 0
+      || this.stats.redundantSemicolonsRemoved > 0;
 
     if (applied) {
-      this.stats.optimizationsApplied = this.stats.trailingWhitespaceTrimmed + this.stats.blankLinesCollapsed;
+      this.stats.optimizationsApplied = this.stats.trailingWhitespaceTrimmed
+        + this.stats.blankLinesCollapsed
+        + this.stats.redundantSemicolonsRemoved;
     }
 
     return {
