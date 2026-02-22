@@ -167,6 +167,23 @@ class IRBuilder {
     );
   }
 
+  // Pattern nodes for destructuring
+  arrayPattern(elements, options = {}) {
+    return this.registerNode(this.nodeFactory.createArrayPattern(elements, options));
+  }
+
+  objectPattern(properties, options = {}) {
+    return this.registerNode(this.nodeFactory.createObjectPattern(properties, options));
+  }
+
+  restElement(argument, options = {}) {
+    return this.registerNode(this.nodeFactory.createRestElement(argument, options));
+  }
+
+  assignmentPattern(left, right, options = {}) {
+    return this.registerNode(this.nodeFactory.createAssignmentPattern(left, right, options));
+  }
+
   callExpression(calleeRef, argumentRefs, options) {
     return this.registerNode(
       this.nodeFactory.createCallExpression(calleeRef, argumentRefs, options)

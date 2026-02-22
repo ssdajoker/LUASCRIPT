@@ -4,7 +4,10 @@
   "description": "Complete JavaScript-to-Lua transpiler with advanced runtime optimization - Tony Yoka's Unified Team Implementation",
   "main": "src/unified_luascript.js",
   "scripts": {
+    "status": "node scripts/status.js",
+    "clarity": "node scripts/clarity-cannon.js",
     "test": "npm run test:core && npm run test:phase1 && node tests/test_memory_management.js",
+    "test:critical": "python tests/test_critical_features.py",
     "test:enhanced": "node test/test_enhanced_transpiler.js",
     "test:all": "npm test && npm run test:enhanced && npm run test:legacy && npm run test:parity",
     "test:phase1": "node test/test_perfect_parser_phase1.js && node test/test_perfect_parser_phase1_negative.js",

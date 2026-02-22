@@ -340,10 +340,53 @@ class IRLowerer {
       case "ExpressionStatement": {
         return this.lowerExpression(node.expression);
       }
+      case "ArrayPattern": {
+        return this.lowerArrayPattern(node).id;
+      }
+      case "ObjectPattern": {
+        return this.lowerObjectPattern(node).id;
+      }
+      case "RestElement": {
+        return this.lowerRestElement(node).id;
+      }
+      case "AssignmentPattern": {
+        return this.lowerAssignmentPattern(node).id;
+      }
       default: {
         throw new Error(`Lowerer does not yet support expression type ${node.type}`);
       }
     }
+  }
+
+  lowerArrayPattern(node) {
+    const elements = (node.elements || []).map((el) => 
+      el ? this.lowerExpression(el) : null
+    );
+    return this.builder.arrayPattern(elements);
+  }
+
+  lowerObjectPattern(node) {
+    const properties = (node.properties || []).map((prop) => {
+      const key = this.lowerExpression(prop.key);
+      const value = this.lowerExpression(prop.value);
+      return this.builder.property(key, value, { 
+        propertyKind: prop.kind || "init",
+        computed: Boolean(prop.computed),
+        shorthand: Boolean(prop.shorthand)
+      }).id;
+    });
+    return this.builder.objectPattern(properties);
+  }
+
+  lowerRestElement(node) {
+    const argument = this.lowerExpression(node.argument);
+    return this.builder.restElement(argument);
+  }
+
+  lowerAssignmentPattern(node) {
+    const left = this.lowerExpression(node.left);
+    const right = this.lowerExpression(node.right);
+    return this.builder.assignmentPattern(left, right);
   }
 
   lowerTryStatement(node) {

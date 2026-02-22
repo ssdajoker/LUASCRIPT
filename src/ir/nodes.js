@@ -284,6 +284,40 @@ class IRNodeFactory {
       meta: options.meta || {},
     });
   }
+
+  // Pattern nodes for destructuring
+  createArrayPattern(elements, options = {}) {
+    return this.createNode("ArrayPattern", {
+      elements,
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
+  createObjectPattern(properties, options = {}) {
+    return this.createNode("ObjectPattern", {
+      properties,
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
+  createRestElement(argument, options = {}) {
+    return this.createNode("RestElement", {
+      argument,
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
+
+  createAssignmentPattern(left, right, options = {}) {
+    return this.createNode("AssignmentPattern", {
+      left,
+      right,
+      span: options.span || null,
+      meta: options.meta || {},
+    });
+  }
 }
 
 function inferLiteralKind(value) {

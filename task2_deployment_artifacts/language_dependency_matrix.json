@@ -1,0 +1,186 @@
+{
+  "timestamp": "2026-02-05T01:48:30.156201",
+  "total_languages": 11,
+  "languages": [
+    "java",
+    "csharp",
+    "elm",
+    "gleam",
+    "kotlin",
+    "fsharp",
+    "python",
+    "ruby",
+    "php",
+    "go",
+    "rust"
+  ],
+  "classification_summary": {
+    "independent": 7,
+    "family_dependent": 3,
+    "functional_ecosystem": 1
+  },
+  "critical_paths": {
+    "path_1": {
+      "start": "Java",
+      "end": "Kotlin/Groovy",
+      "hours": 8
+    },
+    "path_2": {
+      "start": "C#",
+      "end": "F#",
+      "hours": 8
+    },
+    "path_3": {
+      "start": "Elm",
+      "end": "Gleam",
+      "hours": 8
+    }
+  },
+  "total_critical_path_hours": 8,
+  "parallel_execution_potential": "7 independent languages can run parallel",
+  "dependency_matrix": {
+    "java": {
+      "java": "self",
+      "csharp": "independent",
+      "elm": "independent",
+      "gleam": "independent",
+      "kotlin": "independent",
+      "fsharp": "independent",
+      "python": "independent",
+      "ruby": "independent",
+      "php": "independent",
+      "go": "independent",
+      "rust": "independent"
+    },
+    "csharp": {
+      "java": "independent",
+      "csharp": "self",
+      "elm": "independent",
+      "gleam": "independent",
+      "kotlin": "independent",
+      "fsharp": "independent",
+      "python": "independent",
+      "ruby": "independent",
+      "php": "independent",
+      "go": "independent",
+      "rust": "independent"
+    },
+    "elm": {
+      "java": "independent",
+      "csharp": "independent",
+      "elm": "self",
+      "gleam": "independent",
+      "kotlin": "independent",
+      "fsharp": "independent",
+      "python": "independent",
+      "ruby": "independent",
+      "php": "independent",
+      "go": "independent",
+      "rust": "independent"
+    },
+    "gleam": {
+      "java": "independent",
+      "csharp": "independent",
+      "elm": "depends_on",
+      "gleam": "self",
+      "kotlin": "independent",
+      "fsharp": "independent",
+      "python": "independent",
+      "ruby": "independent",
+      "php": "independent",
+      "go": "independent",
+      "rust": "independent"
+    },
+    "kotlin": {
+      "java": "depends_on",
+      "csharp": "independent",
+      "elm": "independent",
+      "gleam": "independent",
+      "kotlin": "self",
+      "fsharp": "independent",
+      "python": "independent",
+      "ruby": "independent",
+      "php": "independent",
+      "go": "independent",
+      "rust": "independent"
+    },
+    "fsharp": {
+      "java": "independent",
+      "csharp": "depends_on",
+      "elm": "independent",
+      "gleam": "independent",
+      "kotlin": "independent",
+      "fsharp": "self",
+      "python": "independent",
+      "ruby": "independent",
+      "php": "independent",
+      "go": "independent",
+      "rust": "independent"
+    },
+    "python": {
+      "java": "independent",
+      "csharp": "independent",
+      "elm": "independent",
+      "gleam": "independent",
+      "kotlin": "independent",
+      "fsharp": "independent",
+      "python": "self",
+      "ruby": "independent",
+      "php": "independent",
+      "go": "independent",
+      "rust": "independent"
+    },
+    "ruby": {
+      "java": "independent",
+      "csharp": "independent",
+      "elm": "independent",
+      "gleam": "independent",
+      "kotlin": "independent",
+      "fsharp": "independent",
+      "python": "independent",
+      "ruby": "self",
+      "php": "independent",
+      "go": "independent",
+      "rust": "independent"
+    },
+    "php": {
+      "java": "independent",
+      "csharp": "independent",
+      "elm": "independent",
+      "gleam": "independent",
+      "kotlin": "independent",
+      "fsharp": "independent",
+      "python": "independent",
+      "ruby": "independent",
+      "php": "self",
+      "go": "independent",
+      "rust": "independent"
+    },
+    "go": {
+      "java": "independent",
+      "csharp": "independent",
+      "elm": "independent",
+      "gleam": "independent",
+      "kotlin": "independent",
+      "fsharp": "independent",
+      "python": "independent",
+      "ruby": "independent",
+      "php": "independent",
+      "go": "self",
+      "rust": "independent"
+    },
+    "rust": {
+      "java": "independent",
+      "csharp": "independent",
+      "elm": "independent",
+      "gleam": "independent",
+      "kotlin": "independent",
+      "fsharp": "independent",
+      "python": "independent",
+      "ruby": "independent",
+      "php": "independent",
+      "go": "independent",
+      "rust": "self"
+    }
+  }
+}
