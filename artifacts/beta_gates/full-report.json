@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:beta-gates",
+  "profile": "full",
+  "generatedAt": "2026-07-14T10:18:49.438Z",
+  "summary": {
+    "batches": 4,
+    "completedBatches": 4,
+    "failedScripts": 0,
+    "elapsedMs": 57580
+  },
+  "batches": [
+    {
+      "index": 1,
+      "scripts": [
+        "clarity:dogfood",
+        "clarity:canon:fast",
+        "clarity:canon:legacy"
+      ],
+      "results": [
+        {
+          "script": "clarity:dogfood",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 35356
+        },
+        {
+          "script": "clarity:canon:fast",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 7315
+        },
+        {
+          "script": "clarity:canon:legacy",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 2141
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "scripts": [
+        "clarity:canon:languages",
+        "clarity:canon:setup-blocked",
+        "clarity:canon:heavy"
+      ],
+      "results": [
+        {
+          "script": "clarity:canon:languages",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 914
+        },
+        {
+          "script": "clarity:canon:setup-blocked",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 895
+        },
+        {
+          "script": "clarity:canon:heavy",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 2094
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "scripts": [
+        "status:check",
+        "stubs:check",
+        "claims:check"
+      ],
+      "results": [
+        {
+          "script": "status:check",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 540
+        },
+        {
+          "script": "stubs:check",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 823
+        },
+        {
+          "script": "claims:check",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 655
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "scripts": [
+        "verify",
+        "test"
+      ],
+      "results": [
+        {
+          "script": "verify",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 19238
+        },
+        {
+          "script": "test",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 4583
+        }
+      ]
+    }
+  ],
+  "failures": []
+}

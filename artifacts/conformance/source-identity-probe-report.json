@@ -1,0 +1,680 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:source-identity-probe",
+  "command": "npm run test:source-identity-probe",
+  "generatedAt": "2026-07-16T05:36:20.065Z",
+  "elapsedMs": 6235,
+  "environment": {
+    "node": "v24.14.0",
+    "npm": {
+      "command": "cmd.exe",
+      "args": [
+        "/c",
+        "npm",
+        "-v"
+      ],
+      "available": true,
+      "status": 0,
+      "stdout": "11.9.0",
+      "stderr": ""
+    },
+    "platform": "win32",
+    "arch": "x64",
+    "os": {
+      "type": "Windows_NT",
+      "release": "10.0.26200"
+    },
+    "cwd": "C:\\Users\\ssdaj\\Desktop\\LUASCRIPT",
+    "generatedBy": "LUASCRIPT conformance report harness"
+  },
+  "manifest": {
+    "path": "tests/roundtrip/source_identity_manifest.json",
+    "sha256": "0280f940b1004e9e2602217ddd6135e5dd3a28a27152c8eb547c1666498c9272",
+    "status": "release-shaped-source-identity-suite",
+    "version": 2,
+    "fixtureCount": 15,
+    "fixtureHashes": [
+      {
+        "name": "ls_arithmetic_bindings_identity",
+        "sha256": "4f382d51ded51794452191c20576d844021bac6a94b47ef3332a37ba95713242"
+      },
+      {
+        "name": "ls_expression_precedence_identity",
+        "sha256": "eb500c86473feb2571a8426521b53b299ebdaca3e9307a4b0853f6e053978c75"
+      },
+      {
+        "name": "ls_functions_conditionals_identity",
+        "sha256": "64ab0c16da139441d3b384af195d017aa5c2758ca9f83cf6857090db9816e765"
+      },
+      {
+        "name": "ls_while_loop_identity",
+        "sha256": "a11b8496eb8c41de4fa0afd187c8f963848f85d88dda0953c60611959137e4b6"
+      },
+      {
+        "name": "ls_numeric_for_identity",
+        "sha256": "a6d19a94ab4d9f7c3e9266651f3a3a506b5d852a5bae8ed72c2744de992f6ed2"
+      },
+      {
+        "name": "ls_break_continue_identity",
+        "sha256": "c6e59b84794d1b7e82efed94321b188bf12daa84e60c29f74de6161f5e556e94"
+      },
+      {
+        "name": "ls_array_index_length_slice_identity",
+        "sha256": "ddec85eb8b4b9f642e33593c39bcdd38eb75b6b293830497b47308f743c3b6b4"
+      },
+      {
+        "name": "ls_object_mutation_identity",
+        "sha256": "525eab8b9902edc8898b73ea1f0bc9d9341b449e4ed9938a8fefbe053b772bfd"
+      },
+      {
+        "name": "ls_nested_object_state_identity",
+        "sha256": "825986f59bc256c7244ce5544c496d50743e13d2e2c663c9895ce4ed7f9f5859"
+      },
+      {
+        "name": "ls_profile_portable_slice_identity",
+        "sha256": "2f6b4a4f219e4a1d713a8885af2ae0f66d8e22de407226a1552a3531a9d29b48"
+      },
+      {
+        "name": "ls_repair_block_identity",
+        "sha256": "187dcb1bff22dfe5075fb4a8a6269e4bb5ef3e89c02a448bbabec51d9ccbea95"
+      },
+      {
+        "name": "ls_verify_block_identity",
+        "sha256": "816c618e46c494ccf7fc4276b73f12b297b8549def07482a26db1e5d7343692a"
+      },
+      {
+        "name": "ls_unsupported_throw_diagnostic",
+        "sha256": "b520dbba87f900f9bca010787e30af32b74e88064a4c95deaf22bb43b7ac686c"
+      },
+      {
+        "name": "ls_meta_profile_forbidden_diagnostic",
+        "sha256": "ea9bb1f9683368fdb1b394bb4efa1d44d98dff831f43c4b08c0413051a0ae4fa"
+      },
+      {
+        "name": "ls_meta_unknown_repair_strategy_diagnostic",
+        "sha256": "cc2f178e2d08d276318ef13c48a874f4779a2cdfda6239abc825578127678192"
+      }
+    ]
+  },
+  "sourceFiles": [
+    {
+      "name": "ls_arithmetic_bindings_identity",
+      "path": "tests/language_completion/fixtures/luascript/arithmetic_locals.ls",
+      "sha256": "d0717610e24ac66d932bc14f9bd92185dd722fe60f7b3bd2bff468d9d44998a9"
+    },
+    {
+      "name": "ls_expression_precedence_identity",
+      "path": "tests/roundtrip/fixtures/ls_expression_precedence_identity.ls",
+      "sha256": "f612a37cf4e4ac0b1c83a0fcb89fe763b4a04f60dd02d8930621500078ceda3b"
+    },
+    {
+      "name": "ls_functions_conditionals_identity",
+      "path": "tests/language_completion/fixtures/luascript/functions_conditionals.ls",
+      "sha256": "50107d81ca55e963c48dd616e961a84eaf483cedb75bcfed3b716a9cbcd62f2d"
+    },
+    {
+      "name": "ls_while_loop_identity",
+      "path": "tests/language_completion/fixtures/luascript/while_loop.ls",
+      "sha256": "6be325086f23567238c59759626835636a0bcc7a33cc358cbce4dbd19aaadd52"
+    },
+    {
+      "name": "ls_numeric_for_identity",
+      "path": "tests/language_completion/fixtures/luascript/numeric_for.ls",
+      "sha256": "ae6f4069d6a6936900bf44d0d1761d0dfbb99f349f08e668685c000686f0aa62"
+    },
+    {
+      "name": "ls_break_continue_identity",
+      "path": "tests/language_completion/fixtures/luascript/ring2_break_continue.ls",
+      "sha256": "9c204866197d03aa57b5962c3fa4a62789d04f0d13b31351a2be5cfa6a3eea3c"
+    },
+    {
+      "name": "ls_array_index_length_slice_identity",
+      "path": "tests/language_completion/fixtures/luascript/ring3_default_index_length_slice.ls",
+      "sha256": "f51484cb3795ee38ab13089c6fe7c798558fa7c38566a37652a2e12988bd9526"
+    },
+    {
+      "name": "ls_object_mutation_identity",
+      "path": "tests/language_completion/fixtures/luascript/object_mutation.ls",
+      "sha256": "b85b543577c8aa340ccfc7916bb8de767f7a776b3b9acd353c51536812ff3443"
+    },
+    {
+      "name": "ls_nested_object_state_identity",
+      "path": "tests/language_completion/fixtures/luascript/ring2_nested_object_state.ls",
+      "sha256": "d43b4331d4f7902c1d3fabad6142ea65bbb2f1fe78432bb37748416b6e8a7cbc"
+    },
+    {
+      "name": "ls_profile_portable_slice_identity",
+      "path": "tests/language_completion/fixtures/luascript/ring3_portable_semantics_index_length_slice.ls",
+      "sha256": "191bafbdfd2f57e9a29a5a96db840ce670b1cdd4de6e81da6fa33c6e9d31f771"
+    },
+    {
+      "name": "ls_repair_block_identity",
+      "path": "tests/roundtrip/fixtures/ls_repair_block_identity.ls",
+      "sha256": "e9e40c24f9a9032a72db44a2e651c610b4df956f9007916c9944dc3e81b94b39"
+    },
+    {
+      "name": "ls_verify_block_identity",
+      "path": "tests/roundtrip/fixtures/ls_verify_block_identity.ls",
+      "sha256": "8d5660cff96a1b5cea54ccc40e6153d80679b0beae1005bc3a3c20595e9578db"
+    },
+    {
+      "name": "ls_unsupported_throw_diagnostic",
+      "path": "tests/language_completion/fixtures/luascript/unsupported_throw.ls",
+      "sha256": "5d2ce1bbd4764a15c5c9832ba336ed188b012475d12e38b5d15d1b879040b11c"
+    },
+    {
+      "name": "ls_meta_profile_forbidden_diagnostic",
+      "path": "tests/language_completion/fixtures/luascript/meta_profile_forbidden_present.ls",
+      "sha256": "4809472cc073bacdca343cce05e97e769883d1f13d2581cd96140719584fa2e6"
+    },
+    {
+      "name": "ls_meta_unknown_repair_strategy_diagnostic",
+      "path": "tests/language_completion/fixtures/luascript/meta_unknown_repair_strategy.ls",
+      "sha256": "0aedcf89a73d32631a5fabe3d4ab34f714c7515a7c598720c572c53e6cbe8ea1"
+    }
+  ],
+  "supportMatrixTraceability": {
+    "supportMatrix": "docs/LANGUAGE_SUPPORT_MATRIX.md",
+    "evidenceBinder": "docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md",
+    "exitCriteria": "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md",
+    "bidirectionalityContract": "docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md",
+    "denaliLedger": "docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md",
+    "boundary": "Report evidence applies only to named manifest slices and does not claim source-preserving round-trip identity, ISO certification, or true omni-language 100%.",
+    "supportRows": [
+      "LUASCRIPT `.ls` JS-like syntax plus V0.16 meta layer to Lua/Python/JavaScript/`.ls`",
+      "The first round-trip probe harness"
+    ],
+    "evidenceRole": "Release-shaped .ls source identity suite with positive normalized source, normalized parser-owned AST, and normalized current bridge IR identity fixtures plus separate expected unsupported diagnostics. This is not token-level text identity, broad lossless source recovery, runtime-output equivalence, semantic equivalence, or true omni-language 100% proof."
+  },
+  "parserOwnedAstIdentity": {
+    "status": "seeded-normalized-positive-fixtures",
+    "parser": "src/parser/enhanced_parser.py",
+    "artifactApi": "parse_artifact(source, filename)",
+    "comparator": "Normalized parser-owned dataclass AST JSON for source and emitted .ls; token stream and trivia are excluded.",
+    "commandDependency": "python3",
+    "claimBoundary": "This proves normalized parser-owned AST identity for the positive .ls source-identity fixtures only. It does not prove token-level identity, comment preservation, broad lossless recovery, runtime-output equivalence, or semantic equivalence."
+  },
+  "summary": {
+    "total": 15,
+    "passed": 15,
+    "failed": 0,
+    "identityFixtures": 12,
+    "diagnosticFixtures": 3,
+    "normalizedSourceIdentity": 12,
+    "normalizedIrIdentity": 12,
+    "tokenLevelTextIdentity": 3,
+    "normalizedAstIdentity": 12,
+    "runtimeOutputEquivalence": 0,
+    "expectedUnsupportedDiagnostics": 3,
+    "broadSemanticEquivalence": 0
+  },
+  "coverageCounts": {
+    "bindings": 1,
+    "expressions": 2,
+    "functions": 1,
+    "conditionals": 3,
+    "loops": 3,
+    "arrays": 2,
+    "indexing": 3,
+    "slicing": 3,
+    "objects": 2,
+    "profile-blocks": 2,
+    "repair-blocks": 2,
+    "verify-blocks": 3,
+    "unsupported-diagnostics": 3
+  },
+  "tierCounts": {
+    "normalized-source-and-ir-identity": 12,
+    "expected-unsupported-diagnostic": 3
+  },
+  "claimTiers": {
+    "normalizedSourceIdentity": "positive fixtures only",
+    "normalizedAstIdentity": "positive fixtures only; parser-owned AST is normalized from src/parser/enhanced_parser.py parse_artifact output and excludes token stream/trivia",
+    "normalizedIrIdentity": "positive fixtures only",
+    "expectedUnsupportedDiagnostics": "expected-failure fixtures only",
+    "tokenLevelTextIdentity": "reported but not required",
+    "runtimeOutputEquivalence": "not claimed by this harness",
+    "broadLosslessRecovery": "not claimed by this harness",
+    "semanticEquivalence": "not claimed by this harness"
+  },
+  "bidirectionalityLayerEvidence": {
+    "language": "luascript",
+    "policy": "This manifest contributes only the .ls source identity layers; language gate, target-runtime, and runtime-output layers remain in the language-completion and round-trip reports.",
+    "layers": {
+      "emittedLs": "proven-named-fixtures",
+      "structuralIrReparse": "proven-named-fixtures",
+      "normalizedSourceIdentity": "proven-12-positive-fixtures",
+      "normalizedAstIdentity": "proven-12-positive-fixtures",
+      "normalizedIrIdentity": "proven-12-positive-fixtures",
+      "tokenIdentity": "measured-non-gating",
+      "runtimeOutputEquivalence": "not-claimed",
+      "semanticEquivalence": "not-claimed"
+    },
+    "evidence": [
+      "Source -> current bridge IR -> emitted .ls -> current bridge IR is checked for 12 positive fixtures.",
+      "Source -> parser-owned AST -> emitted .ls -> parser-owned AST is checked for 12 positive fixtures.",
+      "Token-level text identity is recorded per fixture but is not a gating assertion."
+    ],
+    "boundaries": [
+      "Expected unsupported diagnostic fixtures do not count as identity fixtures.",
+      "This route does not claim token-level identity, runtime-output equivalence, broad lossless recovery, or semantic equivalence."
+    ]
+  },
+  "boundaries": [
+    "This is not token-level text identity.",
+    "Parser-owned normalized AST identity is seeded for positive fixtures only, not for expected unsupported diagnostics or broad .ls syntax.",
+    "This is not broad lossless source recovery.",
+    "This is not runtime-output equivalence.",
+    "This is not broad semantic equivalence.",
+    "Expected unsupported diagnostics do not count as source identity fixtures.",
+    "This is not a 1.0 release seal."
+  ],
+  "results": [
+    {
+      "name": "ls_arithmetic_bindings_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "bindings",
+        "expressions"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for arithmetic bindings",
+      "sourcePath": "tests/language_completion/fixtures/luascript/arithmetic_locals.ls",
+      "sourceSha256": "d0717610e24ac66d932bc14f9bd92185dd722fe60f7b3bd2bff468d9d44998a9",
+      "emittedSha256": "9e9bea3563ef8556a0d54ac4170b0a0cef2ce84949626780699f7550008d4d24",
+      "normalizedSourceSha256": "9e9bea3563ef8556a0d54ac4170b0a0cef2ce84949626780699f7550008d4d24",
+      "normalizedEmittedSha256": "9e9bea3563ef8556a0d54ac4170b0a0cef2ce84949626780699f7550008d4d24",
+      "normalizedIrSha256": "34937d8049b008b33cc012965711c4129bd6082a3ecb5058725ee08740b1f7d0",
+      "normalizedEmittedIrSha256": "34937d8049b008b33cc012965711c4129bd6082a3ecb5058725ee08740b1f7d0",
+      "normalizedAstSha256": "e0f2d576a46799e2bb002b1a7811fe22f69a2849cf4c22704ded2327d6a097f9",
+      "normalizedEmittedAstSha256": "e0f2d576a46799e2bb002b1a7811fe22f69a2849cf4c22704ded2327d6a097f9",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_expression_precedence_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "expressions"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for expression precedence and boolean comparison",
+      "sourcePath": "tests/roundtrip/fixtures/ls_expression_precedence_identity.ls",
+      "sourceSha256": "f612a37cf4e4ac0b1c83a0fcb89fe763b4a04f60dd02d8930621500078ceda3b",
+      "emittedSha256": "69a1334c6da8174981b60e7bfbb614bcab40437baa4aecdfb5c9dbf2f9fde218",
+      "normalizedSourceSha256": "69a1334c6da8174981b60e7bfbb614bcab40437baa4aecdfb5c9dbf2f9fde218",
+      "normalizedEmittedSha256": "69a1334c6da8174981b60e7bfbb614bcab40437baa4aecdfb5c9dbf2f9fde218",
+      "normalizedIrSha256": "a62b006a71620484340ff0411799e477345d887973d66d4b7654bff942049236",
+      "normalizedEmittedIrSha256": "a62b006a71620484340ff0411799e477345d887973d66d4b7654bff942049236",
+      "normalizedAstSha256": "fdc2aa8d5c6bb1621603a5bc5567e01667eccfc02b3f00cb6318adb35a3e2c69",
+      "normalizedEmittedAstSha256": "fdc2aa8d5c6bb1621603a5bc5567e01667eccfc02b3f00cb6318adb35a3e2c69",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": true,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_functions_conditionals_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "functions",
+        "conditionals"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for functions and conditionals",
+      "sourcePath": "tests/language_completion/fixtures/luascript/functions_conditionals.ls",
+      "sourceSha256": "50107d81ca55e963c48dd616e961a84eaf483cedb75bcfed3b716a9cbcd62f2d",
+      "emittedSha256": "bd6d69b8d3fc42502151bc30149741299eb24b0dcdfd5a144a2103e5005fa9cd",
+      "normalizedSourceSha256": "0b276ebee9af1b2ed47ddf23d407bdec635d3630d48099894d7ae9b5238a0c60",
+      "normalizedEmittedSha256": "0b276ebee9af1b2ed47ddf23d407bdec635d3630d48099894d7ae9b5238a0c60",
+      "normalizedIrSha256": "b44762e71bf7d89f5d2e893918fa10c4b4f5015d48a2e0bc470bb3f135d0666f",
+      "normalizedEmittedIrSha256": "b44762e71bf7d89f5d2e893918fa10c4b4f5015d48a2e0bc470bb3f135d0666f",
+      "normalizedAstSha256": "7addf2bdd0d213463d8473c1357570110073308b2e34b59b6cdfdf9de772ccbb",
+      "normalizedEmittedAstSha256": "7addf2bdd0d213463d8473c1357570110073308b2e34b59b6cdfdf9de772ccbb",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_while_loop_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "loops"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for while loops",
+      "sourcePath": "tests/language_completion/fixtures/luascript/while_loop.ls",
+      "sourceSha256": "6be325086f23567238c59759626835636a0bcc7a33cc358cbce4dbd19aaadd52",
+      "emittedSha256": "adb5e29f1f0a83f30bc5dddbe34c2522155dc7d21d1888b8c5321b73e56aa62f",
+      "normalizedSourceSha256": "c2327b2c93458fe6a393dab4079bc0f703fd48774d43bd444fe6f51774dfff78",
+      "normalizedEmittedSha256": "c2327b2c93458fe6a393dab4079bc0f703fd48774d43bd444fe6f51774dfff78",
+      "normalizedIrSha256": "d69f2be8448c0b70bcd8e119040aa482c76835ed5978ae57fb941dc6c672f8a4",
+      "normalizedEmittedIrSha256": "d69f2be8448c0b70bcd8e119040aa482c76835ed5978ae57fb941dc6c672f8a4",
+      "normalizedAstSha256": "5659b01c517438bb664a62b9e54d7d39f15e30b91cf68ff03bb879e3c1337d3f",
+      "normalizedEmittedAstSha256": "5659b01c517438bb664a62b9e54d7d39f15e30b91cf68ff03bb879e3c1337d3f",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_numeric_for_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "loops"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for numeric for loops",
+      "sourcePath": "tests/language_completion/fixtures/luascript/numeric_for.ls",
+      "sourceSha256": "ae6f4069d6a6936900bf44d0d1761d0dfbb99f349f08e668685c000686f0aa62",
+      "emittedSha256": "ac28e259ce1892bfa4bf20b5430c9bc2699a1fc066e4869e7637fbe89817702c",
+      "normalizedSourceSha256": "2a9bd79247c43d37bab4af9e89c511313a2ccae1f67e1351974d684dd9d58c3d",
+      "normalizedEmittedSha256": "2a9bd79247c43d37bab4af9e89c511313a2ccae1f67e1351974d684dd9d58c3d",
+      "normalizedIrSha256": "5660676dd964fba5b6f5098f57c81485a02eb2aa3bf51a7a77998662502a80a7",
+      "normalizedEmittedIrSha256": "5660676dd964fba5b6f5098f57c81485a02eb2aa3bf51a7a77998662502a80a7",
+      "normalizedAstSha256": "4d6c6e9beebb7ec5270a91b01242e2d9b3d77d592e8f40fbbe460f533ee4fba0",
+      "normalizedEmittedAstSha256": "4d6c6e9beebb7ec5270a91b01242e2d9b3d77d592e8f40fbbe460f533ee4fba0",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_break_continue_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "loops",
+        "conditionals"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for loop break/continue flow",
+      "sourcePath": "tests/language_completion/fixtures/luascript/ring2_break_continue.ls",
+      "sourceSha256": "9c204866197d03aa57b5962c3fa4a62789d04f0d13b31351a2be5cfa6a3eea3c",
+      "emittedSha256": "4e275546b6136e39773e5de1c05a59e954b77b07f1c442a81bcf6c8db518a685",
+      "normalizedSourceSha256": "7f2c04a355f48623835494a1eadfcab006a510fded651368660d4bf64411cba8",
+      "normalizedEmittedSha256": "7f2c04a355f48623835494a1eadfcab006a510fded651368660d4bf64411cba8",
+      "normalizedIrSha256": "2ee66f5fe84f6ab5873deff3361828b716a13e014a2db36c55e0b8424e3bb93e",
+      "normalizedEmittedIrSha256": "2ee66f5fe84f6ab5873deff3361828b716a13e014a2db36c55e0b8424e3bb93e",
+      "normalizedAstSha256": "0d74aa0d7344d37789bd29314adc0f0c22f3d0f212cc2acaa943c9ee824f0839",
+      "normalizedEmittedAstSha256": "0d74aa0d7344d37789bd29314adc0f0c22f3d0f212cc2acaa943c9ee824f0839",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_array_index_length_slice_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "arrays",
+        "indexing",
+        "slicing"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for arrays, indexing, length, and slicing in default syntax",
+      "sourcePath": "tests/language_completion/fixtures/luascript/ring3_default_index_length_slice.ls",
+      "sourceSha256": "f51484cb3795ee38ab13089c6fe7c798558fa7c38566a37652a2e12988bd9526",
+      "emittedSha256": "da166840e1c280e55c80e1bef121e630adc615a0cf591c11ad388913b3e84414",
+      "normalizedSourceSha256": "da166840e1c280e55c80e1bef121e630adc615a0cf591c11ad388913b3e84414",
+      "normalizedEmittedSha256": "da166840e1c280e55c80e1bef121e630adc615a0cf591c11ad388913b3e84414",
+      "normalizedIrSha256": "858272417a0e410d283dfb97e31e2bbe35e55a998ecec77ffbd920bbe4d75eab",
+      "normalizedEmittedIrSha256": "858272417a0e410d283dfb97e31e2bbe35e55a998ecec77ffbd920bbe4d75eab",
+      "normalizedAstSha256": "a257e0ff8ec945604173005fdcc7a822e4ced770908eaca8c6138a4c8c272144",
+      "normalizedEmittedAstSha256": "a257e0ff8ec945604173005fdcc7a822e4ced770908eaca8c6138a4c8c272144",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_object_mutation_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "objects"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for object literals and field mutation",
+      "sourcePath": "tests/language_completion/fixtures/luascript/object_mutation.ls",
+      "sourceSha256": "b85b543577c8aa340ccfc7916bb8de767f7a776b3b9acd353c51536812ff3443",
+      "emittedSha256": "7363a965b366ae01e9486e719f1829cde342b4bcd7a06a620c8db17a7d3c6494",
+      "normalizedSourceSha256": "7363a965b366ae01e9486e719f1829cde342b4bcd7a06a620c8db17a7d3c6494",
+      "normalizedEmittedSha256": "7363a965b366ae01e9486e719f1829cde342b4bcd7a06a620c8db17a7d3c6494",
+      "normalizedIrSha256": "ae3a49f0ca2c23ba82ff6f2fe11a0415172a0291fe7f0d634ce6001a06fa6e68",
+      "normalizedEmittedIrSha256": "ae3a49f0ca2c23ba82ff6f2fe11a0415172a0291fe7f0d634ce6001a06fa6e68",
+      "normalizedAstSha256": "74cd7a42186615944c6612abe6ef078a0815abbad1b13f5de14514cfaeea5834",
+      "normalizedEmittedAstSha256": "74cd7a42186615944c6612abe6ef078a0815abbad1b13f5de14514cfaeea5834",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_nested_object_state_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "objects",
+        "conditionals"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for nested object state and conditional selection",
+      "sourcePath": "tests/language_completion/fixtures/luascript/ring2_nested_object_state.ls",
+      "sourceSha256": "d43b4331d4f7902c1d3fabad6142ea65bbb2f1fe78432bb37748416b6e8a7cbc",
+      "emittedSha256": "f631da7e29030e8435424ec9ea7203954f524f33cbb240c3acfc2e3c683fb556",
+      "normalizedSourceSha256": "f78ce13e4a7426887cadd736161cc055ae5af7ad7f49280cc3da8824b360238b",
+      "normalizedEmittedSha256": "f78ce13e4a7426887cadd736161cc055ae5af7ad7f49280cc3da8824b360238b",
+      "normalizedIrSha256": "e5c7e21918de1fe0f242cc9ac0dbb14897d43bd975425eef5d6d8fcde73d255b",
+      "normalizedEmittedIrSha256": "e5c7e21918de1fe0f242cc9ac0dbb14897d43bd975425eef5d6d8fcde73d255b",
+      "normalizedAstSha256": "564cc941a1e1298c3f5b89e423558f3d3accf9d9ea70a4d41cebdf775d8a94b0",
+      "normalizedEmittedAstSha256": "564cc941a1e1298c3f5b89e423558f3d3accf9d9ea70a4d41cebdf775d8a94b0",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_profile_portable_slice_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "profile-blocks",
+        "arrays",
+        "indexing",
+        "slicing"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for portable_semantics_v1 profile, arrays, indexing, length, and slicing",
+      "sourcePath": "tests/language_completion/fixtures/luascript/ring3_portable_semantics_index_length_slice.ls",
+      "sourceSha256": "191bafbdfd2f57e9a29a5a96db840ce670b1cdd4de6e81da6fa33c6e9d31f771",
+      "emittedSha256": "984079191024c9f003460ef66789e5b36f0d486cdb77f82f8ac77afd672cea83",
+      "normalizedSourceSha256": "21f6f495ffc79608910eb14f09d3fb7794936de2a7811b4169c791f9409d828c",
+      "normalizedEmittedSha256": "21f6f495ffc79608910eb14f09d3fb7794936de2a7811b4169c791f9409d828c",
+      "normalizedIrSha256": "ddb3df2fb43f39bda542e78b0e375f2818fa7b8e2dc5bf622283aae18d6bf131",
+      "normalizedEmittedIrSha256": "ddb3df2fb43f39bda542e78b0e375f2818fa7b8e2dc5bf622283aae18d6bf131",
+      "normalizedAstSha256": "3f093587734fafb65dd3404b1b803391ff97a236d2208046b051096668880dcf",
+      "normalizedEmittedAstSha256": "3f093587734fafb65dd3404b1b803391ff97a236d2208046b051096668880dcf",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_repair_block_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "repair-blocks",
+        "verify-blocks",
+        "indexing",
+        "slicing"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for repair and verify block preservation",
+      "sourcePath": "tests/roundtrip/fixtures/ls_repair_block_identity.ls",
+      "sourceSha256": "e9e40c24f9a9032a72db44a2e651c610b4df956f9007916c9944dc3e81b94b39",
+      "emittedSha256": "cb76f4cb4637e1b5adb06a5238abf2fb4ef5981ce52f42f777c601e7bd296f9b",
+      "normalizedSourceSha256": "bc80977f02e676ce7d79922e71d04d68981d13957a315fd5cd623e7d5f12dede",
+      "normalizedEmittedSha256": "bc80977f02e676ce7d79922e71d04d68981d13957a315fd5cd623e7d5f12dede",
+      "normalizedIrSha256": "f3511959da78f8f5e64503a7eb67374ff15d203e55cc64c06c602b3c609f046c",
+      "normalizedEmittedIrSha256": "f3511959da78f8f5e64503a7eb67374ff15d203e55cc64c06c602b3c609f046c",
+      "normalizedAstSha256": "e2feebb403c10cee486e807d4a5283457995bf1d6a14637d01f182cd19d9c72d",
+      "normalizedEmittedAstSha256": "e2feebb403c10cee486e807d4a5283457995bf1d6a14637d01f182cd19d9c72d",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": true,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_verify_block_identity",
+      "status": "passed",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": [
+        "verify-blocks"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for verify block preservation",
+      "sourcePath": "tests/roundtrip/fixtures/ls_verify_block_identity.ls",
+      "sourceSha256": "8d5660cff96a1b5cea54ccc40e6153d80679b0beae1005bc3a3c20595e9578db",
+      "emittedSha256": "81e9f44f2d3f720ae0f48b6f6c971ceb61db8608b2b830918675c18ba10dc74e",
+      "normalizedSourceSha256": "4a3357226d7fb3c887e9d08f1ee0a8f1cf527c96a3b281b0d7c0fe2df24b918f",
+      "normalizedEmittedSha256": "4a3357226d7fb3c887e9d08f1ee0a8f1cf527c96a3b281b0d7c0fe2df24b918f",
+      "normalizedIrSha256": "28feec2c14e59da6b72c70646ae5be8b11e83805652c53b49fb0d3cbb80222e7",
+      "normalizedEmittedIrSha256": "28feec2c14e59da6b72c70646ae5be8b11e83805652c53b49fb0d3cbb80222e7",
+      "normalizedAstSha256": "15da707ac3eaf05ad1982e37bf5d2eec8c8946dfa60a208bd31f4d1ba3465dc8",
+      "normalizedEmittedAstSha256": "15da707ac3eaf05ad1982e37bf5d2eec8c8946dfa60a208bd31f4d1ba3465dc8",
+      "normalizedSourceIdentity": true,
+      "normalizedIrIdentity": true,
+      "tokenLevelTextIdentity": true,
+      "normalizedAstIdentity": true,
+      "runtimeOutputEquivalence": false,
+      "expectedUnsupportedDiagnostic": false,
+      "broadSemanticEquivalence": false
+    },
+    {
+      "name": "ls_unsupported_throw_diagnostic",
+      "status": "passed",
+      "tier": "expected-unsupported-diagnostic",
+      "coverage": [
+        "unsupported-diagnostics"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "named unsupported diagnostic for throw statements; no source identity claimed",
+      "sourcePath": "tests/language_completion/fixtures/luascript/unsupported_throw.ls",
+      "sourceSha256": "5d2ce1bbd4764a15c5c9832ba336ed188b012475d12e38b5d15d1b879040b11c",
+      "expectedDiagnosticPattern": "Unsupported JavaScript exception flow: throw statements",
+      "actualDiagnostic": "JavaScript compilation error: Unsupported JavaScript exception flow: throw statements are not canonicalized for cross-target emission yet",
+      "normalizedSourceIdentity": false,
+      "normalizedIrIdentity": false,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": false,
+      "runtimeOutputEquivalence": false,
+      "broadSemanticEquivalence": false,
+      "expectedUnsupportedDiagnostic": true
+    },
+    {
+      "name": "ls_meta_profile_forbidden_diagnostic",
+      "status": "passed",
+      "tier": "expected-unsupported-diagnostic",
+      "coverage": [
+        "unsupported-diagnostics",
+        "profile-blocks",
+        "verify-blocks"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "named meta profile forbidden diagnostic; no source identity claimed",
+      "sourcePath": "tests/language_completion/fixtures/luascript/meta_profile_forbidden_present.ls",
+      "sourceSha256": "4809472cc073bacdca343cce05e97e769883d1f13d2581cd96140719584fa2e6",
+      "expectedDiagnosticPattern": "Forbidden LUASCRIPT profile assertion present: portable_v1",
+      "actualDiagnostic": "Forbidden LUASCRIPT profile assertion present: portable_v1",
+      "normalizedSourceIdentity": false,
+      "normalizedIrIdentity": false,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": false,
+      "runtimeOutputEquivalence": false,
+      "broadSemanticEquivalence": false,
+      "expectedUnsupportedDiagnostic": true
+    },
+    {
+      "name": "ls_meta_unknown_repair_strategy_diagnostic",
+      "status": "passed",
+      "tier": "expected-unsupported-diagnostic",
+      "coverage": [
+        "unsupported-diagnostics",
+        "repair-blocks"
+      ],
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "claim": "named unsupported repair-strategy diagnostic; no source identity claimed",
+      "sourcePath": "tests/language_completion/fixtures/luascript/meta_unknown_repair_strategy.ls",
+      "sourceSha256": "0aedcf89a73d32631a5fabe3d4ab34f714c7515a7c598720c572c53e6cbe8ea1",
+      "expectedDiagnosticPattern": "Unsupported repair strategy for indexing: one_based",
+      "actualDiagnostic": "Unsupported repair strategy for indexing: one_based",
+      "normalizedSourceIdentity": false,
+      "normalizedIrIdentity": false,
+      "tokenLevelTextIdentity": false,
+      "normalizedAstIdentity": false,
+      "runtimeOutputEquivalence": false,
+      "broadSemanticEquivalence": false,
+      "expectedUnsupportedDiagnostic": true
+    }
+  ],
+  "failures": []
+}

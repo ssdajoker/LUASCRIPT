@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:unsupported-diagnostics",
+  "command": "npm run test:unsupported-diagnostics",
+  "generatedAt": "2026-07-16T05:36:14.199Z",
+  "elapsedMs": 343,
+  "environment": {
+    "node": "v24.14.0",
+    "npm": {
+      "command": "cmd.exe",
+      "args": [
+        "/c",
+        "npm",
+        "-v"
+      ],
+      "available": true,
+      "status": 0,
+      "stdout": "11.9.0",
+      "stderr": ""
+    },
+    "platform": "win32",
+    "arch": "x64",
+    "os": {
+      "type": "Windows_NT",
+      "release": "10.0.26200"
+    },
+    "cwd": "C:\\Users\\ssdaj\\Desktop\\LUASCRIPT",
+    "generatedBy": "LUASCRIPT conformance report harness"
+  },
+  "testFile": {
+    "path": "tests/ir/unsupported_diagnostics.test.js",
+    "sha256": "1ec1c8ab3b8ea81e3da8f7a80cceb95d41e3de6efc9afc27b929a229babeb17b"
+  },
+  "supportMatrixTraceability": {
+    "supportMatrix": "docs/LANGUAGE_SUPPORT_MATRIX.md",
+    "evidenceBinder": "docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md",
+    "exitCriteria": "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md",
+    "bidirectionalityContract": "docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md",
+    "denaliLedger": "docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md",
+    "boundary": "Report evidence applies only to named manifest slices and does not claim source-preserving round-trip identity, ISO certification, or true omni-language 100%.",
+    "supportRows": [
+      "JavaScript input to Lua output",
+      "LUASCRIPT `.ls` JS-like syntax plus V0.16 meta layer to Lua/Python/JavaScript/`.ls`",
+      "Python",
+      "Lua input",
+      "Unsupported diagnostics",
+      "Canonical IR conformance"
+    ],
+    "evidenceRole": "Named unsupported diagnostics catalog for stable current JavaScript, `.ls`, Python, Lua, core fallback, and target-emitter failures."
+  },
+  "summary": {
+    "total": 21,
+    "passed": 21,
+    "failed": 0,
+    "categories": [
+      "core-transpiler",
+      "ir-emitter",
+      "javascript-source",
+      "lua-source",
+      "luascript-source",
+      "python-source",
+      "target-emitter"
+    ]
+  },
+  "results": [
+    {
+      "id": "class_declaration_lua_emitter",
+      "label": "ClassDeclaration must fail with an explicit unsupported diagnostic",
+      "category": "ir-emitter",
+      "status": "passed",
+      "pattern": "Emitter does not support FunctionDeclaration: class-like FunctionDeclaration requires class lowering before Lua emission",
+      "diagnostic": "Emitter does not support FunctionDeclaration: class-like FunctionDeclaration requires class lowering before Lua emission",
+      "caseHash": "d3b9796a215310b1e39aab2834b9771d6790e3551c6d717d6c519c3016a27be9"
+    },
+    {
+      "id": "javascript_for_of",
+      "label": "ForOfStatement must fail with a named JavaScript control-flow diagnostic",
+      "category": "javascript-source",
+      "status": "passed",
+      "pattern": "Unsupported JavaScript control flow: for-of loops",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript control flow: for-of loops are not canonicalized for cross-target emission yet",
+      "caseHash": "7cb97e066b2b3509576ec1aecb426da141a9bdc27b806253810c91ff8dbcaad8"
+    },
+    {
+      "id": "javascript_try_catch",
+      "label": "TryStatement must fail with a named JavaScript exception diagnostic",
+      "category": "javascript-source",
+      "status": "passed",
+      "pattern": "Unsupported JavaScript exception flow: try\\/catch\\/finally",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript exception flow: try/catch/finally is not canonicalized for cross-target emission yet",
+      "caseHash": "ddcfe90c027c160fd05ece7c229f4ea17b41d1e08425a3a26fc042ec099ad4b4"
+    },
+    {
+      "id": "javascript_throw",
+      "label": "ThrowStatement must fail with a named JavaScript exception diagnostic",
+      "category": "javascript-source",
+      "status": "passed",
+      "pattern": "Unsupported JavaScript exception flow: throw statements",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript exception flow: throw statements are not canonicalized for cross-target emission yet",
+      "caseHash": "95543a597c3e85fedf5a3103dc943ebf601d607cda515b7bcec7e9c554a6ac2a"
+    },
+    {
+      "id": "javascript_tagged_template",
+      "label": "TaggedTemplateExpression must fail with a named JavaScript template diagnostic",
+      "category": "javascript-source",
+      "status": "passed",
+      "pattern": "Unsupported JavaScript template literal form: tagged template literals",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript template literal form: tagged template literals are not canonicalized for cross-target emission yet",
+      "caseHash": "96fadb72fc01cdc2619e8f32d1d54d0506665644bc37d5fb6a7af27722f6393b"
+    },
+    {
+      "id": "javascript_object_spread",
+      "label": "Object spread must fail with a named JavaScript data-structure diagnostic",
+      "category": "javascript-source",
+      "status": "passed",
+      "pattern": "Unsupported JavaScript object spread",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript object spread is not canonicalized for cross-target emission yet",
+      "caseHash": "3f251dfe3be4af35bf7a2481df875125dfdd6dcd01d867eaee1b76c513256085"
+    },
+    {
+      "id": "javascript_destructuring",
+      "label": "Destructuring declarations must fail with a named JavaScript pattern diagnostic",
+      "category": "javascript-source",
+      "status": "passed",
+      "pattern": "Unsupported JavaScript variable declarator pattern: ObjectPattern",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript variable declarator pattern: ObjectPattern is not canonicalized for cross-target emission yet",
+      "caseHash": "1d34bd47ea05104a8336c92228a565ece840850b3c661687b5026e9b96f0f030"
+    },
+    {
+      "id": "luascript_for_of",
+      "label": ".ls for-of syntax must fail with the named JS-like control-flow diagnostic",
+      "category": "luascript-source",
+      "status": "passed",
+      "pattern": "Unsupported JavaScript control flow: for-of loops",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript control flow: for-of loops are not canonicalized for cross-target emission yet",
+      "caseHash": "76ccd9a8bab17b7b56bf234bc11c31ad0ec8f638d7af3b53bf95856e62b1b4f2"
+    },
+    {
+      "id": "luascript_try_catch",
+      "label": ".ls try/catch syntax must fail with the named JS-like exception diagnostic",
+      "category": "luascript-source",
+      "status": "passed",
+      "pattern": "Unsupported JavaScript exception flow: try\\/catch\\/finally",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript exception flow: try/catch/finally is not canonicalized for cross-target emission yet",
+      "caseHash": "c93d5282ce76535e3860c7dcb6f288e8946abcdcf9df7df2cfa5daab95674175"
+    },
+    {
+      "id": "luascript_repair_strategy",
+      "label": ".ls repair blocks must fail with a named repair-strategy diagnostic",
+      "category": "luascript-source",
+      "status": "passed",
+      "pattern": "Unsupported repair strategy for indexing: one_based",
+      "diagnostic": "Unsupported repair strategy for indexing: one_based",
+      "caseHash": "66f07d676f153f69c9b925390640d043d4ad0bb295d2d0a2dae1b4379d27d696"
+    },
+    {
+      "id": "python_slice_step",
+      "label": "Python slice steps must fail with a named input-feature diagnostic",
+      "category": "python-source",
+      "status": "passed",
+      "pattern": "Unsupported Python input feature: slice steps",
+      "diagnostic": "Python compilation error: Unsupported Python input feature: slice steps at line 2",
+      "caseHash": "d5bcd9dd85119f8a96df77ffe3f6c89158e790d90a44b279b959eba534575e7a"
+    },
+    {
+      "id": "python_slice_assignment",
+      "label": "Python slice assignment must fail with a named input-feature diagnostic",
+      "category": "python-source",
+      "status": "passed",
+      "pattern": "Unsupported Python input feature: slice assignment",
+      "diagnostic": "Python compilation error: Unsupported Python input feature: slice assignment at line 2",
+      "caseHash": "dd2d65a0d6ac56b88eab5171a847116fd3ec45c1d1063cefec160248f9fc8d8e"
+    },
+    {
+      "id": "python_continue",
+      "label": "Python continue statements must fail with a named input-feature diagnostic",
+      "category": "python-source",
+      "status": "passed",
+      "pattern": "Unsupported Python input feature: continue statements",
+      "diagnostic": "Python compilation error: Unsupported Python input feature: continue statements at line 4",
+      "caseHash": "1be8b0fcf1f9c41a145dcfef894b8d68294b22ee9c8192bd10b3d405284c21ba"
+    },
+    {
+      "id": "lua_varargs",
+      "label": "Lua varargs must fail with a named input-feature diagnostic",
+      "category": "lua-source",
+      "status": "passed",
+      "pattern": "Unsupported Lua input feature: varargs",
+      "diagnostic": "Lua compilation error: Unsupported Lua input feature: varargs at line 1",
+      "caseHash": "57a18d8a8e164b3cc04bf388ec2b5b20abe196713584a370f864f2c8fcd7ff1c"
+    },
+    {
+      "id": "lua_metatables",
+      "label": "Lua metatable helpers must fail with a named input-feature diagnostic",
+      "category": "lua-source",
+      "status": "passed",
+      "pattern": "Unsupported Lua input feature: metatables",
+      "diagnostic": "Lua compilation error: Unsupported Lua input feature: metatables at line 1",
+      "caseHash": "a7e7026bede29f1890a82d315a784b61cb267df592312f6239efa8e9b36327df"
+    },
+    {
+      "id": "lua_require",
+      "label": "Lua require calls must fail with a named input-feature diagnostic",
+      "category": "lua-source",
+      "status": "passed",
+      "pattern": "Unsupported Lua input feature: require",
+      "diagnostic": "Lua compilation error: Unsupported Lua input feature: require at line 1",
+      "caseHash": "40a7c028596fc700ba9b5bf51f0b68520b6a90bcb0f30784da338fa17400917a"
+    },
+    {
+      "id": "lua_complex_table_key",
+      "label": "Lua complex table keys must fail with a named input-feature diagnostic",
+      "category": "lua-source",
+      "status": "passed",
+      "pattern": "Unsupported Lua input feature: complex table keys",
+      "diagnostic": "Lua compilation error: Unsupported Lua input feature: complex table keys at line 1",
+      "caseHash": "ece28f5361fd1c0155b97166ec02e50e0280913dff73847559a94f3c267d9969"
+    },
+    {
+      "id": "core_transpiler_throw_fallback",
+      "label": "Core transpiler fallback must fail with a named JavaScript throw diagnostic",
+      "category": "core-transpiler",
+      "status": "passed",
+      "pattern": "Unsupported JavaScript exception flow: throw statements",
+      "diagnostic": "Unsupported JavaScript exception flow: throw statements are not canonicalized for cross-target emission yet",
+      "caseHash": "d337a9e5670c8fa65d604a4822627f330a39c7a42f1339a4134335d250eea606"
+    },
+    {
+      "id": "javascript_rest_parameters",
+      "label": "Rest parameters must fail with a named JavaScript parameter diagnostic",
+      "category": "javascript-source",
+      "status": "passed",
+      "pattern": "Unsupported JavaScript parameter pattern: RestElement",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript parameter pattern: RestElement is not canonicalized for cross-target emission yet",
+      "caseHash": "6f949186fcba7007e9cc350e1fcbf8a652738531b80e4ffa68a15f1b9b9f52fa"
+    },
+    {
+      "id": "javascript_output_unknown_ir",
+      "label": "JavaScript emitter must fail with a target-specific unsupported IR diagnostic",
+      "category": "target-emitter",
+      "status": "passed",
+      "pattern": "Unsupported JavaScript output IR node kind: ImaginaryNode",
+      "diagnostic": "Unsupported JavaScript output IR node kind: ImaginaryNode",
+      "caseHash": "7d6f610fe41a4cf5d0144121218f85b04721784dd1a97468523cf0d5c24f2cdc"
+    },
+    {
+      "id": "lua_output_unknown_ir",
+      "label": "Lua emitter must fail with a target-specific unsupported IR diagnostic",
+      "category": "target-emitter",
+      "status": "passed",
+      "pattern": "Unsupported Lua output IR node kind: ImaginaryNode",
+      "diagnostic": "Unsupported Lua output IR node kind: ImaginaryNode",
+      "caseHash": "f2cf099f4e72e9c9cdbcf094e9c249f674f22c9ccc57e3a7c580024f11bac475"
+    }
+  ],
+  "failures": []
+}
