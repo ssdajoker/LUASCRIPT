@@ -1,10 +1,12 @@
 
 # LUASCRIPT IR Usage Guide
 
+Status: IR support reference. Current package/runtime status lives in [../../PROJECT_STATUS.md](../../PROJECT_STATUS.md), and the active-docs map lives in [../INDEX.md](../INDEX.md). Examples here are illustrative unless they are covered by current manifests, runtime gates, and claims checks.
+
 ## Installation
 
 ```bash
-npm install luascript
+npm install
 ```
 
 ## Quick Start

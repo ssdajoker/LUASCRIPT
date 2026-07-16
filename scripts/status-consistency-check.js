@@ -13,8 +13,36 @@ const CONFIG = {
   sourceOfTruth: 'PROJECT_STATUS.md',
   keyDocs: [
     'README.md',
-    'DEVELOPMENT_WORKFLOW.md',
-    'CONTRIBUTING.md'
+    'docs/INDEX.md',
+    'docs/LANGUAGE_SUPPORT_MATRIX.md',
+    'docs/LANGUAGE_COMPLETION_RULES.md'
+  ],
+  activeDocs: [
+    'PROJECT_STATUS.md',
+    'docs/INDEX.md',
+    'docs/BETA_RELEASE_HANDOFF_V0_1.md',
+    'docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md',
+    'docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md',
+    'docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md',
+    'docs/LUASCRIPT_1_0_EXIT_CRITERIA.md',
+    'docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md',
+    'docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md',
+    'docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md',
+    'docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md',
+    'docs/LUASCRIPT_MEGA_PLAN.md',
+    'docs/LANGUAGE_SUPPORT_MATRIX.md',
+    'docs/LANGUAGE_COMPLETION_RULES.md',
+    'docs/LUASCRIPT_LIVING_META_LANGUAGE.md',
+    'docs/LUASCRIPT_META_LANGUAGE_V0.md',
+    'docs/LUASCRIPT_MATHEMATICAL_NOTATION_CORE.md',
+    'docs/quick-start/README.md',
+    'docs/architecture/README.md',
+    'docs/reference/README.md',
+    'docs/canonical_ir_spec.md',
+    'docs/VERSIONING.md',
+    'docs/ir/ARCHITECTURE.md',
+    'docs/ir/USAGE_GUIDE.md',
+    'docs/OLD LUASCRIPT DOCS/README.md'
   ],
   deprecatedDocs: [
     // Add patterns for deprecated docs
@@ -25,13 +53,23 @@ const CONFIG = {
   requiredLinks: [
     {
       file: 'README.md',
-      mustContain: ['PROJECT_STATUS.md', 'source of truth'],
-      reason: 'README must link to PROJECT_STATUS as source of truth'
+      mustContain: ['PROJECT_STATUS.md', 'source of truth', 'docs/INDEX.md', 'canonical active-docs map'],
+      reason: 'README must link to PROJECT_STATUS and the active-docs map'
     },
     {
-      file: 'DEVELOPMENT_WORKFLOW.md',
-      mustContain: ['PROJECT_STATUS.md'],
-      reason: 'DEVELOPMENT_WORKFLOW must reference PROJECT_STATUS'
+      file: 'PROJECT_STATUS.md',
+      mustContain: ['docs/INDEX.md', 'active-docs map', 'docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md', 'docs/LUASCRIPT_1_0_EXIT_CRITERIA.md', 'docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md', 'docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md', 'docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md', 'docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md', 'docs/quick-start/README.md', 'docs/architecture/README.md', 'docs/reference/README.md'],
+      reason: 'PROJECT_STATUS must point to the active-docs map and package/runtime docs'
+    },
+    {
+      file: 'docs/INDEX.md',
+      mustContain: ['canonical active-docs map', 'Support References', 'OLD LUASCRIPT DOCS/README.md'],
+      reason: 'docs/INDEX.md must define the active map, support references, and archive root'
+    },
+    {
+      file: 'docs/OLD LUASCRIPT DOCS/README.md',
+      mustContain: ['Nothing here is a current guidance document', '../INDEX.md', 'historical evidence'],
+      reason: 'archive root must remain clearly archive-only'
     }
   ],
   deprecationPointers: [
@@ -42,6 +80,12 @@ const CONFIG = {
     '⚠️'
   ]
 };
+
+function activeIndexTarget(relativePath) {
+  if (relativePath === 'PROJECT_STATUS.md') return '../PROJECT_STATUS.md';
+  if (relativePath.startsWith('docs/')) return relativePath.slice('docs/'.length).replace(/\\/g, '/');
+  return relativePath.replace(/\\/g, '/');
+}
 
 function readFile(filePath) {
   try {
@@ -120,6 +164,44 @@ function checkRequiredLinks() {
     }
   }
   
+  return failures;
+}
+
+function checkActiveDocsMap() {
+  const failures = [];
+  const repoRoot = path.join(__dirname, '..');
+  const readme = readFile(path.join(repoRoot, 'README.md')) || '';
+  const index = readFile(path.join(repoRoot, 'docs', 'INDEX.md')) || '';
+
+  for (const docPath of CONFIG.activeDocs) {
+    const filePath = path.join(repoRoot, docPath);
+    if (!checkFileExists(filePath)) {
+      failures.push({
+        file: docPath,
+        reason: 'Active docs map target is missing',
+        severity: 'error'
+      });
+      continue;
+    }
+
+    const target = activeIndexTarget(docPath);
+    if (docPath !== 'docs/INDEX.md' && !index.includes(target)) {
+      failures.push({
+        file: 'docs/INDEX.md',
+        reason: `Active docs map does not link ${target}`,
+        severity: 'error'
+      });
+    }
+
+    if (docPath !== 'PROJECT_STATUS.md' && docPath !== 'docs/OLD LUASCRIPT DOCS/README.md' && !readme.includes(docPath.replace(/\\/g, '/'))) {
+      failures.push({
+        file: 'README.md',
+        reason: `Documentation map does not link ${docPath}`,
+        severity: 'error'
+      });
+    }
+  }
+
   return failures;
 }
 
@@ -250,6 +332,21 @@ function displayResults(results) {
       warnings++;
     }
   }
+
+  // Active docs map check
+  if (results.activeDocsMap.length === 0) {
+    console.log('✅ Active docs map is sealed');
+  } else {
+    for (const failure of results.activeDocsMap) {
+      const icon = failure.severity === 'error' ? '❌' : '⚠️';
+      console.log(`${icon} ${failure.file}: ${failure.reason}`);
+      if (failure.severity === 'error') {
+        errors++;
+      } else {
+        warnings++;
+      }
+    }
+  }
   
   // Consistency check
   if (results.consistency.length === 0) {
@@ -278,6 +375,7 @@ function main() {
     sourceOfTruth: checkSourceOfTruthExists(),
     requiredLinks: checkRequiredLinks(),
     deprecatedDocs: checkDeprecatedDocs(),
+    activeDocsMap: checkActiveDocsMap(),
     consistency: checkStatusConsistency()
   };
   
@@ -286,6 +384,7 @@ function main() {
   console.log('\n💡 Recommendations:');
   if (errors > 0 || warnings > 0) {
     console.log('  • Ensure all key docs link to PROJECT_STATUS.md');
+    console.log('  • Keep docs/INDEX.md as the active-docs map');
     console.log('  • Add deprecation notices to old/legacy docs');
     console.log('  • Remove inflated claims from README.md');
     console.log('  • Keep PROJECT_STATUS.md as single source of truth');
@@ -313,6 +412,7 @@ if (require.main === module) {
 module.exports = {
   checkSourceOfTruthExists,
   checkRequiredLinks,
+  checkActiveDocsMap,
   checkDeprecatedDocs,
   checkStatusConsistency
 };

@@ -32,6 +32,9 @@ MANIFEST
 !.vscode/
 !.vscode/settings.json
 
+# Local Codex runtime configuration
+.codex/config.toml
+
 # OS
 .DS_Store
 .DS_Store?
@@ -95,6 +98,16 @@ artifacts/lint/
 artifacts/test/
 artifacts/test-output/
 artifacts/tmp/
+artifacts/clarity_canon/
+artifacts/language_completion/
+artifacts/verify/
+tests/ir/artifacts/
+
+# Local/runtime debris accidentally created at repository root
+/Python/
+/Files
+/context_memory/
+/sessions/
 
 # Environment files
 .env
@@ -132,6 +145,12 @@ pnpm-lock.yaml
 test/temp/
 tests/tmp/
 
+# One-off local runtime probes
+check_runtimes.js
+test_findCommand.js
+test_actual_findCommand.js
+test_python_find.py
+
 # Reports and tmp (do not untrack existing committed files)
 reports/**/tmp/
 reports/**/cache/
@@ -140,6 +159,7 @@ reports/**/cache/
 # Perf gate results: generated during CI pipeline, archived separately in artifact management
 artifacts/perf-regression-results.json
 artifacts/perf-*
+artifacts/merge_verification/
 # Performance benchmarks: generated, not version-controlled
 *.benchmark.json
 perf-results/

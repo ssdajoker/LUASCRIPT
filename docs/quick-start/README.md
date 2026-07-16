@@ -1,126 +1,98 @@
-﻿# Quick Start
+# Quick Start
 
-**Status**: ACTIVE  
-**Phase**: Baseline pipeline operational (Phase 1)  
-**Last updated**: 2025-12-20
+**Status**: ACTIVE
+**Track**: scoped non-strict pre-production beta v0.1
+**Last updated**: 2026-07-14
 
-Get set up, run a transpilation, and verify locally.
+Use this guide to validate the current LUASCRIPT beta surface without accidentally treating it as strict-native complete or canonical `1.0`.
 
-## What works (Phase 1)
+The exact scoped beta release-seal artifact is [BETA_RELEASE_HANDOFF_V0_1.md](../BETA_RELEASE_HANDOFF_V0_1.md).
 
-- ✅ JavaScript → IR → Lua transpilation
-- ✅ Basic expressions, statements, functions, classes
-- ✅ Async/await, generators, try/catch
-- ✅ Array and object literals
-- ⏳ **Pattern/destructuring**: Planned Phase 3
+## What This Beta Means
 
-## Install
+LUASCRIPT has passing scoped beta evidence for its implemented lanes. On 2026-06-19:
 
-1. Clone and cd into the repo
-2. Install dependencies: `npm ci`
-3. (Optional) Install Lua/LuaJIT for Lua-side verification
+- `npm run beta:readiness` passed with 17/17 implemented lanes beta-ready.
+- `npm run beta:preflight` passed with 3/3 batches and 0 failed scripts.
+- `npm run beta:full` passed with 4/4 batches and 0 failed scripts.
 
-## Your first transpilation
+This is a scoped, non-strict beta handoff. It does not mean full-language completion, production readiness, or canonical `1.0`; the beta handoff itself did not claim strict-native completion.
 
-### Quick sanity check
+Post-beta strict-native closure for the current named slices was completed on 2026-07-13. Ruby, PHP, Dart, Java, Go, Rust, Kotlin, Elm, and Gleam now have narrow native gates, but they remain limited slices rather than broad language support.
+
+## Install And Validate
 
 ```bash
-# Run full local gate (harness + IR validate + parity + determinism)
-npm run verify
-
-# Expected: All tests pass ✓
+npm install
+npm run beta:readiness
+npm run beta:preflight
+npm run beta:full
 ```
 
-### Manual transpile example
+Use `npm ci` instead of `npm install` when you need lockfile-exact automation.
 
-```bash
-# Transpile a simple function
-node -e "
-const transpiler = require('./src');
-const js = 'function add(x,y) { return x+y; }';
-const result = transpiler.transpile(js);
-console.log(result);
-"
-```
+## Package And Runtime Contract
 
-### See IR pipeline in action
+The full public API/runtime contract draft is [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](../LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md). This quick-start only summarizes the beta validation path.
 
-```bash
-# Golden IR comparisons
-npm run ir:emit:goldens
+The current package identity is `luascript` at `0.1.0-beta.0` on the pre-production beta track. `src/unified_luascript.js` is the current package entrypoint, and the current package file surface is `src/`, `test/`, `README.md`, and `LICENSE`. Treat that as the beta package surface, not a final canonical `1.0` publish promise.
 
-# IR validation on test cases
-npm run ir:validate:all
+The package currently declares `node >=14.0.0`. `npm run build` is a readiness smoke, not a production bundle. Native-runtime support is claimed only when the real runtime command is available and the matching `language:<name>:bidirectional` gate passes. Target-runtime IR lanes prove emitted behavior for named slices, but they do not substitute for native qualification.
 
-# Parity check (JS vs Lua behavior)
-npm run test:parity
-```
+No tag, publish, GitHub release, or package version bump is part of the beta or `1.0` docs route unless a release action is explicitly requested.
 
-## Common workflows
+## Good First Examples
 
-- **Full test suite**: `npm test`
-- **Quick verification**: `npm run verify`
-- **Coverage report**: `npm run test:coverage`
-- **Determinism check**: `npm run test:determinism`
-- **Lint check**: `npm run lint`
+Start with the passing scoped surface:
 
-## Baseline pipeline walkthrough
+- small JavaScript programs that use variables, arithmetic, functions, conditionals, loops, arrays, objects, and console output
+- small `.ls` programs in the verified JS-like and meta-language slices
+- `tests/actual_programs/fixtures/`
+- `examples/supported_math_showcase.ls`
+- `examples/mathematical_notation_core.ls`
+- `examples/mathematical_notation_rehab_v1.ls` through `examples/mathematical_notation_rehab_v18.ls`
 
-### 1. Parser phase
+Avoid using broad multi-language demos or the full Unicode mathematical DSL as beta proof. Those are experimental unless a current manifest and gate names the exact slice.
 
-- Input: JavaScript code string
-- Process: ESTree AST parsing (via `src/parser.js`)
-- Output: AST with id/symbol metadata
+## Useful Focused Gates
 
-### 2. Lowering phase
+- Core/runtime baseline: `npm test`
+- Status consistency: `npm run status:check`
+- Full verification: `npm run verify`
+- Claims audit: `npm run claims:check`
+- Stub gate: `npm run stubs:check`
+- Live dogfood: `npm run clarity:dogfood`
+- Strict local canon: `npm run clarity:canon`
+- Language qualification: `npm run clarity:languages`
+- `.ls` meta-language: `npm run test:luascript-meta`
+- Lua input V2: `npm run test:lua-input`
+- Actual programs: `npm run test:actual-programs`
 
-- Input: AST
-- Process: Convert to canonical IR (via `src/ir/lowerer.js`)
-- IR operations: variable decl, function decl, blocks, expressions
-- Output: Deterministic IR with stable IDs
+## Language Reality
 
-### 3. Validation
+The strongest current paths are the named JavaScript, LUASCRIPT `.ls`, Lua input, Python, C#, C, C++, TypeScript typed-JS, and target-runtime/native narrow slices documented in [LANGUAGE_SUPPORT_MATRIX.md](../LANGUAGE_SUPPORT_MATRIX.md).
 
-- Check IR schema correctness
-- Validate node references
-- Determinism verification
+Experimental target-runtime lanes exist for Ruby, PHP, Dart, Java, Go, Rust, Kotlin, Elm, and Gleam, and each has a matching narrow native gate. Broader promotion still requires expanded parser/lowering/runtime fixtures.
 
-### 4. Emission (Lua)
+## After The Beta Handoff
 
-- Input: IR
-- Process: Generate Lua code (via `src/ir/emitter.js`)
-- Output: Lua code string
+The next documented route is:
 
-### 5. Execution (optional)
+1. keep the scoped beta release messaging and examples aligned with the passing gates
+2. keep strict-native narrow-slice gates green as the language matrix expands
+3. promote broader language support only after parser/lowering/runtime fixtures expand
+4. start the `1.0` canon pass for stable `.ls` identity, supported profiles, package/runtime expectations, examples, docs, and support boundaries
+5. keep this quick-start aligned with the package/runtime contract before any release action
 
-- Run Lua via LuaJIT
-- Compare behavior with JavaScript
+## Navigation
 
-## Known limitations (Phase 1)
-
-- No pattern/destructuring (`const [a,b] = arr`)
-- No spread operator in complex contexts
-- Limited module/import support (Phase 4+)
-- No TypeScript support
-
-See [PROJECT_STATUS.md](../../PROJECT_STATUS.md) for roadmap.
-
-## Troubleshooting
-
-**Tests failing?**
-- Check Node version: `node --version` (need 16+)
-- Run `npm run verify` for diagnostic output
-- See [troubleshooting.md](../development/troubleshooting.md)
-
-**Lua output looks wrong?**
-- Check [docs/architecture/README.md](../architecture/README.md) for emission details
-- Run `npm run test:parity` to compare JS vs Lua behavior
-
-## What's next
-
-- Explore [docs/architecture/README.md](../architecture/README.md) for IR design
-- Read [docs/ci-cd/README.md](../ci-cd/README.md) for deployment
-- Check [PROJECT_STATUS.md](../../PROJECT_STATUS.md) for Phase 3+ roadmap
-
----
-**Navigation**: ← Home | ↑ Index | Architecture →
+- [Project Status](../../PROJECT_STATUS.md)
+- [Documentation Index](../INDEX.md)
+- [Public API And Runtime Contract](../LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md)
+- [Beta Release Handoff v0.1](../BETA_RELEASE_HANDOFF_V0_1.md)
+- [Denali Soloist Ledger](../LUASCRIPT_DENALI_SOLOIST_LEDGER.md)
+- [Mega Plan](../LUASCRIPT_MEGA_PLAN.md)
+- [Architecture And Runtime Boundaries](../architecture/README.md)
+- [Reference Boundary](../reference/README.md)
+- [Language Support Matrix](../LANGUAGE_SUPPORT_MATRIX.md)
+- [Language Completion Rules](../LANGUAGE_COMPLETION_RULES.md)

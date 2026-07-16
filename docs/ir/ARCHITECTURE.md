@@ -1,6 +1,8 @@
 
 # LUASCRIPT IR Architecture
 
+Status: IR support reference. Current package/runtime status lives in [../../PROJECT_STATUS.md](../../PROJECT_STATUS.md), and the active-docs map lives in [../INDEX.md](../INDEX.md). This page does not promote a backend, language, or package claim without the current gates and support matrix agreeing.
+
 ## System Overview
 
 The LUASCRIPT IR system consists of several key components:
@@ -336,21 +338,21 @@ JavaScript' should be semantically equivalent to JavaScript
 
 ## Backend Integration
 
-### WASM Backend ✅
-- **Status**: Fully Implemented
+### WASM Backend
+- **Status**: Support reference; verify against current source and gates before making a support claim
 - **Location**: `src/backends/wasm/`
 - **Features**: Direct compilation to WebAssembly bytecode
 - **Compiler**: `IRToWasmCompiler`
 
-### MLIR Backend ✅
-- **Status**: Fully Implemented
+### MLIR Backend
+- **Status**: Support reference; verify against current source and gates before making a support claim
 - **Location**: `src/backends/mlir/`
 - **Features**: Multi-level IR with dialect system
 - **Compiler**: `IRToMLIRCompiler`
 - **Dialect**: `LuascriptDialect` with 30+ operations
 
-### LLVM IR Backend ✅
-- **Status**: Fully Implemented
+### LLVM IR Backend
+- **Status**: Support reference; verify against current source and gates before making a support claim
 - **Location**: `src/backends/llvm/`
 - **Features**: SSA-form IR with comprehensive type system
 - **Compiler**: `IRToLLVMCompiler`
@@ -360,7 +362,7 @@ JavaScript' should be semantically equivalent to JavaScript
 - **Multi-target**: Compile to all backends simultaneously
 - **Optimization**: Per-backend optimization configuration
 
-See [Backend Documentation](../backends/README.md) for details.
+Backend documentation is not part of the current active-docs map unless [../INDEX.md](../INDEX.md) promotes it.
 
 ## Future Enhancements
 
