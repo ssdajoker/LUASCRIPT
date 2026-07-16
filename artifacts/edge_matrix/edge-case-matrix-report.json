@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "luascript:edge-case-matrix",
-  "generatedAt": "2026-07-16T05:36:25.589Z",
+  "generatedAt": "2026-07-16T08:08:36.842Z",
   "environment": {
     "node": "v24.14.0",
     "npm": {
@@ -269,7 +269,7 @@
             "label": "value-basic-literals-and-arithmetic-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-AioMpm\\value-basic-literals-and-arithmetic-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/value-basic-literals-and-arithmetic-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -286,7 +286,7 @@
             "label": "value-basic-literals-and-arithmetic-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-sNyfRq\\value-basic-literals-and-arithmetic-python.py"
+              "<os-tmp>/<luascript-edge-temp>/value-basic-literals-and-arithmetic-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -303,7 +303,7 @@
             "label": "value-basic-literals-and-arithmetic-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-N8OlP0\\value-basic-literals-and-arithmetic-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/value-basic-literals-and-arithmetic-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -320,7 +320,7 @@
             "label": "value-basic-literals-and-arithmetic-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-iAkd3I\\value-basic-literals-and-arithmetic-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/value-basic-literals-and-arithmetic-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -345,7 +345,7 @@
             "label": "value-boolean-null-equivalents-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-5CRZYP\\value-boolean-null-equivalents-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/value-boolean-null-equivalents-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -362,7 +362,7 @@
             "label": "value-boolean-null-equivalents-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-LlCcZS\\value-boolean-null-equivalents-python.py"
+              "<os-tmp>/<luascript-edge-temp>/value-boolean-null-equivalents-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -379,7 +379,7 @@
             "label": "value-boolean-null-equivalents-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-cmQxre\\value-boolean-null-equivalents-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/value-boolean-null-equivalents-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -396,7 +396,7 @@
             "label": "value-boolean-null-equivalents-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-DeWRQg\\value-boolean-null-equivalents-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/value-boolean-null-equivalents-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -421,7 +421,7 @@
             "label": "value-template-literal-concat-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-xUWuEq\\value-template-literal-concat-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/value-template-literal-concat-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -438,7 +438,7 @@
             "label": "value-template-literal-concat-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-IpVCCP\\value-template-literal-concat-python.py"
+              "<os-tmp>/<luascript-edge-temp>/value-template-literal-concat-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -455,7 +455,7 @@
             "label": "value-template-literal-concat-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-a2aSgy\\value-template-literal-concat-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/value-template-literal-concat-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -472,7 +472,7 @@
             "label": "value-template-literal-concat-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-Md2wlQ\\value-template-literal-concat-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/value-template-literal-concat-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -497,7 +497,7 @@
             "label": "value-arithmetic-precedence-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-ztVtGE\\value-arithmetic-precedence-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/value-arithmetic-precedence-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -514,7 +514,7 @@
             "label": "value-arithmetic-precedence-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-PZDU4U\\value-arithmetic-precedence-python.py"
+              "<os-tmp>/<luascript-edge-temp>/value-arithmetic-precedence-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -531,7 +531,7 @@
             "label": "value-arithmetic-precedence-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-fw0npn\\value-arithmetic-precedence-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/value-arithmetic-precedence-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -548,7 +548,7 @@
             "label": "value-arithmetic-precedence-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-jfgm0C\\value-arithmetic-precedence-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/value-arithmetic-precedence-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -573,7 +573,7 @@
             "label": "control-while-break-continue-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-znPjiF\\control-while-break-continue-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/control-while-break-continue-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -590,7 +590,7 @@
             "label": "control-while-break-continue-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-XFKR8g\\control-while-break-continue-python.py"
+              "<os-tmp>/<luascript-edge-temp>/control-while-break-continue-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -607,7 +607,7 @@
             "label": "control-while-break-continue-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-rP1PtY\\control-while-break-continue-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/control-while-break-continue-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -624,7 +624,7 @@
             "label": "control-while-break-continue-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-VOrQz1\\control-while-break-continue-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/control-while-break-continue-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -649,7 +649,7 @@
             "label": "control-numeric-for-accumulation-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-TsnDgU\\control-numeric-for-accumulation-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/control-numeric-for-accumulation-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -666,7 +666,7 @@
             "label": "control-numeric-for-accumulation-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-32wc8Y\\control-numeric-for-accumulation-python.py"
+              "<os-tmp>/<luascript-edge-temp>/control-numeric-for-accumulation-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -683,7 +683,7 @@
             "label": "control-numeric-for-accumulation-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-CkA0Fa\\control-numeric-for-accumulation-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/control-numeric-for-accumulation-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -700,7 +700,7 @@
             "label": "control-numeric-for-accumulation-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-h7AWZ7\\control-numeric-for-accumulation-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/control-numeric-for-accumulation-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -725,7 +725,7 @@
             "label": "control-if-else-early-return-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-LC0mDS\\control-if-else-early-return-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/control-if-else-early-return-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -742,7 +742,7 @@
             "label": "control-if-else-early-return-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-LmJs2G\\control-if-else-early-return-python.py"
+              "<os-tmp>/<luascript-edge-temp>/control-if-else-early-return-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -759,7 +759,7 @@
             "label": "control-if-else-early-return-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-y5asTc\\control-if-else-early-return-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/control-if-else-early-return-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -776,7 +776,7 @@
             "label": "control-if-else-early-return-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-GzElYQ\\control-if-else-early-return-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/control-if-else-early-return-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -801,7 +801,7 @@
             "label": "control-short-circuit-side-effects-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-sazzbT\\control-short-circuit-side-effects-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/control-short-circuit-side-effects-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -818,7 +818,7 @@
             "label": "control-short-circuit-side-effects-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-jk8F1M\\control-short-circuit-side-effects-python.py"
+              "<os-tmp>/<luascript-edge-temp>/control-short-circuit-side-effects-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -835,7 +835,7 @@
             "label": "control-short-circuit-side-effects-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-lygxwD\\control-short-circuit-side-effects-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/control-short-circuit-side-effects-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -852,7 +852,7 @@
             "label": "control-short-circuit-side-effects-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-FqOkNM\\control-short-circuit-side-effects-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/control-short-circuit-side-effects-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -877,7 +877,7 @@
             "label": "scope-nested-function-closure-mutation-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-tHxrRm\\scope-nested-function-closure-mutation-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/scope-nested-function-closure-mutation-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -894,7 +894,7 @@
             "label": "scope-nested-function-closure-mutation-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-RXbER6\\scope-nested-function-closure-mutation-python.py"
+              "<os-tmp>/<luascript-edge-temp>/scope-nested-function-closure-mutation-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -911,7 +911,7 @@
             "label": "scope-nested-function-closure-mutation-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-f3Ws6l\\scope-nested-function-closure-mutation-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/scope-nested-function-closure-mutation-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -928,7 +928,7 @@
             "label": "scope-nested-function-closure-mutation-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-UEXc91\\scope-nested-function-closure-mutation-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/scope-nested-function-closure-mutation-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -953,7 +953,7 @@
             "label": "scope-shadowed-local-binding-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-BOOOnh\\scope-shadowed-local-binding-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/scope-shadowed-local-binding-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -970,7 +970,7 @@
             "label": "scope-shadowed-local-binding-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-ZDVYnP\\scope-shadowed-local-binding-python.py"
+              "<os-tmp>/<luascript-edge-temp>/scope-shadowed-local-binding-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -987,7 +987,7 @@
             "label": "scope-shadowed-local-binding-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-Mut4vH\\scope-shadowed-local-binding-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/scope-shadowed-local-binding-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1004,7 +1004,7 @@
             "label": "scope-shadowed-local-binding-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-2J7JUj\\scope-shadowed-local-binding-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/scope-shadowed-local-binding-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1029,7 +1029,7 @@
             "label": "scope-recursive-function-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-nosL4T\\scope-recursive-function-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/scope-recursive-function-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -1046,7 +1046,7 @@
             "label": "scope-recursive-function-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-sCwRSd\\scope-recursive-function-python.py"
+              "<os-tmp>/<luascript-edge-temp>/scope-recursive-function-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -1063,7 +1063,7 @@
             "label": "scope-recursive-function-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-i8dKoI\\scope-recursive-function-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/scope-recursive-function-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1080,7 +1080,7 @@
             "label": "scope-recursive-function-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-ZXGoUE\\scope-recursive-function-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/scope-recursive-function-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1105,7 +1105,7 @@
             "label": "data-python-bounded-sequence-slices-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-H8vR1p\\data-python-bounded-sequence-slices-python.py"
+              "<os-tmp>/<luascript-edge-temp>/data-python-bounded-sequence-slices-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -1122,7 +1122,7 @@
             "label": "data-python-bounded-sequence-slices-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-6AVFit\\data-python-bounded-sequence-slices-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/data-python-bounded-sequence-slices-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -1139,7 +1139,7 @@
             "label": "data-python-bounded-sequence-slices-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-zxkM0g\\data-python-bounded-sequence-slices-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/data-python-bounded-sequence-slices-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1156,7 +1156,7 @@
             "label": "data-python-bounded-sequence-slices-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-xbaraR\\data-python-bounded-sequence-slices-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/data-python-bounded-sequence-slices-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1181,7 +1181,7 @@
             "label": "data-javascript-array-object-mutation-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-Nu7zlp\\data-javascript-array-object-mutation-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/data-javascript-array-object-mutation-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -1198,7 +1198,7 @@
             "label": "data-javascript-array-object-mutation-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-dtrFSg\\data-javascript-array-object-mutation-python.py"
+              "<os-tmp>/<luascript-edge-temp>/data-javascript-array-object-mutation-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -1215,7 +1215,7 @@
             "label": "data-javascript-array-object-mutation-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-Vx0lOP\\data-javascript-array-object-mutation-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/data-javascript-array-object-mutation-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1232,7 +1232,7 @@
             "label": "data-javascript-array-object-mutation-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-yW6fgg\\data-javascript-array-object-mutation-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/data-javascript-array-object-mutation-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1257,7 +1257,7 @@
             "label": "data-python-list-membership-mutation-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-Lig9d9\\data-python-list-membership-mutation-python.py"
+              "<os-tmp>/<luascript-edge-temp>/data-python-list-membership-mutation-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -1274,7 +1274,7 @@
             "label": "data-python-list-membership-mutation-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-PofqaQ\\data-python-list-membership-mutation-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/data-python-list-membership-mutation-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -1299,7 +1299,7 @@
             "label": "data-luascript-portable-length-slice-mutation-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-lG7cAk\\data-luascript-portable-length-slice-mutation-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/data-luascript-portable-length-slice-mutation-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -1316,7 +1316,7 @@
             "label": "data-luascript-portable-length-slice-mutation-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-vvNV6R\\data-luascript-portable-length-slice-mutation-python.py"
+              "<os-tmp>/<luascript-edge-temp>/data-luascript-portable-length-slice-mutation-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -1333,7 +1333,7 @@
             "label": "data-luascript-portable-length-slice-mutation-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-wF6rYq\\data-luascript-portable-length-slice-mutation-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/data-luascript-portable-length-slice-mutation-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1350,7 +1350,7 @@
             "label": "data-luascript-portable-length-slice-mutation-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-XpkmdR\\data-luascript-portable-length-slice-mutation-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/data-luascript-portable-length-slice-mutation-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1375,12 +1375,12 @@
             "label": "errors-undefined-call-runtime-diagnostic-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-UIck1H\\errors-undefined-call-runtime-diagnostic-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/errors-undefined-call-runtime-diagnostic-javascript.js"
             ],
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-UIck1H\\errors-undefined-call-runtime-diagnostic-javascript.js:1\nconsole.log(\"edge_error\", missing_call());\n        ^\n\nReferenceError: missing_call is not defined\n    at Object.<anonymous> (C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-UIck1H\\errors-undefined-call-runtime-diagnostic-javascript.js:1:9)\n    at Module._compile (node:internal/modules/cjs/loader:1812:14)\n    at Object..js (node:internal/modules/cjs/loader:1943:10)\n    at Module.load (node:internal/modules/cjs/loader:1533:32)\n    at Module._load (node:internal/modules/cjs/loader:1335:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47\n\nNode.js v24.14.0",
+            "stderr": "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-onXQ3H\\errors-undefined-call-runtime-diagnostic-javascript.js:1\nconsole.log(\"edge_error\", missing_call());\n        ^\n\nReferenceError: missing_call is not defined\n    at Object.<anonymous> (C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-onXQ3H\\errors-undefined-call-runtime-diagnostic-javascript.js:1:9)\n    at Module._compile (node:internal/modules/cjs/loader:1812:14)\n    at Object..js (node:internal/modules/cjs/loader:1943:10)\n    at Module.load (node:internal/modules/cjs/loader:1533:32)\n    at Module._load (node:internal/modules/cjs/loader:1335:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47\n\nNode.js v24.14.0",
             "error": null
           }
         },
@@ -1392,12 +1392,12 @@
             "label": "errors-undefined-call-runtime-diagnostic-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-E4jJ8z\\errors-undefined-call-runtime-diagnostic-python.py"
+              "<os-tmp>/<luascript-edge-temp>/errors-undefined-call-runtime-diagnostic-python.py"
             ],
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-E4jJ8z\\errors-undefined-call-runtime-diagnostic-python.py\", line 10, in <module>\n    __ls_print(\"edge_error\", missing_call())\n                             ^^^^^^^^^^^^\nNameError: name 'missing_call' is not defined",
+            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-8kKCeo\\errors-undefined-call-runtime-diagnostic-python.py\", line 10, in <module>\n    __ls_print(\"edge_error\", missing_call())\n                             ^^^^^^^^^^^^\nNameError: name 'missing_call' is not defined",
             "error": null
           }
         },
@@ -1409,12 +1409,12 @@
             "label": "errors-undefined-call-runtime-diagnostic-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-UThw9E\\errors-undefined-call-runtime-diagnostic-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/errors-undefined-call-runtime-diagnostic-lua.lua"
             ],
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "luajit: ...-UThw9E\\errors-undefined-call-runtime-diagnostic-lua.lua:4: attempt to call global 'missing_call' (a nil value)\nstack traceback:\n\t...-UThw9E\\errors-undefined-call-runtime-diagnostic-lua.lua:4: in main chunk\n\t[C]: at 0x7ff743364840",
+            "stderr": "luajit: ...-3sIgzM\\errors-undefined-call-runtime-diagnostic-lua.lua:4: attempt to call global 'missing_call' (a nil value)\nstack traceback:\n\t...-3sIgzM\\errors-undefined-call-runtime-diagnostic-lua.lua:4: in main chunk\n\t[C]: at 0x7ff743364840",
             "error": null
           }
         }
@@ -1434,12 +1434,12 @@
             "label": "errors-python-undefined-call-runtime-diagnostic-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-KaDh0p\\errors-python-undefined-call-runtime-diagnostic-python.py"
+              "<os-tmp>/<luascript-edge-temp>/errors-python-undefined-call-runtime-diagnostic-python.py"
             ],
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-KaDh0p\\errors-python-undefined-call-runtime-diagnostic-python.py\", line 1, in <module>\n    print(\"edge_error_py\", missing_call())\n                           ^^^^^^^^^^^^\nNameError: name 'missing_call' is not defined",
+            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-SnCKeH\\errors-python-undefined-call-runtime-diagnostic-python.py\", line 1, in <module>\n    print(\"edge_error_py\", missing_call())\n                           ^^^^^^^^^^^^\nNameError: name 'missing_call' is not defined",
             "error": null
           }
         },
@@ -1451,12 +1451,12 @@
             "label": "errors-python-undefined-call-runtime-diagnostic-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-JDiqMB\\errors-python-undefined-call-runtime-diagnostic-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/errors-python-undefined-call-runtime-diagnostic-javascript.js"
             ],
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-JDiqMB\\errors-python-undefined-call-runtime-diagnostic-javascript.js:1\nconsole.log(\"edge_error_py\", missing_call());\n        ^\n\nReferenceError: missing_call is not defined\n    at Object.<anonymous> (C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-JDiqMB\\errors-python-undefined-call-runtime-diagnostic-javascript.js:1:9)\n    at Module._compile (node:internal/modules/cjs/loader:1812:14)\n    at Object..js (node:internal/modules/cjs/loader:1943:10)\n    at Module.load (node:internal/modules/cjs/loader:1533:32)\n    at Module._load (node:internal/modules/cjs/loader:1335:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47\n\nNode.js v24.14.0",
+            "stderr": "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-QlUuoc\\errors-python-undefined-call-runtime-diagnostic-javascript.js:1\nconsole.log(\"edge_error_py\", missing_call());\n        ^\n\nReferenceError: missing_call is not defined\n    at Object.<anonymous> (C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-QlUuoc\\errors-python-undefined-call-runtime-diagnostic-javascript.js:1:9)\n    at Module._compile (node:internal/modules/cjs/loader:1812:14)\n    at Object..js (node:internal/modules/cjs/loader:1943:10)\n    at Module.load (node:internal/modules/cjs/loader:1533:32)\n    at Module._load (node:internal/modules/cjs/loader:1335:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47\n\nNode.js v24.14.0",
             "error": null
           }
         }
@@ -1476,12 +1476,12 @@
             "label": "errors-python-index-runtime-diagnostic-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-CHv28a\\errors-python-index-runtime-diagnostic-python.py"
+              "<os-tmp>/<luascript-edge-temp>/errors-python-index-runtime-diagnostic-python.py"
             ],
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-CHv28a\\errors-python-index-runtime-diagnostic-python.py\", line 2, in <module>\n    print(\"edge_error_index\", items[2])\n                              ~~~~~^^^\nIndexError: list index out of range",
+            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-jlMT05\\errors-python-index-runtime-diagnostic-python.py\", line 2, in <module>\n    print(\"edge_error_index\", items[2])\n                              ~~~~~^^^\nIndexError: list index out of range",
             "error": null
           }
         }
@@ -1501,7 +1501,7 @@
             "label": "target-specific-lua-one-based-index-repair-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-tiI6LS\\target-specific-lua-one-based-index-repair-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-lua-one-based-index-repair-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1518,7 +1518,7 @@
             "label": "target-specific-lua-one-based-index-repair-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-0KxbFh\\target-specific-lua-one-based-index-repair-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-lua-one-based-index-repair-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -1535,7 +1535,7 @@
             "label": "target-specific-lua-one-based-index-repair-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-rz8nwA\\target-specific-lua-one-based-index-repair-python.py"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-lua-one-based-index-repair-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -1552,7 +1552,7 @@
             "label": "target-specific-lua-one-based-index-repair-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-ImzMeH\\target-specific-lua-one-based-index-repair-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-lua-one-based-index-repair-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1577,7 +1577,7 @@
             "label": "target-specific-python-negative-range-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-Wt4C8P\\target-specific-python-negative-range-python.py"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-python-negative-range-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -1594,7 +1594,7 @@
             "label": "target-specific-python-negative-range-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-2KiaSx\\target-specific-python-negative-range-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-python-negative-range-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -1611,7 +1611,7 @@
             "label": "target-specific-python-negative-range-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-kzl6O6\\target-specific-python-negative-range-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-python-negative-range-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1628,7 +1628,7 @@
             "label": "target-specific-python-negative-range-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-1uGtTH\\target-specific-python-negative-range-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-python-negative-range-luascript.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1653,7 +1653,7 @@
             "label": "target-specific-luascript-portable-truthiness-javascript javascript",
             "cmd": "node",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-sEzEAz\\target-specific-luascript-portable-truthiness-javascript.js"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-luascript-portable-truthiness-javascript.js"
             ],
             "status": 0,
             "signal": null,
@@ -1670,7 +1670,7 @@
             "label": "target-specific-luascript-portable-truthiness-python python",
             "cmd": "python3",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-TaxXb4\\target-specific-luascript-portable-truthiness-python.py"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-luascript-portable-truthiness-python.py"
             ],
             "status": 0,
             "signal": null,
@@ -1687,7 +1687,7 @@
             "label": "target-specific-luascript-portable-truthiness-lua lua",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-lua-Cq36mp\\target-specific-luascript-portable-truthiness-lua.lua"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-luascript-portable-truthiness-lua.lua"
             ],
             "status": 0,
             "signal": null,
@@ -1704,7 +1704,7 @@
             "label": "target-specific-luascript-portable-truthiness-luascript luascript runtime",
             "cmd": "luajit",
             "args": [
-              "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-ls-bSGIzG\\target-specific-luascript-portable-truthiness-luascript.lua"
+              "<os-tmp>/<luascript-edge-temp>/target-specific-luascript-portable-truthiness-luascript.lua"
             ],
             "status": 0,
             "signal": null,

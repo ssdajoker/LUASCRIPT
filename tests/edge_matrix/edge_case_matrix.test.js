@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 
 const {
@@ -179,6 +180,28 @@ function assertExpectedOutput(result, expectedOutput, label) {
   }
 }
 
+function normalizeReportPath(value) {
+  if (typeof value !== "string") return value;
+  const normalizedValue = path.normalize(value);
+  const tempRoot = path.normalize(os.tmpdir());
+  if (!normalizedValue.toLowerCase().startsWith(tempRoot.toLowerCase())) {
+    return value;
+  }
+
+  const relativeTempPath = path.relative(tempRoot, normalizedValue).replace(/\\/g, "/");
+  const stableTempPath = relativeTempPath.replace(/^luascript-edge-[^/]+-[^/]+/, "<luascript-edge-temp>");
+  return `<os-tmp>/${stableTempPath}`;
+}
+
+function stableCommandSummary(result) {
+  const summary = commandSummary(result);
+  if (!summary) return summary;
+  return {
+    ...summary,
+    args: (summary.args || []).map(normalizeReportPath)
+  };
+}
+
 function validateManifest() {
   if (manifest.schemaVersion !== 1) {
     fail("edge matrix manifest schemaVersion must be 1");
@@ -278,7 +301,7 @@ function verifyRunnableTarget(item, ir, target) {
       language: targetLanguage,
       mode: "runtime-output",
       status: "passed",
-      command: commandSummary(result)
+      command: stableCommandSummary(result)
     };
   }
 
@@ -289,7 +312,7 @@ function verifyRunnableTarget(item, ir, target) {
       language: targetLanguage,
       mode: "runtime-error",
       status: "passed",
-      command: commandSummary(result)
+      command: stableCommandSummary(result)
     };
   }
 
