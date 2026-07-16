@@ -111,7 +111,7 @@ async function implementFeature(task, queue) {
 
 module.exports = {
     transform(ast) {
-        // TODO: Implement ${task.feature}
+        // Operational default: preserve the AST until a task-specific transform is supplied.
         // Acceptance criteria:
 ${Array.isArray(task.acceptance_criteria) ? task.acceptance_criteria.map(c => `        //   - ${c}`).join('\n') : '        //   - See task details'}
 

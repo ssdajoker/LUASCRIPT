@@ -37,7 +37,7 @@ const COMPLETENESS_RULES = {
   // Code patterns that REQUIRE status file updates
   statusRequired: [
     { pattern: /package\.json/, statusFiles: ['PROJECT_STATUS.md', 'DEVELOPMENT_WORKFLOW.md'] },
-    { pattern: /\.github\/workflows/, statusFiles: ['PROJECT_STATUS.md', 'docs/ci-cd/README.md'] },
+    { pattern: /\.github\/workflows/, statusFiles: ['PROJECT_STATUS.md', 'docs/INDEX.md'] },
     { pattern: /src\/transpiler/, statusFiles: ['PROJECT_STATUS.md', 'ENHANCED_TRANSPILER_README.md'] },
   ],
 
@@ -46,18 +46,20 @@ const COMPLETENESS_RULES = {
     'PROJECT_STATUS.md',
     'DEVELOPMENT_WORKFLOW.md',
     'PERFORMANCE_SLO.md',
-    'docs/status/PROJECT_HEALTH.md',
-    'docs/ci-cd/README.md',
+    'docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md',
+    'docs/LUASCRIPT_MEGA_PLAN.md',
+    'docs/LANGUAGE_SUPPORT_MATRIX.md',
+    'docs/INDEX.md',
   ],
 
   // Timeline/wiki reference documents
   wikiLinks: {
-    timeline: 'docs/timeline/README.md',
+    ledger: 'docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md',
+    roadmap: 'docs/LUASCRIPT_MEGA_PLAN.md',
     architecture: 'docs/architecture/README.md',
     'quick-start': 'docs/quick-start/README.md',
-    testing: 'docs/testing/README.md',
-    'ci-cd': 'docs/ci-cd/README.md',
-    status: 'docs/status/PROJECT_HEALTH.md',
+    reference: 'docs/reference/README.md',
+    status: 'PROJECT_STATUS.md',
   },
 };
 

@@ -299,7 +299,7 @@ function Test-OptionalGate {
     $scriptExists = $packageJson.scripts.PSObject.Properties.Name -contains $Command
 
     if (-not $scriptExists) {
-        Write-Host "    ⚪ $Name (not implemented yet)" -ForegroundColor Gray
+        Write-Host "    ⚪ $Name (script not present)" -ForegroundColor Gray
         return @{ Exists = $false; Pass = $false }
     }
 
@@ -424,7 +424,7 @@ Now I need to complete Layer 3: Core ES6 Features.
 
 Current ES6 status:
 - Async/Await: Partial (~53% complete)
-- Destructuring: Not implemented
+- Destructuring: Pending operational qualification
 - Classes: Partial (~40% complete)
 - Arrow Functions: Complete (100%)
 

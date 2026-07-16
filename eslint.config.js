@@ -22,7 +22,8 @@ const nodeGlobals = {
   clearImmediate: "readonly",
   WebAssembly: "readonly",
   WeakRef: "readonly",
-  FinalizationRegistry: "readonly"
+  FinalizationRegistry: "readonly",
+  performance: "readonly"
 };
 
 const recommendedCoreRules = {
@@ -87,7 +88,11 @@ const recommendedCoreRules = {
 
 const tier1CoreRules = {
   ...recommendedCoreRules,
-  "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+  "no-unused-vars": ["error", {
+    argsIgnorePattern: "^_",
+    caughtErrorsIgnorePattern: "^_",
+    varsIgnorePattern: "^_"
+  }],
   "no-undef": "error",
   "semi": ["error", "always"],
   "quotes": ["error", "double"],
@@ -98,7 +103,11 @@ const tier1CoreRules = {
 
 const tier2ExtendedRules = {
   ...tier1CoreRules,
-  "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+  "no-unused-vars": ["warn", {
+    argsIgnorePattern: "^_",
+    caughtErrorsIgnorePattern: "^_",
+    varsIgnorePattern: "^_"
+  }],
   "no-undef": "warn",
   "semi": ["warn", "always"],
   "quotes": ["warn", "double"],
@@ -187,7 +196,11 @@ module.exports = [
     },
     rules: {
       ...recommendedCoreRules,
-      "no-unused-vars": "warn"
+      "no-unused-vars": ["warn", {
+        argsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+        varsIgnorePattern: "^_"
+      }]
     }
   }
 ];

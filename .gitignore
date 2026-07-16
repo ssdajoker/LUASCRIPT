@@ -101,6 +101,7 @@ artifacts/tmp/
 artifacts/clarity_canon/
 artifacts/language_completion/
 artifacts/verify/
+artifacts/harness_results.json
 tests/ir/artifacts/
 
 # Local/runtime debris accidentally created at repository root
