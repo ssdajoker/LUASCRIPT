@@ -1,167 +1,137 @@
+"use strict";
+
 /**
- * UNIVERSAL MULTI-LANGUAGE TRANSPILER v2.0
- * 
- * Supports 16 languages with 100% round-trip translation
- * - Tier 0: Self-translation (Lang → IR → Lang)
- * - Tier 1: Direct bidirectional pairs (6 languages × 5 pairs = 30 pairs)
- * - Tier 2: Transitive bridge (Ruby, HTML, CSS bridges through Tier 1)
- * - Tier 3: Cross-family translation (all combinations)
- * 
- * Total Supported Pairs: 16 × 16 = 256 (minus self = 240 possible, all implemented)
+ * Legacy universal multi-language transpiler facade.
+ *
+ * This file now routes only through the active core language bridge. It is not
+ * a proof of broad all-pairs support and it must fail explicitly for languages
+ * or target pairs that do not have current core routing.
  */
 
-// Import all parsers
-const { Parser: JSParser } = require("../parser");
-const { LuaParser } = require("./parsers/lua_parser");
-const { PythonParser } = require("./parsers/python_parser");
-const { RubyParser } = require("./parsers/ruby_parser");
-const { PHPParser } = require("./parsers/php_parser");
-const { TypeScriptParser } = require("./parsers/typescript_parser");
-const { DartParser } = require("./parsers/dart_parser");
-const { GroovyParser } = require("./parsers/groovy_parser");
-const { VParser } = require("./parsers/v_parser");
-const { PerlParser } = require("./parsers/perl_parser");
-const { BashParser } = require("./parsers/bash_parser");
-const { FORTRANParser } = require("./parsers/fortran_parser");
-const { PascalParser } = require("./parsers/pascal_parser");
-const { HTMLParser } = require("./parsers/html_parser");
-const { CSSParser } = require("./parsers/css_parser");
+const { CoreLanguageBridge } = require("./compilers");
 
-// Import all emitters
-const { Emitter: LuaEmitter } = require("./ir/emitter");
-const { PythonEmitter } = require("./ir/emitter_python");
-const { RubyEmitter } = require("./ir/emitter_ruby");
-const { PHPEmitter } = require("./ir/emitter_php");
-const { TypeScriptEmitter } = require("./ir/emitter_typescript");
-const { DartEmitter } = require("./ir/emitter_dart");
-const { GroovyEmitter } = require("./ir/emitter_groovy");
-const { VEmitter } = require("./ir/emitter_v");
-const { PerlEmitter } = require("./ir/emitter_perl");
-const { BashEmitter } = require("./ir/emitter_bash");
-const { FORTRANEmitter } = require("./ir/emitter_fortran");
-const { PascalEmitter } = require("./ir/emitter_pascal");
-const { HTMLEmitter } = require("./ir/emitter_html");
-const { CSSEmitter } = require("./ir/emitter_css");
+const ACTIVE_LANGUAGE_FAMILIES = {
+  javascript: "C-Family",
+  typescript: "C-Family",
+  luascript: "Canonical",
+  lua: "Lua",
+  python: "Script",
+  ruby: "Script",
+  php: "C-Family",
+  dart: "C-Family",
+  csharp: "C-Family",
+  c: "C-Family",
+  cpp: "C-Family",
+  java: "C-Family",
+  go: "C-Family",
+  rust: "Systems",
+  kotlin: "C-Family",
+  elm: "Functional",
+  gleam: "Functional"
+};
 
-const { IRBuilder } = require("./ir/builder");
-const { Lowerer } = require("./ir/lowerer");
+const ADVISORY_ONLY_LANGUAGES = {
+  groovy: "Legacy experiment only",
+  v: "Legacy experiment only",
+  perl: "Legacy experiment only",
+  bash: "Legacy experiment only",
+  fortran: "Legacy experiment only",
+  pascal: "Legacy experiment only",
+  html: "Not a core canonical source language",
+  css: "Not a core canonical source language"
+};
 
 class UniversalMultiLanguageTranspiler {
-  constructor() {
-    this.languages = {
-      // Tier 1: Core procedural languages
-      "javascript": { parser: JSParser, emitter: null, family: "C-Family" },
-      "lua": { parser: LuaParser, emitter: LuaEmitter, family: "Functional" },
-      "python": { parser: PythonParser, emitter: PythonEmitter, family: "Script" },
-      "typescript": { parser: TypeScriptParser, emitter: TypeScriptEmitter, family: "C-Family" },
-      "dart": { parser: DartParser, emitter: DartEmitter, family: "C-Family" },
-            
-      // Tier 1 Bridge: Similar to core languages
-      "ruby": { parser: RubyParser, emitter: RubyEmitter, family: "Script" },
-      "php": { parser: PHPParser, emitter: PHPEmitter, family: "C-Family" },
-      "groovy": { parser: GroovyParser, emitter: GroovyEmitter, family: "C-Family" },
-      "v": { parser: VParser, emitter: VEmitter, family: "C-Family" },
-            
-      // Tier 2: Script languages
-      "perl": { parser: PerlParser, emitter: PerlEmitter, family: "Script" },
-      "bash": { parser: BashParser, emitter: BashEmitter, family: "Script" },
-            
-      // Tier 3: Legacy languages
-      "fortran": { parser: FORTRANParser, emitter: FORTRANEmitter, family: "Legacy" },
-      "pascal": { parser: PascalParser, emitter: PascalEmitter, family: "Legacy" },
-            
-      // Tier 4: Markup languages
-      "html": { parser: HTMLParser, emitter: HTMLEmitter, family: "Markup" },
-      "css": { parser: CSSParser, emitter: CSSEmitter, family: "Markup" }
-    };
-
-    this.builder = new IRBuilder();
-    this.lowerer = new Lowerer();
-
-    // Round-trip bridge: Enable translation between all language families
+  constructor(options = {}) {
+    this.bridge = new CoreLanguageBridge(options.bridge || {});
+    this.sourceLanguages = new Set(this.bridge.getSupportedSourceLanguages());
+    this.targetLanguages = new Set(this.bridge.getSupportedTargetLanguages());
+    this.languages = this.buildLanguageRegistry();
     this.bridgeMatrix = this.generateBridgeMatrix();
   }
 
-  /**
-     * Generate comprehensive bridge matrix for all language pairs
-     */
-  generateBridgeMatrix() {
-    const bridge = {};
-    const langs = Object.keys(this.languages);
-        
-    for (const from of langs) {
-      bridge[from] = {};
-      for (const to of langs) {
-        if (from === to) {
-          bridge[from][to] = "self";
-        } else {
-          // All pairs supported via IR
-          bridge[from][to] = "ir";
-        }
-      }
+  buildLanguageRegistry() {
+    const registry = {};
+
+    for (const [language, family] of Object.entries(ACTIVE_LANGUAGE_FAMILIES)) {
+      registry[language] = {
+        family,
+        mode: "core-bridge",
+        sourceSupported: this.sourceLanguages.has(language),
+        targetSupported: this.targetLanguages.has(language),
+        advisory: false
+      };
     }
-        
-    return bridge;
+
+    for (const [language, note] of Object.entries(ADVISORY_ONLY_LANGUAGES)) {
+      registry[language] = {
+        family: "Advisory",
+        mode: "unqualified",
+        sourceSupported: false,
+        targetSupported: false,
+        advisory: true,
+        note
+      };
+    }
+
+    return registry;
   }
 
-  /**
-     * Get all supported translation pairs
-     */
+  generateBridgeMatrix() {
+    const matrix = {};
+    const languages = Object.keys(this.languages);
+
+    for (const from of languages) {
+      matrix[from] = {};
+      for (const to of languages) {
+        matrix[from][to] = this.isLanguagePairSupported(from, to) ? "core-bridge" : "unsupported";
+      }
+    }
+
+    return matrix;
+  }
+
   getSupportedPairs() {
     const pairs = [];
-    const langs = Object.keys(this.languages);
-        
-    for (const from of langs) {
-      for (const to of langs) {
-        if (from !== to) {
+    for (const from of Object.keys(this.languages)) {
+      for (const to of Object.keys(this.languages)) {
+        if (this.isLanguagePairSupported(from, to)) {
           pairs.push({ from, to });
         }
       }
     }
-        
     return pairs;
   }
 
-  /**
-     * Get translation capability statistics
-     */
   getCapabilityStats() {
-    const langs = Object.keys(this.languages);
-    const totalLanguages = langs.length;
-    const possiblePairs = totalLanguages * (totalLanguages - 1);
+    const languages = Object.keys(this.languages);
+    const possiblePairs = languages.length * languages.length;
     const supportedPairs = this.getSupportedPairs().length;
-        
+
     return {
-      languages: langs,
-      totalLanguages,
+      languages,
+      totalLanguages: languages.length,
       possiblePairs,
       supportedPairs,
-      completeness: (supportedPairs / possiblePairs * 100).toFixed(1) + "%",
+      completeness: `${((supportedPairs / possiblePairs) * 100).toFixed(1)}%`,
       families: this.getLanguageFamilies(),
-      roundTripSupport: true,
-      transitiveTranslation: true
+      roundTripSupport: false,
+      transitiveTranslation: false,
+      supportMode: "core-bridge-only"
     };
   }
 
-  /**
-     * Get languages grouped by family
-     */
   getLanguageFamilies() {
     const families = {};
-        
-    for (const [lang, config] of Object.entries(this.languages)) {
+    for (const [language, config] of Object.entries(this.languages)) {
       if (!families[config.family]) {
         families[config.family] = [];
       }
-      families[config.family].push(lang);
+      families[config.family].push(language);
     }
-        
     return families;
   }
 
-  /**
-     * Validate source and target languages
-     */
   validateLanguages(source, target) {
     if (!this.languages[source]) {
       throw new Error(`Unsupported source language: ${source}`);
@@ -169,56 +139,44 @@ class UniversalMultiLanguageTranspiler {
     if (!this.languages[target]) {
       throw new Error(`Unsupported target language: ${target}`);
     }
-    if (source === target) {
-      console.warn(`⚠️ Source and target are the same (${source}). Returning passthrough.`);
+    if (!this.isLanguagePairSupported(source, target)) {
+      const sourceStatus = this.languages[source];
+      const targetStatus = this.languages[target];
+      if (sourceStatus && sourceStatus.advisory) {
+        throw new Error(`Source language ${source} is advisory-only in transpiler_universal.js`);
+      }
+      if (targetStatus && targetStatus.advisory) {
+        throw new Error(`Target language ${target} is advisory-only in transpiler_universal.js`);
+      }
+      throw new Error(`Language pair ${source} -> ${target} is not core-integrated`);
     }
     return true;
   }
 
-  /**
-     * PRIMARY: Transpile code from one language to another
-     */
   transpile(sourceCode, sourceLanguage, targetLanguage) {
     const startTime = Date.now();
-
     try {
-      // Validate
       this.validateLanguages(sourceLanguage, targetLanguage);
 
-      // Passthrough optimization
-      if (sourceLanguage === targetLanguage) {
-        return {
-          success: true,
-          code: sourceCode,
-          sourceLanguage,
-          targetLanguage,
-          duration: Date.now() - startTime,
-          type: "passthrough",
-          metrics: { inputSize: sourceCode.length, outputSize: sourceCode.length }
-        };
-      }
-
-      // Phase 1: Parse to AST
-      const ast = this.parseToAST(sourceCode, sourceLanguage);
-            
-      // Phase 2: Generate IR
-      const ir = this.createIRFromAST(ast, sourceLanguage);
-            
-      // Phase 3: Emit to target language
-      const targetCode = this.emitFromIR(ir, targetLanguage);
+      const result = this.bridge.transpileSource(sourceCode, {
+        sourceLanguage,
+        targetLanguage,
+        filename: `main.${sourceLanguage}`
+      });
 
       return {
         success: true,
-        code: targetCode,
+        code: result.code,
         sourceLanguage,
         targetLanguage,
         duration: Date.now() - startTime,
-        type: "full-translation",
+        type: sourceLanguage === targetLanguage ? "passthrough" : "core-bridge",
         metrics: {
           inputSize: sourceCode.length,
-          outputSize: targetCode.length,
-          compressionRatio: (targetCode.length / sourceCode.length).toFixed(2)
-        }
+          outputSize: result.code.length,
+          compressionRatio: (result.code.length / Math.max(sourceCode.length, 1)).toFixed(2)
+        },
+        ir: result.ir || null
       };
     } catch (error) {
       return {
@@ -232,87 +190,43 @@ class UniversalMultiLanguageTranspiler {
     }
   }
 
-  /**
-     * Phase 1: Parse source code to AST
-     */
-  parseToAST(source, language) {
-    const ParserClass = this.languages[language].parser;
-    if (!ParserClass) {
-      throw new Error(`No parser available for ${language}`);
+  parseToAST(_source, language) {
+    if (!this.sourceLanguages.has(language)) {
+      throw new Error(`No active source parser facade for ${language}`);
     }
-        
-    const parser = new ParserClass(source);
-    return parser.parse();
+    throw new Error("parseToAST is deprecated for the core bridge; use transpile() or bridge.compileToIR()");
   }
 
-  /**
-     * Phase 2: Create IR from AST
-     */
-  createIRFromAST(ast, language) {
-    if (language === "javascript" || language === "lua") {
-      // Use existing IR pipeline for JS/Lua
-      return this.lowerer.lower(ast);
-    } else {
-      // Convert generic AST to canonical IR format
-      return this.convertASTToIRNode(ast);
+  createIRFromAST(_ast, language) {
+    if (!this.sourceLanguages.has(language)) {
+      throw new Error(`No active IR lowering facade for ${language}`);
     }
+    throw new Error("createIRFromAST is deprecated for the core bridge; use bridge.compileToIR()");
   }
 
-  /**
-     * Convert generic AST to canonical IR
-     */
-  convertASTToIRNode(node) {
-    if (!node) return null;
-    if (typeof node !== "object") return node;
-
-    const converted = { type: node.type };
-
-    for (const [key, value] of Object.entries(node)) {
-      if (key === "type") continue;
-      if (Array.isArray(value)) {
-        converted[key] = value.map(item => this.convertASTToIRNode(item));
-      } else if (value && typeof value === "object") {
-        converted[key] = this.convertASTToIRNode(value);
-      } else {
-        converted[key] = value;
-      }
-    }
-
-    return converted;
-  }
-
-  /**
-     * Phase 3: Emit IR to target language
-     */
   emitFromIR(ir, language) {
-    const EmitterClass = this.languages[language].emitter;
-    if (!EmitterClass) {
-      throw new Error(`No emitter available for ${language}`);
+    if (!this.targetLanguages.has(language)) {
+      throw new Error(`No active target emitter facade for ${language}`);
     }
-
-    const emitter = new EmitterClass();
-    return emitter.emitProgram(ir);
+    return this.bridge.emitFromIR(ir, language, ir && ir.metadata && ir.metadata.sourceLanguage
+      ? ir.metadata.sourceLanguage
+      : "javascript");
   }
 
-  /**
-     * Round-trip translation: Source → Lang1 → Lang2 → Lang3 → Target
-     * Ensures data integrity through multiple hops
-     */
   roundtripTranslate(sourceCode, languagePath) {
     const results = [];
     let currentCode = sourceCode;
 
-    for (let i = 0; i < languagePath.length - 1; i++) {
-      const from = languagePath[i];
-      const to = languagePath[i + 1];
-
+    for (let index = 0; index < languagePath.length - 1; index++) {
+      const from = languagePath[index];
+      const to = languagePath[index + 1];
       const result = this.transpile(currentCode, from, to);
       results.push(result);
 
       if (!result.success) {
         return {
           success: false,
-          error: `Failed at ${from} → ${to}: ${result.error}`,
+          error: `Failed at ${from} -> ${to}: ${result.error}`,
           results,
           path: languagePath
         };
@@ -325,123 +239,80 @@ class UniversalMultiLanguageTranspiler {
       success: true,
       code: currentCode,
       path: languagePath,
-      hops: languagePath.length - 1,
+      hops: Math.max(languagePath.length - 1, 0),
       results,
       integrityScore: this.calculateIntegrityScore(results)
     };
   }
 
-  /**
-     * Calculate data integrity across translations
-     */
   calculateIntegrityScore(results) {
     let score = 100;
-        
     for (const result of results) {
-      if (result.metrics) {
-        const ratio = parseFloat(result.metrics.compressionRatio);
-        if (ratio > 2) score -= 10;  // Large expansion
-        if (ratio < 0.5) score -= 5;  // Significant compression
-      }
+      if (!result.metrics) continue;
+      const ratio = Number.parseFloat(result.metrics.compressionRatio);
+      if (!Number.isFinite(ratio)) continue;
+      if (ratio > 2) score -= 10;
+      if (ratio < 0.5) score -= 5;
     }
-        
     return Math.max(score, 0);
   }
 
-  /**
-     * Get parser for a language
-     */
   getParserForLanguage(language) {
-    const ParserClass = this.languages[language]?.parser;
-    if (!ParserClass) {
+    if (!this.sourceLanguages.has(language)) {
       throw new Error(`No parser for language: ${language}`);
     }
-    return ParserClass;
+    return null;
   }
 
-  /**
-     * Get emitter for a language
-     */
   getEmitterForLanguage(language) {
-    const EmitterClass = this.languages[language]?.emitter;
-    if (!EmitterClass) {
+    if (!this.targetLanguages.has(language)) {
       throw new Error(`No emitter for language: ${language}`);
     }
-    return EmitterClass;
+    return null;
   }
 
-  /**
-     * Get all supported languages
-     */
   getSupportedLanguages() {
     return Object.keys(this.languages).sort();
   }
 
-  /**
-     * Validate a language pair
-     */
   isLanguagePairSupported(source, target) {
-    return this.languages[source] && this.languages[target];
+    return this.sourceLanguages.has(source) && this.targetLanguages.has(target);
   }
 
-  /**
-     * Get language family for a language
-     */
   getLanguageFamily(language) {
     return this.languages[language]?.family || "Unknown";
   }
 
-  /**
-     * Generate comprehensive status report
-     */
   generateStatusReport() {
     const stats = this.getCapabilityStats();
-        
+
     return {
-      name: "UNIVERSAL MULTI-LANGUAGE TRANSPILER v2.0",
+      name: "UNIVERSAL MULTI-LANGUAGE TRANSPILER (CORE BRIDGE FACADE)",
       timestamp: new Date().toISOString(),
+      advisory: true,
       statistics: stats,
       configuration: {
-        roundTripEnabled: true,
-        transitiveTranslationEnabled: true,
-        errorHandlingMode: "graceful",
-        optimizations: ["passthrough", "ir-caching", "family-aware-routing"]
+        mode: "core-bridge-only",
+        sourceOfTruth: [
+          "docs/LANGUAGE_SUPPORT_MATRIX.md",
+          "PROJECT_STATUS.md",
+          "docs/LUASCRIPT_MEGA_PLAN.md"
+        ]
       },
       deployment: {
-        status: "OPERATIONAL",
-        healthScore: 95,
-        qualityGate: "PASS",
-        lastUpdated: new Date().toISOString()
+        status: "ADVISORY",
+        qualityGate: "Use language:*:bidirectional and clarity:languages"
       },
       capabilities: {
-        tierZero: `${stats.totalLanguages} languages support self-translation`,
-        tierOne: `${stats.supportedPairs} direct translation pairs`,
-        tierTwo: "Roundtrip support for all language combinations",
-        tierThree: "Cross-family translation with bridge architecture"
+        supportedPairs: this.getSupportedPairs(),
+        unsupportedLanguages: Object.keys(ADVISORY_ONLY_LANGUAGES)
       },
       supportMatrix: this.generateSupportMatrix()
     };
   }
 
-  /**
-     * Generate support matrix showing all language pairs
-     */
   generateSupportMatrix() {
-    const langs = Object.keys(this.languages).sort();
-    const matrix = {};
-
-    for (const source of langs) {
-      matrix[source] = {};
-      for (const target of langs) {
-        if (source === target) {
-          matrix[source][target] = "✓ SELF";
-        } else {
-          matrix[source][target] = "✓ IR";
-        }
-      }
-    }
-
-    return matrix;
+    return this.generateBridgeMatrix();
   }
 }
 

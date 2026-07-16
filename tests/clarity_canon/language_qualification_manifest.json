@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "productionReadyRequires": ["parser", "lowering", "emitter", "runtime", "integration"],
+    "allowedTiers": ["experimental", "partial", "practical"],
+    "allowedStatuses": ["verified", "partial", "missing"]
+  },
+  "execution": {
+    "timeoutMs": 600000,
+    "transientRetries": 1
+  },
+  "languages": [
+    {
+      "language": "JavaScript",
+      "tier": "practical",
+      "claim": "JavaScript V1 Ring 2 medium-programs are verified bidirectionally through canonical IR to Lua, JavaScript, and LUASCRIPT .ls outputs.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:javascript:core", "note": "The V1 Ring 2 manifest parses JavaScript fixtures through the current JS-to-IR compiler." },
+        "lowering": { "status": "verified", "npmScript": "language:javascript:core", "note": "Fixtures lower to canonical IR and emit all V1 Ring 2 targets." },
+        "emitter": { "status": "verified", "npmScript": "language:javascript:core", "note": "The gate emits Lua, JavaScript, and supported JS-like LUASCRIPT .ls." },
+        "runtime": { "status": "verified", "npmScript": "language:javascript:core", "note": "Native and emitted targets execute and compare stdout." },
+        "integration": { "status": "verified", "npmScript": "language:javascript:core", "note": "Ring 2 covers closure state, nested object state, nested loops, break/continue, short-circuit side effects, and explicit unsupported diagnostics." }
+      }
+    },
+    {
+      "language": "TypeScript",
+      "tier": "partial",
+      "claim": "TypeScript V0.25 typed-JS small-programs are verified through canonical IR to Lua, JavaScript, LUASCRIPT .ls, and Python outputs.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:typescript:core", "note": "The V0.25 manifest parses TypeScript through the TypeScript compiler API, validates the supported slice, erases runtime-neutral type syntax, and lowers the generated JavaScript to canonical IR." },
+        "lowering": { "status": "verified", "npmScript": "language:typescript:core", "note": "Fixtures lower typed locals, typed functions, arrays, interface/type-alias annotations, object mutation, loops, break/continue, string length/indexing, and boolean short-circuit behavior." },
+        "emitter": { "status": "verified", "npmScript": "language:typescript:core", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, and Python outputs." },
+        "runtime": { "status": "verified", "npmScript": "language:typescript:core", "note": "Native TypeScript is executed by transpiling the verified slice to JavaScript and running Node; every emitted target executes and compares stdout." },
+        "integration": { "status": "verified", "npmScript": "language:typescript:core", "note": "Unsupported TypeScript features outside V0.25, including classes, enums, generics, and imports, fail with explicit diagnostics." }
+      }
+    },
+    {
+      "language": "LUASCRIPT .ls",
+      "tier": "practical",
+      "claim": "LUASCRIPT .ls V1 Ring 2 JS-like medium-programs are verified through the shared bidirectional gate and actual-program suite.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:luascript:core", "note": "The V1 Ring 2 manifest treats supported .ls as JS-like source for canonical IR." },
+        "lowering": { "status": "verified", "npmScript": "language:luascript:core", "note": "Fixtures lower to canonical IR and actual .ls programs continue through the compiler." },
+        "emitter": { "status": "verified", "npmScript": "language:luascript:core", "note": "The gate emits Lua, JavaScript, and supported JS-like LUASCRIPT .ls." },
+        "runtime": { "status": "verified", "npmScript": "language:luascript:core", "note": "Native .ls and emitted targets execute and compare stdout." },
+        "integration": { "status": "verified", "npmScript": "language:luascript:core", "note": "Ring 2 covers closure state, nested object state, nested loops, break/continue, short-circuit side effects, and actual-program coverage through language:luascript:bidirectional and clarity:dogfood." }
+      }
+    },
+    {
+      "language": "Lua input",
+      "tier": "partial",
+      "claim": "Lua input V2 is requalified for a documented small-program slice through canonical IR to Lua, JavaScript, and LUASCRIPT .ls outputs.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:lua:core", "note": "luaparse-backed Lua fixtures are parsed by the strict V2 gate." },
+        "lowering": { "status": "verified", "npmScript": "language:lua:core", "note": "Lua fixtures lower to canonical IR artifacts with object-style roots for current emitters." },
+        "emitter": { "status": "verified", "npmScript": "language:lua:core", "note": "The gate emits Lua, JavaScript, and supported JS-like LUASCRIPT .ls." },
+        "runtime": { "status": "verified", "npmScript": "language:lua:core", "note": "Lua output, JavaScript output, and emitted .ls compiled to Lua execute and compare stdout." },
+        "integration": { "status": "verified", "npmScript": "language:lua:core", "note": "The Lua input fixture suite remains a separate strict gate in language:lua:bidirectional and test:lua-input." }
+      }
+    },
+    {
+      "language": "Python",
+      "tier": "partial",
+      "claim": "Python V1.2 small-programs are verified bidirectionally through canonical IR to Lua, JavaScript, LUASCRIPT .ls, and Python output.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:python:core", "note": "The V1.2 manifest parses Python fixtures through CPython ast and the Python-to-IR compiler." },
+        "lowering": { "status": "verified", "npmScript": "language:python:core", "note": "Fixtures lower to canonical IR and retain Python source semantics for the V1.2 slice." },
+        "emitter": { "status": "verified", "npmScript": "language:python:core", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, and Python." },
+        "runtime": { "status": "verified", "npmScript": "language:python:core", "note": "Native Python and every emitted target execute and compare stdout." },
+        "integration": { "status": "verified", "npmScript": "language:python:core", "note": "Unsupported Python V1.2-outside features are covered by explicit diagnostics plus JS/Lua/LUASCRIPT canonical reverse fixtures." }
+      }
+    },
+    {
+      "language": "Ruby",
+      "tier": "experimental",
+      "claim": "Ruby V0.6 has a target-runtime canonical-IR lane plus a narrow native Ruby bidirectional gate; broad Ruby remains unqualified.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:ruby:ir-targets", "note": "The V0.6 manifest parses method-oriented Ruby fixtures through RubyToIRCompiler." },
+        "lowering": { "status": "verified", "npmScript": "language:ruby:ir-targets", "note": "The V0.6 slice lowers methods, locals, arithmetic, while/if control flow, simple array iteration, indexed reads/writes, simple hashes, hash mutation, inclusive numeric ranges, boolean flow, break/next, string indexing/length, length/size, math calls, and puts output into canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:ruby:ir-targets", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs that execute and compare stdout." },
+        "runtime": { "status": "verified", "npmScript": "language:ruby:bidirectional", "note": "Native Ruby execution runs the V0.6 fixture slice through ruby and compares stdout." },
+        "integration": { "status": "verified", "npmScript": "language:ruby:bidirectional", "note": "Native Ruby plus emitted Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs execute for the named slice; broader Ruby remains outside the claim." }
+      }
+    },
+    {
+      "language": "PHP",
+      "tier": "experimental",
+      "claim": "PHP V0.6 has a target-runtime canonical-IR lane plus a narrow native PHP bidirectional gate; broad PHP remains unqualified.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:php:ir-targets", "note": "The V0.6 manifest parses function-oriented PHP fixtures through PHPToIRCompiler." },
+        "lowering": { "status": "verified", "npmScript": "language:php:ir-targets", "note": "The V0.6 slice lowers functions, locals, arithmetic, while/if control flow, boolean flow, break/continue, numeric arrays, simple associative arrays with string identifier keys, indexed reads/writes, strlen, for loops, variable-backed foreach, count, math calls, and echo/print output into canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:php:ir-targets", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs that execute and compare stdout." },
+        "runtime": { "status": "verified", "npmScript": "language:php:bidirectional", "note": "Native PHP execution runs the V0.6 fixture slice through php and compares stdout." },
+        "integration": { "status": "verified", "npmScript": "language:php:bidirectional", "note": "Native PHP plus emitted Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs execute for the named slice; broader PHP remains outside the claim." }
+      }
+    },
+    {
+      "language": "Dart",
+      "tier": "experimental",
+      "claim": "Dart V0.6 has a target-runtime canonical-IR lane plus a narrow native Dart bidirectional gate; broad Dart remains unqualified.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:dart:ir-targets", "note": "The V0.6 manifest parses simple top-level Dart fixtures through DartToIRCompiler." },
+        "lowering": { "status": "verified", "npmScript": "language:dart:ir-targets", "note": "The V0.6 slice lowers functions, locals, typed lists, indexed reads/writes, while/if/for control flow, simple for-in loops, boolean flow, break/continue, string length/indexing, math calls, and print output into canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:dart:ir-targets", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs that execute and compare stdout." },
+        "runtime": { "status": "verified", "npmScript": "language:dart:bidirectional", "note": "Native Dart execution runs the V0.6 fixture slice through dart and compares stdout." },
+        "integration": { "status": "verified", "npmScript": "language:dart:bidirectional", "note": "Native Dart plus emitted Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs execute for the named slice; broader Dart remains outside the claim." }
+      }
+    },
+    {
+      "language": "C#",
+      "tier": "partial",
+      "claim": "C# V0.5 Program/static-method small-programs are verified through canonical IR to Lua, JavaScript, LUASCRIPT .ls, and C# output.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:csharp:core", "note": "The V0.5 manifest parses Program-wrapper C# fixtures through the C#-to-IR compiler." },
+        "lowering": { "status": "verified", "npmScript": "language:csharp:core", "note": "Fixtures lower locals, static methods, conditionals, loops, arrays, foreach including continue, .Length, string indexing, string interpolation, Math.* calls, and Console.WriteLine to canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:csharp:core", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, and C#." },
+        "runtime": { "status": "verified", "npmScript": "language:csharp:core", "note": "Native C# runs through dotnet, and every emitted target executes and compares stdout." },
+        "integration": { "status": "verified", "npmScript": "language:csharp:core", "note": "Unsupported C# features outside V0.5 are covered by explicit diagnostics." }
+      }
+    },
+    {
+      "language": "C",
+      "tier": "partial",
+      "claim": "C V0.3 record small-programs are verified through canonical IR to Lua, JavaScript, LUASCRIPT .ls, C, and C++ output.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:c:core", "note": "The V0.3 manifest parses function/main plus record-slice C fixtures through the C-like compiler." },
+        "lowering": { "status": "verified", "npmScript": "language:c:core", "note": "Fixtures lower locals, free functions, record-like structs with scalar fields, struct initialization, member access/mutation, struct parameters/returns, array parameters with explicit counts, conditionals, loops, numeric arrays, static-array sizeof length, strlen, string indexing, character literals, break/continue, math calls, printf/puts output, and assignments to canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:c:core", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, C, and C++." },
+        "runtime": { "status": "verified", "npmScript": "language:c:core", "note": "Native C compiles/runs through clang or the bundled dotnet clang fallback, and every emitted target executes and compares stdout." },
+        "integration": { "status": "verified", "npmScript": "language:c:core", "note": "Unsupported C features outside V0.3 are covered by explicit diagnostics." }
+      }
+    },
+    {
+      "language": "C++",
+      "tier": "partial",
+      "claim": "C++ V0.4 class-method small-programs are verified through canonical IR to Lua, JavaScript, LUASCRIPT .ls, C, and C++ output.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:cpp:core", "note": "The V0.4 manifest parses function/main plus class-method-slice C++ fixtures through the C-like compiler." },
+        "lowering": { "status": "verified", "npmScript": "language:cpp:core", "note": "Fixtures lower locals, free functions, simple public-field class records, aggregate initialization, member access/mutation, record parameters/returns, simple public constructors, simple public instance methods, raw array parameters with explicit counts, conditionals, loops, numeric arrays, std::string size/index basics, character literals, break/continue, math calls, std::cout output, and assignments to canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:cpp:core", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, C, and C++." },
+        "runtime": { "status": "verified", "npmScript": "language:cpp:core", "note": "Native C++ compiles/runs through clang++ or the bundled dotnet clang++ fallback, and every emitted target executes and compares stdout." },
+        "integration": { "status": "verified", "npmScript": "language:cpp:core", "note": "Unsupported C++ features outside V0.4 are covered by explicit diagnostics." }
+      }
+    },
+    {
+      "language": "Java",
+      "tier": "experimental",
+      "claim": "Java V0.6 has a target-runtime canonical-IR lane plus a narrow native Java bidirectional gate; broad Java remains unqualified.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:java:ir-targets", "note": "The V0.6 manifest parses single-class static-method Java fixtures through JavaToIRCompiler." },
+        "lowering": { "status": "verified", "npmScript": "language:java:ir-targets", "note": "The V0.6 slice lowers static methods, locals, arithmetic, while/if control flow, primitive arrays, indexed reads/writes, enhanced for, boolean flow, break/continue, .length, String.length(), String.charAt, Math calls, and System.out.println into canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:java:ir-targets", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs that execute and compare stdout." },
+        "runtime": { "status": "verified", "npmScript": "language:java:bidirectional", "note": "Native Java execution compiles with javac, runs with java, and compares stdout for the narrow native fixture slice." },
+        "integration": { "status": "verified", "npmScript": "language:java:bidirectional", "note": "Native Java plus emitted Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs execute for the named slice; broader Java remains outside the claim." }
+      }
+    },
+    {
+      "language": "Go",
+      "tier": "experimental",
+      "claim": "Go V0.25 has a target-runtime canonical-IR lane plus a narrow native Go bidirectional gate; broad Go remains unqualified.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:go:ir-targets", "note": "The V0.25 manifest parses a small Go slice through GoToIRCompiler by normalizing supported Go syntax into the shared C-like parser." },
+        "lowering": { "status": "verified", "npmScript": "language:go:ir-targets", "note": "The V0.25 slice lowers package-level functions, typed parameters/returns, var and := locals, primitive arrays, range loops over arrays, conditionals, while-style for loops, numeric for loops, break/continue, simple structs, field access/mutation, fmt.Println, len, and math.Sqrt into canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:go:ir-targets", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs that execute and compare stdout." },
+        "runtime": { "status": "verified", "npmScript": "language:go:bidirectional", "note": "Native Go execution runs the V0.25 fixture slice through go run and compares stdout." },
+        "integration": { "status": "verified", "npmScript": "language:go:bidirectional", "note": "Native Go plus emitted Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs execute for the named slice; broader Go remains outside the claim." }
+      }
+    },
+    {
+      "language": "Rust",
+      "tier": "experimental",
+      "claim": "Rust V0.25 has a target-runtime canonical-IR lane plus a narrow native Rust bidirectional gate; broad Rust remains unqualified.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:rust:ir-targets", "note": "The V0.25 manifest parses a small Rust slice through RustToIRCompiler by normalizing supported Rust syntax into the shared C-like parser." },
+        "lowering": { "status": "verified", "npmScript": "language:rust:ir-targets", "note": "The V0.25 slice lowers free functions, typed parameters/returns, let/mut locals, primitive arrays, array iteration, numeric ranges, conditionals, while loops, break/continue, simple structs, field access/mutation, println!, len, and float sqrt into canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:rust:ir-targets", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs that execute and compare stdout." },
+        "runtime": { "status": "verified", "npmScript": "language:rust:bidirectional", "note": "Native Rust execution compiles with rustc, runs the fixture executables, and compares stdout for the narrow native fixture slice." },
+        "integration": { "status": "verified", "npmScript": "language:rust:bidirectional", "note": "Native Rust plus emitted Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs execute for the named slice; broader Rust remains outside the claim." }
+      }
+    },
+    {
+      "language": "Kotlin",
+      "tier": "experimental",
+      "claim": "Kotlin V0.25 has a target-runtime canonical-IR lane plus a narrow native Kotlin bidirectional gate; broad Kotlin remains unqualified.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:kotlin:ir-targets", "note": "The V0.25 manifest parses a small Kotlin slice through KotlinToIRCompiler by normalizing supported Kotlin syntax into the shared C-like parser." },
+        "lowering": { "status": "verified", "npmScript": "language:kotlin:ir-targets", "note": "The V0.25 slice lowers free functions, typed parameters/returns, val/var locals, primitive arrays, array iteration, numeric ranges, conditionals, while loops, break/continue, data-class record fields, field access/mutation, println, size/length, and Math calls into canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:kotlin:ir-targets", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs that execute and compare stdout." },
+        "runtime": { "status": "verified", "npmScript": "language:kotlin:bidirectional", "note": "Native Kotlin execution compiles the V0.25 fixture slice with kotlinc, runs it on Java, and compares stdout." },
+        "integration": { "status": "verified", "npmScript": "language:kotlin:bidirectional", "note": "Native Kotlin plus emitted Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs execute for the named slice; broader Kotlin remains outside the claim." }
+      }
+    },
+    {
+      "language": "Elm",
+      "tier": "experimental",
+      "claim": "Elm V0.6 has a target-runtime canonical-IR lane plus a narrow native Elm bidirectional gate; broad Elm remains unqualified.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:elm:ir-targets", "note": "The V0.6 manifest parses expression-oriented Elm top-level definitions through ElmToIRCompiler." },
+        "lowering": { "status": "verified", "npmScript": "language:elm:ir-targets", "note": "The V0.6 slice lowers definitions, function calls, conditionals, boolean/comparison expressions including || and &&, unary not, nested calls, single-line let-in, literal list access, literal/top-level-constant length, string concatenation, and print output into canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:elm:ir-targets", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs that execute and compare stdout." },
+        "runtime": { "status": "verified", "npmScript": "language:elm:bidirectional", "note": "Native Elm execution compiles the V0.6 fixture slice with elm make, runs the generated worker under Node, and compares stdout." },
+        "integration": { "status": "verified", "npmScript": "language:elm:bidirectional", "note": "Native Elm plus emitted Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs execute for the named slice; broader Elm remains outside the claim." }
+      }
+    },
+    {
+      "language": "Gleam",
+      "tier": "experimental",
+      "claim": "Gleam V0.6 has a target-runtime canonical-IR lane plus a narrow native Gleam bidirectional gate; broad Gleam remains unqualified.",
+      "evidence": {
+        "parser": { "status": "verified", "npmScript": "language:gleam:ir-targets", "note": "The V0.6 manifest parses simple top-level fn definitions through GleamToIRCompiler." },
+        "lowering": { "status": "verified", "npmScript": "language:gleam:ir-targets", "note": "The V0.6 slice lowers functions, lets, expression returns, if-expressions, boolean/comparison expressions including || and &&, nested calls, list helper use, local-constant list_length/string_length, and print output into canonical IR." },
+        "emitter": { "status": "verified", "npmScript": "language:gleam:ir-targets", "note": "The gate emits Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs that execute and compare stdout." },
+        "runtime": { "status": "verified", "npmScript": "language:gleam:bidirectional", "note": "Native Gleam execution runs the V0.6 fixture slice through gleam run and compares stdout." },
+        "integration": { "status": "verified", "npmScript": "language:gleam:bidirectional", "note": "Native Gleam plus emitted Lua, JavaScript, supported JS-like LUASCRIPT .ls, Python, and C# outputs execute for the named slice; broader Gleam remains outside the claim." }
+      }
+    }
+  ]
+}

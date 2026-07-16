@@ -72,6 +72,8 @@ const parserTests = [
 ];
 
 const results = {};
+let memoryFailures = 0;
+let consistencyFailures = 0;
 
 for (const parserTest of parserTests) {
   testSection(`${parserTest.name} - Parsing Correctness`);
@@ -112,35 +114,59 @@ for (const parserTest of parserTests) {
 // MEMORY LEAK VERIFICATION
 // ============================================================================
 
-testSection('Memory Leak Verification - 100 Sequential Parses');
+testSection('Memory Stability Verification - Same-Fixture Repeated Parses');
 
 for (const parserTest of parserTests) {
   const Parser = parserTest.ParserClass;
-  const snapshots = [];
-  
-  for (let i = 0; i < 100; i++) {
-    const testCase = parserTest.testCases[i % parserTest.testCases.length];
-    try {
-      const parser = new Parser(testCase.code);
-      parser.parse();
-      snapshots.push(parser.getMemoryStats().objectCount);
-    } catch (e) {
-      snapshots.push(0);
+  let parserMemoryFailures = 0;
+
+  log(`\n${parserTest.name}:`);
+
+  for (const testCase of parserTest.testCases) {
+    const snapshots = [];
+    let parseFailure = null;
+
+    for (let i = 0; i < 20; i++) {
+      try {
+        const parser = new Parser(testCase.code);
+        parser.parse();
+        snapshots.push(parser.getMemoryStats().objectCount);
+      } catch (error) {
+        parseFailure = error;
+        break;
+      }
     }
+
+    if (parseFailure) {
+      memoryFailures++;
+      parserMemoryFailures++;
+      log(`  ❌ ${testCase.name.padEnd(20)} | ${parseFailure.message}`, 'RED');
+      continue;
+    }
+
+    const first = snapshots[0];
+    const last = snapshots[snapshots.length - 1];
+    const growthNumber = ((last - first) / (first || 1)) * 100;
+    const growth = growthNumber.toFixed(1);
+    const max = Math.max(...snapshots);
+    const positiveSnapshots = snapshots.filter(x => x > 0);
+    const min = positiveSnapshots.length > 0 ? Math.min(...positiveSnapshots) : 0;
+    const status = Math.abs(growthNumber) < 10 ? 'PASS' : 'FAIL';
+
+    if (status === 'FAIL') {
+      memoryFailures++;
+      parserMemoryFailures++;
+    }
+
+    log(
+      `  ${status === 'PASS' ? '✅' : '❌'} ${testCase.name.padEnd(20)} | ${first} -> ${last} objects (${growth}%), min/max ${min}/${max}`,
+      status === 'PASS' ? 'GREEN' : 'RED'
+    );
   }
 
-  const first = snapshots[0];
-  const last = snapshots[99];
-  const growth = ((last - first) / (first || 1) * 100).toFixed(1);
-  const max = Math.max(...snapshots);
-  const min = Math.min(...snapshots.filter(x => x > 0));
-  
-  const status = Math.abs(growth) < 10 ? 'PASS' : 'FAIL';
-  log(`\n${parserTest.name}:`);
-  log(`  Iteration 0:   ${first} objects`);
-  log(`  Iteration 99:  ${last} objects`);
-  log(`  Memory growth: ${growth}% [${status}]`, growth < 0 || growth < 10 ? 'GREEN' : 'RED');
-  log(`  Min/Max: ${min} / ${max} objects`);
+  if (parserMemoryFailures === 0) {
+    log(`  ✅ Same-fixture memory stable across ${parserTest.testCases.length} cases`, 'GREEN');
+  }
 }
 
 // ============================================================================
@@ -215,6 +241,7 @@ for (const parserTest of parserTests) {
   if (allSame) {
     log(`  ✅ Consistent AST output over 5 parses`, 'GREEN');
   } else {
+    consistencyFailures++;
     log(`  ❌ Inconsistent AST output`, 'RED');
   }
 }
@@ -241,14 +268,16 @@ for (const [name, result] of Object.entries(results)) {
 
 log(`\n${'─'.repeat(80)}`);
 log(`Total: ${totalPassed} passed, ${totalFailed} failed`);
+log(`Auxiliary: ${memoryFailures} memory failures, ${consistencyFailures} consistency failures`);
 
-if (totalFailed === 0) {
+if (totalFailed === 0 && memoryFailures === 0 && consistencyFailures === 0) {
   log(`\n✅ STEP 1 COMPLETE: PHP AND DART VERIFIED`, 'GREEN');
 } else {
   log(`\n⚠️  STEP 1 PARTIAL: Some tests failed`, 'YELLOW');
+  process.exitCode = 1;
 }
 
 log(`\n${'═'.repeat(80)}\n`);
 
 // Export for next steps
-module.exports = { results };
+module.exports = { results, memoryFailures, consistencyFailures };

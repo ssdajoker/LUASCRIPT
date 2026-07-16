@@ -30,7 +30,7 @@ class PythonPhaseESecurityIntegration {
   /**
    * Run security gate for Phase E
    */
-  runSecurityGate(code, options = {}) {
+  runSecurityGate(code, _options = {}) {
     if (!this.options.enabled) {
       return {
         passed: true,

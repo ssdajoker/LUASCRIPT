@@ -87,7 +87,7 @@ class IRTransform {
    * @throws {TransformError} If transform fails
    */
   transform(_node, _context) {
-    throw new Error(`${this.name}.transform() not implemented`);
+    throw new Error(`${this.name}.transform() must be overridden by the transform implementation`);
   }
 
   /**
@@ -109,7 +109,7 @@ class IRTransform {
    * @returns {object} Original node
    */
   rollback(_node) {
-    throw new Error(`${this.name}.rollback() not implemented`);
+    throw new Error(`${this.name}.rollback() must be overridden by the transform implementation`);
   }
 }
 

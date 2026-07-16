@@ -42,6 +42,9 @@ class TokenType(Enum):
     DIVIDE_UNICODE = auto()     # ÷
     MINUS_UNICODE = auto()      # −  
     PLUS_MINUS = auto()         # ±
+    DOT_PRODUCT = auto()        # ·
+    CROSS_PRODUCT = auto()      # ⨯
+    TENSOR_PRODUCT = auto()     # ⊗
     SQRT = auto()               # √
     ARROW_RIGHT = auto()        # →
     ARROW_LEFT = auto()         # ←
@@ -123,6 +126,20 @@ class TokenType(Enum):
     FROM = auto()
     DEFAULT = auto()
     AS = auto()
+
+    # Keywords - LUASCRIPT meta layer
+    META = auto()
+    TARGET = auto()
+    RESOLVE = auto()
+    USING = auto()
+    DIAGNOSE = auto()
+    UNSUPPORTED = auto()
+    VERIFY = auto()
+    REQUIRES = auto()
+    FORBID = auto()
+    ADAPT = auto()
+    REPAIR = auto()
+    LOWER = auto()
     
     # Keywords - LUASCRIPT Mathematical Extensions
     NEURAL = auto()
@@ -259,6 +276,10 @@ class EnhancedLexer:
         '÷': (TokenType.DIVIDE_UNICODE, 'divide'),
         '−': (TokenType.MINUS_UNICODE, 'minus'),
         '±': (TokenType.PLUS_MINUS, 'plus_minus'),
+        '·': (TokenType.DOT_PRODUCT, 'dot_product'),
+        '⋅': (TokenType.DOT_PRODUCT, 'dot_product'),
+        '⨯': (TokenType.CROSS_PRODUCT, 'cross_product'),
+        '⊗': (TokenType.TENSOR_PRODUCT, 'tensor_product'),
         '√': (TokenType.SQRT, 'square_root'),
         '→': (TokenType.ARROW_RIGHT, 'arrow_right'),
         '←': (TokenType.ARROW_LEFT, 'arrow_left'),
@@ -342,6 +363,7 @@ class EnhancedLexer:
         'undefined': TokenType.UNDEFINED,
         'of': TokenType.OF,
         'in': TokenType.IN,
+        'mod': TokenType.MODULO,
         'instanceof': TokenType.INSTANCEOF,
         'typeof': TokenType.TYPEOF,
         'void': TokenType.VOID,
@@ -354,6 +376,20 @@ class EnhancedLexer:
         'from': TokenType.FROM,
         'default': TokenType.DEFAULT,
         'as': TokenType.AS,
+
+        # LUASCRIPT meta layer
+        'meta': TokenType.META,
+        'target': TokenType.TARGET,
+        'resolve': TokenType.RESOLVE,
+        'using': TokenType.USING,
+        'diagnose': TokenType.DIAGNOSE,
+        'unsupported': TokenType.UNSUPPORTED,
+        'verify': TokenType.VERIFY,
+        'requires': TokenType.REQUIRES,
+        'forbid': TokenType.FORBID,
+        'adapt': TokenType.ADAPT,
+        'repair': TokenType.REPAIR,
+        'lower': TokenType.LOWER,
         
         # LUASCRIPT mathematical extensions
         'neural': TokenType.NEURAL,

@@ -133,7 +133,7 @@ class BaseParser {
       if (this.pos >= this.source.length) break;
 
       const char = this.source[this.pos];
-      const lastPos = this.pos; // Track position to detect stalls
+      const _lastPos = this.pos; // Track position to detect stalls
 
       // Comments
       if (char === "/" && this.source[this.pos + 1] === "/") {

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "language": "java",
+  "status": "qualified",
+  "supportSlice": "java-v0.6-ir-target-runtime-slice",
+  "nativeRuntime": "verified separately by tests/language_completion/manifests/java_native.json and npm run language:java:bidirectional",
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_methods",
+      "source": "tests/language_completion/fixtures/java/arithmetic_methods.java",
+      "skipNative": true,
+      "expectedOutput": "java_arithmetic\n10"
+    },
+    {
+      "name": "control_flow",
+      "source": "tests/language_completion/fixtures/java/control_flow.java",
+      "skipNative": true,
+      "expectedOutput": "java_flow\n10"
+    },
+    {
+      "name": "math_calls",
+      "source": "tests/language_completion/fixtures/java/math_calls.java",
+      "skipNative": true,
+      "expectedOutput": "java_math\n5"
+    },
+    {
+      "name": "array_indexed_loop",
+      "source": "tests/language_completion/fixtures/java/array_indexed_loop.java",
+      "skipNative": true,
+      "expectedOutput": "java_array_index\n16"
+    },
+    {
+      "name": "enhanced_for_arrays",
+      "source": "tests/language_completion/fixtures/java/enhanced_for_arrays.java",
+      "skipNative": true,
+      "expectedOutput": "java_enhanced_for\n15"
+    },
+    {
+      "name": "string_length_charat",
+      "source": "tests/language_completion/fixtures/java/string_length_charat.java",
+      "skipNative": true,
+      "expectedOutput": "java_string\n4\no"
+    },
+    {
+      "name": "boolean_break_continue",
+      "source": "tests/language_completion/fixtures/java/boolean_break_continue.java",
+      "skipNative": true,
+      "expectedOutput": "java_bool_loop\n9"
+    },
+    {
+      "name": "unsupported_import",
+      "source": "tests/language_completion/fixtures/java/unsupported_import.java",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Java input feature: imports"
+    },
+    {
+      "name": "unsupported_new",
+      "source": "tests/language_completion/fixtures/java/unsupported_new.java",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Java input feature: object allocation"
+    },
+    {
+      "name": "unsupported_package",
+      "source": "tests/language_completion/fixtures/java/unsupported_package.java",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Java input feature: imports"
+    },
+    {
+      "name": "unsupported_exception",
+      "source": "tests/language_completion/fixtures/java/unsupported_exception.java",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Java input feature: exceptions"
+    },
+    {
+      "name": "unsupported_generics",
+      "source": "tests/language_completion/fixtures/java/unsupported_generics.java",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Java input feature: generics"
+    },
+    {
+      "name": "unsupported_second_class",
+      "source": "tests/language_completion/fixtures/java/unsupported_second_class.java",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Java input feature: classes beyond the single top-level container"
+    }
+  ]
+}

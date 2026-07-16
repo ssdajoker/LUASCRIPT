@@ -2,7 +2,7 @@
 // Phase B: Python IR Lowering Rules (Deep Normalization)
 // Transforms Python Phase A IR into canonical Phase B IR with full normalization.
 
-const { IRNode, IRNodeType, IRType, IRTypeKind } = require("./canonical_ir_schema");
+const { _IRNode, IRNodeType, _IRType, IRTypeKind } = require("./canonical_ir_schema");
 const { TypeConstraintSolver } = require("./type_constraint_solver");
 const { ErrorReporter, ErrorCategory } = require("./error_reporter");
 const { SemanticPreservationVerifier } = require("./semantic_preservation_verifier");

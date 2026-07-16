@@ -1,10 +1,8 @@
 
 /**
- * LUASCRIPT Unified System - Tony Yoka's Complete Implementation
- * All components integrated into one powerful system
- * 
- * Team: Tony Yoka (Lead) + Steve Jobs + Donald Knuth + PS2/PS3 Team + 32+ Developers
- * Mission: 100% Phases 1-6, Build Phases 7-9 to 90%, 80%, 70%
+ * LUASCRIPT Unified System
+ * Legacy facade that wires active components into one interface.
+ * Current readiness is defined by strict npm gates and docs/LANGUAGE_SUPPORT_MATRIX.md.
  */
 
 const { CoreTranspiler } = require("./core_transpiler");
@@ -54,7 +52,7 @@ class UnifiedLuaScript extends EventEmitter {
       version: "1.0.0"
     };
         
-    this.initializeComponents();
+    this.initializationPromise = this.initializeComponents();
   }
 
   /**
@@ -65,14 +63,14 @@ class UnifiedLuaScript extends EventEmitter {
     this.emit("initStart");
         
     try {
-      // Core Transpiler - Phase 1-2 Complete
+      // Core transpiler component
       if (this.options.enableTranspiler) {
         this.components.set("transpiler", new CoreTranspiler(this.options.transpiler));
         this.stats.componentsLoaded++;
         this.emit("componentLoaded", { name: "transpiler", phase: "1-2" });
       }
             
-      // Runtime System - Phase 3-4 Complete  
+      // Runtime system component
       if (this.options.enableRuntime) {
         this.components.set("runtime", new RuntimeSystem(this.options.runtime));
         await this.components.get("runtime").initialize();
@@ -80,14 +78,14 @@ class UnifiedLuaScript extends EventEmitter {
         this.emit("componentLoaded", { name: "runtime", phase: "3-4" });
       }
             
-      // Advanced Features - Phase 5 Complete
+      // Advanced feature component
       if (this.options.enableAdvanced) {
         this.components.set("advanced", new AdvancedFeatures(this.options.advanced));
         this.stats.componentsLoaded++;
         this.emit("componentLoaded", { name: "advanced", phase: "5" });
       }
             
-      // Performance Tools - Phase 6 Complete
+      // Performance tools component
       if (this.options.enablePerformance) {
         this.components.set("performance", new PerformanceTools(this.options.performance));
         await this.components.get("performance").initialize();
@@ -95,7 +93,7 @@ class UnifiedLuaScript extends EventEmitter {
         this.emit("componentLoaded", { name: "performance", phase: "6" });
       }
             
-      // Agentic IDE - Phase 7 (90% Complete)
+      // IDE component
       if (this.options.enableIDE) {
         this.components.set("ide", new AgenticIDE(this.options.ide));
         await this.components.get("ide").initialize();
@@ -129,8 +127,15 @@ class UnifiedLuaScript extends EventEmitter {
     const t = metrics.timeBlock("transpile");
         
     try {
+      const sourceLanguage = options.sourceLanguage || "javascript";
+      const targetLanguage = options.targetLanguage || "lua";
+
       // Core transpilation
-      const rawResult = await transpiler.transpile(jsCode, options.filename);
+      const rawResult = await transpiler.transpileSource(jsCode, {
+        ...options,
+        sourceLanguage,
+        targetLanguage
+      });
       let result = typeof rawResult === "string"
         ? {
           code: rawResult,
@@ -138,7 +143,9 @@ class UnifiedLuaScript extends EventEmitter {
             originalSize: jsCode.length,
             transpiled: rawResult.length,
             optimizations: 0,
-            filename: options.filename || "main.js"
+            filename: options.filename || "main.js",
+            sourceLanguage,
+            targetLanguage
           }
         }
         : { ...rawResult };
@@ -170,6 +177,18 @@ class UnifiedLuaScript extends EventEmitter {
       this.emit("transpileError", { error: error.message });
       throw error;
     }
+  }
+
+  /**
+     * Explicit multi-language entrypoint for source-language aware transpilation.
+     * @param {string} sourceCode
+     * @param {object} [options={}]
+     * @param {string} [options.sourceLanguage='javascript']
+     * @param {string} [options.targetLanguage='lua']
+     * @returns {Promise<object>}
+     */
+  async transpileSource(sourceCode, options = {}) {
+    return this.transpile(sourceCode, options);
   }
 
   /**
@@ -406,164 +425,60 @@ class UnifiedLuaScript extends EventEmitter {
   }
 
   /**
-     * Validates all phases of the project to determine if victory conditions are met.
-     * @returns {Promise<object>} A promise that resolves with the validation results.
+     * Reports component availability and points to strict evidence gates.
+     * This snapshot is advisory; it does not certify readiness by itself.
+     * @returns {Promise<object>} A promise that resolves with the evidence snapshot.
      */
-  async validateVictory() {
-    console.log("🚨 LUASCRIPT UNIFIED VICTORY VALIDATION 🚨");
-    console.log("=" .repeat(80));
-        
-    const phase12 = await this.validatePhase12();
-    const phase34 = await Promise.resolve(this.validatePhase34());
-    const phase5 = await Promise.resolve(this.validatePhase5());
-    const phase6 = await Promise.resolve(this.validatePhase6());
-    const phase7 = await Promise.resolve(this.validatePhase7());
-    const phase8 = await Promise.resolve(this.validatePhase8());
-    const phase9 = await Promise.resolve(this.validatePhase9());
+  async validateEvidence() {
+    await this.initializationPromise;
 
-    const validation = {
-      phases: {
-        "Phase 1-2 (Transpiler)": phase12,
-        "Phase 3-4 (Runtime)": phase34,
-        "Phase 5 (Advanced)": phase5,
-        "Phase 6 (Performance)": phase6,
-        "Phase 7 (IDE)": phase7,
-        "Phase 8 (Enterprise)": phase8,
-        "Phase 9 (Ecosystem)": phase9
-      },
-      overall: 0,
-      victory: false
+    const componentChecks = [
+      "transpiler",
+      "runtime",
+      "advanced",
+      "performance",
+      "ide"
+    ].map((name) => ({
+      name,
+      enabled: this.options[`enable${name[0].toUpperCase()}${name.slice(1)}`] !== false,
+      loaded: this.components.has(name)
+    }));
+
+    const strictGates = [
+      "npm run claims:check",
+      "npm run verify",
+      "npm test",
+      "npm run clarity:dogfood",
+      "npm run clarity:canon",
+      "npm run clarity:languages",
+      "npm run stubs:check"
+    ];
+
+    const snapshot = {
+      advisory: true,
+      statusAuthority: [
+        "PROJECT_STATUS.md",
+        "docs/LANGUAGE_SUPPORT_MATRIX.md",
+        "docs/LUASCRIPT_MEGA_PLAN.md"
+      ],
+      componentChecks,
+      strictGates,
+      message: "Component availability is not a production-readiness claim. Run the strict gates for current support evidence."
     };
-        
-    // Calculate overall score
-    const scores = Object.values(validation.phases);
-    validation.overall = scores.reduce((sum, score) => sum + score, 0) / scores.length;
-    validation.victory = validation.overall >= 90;
-        
-    console.log("📊 PHASE COMPLETION SCORES:");
-    for (const [phase, score] of Object.entries(validation.phases)) {
-      const status = score >= 90 ? "✅" : score >= 70 ? "⚠️" : "❌";
-      console.log(`   ${status} ${phase}: ${score.toFixed(1)}%`);
+
+    console.log("LUASCRIPT evidence snapshot");
+    console.log("=".repeat(80));
+    for (const check of componentChecks) {
+      console.log(`   ${check.name}: ${check.loaded ? "loaded" : "not loaded"}`);
     }
-        
-    console.log(`\n🏆 OVERALL SCORE: ${validation.overall.toFixed(1)}%`);
-    console.log(`🎯 VICTORY STATUS: ${validation.victory ? "🎉 ACHIEVED!" : "⚠️ In Progress"}`);
-        
-    if (validation.victory) {
-      console.log("\n💰 $1,000,000 PRIZE UNLOCKED!");
-      console.log("🚀 TONY YOKA'S UNIFIED TEAM: MISSION ACCOMPLISHED!");
-      console.log("🏆 PS2/PS3 SPECIALISTS + STEVE JOBS + DONALD KNUTH: VICTORY!");
+    console.log("\nStrict readiness gates:");
+    for (const gate of strictGates) {
+      console.log(`   ${gate}`);
     }
-        
-    console.log("\n" + "=".repeat(80));
-        
-    return validation;
-  }
+    console.log("\nThis snapshot is advisory; current support claims come from live gates and status docs.");
+    console.log("=".repeat(80));
 
-  async validatePhase12() {
-    // Transpiler validation - 100% target
-    const transpiler = this.components.get("transpiler");
-    if (!transpiler) return 0;
-        
-    let score = 100; // Base score for having transpiler
-        
-    // Test basic transpilation
-    try {
-      const output = await transpiler.transpile("let x = 5; console.log(x);");
-      const luaCode = typeof output === "string" ? output : (output && output.code) || "";
-
-      if (luaCode.includes("local x = 5")) score += 0;
-      else score -= 20;
-    } catch (error) {
-      score -= 30;
-    }
-        
-    return Math.max(0, Math.min(100, score));
-  }
-
-  validatePhase34() {
-    // Runtime validation - 100% target
-    const runtime = this.components.get("runtime");
-    if (!runtime) return 0;
-        
-    let score = 100; // Base score for having runtime
-        
-    // Test basic execution
-    try {
-      // Simulate execution test
-      score += 0; // Runtime exists and initialized
-    } catch (error) {
-      score -= 30;
-    }
-        
-    return Math.max(0, Math.min(100, score));
-  }
-
-  validatePhase5() {
-    // Advanced features validation - 100% target
-    const advanced = this.components.get("advanced");
-    if (!advanced) return 0;
-        
-    let score = 100; // Base score for having advanced features
-        
-    // Test OOP transformation
-    try {
-      const result = advanced.transform("class Test {}", ["oop"]);
-      if (result.includes("local Test = {}")) score += 0;
-      else score -= 15;
-    } catch (error) {
-      score -= 25;
-    }
-        
-    return Math.max(0, Math.min(100, score));
-  }
-
-  validatePhase6() {
-    // Performance tools validation - 100% target
-    const performance = this.components.get("performance");
-    if (!performance) return 0;
-        
-    let score = 100; // Base score for having performance tools
-        
-    // Performance tools are initialized and available
-    return Math.max(0, Math.min(100, score));
-  }
-
-  validatePhase7() {
-    // IDE validation - 90% target
-    const ide = this.components.get("ide");
-    if (!ide) return 0;
-        
-    let score = 90; // Target score for Phase 7
-        
-    // IDE is initialized and available
-    return Math.max(0, Math.min(90, score));
-  }
-
-  validatePhase8() {
-    // Phase 8 Complete - 100% (Ada's Unified Team Implementation)
-    let score = 100; // Phase 8 at 100%!
-        
-    // Phase 8 Complete Features:
-    // ✅ Optional Chaining (?.) - 100%
-    // ✅ Nullish Coalescing (??) - 100%
-    // ✅ Advanced Async Patterns - 100%
-    // ✅ WASM Backend (A6) - 100%
-    // ✅ Enterprise Features - 100%
-        
-    return score;
-  }
-
-  validatePhase9() {
-    // Ecosystem - 70% target (simulated)
-    let score = 70; // Target score for Phase 9
-        
-    // Ecosystem features would include:
-    // - Package manager
-    // - Plugin system
-    // - Community tools
-        
-    return score;
+    return snapshot;
   }
 
   /**
@@ -630,14 +545,14 @@ class UnifiedLuaScript extends EventEmitter {
   }
 
   /**
-     * A static method to validate the victory conditions.
-     * @returns {Promise<object>} A promise that resolves with the validation results.
+     * Reports component availability without starting the IDE subsystem.
+     * @returns {Promise<object>} A promise that resolves with the evidence snapshot.
      */
-  static async validateVictoryStatic() {
-    const system = new UnifiedLuaScript();
+  static async validateEvidenceStatic() {
+    const system = new UnifiedLuaScript({ enableIDE: false });
     try {
-      await system.initializeComponents();
-      return await system.validateVictory();
+      await system.initializationPromise;
+      return await system.validateEvidence();
     } finally {
       system.shutdown();
     }

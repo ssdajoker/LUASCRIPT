@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "language": "javascript",
+  "status": "qualified",
+  "supportSlice": "javascript-v1-ring2-medium-programs",
+  "targets": ["lua", "javascript", "luascript"],
+  "fixtures": [
+    {
+      "name": "arithmetic_locals",
+      "source": "tests/language_completion/fixtures/javascript/arithmetic_locals.js",
+      "expectedOutput": "js_arithmetic 5 15"
+    },
+    {
+      "name": "functions_conditionals",
+      "source": "tests/language_completion/fixtures/javascript/functions_conditionals.js",
+      "expectedOutput": "js_branch big 7"
+    },
+    {
+      "name": "while_loop",
+      "source": "tests/language_completion/fixtures/javascript/while_loop.js",
+      "expectedOutput": "js_while 6"
+    },
+    {
+      "name": "numeric_for",
+      "source": "tests/language_completion/fixtures/javascript/numeric_for.js",
+      "expectedOutput": "js_for 10"
+    },
+    {
+      "name": "object_mutation",
+      "source": "tests/language_completion/fixtures/javascript/object_mutation.js",
+      "expectedOutput": "js_object Ada 7"
+    },
+    {
+      "name": "ring2_lexical_scope_closure",
+      "source": "tests/language_completion/fixtures/javascript/ring2_lexical_scope_closure.js",
+      "expectedOutput": "ring2_scope 24 31"
+    },
+    {
+      "name": "ring2_nested_object_state",
+      "source": "tests/language_completion/fixtures/javascript/ring2_nested_object_state.js",
+      "expectedOutput": "ring2_object beta 12"
+    },
+    {
+      "name": "ring2_numeric_nested_loops",
+      "source": "tests/language_completion/fixtures/javascript/ring2_numeric_nested_loops.js",
+      "expectedOutput": "ring2_loops 36"
+    },
+    {
+      "name": "ring2_break_continue",
+      "source": "tests/language_completion/fixtures/javascript/ring2_break_continue.js",
+      "expectedOutput": "ring2_control 8"
+    },
+    {
+      "name": "ring2_short_circuit_state",
+      "source": "tests/language_completion/fixtures/javascript/ring2_short_circuit_state.js",
+      "expectedOutput": "ring2_short 0 false true"
+    },
+    {
+      "name": "ring3_template_literal",
+      "source": "tests/language_completion/fixtures/javascript/ring3_template_literal.js",
+      "expectedOutput": "ring3_template P 7"
+    },
+    {
+      "name": "ring3_index_length",
+      "source": "tests/language_completion/fixtures/javascript/ring3_index_length.js",
+      "targets": ["lua", "javascript"],
+      "expectedOutput": "ring3_index_length 1 9 a 3 3"
+    },
+    {
+      "name": "ring3_switch_conditional",
+      "source": "tests/language_completion/fixtures/javascript/ring3_switch_conditional.js",
+      "targets": ["lua", "javascript"],
+      "expectedOutput": "ring3_switch_conditional one two many"
+    },
+    {
+      "name": "unsupported_throw",
+      "source": "tests/language_completion/fixtures/javascript/unsupported_throw.js",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported JavaScript exception flow: throw statements"
+    },
+    {
+      "name": "unsupported_try_catch",
+      "source": "tests/language_completion/fixtures/javascript/unsupported_try_catch.js",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported JavaScript exception flow: try/catch/finally"
+    },
+    {
+      "name": "unsupported_tagged_template",
+      "source": "tests/language_completion/fixtures/javascript/unsupported_tagged_template.js",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported JavaScript template literal form: tagged template literals"
+    },
+    {
+      "name": "unsupported_object_spread",
+      "source": "tests/language_completion/fixtures/javascript/unsupported_object_spread.js",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported JavaScript object spread"
+    },
+    {
+      "name": "unsupported_destructuring",
+      "source": "tests/language_completion/fixtures/javascript/unsupported_destructuring.js",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported JavaScript variable declarator pattern: ObjectPattern"
+    }
+  ]
+}

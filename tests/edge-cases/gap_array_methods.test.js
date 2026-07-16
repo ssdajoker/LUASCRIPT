@@ -35,11 +35,6 @@ const evens = arr.filter(x => x % 2 === 0);
     console.log('✅ array methods Lua pattern validation passed');
     return true;
   } catch (err) {
-    // Array methods may be unsupported or partially implemented
-    if (/Unsupported|not implemented|array/i.test(err.message)) {
-      console.log('⚠️  array_methods: partial implementation or unsupported');
-      return true;
-    }
     throw err;
   }
 }

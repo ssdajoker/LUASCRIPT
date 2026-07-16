@@ -6,11 +6,27 @@
  * across different runtime environments and JavaScript engines
  */
 
+// Cache Configuration Constants
+const DEFAULT_MAX_CACHE_SIZE = 1000;
+const DEFAULT_CACHE_TTL_MS = 3600000; // 1 hour
+const CACHE_KEY_HASH_LENGTH = 16;
+const _DEFAULT_MAX_STACK_FRAMES = 50;
+
+// Runtime Object Size Limits (in MB, multiply by BYTES_PER_KB squared)
+const V8_MAX_OBJECT_SIZE_MB = 512;
+const SPIDERMONKEY_MAX_OBJECT_SIZE_MB = 256;
+const JSC_MAX_OBJECT_SIZE_MB = 128;
+const BYTES_PER_KB = 1024;
+
+// Conversion Constants
+const CACHE_HIT_RATE_PERCENTAGE_MULTIPLIER = 100;
+const LRU_EVICTION_PERCENTAGE = 0.1; // 10%
+
 class InteropCache {
   constructor(options = {}) {
     this.options = {
-      maxSize: options.maxSize || 1000,
-      ttl: options.ttl || 3600000, // 1 hour default
+      maxSize: options.maxSize || DEFAULT_MAX_CACHE_SIZE,
+      ttl: options.ttl || DEFAULT_CACHE_TTL_MS,
       serializeFormat: options.serializeFormat || "json", // json or msgpack
       enableCompression: options.enableCompression !== false,
       enableMetrics: options.enableMetrics !== false,
@@ -42,21 +58,21 @@ class InteropCache {
       name: "V8 (Node.js/Chrome)",
       features: ["async", "proxy", "weakmap", "bigint", "privatefields"],
       optimizations: ["tiered-compilation", "speculative-optimization", "inlining"],
-      constraints: { maxObjectSize: 512 * 1024 * 1024 }
+      constraints: { maxObjectSize: V8_MAX_OBJECT_SIZE_MB * BYTES_PER_KB * BYTES_PER_KB }
     });
 
     this.runtimeProfiles.set("spidermonkey", {
       name: "SpiderMonkey (Firefox)",
       features: ["async", "proxy", "weakmap", "bigint"],
       optimizations: ["jit", "inline-caches", "type-specialization"],
-      constraints: { maxObjectSize: 256 * 1024 * 1024 }
+      constraints: { maxObjectSize: SPIDERMONKEY_MAX_OBJECT_SIZE_MB * BYTES_PER_KB * BYTES_PER_KB }
     });
 
     this.runtimeProfiles.set("jsc", {
       name: "JavaScriptCore (Safari)",
       features: ["async", "proxy", "weakmap", "bigint"],
       optimizations: ["dfg", "ftl", "speculative-optimization"],
-      constraints: { maxObjectSize: 128 * 1024 * 1024 }
+      constraints: { maxObjectSize: JSC_MAX_OBJECT_SIZE_MB * BYTES_PER_KB * BYTES_PER_KB }
     });
 
     this.runtimeProfiles.set("chakra", {
@@ -70,11 +86,11 @@ class InteropCache {
   /**
    * Generate normalized cache key for AST nodes or code
    */
-  _generateKey(input, runtime = null) {
+  _generateKey(input, _runtime = null) {
     const crypto = require("crypto");
     // Normalize the input for consistent hashing - NEVER include runtime in base key
     let keyInput = typeof input === "string" ? input : JSON.stringify(input);
-    const hash = crypto.createHash("sha256").update(keyInput).digest("hex").substring(0, 16);
+    const hash = crypto.createHash("sha256").update(keyInput).digest("hex").substring(0, CACHE_KEY_HASH_LENGTH);
     return hash;
   }
 
@@ -287,7 +303,7 @@ class InteropCache {
     const sortedByAge = Array.from(this.metadata.entries())
       .sort((a, b) => a[1].timestamp - b[1].timestamp);
 
-    const toEvict = Math.ceil(this.options.maxSize * 0.1); // Evict 10%
+    const toEvict = Math.ceil(this.options.maxSize * LRU_EVICTION_PERCENTAGE);
     for (let i = 0; i < toEvict; i++) {
       const [key] = sortedByAge[i];
       this.cache.delete(key);
@@ -301,12 +317,12 @@ class InteropCache {
    */
   getStats() {
     const total = this.metrics.hits + this.metrics.misses;
-    const hitRate = total > 0 ? (this.metrics.hits / total * 100).toFixed(2) : 0;
+    const hitRate = total > 0 ? (this.metrics.hits / total * CACHE_HIT_RATE_PERCENTAGE_MULTIPLIER).toFixed(2) : 0;
 
     return {
       size: this.cache.size,
       maxSize: this.options.maxSize,
-      utilization: ((this.cache.size / this.options.maxSize) * 100).toFixed(2) + "%",
+      utilization: ((this.cache.size / this.options.maxSize) * CACHE_HIT_RATE_PERCENTAGE_MULTIPLIER).toFixed(2) + "%",
       hits: this.metrics.hits,
       misses: this.metrics.misses,
       hitRate: hitRate + "%",

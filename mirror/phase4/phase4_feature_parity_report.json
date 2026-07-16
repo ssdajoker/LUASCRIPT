@@ -1,0 +1,278 @@
+{
+  "generatedAt": "2026-02-03T19:07:32.687Z",
+  "tiers": [
+    "python",
+    "ruby",
+    "php",
+    "dart"
+  ],
+  "totalModules": 31,
+  "summary": {
+    "python": {
+      "modules": 31,
+      "missing": []
+    },
+    "ruby": {
+      "modules": 31,
+      "missing": []
+    },
+    "php": {
+      "modules": 31,
+      "missing": []
+    },
+    "dart": {
+      "modules": 31,
+      "missing": []
+    }
+  },
+  "matrix": [
+    {
+      "module": "async_coroutines",
+      "category": "Async & Control Flow",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "async_errhandling",
+      "category": "Async & Control Flow",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "async_parallel",
+      "category": "Async & Control Flow",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "async_promises",
+      "category": "Async & Control Flow",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "ir_canonical",
+      "category": "IR & Determinism",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "ir_determinism",
+      "category": "IR & Determinism",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "ir_tracing",
+      "category": "IR & Determinism",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "meta_ast",
+      "category": "Metaprogramming",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "meta_decorators",
+      "category": "Metaprogramming",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "meta_generation",
+      "category": "Metaprogramming",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "meta_reflection",
+      "category": "Metaprogramming",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "pattern_basic",
+      "category": "Pattern Matching",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "pattern_binding",
+      "category": "Pattern Matching",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "pattern_exhaustive",
+      "category": "Pattern Matching",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "pattern_guards",
+      "category": "Pattern Matching",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "pattern_nested",
+      "category": "Pattern Matching",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "pattern_performance",
+      "category": "Pattern Matching",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "perf_benchmark",
+      "category": "Optimization",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "perf_caching",
+      "category": "Optimization",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "perf_constantfolding",
+      "category": "Optimization",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "perf_deadcode",
+      "category": "Optimization",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "perf_memoization",
+      "category": "Optimization",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "sec_audit",
+      "category": "Security",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "sec_crypto",
+      "category": "Security",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "sec_injection",
+      "category": "Security",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "sec_input",
+      "category": "Security",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "type_advanced",
+      "category": "Type System",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "type_basics",
+      "category": "Type System",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "type_constraints",
+      "category": "Type System",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "type_generics",
+      "category": "Type System",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    },
+    {
+      "module": "type_performance",
+      "category": "Type System",
+      "python": true,
+      "ruby": true,
+      "php": true,
+      "dart": true
+    }
+  ]
+}

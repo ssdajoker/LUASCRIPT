@@ -22,6 +22,8 @@
  * 5. Not used in complex control flow
  */
 
+const { safeCloneIR } = require("../ir-utils");
+
 /**
  * Analyze a variable/object for stack allocation suitability
  * Returns object traits that affect stack eligibility
@@ -394,7 +396,7 @@ function applyStackAllocation(ir, stackAnalysis) {
     return ir;
   }
 
-  const optimizedIR = JSON.parse(JSON.stringify(ir));
+  const optimizedIR = safeCloneIR(ir);
   let markedCount = 0;
 
   // Mark each candidate in the IR
@@ -424,20 +426,24 @@ function applyStackAllocation(ir, stackAnalysis) {
 /**
  * Utility: Walk AST tree
  */
-function walkAST(node, callback, parent = null) {
+function walkAST(node, callback, parent = null, seen = new WeakSet()) {
   if (!node) return;
+  if (typeof node === "object") {
+    if (seen.has(node)) return;
+    seen.add(node);
+  }
   
   callback(node, parent);
   
   if (typeof node === "object") {
     for (const key in node) {
-      if (key.startsWith("_")) continue; // Skip metadata
+      if (key === "parent" || key.startsWith("_")) continue; // Skip metadata
       const child = node[key];
       
       if (Array.isArray(child)) {
-        child.forEach(item => walkAST(item, callback, node));
+        child.forEach(item => walkAST(item, callback, node, seen));
       } else if (typeof child === "object" && child !== null) {
-        walkAST(child, callback, node);
+        walkAST(child, callback, node, seen);
       }
     }
   }

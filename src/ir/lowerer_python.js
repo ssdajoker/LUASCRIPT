@@ -447,21 +447,21 @@ class PythonLowerer {
   /**
    * Lower pass statement
    */
-  lowerPassStatement(stmt) {
+  lowerPassStatement(_stmt) {
     return this.createNode("PassStatement", {});
   }
 
   /**
    * Lower break statement
    */
-  lowerBreakStatement(stmt) {
+  lowerBreakStatement(_stmt) {
     return this.createNode("BreakStatement", {});
   }
 
   /**
    * Lower continue statement
    */
-  lowerContinueStatement(stmt) {
+  lowerContinueStatement(_stmt) {
     return this.createNode("ContinueStatement", {});
   }
 

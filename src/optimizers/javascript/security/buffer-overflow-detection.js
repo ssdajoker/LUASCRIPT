@@ -24,6 +24,7 @@ const DEFAULT_MUTATING_METHODS = new Set([
   "copyWithin",
   "fill"
 ]);
+const { safeCloneIR } = require("../ir-utils");
 
 function analyzeBufferOverflow(ir, options = {}) {
   if (!ir || !ir.program) {
@@ -264,7 +265,7 @@ function applyBufferOverflowProtection(ir, analysis, options = {}) {
       .map(finding => finding.access.key)
   );
 
-  const optimizedIR = JSON.parse(JSON.stringify(ir));
+  const optimizedIR = safeCloneIR(ir);
   let markedCount = 0;
 
   walkAST(optimizedIR.program, (node) => {
@@ -287,18 +288,23 @@ function applyBufferOverflowProtection(ir, analysis, options = {}) {
   };
 }
 
-function walkAST(node, callback, parent = null) {
+function walkAST(node, callback, parent = null, seen = new WeakSet()) {
   if (!node) return;
+  if (typeof node === "object") {
+    if (seen.has(node)) return;
+    seen.add(node);
+  }
+
   callback(node, parent);
 
   if (typeof node === "object") {
     for (const key of Object.keys(node)) {
-      if (key.startsWith("_")) continue;
+      if (key === "parent" || key.startsWith("_")) continue;
       const child = node[key];
       if (Array.isArray(child)) {
-        child.forEach(item => walkAST(item, callback, node));
+        child.forEach(item => walkAST(item, callback, node, seen));
       } else if (typeof child === "object" && child !== null) {
-        walkAST(child, callback, node);
+        walkAST(child, callback, node, seen);
       }
     }
   }

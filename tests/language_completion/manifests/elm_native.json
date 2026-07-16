@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "language": "elm",
+  "status": "qualified",
+  "supportSlice": "elm-v0.6-native-bidirectional",
+  "runtime": "elm",
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_functions",
+      "sourceLanguage": "elm",
+      "source": "tests/language_completion/fixtures/elm/arithmetic_functions.elm",
+      "expectedOutput": "elm_arithmetic\n12"
+    },
+    {
+      "name": "conditionals",
+      "sourceLanguage": "elm",
+      "source": "tests/language_completion/fixtures/elm/conditionals.elm",
+      "expectedOutput": "elm_conditional\n1"
+    },
+    {
+      "name": "list_sum",
+      "sourceLanguage": "elm",
+      "source": "tests/language_completion/fixtures/elm/list_sum.elm",
+      "expectedOutput": "elm_list\n12"
+    },
+    {
+      "name": "boolean_nested_let",
+      "sourceLanguage": "elm",
+      "source": "tests/language_completion/fixtures/elm/boolean_nested_let.elm",
+      "expectedOutput": "elm_v02\n21"
+    },
+    {
+      "name": "string_length_concat",
+      "sourceLanguage": "elm",
+      "source": "tests/language_completion/fixtures/elm/string_length_concat.elm",
+      "expectedOutput": "elm_v03\n6"
+    },
+    {
+      "name": "boolean_or_not",
+      "sourceLanguage": "elm",
+      "source": "tests/language_completion/fixtures/elm/boolean_or_not.elm",
+      "expectedOutput": "elm_bool_v04\n2"
+    },
+    {
+      "name": "unsupported_import",
+      "sourceLanguage": "elm",
+      "source": "tests/language_completion/fixtures/elm/unsupported_import.elm",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Elm input feature: modules/imports"
+    },
+    {
+      "name": "unsupported_case",
+      "sourceLanguage": "elm",
+      "source": "tests/language_completion/fixtures/elm/unsupported_case.elm",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Elm input feature: case expressions"
+    },
+    {
+      "name": "unsupported_dynamic_list_index",
+      "sourceLanguage": "elm",
+      "source": "tests/language_completion/fixtures/elm/unsupported_dynamic_list_index.elm",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Elm input feature: dynamic list indexing"
+    },
+    {
+      "name": "unsupported_list_cons",
+      "sourceLanguage": "elm",
+      "source": "tests/language_completion/fixtures/elm/unsupported_list_cons.elm",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Elm input feature: list cons/pattern matching"
+    },
+    {
+      "name": "unsupported_dynamic_length",
+      "sourceLanguage": "elm",
+      "source": "tests/language_completion/fixtures/elm/unsupported_dynamic_length.elm",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Elm input feature: dynamic length"
+    }
+  ]
+}

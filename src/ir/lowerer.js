@@ -306,10 +306,408 @@ class IRLowerer {
   }
 
   lowerIfStatement(node) {
+    // Check if test expression contains pattern assignment
+    const patternInfo = this.detectIfPatternAssignment(node.test);
+   
+    if (patternInfo) {
+      // Handle if-statement with pattern destructuring
+      return this.lowerIfStatementWithPattern(node, patternInfo);
+    }
+   
+    // Standard if-statement (no pattern)
     const testRef = this.lowerExpression(node.test);
     const consequent = this.ensureBlock(node.consequent);
     const alternate = node.alternate ? this.ensureBlock(node.alternate) : null;
 
+    return this.builder.ifStatement(
+      testRef,
+      consequent.id,
+      alternate ? alternate.id : null
+    );
+  }
+
+  /**
+    * Detect if test expression is an assignment with pattern left-hand side
+    * Supports: [x, y] = data, {x} = data, logical ops, negation
+    */
+  detectIfPatternAssignment(expr) {
+    if (!expr) return null;
+   
+    // Simple case: ([x, y] = data) or ({x} = data)
+    if (expr.type === "AssignmentExpression") {
+      const left = expr.left;
+      if (left && (left.type === "ArrayPattern" || left.type === "ObjectPattern")) {
+        return {
+          pattern: left,
+          value: expr.right,
+          operator: expr.operator,
+          isSimple: true
+        };
+      }
+    }
+   
+    // Logical operators: data && ({x} = data)
+    if (expr.type === "LogicalExpression") {
+      const rightPattern = this.detectIfPatternAssignment(expr.right);
+      if (rightPattern) {
+        return {
+          ...rightPattern,
+          isSimple: false,
+          logicalOp: expr.operator,
+          logicalLeft: expr.left
+        };
+      }
+      // Also check left side for OR: ({x} = d1) || ({x} = d2)
+      const leftPattern = this.detectIfPatternAssignment(expr.left);
+      if (leftPattern) {
+        return {
+          ...leftPattern,
+          isSimple: false,
+          logicalOp: expr.operator,
+          logicalRight: expr.right
+        };
+      }
+    }
+   
+    // Negation: !([x] = arr)
+    if (expr.type === "UnaryExpression" && expr.operator === "!") {
+      const innerPattern = this.detectIfPatternAssignment(expr.argument);
+      if (innerPattern) {
+        return {
+          ...innerPattern,
+          isSimple: false,
+          negated: true
+        };
+      }
+    }
+   
+    return null;
+  }
+
+  /**
+    * Lower if-statement with pattern destructuring in test condition
+    */
+  lowerIfStatementWithPattern(node, patternInfo) {
+    // Handle simple patterns: if ([x, y] = data) { ... }
+    if (patternInfo.isSimple) {
+      // Step 1: Lower the RHS value to get the data source
+      const valueRef = this.lowerExpression(patternInfo.value);
+     
+      // Step 2: Create temp variable to hold the assigned value
+      const tempVarName = this.createTempVar("_if_val");
+      const tempVarNode = { type: "Identifier", name: tempVarName };
+     
+      // Step 3: Lower the temp variable
+      const tempRef = this.lowerExpression(tempVarNode);
+     
+      // Step 4: Create assignment: tempVar = value
+      const assignStmt = this.builder.assignment(tempRef, valueRef);
+     
+      // Step 5: Extract pattern bindings from temp variable
+      const bindings = this.extractPatternBindings(patternInfo.pattern, tempVarNode);
+     
+      // Step 6: Lower all binding statements
+      const bindingStmts = bindings.map(binding => this.lowerStatement(binding));
+     
+      // Step 7: Modify consequent to include bindings at start
+      const consequent = this.ensureBlock(node.consequent);
+      const modifiedConsequent = this.builder.blockStatement([
+        assignStmt,
+        ...bindingStmts,
+        ...consequent.statements
+      ]);
+     
+      // Step 8: Use temp variable as test condition (preserves truthiness)
+      const alternate = node.alternate ? this.ensureBlock(node.alternate) : null;
+     
+      return this.builder.ifStatement(
+        tempRef,
+        modifiedConsequent.id,
+        alternate ? alternate.id : null
+      );
+    }
+   
+    // Handle complex patterns (logical ops, negation)
+    return this.lowerComplexIfPattern(node, patternInfo);
+  }
+
+  /**
+    * Extract variable bindings from pattern destructuring
+    * Converts pattern into variable declarations
+    */
+  extractPatternBindings(pattern, sourceExpr) {
+    const bindings = [];
+   
+    if (!pattern) return bindings;
+   
+    if (pattern.type === "ArrayPattern") {
+      const elements = pattern.elements || [];
+      elements.forEach((element, index) => {
+        if (!element) return; // Skip holes
+       
+        if (element.type === "Identifier") {
+          // Simple: x = source[0]
+          const memberExpr = {
+            type: "MemberExpression",
+            object: sourceExpr,
+            property: { type: "Literal", value: index },
+            computed: true
+          };
+         
+          const binding = {
+            type: "VariableDeclaration",
+            declarations: [{
+              type: "VariableDeclarator",
+              id: element,
+              init: memberExpr
+            }],
+            kind: "const"
+          };
+          bindings.push(binding);
+        } else if (element.type === "RestElement") {
+          // Rest: ...rest = source.slice(index)
+          const sliceCall = {
+            type: "CallExpression",
+            callee: {
+              type: "MemberExpression",
+              object: sourceExpr,
+              property: { type: "Identifier", name: "slice" },
+              computed: false
+            },
+            arguments: [{ type: "Literal", value: index }]
+          };
+         
+          const binding = {
+            type: "VariableDeclaration",
+            declarations: [{
+              type: "VariableDeclarator",
+              id: element.argument,
+              init: sliceCall
+            }],
+            kind: "const"
+          };
+          bindings.push(binding);
+        } else if (element.type === "AssignmentPattern") {
+          // Default: a = 10 => const a = source[0] !== undefined ? source[0] : 10
+          const memberExpr = {
+            type: "MemberExpression",
+            object: sourceExpr,
+            property: { type: "Literal", value: index },
+            computed: true
+          };
+         
+          const conditionalExpr = {
+            type: "ConditionalExpression",
+            test: {
+              type: "BinaryExpression",
+              left: memberExpr,
+              operator: "!==",
+              right: { type: "Identifier", name: "undefined" }
+            },
+            consequent: memberExpr,
+            alternate: element.right
+          };
+         
+          const binding = {
+            type: "VariableDeclaration",
+            declarations: [{
+              type: "VariableDeclarator",
+              id: element.left,
+              init: conditionalExpr
+            }],
+            kind: "const"
+          };
+          bindings.push(binding);
+        } else {
+          // Nested pattern - recurse
+          const memberExpr = {
+            type: "MemberExpression",
+            object: sourceExpr,
+            property: { type: "Literal", value: index },
+            computed: true
+          };
+          const nested = this.extractPatternBindings(element, memberExpr);
+          bindings.push(...nested);
+        }
+      });
+    } else if (pattern.type === "ObjectPattern") {
+      const properties = pattern.properties || [];
+      properties.forEach(prop => {
+        if (prop.type === "RestElement") {
+          // Object rest: {...rest}
+          // For now, skip - advanced feature
+          return;
+        }
+       
+        const _key = prop.key.name || prop.key.value;
+        const value = prop.value;
+       
+        if (value.type === "Identifier") {
+          // Simple: {x} or {x: a}
+          const memberExpr = {
+            type: "MemberExpression",
+            object: sourceExpr,
+            property: prop.key,
+            computed: false
+          };
+         
+          const binding = {
+            type: "VariableDeclaration",
+            declarations: [{
+              type: "VariableDeclarator",
+              id: value,
+              init: memberExpr
+            }],
+            kind: "const"
+          };
+          bindings.push(binding);
+        } else if (value.type === "AssignmentPattern") {
+          // Default: {x = 10}
+          const memberExpr = {
+            type: "MemberExpression",
+            object: sourceExpr,
+            property: prop.key,
+            computed: false
+          };
+         
+          const conditionalExpr = {
+            type: "ConditionalExpression",
+            test: {
+              type: "BinaryExpression",
+              left: memberExpr,
+              operator: "!==",
+              right: { type: "Identifier", name: "undefined" }
+            },
+            consequent: memberExpr,
+            alternate: value.right
+          };
+         
+          const binding = {
+            type: "VariableDeclaration",
+            declarations: [{
+              type: "VariableDeclarator",
+              id: value.left,
+              init: conditionalExpr
+            }],
+            kind: "const"
+          };
+          bindings.push(binding);
+        } else {
+          // Nested pattern - recurse
+          const memberExpr = {
+            type: "MemberExpression",
+            object: sourceExpr,
+            property: prop.key,
+            computed: false
+          };
+          const nested = this.extractPatternBindings(value, memberExpr);
+          bindings.push(...nested);
+        }
+      });
+    }
+   
+    return bindings;
+  }
+
+  /**
+    * Handle complex if-patterns with logical operators or negation
+    */
+  lowerComplexIfPattern(node, patternInfo) {
+    // Handle logical AND: if (data && ({x} = data))
+    if (patternInfo.logicalOp === "&&") {
+      const leftRef = this.lowerExpression(patternInfo.logicalLeft);
+     
+      // Create inner if with pattern
+      const innerIfNode = {
+        type: "IfStatement",
+        test: {
+          type: "AssignmentExpression",
+          left: patternInfo.pattern,
+          right: patternInfo.value,
+          operator: "="
+        },
+        consequent: node.consequent,
+        alternate: null
+      };
+     
+      const innerIf = this.lowerIfStatementWithPattern(
+        innerIfNode,
+        { ...patternInfo, isSimple: true }
+      );
+     
+      // Wrap in outer if for left condition
+      const alternate = node.alternate ? this.ensureBlock(node.alternate) : null;
+     
+      return this.builder.ifStatement(
+        leftRef,
+        innerIf.id,
+        alternate ? alternate.id : null
+      );
+    }
+   
+    // Handle logical OR: if (({x} = d1) || ({x} = d2))
+    if (patternInfo.logicalOp === "||") {
+      // Lower left pattern assignment
+      const leftIfNode = {
+        type: "IfStatement",
+        test: {
+          type: "AssignmentExpression",
+          left: patternInfo.pattern,
+          right: patternInfo.value,
+          operator: "="
+        },
+        consequent: node.consequent,
+        alternate: {
+          type: "IfStatement",
+          test: patternInfo.logicalRight,
+          consequent: node.consequent,
+          alternate: node.alternate
+        }
+      };
+     
+      return this.lowerIfStatementWithPattern(
+        leftIfNode,
+        { ...patternInfo, isSimple: true }
+      );
+    }
+   
+    // Handle negation: if (!([x] = arr))
+    if (patternInfo.negated) {
+      // Create if with pattern, then negate result
+      const valueRef = this.lowerExpression(patternInfo.value);
+      const tempVarName = this.createTempVar("_if_neg");
+      const tempVarNode = { type: "Identifier", name: tempVarName };
+      const tempRef = this.lowerExpression(tempVarNode);
+     
+      const assignStmt = this.builder.assignment(tempRef, valueRef);
+      const negatedTest = this.builder.unaryExpression("!", tempRef);
+     
+      const bindings = this.extractPatternBindings(patternInfo.pattern, tempVarNode);
+      const bindingStmts = bindings.map(binding => this.lowerStatement(binding));
+     
+      // For negation, bindings should still be available if pattern is valid
+      // But condition checks for falsy result
+      const consequent = this.ensureBlock(node.consequent);
+      const modifiedConsequent = this.builder.blockStatement([
+        assignStmt,
+        ...bindingStmts,
+        ...consequent.statements
+      ]);
+     
+      const alternate = node.alternate ? this.ensureBlock(node.alternate) : null;
+     
+      return this.builder.ifStatement(
+        negatedTest.id,
+        modifiedConsequent.id,
+        alternate ? alternate.id : null
+      );
+    }
+   
+    // Fallback to standard lowering
+    const testRef = this.lowerExpression(node.test);
+    const consequent = this.ensureBlock(node.consequent);
+    const alternate = node.alternate ? this.ensureBlock(node.alternate) : null;
+   
     return this.builder.ifStatement(
       testRef,
       consequent.id,
@@ -472,17 +870,103 @@ class IRLowerer {
       return this.builder.memberExpression(objectRef, propertyRef, Boolean(node.computed), { optional: Boolean(node.optional) }).id;
     }
     case "ArrayExpression": {
-      const elements = (node.elements || []).map((el) => (el ? this.lowerExpression(el) : null)).filter((x) => x !== null);
-      return this.builder.arrayExpression(elements).id;
+      const elements = [];
+      for (const el of (node.elements || [])) {
+        if (el === null) {
+          // Sparse array element - skip nulls
+          continue;
+        } else if (el.type === "SpreadElement") {
+          // Handle spread element: ...expr
+          const spreadRef = this.lowerExpression(el.argument);
+          // Mark as spread for emitter to handle
+          elements.push({ spreadRef, isSpread: true });
+        } else {
+          const ref = this.lowerExpression(el);
+          elements.push(ref);
+        }
+      }
+      
+      // If no spreads, use simple array expression
+      const hasSpread = elements.some(el => typeof el === "object" && el.isSpread);
+      if (!hasSpread) {
+        const simpleElements = elements.filter(el => el);
+        return this.builder.arrayExpression(simpleElements).id;
+      }
+      
+      // Handle spreads by concatenating arrays
+      let result = null;
+      for (const el of elements) {
+        if (typeof el === "object" && el.isSpread) {
+          if (result === null) {
+            result = el.spreadRef;
+          } else {
+            // Concatenate arrays: result = result.concat(spread)
+            result = this.builder.callExpression(
+              this.builder.memberExpression(result, this.builder.identifier("concat"), false).id,
+              [el.spreadRef]
+            ).id;
+          }
+        } else {
+          const arrayId = this.builder.arrayExpression([el]).id;
+          if (result === null) {
+            result = arrayId;
+          } else {
+            result = this.builder.callExpression(
+              this.builder.memberExpression(result, this.builder.identifier("concat"), false).id,
+              [arrayId]
+            ).id;
+          }
+        }
+      }
+      return result || this.builder.arrayExpression([]).id;
     }
     case "ObjectExpression": {
-      const props = (node.properties || []).map((p) => {
-        const key = this.lowerExpression(p.key);
-        const value = this.lowerExpression(p.value);
-        return this.builder.property(key, value, { propertyKind: p.kind || "init", computed: Boolean(p.computed), shorthand: Boolean(p.shorthand) });
-      });
-      const propIds = props.map((pr) => pr.id);
-      return this.builder.objectExpression(propIds).id;
+      const props = [];
+      const spreadProps = [];
+      
+      for (const p of (node.properties || [])) {
+        if (p.type === "SpreadElement") {
+          // Handle spread property: {...obj}
+          spreadProps.push(this.lowerExpression(p.argument));
+        } else {
+          const key = this.lowerExpression(p.key);
+          const value = this.lowerExpression(p.value);
+          props.push(this.builder.property(key, value, { propertyKind: p.kind || "init", computed: Boolean(p.computed), shorthand: Boolean(p.shorthand) }));
+        }
+      }
+      
+      // If no spreads, use simple object expression
+      if (spreadProps.length === 0) {
+        const propIds = props.map((pr) => pr.id);
+        return this.builder.objectExpression(propIds).id;
+      }
+      
+      // Handle spreads: merge base object with spreads
+      let result = null;
+      
+      // First, create base object with non-spread properties
+      if (props.length > 0) {
+        result = this.builder.objectExpression(props.map(p => p.id)).id;
+      }
+      
+      // Then merge each spread
+      for (const spreadRef of spreadProps) {
+        if (result === null) {
+          result = spreadRef;
+        } else {
+          // Merge objects using Object.assign
+          result = this.builder.callExpression(
+            this.builder.memberExpression(
+              this.builder.identifier("Object"),
+              this.builder.identifier("assign"),
+              false
+            ).id,
+            [result, spreadRef]
+          ).id;
+        }
+      }
+      
+      return result || this.builder.objectExpression([]).id;
     }
     case "ConditionalExpression": {
       const test = this.lowerExpression(node.test);
@@ -951,7 +1435,7 @@ class IRLowerer {
     return this.builder.awaitExpression(argument).id;
   }
 
-  lowerThisExpression(node) {
+  lowerThisExpression(_node) {
     return this.builder.thisExpression();
   }
 

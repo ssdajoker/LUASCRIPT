@@ -99,13 +99,8 @@ function runStressTest() {
       passed++;
     } catch (err) {
       const msg = err.message || String(err);
-      // Skip tests that hit known parser/lowering limitations
-      if (/toJSON|Unsupported|not implemented/i.test(msg)) {
-        console.log(`⚠️  ${testCase.name}: skipped (${msg.substring(0, 60)}...)`);
-      } else {
-        console.log(`❌ ${testCase.name}: ${msg}`);
-        failed++;
-      }
+      console.log(`❌ ${testCase.name}: ${msg}`);
+      failed++;
     }
   }
 

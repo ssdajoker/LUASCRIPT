@@ -1095,7 +1095,7 @@ class AsyncFunctionDeclaration extends IRNode {
    * - Type compatibility across languages (Promise in JS, Future in Dart, etc.)
    */
   _validateAsyncReturnType() {
-    const { TVoid, TypeCategory } = require("./types");
+    const { _TVoid, TypeCategory } = require("./types");
     
     // Rule 1: If no return type specified, create implicit Promise<void>
     if (!this.returnType) {

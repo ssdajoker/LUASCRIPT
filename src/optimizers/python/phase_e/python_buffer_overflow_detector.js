@@ -457,7 +457,7 @@ class PythonBufferOverflowDetector {
   /**
    * Check loop body for off-by-one errors
    */
-  _checkLoopBodyForOffByOne(body, loopVar, loopEnd) {
+  _checkLoopBodyForOffByOne(_body, _loopVar, _loopEnd) {
     // Simplified check: look for array[loopVar] patterns
     // In production would need full data flow analysis
   }

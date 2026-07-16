@@ -250,7 +250,7 @@ class CallingConventionMapper {
   /**
    * Get C++ ABI for language + platform
    */
-  getCppABI(language, platform = this.platform) {
+  getCppABI(language, _platform = this.platform) {
     if (language === "C#") return this.abis.msvc;
     if (language === "Objective-C") return this.abis.objc;
     

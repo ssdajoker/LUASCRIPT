@@ -309,7 +309,7 @@ class MemoryModelAbstraction {
    * @returns {object} Alias analysis result
    */
   performAliasAnalysis(pointerNames, assignments = []) {
-    const aliasGroups = new Map();
+    const _aliasGroups = new Map();
     const mustAliases = new Set(); // Definitely alias
     const mayAliases = new Set();  // Might alias
 
@@ -376,7 +376,7 @@ class MemoryModelAbstraction {
    * @param {string} language - Source language
    * @returns {object} Memory layout
    */
-  calculateMemoryLayout(structDef, language) {
+  calculateMemoryLayout(structDef, _language) {
     let offset = 0;
     let maxAlignment = 1;
     const fieldLayouts = [];

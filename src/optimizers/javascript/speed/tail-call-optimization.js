@@ -25,6 +25,8 @@
  * @module src/optimizers/javascript/speed/tail-call-optimization
  */
 
+const { safeCloneIR } = require("../ir-utils");
+
 /**
  * Analyze and detect tail call optimization opportunities
  * @param {Object} ir - IR tree to analyze
@@ -62,7 +64,7 @@ function analyzeTailCalls(ir, options = {}) {
   };
 
   // Clone IR to avoid mutation
-  const analyzedIR = JSON.parse(JSON.stringify(ir));
+  const analyzedIR = safeCloneIR(ir);
 
   // Phase 1: Collect all functions
   collectFunctions(analyzedIR.program, analysis);

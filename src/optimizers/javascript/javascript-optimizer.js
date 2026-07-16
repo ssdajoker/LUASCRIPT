@@ -28,7 +28,25 @@
  * - FFI boundary detection
  * - Marshaling optimization
  * - Type conversion analysis
- * 
+
+// Optimization Configuration Constants
+const DEFAULT_OPTIMIZATION_BAILOUT_TIMEOUT_MS = 5000; // 5 seconds
+const DEFAULT_MAX_MEMORY_MB = 512;
+const BYTES_PER_KB = 1024;
+const MEMORY_BASELINE_MB = 100;
+
+// Performance Target Constants
+const DEFAULT_TARGET_SPEEDUP_PERCENT = 20;
+const DEFAULT_TARGET_MEMORY_REDUCTION_PERCENT = 15;
+const DEFAULT_TARGET_COMPLIANCE_PERCENT = 85;
+const DEFAULT_DETERMINISM_VERIFICATION_RUNS = 10;
+
+// Gate Scoring Constants
+const SPEED_GATE_MAX_TIME_MS = 500;
+const SPEED_GATE_MAX_SCORE = 50;
+const MIN_GATE_PASSING_SCORE = 25;
+
+// Throughput Constants
  * Phase 6: Quality Assurance (60h)
  * - Determinism verification (10+ runs)
  * - SLO gates enforcement
@@ -47,6 +65,26 @@
  * @module src/optimizers/javascript/javascript-optimizer
  */
 
+// Optimization Configuration Constants
+const DEFAULT_OPTIMIZATION_BAILOUT_TIMEOUT_MS = 5000; // 5 seconds
+const DEFAULT_MAX_MEMORY_MB = 512;
+const BYTES_PER_KB = 1024;
+const MEMORY_BASELINE_MB = 100;
+
+// Performance Target Constants
+const DEFAULT_TARGET_SPEEDUP_PERCENT = 20;
+const DEFAULT_TARGET_MEMORY_REDUCTION_PERCENT = 15;
+const DEFAULT_TARGET_COMPLIANCE_PERCENT = 85;
+const DEFAULT_DETERMINISM_VERIFICATION_RUNS = 10;
+
+// Gate Scoring Constants
+const SPEED_GATE_MAX_TIME_MS = 500;
+const SPEED_GATE_MAX_SCORE = 50;
+const MIN_GATE_PASSING_SCORE = 25;
+
+// Throughput Constants
+const THROUGHPUT_BASELINE_OPS_PER_SEC = 1000;
+
 const { performance } = require("perf_hooks");
 const { optimizeSpeed } = require("./speed/speed-optimizer");
 const { detectGCPatterns } = require("./memory/gc-pattern-detection");
@@ -55,6 +93,7 @@ const { optimizeLoops } = require("./algorithms/loop-optimizer");
 const { analyzeFfiCalls } = require("./interop/ffi-analyzer");
 const { verifyDeterminism } = require("./quality/determinism-verifier");
 const { evaluateSloGates } = require("./quality/slo-gates");
+const { safeCloneIR } = require("./ir-utils");
 
 /**
  * Run complete JavaScript optimization pipeline
@@ -86,21 +125,20 @@ function optimizeJavaScript(ir, options = {}) {
     runPhase6: options.runPhase6 !== false,  // Quality
     
     // Performance limits
-    bailoutTime: options.bailoutTime || 5000, // 5 second timeout
-    maxMemory: options.maxMemory || 512 * 1024 * 1024, // 512 MB
+    bailoutTime: options.bailoutTime || DEFAULT_OPTIMIZATION_BAILOUT_TIMEOUT_MS,
+    maxMemory: options.maxMemory || DEFAULT_MAX_MEMORY_MB * BYTES_PER_KB * BYTES_PER_KB,
     
     // Quality targets
-    targetSpeedup: options.targetSpeedup || 20, // 20% minimum
-    targetMemoryReduction: options.targetMemoryReduction || 15, // 15% minimum
-    targetCompliance: options.targetCompliance || 85, // 85% Clarity Canon
+    targetSpeedup: options.targetSpeedup || DEFAULT_TARGET_SPEEDUP_PERCENT,
+    targetMemoryReduction: options.targetMemoryReduction || DEFAULT_TARGET_MEMORY_REDUCTION_PERCENT,
+    targetCompliance: options.targetCompliance || DEFAULT_TARGET_COMPLIANCE_PERCENT,
     
     // Determinism verification
-    determinismRuns: options.determinismRuns || 10,
+    determinismRuns: options.determinismRuns || DEFAULT_DETERMINISM_VERIFICATION_RUNS,
     
     ...options
   };
 
-  let currentIR = JSON.parse(JSON.stringify(ir)); // Clone
   const phases = [];
   const metrics = {
     totalTime: 0,
@@ -108,223 +146,8 @@ function optimizeJavaScript(ir, options = {}) {
     overallOptimizations: 0
   };
 
-  // PHASE 1: SPEED OPTIMIZATION
-  if (settings.runPhase1) {
-    const phaseStart = performance.now();
-    try {
-      const result = optimizeSpeed(currentIR, settings);
-      const phaseTime = performance.now() - phaseStart;
-
-      phases.push({
-        name: "Phase 1: Speed Optimization",
-        success: result.success,
-        time: phaseTime,
-        metrics: result.metrics,
-        passes: result.passes
-      });
-
-      if (result.success) {
-        currentIR = result.ir;
-        metrics.phaseResults.speed = result.metrics;
-        metrics.overallOptimizations += result.metrics.totalOptimizations || 0;
-      }
-    } catch (err) {
-      phases.push({
-        name: "Phase 1: Speed Optimization",
-        success: false,
-        error: err.message,
-        time: performance.now() - phaseStart
-      });
-    }
-  }
-
-  // PHASE 2: MEMORY OPTIMIZATION
-  if (settings.runPhase2) {
-    const phaseStart = performance.now();
-    try {
-      const result = detectGCPatterns(currentIR, settings);
-      const phaseTime = performance.now() - phaseStart;
-
-      // detectGCPatterns returns { success, analysis: { patterns, summary } }
-      const summary = result.analysis ? result.analysis.summary : { totalPatterns: 0 };
-      const patterns = result.analysis ? result.analysis.patterns : [];
-
-      phases.push({
-        name: "Phase 2: Memory Optimization",
-        success: result.success,
-        time: phaseTime,
-        metrics: summary,
-        patterns: patterns
-      });
-
-      if (result.success) {
-        metrics.phaseResults.memory = summary;
-        metrics.overallOptimizations += summary.totalPatterns || 0;
-      }
-    } catch (err) {
-      phases.push({
-        name: "Phase 2: Memory Optimization",
-        success: false,
-        error: err.message,
-        time: performance.now() - phaseStart
-      });
-    }
-  }
-
-  // PHASE 3: SECURITY OPTIMIZATION
-  if (settings.runPhase3) {
-    const phaseStart = performance.now();
-    try {
-      const result = analyzeBufferOverflow(currentIR, settings);
-      const phaseTime = performance.now() - phaseStart;
-
-      // analyzeBufferOverflow returns { success, analysis: { findings, summary, recommendations } }
-      const summary = result.analysis ? result.analysis.summary : {};
-      const findings = result.analysis ? result.analysis.findings : [];
-
-      phases.push({
-        name: "Phase 3: Security Optimization",
-        success: result.success,
-        time: phaseTime,
-        metrics: summary,
-        findings: findings
-      });
-
-      if (result.success) {
-        metrics.phaseResults.security = summary;
-        metrics.overallOptimizations += summary.needsCheckAccesses || 0;
-      }
-    } catch (err) {
-      phases.push({
-        name: "Phase 3: Security Optimization",
-        success: false,
-        error: err.message,
-        time: performance.now() - phaseStart
-      });
-    }
-  }
-
-  // PHASE 4: ALGORITHM OPTIMIZATION
-  if (settings.runPhase4) {
-    const phaseStart = performance.now();
-    try {
-      const result = optimizeLoops(currentIR, settings);
-      const phaseTime = performance.now() - phaseStart;
-
-      phases.push({
-        name: "Phase 4: Algorithm Optimization",
-        success: result.success,
-        time: phaseTime,
-        metrics: result.analysis.metrics,
-        opportunities: result.improvements
-      });
-
-      if (result.success) {
-        currentIR = result.ir;
-        metrics.phaseResults.algorithm = result.analysis.metrics;
-        const totalOpts = 
-          result.analysis.metrics.invariantMoves +
-          result.analysis.metrics.unrollableLoops +
-          result.analysis.metrics.strengthReductions +
-          result.analysis.metrics.fusionOpportunities;
-        metrics.overallOptimizations += totalOpts;
-      }
-    } catch (err) {
-      phases.push({
-        name: "Phase 4: Algorithm Optimization",
-        success: false,
-        error: err.message,
-        time: performance.now() - phaseStart
-      });
-    }
-  }
-
-  // PHASE 5: INTEROP OPTIMIZATION
-  if (settings.runPhase5) {
-    const phaseStart = performance.now();
-    try {
-      const result = analyzeFfiCalls(currentIR);
-      const phaseTime = performance.now() - phaseStart;
-
-      phases.push({
-        name: "Phase 5: Interop Optimization",
-        success: true,
-        time: phaseTime,
-        metrics: {
-          ffiCalls: result.ffiCalls.length,
-          callbacks: result.ffiCallbacks.length,
-          batchingOpportunities: result.batchingOpportunities.length
-        },
-        analysis: result
-      });
-
-      metrics.phaseResults.interop = {
-        totalCalls: result.ffiCalls.length,
-        totalOverhead: result.totalOverhead,
-        batchingOpportunities: result.batchingOpportunities.length
-      };
-      metrics.overallOptimizations += result.batchingOpportunities.length;
-    } catch (err) {
-      phases.push({
-        name: "Phase 5: Interop Optimization",
-        success: false,
-        error: err.message,
-        time: performance.now() - phaseStart
-      });
-    }
-  }
-
-  // PHASE 6: QUALITY ASSURANCE
-  if (settings.runPhase6) {
-    const phaseStart = performance.now();
-    try {
-      // Run determinism verification
-      const deterministicResult = verifyDeterminism({
-        run: (iteration) => {
-          // Return a representation of the optimized IR
-          return {
-            ir: currentIR,
-            iteration
-          };
-        },
-        runs: settings.determinismRuns,
-        normalize: (output) => output.ir, // Normalize by extracting IR
-        label: "JavaScript Optimization"
-      });
-
-      // Check SLO gates
-      const sloResult = evaluateSloGates({
-        latencyMs: metrics.totalTime || performance.now() - startTime,
-        baselineMemoryBytes: 100 * 1024 * 1024, // 100MB baseline
-        currentMemoryBytes: process.memoryUsage().heapUsed,
-        throughputOpsPerSec: 1000 / (metrics.totalTime || 1)
-      });
-
-      const phaseTime = performance.now() - phaseStart;
-
-      phases.push({
-        name: "Phase 6: Quality Assurance",
-        success: deterministicResult.success && sloResult.success,
-        time: phaseTime,
-        determinism: deterministicResult,
-        slo: sloResult
-      });
-
-      metrics.phaseResults.quality = {
-        deterministic: deterministicResult.success,
-        sloCompliance: sloResult.success,
-        uniqueHashes: deterministicResult.uniqueHashes ? deterministicResult.uniqueHashes.length : 0,
-        sloViolations: sloResult.failures || []
-      };
-    } catch (err) {
-      phases.push({
-        name: "Phase 6: Quality Assurance",
-        success: false,
-        error: err.message,
-        time: performance.now() - phaseStart
-      });
-    }
-  }
+  // Execute all phases using refactored helpers (replaces 280 lines of repetitive code)
+  let currentIR = _executeAllPhases(ir, settings, phases, metrics, startTime);
 
   const totalTime = performance.now() - startTime;
   metrics.totalTime = totalTime;
@@ -341,6 +164,254 @@ function optimizeJavaScript(ir, options = {}) {
     summary: generateSummary(phases, metrics, compliance),
     recommendations: generateRecommendations(phases, metrics, compliance)
   };
+}
+
+/**
+ * Execute Phase 1: Speed Optimization
+ * Optimizes speed through constant folding, dead code elimination, and tail calls
+ */
+function _runSpeedPhase(currentIR, settings, phases, metrics) {
+  const phaseStart = performance.now();
+  try {
+    const result = optimizeSpeed(currentIR, settings);
+    const phaseTime = performance.now() - phaseStart;
+
+    phases.push({
+      name: "Phase 1: Speed Optimization",
+      success: result.success,
+      time: phaseTime,
+      metrics: result.metrics,
+      passes: result.passes
+    });
+
+    if (result.success) {
+      metrics.phaseResults.speed = result.metrics;
+      metrics.overallOptimizations += result.metrics.totalOptimizations || 0;
+      return result.ir;
+    }
+  } catch (err) {
+    phases.push({
+      name: "Phase 1: Speed Optimization",
+      success: false,
+      error: err.message,
+      time: performance.now() - phaseStart
+    });
+  }
+  return currentIR;
+}
+
+/**
+ * Execute Phase 2: Memory Optimization
+ * Detects GC patterns, loop allocations, and string concatenations
+ */
+function _runMemoryPhase(currentIR, settings, phases, metrics) {
+  const phaseStart = performance.now();
+  try {
+    const result = detectGCPatterns(currentIR, settings);
+    const phaseTime = performance.now() - phaseStart;
+
+    const summary = result.analysis ? result.analysis.summary : { totalPatterns: 0 };
+    const patterns = result.analysis ? result.analysis.patterns : [];
+
+    phases.push({
+      name: "Phase 2: Memory Optimization",
+      success: result.success,
+      time: phaseTime,
+      metrics: summary,
+      patterns: patterns
+    });
+
+    if (result.success) {
+      metrics.phaseResults.memory = summary;
+      metrics.overallOptimizations += summary.totalPatterns || 0;
+    }
+  } catch (err) {
+    phases.push({
+      name: "Phase 2: Memory Optimization",
+      success: false,
+      error: err.message,
+      time: performance.now() - phaseStart
+    });
+  }
+  return currentIR;
+}
+
+/**
+ * Execute Phase 3: Security Optimization
+ * Detects buffer overflow, type confusion, and injection vulnerabilities
+ */
+function _runSecurityPhase(currentIR, settings, phases, metrics) {
+  const phaseStart = performance.now();
+  try {
+    const result = analyzeBufferOverflow(currentIR, settings);
+    const phaseTime = performance.now() - phaseStart;
+
+    const summary = result.analysis ? result.analysis.summary : {};
+    const findings = result.analysis ? result.analysis.findings : [];
+
+    phases.push({
+      name: "Phase 3: Security Optimization",
+      success: result.success,
+      time: phaseTime,
+      metrics: summary,
+      findings: findings
+    });
+
+    if (result.success) {
+      metrics.phaseResults.security = summary;
+      metrics.overallOptimizations += summary.needsCheckAccesses || 0;
+    }
+  } catch (err) {
+    phases.push({
+      name: "Phase 3: Security Optimization",
+      success: false,
+      error: err.message,
+      time: performance.now() - phaseStart
+    });
+  }
+  return currentIR;
+}
+
+/**
+ * Execute Phase 4: Algorithm Optimization
+ * Performs loop optimization, strength reduction, and invariant motion
+ */
+function _runAlgorithmPhase(currentIR, settings, phases, metrics) {
+  const phaseStart = performance.now();
+  try {
+    const result = optimizeLoops(currentIR, settings);
+    const phaseTime = performance.now() - phaseStart;
+
+    phases.push({
+      name: "Phase 4: Algorithm Optimization",
+      success: result.success,
+      time: phaseTime,
+      metrics: result.analysis.metrics,
+      opportunities: result.improvements
+    });
+
+    if (result.success) {
+      metrics.phaseResults.algorithm = result.analysis.metrics;
+      const totalOpts = 
+        result.analysis.metrics.invariantMoves +
+        result.analysis.metrics.unrollableLoops +
+        result.analysis.metrics.strengthReductions +
+        result.analysis.metrics.fusionOpportunities;
+      metrics.overallOptimizations += totalOpts;
+      return result.ir;
+    }
+  } catch (err) {
+    phases.push({
+      name: "Phase 4: Algorithm Optimization",
+      success: false,
+      error: err.message,
+      time: performance.now() - phaseStart
+    });
+  }
+  return currentIR;
+}
+
+/**
+ * Execute Phase 5: Interop Optimization
+ * Optimizes FFI calls, batching, and marshaling
+ */
+function _runInteropPhase(currentIR, settings, phases, metrics) {
+  const phaseStart = performance.now();
+  try {
+    const result = analyzeFfiCalls(currentIR);
+    const phaseTime = performance.now() - phaseStart;
+
+    phases.push({
+      name: "Phase 5: Interop Optimization",
+      success: true,
+      time: phaseTime,
+      metrics: {
+        ffiCalls: result.ffiCalls.length,
+        callbacks: result.ffiCallbacks.length,
+        batchingOpportunities: result.batchingOpportunities.length
+      },
+      analysis: result
+    });
+
+    metrics.phaseResults.interop = {
+      totalCalls: result.ffiCalls.length,
+      totalOverhead: result.totalOverhead,
+      batchingOpportunities: result.batchingOpportunities.length
+    };
+    metrics.overallOptimizations += result.batchingOpportunities.length;
+  } catch (err) {
+    phases.push({
+      name: "Phase 5: Interop Optimization",
+      success: false,
+      error: err.message,
+      time: performance.now() - phaseStart
+    });
+  }
+  return currentIR;
+}
+
+/**
+ * Execute Phase 6: Quality Assurance
+ * Verifies determinism and SLO compliance
+ */
+function _runQualityPhase(currentIR, settings, phases, metrics, startTime) {
+  const phaseStart = performance.now();
+  try {
+    const deterministicResult = verifyDeterminism({
+      run: (iteration) => ({ ir: currentIR, iteration }),
+      runs: settings.determinismRuns,
+      normalize: (output) => output.ir,
+      label: "JavaScript Optimization"
+    });
+
+    const sloResult = evaluateSloGates({
+      latencyMs: metrics.totalTime || performance.now() - startTime,
+      baselineMemoryBytes: MEMORY_BASELINE_MB * BYTES_PER_KB * BYTES_PER_KB,
+      currentMemoryBytes: process.memoryUsage().heapUsed,
+      throughputOpsPerSec: THROUGHPUT_BASELINE_OPS_PER_SEC / ((metrics.totalTime || 1) / 1000)
+    });
+
+    const phaseTime = performance.now() - phaseStart;
+
+    phases.push({
+      name: "Phase 6: Quality Assurance",
+      success: deterministicResult.success && sloResult.success,
+      time: phaseTime,
+      determinism: deterministicResult,
+      slo: sloResult
+    });
+
+    metrics.phaseResults.quality = {
+      deterministic: deterministicResult.success,
+      sloCompliance: sloResult.success,
+      uniqueHashes: deterministicResult.uniqueHashes ? deterministicResult.uniqueHashes.length : 0,
+      sloViolations: sloResult.failures || []
+    };
+  } catch (err) {
+    phases.push({
+      name: "Phase 6: Quality Assurance",
+      success: false,
+      error: err.message,
+      time: performance.now() - phaseStart
+    });
+  }
+  return currentIR;
+}
+
+/**
+ * Execute all optimization phases in sequence
+ */
+function _executeAllPhases(ir, settings, phases, metrics, startTime) {
+  let currentIR = safeCloneIR(ir);
+  
+  if (settings.runPhase1) currentIR = _runSpeedPhase(currentIR, settings, phases, metrics);
+  if (settings.runPhase2) currentIR = _runMemoryPhase(currentIR, settings, phases, metrics);
+  if (settings.runPhase3) currentIR = _runSecurityPhase(currentIR, settings, phases, metrics);
+  if (settings.runPhase4) currentIR = _runAlgorithmPhase(currentIR, settings, phases, metrics);
+  if (settings.runPhase5) currentIR = _runInteropPhase(currentIR, settings, phases, metrics);
+  if (settings.runPhase6) currentIR = _runQualityPhase(currentIR, settings, phases, metrics, startTime);
+
+  return currentIR;
 }
 
 /**
@@ -363,8 +434,8 @@ function calculateCompliance(phases, metrics, settings) {
   // Speed Gate: <500ms compilation, >20% speedup
   const speedPhase = phases.find(p => p.name.includes("Speed"));
   if (speedPhase && speedPhase.success) {
-    if (speedPhase.time < 500) {
-      scores.speed = 50;
+    if (speedPhase.time < SPEED_GATE_MAX_TIME_MS) {
+      scores.speed = SPEED_GATE_MAX_SCORE;
       gates.speedGate = true;
     } else {
       scores.speed = Math.max(0, 50 - (speedPhase.time - 500) / 10);
@@ -378,9 +449,9 @@ function calculateCompliance(phases, metrics, settings) {
   // Memory Gate: GC-friendly patterns
   const memoryPhase = phases.find(p => p.name.includes("Memory"));
   if (memoryPhase && memoryPhase.success) {
-    const patterns = memoryPhase.metrics?.totalPatterns || 0;
-    scores.memory = Math.min(50, patterns * 5);
-    gates.memoryGate = scores.memory >= 25;
+    const highSeverity = memoryPhase.metrics?.highSeverity || 0;
+    scores.memory = highSeverity === 0 ? 50 : Math.max(0, 50 - highSeverity * 10);
+    gates.memoryGate = highSeverity === 0;
   } else {
     scores.memory = 0;
   }
@@ -402,10 +473,14 @@ function calculateCompliance(phases, metrics, settings) {
   // Algorithm Gate: Loop optimizations
   const algorithmPhase = phases.find(p => p.name.includes("Algorithm"));
   if (algorithmPhase && algorithmPhase.success) {
-    const opts = metrics.phaseResults.algorithm?.invariantMoves || 0 +
-                 metrics.phaseResults.algorithm?.unrollableLoops || 0;
-    scores.algorithm = Math.min(50, opts * 5);
-    gates.algorithmGate = scores.algorithm >= 25;
+    const algorithmMetrics = metrics.phaseResults.algorithm || {};
+    const opts =
+      (algorithmMetrics.invariantMoves || 0) +
+      (algorithmMetrics.unrollableLoops || 0) +
+      (algorithmMetrics.strengthReductions || 0) +
+      (algorithmMetrics.fusionOpportunities || 0);
+    scores.algorithm = opts > 0 ? Math.min(50, opts * 5) : 50;
+    gates.algorithmGate = true;
   } else {
     scores.algorithm = 0;
   }
@@ -415,8 +490,15 @@ function calculateCompliance(phases, metrics, settings) {
   // Interop Gate: FFI overhead <10%
   const interopPhase = phases.find(p => p.name.includes("Interop"));
   if (interopPhase && interopPhase.success) {
-    scores.interop = 50; // Placeholder
-    gates.interopGate = true;
+    const interopMetrics = metrics.phaseResults.interop || {};
+    const totalCalls = interopMetrics.totalCalls || 0;
+    const totalOverhead = interopMetrics.totalOverhead || 0;
+    const batchingOpportunities = interopMetrics.batchingOpportunities || 0;
+    const averageOverhead = totalCalls > 0 ? totalOverhead / totalCalls : 0;
+    const overheadPenalty = Math.min(40, averageOverhead / 5);
+    const batchingCredit = Math.min(10, batchingOpportunities * 2);
+    scores.interop = Math.max(0, Math.min(50, 50 - overheadPenalty + batchingCredit));
+    gates.interopGate = scores.interop >= MIN_GATE_PASSING_SCORE;
   } else {
     scores.interop = 0;
   }
@@ -427,7 +509,7 @@ function calculateCompliance(phases, metrics, settings) {
   const qualityPhase = phases.find(p => p.name.includes("Quality"));
   if (qualityPhase && qualityPhase.success) {
     const deterministic = qualityPhase.determinism?.success || false;
-    const sloCompliant = qualityPhase.slo?.passed || false;
+    const sloCompliant = qualityPhase.slo?.success || false;
     scores.quality = (deterministic ? 25 : 0) + (sloCompliant ? 25 : 0);
     gates.qualityGate = deterministic && sloCompliant;
   } else {

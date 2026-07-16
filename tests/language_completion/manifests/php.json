@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "language": "php",
+  "status": "qualified",
+  "supportSlice": "php-v0.6-native-bidirectional",
+  "runtime": "php",
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_functions",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/arithmetic_functions.php",
+      "expectedOutput": "php_arithmetic\n10",
+      "expectedOutputs": {
+        "php": "php_arithmetic10"
+      }
+    },
+    {
+      "name": "control_flow",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/control_flow.php",
+      "expectedOutput": "php_flow\n10",
+      "expectedOutputs": {
+        "php": "php_flow10"
+      }
+    },
+    {
+      "name": "math_calls",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/math_calls.php",
+      "expectedOutput": "php_math\n5",
+      "expectedOutputs": {
+        "php": "php_math5"
+      }
+    },
+    {
+      "name": "arrays_indexed",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/arrays_indexed.php",
+      "expectedOutput": "php_arrays\n15",
+      "expectedOutputs": {
+        "php": "php_arrays15"
+      }
+    },
+    {
+      "name": "foreach_sum",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/foreach_sum.php",
+      "expectedOutput": "php_foreach\n15",
+      "expectedOutputs": {
+        "php": "php_foreach15"
+      }
+    },
+    {
+      "name": "for_loop_calls",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/for_loop_calls.php",
+      "expectedOutput": "php_for\n14",
+      "expectedOutputs": {
+        "php": "php_for14"
+      }
+    },
+    {
+      "name": "assoc_arrays",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/assoc_arrays.php",
+      "expectedOutput": "php_assoc\n16",
+      "expectedOutputs": {
+        "php": "php_assoc16"
+      }
+    },
+    {
+      "name": "string_index_strlen",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/string_index_strlen.php",
+      "expectedOutput": "php_string\n4\no",
+      "expectedOutputs": {
+        "php": "php_string4o"
+      }
+    },
+    {
+      "name": "boolean_break_continue",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/boolean_break_continue.php",
+      "expectedOutput": "php_bool_loop\n9",
+      "expectedOutputs": {
+        "php": "php_bool_loop9"
+      }
+    },
+    {
+      "name": "unsupported_class",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/unsupported_class.php",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported PHP input feature: object system"
+    },
+    {
+      "name": "unsupported_import",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/unsupported_import.php",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported PHP input feature: imports/includes"
+    },
+    {
+      "name": "unsupported_async",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/unsupported_async.php",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported PHP input feature: async"
+    },
+    {
+      "name": "unsupported_lambda",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/unsupported_lambda.php",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported PHP input feature: lambdas/closures"
+    },
+    {
+      "name": "unsupported_foreach_literal",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/unsupported_foreach.php",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported PHP input feature: foreach over literal arrays"
+    }
+  ]
+}

@@ -203,7 +203,7 @@ class DartPerformanceOptimizer {
   optimizeCollections(ir) {
     const optimized = JSON.parse(JSON.stringify(ir));
 
-    this.visitNodes(optimized, (node, parent, key) => {
+    this.visitNodes(optimized, (node, _parent, _key) => {
       // Optimize list/map access
       if (node.type === "MemberExpression" && node.computed) {
         if (node.property && node.property.type === "Literal") {
@@ -385,7 +385,7 @@ class DartPerformanceOptimizer {
   /**
    * Check if while can be unrolled
    */
-  canUnrollWhile(node) {
+  canUnrollWhile(_node) {
     // Simplified: don't unroll while loops (might be infinite)
     return false;
   }
@@ -418,7 +418,7 @@ class DartPerformanceOptimizer {
   /**
    * Unroll while (simplified)
    */
-  unrollWhile(node) {
+  unrollWhile(_node) {
     return null;
   }
 

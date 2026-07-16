@@ -21,6 +21,7 @@ const { eliminateDeadCode } = require("./dead-code-elimination");
 const { foldConstants } = require("./constant-folding");
 const { analyzeTailCalls } = require("./tail-call-optimization");
 const { performance } = require("perf_hooks");
+const { safeCloneIR } = require("../ir-utils");
 
 /**
  * Run all speed optimization passes
@@ -50,7 +51,7 @@ function optimizeSpeed(ir, options = {}) {
     ...options
   };
 
-  let currentIR = JSON.parse(JSON.stringify(ir)); // Clone
+  let currentIR = safeCloneIR(ir); // Clone without parent cycles
   const passes = [];
   const overallMetrics = {
     totalTime: 0,
@@ -65,7 +66,7 @@ function optimizeSpeed(ir, options = {}) {
 
   // Run optimization passes iteratively
   for (let iteration = 0; iteration < settings.iterations; iteration++) {
-    const iterationStart = performance.now();
+    const _iterationStart = performance.now();
     let changed = false;
 
     // Pass 1: Dead Code Elimination

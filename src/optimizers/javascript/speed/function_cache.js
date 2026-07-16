@@ -20,7 +20,7 @@
  * @module src/optimizers/javascript/speed/function_cache
  */
 
-const { CacheManager } = require("./cache_manager");
+const { _CacheManager } = require("./cache_manager");
 
 /**
  * Function declaration caching system
@@ -150,18 +150,19 @@ class FunctionCache {
 
   /**
    * Compile a function declaration to Lua
-   * This would integrate with the actual transpiler
+   * Handles common ESTree statement/expression forms used by cached functions.
    * 
    * @private
    */
-  _compileFunctionDeclaration(fnAst, context) {
-    // Placeholder for actual transpilation
-    // In real implementation, this calls the transpiler
-    const name = fnAst.id?.name || "";
-    const params = (fnAst.params || []).map(p => p.name || "arg").join(", ");
-    const bodyLines = this._estimateBodyLineCount(fnAst.body);
-    
-    return `local function ${name}(${params})\n  -- ${bodyLines} lines\nend`;
+  _compileFunctionDeclaration(fnAst, context = {}) {
+    const name = this._luaIdentifier(fnAst.id?.name || "__anonymous");
+    const params = this._compileParameterList(fnAst.params || []);
+    const lines = [`local function ${name}(${params.join(", ")})`];
+    lines.push(...this._compileParameterBindings(fnAst.params || []));
+    lines.push(...this._compileBodyStatements(fnAst.body, context));
+    lines.push("end");
+
+    return lines.join("\n");
   }
 
   /**
@@ -210,13 +211,60 @@ class FunctionCache {
    * @private
    */
   _extractClosureVariables(fnAst) {
-    // Placeholder - would do proper AST analysis
-    const vars = [];
-    
-    // In real implementation, walk AST looking for identifiers
-    // that aren't defined in function parameters or body
-    
-    return vars;
+    const declared = new Set();
+    const used = new Set();
+    const globals = new Set([
+      "Array", "Boolean", "Date", "Error", "JSON", "Math", "Number", "Object",
+      "Promise", "RegExp", "Set", "String", "console", "require", "undefined"
+    ]);
+
+    for (const param of fnAst.params || []) {
+      this._collectPatternNames(param, declared);
+    }
+
+    const root = fnAst;
+    const visit = (node, parent = null, key = "", seen = new WeakSet()) => {
+      if (!node || typeof node !== "object") return;
+      if (seen.has(node)) return;
+      seen.add(node);
+
+      if (node !== root && this._isFunctionNode(node)) {
+        if (node.id?.name) declared.add(node.id.name);
+        return;
+      }
+
+      if (node.type === "VariableDeclarator") {
+        this._collectPatternNames(node.id, declared);
+        visit(node.init, node, "init", seen);
+        return;
+      }
+
+      if (node.type === "FunctionDeclaration") {
+        if (node.id?.name) declared.add(node.id.name);
+        return;
+      }
+
+      if (node.type === "Identifier") {
+        if (!this._isIdentifierReference(node, parent, key) || declared.has(node.name) || globals.has(node.name)) {
+          return;
+        }
+        used.add(node.name);
+        return;
+      }
+
+      for (const childKey of Object.keys(node)) {
+        if (childKey === "parent" || childKey.startsWith("_")) continue;
+        const child = node[childKey];
+        if (Array.isArray(child)) {
+          child.forEach(item => visit(item, node, childKey, seen));
+        } else {
+          visit(child, node, childKey, seen);
+        }
+      }
+    };
+
+    visit(fnAst.body || fnAst);
+    return [...used].sort();
   }
 
   /**
@@ -235,7 +283,7 @@ class FunctionCache {
     }
     
     this.stats.patterns.arrow++;
-    const compiled = `function(${this._paramList(arrowAst.params)}) return ${this._bodyHash(arrowAst.body)} end`;
+    const compiled = this._compileAnonymousFunction(arrowAst, context);
     
     this.cache.set(key, compiled, 1);
     this.stats.compiled++;
@@ -259,7 +307,7 @@ class FunctionCache {
     }
     
     this.stats.patterns.async++;
-    const compiled = `async function ${asyncAst.id?.name || ""}(${this._paramList(asyncAst.params)}) -- async body end`;
+    const compiled = this._compileFunctionDeclaration(asyncAst, context);
     
     this.cache.set(key, compiled, 1);
     this.stats.compiled++;
@@ -283,7 +331,7 @@ class FunctionCache {
     }
     
     this.stats.patterns.generator++;
-    const compiled = `function* ${genAst.id?.name || ""}(${this._paramList(genAst.params)}) -- generator body end`;
+    const compiled = this._compileFunctionDeclaration(genAst, context);
     
     this.cache.set(key, compiled, 1);
     this.stats.compiled++;
@@ -297,7 +345,7 @@ class FunctionCache {
    * @param {Object} context - Transpilation context
    * @returns {string} Transpiled Lua code
    */
-  cacheDestructuredFunction(fnAst, context) {
+  cacheDestructuredFunction(fnAst, _context) {
     const destructParams = fnAst.params.filter(p => p.type === "ArrayPattern" || p.type === "ObjectPattern");
     const key = `destruct_${fnAst.id?.name}_${this._hashPatterns(destructParams)}`;
     
@@ -321,11 +369,7 @@ class FunctionCache {
    * @private
    */
   _compileDestructuredParams(fnAst) {
-    // Placeholder for destructuring compilation
-    const name = fnAst.id?.name || "";
-    const paramCount = fnAst.params.length;
-    
-    return `local function ${name}(destructured_params_${paramCount})\n  -- destructure here\nend`;
+    return this._compileFunctionDeclaration(fnAst);
   }
 
   /**
@@ -345,7 +389,7 @@ class FunctionCache {
     }
     
     this.stats.patterns.rest++;
-    const compiled = `local function ${fnAst.id?.name || ""}(...) -- rest params end`;
+    const compiled = this._compileFunctionDeclaration(fnAst, context);
     
     this.cache.set(key, compiled, 1);
     this.stats.compiled++;
@@ -388,13 +432,20 @@ class FunctionCache {
    * @param {string} criteria.pattern - Pattern type to invalidate
    */
   invalidateCached(criteria) {
-    if (criteria.name) {
-      const key = `fn_${criteria.name}`;
-      // In real implementation, would search and delete matching keys
-    }
-    
+    const shouldDelete = key => {
+      if (criteria.name && !String(key).includes(`fn_${criteria.name}`)) return false;
+      if (criteria.pattern && !String(key).includes(`_${criteria.pattern}`)) return false;
+      return Boolean(criteria.name || criteria.pattern);
+    };
+
+    this._deleteCacheKeys(shouldDelete);
+    this.functionTemplates.forEach((value, key) => {
+      if (shouldDelete(key)) {
+        this.functionTemplates.delete(key);
+      }
+    });
+
     if (criteria.pattern) {
-      // Would clear stats for this pattern
       this.stats.patterns[criteria.pattern] = 0;
     }
   }
@@ -428,7 +479,7 @@ class FunctionCache {
 
   // Helper methods
   _paramList(params) {
-    return (params || []).map(p => p.name || "arg").join(", ");
+    return this._compileParameterList(params || []).join(", ");
   }
 
   _bodyHash(body) {
@@ -437,11 +488,261 @@ class FunctionCache {
   }
 
   _hashBody(body) {
-    return (body?.toString() || "").substring(0, 16);
+    return this._stableStringify(body).substring(0, 32);
   }
 
   _hashPatterns(patterns) {
     return patterns.map(p => p.type).join("_");
+  }
+
+  _compileAnonymousFunction(fnAst, context = {}) {
+    const params = this._compileParameterList(fnAst.params || []);
+    const lines = [`function(${params.join(", ")})`];
+    lines.push(...this._compileParameterBindings(fnAst.params || []));
+    if (fnAst.body?.type === "BlockStatement") {
+      lines.push(...this._compileBodyStatements(fnAst.body, context));
+    } else {
+      lines.push(`  return ${this._compileExpression(fnAst.body, context)}`);
+    }
+    lines.push("end");
+    return lines.join("\n");
+  }
+
+  _compileParameterList(params) {
+    return params.map((param, index) => {
+      if (param?.type === "RestElement") return "...";
+      if (param?.type === "AssignmentPattern") return this._luaIdentifier(param.left?.name || `arg${index + 1}`);
+      if (param?.type === "ArrayPattern" || param?.type === "ObjectPattern") return `destructured_param_${index + 1}`;
+      return this._luaIdentifier(param?.name || `arg${index + 1}`);
+    });
+  }
+
+  _compileParameterBindings(params) {
+    const lines = [];
+    params.forEach((param, index) => {
+      if (param?.type === "RestElement") {
+        const name = this._luaIdentifier(param.argument?.name || `rest_${index + 1}`);
+        lines.push(`  local ${name} = {...}`);
+      } else if (param?.type === "AssignmentPattern") {
+        const name = this._luaIdentifier(param.left?.name || `arg${index + 1}`);
+        lines.push(`  if ${name} == nil then ${name} = ${this._compileExpression(param.right)} end`);
+      } else if (param?.type === "ArrayPattern" || param?.type === "ObjectPattern") {
+        lines.push(...this._compilePatternBinding(param, `destructured_param_${index + 1}`));
+      }
+    });
+    return lines;
+  }
+
+  _compilePatternBinding(pattern, source, indent = "  ") {
+    const lines = [];
+    if (!pattern) return lines;
+
+    if (pattern.type === "Identifier") {
+      lines.push(`${indent}local ${this._luaIdentifier(pattern.name)} = ${source}`);
+      return lines;
+    }
+
+    if (pattern.type === "RestElement") {
+      lines.push(`${indent}local ${this._luaIdentifier(pattern.argument?.name || "rest")} = ${source}`);
+      return lines;
+    }
+
+    if (pattern.type === "ArrayPattern") {
+      (pattern.elements || []).forEach((element, index) => {
+        if (!element) return;
+        lines.push(...this._compilePatternBinding(element, `${source}[${index + 1}]`, indent));
+      });
+      return lines;
+    }
+
+    if (pattern.type === "ObjectPattern") {
+      (pattern.properties || []).forEach(property => {
+        const key = property.key?.name || property.key?.value || property.name;
+        const target = property.value || property.argument || property.key;
+        if (!key || !target) return;
+        lines.push(...this._compilePatternBinding(target, `${source}.${key} or ${source}[${JSON.stringify(key)}]`, indent));
+      });
+    }
+
+    return lines;
+  }
+
+  _compileBodyStatements(body, context = {}) {
+    const statements = body?.type === "BlockStatement" ? body.body || [] : [];
+    if (statements.length === 0) {
+      return ["  return nil"];
+    }
+
+    const lines = [];
+    statements.forEach((statement, index) => {
+      lines.push(...this._compileStatement(statement, context, index));
+    });
+    return lines.length > 0 ? lines : ["  return nil"];
+  }
+
+  _compileStatement(statement, context = {}, index = 0, indent = "  ") {
+    if (!statement) return [];
+
+    switch (statement.type) {
+    case "ReturnStatement":
+      return [`${indent}return ${this._compileExpression(statement.argument, context)}`];
+    case "ExpressionStatement":
+      return [`${indent}${this._compileExpression(statement.expression, context)}`];
+    case "VariableDeclaration":
+      return (statement.declarations || []).flatMap(declaration => {
+        const value = this._compileExpression(declaration.init, context);
+        if (declaration.id?.type === "Identifier") {
+          return [`${indent}local ${this._luaIdentifier(declaration.id.name)} = ${value}`];
+        }
+        return this._compilePatternBinding(declaration.id, value, indent);
+      });
+    case "IfStatement": {
+      const lines = [`${indent}if ${this._compileExpression(statement.test, context)} then`];
+      lines.push(...this._compileNestedStatement(statement.consequent, context, `${indent}  `));
+      if (statement.alternate) {
+        lines.push(`${indent}else`);
+        lines.push(...this._compileNestedStatement(statement.alternate, context, `${indent}  `));
+      }
+      lines.push(`${indent}end`);
+      return lines;
+    }
+    case "BlockStatement":
+      return (statement.body || []).flatMap((nested, nestedIndex) => this._compileStatement(nested, context, nestedIndex, indent));
+    default:
+      return [`${indent}error("Unsupported cached function statement: ${statement.type || `unknown_${index}`}")`];
+    }
+  }
+
+  _compileNestedStatement(statement, context, indent) {
+    if (!statement) return [`${indent}return nil`];
+    if (statement.type === "BlockStatement") {
+      return (statement.body || []).flatMap((nested, index) => this._compileStatement(nested, context, index, indent));
+    }
+    return this._compileStatement(statement, context, 0, indent);
+  }
+
+  _compileExpression(expression, context = {}) {
+    if (!expression) return "nil";
+    if (context.compileExpression) {
+      const compiled = context.compileExpression(expression);
+      if (compiled) return compiled;
+    }
+
+    switch (expression.type) {
+    case "Literal":
+      if (expression.value === null || expression.value === undefined) return "nil";
+      if (typeof expression.value === "string") return JSON.stringify(expression.value);
+      return String(expression.value);
+    case "Identifier":
+      return this._luaIdentifier(expression.name);
+    case "BinaryExpression":
+    case "LogicalExpression":
+      return `${this._compileExpression(expression.left, context)} ${this._luaOperator(expression.operator)} ${this._compileExpression(expression.right, context)}`;
+    case "UnaryExpression":
+      return `${this._luaOperator(expression.operator)} ${this._compileExpression(expression.argument, context)}`;
+    case "AssignmentExpression":
+      return `${this._compileExpression(expression.left, context)} ${this._luaOperator(expression.operator)} ${this._compileExpression(expression.right, context)}`;
+    case "CallExpression":
+      return `${this._compileExpression(expression.callee, context)}(${(expression.arguments || []).map(arg => this._compileExpression(arg, context)).join(", ")})`;
+    case "MemberExpression": {
+      const object = this._compileExpression(expression.object, context);
+      if (expression.computed) {
+        return `${object}[${this._compileExpression(expression.property, context)}]`;
+      }
+      return `${object}.${this._compileExpression(expression.property, context)}`;
+    }
+    case "ArrayExpression":
+      return `{${(expression.elements || []).map(element => this._compileExpression(element, context)).join(", ")}}`;
+    case "ObjectExpression":
+      return `{${(expression.properties || []).map(property => {
+        const key = property.key?.name || property.key?.value;
+        return `${this._luaIdentifier(key || "field")} = ${this._compileExpression(property.value, context)}`;
+      }).join(", ")}}`;
+    case "ConditionalExpression":
+      return `((${this._compileExpression(expression.test, context)}) and (${this._compileExpression(expression.consequent, context)}) or (${this._compileExpression(expression.alternate, context)}))`;
+    case "ArrowFunctionExpression":
+    case "FunctionExpression":
+      return this._compileAnonymousFunction(expression, context);
+    default:
+      return `error("Unsupported cached function expression: ${expression.type || "unknown"}")`;
+    }
+  }
+
+  _luaOperator(operator) {
+    return {
+      "===": "==",
+      "!==": "~=",
+      "!=": "~=",
+      "&&": "and",
+      "||": "or",
+      "!": "not",
+      "**": "^"
+    }[operator] || operator || "";
+  }
+
+  _luaIdentifier(name) {
+    const cleaned = String(name || "value").replace(/[^A-Za-z0-9_]/g, "_");
+    return /^[A-Za-z_]/.test(cleaned) ? cleaned : `_${cleaned}`;
+  }
+
+  _collectPatternNames(pattern, out) {
+    if (!pattern) return;
+    if (pattern.type === "Identifier") {
+      out.add(pattern.name);
+    } else if (pattern.type === "RestElement") {
+      this._collectPatternNames(pattern.argument, out);
+    } else if (pattern.type === "AssignmentPattern") {
+      this._collectPatternNames(pattern.left, out);
+    } else if (pattern.type === "ArrayPattern") {
+      (pattern.elements || []).forEach(element => this._collectPatternNames(element, out));
+    } else if (pattern.type === "ObjectPattern") {
+      (pattern.properties || []).forEach(property => this._collectPatternNames(property.value || property.argument || property.key, out));
+    }
+  }
+
+  _isFunctionNode(node) {
+    return node.type === "FunctionDeclaration" ||
+      node.type === "FunctionExpression" ||
+      node.type === "ArrowFunctionExpression";
+  }
+
+  _isIdentifierReference(node, parent, key) {
+    if (!parent) return true;
+    if ((key === "id" && (parent.type === "VariableDeclarator" || this._isFunctionNode(parent))) || key === "params") return false;
+    if (parent.type === "MemberExpression" && key === "property" && !parent.computed) return false;
+    if (parent.type === "Property" && key === "key" && !parent.computed) return false;
+    return true;
+  }
+
+  _deleteCacheKeys(predicate) {
+    if (this.cache?.l1Cache) {
+      for (const key of [...this.cache.l1Cache.keys()]) {
+        if (predicate(key)) this.cache.l1Cache.delete(key);
+      }
+    }
+    if (this.cache?.l2Cache) {
+      for (const key of [...this.cache.l2Cache.keys()]) {
+        if (predicate(key)) this.cache.l2Cache.delete(key);
+      }
+    }
+    if (this.cache?.l3Cache?.cache) {
+      for (const key of [...this.cache.l3Cache.cache.keys()]) {
+        if (predicate(key)) this.cache.l3Cache.cache.delete(key);
+      }
+      this.cache.l3Cache.accessOrder = this.cache.l3Cache.accessOrder.filter(key => !predicate(key));
+    }
+  }
+
+  _stableStringify(value) {
+    const seen = new WeakSet();
+    return JSON.stringify(value, (key, item) => {
+      if (key === "parent") return undefined;
+      if (item && typeof item === "object") {
+        if (seen.has(item)) return "[Circular]";
+        seen.add(item);
+      }
+      return item;
+    }) || "empty";
   }
 }
 

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "language": "go",
+  "status": "qualified",
+  "supportSlice": "go-v0.25-native-bidirectional",
+  "runtime": "go",
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_functions",
+      "sourceLanguage": "go",
+      "source": "tests/language_completion/fixtures/go/arithmetic_functions.go",
+      "expectedOutput": "go_arithmetic 12"
+    },
+    {
+      "name": "control_flow",
+      "sourceLanguage": "go",
+      "source": "tests/language_completion/fixtures/go/control_flow.go",
+      "expectedOutput": "go_control ready 5"
+    },
+    {
+      "name": "array_range_len",
+      "sourceLanguage": "go",
+      "source": "tests/language_completion/fixtures/go/array_range_len.go",
+      "expectedOutput": "go_array 10 4"
+    },
+    {
+      "name": "numeric_for_break_continue",
+      "sourceLanguage": "go",
+      "source": "tests/language_completion/fixtures/go/numeric_for_break_continue.go",
+      "expectedOutput": "go_loop 13"
+    },
+    {
+      "name": "struct_fields",
+      "sourceLanguage": "go",
+      "source": "tests/language_completion/fixtures/go/struct_fields.go",
+      "expectedOutput": "go_struct 5 4"
+    },
+    {
+      "name": "math_calls",
+      "sourceLanguage": "go",
+      "source": "tests/language_completion/fixtures/go/math_calls.go",
+      "expectedOutput": "go_math 4 7"
+    },
+    {
+      "name": "unsupported_goroutine",
+      "sourceLanguage": "go",
+      "source": "tests/language_completion/fixtures/go/unsupported_goroutine.go",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Go input feature: goroutines"
+    },
+    {
+      "name": "unsupported_channel",
+      "sourceLanguage": "go",
+      "source": "tests/language_completion/fixtures/go/unsupported_channel.go",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Go input feature: channels"
+    },
+    {
+      "name": "unsupported_map",
+      "sourceLanguage": "go",
+      "source": "tests/language_completion/fixtures/go/unsupported_map.go",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Go input feature: maps"
+    },
+    {
+      "name": "unsupported_interface",
+      "sourceLanguage": "go",
+      "source": "tests/language_completion/fixtures/go/unsupported_interface.go",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Go input feature: interfaces"
+    },
+    {
+      "name": "unsupported_import",
+      "sourceLanguage": "go",
+      "source": "tests/language_completion/fixtures/go/unsupported_import.go",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Go input feature: imports outside fmt/math"
+    }
+  ]
+}

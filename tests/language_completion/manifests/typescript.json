@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "language": "typescript",
+  "status": "qualified",
+  "supportSlice": "typescript-v0.25-typed-js-small-programs",
+  "runtime": "node",
+  "targets": ["lua", "javascript", "luascript", "python"],
+  "fixtures": [
+    {
+      "name": "typed_arithmetic",
+      "source": "tests/language_completion/fixtures/typescript/typed_arithmetic.ts",
+      "expectedOutput": "ts_arithmetic 5 15"
+    },
+    {
+      "name": "typed_functions_conditionals",
+      "source": "tests/language_completion/fixtures/typescript/typed_functions_conditionals.ts",
+      "expectedOutput": "ts_branch big small"
+    },
+    {
+      "name": "typed_arrays_loops",
+      "source": "tests/language_completion/fixtures/typescript/typed_arrays_loops.ts",
+      "expectedOutput": "ts_array_loop 10 3"
+    },
+    {
+      "name": "interface_object_mutation",
+      "source": "tests/language_completion/fixtures/typescript/interface_object_mutation.ts",
+      "expectedOutput": "ts_object alpha 12"
+    },
+    {
+      "name": "type_alias_break_continue",
+      "source": "tests/language_completion/fixtures/typescript/type_alias_break_continue.ts",
+      "expectedOutput": "ts_control 8"
+    },
+    {
+      "name": "string_index_length",
+      "source": "tests/language_completion/fixtures/typescript/string_index_length.ts",
+      "expectedOutput": "ts_string LuaScript"
+    },
+    {
+      "name": "boolean_short_circuit",
+      "source": "tests/language_completion/fixtures/typescript/boolean_short_circuit.ts",
+      "expectedOutput": "ts_short 0 false true",
+      "expectedOutputs": {
+        "python": "ts_short 0 False True"
+      }
+    },
+    {
+      "name": "unsupported_class",
+      "source": "tests/language_completion/fixtures/typescript/unsupported_class.ts",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported TypeScript input feature: classes"
+    },
+    {
+      "name": "unsupported_enum",
+      "source": "tests/language_completion/fixtures/typescript/unsupported_enum.ts",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported TypeScript input feature: enums"
+    },
+    {
+      "name": "unsupported_generics",
+      "source": "tests/language_completion/fixtures/typescript/unsupported_generics.ts",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported TypeScript input feature: generics"
+    },
+    {
+      "name": "unsupported_import",
+      "source": "tests/language_completion/fixtures/typescript/unsupported_import.ts",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported TypeScript input feature: imports"
+    }
+  ]
+}

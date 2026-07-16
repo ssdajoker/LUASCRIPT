@@ -53,7 +53,7 @@ class UniversalLowerer {
       .filter(([, pass]) => pass.enabled)
       .sort(([, a], [, b]) => b.priority - a.priority);
 
-    for (const [passName, pass] of sortedPasses) {
+    for (const [passName, _pass] of sortedPasses) {
       current = this.runPass(passName, current, language, context);
     }
 

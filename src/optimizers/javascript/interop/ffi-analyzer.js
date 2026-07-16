@@ -368,13 +368,100 @@ function analyzeFfiCallback(node) {
  * Extract captured variables from callback closure
  */
 function extractCapturedVariables(node) {
-  // Simplified: would need proper closure analysis
-  if (node.arguments && node.arguments[0]?.type === "Function") {
-    const func = node.arguments[0];
-    // Would analyze function body for free variables
-    return [];  // Placeholder
+  const func = (node.arguments || []).find(arg =>
+    arg?.type === "Function" ||
+    arg?.type === "FunctionExpression" ||
+    arg?.type === "ArrowFunctionExpression"
+  );
+  if (!func) return [];
+
+  const declared = new Set();
+  const used = new Set();
+  const globals = new Set([
+    "Array", "Boolean", "Date", "Error", "JSON", "Math", "Number", "Object",
+    "Promise", "RegExp", "Set", "String", "console", "ffi", "require",
+    "undefined"
+  ]);
+
+  for (const param of func.params || []) {
+    collectBindingNames(param, declared);
   }
-  return [];
+
+  walkClosureAst(func.body || func, (child, parent, key) => {
+    if (child !== func && isFunctionLike(child)) {
+      if (child.id?.name) declared.add(child.id.name);
+      return false;
+    }
+
+    if (child.type === "VariableDeclarator") {
+      collectBindingNames(child.id, declared);
+      return true;
+    }
+
+    if (child.type === "FunctionDeclaration") {
+      if (child.id?.name) declared.add(child.id.name);
+      return false;
+    }
+
+    if (child.type === "Identifier" && isIdentifierReference(child, parent, key)) {
+      if (!declared.has(child.name) && !globals.has(child.name)) {
+        used.add(child.name);
+      }
+    }
+
+    return true;
+  });
+
+  return [...used].sort();
+}
+
+function walkClosureAst(node, visitor, parent = null, key = "", seen = new WeakSet()) {
+  if (!node || typeof node !== "object") return;
+  if (seen.has(node)) return;
+  seen.add(node);
+
+  if (visitor(node, parent, key) === false) return;
+
+  for (const childKey of Object.keys(node)) {
+    if (childKey === "parent" || childKey.startsWith("_")) continue;
+    const child = node[childKey];
+    if (Array.isArray(child)) {
+      child.forEach(item => walkClosureAst(item, visitor, node, childKey, seen));
+    } else {
+      walkClosureAst(child, visitor, node, childKey, seen);
+    }
+  }
+}
+
+function collectBindingNames(pattern, out) {
+  if (!pattern) return;
+  if (pattern.type === "Identifier") {
+    out.add(pattern.name);
+  } else if (pattern.type === "RestElement") {
+    collectBindingNames(pattern.argument, out);
+  } else if (pattern.type === "AssignmentPattern") {
+    collectBindingNames(pattern.left, out);
+  } else if (pattern.type === "ArrayPattern") {
+    (pattern.elements || []).forEach(element => collectBindingNames(element, out));
+  } else if (pattern.type === "ObjectPattern") {
+    (pattern.properties || []).forEach(property => collectBindingNames(property.value || property.argument || property.key, out));
+  }
+}
+
+function isFunctionLike(node) {
+  return node?.type === "Function" ||
+    node?.type === "FunctionDeclaration" ||
+    node?.type === "FunctionExpression" ||
+    node?.type === "ArrowFunctionExpression";
+}
+
+function isIdentifierReference(node, parent, key) {
+  if (!parent) return true;
+  if ((key === "id" && (parent.type === "VariableDeclarator" || isFunctionLike(parent))) || key === "params") return false;
+  if (parent.type === "MemberExpression" && key === "property" && !parent.computed) return false;
+  if (parent.type === "Member" && key === "property") return false;
+  if (parent.type === "Property" && key === "key" && !parent.computed) return false;
+  return true;
 }
 
 /**
@@ -470,20 +557,22 @@ function applyFfiOptimizations(ir, analysis) {
 /**
  * Traverse IR tree and apply function to each node
  */
-function traverseIR(node, fn) {
+function traverseIR(node, fn, seen = new WeakSet()) {
   if (!node || typeof node !== "object") return;
+  if (seen.has(node)) return;
+  seen.add(node);
   
   fn(node);
   
   // Traverse children
   for (const key in node) {
-    if (key.startsWith("_")) continue;  // Skip metadata
+    if (key === "parent" || key.startsWith("_")) continue;  // Skip metadata and back-links
     
     const child = node[key];
     if (Array.isArray(child)) {
-      child.forEach(c => traverseIR(c, fn));
+      child.forEach(c => traverseIR(c, fn, seen));
     } else if (typeof child === "object") {
-      traverseIR(child, fn);
+      traverseIR(child, fn, seen);
     }
   }
 }
@@ -498,5 +587,6 @@ module.exports = {
   parseFfiSignature,
   estimateOverhead,
   validateSafety,
-  detectBatchingOpportunities
+  detectBatchingOpportunities,
+  extractCapturedVariables
 };

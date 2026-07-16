@@ -16,10 +16,10 @@ class PythonExtendedFeaturesEnhancer {
    */
   static enhanceParser(parser) {
     // Store original methods
-    const originalParseDecorator = parser.parseDecorator.bind(parser);
-    const originalParseWith = parser.parseWith.bind(parser);
-    const originalParseFunctionDeclaration = parser.parseFunctionDeclaration.bind(parser);
-    const originalParseStatement = parser.parseStatement.bind(parser);
+    const _originalParseDecorator = parser.parseDecorator.bind(parser);
+    const _originalParseWith = parser.parseWith.bind(parser);
+    const _originalParseFunctionDeclaration = parser.parseFunctionDeclaration.bind(parser);
+    const _originalParseStatement = parser.parseStatement.bind(parser);
 
     /**
      * Enhanced decorator parsing - now handles full decorator expressions
@@ -405,7 +405,7 @@ class PythonExtendedFeaturesEnhancer {
   /**
    * Validate extended features
    */
-  static validateFeatures(ir) {
+  static validateFeatures(_ir) {
     const issues = [];
     
     // Check for await outside async function

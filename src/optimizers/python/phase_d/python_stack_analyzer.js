@@ -456,7 +456,7 @@ class PythonStackAnalyzer {
 
     this.frames.forEach(frame => {
       const varCount = frame.getTotalVariableCount();
-      const stackBytes = frame.getEstimatedStackBytes();
+      const _stackBytes = frame.getEstimatedStackBytes();
 
       // Identify unused or short-lived variables
       frame.variables.forEach(varInfo => {

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "language": "java",
+  "status": "qualified",
+  "supportSlice": "java-v1-native-bidirectional",
+  "runtime": "java",
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_methods",
+      "source": "tests/language_completion/fixtures/java/arithmetic_methods.java",
+      "expectedOutput": "java_arithmetic\n10"
+    },
+    {
+      "name": "control_flow",
+      "source": "tests/language_completion/fixtures/java/control_flow.java",
+      "expectedOutput": "java_flow\n10"
+    },
+    {
+      "name": "math_calls",
+      "source": "tests/language_completion/fixtures/java/math_calls.java",
+      "expectedOutput": "java_math\n5"
+    }
+  ]
+}

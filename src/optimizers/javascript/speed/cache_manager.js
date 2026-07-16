@@ -272,7 +272,7 @@ class CacheManager {
     const now = Date.now();
     let cleaned = 0;
     
-    for (const [key, item] of this.l1Cache.entries()) {
+    for (const [_key, item] of this.l1Cache.entries()) {
       if (now - item.timestamp > this.l1TTL) {
         item.expired = true;
         cleaned++;

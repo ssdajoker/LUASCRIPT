@@ -121,7 +121,7 @@ class RubySecurityValidator {
           const args = node.arguments || [];
           if (args.length > 0 && this.isUserControlled(args[0])) {
             this.addIssue("critical", "Path Traversal",
-              `File operation with user-controlled path detected.`,
+              "File operation with user-controlled path detected.",
               node);
             this.stats.criticalIssues++;
             this.stats.vulnerabilitiesFound++;
@@ -142,7 +142,7 @@ class RubySecurityValidator {
       if (node.type === "BinaryExpression" && node.operator === "+") {
         if (this.containsSQLKeywords(node)) {
           this.addIssue("critical", "SQL Injection",
-            `String concatenation in SQL query detected. Use parameterized queries.`,
+            "String concatenation in SQL query detected. Use parameterized queries.",
             node);
           this.stats.criticalIssues++;
           this.stats.vulnerabilitiesFound++;
@@ -156,7 +156,7 @@ class RubySecurityValidator {
           const args = node.arguments || [];
           if (args.length > 0 && this.hasStringInterpolation(args[0])) {
             this.addIssue("critical", "SQL Injection",
-              `SQL query with string interpolation detected.`,
+              "SQL query with string interpolation detected.",
               node);
             this.stats.criticalIssues++;
             this.stats.vulnerabilitiesFound++;
@@ -183,7 +183,7 @@ class RubySecurityValidator {
             const args = node.arguments || [];
             if (args.length > 0 && this.isUserControlled(args[0])) {
               this.addIssue("critical", "Command Injection",
-                `Command execution with user input detected.`,
+                "Command execution with user input detected.",
                 node);
               this.stats.criticalIssues++;
               this.stats.vulnerabilitiesFound++;
@@ -211,7 +211,7 @@ class RubySecurityValidator {
             const args = node.arguments || [];
             if (args.length > 0 && this.isUserControlled(args[0])) {
               this.addIssue("critical", "Insecure Deserialization",
-                `Deserialization of user-controlled data detected. Use safe_load for YAML.`,
+                "Deserialization of user-controlled data detected. Use safe_load for YAML.",
                 node);
               this.stats.criticalIssues++;
               this.stats.vulnerabilitiesFound++;
@@ -236,7 +236,7 @@ class RubySecurityValidator {
           const args = node.arguments || [];
           if (args.length > 0 && this.isUserControlled(args[0])) {
             this.addIssue("warning", "Open Redirect",
-              `Redirect to user-controlled URL detected.`,
+              "Redirect to user-controlled URL detected.",
               node);
             this.stats.warningIssues++;
             this.stats.vulnerabilitiesFound++;
@@ -261,7 +261,7 @@ class RubySecurityValidator {
           const receiver = node.callee && node.callee.object;
           if (receiver && this.isUserControlled(receiver)) {
             this.addIssue("critical", "XSS Vulnerability",
-              `User input marked as html_safe without sanitization.`,
+              "User input marked as html_safe without sanitization.",
               node);
             this.stats.criticalIssues++;
             this.stats.vulnerabilitiesFound++;
@@ -442,7 +442,7 @@ class RubySecurityValidator {
    * Calculate security score (0-100)
    */
   calculateSecurityScore() {
-    const totalIssues = this.stats.vulnerabilitiesFound;
+    const _totalIssues = this.stats.vulnerabilitiesFound;
     const criticalWeight = 20;
     const warningWeight = 5;
 
@@ -459,8 +459,8 @@ class RubySecurityValidator {
     return {
       ...this.stats,
       hardeningLevel: this.stats.securityScore >= 98 ? "Excellent" :
-                      this.stats.securityScore >= 90 ? "Good" :
-                      this.stats.securityScore >= 80 ? "Fair" : "Poor",
+        this.stats.securityScore >= 90 ? "Good" :
+          this.stats.securityScore >= 80 ? "Fair" : "Poor",
     };
   }
 }

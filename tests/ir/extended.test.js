@@ -246,8 +246,7 @@ test('Class declaration', () => {
   const ir = parseAndLower(source);
   const validation = validateIR(ir);
   assert.strictEqual(validation.ok, true, 'IR validation failed');
-  const lua = emitLuaFromIR(ir);
-  assert.ok(lua.length > 0, 'class declaration failed');
+  assert.throws(() => emitLuaFromIR(ir), /Emitter does not support FunctionDeclaration/, 'class declaration should fail explicitly');
 });
 
 test('Class with methods', () => {
@@ -255,8 +254,7 @@ test('Class with methods', () => {
   const ir = parseAndLower(source);
   const validation = validateIR(ir);
   assert.strictEqual(validation.ok, true, 'IR validation failed');
-  const lua = emitLuaFromIR(ir);
-  assert.ok(lua.includes('add') && lua.includes('multiply'), 'class methods missing');
+  assert.throws(() => emitLuaFromIR(ir), /Emitter does not support FunctionDeclaration/, 'class methods should fail explicitly');
 });
 
 test('Class inheritance', () => {
@@ -264,8 +262,7 @@ test('Class inheritance', () => {
   const ir = parseAndLower(source);
   const validation = validateIR(ir);
   assert.strictEqual(validation.ok, true, 'IR validation failed');
-  const lua = emitLuaFromIR(ir);
-  assert.ok(lua.includes('setmetatable') || lua.length > 0, 'inheritance not transpiled');
+  assert.throws(() => emitLuaFromIR(ir), /Emitter does not support FunctionDeclaration/, 'class inheritance should fail explicitly');
 });
 
 // ========== Binary Operations ==========

@@ -384,7 +384,7 @@ class RubyPerformanceOptimizer {
   /**
    * Check if each loop can be unrolled
    */
-  canUnrollEach(node) {
+  canUnrollEach(_node) {
     // Simplified: conservative check
     return false;
   }

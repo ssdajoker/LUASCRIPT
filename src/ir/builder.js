@@ -6,7 +6,7 @@
  */
 
 const nodes = require("./nodes");
-const { Types, TypeCategory } = require("./types");
+const { Types, _TypeCategory } = require("./types");
 const { BalancedTernaryIdGenerator } = require("./idGenerator"); // Import idGenerator
 
 class IRBuilder {

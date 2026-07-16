@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "language": "lua",
+  "status": "qualified",
+  "supportSlice": "lua-input-v2.1-table-index-python-target-small-programs",
+  "targets": ["lua", "javascript", "luascript", "python"],
+  "fixtures": [
+    {
+      "name": "arithmetic_locals",
+      "source": "tests/lua_input/fixtures/arithmetic_locals.lua",
+      "expectedOutput": "arithmetic 5 15"
+    },
+    {
+      "name": "functions",
+      "source": "tests/lua_input/fixtures/functions.lua",
+      "expectedOutput": "function 7"
+    },
+    {
+      "name": "conditionals",
+      "source": "tests/lua_input/fixtures/conditionals.lua",
+      "expectedOutput": "branch equal"
+    },
+    {
+      "name": "while_loop",
+      "source": "tests/lua_input/fixtures/while_loop.lua",
+      "expectedOutput": "while 6"
+    },
+    {
+      "name": "numeric_for",
+      "source": "tests/lua_input/fixtures/numeric_for.lua",
+      "expectedOutput": "for 10"
+    },
+    {
+      "name": "tables",
+      "source": "tests/lua_input/fixtures/tables.lua",
+      "expectedOutput": "tables 4 Ada 5"
+    },
+    {
+      "name": "length_operator",
+      "source": "tests/lua_input/fixtures/length_operator.lua",
+      "expectedOutput": "length 4 4"
+    },
+    {
+      "name": "multiple_assignment",
+      "source": "tests/lua_input/fixtures/multiple_assignment.lua",
+      "expectedOutput": "multi 5 5"
+    },
+    {
+      "name": "generic_for_ipairs",
+      "source": "tests/lua_input/fixtures/generic_for_ipairs.lua",
+      "expectedOutput": "ipairs 15 3"
+    },
+    {
+      "name": "table_index_read_write",
+      "source": "tests/lua_input/fixtures/table_index_read_write.lua",
+      "expectedOutput": "lua_index 3 9 8"
+    },
+    {
+      "name": "unsupported_generic_for",
+      "source": "tests/lua_input/fixtures/unsupported_generic_for.lua",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Lua input feature: generic for"
+    }
+  ]
+}

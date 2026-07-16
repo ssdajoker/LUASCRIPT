@@ -12,6 +12,18 @@
  * - Support for JS↔Lua↔OCaml type bridges
  */
 
+// Timing and Conversion Constants
+const HRTIME_TO_MICROSECONDS_DIVISOR = 1000;
+
+// Type Size Constants (in bytes)
+const DEFAULT_BUFFER_SIZE_BYTES = 8192; // 8KB
+const DEFAULT_OBJECT_SIZE_BYTES = 4096; // 4KB
+const DEFAULT_ARRAY_SIZE_BYTES = 2048; // 2KB
+const DEFAULT_TYPE_SIZE_BYTES = 256;
+
+// Precision Loss Constants
+const COMPLETE_PRECISION_LOSS_PERCENT = 100;
+
 class TypeConverter {
   constructor() {
     this.typeMap = new Map();
@@ -135,7 +147,7 @@ class TypeConverter {
     metrics.estimatedReduction = this._calculateEstimatedReduction(conversions);
 
     const endTime = process.hrtime.bigint();
-    metrics.analysisTime = Number(endTime - startTime) / 1000; // microseconds
+    metrics.analysisTime = Number(endTime - startTime) / HRTIME_TO_MICROSECONDS_DIVISOR; // microseconds
 
     return {
       conversions,
@@ -218,10 +230,10 @@ class TypeConverter {
     if (type.includes("int64") || type.includes("float64")) return 8;
     if (type.includes("int16")) return 2;
     if (type.includes("int8") || type.includes("char")) return 1;
-    if (type.includes("buffer") || type.includes("arraybuffer")) return 8192;
-    if (type.includes("object")) return 4096;
-    if (type.includes("array")) return 2048;
-    return 256;
+    if (type.includes("buffer") || type.includes("arraybuffer")) return DEFAULT_BUFFER_SIZE_BYTES;
+    if (type.includes("object")) return DEFAULT_OBJECT_SIZE_BYTES;
+    if (type.includes("array")) return DEFAULT_ARRAY_SIZE_BYTES;
+    return DEFAULT_TYPE_SIZE_BYTES;
   }
 
   /**
@@ -297,7 +309,7 @@ class TypeConverter {
       percentLoss = 50; // Significant loss
     } else if (operation.sourceType === "double" && operation.targetType === "int") {
       preserved = false;
-      percentLoss = 100; // Complete loss of fractional part
+      percentLoss = COMPLETE_PRECISION_LOSS_PERCENT; // Complete loss of fractional part
     } else if (operation.sourceType.includes("int") && operation.targetType.includes("int")) {
       // Integer to integer usually preserves if target is wider or equal
       if (this._getTypeWidth(operation.sourceType) <= this._getTypeWidth(operation.targetType)) {
@@ -445,7 +457,7 @@ class TypeConverter {
    * Build recommendations for type conversion strategy
    * @private
    */
-  _buildRecommendations(conversions, strategyMap) {
+  _buildRecommendations(conversions, _strategyMap) {
     const recommendations = [];
     const safeCount = conversions.filter(c => c.safety.safe).length;
     const riskyCount = conversions.filter(c => !c.safety.safe).length;

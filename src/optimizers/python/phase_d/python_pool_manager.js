@@ -286,6 +286,8 @@ class PythonPoolManager {
       globalStats: {
         totalAcquisitions: this.globalStats.totalAcquisitions,
         totalReleases: this.globalStats.totalReleases,
+        totalAllocations,
+        totalDeallocations,
         totalReuses: totalReuses,
         totalEvictions: totalEvictions,
         reuseRate: this.globalStats.totalAcquisitions > 0

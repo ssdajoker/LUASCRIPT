@@ -1,11 +1,18 @@
 /**
- * PHP Parser - C-Family Language Support
+ * PHP Parser - C-Family Language Support + TIER 1 OPTIMIZATIONS
  * Parses PHP code to canonical AST for IR pipeline
  * Focus: Server-side scripting, dynamic typing
  * Memory: Object pooling for tokens and AST nodes (Phase B pattern)
+ * 
+ * TIER 1 OPTIMIZATIONS INTEGRATED (Step 5):
+ * - Tier1OptimizationManager integration
+ * - Hybrid caching for parse results
+ * - Enhanced memory pooling
+ * - Performance monitoring
  */
 
 const { BaseParser } = require("./base_parser");
+const { Tier1OptimizationManager } = require("../tier1_optimization_suite");
 
 /**
  * Object Pool for memory-efficient token and AST node creation
@@ -62,6 +69,17 @@ class PHPParser extends BaseParser {
     this.pool = new ObjectPool(5000);
     this.objectCount = 0;
     this.maxObjects = 50000;
+    
+    // TIER 1 OPTIMIZATION: Integrate Tier1OptimizationManager (Step 5)
+    if (this.options && this.options.enableTier1Optimizations !== false) {
+      this.tier1Optimizer = new Tier1OptimizationManager();
+      this.optimizationStats = {
+        cacheHits: 0,
+        cacheMisses: 0,
+        totalParses: 0,
+        averageParseTime: 0
+      };
+    }
   }
 
   tokenize() {

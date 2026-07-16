@@ -18,7 +18,7 @@
  * @module src/optimizers/javascript/speed/pattern_cache
  */
 
-const { CacheManager } = require("./cache_manager");
+const { _CacheManager } = require("./cache_manager");
 
 class PatternCache {
   /**
@@ -214,7 +214,7 @@ class PatternCache {
 
   // ----- Private helper methods -----
 
-  _compileDestructuringPattern(patternAst, context) {
+  _compileDestructuringPattern(patternAst, _context) {
     const type = patternAst?.type || "Pattern";
     const itemCount = Array.isArray(patternAst?.elements)
       ? patternAst.elements.length
@@ -225,13 +225,13 @@ class PatternCache {
     return `-- destructuring ${type} (${itemCount} items)`;
   }
 
-  _compileTemplateLiteral(templateAst, context) {
+  _compileTemplateLiteral(templateAst, _context) {
     const quasis = templateAst?.quasis?.length || 0;
     const exprs = templateAst?.expressions?.length || 0;
     return `-- template literal q${quasis} e${exprs}`;
   }
 
-  _compileArrayMethodPattern(callAst, context) {
+  _compileArrayMethodPattern(callAst, _context) {
     const method = this._extractArrayMethodName(callAst) || "arrayMethod";
     const args = callAst?.arguments?.length || 0;
     return `-- array method ${method} (${args} args)`;

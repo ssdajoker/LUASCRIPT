@@ -2,7 +2,7 @@
 // Phase B: Type Constraint Solver
 // Solves type constraints and ensures type safety across the canonical IR.
 
-const { IRTypeKind, IRType } = require("./canonical_ir_schema");
+const { IRTypeKind, _IRType } = require("./canonical_ir_schema");
 
 /**
  * Type Constraint Solver
@@ -192,7 +192,7 @@ class TypeConstraintSolver {
   /**
    * Unify generic types
    */
-  unifyGeneric(t1, t2) {
+  unifyGeneric(_t1, _t2) {
     // Simplified: treat generics as unified if one is generic
     return true;
   }

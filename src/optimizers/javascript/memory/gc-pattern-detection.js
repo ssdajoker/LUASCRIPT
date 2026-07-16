@@ -25,6 +25,8 @@
  * - Estimate GC pause time reduction
  */
 
+const { safeCloneIR } = require("../ir-utils");
+
 /**
  * Detect if a pattern is in a tight loop
  */
@@ -364,26 +366,28 @@ function isAllocationFunction(node) {
 /**
  * Walk AST tree with context
  */
-function walkAST(node, callback, parent = null) {
+function walkAST(node, callback, parent = null, seen = new WeakSet()) {
   if (!node) return;
+  if (typeof node === "object") {
+    if (seen.has(node)) return;
+    seen.add(node);
+  }
   
   callback(node, parent, { parent });
   
   if (typeof node === "object") {
     for (const key in node) {
-      if (key.startsWith("_")) continue;
+      if (key === "parent" || key.startsWith("_")) continue;
       const child = node[key];
       
       if (Array.isArray(child)) {
         child.forEach(item => {
           if (item && typeof item === "object") {
-            item.parent = node;
-            walkAST(item, callback, node);
+            walkAST(item, callback, node, seen);
           }
         });
       } else if (typeof child === "object" && child !== null) {
-        child.parent = node;
-        walkAST(child, callback, node);
+        walkAST(child, callback, node, seen);
       }
     }
   }
@@ -397,7 +401,7 @@ function applyGCOptimizations(ir, gcAnalysis) {
     return ir;
   }
 
-  const optimizedIR = JSON.parse(JSON.stringify(ir));
+  const optimizedIR = safeCloneIR(ir);
   let markedPatterns = 0;
 
   // Mark patterns for optimization

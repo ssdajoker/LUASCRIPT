@@ -380,7 +380,7 @@ class PerfectParserPhase1Tester {
         for (const deliverable of deliverables) {
             const passed = deliverable.tests.filter(t => t.passed).length;
             const total = deliverable.tests.length;
-            const status = passed === total ? '✅ COMPLETE' : `⚠️ ${passed}/${total}`;
+            const status = passed === total ? '✅ pass' : `⚠️ ${passed}/${total}`;
             console.log(`  ${status} ${deliverable.name}`);
         }
         
@@ -397,10 +397,10 @@ class PerfectParserPhase1Tester {
         console.log('\n' + '='.repeat(60));
         
         if (allPassed) {
-            console.log('🎉 PERFECT PARSER INITIATIVE - Phase 1 COMPLETE!');
-            console.log('✅ All critical fixes implemented and tested successfully.');
+            console.log('PERFECT PARSER INITIATIVE - Phase 1 checks passed.');
+            console.log('All critical checks in this suite passed.');
         } else {
-            console.log('⚠️ PERFECT PARSER INITIATIVE - Phase 1 INCOMPLETE');
+            console.log('⚠️ PERFECT PARSER INITIATIVE - Phase 1 checks failed.');
             console.log(`❌ ${failedTests} test(s) failed. Review and fix before proceeding to Phase 2.`);
         }
         

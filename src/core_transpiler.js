@@ -1,10 +1,7 @@
 
 /**
- * LUASCRIPT Core Transpiler - Tony Yoka's Unified Team Implementation
- * Complete JavaScript to Lua Transpiler with Advanced Features
- * 
- * Team: Tony Yoka (Lead) + Steve Jobs + Donald Knuth + PS2/PS3 Team + 32+ Developers
- * Mission: 100% Implementation of Phases 1-6, Build Phases 7-9
+ * LUASCRIPT Core Transpiler
+ * JavaScript-to-Lua support is evidence-gated by named executable slices.
  * 
  * PHASE 4: IR Pipeline Integration (December 20, 2025)
  * Now routes transpilation through modern AST → IR → Lua pipeline
@@ -12,6 +9,14 @@
 
 const { EventEmitter } = require("events");
 const { IRPipeline } = require("./ir/pipeline-integration");
+const { CoreLanguageBridge, normalizeSourceLanguage, normalizeTargetLanguage } = require("./compilers");
+
+const namedUnsupportedAstDiagnostics = {
+  ForOfStatement: "Unsupported JavaScript control flow: for-of loops are not canonicalized for cross-target emission yet",
+  ThrowStatement: "Unsupported JavaScript exception flow: throw statements are not canonicalized for cross-target emission yet",
+  TryStatement: "Unsupported JavaScript exception flow: try/catch/finally is not canonicalized for cross-target emission yet",
+  TaggedTemplateExpression: "Unsupported JavaScript template literal form: tagged template literals are not canonicalized for cross-target emission yet"
+};
 
 /**
  * The CoreTranspiler class is responsible for the primary transformation of JavaScript code into Lua.
@@ -46,6 +51,7 @@ class CoreTranspiler extends EventEmitter {
       validate: this.options.validate && this.options.strict, // Only strict validate if strict mode enabled
       emitDebugInfo: this.options.emitDebugInfo
     });
+    this.languageBridge = new CoreLanguageBridge();
         
     // Legacy cache and patterns (kept for backward compatibility)
     this.patterns = new Map();
@@ -438,7 +444,7 @@ class CoreTranspiler extends EventEmitter {
     }
 
     default:
-      throw new Error(`Unsupported AST node type: ${node.type}`);
+      throw new Error(namedUnsupportedAstDiagnostics[node.type] || `Unsupported JavaScript AST node type: ${node.type}`);
     }
   }
 
@@ -592,6 +598,42 @@ class CoreTranspiler extends EventEmitter {
       this.emit("transpileError", { filename, error: error.message });
       throw error;
     }
+  }
+
+  /**
+     * Transpile a supported source language into a supported target language
+     * through the active compiler bridge.
+     * JavaScript -> Lua continues to use the IR pipeline for backward-compatible
+     * result details; other pairs use the core language bridge.
+     * @param {string} sourceCode
+     * @param {object} [options={}]
+     * @param {string} [options.sourceLanguage='javascript']
+     * @param {string} [options.targetLanguage='lua']
+     * @param {string} [options.filename]
+     * @returns {object}
+     */
+  transpileSource(sourceCode, options = {}) {
+    const sourceLanguage = normalizeSourceLanguage(options.sourceLanguage || "javascript");
+    const targetLanguage = normalizeTargetLanguage(options.targetLanguage || "lua");
+    const filename = options.filename || `main.${sourceLanguage}`;
+
+    if (sourceLanguage === "javascript" && targetLanguage === "lua") {
+      return this.transpile(sourceCode, filename);
+    }
+
+    const result = this.languageBridge.transpileSource(sourceCode, {
+      sourceLanguage,
+      targetLanguage,
+      filename
+    });
+
+    return {
+      ...result,
+      sourceLanguage,
+      targetLanguage,
+      sourceMap: null,
+      ast: null
+    };
   }
 
   /**

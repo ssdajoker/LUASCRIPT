@@ -5,7 +5,7 @@
  * Features: Proper error reporting, memory pooling, AST generation
  */
 
-const { BaseParser } = require("./base_parser");
+const { _BaseParser } = require("./base_parser");
 
 /**
  * Object Pool for JSON nodes

@@ -42,7 +42,7 @@ class PythonPhaseAPipeline {
    * @param {object} options - Transpilation options
    * @returns {object} Result { success, output, ast, ir, stats, errors }
    */
-  transpile(source, options = {}) {
+  transpile(source, _options = {}) {
     const startTime = Date.now();
     const errors = [];
     

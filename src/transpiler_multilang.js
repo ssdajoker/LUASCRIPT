@@ -544,12 +544,12 @@ class MultiLanguageTranspiler {
       tier1: {
         languages: 3, // JavaScript, Lua, Python
         bidirectionalPairs: tier1Count,
-        status: "100% Complete",
+        status: "evidence-gated",
       },
       tier2: {
         languages: 1, // Ruby
         bridgedPairs: tier2Count,
-        status: "100% Complete via Tier 1",
+        status: "experimental bridge evidence only",
       },
       total: {
         supportedLanguages: 4,

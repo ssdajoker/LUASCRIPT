@@ -49,6 +49,7 @@ class LuaScriptParser {
     };
     this.functionDepth = 0;
     this.loopDepth = 0;
+    this.switchDepth = 0;
   }
 
   /**
@@ -129,13 +130,12 @@ class LuaScriptParser {
      * @private
      */
   parseStatement() {
-    console.log("Parsing statement, current token:", this.peek());
     try {
       if (this.check("KEYWORD")) {
         const firstKeywordToken = this.peek();
         if (firstKeywordToken.value === "async") {
           const nextToken = this.tokens[this.current + 1];
-          if (nextToken && nextToken.type === "KEYWORD" && nextToken.value === "function") {
+          if (nextToken && nextToken.value === "function") {
             this.advance(); // Consume 'async'
             this.advance(); // Consume 'function'
             return this.parseFunctionDeclaration(true);
@@ -300,8 +300,9 @@ class LuaScriptParser {
         
     if (this.match("KEYWORD") && this.previous().value === "else") {
       alternate = this.parseStatement();
-    } else {
-      this.current--; // Backtrack if not 'else'
+    } else if (this.previous().type === "KEYWORD" && this.previous().value !== "else") {
+      // Only backtrack if we consumed a KEYWORD token that wasn't 'else'
+      this.current--;
     }
         
     return new IfStatementNode(test, consequent, alternate, {
@@ -374,11 +375,31 @@ class LuaScriptParser {
     const token = this.previous();
     this.loopDepth++;
 
+    // Check for 'await' keyword (for-await-of)
+    let isAsync = false;
+    if (this.check("KEYWORD") && this.peek().value === "await") {
+      isAsync = true;
+      this.advance(); // Consume 'await'
+    }
+
     this.consume("LEFT_PAREN", "Expected '(' after 'for'");
 
     if (this.match("KEYWORD") && ["let", "const", "var"].includes(this.previous().value)) {
       const kindToken = this.previous();
-      const id = this.parseIdentifier();
+      
+      // Check if this is a pattern (array or object destructuring)
+      let id;
+      if (this.check("LEFT_BRACKET")) {
+        // Array destructuring pattern
+        id = this.parseArrayPattern();
+      } else if (this.check("LEFT_BRACE")) {
+        // Object destructuring pattern
+        id = this.parseObjectPattern();
+      } else {
+        // Simple identifier
+        id = this.parseIdentifier();
+      }
+      
       let initExpr = null;
       if (this.match("ASSIGN")) {
         initExpr = this.parseAssignmentExpression();
@@ -397,10 +418,15 @@ class LuaScriptParser {
         this.consume("RIGHT_PAREN", "Expected ')' after for-of clauses");
         const body = this.parseStatement();
         this.loopDepth--;
-        return new ForOfStatementNode(decl, right, body, {
+        // Create ForOfStatementNode with async flag if for-await-of
+        const forOfNode = new ForOfStatementNode(decl, right, body, {
           line: token.line,
           column: token.column
         });
+        if (isAsync) {
+          forOfNode.await = true; // Mark as async iteration
+        }
+        return forOfNode;
       }
 
       this.consume("SEMICOLON", "Expected ';' after for loop initializer");
@@ -460,7 +486,7 @@ class LuaScriptParser {
   parseBreakStatement() {
     const token = this.previous();
         
-    if (this.loopDepth === 0) {
+    if (this.loopDepth === 0 && this.switchDepth === 0) {
       throw new SyntaxError(`Break statement outside loop at line ${token.line}`);
     }
         
@@ -520,13 +546,25 @@ class LuaScriptParser {
       this.advance();
       let param = null;
       if (this.match("LEFT_PAREN")) {
-        const paramToken = this.consume("IDENTIFIER", "Expected identifier for catch parameter");
-        param = new IdentifierNode(paramToken.value, {
-          line: paramToken.line,
-          column: paramToken.column
-        });
+        // Support patterns in catch parameter: catch ({message, stack}) or catch (error)
+        if (this.check("LEFT_BRACKET")) {
+          // Array pattern: catch ([a, b])
+          param = this.parseArrayPattern();
+        } else if (this.check("LEFT_BRACE")) {
+          // Object pattern: catch ({message, stack})
+          param = this.parseObjectPattern();
+        } else if (this.check("IDENTIFIER")) {
+          // Simple identifier: catch (error)
+          const paramToken = this.advance();
+          param = new IdentifierNode(paramToken.value, {
+            line: paramToken.line,
+            column: paramToken.column
+          });
+        }
+        // If no param (empty parens), param stays null (optional catch binding ES2019)
         this.consume("RIGHT_PAREN", "Expected ')' after catch parameter");
       }
+      // If no LEFT_PAREN, param is null (optional catch binding ES2019)
       const catchBody = this.parseBlockStatement();
       handler = new CatchClauseNode(param, catchBody);
     }
@@ -600,14 +638,121 @@ class LuaScriptParser {
         
     if (this.match("ASSIGN", "PLUS_ASSIGN", "MINUS_ASSIGN", "MULTIPLY_ASSIGN", "DIVIDE_ASSIGN", "NULLISH_ASSIGN")) {
       const operator = this.previous().value;
+     
+      // Check if left side should be treated as a pattern
+      let left = expr;
+      if (operator === "=" && this.isPatternCompatible(expr)) {
+        left = this.convertToPattern(expr);
+      }
+     
       const right = this.parseAssignmentExpression();
             
-      return new AssignmentExpressionNode(operator, expr, right, {
+      return new AssignmentExpressionNode(operator, left, right, {
         line: expr.line,
         column: expr.column
       });
     }
         
+    return expr;
+  }
+
+  /**
+    * Check if an expression can be converted to a pattern
+    */
+  isPatternCompatible(expr) {
+    if (!expr) return false;
+    if (expr.type === "ArrayExpression") return true;
+    if (expr.type === "ObjectExpression") return true;
+    return false;
+  }
+
+  /**
+    * Convert an expression to a pattern
+    * Converts ArrayExpression -> ArrayPattern, ObjectExpression -> ObjectPattern
+    */
+  convertToPattern(expr) {
+    if (expr.type === "ArrayExpression") {
+      // Convert array literal to array pattern
+      const elements = (expr.elements || []).map(el => {
+        if (!el) return null; // Hole
+        if (el.type === "Identifier") return el;
+        if (el.type === "SpreadElement") {
+          return {
+            type: "RestElement",
+            argument: el.argument,
+            line: el.line,
+            column: el.column
+          };
+        }
+        if (el.type === "AssignmentExpression" && el.operator === "=") {
+          // Default value: [a = 10]
+          return {
+            type: "AssignmentPattern",
+            left: el.left,
+            right: el.right,
+            line: el.line,
+            column: el.column
+          };
+        }
+        if (el.type === "ArrayExpression" || el.type === "ObjectExpression") {
+          // Nested pattern
+          return this.convertToPattern(el);
+        }
+        return el;
+      });
+     
+      return {
+        type: "ArrayPattern",
+        elements: elements,
+        line: expr.line,
+        column: expr.column
+      };
+    } else if (expr.type === "ObjectExpression") {
+      // Convert object literal to object pattern
+      const properties = (expr.properties || []).map(prop => {
+        if (prop.type === "SpreadElement") {
+          return {
+            type: "RestElement",
+            argument: prop.argument,
+            line: prop.line,
+            column: prop.column
+          };
+        }
+       
+        let value = prop.value;
+        if (value && value.type === "AssignmentExpression" && value.operator === "=") {
+          // Default value: {x = 10}
+          value = {
+            type: "AssignmentPattern",
+            left: value.left,
+            right: value.right,
+            line: value.line,
+            column: value.column
+          };
+        } else if (value && (value.type === "ArrayExpression" || value.type === "ObjectExpression")) {
+          // Nested pattern
+          value = this.convertToPattern(value);
+        }
+       
+        return {
+          type: "Property",
+          key: prop.key,
+          value: value,
+          computed: prop.computed,
+          shorthand: prop.shorthand,
+          line: prop.line,
+          column: prop.column
+        };
+      });
+     
+      return {
+        type: "ObjectPattern",
+        properties: properties,
+        line: expr.line,
+        column: expr.column
+      };
+    }
+   
     return expr;
   }
 
@@ -701,7 +846,11 @@ class LuaScriptParser {
   parseRelationalExpression() {
     let expr = this.parseAdditiveExpression();
         
-    while (this.match("LESS_THAN", "GREATER_THAN", "LESS_EQUAL", "GREATER_EQUAL")) {
+    while (
+      this.match("LESS_THAN", "GREATER_THAN", "LESS_EQUAL", "GREATER_EQUAL") ||
+      (this.check("KEYWORD") && ["in", "instanceof"].includes(this.peek().value) && this.advance()) ||
+      (this.check("IDENTIFIER") && ["in", "instanceof"].includes(this.peek().value) && this.advance())
+    ) {
       const operator = this.previous().value;
       const right = this.parseAdditiveExpression();
       expr = new BinaryExpressionNode(operator, expr, right, {
@@ -937,7 +1086,15 @@ class LuaScriptParser {
           column: this.previous().column
         });
       case "function":
-        return this.parseFunctionExpression();
+        return this.parseFunctionExpression(false);
+      case "async": {
+        const nextToken = this.tokens[this.current];
+        if (nextToken && nextToken.value === "function") {
+          this.advance(); // Consume 'function'
+          return this.parseFunctionExpression(true);
+        }
+        throw new SyntaxError(`Unexpected keyword '${keyword}' at line ${this.previous().line}`);
+      }
       case "new":
         return this.parseNewExpression();
       default:
@@ -1090,6 +1247,7 @@ class LuaScriptParser {
     const discriminant = this.parseExpression();
     this.consume("RIGHT_PAREN", "Expected ')' after switch discriminant");
     this.consume("LEFT_BRACE", "Expected '{' to start switch cases");
+    this.switchDepth++;
     const cases = [];
     while (!this.check("RIGHT_BRACE") && !this.isAtEnd()) {
       if (this.match("KEYWORD") && (this.previous().value === "case" || this.previous().value === "default")) {
@@ -1110,6 +1268,7 @@ class LuaScriptParser {
         this.advance();
       }
     }
+    this.switchDepth--;
     this.consume("RIGHT_BRACE", "Expected '}' to close switch");
     return new SwitchStatementNode(discriminant, cases, { line: token.line, column: token.column });
   }
@@ -1171,7 +1330,7 @@ class LuaScriptParser {
      * @returns {FunctionExpressionNode} The AST node for the function expression.
      * @private
      */
-  parseFunctionExpression() {
+  parseFunctionExpression(isAsync = false) {
     this.functionDepth++;
 
     const isGenerator = this.match("MULTIPLY");
@@ -1192,6 +1351,7 @@ class LuaScriptParser {
     return new FunctionExpressionNode(id, params, body, {
       line: this.previous().line,
       column: this.previous().column,
+      async: isAsync,
       generator: isGenerator
     });
   }
@@ -1209,6 +1369,13 @@ class LuaScriptParser {
         if (this.check("COMMA")) {
           // Sparse array element
           elements.push(null);
+        } else if (this.match("SPREAD")) {
+          // Spread element: ...expr
+          const argument = this.parseAssignmentExpression();
+          elements.push(new SpreadElementNode(argument, {
+            line: this.previous().line,
+            column: this.previous().column
+          }));
         } else {
           elements.push(this.parseAssignmentExpression());
         }
@@ -1233,8 +1400,17 @@ class LuaScriptParser {
         
     if (!this.check("RIGHT_BRACE")) {
       do {
-        const property = this.parseProperty();
-        properties.push(property);
+        // Check for spread property: {...obj}
+        if (this.match("SPREAD")) {
+          const argument = this.parseAssignmentExpression();
+          properties.push(new SpreadElementNode(argument, {
+            line: this.previous().line,
+            column: this.previous().column
+          }));
+        } else {
+          const property = this.parseProperty();
+          properties.push(property);
+        }
       } while (this.match("COMMA") && !this.check("RIGHT_BRACE"));
     }
         
@@ -1252,6 +1428,61 @@ class LuaScriptParser {
      * @private
      */
   parseProperty() {
+    // Check for getter/setter keywords
+    if (this.check("IDENTIFIER")) {
+      const keywordToken = this.peek();
+      if (keywordToken.value === "get" || keywordToken.value === "set") {
+        // Look ahead to determine if this is really a getter/setter
+        const nextIdx = this.current + 1;
+        if (nextIdx < this.tokens.length) {
+          const nextToken = this.tokens[nextIdx];
+          // If next token can be a property key, this is a getter/setter
+          if (nextToken.type === "IDENTIFIER" || nextToken.type === "STRING" || 
+              nextToken.type === "NUMBER" || nextToken.type === "LEFT_BRACKET") {
+            const kind = this.advance().value; // consume 'get' or 'set'
+            let key;
+            let computed = false;
+            
+            if (this.match("LEFT_BRACKET")) {
+              // Computed property name
+              key = this.parseExpression();
+              this.consume("RIGHT_BRACKET", "Expected ']' after computed property name");
+              computed = true;
+            } else if (this.match("STRING", "NUMBER")) {
+              // String or number literal key
+              const token = this.previous();
+              key = new LiteralNode(token.value, token.value.toString(), {
+                line: token.line,
+                column: token.column
+              });
+            } else {
+              // Identifier key
+              key = this.parseIdentifier();
+            }
+            
+            // Parse the getter/setter function
+            this.functionDepth++;
+            this.consume("LEFT_PAREN", `Expected '(' after ${kind} property`);
+            const params = this.parseParameterList();
+            this.consume("RIGHT_PAREN", "Expected ')' after parameter list");
+            const body = this.parseBlockStatement();
+            this.functionDepth--;
+            
+            const fn = new FunctionExpressionNode(null, params, body, {
+              line: key.line,
+              column: key.column
+            });
+            
+            return new PropertyNode(key, fn, kind, {
+              line: key.line,
+              column: key.column,
+              computed
+            });
+          }
+        }
+      }
+    }
+    
     let key;
     let computed = false;
         
@@ -1447,7 +1678,17 @@ class LuaScriptParser {
         }
         properties.push(new PropertyNode(key, value, { computed: true, shorthand: false, line: start.line, column: start.column }));
       } else {
-        const key = this.parseIdentifier();
+        // Allow numeric and string literal keys in addition to identifiers
+        let key;
+        if (this.check("NUMBER")) {
+          const token = this.advance();
+          key = new LiteralNode(token.value, { line: token.line, column: token.column });
+        } else if (this.check("STRING")) {
+          const token = this.advance();
+          key = new LiteralNode(token.value, { line: token.line, column: token.column });
+        } else {
+          key = this.parseIdentifier();
+        }
         if (this.match("COLON")) {
           let value = this.parseBindingIdentifierOrPattern();
           if (this.match("ASSIGN")) {

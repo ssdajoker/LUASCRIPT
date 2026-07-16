@@ -15,7 +15,7 @@
  */
 
 const { TypeConstraintSolver } = require("./type_constraint_solver");
-const { ErrorReporter, ErrorCategory } = require("./error_reporter");
+const { ErrorReporter, _ErrorCategory } = require("./error_reporter");
 const { SemanticPreservationVerifier } = require("./semantic_preservation_verifier");
 
 /**

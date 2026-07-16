@@ -1,0 +1,418 @@
+{
+  "schemaVersion": 1,
+  "language": "luascript",
+  "status": "qualified",
+  "supportSlice": "luascript-v0.16-meta-plus-v1-ring2-medium-programs-and-ring3-portable-semantics",
+  "targets": ["lua", "javascript", "luascript"],
+  "fixtures": [
+    {
+      "name": "arithmetic_locals",
+      "source": "tests/language_completion/fixtures/luascript/arithmetic_locals.ls",
+      "expectedOutput": "ls_arithmetic 5 15"
+    },
+    {
+      "name": "functions_conditionals",
+      "source": "tests/language_completion/fixtures/luascript/functions_conditionals.ls",
+      "expectedOutput": "ls_branch big 7"
+    },
+    {
+      "name": "while_loop",
+      "source": "tests/language_completion/fixtures/luascript/while_loop.ls",
+      "expectedOutput": "ls_while 6"
+    },
+    {
+      "name": "numeric_for",
+      "source": "tests/language_completion/fixtures/luascript/numeric_for.ls",
+      "expectedOutput": "ls_for 10"
+    },
+    {
+      "name": "object_mutation",
+      "source": "tests/language_completion/fixtures/luascript/object_mutation.ls",
+      "expectedOutput": "ls_object Ada 7"
+    },
+    {
+      "name": "ring2_lexical_scope_closure",
+      "source": "tests/language_completion/fixtures/luascript/ring2_lexical_scope_closure.ls",
+      "targets": ["lua", "javascript", "luascript", "python"],
+      "expectedOutput": "ring2_scope 24 31"
+    },
+    {
+      "name": "ring2_nested_object_state",
+      "source": "tests/language_completion/fixtures/luascript/ring2_nested_object_state.ls",
+      "expectedOutput": "ring2_object beta 12"
+    },
+    {
+      "name": "ring2_numeric_nested_loops",
+      "source": "tests/language_completion/fixtures/luascript/ring2_numeric_nested_loops.ls",
+      "expectedOutput": "ring2_loops 36"
+    },
+    {
+      "name": "ring2_break_continue",
+      "source": "tests/language_completion/fixtures/luascript/ring2_break_continue.ls",
+      "expectedOutput": "ring2_control 8"
+    },
+    {
+      "name": "ring2_short_circuit_state",
+      "source": "tests/language_completion/fixtures/luascript/ring2_short_circuit_state.ls",
+      "expectedOutput": "ring2_short 0 false true"
+    },
+    {
+      "name": "ring3_template_literal",
+      "source": "tests/language_completion/fixtures/luascript/ring3_template_literal.ls",
+      "expectedOutput": "ring3_template P 7"
+    },
+    {
+      "name": "ring3_portable_semantics_index_length_slice",
+      "source": "tests/language_completion/fixtures/luascript/ring3_portable_semantics_index_length_slice.ls",
+      "targets": ["lua", "javascript", "luascript", "python"],
+      "expectedOutput": "ring3_profile b 4 bc 8 9 8 2 10"
+    },
+    {
+      "name": "ring3_portable_semantics_truthiness_string_many",
+      "source": "tests/language_completion/fixtures/luascript/ring3_portable_semantics_truthiness_string_many.ls",
+      "targets": ["lua", "javascript", "luascript", "python"],
+      "expectedOutput": "ring3_semantics list_truthy object_truthy zero_false empty_false neg_false count=3 flag=false empty=null 2 Ada 3 7 done"
+    },
+    {
+      "name": "ring3_default_index_length_slice",
+      "source": "tests/language_completion/fixtures/luascript/ring3_default_index_length_slice.ls",
+      "targets": ["lua", "javascript", "luascript", "python"],
+      "expectedOutput": "ring3_default b 4 bc 8 9 8 2 10"
+    },
+    {
+      "name": "ring3_default_truthiness_string_many",
+      "source": "tests/language_completion/fixtures/luascript/ring3_default_truthiness_string_many.ls",
+      "targets": ["lua", "javascript", "luascript", "python"],
+      "expectedOutput": "ring3_default_semantics list_truthy object_truthy zero_false empty_false neg_false count=3 flag=false empty=null 2 Ada 3 7 done"
+    },
+    {
+      "name": "meta_noop_baseline",
+      "source": "tests/language_completion/fixtures/luascript/meta_noop_baseline.ls",
+      "expectedOutput": "meta_noop 5"
+    },
+    {
+      "name": "meta_profile_portable_v1",
+      "source": "tests/language_completion/fixtures/luascript/meta_profile_portable_v1.ls"
+    },
+    {
+      "name": "meta_profile_override_async_message",
+      "source": "tests/language_completion/fixtures/luascript/meta_profile_override_async_message.ls"
+    },
+    {
+      "name": "meta_resolve_continue",
+      "source": "tests/language_completion/fixtures/luascript/meta_resolve_continue.ls",
+      "expectedOutput": "meta_continue 8"
+    },
+    {
+      "name": "meta_capability_auto_continue",
+      "source": "tests/language_completion/fixtures/luascript/meta_capability_auto_continue.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_forbid_goto_no_continue",
+      "source": "tests/language_completion/fixtures/luascript/meta_forbid_goto_no_continue.ls"
+    },
+    {
+      "name": "meta_verify_stdout",
+      "source": "tests/language_completion/fixtures/luascript/meta_verify_stdout.ls"
+    },
+    {
+      "name": "meta_verify_lua_emission",
+      "source": "tests/language_completion/fixtures/luascript/meta_verify_lua_emission.ls"
+    },
+    {
+      "name": "meta_verify_target_emission",
+      "source": "tests/language_completion/fixtures/luascript/meta_verify_target_emission.ls"
+    },
+    {
+      "name": "meta_verify_target_runtime",
+      "source": "tests/language_completion/fixtures/luascript/meta_verify_target_runtime.ls"
+    },
+    {
+      "name": "meta_verify_target_runtime_failure",
+      "source": "tests/language_completion/fixtures/luascript/meta_verify_target_runtime_failure.ls"
+    },
+    {
+      "name": "meta_policy_assertions",
+      "source": "tests/language_completion/fixtures/luascript/meta_policy_assertions.ls"
+    },
+    {
+      "name": "meta_cross_target_policy_assertions",
+      "source": "tests/language_completion/fixtures/luascript/meta_cross_target_policy_assertions.ls"
+    },
+    {
+      "name": "meta_python_truthiness_adapter",
+      "source": "tests/language_completion/fixtures/luascript/meta_python_truthiness_adapter.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_python_index_length_slice_adapter",
+      "source": "tests/language_completion/fixtures/luascript/meta_python_index_length_slice_adapter.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_string_coercion_adapter",
+      "source": "tests/language_completion/fixtures/luascript/meta_string_coercion_adapter.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_capability_negotiation",
+      "source": "tests/language_completion/fixtures/luascript/meta_capability_negotiation.ls",
+      "expectedOutput": "meta_caps 6"
+    },
+    {
+      "name": "meta_semantic_adapters",
+      "source": "tests/language_completion/fixtures/luascript/meta_semantic_adapters.ls"
+    },
+    {
+      "name": "meta_repair_block",
+      "source": "tests/language_completion/fixtures/luascript/meta_repair_block.ls"
+    },
+    {
+      "name": "meta_multiple_returns_adapter",
+      "source": "tests/language_completion/fixtures/luascript/meta_multiple_returns_adapter.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_multiple_returns_repair",
+      "source": "tests/language_completion/fixtures/luascript/meta_multiple_returns_repair.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_repair_stateful_parity",
+      "source": "tests/language_completion/fixtures/luascript/meta_repair_stateful_parity.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_profile_portable_semantics_matrix",
+      "source": "tests/language_completion/fixtures/luascript/meta_profile_portable_semantics_matrix.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_profile_composition_pressure",
+      "source": "tests/language_completion/fixtures/luascript/meta_profile_composition_pressure.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_repair_contract_indexing",
+      "source": "tests/language_completion/fixtures/luascript/meta_repair_contract_indexing.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_python_closure_rebinding",
+      "source": "tests/language_completion/fixtures/luascript/meta_python_closure_rebinding.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_closure_profile_stateful_repair",
+      "source": "tests/language_completion/fixtures/luascript/meta_closure_profile_stateful_repair.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_identity_contract_portable_slice",
+      "source": "tests/language_completion/fixtures/luascript/meta_identity_contract_portable_slice.ls",
+      "targets": ["lua", "javascript", "luascript", "python"]
+    },
+    {
+      "name": "meta_feature_contract_ir",
+      "source": "tests/language_completion/fixtures/luascript/meta_feature_contract_ir.ls"
+    },
+    {
+      "name": "meta_feature_contract_missing",
+      "source": "tests/language_completion/fixtures/luascript/meta_feature_contract_missing.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Missing verified feature slice: classes"
+    },
+    {
+      "name": "meta_feature_contract_forbidden",
+      "source": "tests/language_completion/fixtures/luascript/meta_feature_contract_forbidden.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Forbidden verified feature slice present: for-of"
+    },
+    {
+      "name": "meta_forbid_prototype",
+      "source": "tests/language_completion/fixtures/luascript/meta_forbid_prototype.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Forbidden capability used by meta policy: js.prototype"
+    },
+    {
+      "name": "meta_profile_unknown",
+      "source": "tests/language_completion/fixtures/luascript/meta_profile_unknown.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported meta profile: impossible_v9"
+    },
+    {
+      "name": "meta_profile_override_conflict_goto",
+      "source": "tests/language_completion/fixtures/luascript/meta_profile_override_conflict_goto.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Conflicting capability policy: lua.goto is both required and forbidden"
+    },
+    {
+      "name": "meta_profile_override_policy_missing",
+      "source": "tests/language_completion/fixtures/luascript/meta_profile_override_policy_missing.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Missing LUASCRIPT policy assertion for lua: diagnostics.async=async is not supported in LuaScript V0"
+    },
+    {
+      "name": "meta_profile_assertion_missing",
+      "source": "tests/language_completion/fixtures/luascript/meta_profile_assertion_missing.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Missing LUASCRIPT profile assertion: portable_semantics_v1"
+    },
+    {
+      "name": "meta_profile_forbidden_present",
+      "source": "tests/language_completion/fixtures/luascript/meta_profile_forbidden_present.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Forbidden LUASCRIPT profile assertion present: portable_v1"
+    },
+    {
+      "name": "meta_implicit_profile_forbidden_present",
+      "source": "tests/language_completion/fixtures/luascript/meta_implicit_profile_forbidden_present.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Forbidden LUASCRIPT implicit profile assertion present: portable_semantics_v1"
+    },
+    {
+      "name": "meta_named_diagnostic_async",
+      "source": "tests/language_completion/fixtures/luascript/meta_named_diagnostic_async.ls",
+      "expectedFailure": true
+    },
+    {
+      "name": "meta_named_diagnostic_unknown",
+      "source": "tests/language_completion/fixtures/luascript/meta_named_diagnostic_unknown.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unknown LUASCRIPT diagnostic: missing_diag"
+    },
+    {
+      "name": "meta_js_forbid_prototype",
+      "source": "tests/language_completion/fixtures/luascript/meta_js_forbid_prototype.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Forbidden capability used by meta policy: js.prototype"
+    },
+    {
+      "name": "meta_unsupported_adapter",
+      "source": "tests/language_completion/fixtures/luascript/meta_unsupported_adapter.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported meta adapter strategy for multiple_returns: first_value"
+    },
+    {
+      "name": "meta_policy_assertion_missing",
+      "source": "tests/language_completion/fixtures/luascript/meta_policy_assertion_missing.ls",
+      "expectedFailure": true
+    },
+    {
+      "name": "meta_cross_target_policy_missing",
+      "source": "tests/language_completion/fixtures/luascript/meta_cross_target_policy_missing.ls",
+      "expectedFailure": true
+    },
+    {
+      "name": "meta_verify_diagnostic",
+      "source": "tests/language_completion/fixtures/luascript/meta_verify_diagnostic.ls",
+      "expectedFailure": true
+    },
+    {
+      "name": "meta_capability_no_compatible_continue",
+      "source": "tests/language_completion/fixtures/luascript/meta_capability_no_compatible_continue.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "No policy-compatible lowering for continue on lua target"
+    },
+    {
+      "name": "meta_diagnose_async",
+      "source": "tests/language_completion/fixtures/luascript/meta_diagnose_async.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "async is not supported in LuaScript V0"
+    },
+    {
+      "name": "meta_unknown_target",
+      "source": "tests/language_completion/fixtures/luascript/meta_unknown_target.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported meta target: wasm"
+    },
+    {
+      "name": "meta_unknown_resolver",
+      "source": "tests/language_completion/fixtures/luascript/meta_unknown_resolver.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported meta resolver: coroutine"
+    },
+    {
+      "name": "meta_unknown_strategy",
+      "source": "tests/language_completion/fixtures/luascript/meta_unknown_strategy.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported meta strategy for continue: magic_jump"
+    },
+    {
+      "name": "meta_resolve_continue_missing_requires",
+      "source": "tests/language_completion/fixtures/luascript/meta_resolve_continue_missing_requires.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "resolve continue using label_goto requires lua.goto"
+    },
+    {
+      "name": "meta_forbid_goto_continue",
+      "source": "tests/language_completion/fixtures/luascript/meta_forbid_goto_continue.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "No policy-compatible lowering for continue on lua target"
+    },
+    {
+      "name": "meta_unknown_repair_feature",
+      "source": "tests/language_completion/fixtures/luascript/meta_unknown_repair_feature.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported repair feature: coroutines"
+    },
+    {
+      "name": "meta_unknown_repair_strategy",
+      "source": "tests/language_completion/fixtures/luascript/meta_unknown_repair_strategy.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported repair strategy for indexing: one_based"
+    },
+    {
+      "name": "meta_repair_contract_missing_evidence",
+      "source": "tests/language_completion/fixtures/luascript/meta_repair_contract_missing_evidence.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "emitted luascript output missing verify luascript_contains text: lower indexing using zero_based"
+    },
+    {
+      "name": "meta_repair_contract_missing_runtime_proof",
+      "source": "tests/language_completion/fixtures/luascript/meta_repair_contract_missing_runtime_proof.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "repair assertion for lua requires verify lua_stdout for runtime parity"
+    },
+    {
+      "name": "meta_repair_contract_missing_python_runtime_proof",
+      "source": "tests/language_completion/fixtures/luascript/meta_repair_contract_missing_python_runtime_proof.ls",
+      "targets": ["python"],
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "repair assertion for python requires verify python_stdout for runtime parity"
+    },
+    {
+      "name": "meta_repair_contract_missing_js_runtime_proof",
+      "source": "tests/language_completion/fixtures/luascript/meta_repair_contract_missing_js_runtime_proof.ls",
+      "targets": ["javascript"],
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "repair assertion for javascript requires verify js_stdout for runtime parity"
+    },
+    {
+      "name": "meta_repair_contract_missing_ls_runtime_proof",
+      "source": "tests/language_completion/fixtures/luascript/meta_repair_contract_missing_ls_runtime_proof.ls",
+      "targets": ["luascript"],
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "repair assertion for luascript requires verify ls_stdout for runtime parity"
+    },
+    {
+      "name": "unsupported_throw",
+      "source": "tests/language_completion/fixtures/luascript/unsupported_throw.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported JavaScript exception flow: throw statements"
+    },
+    {
+      "name": "unsupported_for_of",
+      "source": "tests/language_completion/fixtures/luascript/unsupported_for_of.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported JavaScript control flow: for-of loops"
+    },
+    {
+      "name": "unsupported_try_catch",
+      "source": "tests/language_completion/fixtures/luascript/unsupported_try_catch.ls",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported JavaScript exception flow: try/catch/finally"
+    }
+  ]
+}

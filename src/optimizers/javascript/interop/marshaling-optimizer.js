@@ -11,6 +11,29 @@
  * - Deterministic results across identical runs
  */
 
+// Timing and Conversion Constants
+const HRTIME_TO_MICROSECONDS_DIVISOR = 1000;
+const _BYTES_PER_KB = 1024;
+
+// Overhead Reduction Percentages
+const ZERO_COPY_OVERHEAD_REDUCTION_PERCENT = 50;
+const ZERO_COPY_BUFFER_OVERHEAD_REDUCTION_PERCENT = 60;
+const BUFFER_POOLING_OVERHEAD_REDUCTION_PERCENT = 30;
+const SHARED_MEMORY_OVERHEAD_REDUCTION_PERCENT = 45;
+
+// Applicability and Thresholds
+const MAX_APPLICABILITY_PERCENT = 100;
+const MIN_FREQUENCY_FOR_BUFFER_POOLING = 5;
+const MIN_CANDIDATES_FOR_POOLING = 2;
+const MIN_FREQUENCY_FOR_SHARED_MEMORY = 10;
+const POOLING_APPLICABILITY_PER_CANDIDATE_MULTIPLIER = 20;
+
+// Size Constants (in bytes)
+const MIN_SIZE_FOR_SHARED_MEMORY_BYTES = 2048; // 2KB
+const DEFAULT_BUFFER_SIZE_BYTES = 8192; // 8KB
+const DEFAULT_OBJECT_SIZE_BYTES = 4096; // 4KB
+const DEFAULT_TYPE_SIZE_BYTES = 256;
+
 class MarshalingOptimizer {
   constructor() {
     this.bufferPool = [];
@@ -63,7 +86,7 @@ class MarshalingOptimizer {
     metrics.estimatedReduction = this._calculateEstimatedReduction(opportunities);
 
     const endTime = process.hrtime.bigint();
-    metrics.analysisTime = Number(endTime - startTime) / 1000; // Convert to microseconds
+    metrics.analysisTime = Number(endTime - startTime) / HRTIME_TO_MICROSECONDS_DIVISOR; // Convert to microseconds
 
     return {
       opportunities,
@@ -124,7 +147,7 @@ class MarshalingOptimizer {
             type: "zero-copy",
             paramType: call.paramType,
             paramName: call.paramName,
-            reduction: 50, // 50% overhead reduction for zero-copy
+            reduction: ZERO_COPY_OVERHEAD_REDUCTION_PERCENT, // 50% overhead reduction for zero-copy
             safety: "safe",
             applicability: this._assessZeroCopySafety(call)
           });
@@ -140,9 +163,9 @@ class MarshalingOptimizer {
             type: "zero-copy",
             paramType: call.paramType,
             paramName: call.paramName,
-            reduction: 50,
+            reduction: ZERO_COPY_OVERHEAD_REDUCTION_PERCENT,
             safety: "safe",
-            applicability: 100
+            applicability: MAX_APPLICABILITY_PERCENT
           });
         }
       } else if (call.paramType === "buffer" || call.paramType === "arraybuffer") {
@@ -151,9 +174,9 @@ class MarshalingOptimizer {
           type: "zero-copy",
           paramType: call.paramType,
           paramName: call.paramName,
-          reduction: 60, // Even better for buffers
+          reduction: ZERO_COPY_BUFFER_OVERHEAD_REDUCTION_PERCENT, // Even better for buffers
           safety: "safe",
-          applicability: 100
+          applicability: MAX_APPLICABILITY_PERCENT
         });
       } else {
         this.detectionCache.set(cacheKey, false);
@@ -197,7 +220,7 @@ class MarshalingOptimizer {
     for (const call of calls) {
       // Buffer pooling is beneficial for arrays and objects
       // or any call with high frequency
-      const isPoolable = (call.isArray || call.isObject) || call.frequency > 5;
+      const isPoolable = (call.isArray || call.isObject) || call.frequency > MIN_FREQUENCY_FOR_BUFFER_POOLING;
 
       if (isPoolable) {
         if (!poolableTypes.has(call.paramType)) {
@@ -208,16 +231,16 @@ class MarshalingOptimizer {
     }
 
     for (const [type, callList] of poolableTypes) {
-      if (callList.length >= 2) {
+      if (callList.length >= MIN_CANDIDATES_FOR_POOLING) {
         // Only recommend pooling if there are multiple candidates
         opportunities.push({
           type: "buffer-pooling",
           paramType: type,
           candidates: callList.length,
-          reduction: 30, // 30% reduction through pooling
+          reduction: BUFFER_POOLING_OVERHEAD_REDUCTION_PERCENT, // 30% reduction through pooling
           poolSize: Math.max(...callList.map(c => c.paramSize)),
           allocationSaved: callList.length - 1,
-          applicability: Math.min(100, callList.length * 20)
+          applicability: Math.min(MAX_APPLICABILITY_PERCENT, callList.length * POOLING_APPLICABILITY_PER_CANDIDATE_MULTIPLIER)
         });
       }
     }
@@ -254,16 +277,16 @@ class MarshalingOptimizer {
       const [paramType, sizeStr] = key.split("-");
       const size = parseInt(sizeStr, 10);
 
-      if (size > 2048 && data.totalFrequency > 10 && data.count >= 2) {
+      if (size > MIN_SIZE_FOR_SHARED_MEMORY_BYTES && data.totalFrequency > MIN_FREQUENCY_FOR_SHARED_MEMORY && data.count >= MIN_CANDIDATES_FOR_POOLING) {
         opportunities.push({
           type: "shared-memory",
           paramType: paramType,
           instances: data.count,
           totalFrequency: data.totalFrequency,
           size: size,
-          reduction: 45, // 45% reduction through shared memory
+          reduction: SHARED_MEMORY_OVERHEAD_REDUCTION_PERCENT, // 45% reduction through shared memory
           allocationsEliminated: Math.floor(data.totalFrequency * 0.8),
-          applicability: Math.min(100, data.totalFrequency * 5)
+          applicability: Math.min(MAX_APPLICABILITY_PERCENT, data.totalFrequency * 5)
         });
       }
     }
@@ -282,7 +305,7 @@ class MarshalingOptimizer {
 
     // Reduction calculation: compound effect of multiple optimizations
     let totalReduction = 0;
-    let maxReduction = 100;
+    let _maxReduction = 100;
 
     for (const opp of opportunities) {
       const weight = opp.applicability / 100;
@@ -303,10 +326,10 @@ class MarshalingOptimizer {
     if (type.includes("int64") || type.includes("float64") || type.includes("double")) return 8;
     if (type.includes("int16") || type.includes("short")) return 2;
     if (type.includes("int8") || type.includes("char")) return 1;
-    if (type.includes("buffer") || type.includes("arraybuffer")) return 8192; // Assume 8KB
-    if (type.includes("object") || type.includes("{}")) return 4096; // Assume 4KB
+    if (type.includes("buffer") || type.includes("arraybuffer")) return DEFAULT_BUFFER_SIZE_BYTES; // Assume 8KB
+    if (type.includes("object") || type.includes("{}")) return DEFAULT_OBJECT_SIZE_BYTES; // Assume 4KB
     if (type.includes("[]")) return 2048; // Assume 2KB array
-    return 256; // Default fallback
+    return DEFAULT_TYPE_SIZE_BYTES; // Default fallback
   }
 
   /**

@@ -9,6 +9,13 @@ const acorn = require("acorn");
 const { builder } = require("../ir/builder");
 const { Types } = require("../ir/types");
 
+const unsupportedValueIdentifiers = new Set(["undefined", "NaN", "Infinity"]);
+const namedUnsupportedAstDiagnostics = {
+  ForOfStatement: "Unsupported JavaScript control flow: for-of loops are not canonicalized for cross-target emission yet",
+  ThrowStatement: "Unsupported JavaScript exception flow: throw statements are not canonicalized for cross-target emission yet",
+  TryStatement: "Unsupported JavaScript exception flow: try/catch/finally is not canonicalized for cross-target emission yet"
+};
+
 class JSToIRCompiler {
   constructor(options = {}) {
     this.options = {
@@ -49,7 +56,7 @@ class JSToIRCompiler {
       return this[methodName](node);
     }
 
-    throw new Error(`Unsupported AST node type: ${node.type}`);
+    throw new Error(namedUnsupportedAstDiagnostics[node.type] || `Unsupported JavaScript AST node type: ${node.type}`);
   }
 
   // ========== PROGRAM & DECLARATIONS ==========
@@ -60,6 +67,7 @@ class JSToIRCompiler {
   }
 
   convertFunctionDeclaration(node) {
+    this.assertSupportedFunctionForm(node);
     const name = node.id ? node.id.name : null;
     const parameters = node.params.map(param => this.convertParameter(param));
     const body = this.convertNode(node.body);
@@ -71,6 +79,9 @@ class JSToIRCompiler {
     // JavaScript variable declarations can have multiple declarators
     // We'll convert each to a separate IR VarDecl
     const declarations = node.declarations.map(declarator => {
+      if (!declarator.id || declarator.id.type !== "Identifier") {
+        throw new Error(`Unsupported JavaScript variable declarator pattern: ${declarator.id ? declarator.id.type : "unknown"} is not canonicalized for cross-target emission yet`);
+      }
       const name = declarator.id.name;
       const init = declarator.init ? this.convertNode(declarator.init) : null;
       return this.builder.varDecl(name, init, null, {
@@ -92,12 +103,15 @@ class JSToIRCompiler {
     if (node.type === "Identifier") {
       return this.builder.parameter(node.name, null, null, this.getLoc(node));
     } else if (node.type === "AssignmentPattern") {
+      if (!node.left || node.left.type !== "Identifier") {
+        throw new Error(`Unsupported JavaScript parameter pattern: ${node.left ? node.left.type : "unknown"} is not canonicalized for cross-target emission yet`);
+      }
       const name = node.left.name;
       const defaultValue = this.convertNode(node.right);
       return this.builder.parameter(name, null, defaultValue, this.getLoc(node));
     }
         
-    throw new Error(`Unsupported parameter type: ${node.type}`);
+    throw new Error(`Unsupported JavaScript parameter pattern: ${node.type} is not canonicalized for cross-target emission yet`);
   }
 
   // ========== STATEMENTS ==========
@@ -224,13 +238,23 @@ class JSToIRCompiler {
   }
 
   convertProperty(node) {
+    if (node.type === "SpreadElement") {
+      throw new Error("Unsupported JavaScript object spread is not canonicalized for cross-target emission yet");
+    }
     const key = this.convertNode(node.key);
     const value = this.convertNode(node.value);
         
     return this.builder.property(key, value, this.getLoc(node));
   }
 
+  convertSpreadElement() {
+    throw new Error("Unsupported JavaScript spread element is not canonicalized for cross-target emission yet");
+  }
+
   convertIdentifier(node) {
+    if (unsupportedValueIdentifiers.has(node.name)) {
+      throw new Error(`Unsupported JavaScript value semantic: ${node.name} is not canonicalized for cross-target emission yet`);
+    }
     return this.builder.identifier(node.name, this.getLoc(node));
   }
 
@@ -265,7 +289,36 @@ class JSToIRCompiler {
     return this.builder.conditional(condition, consequent, alternate, this.getLoc(node));
   }
 
+  convertTemplateLiteral(node) {
+    const parts = [];
+
+    for (let index = 0; index < node.quasis.length; index++) {
+      const quasi = node.quasis[index];
+      const cooked = quasi && quasi.value ? quasi.value.cooked : "";
+      if (cooked) {
+        parts.push(this.builder.literal(cooked, Types.string(), this.getLoc(quasi)));
+      }
+
+      if (index < node.expressions.length) {
+        parts.push(this.convertNode(node.expressions[index]));
+      }
+    }
+
+    if (parts.length === 0) {
+      return this.builder.literal("", Types.string(), this.getLoc(node));
+    }
+
+    return parts.reduce((left, right) => {
+      return this.builder.binaryOp("concat", left, right, this.getLoc(node));
+    });
+  }
+
+  convertTaggedTemplateExpression() {
+    throw new Error("Unsupported JavaScript template literal form: tagged template literals are not canonicalized for cross-target emission yet");
+  }
+
   convertArrowFunctionExpression(node) {
+    this.assertSupportedFunctionForm(node);
     // Convert arrow functions to regular function declarations
     const parameters = node.params.map(param => this.convertParameter(param));
         
@@ -284,6 +337,7 @@ class JSToIRCompiler {
   }
 
   convertFunctionExpression(node) {
+    this.assertSupportedFunctionForm(node);
     // Similar to function declaration but may be anonymous
     const name = node.id ? node.id.name : null;
     const parameters = node.params.map(param => this.convertParameter(param));
@@ -309,6 +363,15 @@ class JSToIRCompiler {
   }
 
   // ========== HELPERS ==========
+
+  assertSupportedFunctionForm(node) {
+    if (node.async) {
+      throw new Error("Unsupported JavaScript function form: async functions are not canonicalized for cross-target emission yet");
+    }
+    if (node.generator) {
+      throw new Error("Unsupported JavaScript function form: generator functions are not canonicalized for cross-target emission yet");
+    }
+  }
 
   getLoc(node) {
     if (node.loc) {

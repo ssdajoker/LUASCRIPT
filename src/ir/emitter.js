@@ -155,8 +155,13 @@ class IREmitter {
     return this.emitIndentedLine(context, `error(${argument || ""})`);
   }
 
-  emitClassDeclaration(node, context) {
-    return this.emitIndentedLine(context, "--[[ClassDeclaration not yet supported]]");
+  emitClassDeclaration(node, _context) {
+    this.throwUnsupported(node, "ClassDeclaration requires class lowering before Lua emission");
+  }
+
+  throwUnsupported(node, detail) {
+    const kind = node && node.kind ? node.kind : "unknown";
+    throw new Error(`Emitter does not support ${kind}: ${detail}`);
   }
 
   emitBlockStatement(node, context) {
@@ -511,6 +516,10 @@ class IREmitter {
   }
 
   emitFunctionDeclaration(node, context) {
+    if (node.metadata && node.metadata.classLike) {
+      this.throwUnsupported(node, "class-like FunctionDeclaration requires class lowering before Lua emission");
+    }
+
     const name = node.name;
     // Handle both node.params (old) and node.parameters (new) naming
     const paramsArray = node.params || node.parameters || [];
@@ -1044,7 +1053,7 @@ class IREmitter {
       .replace(/\s+,/g, ", ");
   }
 
-  emitThisExpression(node, context) {
+  emitThisExpression(_node, _context) {
     // In Lua, 'this' can be represented as a special reference
     // For now, we'll emit it as a special identifier that maps to self
     return "self";

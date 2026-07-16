@@ -1,15 +1,22 @@
 "use strict";
 
 /**
- * Ruby Parser - Converts Ruby code to canonical IR AST
+ * Ruby Parser - Converts Ruby code to canonical IR AST + TIER 1 OPTIMIZATIONS
  * Tier 2 Language Support for LUASCRIPT Multi-Language Transpilation
  * Memory: Object pooling for AST nodes (Phase B pattern)
  * 
  * Parses Ruby code and generates AST nodes compatible with the canonical IR.
  * Handles Ruby-specific syntax and converts to standardized IR format.
+ * 
+ * TIER 1 OPTIMIZATIONS INTEGRATED (Step 4):
+ * - Tier1OptimizationManager integration
+ * - Hybrid caching for parse results
+ * - Enhanced memory pooling
+ * - Performance monitoring
  */
 
 const { IRBuilder } = require("../ir/builder");
+const { Tier1OptimizationManager } = require("../tier1_optimization_suite");
 
 /**
  * Object pool for memory-efficient AST node reuse
@@ -59,6 +66,17 @@ class RubyParser {
     this.pool = new ObjectPool(5000);
     this.objectCount = 0;
     this.maxObjects = 50000;
+    
+    // TIER 1 OPTIMIZATION: Integrate Tier1OptimizationManager (Step 4)
+    if (options.enableTier1Optimizations !== false) {
+      this.tier1Optimizer = new Tier1OptimizationManager();
+      this.optimizationStats = {
+        cacheHits: 0,
+        cacheMisses: 0,
+        totalParses: 0,
+        averageParseTime: 0
+      };
+    }
   }
 
   parse(rubyCode) {

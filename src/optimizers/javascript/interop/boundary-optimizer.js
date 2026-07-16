@@ -134,7 +134,7 @@ function detectBoundaries(ir, ffiAnalysis) {
  * Infer boundary type from FFI call
  * Returns: 'js-lua', 'lua-js', 'js-ocaml', etc.
  */
-function inferBoundaryType(ffiCall) {
+function inferBoundaryType(_ffiCall) {
   // Default to js-lua (most common in our codebase)
   // In production, would infer from context or metadata
   return "js-lua";
@@ -276,7 +276,7 @@ function isNodeInScope(nodeId, loop) {
 /**
  * Check if boundary is loop-invariant
  */
-function isBoundaryInvariant(boundary, loop) {
+function isBoundaryInvariant(boundary, _loop) {
   // Boundary is invariant if:
   // 1. It doesn't depend on loop variables
   // 2. It has no side effects that depend on iteration
@@ -288,7 +288,7 @@ function isBoundaryInvariant(boundary, loop) {
 /**
  * Estimate loop iteration count
  */
-function estimateIterationCount(loop) {
+function estimateIterationCount(_loop) {
   // Conservative estimate: 10 iterations
   // In production, would analyze loop bounds
   return 10;
@@ -411,20 +411,22 @@ function applyBoundaryOptimizations(ir, analysis) {
 /**
  * Traverse IR tree and apply function to each node
  */
-function traverseIR(node, fn) {
+function traverseIR(node, fn, seen = new WeakSet()) {
   if (!node || typeof node !== "object") return;
+  if (seen.has(node)) return;
+  seen.add(node);
   
   fn(node);
   
   // Traverse children
   for (const key in node) {
-    if (key.startsWith("_")) continue;  // Skip metadata
+    if (key === "parent" || key.startsWith("_")) continue;  // Skip metadata and back-links
     
     const child = node[key];
     if (Array.isArray(child)) {
-      child.forEach(c => traverseIR(c, fn));
+      child.forEach(c => traverseIR(c, fn, seen));
     } else if (typeof child === "object") {
-      traverseIR(child, fn);
+      traverseIR(child, fn, seen);
     }
   }
 }

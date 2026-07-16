@@ -254,6 +254,8 @@ const allParsersList = [
 
 log(`\n[TESTING] Memory stability (50 sequential parses each)\n`, 'BLUE');
 
+let memoryFailed = 0;
+
 for (const parser of allParsersList) {
   const snapshots = [];
   
@@ -280,9 +282,12 @@ for (const parser of allParsersList) {
   const last = snapshots[49];
   const growth = ((last - first) / (first || 1) * 100).toFixed(1);
   
-  const status = Math.abs(growth) < 10 ? 'OK' : 'WARN';
+  const status = Math.abs(growth) < 10 ? 'OK' : 'FAIL';
+  if (status === 'FAIL') {
+    memoryFailed++;
+  }
   log(`${parser.name.padEnd(10)} | Start: ${first.toString().padEnd(3)} | End: ${last.toString().padEnd(3)} | Growth: ${growth.padEnd(5)}% | [${status}]`, 
-      Math.abs(growth) < 10 ? 'GREEN' : 'YELLOW');
+      Math.abs(growth) < 10 ? 'GREEN' : 'RED');
 }
 
 // ==================================================================================
@@ -335,19 +340,19 @@ log(`  Phase 1 (Languages):          ${langPassed}/${langPassed + langFailed}`, 
 log(`  Phase 2 (JSON):               ${jsonPassed}/${jsonPassed + jsonFailed}`, jsonFailed === 0 ? 'GREEN' : 'YELLOW');
 log(`  Phase 3 (Dart + JSON):        ${dartJsonPassed}/${dartJsonPassed + dartJsonFailed}`, dartJsonFailed === 0 ? 'GREEN' : 'YELLOW');
 log(`  Phase 4 (Round-trip):         ${rtPassed}/${rtPassed + rtFailed}`, rtFailed === 0 ? 'GREEN' : 'YELLOW');
-log(`  Phase 5 (Memory):             VERIFIED (all stable)`, 'GREEN');
+log(`  Phase 5 (Memory):             ${memoryFailed === 0 ? 'VERIFIED (all stable)' : `${memoryFailed} failures`}`, memoryFailed === 0 ? 'GREEN' : 'YELLOW');
 log(`  Phase 6 (Error Handling):     ${errorsPassed}/${errorsPassed + errorsFailed}`, errorsFailed === 0 ? 'GREEN' : 'YELLOW');
 
 log(`\n[TOTAL] ${allPassed}/${allTests} (${passRate}%)`, passRate >= 98 ? 'GREEN' : 'YELLOW');
 
-if (passRate >= 99 && langFailed === 0 && jsonFailed === 0 && dartJsonFailed === 0 && rtFailed === 0 && errorsFailed === 0) {
+if (passRate >= 99 && langFailed === 0 && jsonFailed === 0 && dartJsonFailed === 0 && rtFailed === 0 && memoryFailed === 0 && errorsFailed === 0) {
   log(`
 
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║                                                                            ║
-║       [CLARITY SUPER CANON] COMPLETE MULTI-LANGUAGE + JSON SYSTEM         ║
+║       [CLARITY SUPER CANON] SCOPED PARSER + JSON FIXTURE PROBE            ║
 ║                                                                            ║
-║  Status: ✓ SAMURAI-GRADE HARDENED                                         ║
+║  Status: ✓ SCOPED FIXTURE GATE PASS                                       ║
 ║  ├─ PHP Parser:          ✓ VERIFIED (5/5 tests)                          ║
 ║  ├─ Dart Parser:         ✓ VERIFIED (5/5 tests)                          ║
 ║  ├─ Ruby Parser:         ✓ VERIFIED (5/5 tests)                          ║
@@ -358,14 +363,15 @@ if (passRate >= 99 && langFailed === 0 && jsonFailed === 0 && dartJsonFailed ===
 ║  ├─ Memory Stability:    ✓ VERIFIED (all parsers stable)                 ║
 ║  └─ Error Handling:      ✓ VERIFIED (comprehensive)                      ║
 ║                                                                            ║
-║  The complete multi-language parser system with full JSON support is      ║
-║  forensically verified, hardened to samurai standards, and ready for      ║
-║  production deployment.                                                   ║
+║  This direct legacy probe verifies the listed parser and JSON fixtures     ║
+║  only. It is not a production, broad-language, or canonical 1.0 claim.     ║
+║  Use npm run clarity:canon for the current governed canon gate.            ║
 ║                                                                            ║
-║  Overall Health: ${passRate}% (EXCELLENT)                                            ║
+║  Fixture Health: ${passRate}% (EXCELLENT)                                            ║
 ║                                                                            ║
 ╚════════════════════════════════════════════════════════════════════════════╝
   `, 'GREEN');
 } else {
-  log(`\n[ALERT] Review failures above. ${langFailed + jsonFailed + dartJsonFailed + rtFailed + errorsFailed} issues found.`, 'YELLOW');
+  log(`\n[ALERT] Review failures above. ${langFailed + jsonFailed + dartJsonFailed + rtFailed + memoryFailed + errorsFailed} issues found.`, 'YELLOW');
+  process.exitCode = 1;
 }

@@ -402,7 +402,7 @@ class DartSecurityValidator {
   /**
    * Check if node is in try/catch
    */
-  isInTryCatch(node) {
+  isInTryCatch(_node) {
     // Simplified: check if surrounded by try
     return false; // Would need parent tracking
   }

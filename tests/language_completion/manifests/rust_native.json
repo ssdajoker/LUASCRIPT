@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "language": "rust",
+  "status": "qualified",
+  "supportSlice": "rust-v0.25-native-bidirectional",
+  "runtime": "rust",
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_functions",
+      "source": "tests/language_completion/fixtures/rust/arithmetic_functions.rs",
+      "expectedOutput": "rust_arithmetic 13"
+    },
+    {
+      "name": "control_flow",
+      "source": "tests/language_completion/fixtures/rust/control_flow.rs",
+      "expectedOutput": "rust_control ready 5"
+    }
+  ]
+}

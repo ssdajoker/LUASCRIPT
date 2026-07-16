@@ -129,7 +129,7 @@ class SemanticPreservationVerifier {
     const transformedTypes = this.extractTypes(transformed);
 
     // Check that all original types exist in transformed
-    for (const [name, type] of originalTypes) {
+    for (const [name, _type] of originalTypes) {
       if (!transformedTypes.has(name)) {
         check.passed = false;
         this.errors.push({
@@ -306,7 +306,7 @@ class SemanticPreservationVerifier {
    * Check value preservation
    * - Constants and literals are preserved
    */
-  checkValuePreservation(original, transformed, context) {
+  checkValuePreservation(original, transformed, _context) {
     const check = {
       name: "value_preservation",
       passed: true,

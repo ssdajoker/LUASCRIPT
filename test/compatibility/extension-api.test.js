@@ -176,7 +176,7 @@ describe('Extension API Backward Compatibility', function() {
       });
       assert.throws(() => {
         transform.transform({});
-      }, /not implemented/);
+      }, /must be overridden/);
     });
   });
 

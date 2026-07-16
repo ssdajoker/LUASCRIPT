@@ -11,6 +11,7 @@ const {
   analyzeBufferOverflow,
   createAccessKey
 } = require("./buffer-overflow-detection");
+const { safeCloneIR } = require("../ir-utils");
 
 function emitBoundsChecks(ir, options = {}) {
   if (!ir || !ir.program) {
@@ -83,7 +84,7 @@ function buildBoundsCheck(finding, sequence) {
 function applyBoundsChecks(ir, emission) {
   if (!ir || !emission || !emission.checks) return ir;
 
-  const optimizedIR = JSON.parse(JSON.stringify(ir));
+  const optimizedIR = safeCloneIR(ir);
   const checksByKey = new Map();
   emission.checks.forEach(check => {
     checksByKey.set(check.key, check);
@@ -108,18 +109,23 @@ function applyBoundsChecks(ir, emission) {
   };
 }
 
-function walkAST(node, callback, parent = null) {
+function walkAST(node, callback, parent = null, seen = new WeakSet()) {
   if (!node) return;
+  if (typeof node === "object") {
+    if (seen.has(node)) return;
+    seen.add(node);
+  }
+
   callback(node, parent);
 
   if (typeof node === "object") {
     for (const key of Object.keys(node)) {
-      if (key.startsWith("_")) continue;
+      if (key === "parent" || key.startsWith("_")) continue;
       const child = node[key];
       if (Array.isArray(child)) {
-        child.forEach(item => walkAST(item, callback, node));
+        child.forEach(item => walkAST(item, callback, node, seen));
       } else if (typeof child === "object" && child !== null) {
-        walkAST(child, callback, node);
+        walkAST(child, callback, node, seen);
       }
     }
   }
