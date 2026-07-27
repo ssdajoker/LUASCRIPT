@@ -22,7 +22,7 @@
     "stubs:scan": "node scripts/stub_inventory.js",
     "stubs:check": "node scripts/stub_inventory.js --check",
     "archive:audit": "node scripts/archive_audit.js",
-    "repocalypse:verify": "npm run status:check && npm run claims:check && npm run stubs:check && npm run archive:audit && npm run test:ir-conformance && npm run test:edge-matrix && npm run test:roundtrip-probe && npm run test:source-identity-probe && npm run test:unsupported-diagnostics",
+    "repocalypse:verify": "node scripts/repocalypse_verify.js",
     "claims:check": "node scripts/claims_check.js",
     "claims:math": "node scripts/claims_check.js --math",
     "claims:luascript": "node scripts/claims_check.js --luascript",

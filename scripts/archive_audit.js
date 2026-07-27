@@ -36,6 +36,7 @@ const allowedDocsTopLevel = new Set([
   "LUASCRIPT_MEGA_PLAN.md",
   "LUASCRIPT_META_LANGUAGE_V0.md",
   "LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
+  "REPOCALYPSE_SYNC.md",
   "VERSIONING.md",
   "canonical_ir.schema.json",
   "canonical_ir_spec.md",

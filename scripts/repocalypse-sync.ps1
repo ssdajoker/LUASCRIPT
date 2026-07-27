@@ -19,6 +19,12 @@ $ErrorActionPreference = 'Stop'
 $requiredVersion = '1.5.1'
 $repoRoot = Split-Path -Parent $PSScriptRoot
 
+# Repocalypse 1.5.1 launches verification commands through Python text-mode
+# subprocesses. Force UTF-8 so LUASCRIPT's Unicode diagnostics are decoded
+# consistently on Windows hosts whose legacy code page is CP-1252.
+$env:PYTHONUTF8 = '1'
+$env:PYTHONIOENCODING = 'utf-8'
+
 if ([string]::IsNullOrWhiteSpace($env:REPOCALYPSE_HOME)) {
     throw 'REPOCALYPSE_HOME must point to the active combined Repocalypse checkout.'
 }

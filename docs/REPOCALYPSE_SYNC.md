@@ -38,6 +38,10 @@ The tracked `nogit_state.yaml` is stable project configuration. Mutable
 `.nogit` caches, bridge packets, locks, and local receipts are intentionally
 ignored.
 
+LUASCRIPT's hand-maintained README, changelog, and setup documentation remain
+authoritative. No-Git's generic derived-document differences are advisory;
+`npm run repocalypse:verify` remains mandatory and blocking.
+
 ## Safety boundaries
 
 - No-Git verifies and transports the current Git branch; it does not call
