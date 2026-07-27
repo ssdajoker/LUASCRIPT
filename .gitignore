@@ -217,6 +217,7 @@ py.typed
 # Repocalypse / No-Git machine-local state and receipts
 .nogit/
 .nogit.lock
+.nogit_cache.json
 .repocalypse/receipts/
 reports/nogit-local/
 *.nogit-receipt.json
