@@ -1,7 +1,7 @@
 # LUASCRIPT Big Remaining Climb Master Ledger
 
 Status: active master ledger
-Last updated: 2026-07-16
+Last updated: 2026-07-27
 Track: post-Denali climb toward source-preserving round-trip proof and certification-grade evidence
 
 This ledger takes over after the penultimate Denali readiness audit and the 2026-07-16 Denali release-candidate audit. Denali canonical `1.0` is estimated at 78% done, while the user's true omni-language 100% summit is estimated at 7% done. This ledger is for the remaining climb: language-depth coverage, formal IR semantics, edge-case expansion, bidirectionality proof, public API/runtime stabilization, conformance tests, compatibility rules, and certification-grade evidence.
@@ -15,6 +15,7 @@ Current evidence inherited from Denali:
 - Scoped beta and strict-native named slices are green for current implemented lanes.
 - `npm run beta:readiness:strict` reports 17/17 implemented lanes beta-ready and 0 native setup blockers.
 - `npm run test:ir-conformance` passes 32 fixtures, writes `artifacts/conformance/canonical-ir-conformance-report.json`, and is now mapped fixture-by-fixture to named IR semantic rules or documented gaps in `docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md`.
+- `npm run test:schema-artifact-map` passes 21/21 positive derived schema-artifact mappings, preserves 11 expected diagnostics, writes `artifacts/conformance/schema-artifact-mapping-report.json`, and records dual-surface kind/field alias gaps without changing compiler output or choosing the release IR surface.
 - `npm run test:roundtrip-probe` passes 6 probes and now writes `artifacts/conformance/roundtrip-probe-report.json` with JS/.ls/Python/Lua bidirectionality layer evidence.
 - `npm run test:source-identity-probe` passes 15 `.ls` fixtures: 12 normalized source identity checks, 12 normalized parser-owned AST identity checks, 12 normalized IR identity checks, and 3 expected unsupported diagnostics; it writes `artifacts/conformance/source-identity-probe-report.json`.
 - `npm run test:unsupported-diagnostics` passes 21 named diagnostics and writes `artifacts/conformance/unsupported-diagnostics-report.json`.
@@ -35,7 +36,7 @@ Current evidence inherited from Denali:
 | Track | Current state | Next executable slice | Exit signal |
 | --- | --- | --- | --- |
 | Language-depth coverage | 17 named lanes have narrow native or target-runtime evidence; broad language support is not claimed | Expand Python V1.3 and `.ls` V0.16 first, then JavaScript Ring 3, using accession checklists | Each promoted slice has parser, lowering, emitter, native runtime, target runtime, docs, support matrix, claims check, and ledger proof |
-| Formal IR semantics | Inventory and spec v0 exist; the 32-fixture conformance surface is now mapped to v1 evidence rules and documented gaps | Reconcile schema-valid conformance artifacts with the release IR surface or document a dual-surface transition | Every supported IR node has value/control/error semantics, target obligations, schema-valid evidence, and conformance fixtures |
+| Formal IR semantics | Inventory and spec v0 exist; the 32-fixture conformance surface is mapped to v1 evidence rules; derived schema-valid artifacts are proven for 21 positive fixtures with 11 expected diagnostics preserved | Choose the final release IR surface or formalize the dual-surface compatibility bridge with invariant checks | Every supported IR node has value/control/error semantics, target obligations, schema-valid evidence, and conformance fixtures |
 | Edge-case matrix | Scoped 25-case matrix exists with category counts and report hashes | Grow beyond 25 only after the schema/release-surface IR route, or add release-shaped edge families tied to mapped IR semantics | Matrix has release-shaped feature coverage accounting and report hashes |
 | Bidirectionality proof | Named-slice gates plus 6 round-trip probes plus 15 `.ls` source identity probes including 12 normalized parser-owned AST identity checks; JS/.ls/Python/Lua layer map is report-backed | Add the next real proof layer: Lua structural IR reparse or a second normalized source-identity lane, without broad language claims | Source -> IR -> emitted source -> parser identity proof exists for named fixtures and broad identity claims stay tiered |
 | Public API/runtime stabilization | No-release freeze candidate is prepared; package remains `0.1.0-beta.0`; no npm `bin`; no `exports` map; root `runtime/` is outside package `files` | Add API-specific compatibility tests and final release-package review before any `1.0` action | Package entrypoint, exports, files, Node floor, CLI stance, runtime files, semver, and release actions are final for `1.0` |
@@ -85,10 +86,13 @@ Current evidence inherited from Denali:
    - `tests/language_completion/bidirectional_harness.js` now strips only preserved top-level `.ls` `verify { ... }` blocks before embedded `ls_contains` / `ls_not_contains` self-verification assertions, so verify-block source identity and emitted policy checks can coexist.
    - Boundary: JavaScript and Python source identity remain unclaimed; Lua structural IR reparse remains unclaimed; semantic equivalence remains partial fixture stdout/diagnostic evidence only.
 
-6. Schema-valid conformance artifact mapping: NOT STARTED / NEXT ROUTE
-   - Decide whether current conformance fixtures must emit a consolidated schema artifact, stay on the legacy object-tree bridge, or move through a documented dual-surface transition.
-   - Map fixture behavior to schema-valid artifacts where possible and document field alias gaps where not.
-   - Keep this scoped to evidence and compatibility; do not refactor the compiler path unless a tiny, proven fix is required.
+6. Schema-valid conformance artifact mapping: SEALED for derived dual-surface evidence; OPEN for final release IR surface.
+   - `npm run test:schema-artifact-map` derives schema-valid canonical IR v1 artifacts for 21/21 positive conformance fixtures and keeps 11 expected diagnostics separate.
+   - Report path: `artifacts/conformance/schema-artifact-mapping-report.json`.
+   - Current manifest SHA-256: `0f551a2076df5e6a6319dcab93600bff73213476351a3fd63ea732a5a597b780`.
+   - Current schema SHA-256: `78f8cb23636bd10d807168dbb06a26da26cf8908a62a66873d91474d843703ff`.
+   - Alias gaps recorded include `VariableDeclarator->VariableDeclaration`, `Parameter->Identifier`, `UnaryExpression->BinaryExpression`, and `SwitchCase->BlockStatement`.
+   - Boundary: this is evidence and compatibility accounting only; it does not change compiler output, choose the release IR surface, promote canonical `1.0`, or claim true omni-language 100%.
 
 7. Public API/runtime freeze candidate: SEALED for no-release candidate; OPEN for final `1.0` release freeze.
    - Current candidate explicitly preserves no npm `bin`, no package `exports` map, root package import through `src/unified_luascript.js`, Node floor `>=14.0.0`, and package files `src/`, `test/`, `README.md`, and `LICENSE`.
@@ -123,7 +127,7 @@ Started routes sealed so far:
 Future routes not yet started:
 
 - Lua structural IR reparse or a second normalized source-identity lane;
-- schema-valid conformance artifact mapping and release IR surface reconciliation;
+- final release IR surface selection or formal dual-surface compatibility bridge;
 - one-command generated evidence bundle;
 - first-class clarity/language/actual-program/parser-ownership/compatibility report hashes;
 - final `1.0` public API/runtime freeze;
@@ -165,15 +169,16 @@ To close Denali canonical `1.0`, do these in order:
 
 3. IR semantics v1 evidence pass: SEALED.
    - Every current conformance fixture now maps to a named IR semantic rule or documented gap.
-   - Remaining IR blockers are schema-valid conformance artifacts, release IR surface choice, helper versioning, complete target deltas, and broader value/error edge semantics.
+   - Derived schema-valid artifacts are now proven for the current positive conformance fixtures.
+   - Remaining IR blockers are final release IR surface choice or compatibility bridge, helper versioning, complete target deltas, and broader value/error edge semantics.
 
 4. Add the next bidirectionality proof layer.
    - Candidate A: add a tiny Lua structural IR reparse fixture.
    - Candidate B: start a second normalized source-identity lane only if parser-owned artifacts are stable.
    - Do not promote semantic equivalence or token identity from accounting alone.
 
-5. Reconcile schema-valid conformance artifacts with the release IR surface.
-   - The next IR route must decide consolidated schema artifact, legacy object tree, or dual-surface transition before promotion.
+5. Choose the release IR surface or formal dual-surface compatibility bridge.
+   - The next IR route must decide consolidated schema artifact, legacy object tree, or formally versioned dual-surface bridge before promotion.
 
 6. Freeze the public API/runtime candidate: SEALED for no-release candidate; OPEN for final release.
    - Current candidate chooses no-bin/no-exports, root package import only, Node floor `>=14.0.0`, current package `files`, repo-local root `runtime/` boundary, semver/compatibility policy, and explicit release-action separation.
@@ -186,7 +191,7 @@ To close Denali canonical `1.0`, do these in order:
    - [LUASCRIPT_1_0_EXIT_CRITERIA.md](LUASCRIPT_1_0_EXIT_CRITERIA.md) now records the 2026-07-16 RC audit table.
    - Current verdict: Denali canonical `1.0` is 78% done / 22% remaining; true omni-language 100% is 7% done / 93% remaining.
    - Closure decision: the current Denali ledger cannot close as a canonical `1.0` release ledger and hands off to this Big Remaining Climb ledger.
-   - Remaining blockers: source-preserving proof layers beyond the current `.ls` normalized suite, schema-valid release IR surface, final API/runtime freeze, compatibility seal, first-class clarity/language/actual-program report hashes, cross-platform/runtime metadata, one-command evidence bundle generation, and release-blocking conformance policy.
+   - Remaining blockers: source-preserving proof layers beyond the current `.ls` normalized suite, final release IR surface or compatibility bridge, final API/runtime freeze, compatibility seal, first-class clarity/language/actual-program report hashes, cross-platform/runtime metadata, one-command evidence bundle generation, and release-blocking conformance policy.
 
 ## Guardrails
 
@@ -203,6 +208,7 @@ The first Big Remaining Climb route starts with durable conformance reports:
 | Gate | Durable report |
 | --- | --- |
 | `npm run test:ir-conformance` | `artifacts/conformance/canonical-ir-conformance-report.json` |
+| `npm run test:schema-artifact-map` | `artifacts/conformance/schema-artifact-mapping-report.json` |
 | `npm run test:roundtrip-probe` | `artifacts/conformance/roundtrip-probe-report.json` |
 | `npm run test:source-identity-probe` | `artifacts/conformance/source-identity-probe-report.json` |
 | `npm run test:unsupported-diagnostics` | `artifacts/conformance/unsupported-diagnostics-report.json` |
@@ -211,4 +217,4 @@ Second route seal: [LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CO
 
 RC route seal: the 2026-07-16 Denali release-candidate audit is SEALED for verdict and OPEN for release closure. It updates the estimates to Denali canonical `1.0` 78% done / 22% remaining and true omni-language 100% 7% done / 93% remaining, and it keeps scoped beta, Denali `1.0`, and the true omni-language summit separate.
 
-Next route after this ledger: add a real new proof layer, preferably a tiny Lua structural IR reparse probe or a second normalized source-identity lane, then reconcile schema-valid conformance artifacts with the release IR surface. Public API/runtime next work is final-release review only: API compatibility tests, package-file/runtime-helper inclusion, and release-tooling pre-release transition checks.
+Next route after this ledger: add a real new proof layer, preferably a tiny Lua structural IR reparse probe or a second normalized source-identity lane, then choose the final release IR surface or formalize the dual-surface compatibility bridge. Public API/runtime next work is final-release review only: API compatibility tests, package-file/runtime-helper inclusion, and release-tooling pre-release transition checks.

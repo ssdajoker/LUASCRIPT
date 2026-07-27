@@ -193,6 +193,8 @@ function checkPackageMetadata() {
   "package.json implemented target-runtime gate includes Gleam lane");
   check(scripts["test:ir-conformance"] === "node tests/conformance/canonical_ir_conformance.test.js",
     "package.json exposes npm run test:ir-conformance");
+  check(scripts["test:schema-artifact-map"] === "node tests/conformance/schema_artifact_mapping.test.js",
+    "package.json exposes npm run test:schema-artifact-map");
   check(scripts["test:edge-matrix"] === "node tests/edge_matrix/edge_case_matrix.test.js",
     "package.json exposes npm run test:edge-matrix");
   check(scripts["test:unsupported-diagnostics"] === "node tests/ir/unsupported_diagnostics.test.js",
@@ -222,6 +224,16 @@ function checkPackageMetadata() {
   check(pkg.luascript && Array.isArray(pkg.luascript.verifiedSlices) &&
     pkg.luascript.verifiedSlices.includes("Python V1.3 sequence-slices small-program slice"),
   "package.json names Python V1.3 verified slice");
+
+  checkFile("tests/conformance/schema_artifact_mapping.test.js");
+  checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "dual-surface-transition",
+    "schema artifact mapping harness records dual-surface transition decision");
+  checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "schema-artifact-mapping-report.json",
+    "schema artifact mapping harness writes durable report");
+  checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "This report proves schema-valid derived artifacts for current positive conformance fixtures only.",
+    "schema artifact mapping harness keeps scoped boundary");
+  checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "It does not choose the release IR surface, change compiler output, promote broad source identity, or close canonical 1.0.",
+    "schema artifact mapping harness no-release-surface boundary");
 
   const edgeMatrixCases = new Set((edgeMatrixManifest.cases || []).map((entry) => entry.id));
   checkFile("tests/edge_matrix/manifest.json");
@@ -773,6 +785,10 @@ function checkPackageMetadata() {
     "exit criteria conformance gate");
   checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`artifacts/conformance/canonical-ir-conformance-report.json`",
     "exit criteria canonical IR durable report");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`npm run test:schema-artifact-map`",
+    "exit criteria schema artifact mapping gate");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`artifacts/conformance/schema-artifact-mapping-report.json`",
+    "exit criteria schema artifact durable report");
   checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`artifacts/conformance/roundtrip-probe-report.json`",
     "exit criteria roundtrip durable report");
   checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`artifacts/conformance/source-identity-probe-report.json`",
@@ -799,7 +815,7 @@ function checkPackageMetadata() {
     "conformance evidence bundle index status");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "This is a release-shaped conformance evidence bundle index for LUASCRIPT. It is certification-style evidence, not certification",
     "conformance evidence bundle index non-certification boundary");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "beta gates, language gates, Clarity dogfood/canon/super-canon evidence, IR conformance, edge matrix, round-trip probe, source identity probe, unsupported diagnostics, actual programs, support matrix, compatibility policy",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "beta gates, language gates, Clarity dogfood/canon/super-canon evidence, IR conformance, schema artifact mapping, edge matrix, round-trip probe, source identity probe, unsupported diagnostics, actual programs, support matrix, compatibility policy",
     "conformance evidence bundle index lane coverage");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "Fixture/hash expectations mean report-level manifest hashes, fixture or case hashes, pass/fail summaries, environment metadata, and support-matrix traceability",
     "conformance evidence bundle index fixture hash expectations");
@@ -811,6 +827,12 @@ function checkPackageMetadata() {
     "conformance evidence bundle dogfood report");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "`artifacts/conformance/canonical-ir-conformance-report.json`",
     "conformance evidence bundle canonical IR report");
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "`artifacts/conformance/schema-artifact-mapping-report.json`",
+    "conformance evidence bundle schema artifact mapping report");
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "| Schema artifact mapping | `npm run test:schema-artifact-map` |",
+    "conformance evidence bundle schema artifact mapping lane");
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "Dual-surface transition evidence; not release IR surface selection, not compiler-output change",
+    "conformance evidence bundle schema artifact boundary");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "`artifacts/edge_matrix/edge-case-matrix-report.json`",
     "conformance evidence bundle edge matrix report");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "`artifacts/conformance/roundtrip-probe-report.json`",
@@ -831,6 +853,12 @@ function checkPackageMetadata() {
     "conformance evidence binder edge report artifact");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "`artifacts/conformance/canonical-ir-conformance-report.json`",
     "conformance evidence binder canonical IR report artifact");
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "`artifacts/conformance/schema-artifact-mapping-report.json`",
+    "conformance evidence binder schema artifact mapping report artifact");
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "| Schema artifact mapping | `npm run test:schema-artifact-map` |",
+    "conformance evidence binder schema artifact mapping gate family");
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "21 positive conformance fixtures produce derived schema-valid canonical IR v1 artifacts; 11 expected diagnostics remain separate",
+    "conformance evidence binder schema artifact mapping suite count");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "`artifacts/conformance/roundtrip-probe-report.json`",
     "conformance evidence binder roundtrip report artifact");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "`artifacts/conformance/source-identity-probe-report.json`",
@@ -855,7 +883,7 @@ function checkPackageMetadata() {
     "conformance evidence binder token identity boundary");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "26 language/target manifests for named native and target-runtime slices",
     "conformance evidence binder language manifest count");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "Durable local report closure: `npm run test:ir-conformance`, `npm run test:roundtrip-probe`, `npm run test:source-identity-probe`, and `npm run test:unsupported-diagnostics` now write standalone JSON reports under `artifacts/conformance/`",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "Durable local report closure: `npm run test:ir-conformance`, `npm run test:schema-artifact-map`, `npm run test:roundtrip-probe`, `npm run test:source-identity-probe`, and `npm run test:unsupported-diagnostics` now write standalone JSON reports under `artifacts/conformance/`",
     "conformance evidence binder durable report closure");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "not runtime-output equivalence, broad lossless recovery, or broad semantic equivalence",
     "conformance evidence binder source-preserving boundary");
@@ -1202,8 +1230,12 @@ function checkPackageMetadata() {
     "canonical IR semantics spec v1 determinism rule");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "`IR-TGT-001`",
     "canonical IR semantics spec v1 target obligation rule");
-  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "Schema-valid fixture artifacts for every conformance fixture remain open;",
-    "canonical IR semantics spec v1 schema-valid gap");
+  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "The 2026-07-27 schema-artifact mapping pass adds `npm run test:schema-artifact-map`.",
+    "canonical IR semantics spec schema artifact mapping route");
+  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "21/21 positive conformance fixtures",
+    "canonical IR semantics spec schema artifact positive fixture count");
+  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "dual-surface transition evidence route",
+    "canonical IR semantics spec schema artifact boundary");
   checkIncludes("src/compilers/js-to-ir.js", "Unsupported JavaScript value semantic",
     "JavaScript bridge special value diagnostic");
   checkIncludes("src/compilers/js-to-ir.js", "Unsupported JavaScript control flow: for-of loops",
@@ -2142,6 +2174,14 @@ function checkLuaScriptClaims() {
     "Denali 1.0 ledger IR semantics fixture mapping seal");
   checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Schema-valid fixture artifacts for every conformance fixture remain open.",
     "Denali 1.0 ledger IR semantics schema-valid gap");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "### 2026-07-27 - Schema-Valid Conformance Artifact Mapping",
+    "Denali 1.0 ledger schema artifact mapping route entry");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "21/21 positive conformance fixtures produced schema-valid derived artifacts; 11 expected diagnostics preserved",
+    "Denali 1.0 ledger schema artifact verification seal");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "VariableDeclarator->VariableDeclaration",
+    "Denali 1.0 ledger schema artifact alias evidence");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "78f8cb23636bd10d807168dbb06a26da26cf8908a62a66873d91474d843703ff",
+    "Denali 1.0 ledger schema hash");
   checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "### 2026-07-16 - Bidirectionality Layer Evidence Map",
     "Denali 1.0 ledger bidirectionality layer evidence route entry");
   checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "`npm run language:luascript:bidirectional` | PASS: 75/75 language fixtures; `test:luascript-meta` passed; `test:actual-programs` passed",
@@ -2182,8 +2222,10 @@ function checkLuaScriptClaims() {
     "Big Remaining Climb source identity sealed");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Edge-case matrix expansion: SEALED",
     "Big Remaining Climb edge matrix sealed");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Schema-valid conformance artifact mapping: NOT STARTED / NEXT ROUTE",
-    "Big Remaining Climb schema-valid route is future/not started");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Schema-valid conformance artifact mapping: SEALED for derived dual-surface evidence; OPEN for final release IR surface.",
+    "Big Remaining Climb schema-valid route sealed/open");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "`npm run test:schema-artifact-map` passes 21/21 positive derived schema-artifact mappings",
+    "Big Remaining Climb schema artifact current count");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Add the next real proof layer: Lua structural IR reparse or a second normalized source-identity lane, without broad language claims",
     "Big Remaining Climb bidirectionality next route cleanup");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "The IR semantics v1 evidence route is now sealed; broad lossless recovery remains a later climb.",
@@ -2198,7 +2240,7 @@ function checkLuaScriptClaims() {
     "Big Remaining Climb roundtrip layer manifest hash");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "0280f940b1004e9e2602217ddd6135e5dd3a28a27152c8eb547c1666498c9272",
     "Big Remaining Climb source identity layer manifest hash");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Next route after this ledger: add a real new proof layer, preferably a tiny Lua structural IR reparse probe or a second normalized source-identity lane, then reconcile schema-valid conformance artifacts with the release IR surface.",
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Next route after this ledger: add a real new proof layer, preferably a tiny Lua structural IR reparse probe or a second normalized source-identity lane, then choose the final release IR surface or formalize the dual-surface compatibility bridge.",
     "Big Remaining Climb next route seal");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "## Loose-End Closure Pass",
     "Big Remaining Climb loose-end closure section");

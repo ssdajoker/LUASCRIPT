@@ -1800,6 +1800,51 @@ Verification seal:
 | `npm run archive:audit` | PASS: 769 active files scanned |
 | Package version no-bump check | PASS: `0.1.0-beta.0` |
 
+### 2026-07-27 - Schema-Valid Conformance Artifact Mapping
+
+Intent:
+
+- Execute the Big Remaining Climb schema-valid conformance artifact mapping route on the Repocalypse 1.5-aligned baseline.
+- Prove what can be derived from the current conformance surface without changing compiler output, public API, runtime API, package version, package `bin`, package `exports`, tag, publish action, or release status.
+- Keep scoped beta, Denali canonical `1.0`, and true omni-language 100% separate.
+
+Repairs made:
+
+- Added `npm run test:schema-artifact-map`.
+- Added `tests/conformance/schema_artifact_mapping.test.js` as a manifest-driven mapping harness.
+- Added durable report output at `artifacts/conformance/schema-artifact-mapping-report.json`.
+- Updated the canonical IR semantics spec, exit criteria, evidence binder, evidence bundle index, Big Remaining Climb ledger, and claims checks for the new evidence boundary.
+- Added a narrow `.gitignore` rule for obsolete local GSS dogfood debris under `artifacts/gss/`; that artifact family is not active durable evidence for this route.
+
+Proof scope:
+
+| Evidence | Result |
+| --- | --- |
+| `npm run test:schema-artifact-map` | PASS: 21/21 positive conformance fixtures produced schema-valid derived artifacts; 11 expected diagnostics preserved |
+| Manifest hash | `0f551a2076df5e6a6319dcab93600bff73213476351a3fd63ea732a5a597b780` |
+| Schema hash | `78f8cb23636bd10d807168dbb06a26da26cf8908a62a66873d91474d843703ff` |
+| Report shape | Environment metadata, manifest hash, schema hash, 32 fixture hashes, 21 derived artifact hashes, pass/fail summaries, support-matrix traceability, and alias gap counts |
+| Kind aliases recorded | `VariableDeclarator->VariableDeclaration`, `Parameter->Identifier`, `UnaryExpression->BinaryExpression`, `SwitchCase->BlockStatement` |
+
+Boundary:
+
+- This supersedes the earlier open blocker only for derived schema-valid artifacts from the current positive conformance fixtures.
+- This does not choose the final release IR surface.
+- This does not require the active compiler bridge to emit the schema artifact surface.
+- This does not close canonical `1.0`, source-preserving round trip proof, broad semantic equivalence, exhaustive edge coverage, ISO certification, or true omni-language 100%.
+
+Next route:
+
+- Choose the final release IR surface or formalize the dual-surface compatibility bridge with invariant checks.
+- Or add the next real bidirectionality proof layer, preferably Lua structural IR reparse, before the final surface decision if that gives clearer evidence.
+
+Verification seal:
+
+| Gate | Result |
+| --- | --- |
+| `node --check tests\conformance\schema_artifact_mapping.test.js` | PASS |
+| `npm run test:schema-artifact-map` | PASS: 21/21 positive conformance fixtures produced schema-valid derived artifacts; 11 expected diagnostics preserved |
+
 ### 2026-07-16 - No-Release Public API Runtime Freeze Candidate
 
 Intent:

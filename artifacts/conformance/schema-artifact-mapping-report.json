@@ -1,0 +1,1009 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:schema-artifact-mapping",
+  "command": "npm run test:schema-artifact-map",
+  "generatedAt": "2026-07-27T05:24:11.059Z",
+  "elapsedMs": 364,
+  "environment": {
+    "node": "v24.14.0",
+    "npm": {
+      "command": "cmd.exe",
+      "args": [
+        "/c",
+        "npm",
+        "-v"
+      ],
+      "available": true,
+      "status": 0,
+      "stdout": "11.9.0",
+      "stderr": ""
+    },
+    "platform": "win32",
+    "arch": "x64",
+    "os": {
+      "type": "Windows_NT",
+      "release": "10.0.26200"
+    },
+    "cwd": "C:\\Users\\ssdaj\\Desktop\\LUASCRIPT",
+    "generatedBy": "LUASCRIPT conformance report harness"
+  },
+  "manifest": {
+    "path": "tests/conformance/manifest.json",
+    "sha256": "0f551a2076df5e6a6319dcab93600bff73213476351a3fd63ea732a5a597b780",
+    "status": "scoped-skeleton",
+    "version": "0.1.0",
+    "fixtureCount": 32,
+    "fixtureHashes": [
+      {
+        "name": "values_bindings_control_flow",
+        "sha256": "ff4a44b6b1ea2011f50165d5066711463c6e39b92803a3dd880d932d1ff27c1e"
+      },
+      {
+        "name": "functions_calls_arrays_objects",
+        "sha256": "9ddf262c1a0792313f61c060f7413036dc92491a5b1633d266429dcdae26b8ab"
+      },
+      {
+        "name": "primitive_values_null_equivalents",
+        "sha256": "14abfb1e11cb3de1cc1dbfba769cec20ae88edf9f6fd26eaa3ac18c1e1cdffe4"
+      },
+      {
+        "name": "arrays_objects_records_indexing",
+        "sha256": "96881f21f0e7f812d1733ad4bda4a540aefde5a095bd86738bce9e1d6eb4824d"
+      },
+      {
+        "name": "truthiness_target_native_delta",
+        "sha256": "ad8e564308680d08a5d2c3f887e12bc417018b5899ae15dc870e7af6593c1366"
+      },
+      {
+        "name": "equality_and_coercion_target_delta",
+        "sha256": "903337546b8125c388131e00f67b2f6d3914af1c7b2953a8fdd1a1082d9244d3"
+      },
+      {
+        "name": "portable_value_semantics_profile",
+        "sha256": "619881a63b87008d7c38e8f525a6dd39f6ffb0886bf45ba9c7a411eaf354c1e8"
+      },
+      {
+        "name": "control_flow_nested_break_continue_early_return",
+        "sha256": "1e018e8a082f500046fe7c11719c3c6b10cb61dc0b42de55ed66061489daa63f"
+      },
+      {
+        "name": "short_circuit_side_effects",
+        "sha256": "c0670c181ac0766081044508766032eb1a1dc306dc0b4c8a2bde9af37ff5986a"
+      },
+      {
+        "name": "control_javascript_switch_conditional",
+        "sha256": "54fb52a5c9f841b0c49760c378452a4646b90cf817acb975b88d36cce33cc864"
+      },
+      {
+        "name": "python_range_forward_control_flow",
+        "sha256": "7df5be4190ebf5d2bda4e2f81751a987e9360aea7cf02211968a457da7323dc8"
+      },
+      {
+        "name": "python_range_negative_step_control_flow",
+        "sha256": "4053d8048f9f4e0f4c60de7e9bbf217e9f3ea4e772ae51dde76e9a40cc9982c1"
+      },
+      {
+        "name": "function_scope_closure_shadow_mutation",
+        "sha256": "45217dc70fd8dd739ba4794d9ba22f0f2060a3707cf0e33d1da78a127b57c514"
+      },
+      {
+        "name": "function_recursion_return_normalization",
+        "sha256": "14e34d03d82f9ed42429aaa6ac2b7897f31ea9d4bac3281aeddec8a442e64e32"
+      },
+      {
+        "name": "function_extra_arity_target_delta",
+        "sha256": "9795884d110992e82f48b166e6e9e477b4242bd212f0e79847b04ed87004001d"
+      },
+      {
+        "name": "unsupported_js_async_function_scope",
+        "sha256": "8ac645ff9adf33ee3c5058e2b521f27b50a44b289d64dd29901d93afda86941f"
+      },
+      {
+        "name": "unsupported_js_generator_function_scope",
+        "sha256": "a596737c0d5ddcf9a66acba9728a8448165c041ab9bb1d25047b99239cc4ef10"
+      },
+      {
+        "name": "data_nested_js_arrays_objects_records",
+        "sha256": "fa1e1ca394d612782e0efc0d84b3c465112bd244cae8c6170f655e1cf1628aab"
+      },
+      {
+        "name": "data_luascript_portable_length_slice_mutation",
+        "sha256": "0ed95a498af33715ab70b7afb5b89867ce882d908b9d51c36b86b0d55344fa71"
+      },
+      {
+        "name": "data_python_list_dict_membership_mutation",
+        "sha256": "4522d3b55bd2ad65a5e160e1a7f4b0f11a0204f05a5785876d4e543177dc56dc"
+      },
+      {
+        "name": "data_python_list_iteration_length",
+        "sha256": "acee5c916899b2ad152ba967eb03f5b729ef078286c28d073b364e34647881d8"
+      },
+      {
+        "name": "data_lua_table_record_fields",
+        "sha256": "742225f61bf7036ae6f6d925dcd810997dffab6358a4e30353c6f83889e664e5"
+      },
+      {
+        "name": "unsupported_js_object_spread_structure",
+        "sha256": "fca467ef367e6236ed9867534b5edb022c870b93516e5612413675e07827c775"
+      },
+      {
+        "name": "unsupported_js_destructuring_structure",
+        "sha256": "97397dda4f2847a1f14efe21e300e702442460d93d24f00ac0c5a53ee8575f2b"
+      },
+      {
+        "name": "unsupported_target_diagnostic",
+        "sha256": "f53668d56c5961d543c58bccb8e9041cdf039466611eaab4a57e42af8345e307"
+      },
+      {
+        "name": "unsupported_js_for_of_control_flow",
+        "sha256": "c60df62166a1e793681ae5be9439951edf17ff947b315610d0a49ebe2593a6d3"
+      },
+      {
+        "name": "unsupported_python_continue_control_flow",
+        "sha256": "cc2aa78f6d65b36a64330050d0badb36575ba11fb5a3b44afe17297394ca6ecb"
+      },
+      {
+        "name": "unsupported_js_try_catch_control_flow",
+        "sha256": "37418b4c5fb513f8f3480adff4f1aab93ab201fd726f3d75f0ac44a8b30effd3"
+      },
+      {
+        "name": "unsupported_js_tagged_template_control_flow",
+        "sha256": "bab1acb55639cd97d0aa7a5a34d9750da6a0e67193ca9b756d2cdafc9484a44c"
+      },
+      {
+        "name": "unsupported_undefined_value_semantic",
+        "sha256": "65e187accc0568ecf9c70f578cfdbac4c5b19855688c2c4050aa412e0fefa2d6"
+      },
+      {
+        "name": "unsupported_nan_value_semantic",
+        "sha256": "f5a3d12811fb3d63a35b3ad865d34bbf9391fe353369a94fac6d5c13ac143a27"
+      },
+      {
+        "name": "unsupported_infinity_value_semantic",
+        "sha256": "491a720c64148a0c41ae35072914ffec1bc4590cb3cc42de4ef2eb296bd51033"
+      }
+    ]
+  },
+  "schema": {
+    "path": "docs/canonical_ir.schema.json",
+    "sha256": "78f8cb23636bd10d807168dbb06a26da26cf8908a62a66873d91474d843703ff",
+    "schemaVersion": "1.0.0"
+  },
+  "supportMatrixTraceability": {
+    "supportMatrix": "docs/LANGUAGE_SUPPORT_MATRIX.md",
+    "evidenceBinder": "docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md",
+    "exitCriteria": "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md",
+    "bidirectionalityContract": "docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md",
+    "denaliLedger": "docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md",
+    "boundary": "This report proves schema-valid derived artifacts for current positive conformance fixtures only. It does not choose the release IR surface, change compiler output, promote broad source identity, or close canonical 1.0.",
+    "supportRows": [
+      "Canonical IR conformance",
+      "Denali 1.0 IR semantics",
+      "Big Remaining Climb schema-valid conformance artifact mapping"
+    ],
+    "evidenceRole": "Maps the current legacy object-tree conformance IR to derived schema-valid canonical IR artifacts and records alias gaps for the dual-surface transition."
+  },
+  "transitionPolicy": {
+    "decision": "dual-surface-transition",
+    "legacySurface": "CoreLanguageBridge compileToIR legacy object-tree Program",
+    "schemaSurface": "docs/canonical_ir.schema.json schemaVersion 1.0.0",
+    "releaseSurfaceStatus": "OPEN",
+    "notes": [
+      "The current compiler bridge continues to emit legacy object-tree IR for active emitters.",
+      "This harness derives schema-valid artifacts for evidence accounting without changing compiler or runtime APIs.",
+      "Release 1.0 still needs a final surface choice or a formal compatibility bridge."
+    ]
+  },
+  "summary": {
+    "total": 32,
+    "positiveFixtures": 21,
+    "schemaValidDerivedArtifacts": 21,
+    "expectedDiagnostics": 11,
+    "failed": 0,
+    "globalKindAliases": {
+      "VariableDeclarator->VariableDeclaration": 52,
+      "Parameter->Identifier": 10,
+      "UnaryExpression->BinaryExpression": 5,
+      "SwitchCase->BlockStatement": 3
+    },
+    "globalFieldAliases": {
+      "varKind->declarationKind": 52,
+      "condition->test": 22,
+      "args->arguments": 65,
+      "parameters->params": 10,
+      "value->argument": 16,
+      "operand->argument": 5
+    },
+    "globalMappedKinds": {
+      "VariableDeclaration": 52,
+      "Literal": 192,
+      "ForStatement": 5,
+      "BinaryExpression": 65,
+      "Identifier": 308,
+      "AssignmentExpression": 32,
+      "BlockStatement": 43,
+      "ExpressionStatement": 57,
+      "IfStatement": 15,
+      "CallExpression": 65,
+      "MemberExpression": 79,
+      "FunctionDeclaration": 10,
+      "ReturnStatement": 16,
+      "ArrayExpression": 11,
+      "ObjectExpression": 8,
+      "Property": 16,
+      "WhileStatement": 2,
+      "ContinueStatement": 1,
+      "BreakStatement": 1,
+      "SwitchStatement": 1,
+      "ConditionalExpression": 1
+    }
+  },
+  "results": [
+    {
+      "name": "values_bindings_control_flow",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 3,
+      "nodeCount": 38,
+      "artifactSha256": "cbd299feb3895847fa91bb566e49c9b70773b86805b8a5fdf9b46c2ad4045fab",
+      "kindCounts": {
+        "VariableDeclaration": 2,
+        "Literal": 6,
+        "ForStatement": 1,
+        "BinaryExpression": 4,
+        "Identifier": 12,
+        "AssignmentExpression": 2,
+        "BlockStatement": 3,
+        "ExpressionStatement": 3,
+        "IfStatement": 1,
+        "CallExpression": 2,
+        "MemberExpression": 2
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 2
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 2,
+        "condition->test": 2,
+        "args->arguments": 2
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "functions_calls_arrays_objects",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 4,
+      "nodeCount": 33,
+      "artifactSha256": "456391744c937daa25de58998f5d84cf35200410e656f5fde9645b9bde5606ec",
+      "kindCounts": {
+        "FunctionDeclaration": 1,
+        "Identifier": 12,
+        "BlockStatement": 1,
+        "ReturnStatement": 1,
+        "BinaryExpression": 1,
+        "VariableDeclaration": 2,
+        "ArrayExpression": 1,
+        "Literal": 5,
+        "ObjectExpression": 1,
+        "Property": 1,
+        "MemberExpression": 4,
+        "ExpressionStatement": 1,
+        "CallExpression": 2
+      },
+      "kindAliases": {
+        "Parameter->Identifier": 2,
+        "VariableDeclarator->VariableDeclaration": 2
+      },
+      "fieldAliases": {
+        "parameters->params": 1,
+        "value->argument": 1,
+        "varKind->declarationKind": 2,
+        "args->arguments": 2
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "primitive_values_null_equivalents",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 5,
+      "nodeCount": 17,
+      "artifactSha256": "b8e0c105bc0c5e856cc5e34f2b49e2e78a387070569193502deb2d97b16f5049",
+      "kindCounts": {
+        "VariableDeclaration": 4,
+        "Literal": 4,
+        "ExpressionStatement": 1,
+        "CallExpression": 1,
+        "MemberExpression": 1,
+        "Identifier": 6
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 4
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 4,
+        "args->arguments": 1
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "arrays_objects_records_indexing",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 4,
+      "nodeCount": 43,
+      "artifactSha256": "2f63ed390367ffba9c447763fe9c5576cfde19a830ac97aa86607328cd760d95",
+      "kindCounts": {
+        "VariableDeclaration": 2,
+        "ArrayExpression": 1,
+        "Literal": 8,
+        "ObjectExpression": 1,
+        "Property": 2,
+        "Identifier": 15,
+        "MemberExpression": 9,
+        "ExpressionStatement": 2,
+        "AssignmentExpression": 1,
+        "BinaryExpression": 1,
+        "CallExpression": 1
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 2
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 2,
+        "args->arguments": 1
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "truthiness_target_native_delta",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 6,
+      "nodeCount": 54,
+      "artifactSha256": "bb4bf404410ee52476ae327bb25719c73cd5bd71391ac933f2df25569c8aed38",
+      "kindCounts": {
+        "VariableDeclaration": 3,
+        "Literal": 9,
+        "IfStatement": 3,
+        "Identifier": 15,
+        "BlockStatement": 6,
+        "ExpressionStatement": 6,
+        "CallExpression": 6,
+        "MemberExpression": 6
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 3
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 3,
+        "condition->test": 3,
+        "args->arguments": 6
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "equality_and_coercion_target_delta",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 6,
+      "nodeCount": 24,
+      "artifactSha256": "728218db6301f07e4224853ebac7cebc143638d1026e61871ec3e69ad68db25e",
+      "kindCounts": {
+        "VariableDeclaration": 5,
+        "Literal": 4,
+        "BinaryExpression": 3,
+        "Identifier": 9,
+        "ExpressionStatement": 1,
+        "CallExpression": 1,
+        "MemberExpression": 1
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 5
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 5,
+        "args->arguments": 1
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "portable_value_semantics_profile",
+      "sourceLanguage": "luascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 6,
+      "nodeCount": 60,
+      "artifactSha256": "32d4f95a790378f3416625c807abab7dfc4923e54c6fc50907986a2f37eaa614",
+      "kindCounts": {
+        "VariableDeclaration": 4,
+        "ArrayExpression": 1,
+        "Literal": 16,
+        "IfStatement": 1,
+        "BinaryExpression": 8,
+        "MemberExpression": 6,
+        "Identifier": 15,
+        "BlockStatement": 2,
+        "ExpressionStatement": 3,
+        "AssignmentExpression": 2,
+        "CallExpression": 2
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 4
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 4,
+        "condition->test": 1,
+        "args->arguments": 2
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "control_flow_nested_break_continue_early_return",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 2,
+      "nodeCount": 105,
+      "artifactSha256": "ac0bac0e748d586975b463f46a9f787da7c7b4b6fa8e817b2a704e7748edd4cb",
+      "kindCounts": {
+        "FunctionDeclaration": 1,
+        "Identifier": 30,
+        "BlockStatement": 9,
+        "VariableDeclaration": 4,
+        "Literal": 18,
+        "IfStatement": 4,
+        "BinaryExpression": 17,
+        "ReturnStatement": 3,
+        "ExpressionStatement": 5,
+        "AssignmentExpression": 6,
+        "WhileStatement": 1,
+        "ContinueStatement": 1,
+        "BreakStatement": 1,
+        "ForStatement": 2,
+        "CallExpression": 2,
+        "MemberExpression": 1
+      },
+      "kindAliases": {
+        "Parameter->Identifier": 1,
+        "VariableDeclarator->VariableDeclaration": 4,
+        "UnaryExpression->BinaryExpression": 1
+      },
+      "fieldAliases": {
+        "parameters->params": 1,
+        "varKind->declarationKind": 4,
+        "condition->test": 7,
+        "value->argument": 3,
+        "operand->argument": 1,
+        "args->arguments": 2
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "short_circuit_side_effects",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 4,
+      "nodeCount": 43,
+      "artifactSha256": "0028580df29a30b62a2357261618390ac20fd93a3ac306cb29c0db24da9dc93a",
+      "kindCounts": {
+        "VariableDeclaration": 1,
+        "Literal": 8,
+        "FunctionDeclaration": 1,
+        "BlockStatement": 3,
+        "ExpressionStatement": 4,
+        "AssignmentExpression": 3,
+        "Identifier": 11,
+        "BinaryExpression": 5,
+        "ReturnStatement": 1,
+        "IfStatement": 2,
+        "CallExpression": 3,
+        "MemberExpression": 1
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 1
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 1,
+        "parameters->params": 1,
+        "value->argument": 1,
+        "condition->test": 2,
+        "args->arguments": 3
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "control_javascript_switch_conditional",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 2,
+      "nodeCount": 33,
+      "artifactSha256": "7aa38992d1a6e35a3800f6c7fe96526babb529d7e34be1c75050de0bbc363b54",
+      "kindCounts": {
+        "FunctionDeclaration": 1,
+        "Identifier": 7,
+        "BlockStatement": 4,
+        "SwitchStatement": 1,
+        "Literal": 10,
+        "ReturnStatement": 3,
+        "ConditionalExpression": 1,
+        "ExpressionStatement": 1,
+        "CallExpression": 4,
+        "MemberExpression": 1
+      },
+      "kindAliases": {
+        "Parameter->Identifier": 1,
+        "SwitchCase->BlockStatement": 3
+      },
+      "fieldAliases": {
+        "parameters->params": 1,
+        "value->argument": 3,
+        "args->arguments": 4
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "python_range_forward_control_flow",
+      "sourceLanguage": "python",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 3,
+      "nodeCount": 25,
+      "artifactSha256": "33090c0182a5dc271e1dc3d377504676259b8600ae394509ae0b31b2de0805b8",
+      "kindCounts": {
+        "VariableDeclaration": 2,
+        "Literal": 5,
+        "ForStatement": 1,
+        "BinaryExpression": 3,
+        "Identifier": 8,
+        "AssignmentExpression": 2,
+        "BlockStatement": 1,
+        "ExpressionStatement": 2,
+        "CallExpression": 1
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 2
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 2,
+        "condition->test": 1,
+        "args->arguments": 1
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "python_range_negative_step_control_flow",
+      "sourceLanguage": "python",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 3,
+      "nodeCount": 27,
+      "artifactSha256": "8a1ecd2770d1d97765f30393291b96507ef77fc62978f0487fbfe68ec6acd772",
+      "kindCounts": {
+        "VariableDeclaration": 2,
+        "Literal": 5,
+        "ForStatement": 1,
+        "BinaryExpression": 5,
+        "Identifier": 8,
+        "AssignmentExpression": 2,
+        "BlockStatement": 1,
+        "ExpressionStatement": 2,
+        "CallExpression": 1
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 2,
+        "UnaryExpression->BinaryExpression": 2
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 2,
+        "condition->test": 1,
+        "operand->argument": 2,
+        "args->arguments": 1
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "function_scope_closure_shadow_mutation",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 6,
+      "nodeCount": 57,
+      "artifactSha256": "564e03f66d3572ece2f06ddd1ad46e742afde83a99eb7783b08376d9388fc76e",
+      "kindCounts": {
+        "VariableDeclaration": 5,
+        "Literal": 8,
+        "FunctionDeclaration": 3,
+        "Identifier": 21,
+        "BlockStatement": 3,
+        "ExpressionStatement": 2,
+        "AssignmentExpression": 1,
+        "BinaryExpression": 2,
+        "ReturnStatement": 3,
+        "ArrayExpression": 1,
+        "CallExpression": 5,
+        "MemberExpression": 3
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 5,
+        "Parameter->Identifier": 3
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 5,
+        "parameters->params": 3,
+        "value->argument": 3,
+        "args->arguments": 5
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "function_recursion_return_normalization",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 3,
+      "nodeCount": 42,
+      "artifactSha256": "d64c83f4546fd42e95aa141d72c95ddd7c15e0042c298f4f8a6f7d428623c453",
+      "kindCounts": {
+        "FunctionDeclaration": 2,
+        "Identifier": 12,
+        "BlockStatement": 4,
+        "IfStatement": 2,
+        "BinaryExpression": 3,
+        "Literal": 8,
+        "ReturnStatement": 4,
+        "CallExpression": 5,
+        "ExpressionStatement": 1,
+        "MemberExpression": 1
+      },
+      "kindAliases": {
+        "Parameter->Identifier": 2
+      },
+      "fieldAliases": {
+        "parameters->params": 2,
+        "condition->test": 2,
+        "value->argument": 4,
+        "args->arguments": 5
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "function_extra_arity_target_delta",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 2,
+      "nodeCount": 15,
+      "artifactSha256": "1969c127193f9f17deec28cbc9ba3275b461d21a5deb5e96f0ccc2f0d3b876e8",
+      "kindCounts": {
+        "FunctionDeclaration": 1,
+        "Identifier": 5,
+        "BlockStatement": 1,
+        "ReturnStatement": 1,
+        "ExpressionStatement": 1,
+        "CallExpression": 2,
+        "MemberExpression": 1,
+        "Literal": 3
+      },
+      "kindAliases": {
+        "Parameter->Identifier": 1
+      },
+      "fieldAliases": {
+        "parameters->params": 1,
+        "value->argument": 1,
+        "args->arguments": 2
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "unsupported_js_async_function_scope",
+      "sourceLanguage": "javascript",
+      "status": "expected-diagnostic",
+      "phase": "compile",
+      "messageIncludes": [
+        "Unsupported JavaScript function form: async functions"
+      ]
+    },
+    {
+      "name": "unsupported_js_generator_function_scope",
+      "sourceLanguage": "javascript",
+      "status": "expected-diagnostic",
+      "phase": "compile",
+      "messageIncludes": [
+        "Unsupported JavaScript function form: generator functions"
+      ]
+    },
+    {
+      "name": "data_nested_js_arrays_objects_records",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 6,
+      "nodeCount": 88,
+      "artifactSha256": "ea9cdce347bb143213f16f2584ec41479a691bdf6338b265cc7266523f7c6e2b",
+      "kindCounts": {
+        "VariableDeclaration": 2,
+        "ObjectExpression": 3,
+        "Property": 6,
+        "Identifier": 30,
+        "Literal": 15,
+        "ArrayExpression": 2,
+        "ExpressionStatement": 4,
+        "AssignmentExpression": 3,
+        "MemberExpression": 20,
+        "BinaryExpression": 2,
+        "CallExpression": 1
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 2
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 2,
+        "args->arguments": 1
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "data_luascript_portable_length_slice_mutation",
+      "sourceLanguage": "luascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 5,
+      "nodeCount": 60,
+      "artifactSha256": "76fbb9cdfb54b23a363c0e8901c94ce2ef28a2f4466445467ffd29b4e66ab85c",
+      "kindCounts": {
+        "VariableDeclaration": 3,
+        "ArrayExpression": 1,
+        "Literal": 12,
+        "CallExpression": 2,
+        "MemberExpression": 12,
+        "Identifier": 22,
+        "ExpressionStatement": 2,
+        "AssignmentExpression": 1,
+        "BinaryExpression": 1,
+        "ObjectExpression": 1,
+        "Property": 3
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 3
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 3,
+        "args->arguments": 2
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "data_python_list_dict_membership_mutation",
+      "sourceLanguage": "python",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 12,
+      "nodeCount": 129,
+      "artifactSha256": "6d78ad88b93e961e3992c923720881f285be1444a34b8868bb4d24eeb9fac628",
+      "kindCounts": {
+        "VariableDeclaration": 4,
+        "ArrayExpression": 2,
+        "Literal": 32,
+        "ExpressionStatement": 10,
+        "CallExpression": 18,
+        "Identifier": 40,
+        "BinaryExpression": 6,
+        "IfStatement": 2,
+        "BlockStatement": 4,
+        "AssignmentExpression": 6,
+        "ObjectExpression": 1,
+        "Property": 2,
+        "MemberExpression": 2
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 4,
+        "UnaryExpression->BinaryExpression": 2
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 4,
+        "args->arguments": 18,
+        "condition->test": 2,
+        "operand->argument": 2
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "data_python_list_iteration_length",
+      "sourceLanguage": "python",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 6,
+      "nodeCount": 43,
+      "artifactSha256": "756a7fc5b8d483f34f96c04d6afe5ba975c1adb639a5e4be19af1325e3694eb4",
+      "kindCounts": {
+        "VariableDeclaration": 5,
+        "ArrayExpression": 1,
+        "Literal": 7,
+        "Identifier": 16,
+        "WhileStatement": 1,
+        "BinaryExpression": 3,
+        "CallExpression": 4,
+        "BlockStatement": 1,
+        "ExpressionStatement": 3,
+        "AssignmentExpression": 2
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 5
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 5,
+        "condition->test": 1,
+        "args->arguments": 4
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "data_lua_table_record_fields",
+      "sourceLanguage": "lua",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 3,
+      "nodeCount": 36,
+      "artifactSha256": "1a715da5af1478ecadd34060cee2d2f48054f32a848ba5f1b9c0c76e2b63b1bb",
+      "kindCounts": {
+        "VariableDeclaration": 1,
+        "ObjectExpression": 1,
+        "Property": 2,
+        "Identifier": 11,
+        "Literal": 8,
+        "ArrayExpression": 1,
+        "ExpressionStatement": 2,
+        "AssignmentExpression": 1,
+        "MemberExpression": 7,
+        "BinaryExpression": 1,
+        "CallExpression": 1
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 1
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 1,
+        "args->arguments": 1
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "unsupported_js_object_spread_structure",
+      "sourceLanguage": "javascript",
+      "status": "expected-diagnostic",
+      "phase": "compile",
+      "messageIncludes": [
+        "Unsupported JavaScript object spread"
+      ]
+    },
+    {
+      "name": "unsupported_js_destructuring_structure",
+      "sourceLanguage": "javascript",
+      "status": "expected-diagnostic",
+      "phase": "compile",
+      "messageIncludes": [
+        "Unsupported JavaScript variable declarator pattern: ObjectPattern"
+      ]
+    },
+    {
+      "name": "unsupported_target_diagnostic",
+      "sourceLanguage": "javascript",
+      "status": "schema-valid-derived-artifact",
+      "legacyRootKind": "Program",
+      "schemaVersion": "1.0.0",
+      "moduleBodyCount": 2,
+      "nodeCount": 8,
+      "artifactSha256": "cae98dd2d6ac8de4f056122c24d502bdd253a2ab8a094054ed4975c403a3b745",
+      "kindCounts": {
+        "VariableDeclaration": 1,
+        "Literal": 1,
+        "ExpressionStatement": 1,
+        "CallExpression": 1,
+        "MemberExpression": 1,
+        "Identifier": 3
+      },
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 1
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 1,
+        "args->arguments": 1
+      },
+      "unmappedKinds": {}
+    },
+    {
+      "name": "unsupported_js_for_of_control_flow",
+      "sourceLanguage": "javascript",
+      "status": "expected-diagnostic",
+      "phase": "compile",
+      "messageIncludes": [
+        "Unsupported JavaScript control flow: for-of loops"
+      ]
+    },
+    {
+      "name": "unsupported_python_continue_control_flow",
+      "sourceLanguage": "python",
+      "status": "expected-diagnostic",
+      "phase": "compile",
+      "messageIncludes": [
+        "Unsupported Python input feature: continue statements"
+      ]
+    },
+    {
+      "name": "unsupported_js_try_catch_control_flow",
+      "sourceLanguage": "javascript",
+      "status": "expected-diagnostic",
+      "phase": "compile",
+      "messageIncludes": [
+        "Unsupported JavaScript exception flow: try/catch/finally"
+      ]
+    },
+    {
+      "name": "unsupported_js_tagged_template_control_flow",
+      "sourceLanguage": "javascript",
+      "status": "expected-diagnostic",
+      "phase": "compile",
+      "messageIncludes": [
+        "Unsupported JavaScript template literal form: tagged template literals"
+      ]
+    },
+    {
+      "name": "unsupported_undefined_value_semantic",
+      "sourceLanguage": "javascript",
+      "status": "expected-diagnostic",
+      "phase": "compile",
+      "messageIncludes": [
+        "Unsupported JavaScript value semantic: undefined"
+      ]
+    },
+    {
+      "name": "unsupported_nan_value_semantic",
+      "sourceLanguage": "javascript",
+      "status": "expected-diagnostic",
+      "phase": "compile",
+      "messageIncludes": [
+        "Unsupported JavaScript value semantic: NaN"
+      ]
+    },
+    {
+      "name": "unsupported_infinity_value_semantic",
+      "sourceLanguage": "javascript",
+      "status": "expected-diagnostic",
+      "phase": "compile",
+      "messageIncludes": [
+        "Unsupported JavaScript value semantic: Infinity"
+      ]
+    }
+  ],
+  "failures": []
+}

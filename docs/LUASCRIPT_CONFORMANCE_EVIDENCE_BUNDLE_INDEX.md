@@ -1,14 +1,14 @@
 # LUASCRIPT Conformance Evidence Bundle Index
 
 Status: active evidence bundle index
-Last updated: 2026-07-16
+Last updated: 2026-07-27
 Track: Denali canonical `1.0` evidence structure
 
 This is a release-shaped conformance evidence bundle index for LUASCRIPT. It is certification-style evidence, not certification: it is not ISO certification, third-party certification, production certification, a release artifact, a package publish, canonical `1.0`, or the user's true omni-language 100% summit.
 
 The index cross-links the current report-producing gates, manifest evidence, support boundaries, compatibility policy, and reproducibility steps. It does not promote any language, runtime, profile, package surface, or source-preservation claim by itself.
 
-Coverage lanes: beta gates, language gates, Clarity dogfood/canon/super-canon evidence, IR conformance, edge matrix, round-trip probe, source identity probe, unsupported diagnostics, actual programs, support matrix, compatibility policy, report paths, fixture/hash expectations, known unsupported areas, and reproducibility steps.
+Coverage lanes: beta gates, language gates, Clarity dogfood/canon/super-canon evidence, IR conformance, schema artifact mapping, edge matrix, round-trip probe, source identity probe, unsupported diagnostics, actual programs, support matrix, compatibility policy, report paths, fixture/hash expectations, known unsupported areas, and reproducibility steps.
 
 ## Evidence Boundary
 
@@ -27,6 +27,7 @@ Coverage lanes: beta gates, language gates, Clarity dogfood/canon/super-canon ev
 | Language gates | `npm run language:implemented:bidirectional`, `npm run language:all:bidirectional`, `npm run language:<name>:bidirectional`, `npm run language:<name>:ir-targets` | `artifacts/language_completion/*-report.json` | `tests/language_completion/manifests/*.json`, `tests/language_completion/fixtures/**`, `tests/language_completion/bidirectional_harness.js` | Current reports are per-manifest gate evidence; release bundle should preserve manifest and fixture hashes before promotion | Trace through `docs/LANGUAGE_SUPPORT_MATRIX.md` and `docs/LANGUAGE_COMPLETION_RULES.md`; named slices only |
 | Clarity dogfood and canon | `npm run clarity:dogfood`, `npm run clarity:canon`, `npm run clarity:canon:super`, `npm run clarity:languages` | `artifacts/clarity_canon/dogfood-report.json`, `artifacts/clarity_canon/canon-report.json`, `artifacts/clarity_canon/canon-super-report.json`, `artifacts/clarity_canon/canon-languages-report.json` | `tests/clarity_canon/manifest.json`, `tests/clarity_canon/language_qualification_manifest.json`, dogfood fixtures, actual programs, canon shards | Reports capture generated time and pass/fail summaries; future release bundle should add manifest hash coverage for every clarity shard | Dogfood/canon evidence is scoped to active manifests and reports; archived canon docs remain historical only |
 | Canonical IR conformance | `npm run test:ir-conformance` | `artifacts/conformance/canonical-ir-conformance-report.json` | `tests/conformance/manifest.json`, `tests/conformance/canonical_ir_conformance.test.js` | Current report writes environment metadata, manifest hash, 32 fixture hashes, pass/fail summaries, and support-matrix traceability | 32 fixtures mapped to named IR semantic rules or documented gaps; not a schema-valid release IR surface by itself |
+| Schema artifact mapping | `npm run test:schema-artifact-map` | `artifacts/conformance/schema-artifact-mapping-report.json` | `tests/conformance/manifest.json`, `tests/conformance/schema_artifact_mapping.test.js`, `docs/canonical_ir.schema.json` | Current report writes environment metadata, manifest hash, schema hash, 32 fixture hashes, 21 derived artifact hashes, pass/fail summaries, and alias gap counts | Dual-surface transition evidence; not release IR surface selection, not compiler-output change |
 | Edge-case matrix | `npm run test:edge-matrix` | `artifacts/edge_matrix/edge-case-matrix-report.json` | `tests/edge_matrix/manifest.json`, `tests/edge_matrix/edge_case_matrix.test.js` | Current report writes environment metadata, manifest hash, 25 case hashes, category counts, pass/fail summaries, and support-matrix traceability | Scoped value/control/scope/data/errors/target-specific/unsupported-diagnostic matrix; not exhaustive edge coverage |
 | Round-trip probe | `npm run test:roundtrip-probe` | `artifacts/conformance/roundtrip-probe-report.json` | `tests/roundtrip/manifest.json`, `tests/roundtrip/roundtrip_probe.test.js` | Current report writes environment metadata, manifest hash, 6 fixture hashes, pass/fail summaries, layer evidence, and support-matrix traceability | Structural IR reparse and runtime-output equivalence only; source-preserving round-trip count remains 0 |
 | Source identity probe | `npm run test:source-identity-probe` | `artifacts/conformance/source-identity-probe-report.json` | `tests/roundtrip/source_identity_manifest.json`, `tests/roundtrip/source_identity_probe.test.js`, `tests/roundtrip/fixtures/**` | Current report writes environment metadata, manifest hash, 15 fixture hashes, tier counts, pass/fail summaries, token observations, and support-matrix traceability | 12 positive `.ls` normalized source/parser-owned-AST/IR identity checks plus 3 expected diagnostics; token identity is measured but non-gating |
@@ -50,6 +51,7 @@ Durable report-producing conformance lanes should carry:
 Current lanes already satisfying this shape:
 
 - `artifacts/conformance/canonical-ir-conformance-report.json`;
+- `artifacts/conformance/schema-artifact-mapping-report.json`;
 - `artifacts/edge_matrix/edge-case-matrix-report.json`;
 - `artifacts/conformance/roundtrip-probe-report.json`;
 - `artifacts/conformance/source-identity-probe-report.json`;
@@ -70,7 +72,7 @@ Known unsupported or not-yet-release-sealed areas include:
 - broad full-language support beyond named manifest slices;
 - true omni-language universal IR coverage;
 - ISO, third-party, or production certification;
-- schema-valid release IR surface selection for every conformance fixture;
+- release IR surface selection beyond the current derived schema-valid conformance artifact mapping;
 - token-level source identity as a gating claim;
 - broad parser-owned AST identity beyond the 12 positive `.ls` fixtures;
 - broad lossless source recovery;
@@ -89,6 +91,7 @@ Baseline release-shaped evidence reproduction:
 ```bash
 npm install
 npm run test:ir-conformance
+npm run test:schema-artifact-map
 npm run test:edge-matrix
 npm run test:roundtrip-probe
 npm run test:source-identity-probe
@@ -128,7 +131,7 @@ After reproduction, compare this index, [LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.m
 The bundle index is now the evidence navigation layer. The next executable climb remains one of:
 
 - add a real new bidirectionality proof layer, preferably Lua structural IR reparse;
-- reconcile schema-valid conformance artifacts with the release IR surface;
+- choose the final release IR surface or formalize the dual-surface compatibility bridge;
 - add first-class report hashes for clarity, language, actual-program, parser-ownership, and compatibility gates.
 
 Do not broaden claims while doing those routes. The index should become denser, not louder.
