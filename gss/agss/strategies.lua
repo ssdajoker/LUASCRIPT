@@ -8,6 +8,7 @@ local M = {}
 function M.grid_search(ranges, step_sizes)
     local params = {}
     local param_names = {}
+    local exhausted = false
 
     -- Extract parameter names and ranges
     for name, range in pairs(ranges) do
@@ -22,6 +23,10 @@ function M.grid_search(ranges, step_sizes)
 
     -- Iterator function
     local function next_sample()
+        if exhausted then
+            return nil
+        end
+
         local sample = {}
 
         -- Get current values
@@ -46,9 +51,8 @@ function M.grid_search(ranges, step_sizes)
             end
         end
 
-        -- Return nil when done
         if carry then
-            return nil
+            exhausted = true
         end
 
         return sample

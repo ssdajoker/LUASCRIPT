@@ -1,0 +1,14 @@
+{
+  "version": "gss-browser-contract-v1",
+  "renderer": "canvas-prototype",
+  "authoritativeRuntime": "../gss",
+  "capabilities": {
+    "canvas": "live",
+    "browserParser": "gaussian-blob-demo-only",
+    "gssParser": "separate-luajit-prototype",
+    "wasm": "planned",
+    "webgpu": "planned",
+    "rayTracing": "unimplemented"
+  },
+  "promotionRule": "Do not promote browser GSS claims until shared parser/runtime parity evidence exists."
+}

@@ -1,0 +1,54 @@
+{
+  "version": "gss-dogfood-v1",
+  "purpose": "Evidence manifest for the standalone Gaussian/GSS/AGSS prototype.",
+  "capabilities": [
+    {
+      "name": "gss-parser",
+      "status": "implemented-with-optional-lpeg",
+      "evidence": "gss/grammar/*.lpeg and gss/parser/*.lua",
+      "boundary": "Reports setup-blocked when LuaJIT LPEG is unavailable."
+    },
+    {
+      "name": "gss-kernel-pipeline",
+      "status": "implemented-luajit",
+      "evidence": "gss/ir and gss/runtime",
+      "boundary": "Reference runtime only; not browser or WebGPU execution."
+    },
+    {
+      "name": "agss-optimizer",
+      "status": "implemented-bounded-prototype",
+      "evidence": "gss/agss",
+      "boundary": "Local bounded parameter search; not unattended code mutation."
+    },
+    {
+      "name": "browser-canvas-showcase",
+      "status": "implemented-demo",
+      "evidence": "ide/gaussian-blobs-demo.html",
+      "boundary": "Browser-local parser and Canvas renderer, separate from Lua GSS."
+    },
+    {
+      "name": "wasm",
+      "status": "planned",
+      "evidence": "gss/runtime/wasm.lua and tests/future/gpu-wasm.test.js",
+      "boundary": "No real browser WASM module is claimed."
+    },
+    {
+      "name": "webgpu",
+      "status": "planned",
+      "evidence": "tests/future/gpu-wasm.test.js",
+      "boundary": "No WebGPU backend or public API is claimed."
+    },
+    {
+      "name": "ray-tracing",
+      "status": "unimplemented",
+      "evidence": null,
+      "boundary": "Long-horizon research route only."
+    }
+  ],
+  "agent_contract": {
+    "name": "canon-agent-bridge-v1",
+    "transport": "existing-mcp-work-queue-is-advisory",
+    "completion": "receipt-required",
+    "mutation": "explicit-authority-required"
+  }
+}

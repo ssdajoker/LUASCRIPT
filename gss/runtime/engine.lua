@@ -14,7 +14,7 @@ local M = {}
 
 -- Create rendering engine
 function M.Engine(width, height)
-    return {
+    local instance = {
         width = width,
         height = height,
         tile_cache = cache.Cache(100),
@@ -27,6 +27,14 @@ function M.Engine(width, height)
             cache_misses = 0
         }
     }
+
+    -- Keep the instance API compatible with AGSS, which invokes engines as
+    -- objects while the rest of the runtime also exposes module functions.
+    instance.execute = function(self, kernel_graph)
+        return M.execute(self, kernel_graph)
+    end
+
+    return instance
 end
 
 -- Set parameter value

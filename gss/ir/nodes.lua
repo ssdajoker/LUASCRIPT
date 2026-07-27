@@ -156,12 +156,21 @@ function M.get_dependencies(node)
     if node.type == "mix" then
         table.insert(deps, node.input1)
         table.insert(deps, node.input2)
+        table.insert(deps, node.weight)
     elseif node.type == "sum" then
         for _, input in ipairs(node.inputs) do
             table.insert(deps, input)
         end
+    elseif node.type == "gaussian" then
+        table.insert(deps, node.muX)
+        table.insert(deps, node.muY)
+        table.insert(deps, node.sigma)
     elseif node.type == "ramp" or node.type == "iso" then
         table.insert(deps, node.input)
+        if node.type == "iso" then
+            table.insert(deps, node.threshold)
+            table.insert(deps, node.width)
+        end
     elseif node.type == "composite" then
         for _, layer in ipairs(node.layers) do
             table.insert(deps, layer)

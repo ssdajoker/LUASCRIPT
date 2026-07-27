@@ -98,19 +98,22 @@ gss/
 
 ```bash
 # Kernel tests (no LPEG required)
-lua gss/tests/test_kernels.lua
+luajit gss/tests/test_kernels.lua
 
 # AGSS tests
-lua gss/tests/test_agss.lua
+luajit gss/tests/test_agss.lua
 
 # Async/await tests
-lua gss/tests/test_async.lua
+luajit gss/tests/test_async.lua
 
 # Integration tests
-lua gss/tests/test_integration.lua
+luajit gss/tests/test_integration.lua
 
 # Parser tests (requires LPEG)
-lua gss/tests/test_parser.lua
+luajit gss/tests/test_parser.lua
+
+# Report local Lua/LuaJIT/LPEG setup status from the repository root
+npm run gss:runtime-check
 ```
 
 ### Running Benchmarks

@@ -1,6 +1,15 @@
 
 -- Test GSS Parser
 
+package.path = "?.lua;?/init.lua;?.lpeg;" .. package.path
+
+local lpeg_ok = pcall(require, "lpeg")
+if not lpeg_ok then
+    print("GSS parser tests: setup-blocked (LPEG is not installed for this Lua runtime)")
+    print("Install with: luarocks install lpeg")
+    return
+end
+
 local gss_grammar = require("gss.grammar.gss")
 local agss_grammar = require("gss.grammar.agss")
 local parser = require("gss.parser.parser")

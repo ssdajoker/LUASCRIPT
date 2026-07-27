@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUASCRIPT IDE - Gaussian Blobs GSS Prototyping</title>
+    <title>LUASCRIPT IDE - Gaussian Blobs GSS Prototype</title>
     <style>
         * {
             margin: 0;
@@ -199,7 +199,7 @@
     <div class="container">
         <header>
             <h1>🎛️ LUASCRIPT IDE</h1>
-            <div class="version">Gaussian Blobs GSS Prototyping Environment v1.0.0</div>
+            <div class="version">Gaussian Blobs GSS Canvas Prototype</div>
         </header>
         
         <div class="main-content">
@@ -252,9 +252,11 @@ gaussian_blob {
         
         <div class="panel">
             <h2>💻 Console Output</h2>
-            <div class="output" id="consoleOutput">LUASCRIPT GSS Engine v1.0.0 Ready
-WASM Backend: Loaded
-Gaussian Blobs Module: Active
+            <div class="output" id="consoleOutput">LUASCRIPT Gaussian Canvas Prototype Ready
+Canvas renderer: Live
+Real GSS parser/runtime: Separate Lua prototype
+WASM/WebGPU: Planned, not active
+Ray tracing: Unimplemented
 Tape-Deck Interface: Online
 
 Ready to prototype! Click PLAY to run your GSS code.
@@ -265,7 +267,7 @@ Ready to prototype! Click PLAY to run your GSS code.
             <h2>📚 Gaussian Blobs GSS Tutorial</h2>
             
             <h3>🎯 What is Gaussian Blobs GSS?</h3>
-            <p>Gaussian Blobs GSS (Gaussian Splatting Syntax) is a domain-specific language for creating smooth, organic shapes using Gaussian functions. It's perfect for prototyping blob-based graphics, soft shadows, and organic UI elements.</p>
+            <p>This browser page is a Canvas-facing Gaussian blob prototype. It demonstrates the visual direction, while the authoritative GSS parser, kernel graph, and AGSS runtime live in the Lua prototype under <code>/gss</code>.</p>
             
             <h3>🚀 Quick Start</h3>
             <ol>
@@ -320,12 +322,13 @@ Ready to prototype! Click PLAY to run your GSS code.
                 <div class="status-dot"></div>
                 <span>System Online</span>
             </div>
-            <div>LUASCRIPT v1.0.0 | WASM Backend Active | GSS Engine Ready</div>
+            <div data-capability="status" data-capability-contract="gss-capability-contract-v1">LUASCRIPT Gaussian Canvas Prototype | Canvas Live | WASM/WebGPU Planned | Ray Tracing Unimplemented</div>
         </div>
     </div>
     
     <script>
-        // LUASCRIPT GSS Engine Implementation
+        // Browser-only Gaussian Canvas prototype. This is intentionally not
+        // presented as the authoritative Lua GSS runtime or a WASM backend.
         const canvas = document.getElementById('outputCanvas');
         const ctx = canvas.getContext('2d');
         const consoleOutput = document.getElementById('consoleOutput');
@@ -436,6 +439,16 @@ Ready to prototype! Click PLAY to run your GSS code.
             
             return { blobs, blendMode };
         }
+
+        window.__luascriptGssDemo = {
+            renderer: 'canvas-prototype',
+            parser: 'browser-demo-gaussian-blob-parser',
+            gssRuntime: 'separate-lua-prototype',
+            wasm: 'planned',
+            webgpu: 'planned',
+            rayTracing: 'unimplemented',
+            parseGSS
+        };
         
         function runGSS() {
             log('🎬 PLAY: Executing GSS code...');

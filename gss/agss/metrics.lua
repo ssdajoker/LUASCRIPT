@@ -133,8 +133,24 @@ function M.compute_checksum(params)
 
     -- Simple hash (FNV-1a)
     local hash = 2166136261
+
+    -- LuaJIT/Lua 5.1 does not guarantee the Lua 5.2 bit32 library. Keep
+    -- the checksum deterministic without requiring an optional dependency.
+    local function bxor(a, b)
+        local result, bit = 0, 1
+        while a > 0 or b > 0 do
+            local abit = a % 2
+            local bbit = b % 2
+            if abit ~= bbit then result = result + bit end
+            a = math.floor(a / 2)
+            b = math.floor(b / 2)
+            bit = bit * 2
+        end
+        return result
+    end
+
     for i = 1, #str do
-        hash = bit32.bxor(hash, string.byte(str, i))
+        hash = bxor(hash, string.byte(str, i))
         hash = (hash * 16777619) % 4294967296
     end
 

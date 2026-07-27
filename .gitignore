@@ -99,6 +99,7 @@ artifacts/test/
 artifacts/test-output/
 artifacts/tmp/
 artifacts/clarity_canon/
+artifacts/gss/
 artifacts/language_completion/
 artifacts/verify/
 artifacts/harness_results.json
