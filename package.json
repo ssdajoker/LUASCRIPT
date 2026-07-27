@@ -15,6 +15,7 @@
     "test:core-language-bridge": "node tests/core_language_bridge.test.js",
     "test:ir-conformance": "node tests/conformance/canonical_ir_conformance.test.js",
     "test:schema-artifact-map": "node tests/conformance/schema_artifact_mapping.test.js",
+    "test:ir-compatibility-bridge": "node tests/conformance/dual_surface_compatibility_bridge.test.js",
     "test:edge-matrix": "node tests/edge_matrix/edge_case_matrix.test.js",
     "test:roundtrip-probe": "node tests/roundtrip/roundtrip_probe.test.js",
     "test:source-identity-probe": "node tests/roundtrip/source_identity_probe.test.js",

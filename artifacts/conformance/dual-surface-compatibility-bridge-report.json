@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "kind": "luascript:schema-artifact-mapping",
-  "command": "npm run test:schema-artifact-map",
-  "generatedAt": "2026-07-27T05:35:59.916Z",
-  "elapsedMs": 413,
+  "kind": "luascript:dual-surface-compatibility-bridge",
+  "command": "npm run test:ir-compatibility-bridge",
+  "generatedAt": "2026-07-27T05:35:59.989Z",
+  "elapsedMs": 412,
   "environment": {
     "node": "v24.14.0",
     "npm": {
@@ -175,28 +175,36 @@
     "exitCriteria": "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md",
     "bidirectionalityContract": "docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md",
     "denaliLedger": "docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md",
-    "boundary": "This report proves schema-valid derived artifacts for current positive conformance fixtures only. It does not choose the release IR surface, change compiler output, promote broad source identity, or close canonical 1.0.",
+    "boundary": "This report proves an internal dual-surface compatibility bridge candidate for current positive conformance fixtures only. It does not make the bridge public API, choose the final release IR surface, change compiler output, or close canonical 1.0.",
     "supportRows": [
       "Canonical IR conformance",
-      "Denali 1.0 IR semantics",
-      "Big Remaining Climb schema-valid conformance artifact mapping"
+      "Dual-surface IR compatibility bridge",
+      "Big Remaining Climb final release IR surface"
     ],
-    "evidenceRole": "Maps the current legacy object-tree conformance IR to derived schema-valid canonical IR artifacts and records alias gaps for the dual-surface transition."
+    "evidenceRole": "Validates the internal bridge from current legacy object-tree IR to derived schema-valid canonical IR artifacts with invariant checks."
   },
-  "transitionPolicy": {
-    "decision": "dual-surface-transition",
+  "bridgePolicy": {
+    "decision": "formal-dual-surface-compatibility-bridge-candidate",
+    "implementation": "src/ir/schema_artifact_bridge.js",
     "legacySurface": "CoreLanguageBridge compileToIR legacy object-tree Program",
     "schemaSurface": "docs/canonical_ir.schema.json schemaVersion 1.0.0",
+    "publicApiStatus": "INTERNAL_ONLY",
     "releaseSurfaceStatus": "OPEN",
-    "notes": [
-      "The current compiler bridge continues to emit legacy object-tree IR for active emitters.",
-      "The reusable internal bridge module derives schema-valid artifacts for evidence accounting without changing compiler or runtime APIs.",
-      "Release 1.0 still needs a final surface choice or a formal compatibility bridge."
+    "invariantFamilies": [
+      "schema-version",
+      "module-id-shape",
+      "module-body-resolves",
+      "node-ids-match-map-keys",
+      "node-ids-are-schema-ids",
+      "node-references-resolve",
+      "no-unmapped-kinds",
+      "source-surface-marked"
     ]
   },
   "summary": {
     "total": 32,
     "positiveFixtures": 21,
+    "bridgeCompatibleDerivedArtifacts": 21,
     "schemaValidDerivedArtifacts": 21,
     "expectedDiagnostics": 11,
     "failed": 0,
@@ -247,10 +255,9 @@
     {
       "name": "values_bindings_control_flow",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 3,
       "nodeCount": 38,
       "artifactSha256": "cbd299feb3895847fa91bb566e49c9b70773b86805b8a5fdf9b46c2ad4045fab",
       "compatibilityChecks": [
@@ -295,7 +302,15 @@
           "detail": 38
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 2
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 2,
+        "condition->test": 2,
+        "args->arguments": 2
+      },
+      "mappedKinds": {
         "VariableDeclaration": 2,
         "Literal": 6,
         "ForStatement": 1,
@@ -307,24 +322,14 @@
         "IfStatement": 1,
         "CallExpression": 2,
         "MemberExpression": 2
-      },
-      "kindAliases": {
-        "VariableDeclarator->VariableDeclaration": 2
-      },
-      "fieldAliases": {
-        "varKind->declarationKind": 2,
-        "condition->test": 2,
-        "args->arguments": 2
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "functions_calls_arrays_objects",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 4,
       "nodeCount": 33,
       "artifactSha256": "456391744c937daa25de58998f5d84cf35200410e656f5fde9645b9bde5606ec",
       "compatibilityChecks": [
@@ -369,7 +374,17 @@
           "detail": 33
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "Parameter->Identifier": 2,
+        "VariableDeclarator->VariableDeclaration": 2
+      },
+      "fieldAliases": {
+        "parameters->params": 1,
+        "value->argument": 1,
+        "varKind->declarationKind": 2,
+        "args->arguments": 2
+      },
+      "mappedKinds": {
         "FunctionDeclaration": 1,
         "Identifier": 12,
         "BlockStatement": 1,
@@ -383,26 +398,14 @@
         "MemberExpression": 4,
         "ExpressionStatement": 1,
         "CallExpression": 2
-      },
-      "kindAliases": {
-        "Parameter->Identifier": 2,
-        "VariableDeclarator->VariableDeclaration": 2
-      },
-      "fieldAliases": {
-        "parameters->params": 1,
-        "value->argument": 1,
-        "varKind->declarationKind": 2,
-        "args->arguments": 2
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "primitive_values_null_equivalents",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 5,
       "nodeCount": 17,
       "artifactSha256": "b8e0c105bc0c5e856cc5e34f2b49e2e78a387070569193502deb2d97b16f5049",
       "compatibilityChecks": [
@@ -447,14 +450,6 @@
           "detail": 17
         }
       ],
-      "kindCounts": {
-        "VariableDeclaration": 4,
-        "Literal": 4,
-        "ExpressionStatement": 1,
-        "CallExpression": 1,
-        "MemberExpression": 1,
-        "Identifier": 6
-      },
       "kindAliases": {
         "VariableDeclarator->VariableDeclaration": 4
       },
@@ -462,15 +457,21 @@
         "varKind->declarationKind": 4,
         "args->arguments": 1
       },
-      "unmappedKinds": {}
+      "mappedKinds": {
+        "VariableDeclaration": 4,
+        "Literal": 4,
+        "ExpressionStatement": 1,
+        "CallExpression": 1,
+        "MemberExpression": 1,
+        "Identifier": 6
+      }
     },
     {
       "name": "arrays_objects_records_indexing",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 4,
       "nodeCount": 43,
       "artifactSha256": "2f63ed390367ffba9c447763fe9c5576cfde19a830ac97aa86607328cd760d95",
       "compatibilityChecks": [
@@ -515,7 +516,14 @@
           "detail": 43
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 2
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 2,
+        "args->arguments": 1
+      },
+      "mappedKinds": {
         "VariableDeclaration": 2,
         "ArrayExpression": 1,
         "Literal": 8,
@@ -527,23 +535,14 @@
         "AssignmentExpression": 1,
         "BinaryExpression": 1,
         "CallExpression": 1
-      },
-      "kindAliases": {
-        "VariableDeclarator->VariableDeclaration": 2
-      },
-      "fieldAliases": {
-        "varKind->declarationKind": 2,
-        "args->arguments": 1
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "truthiness_target_native_delta",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 6,
       "nodeCount": 54,
       "artifactSha256": "bb4bf404410ee52476ae327bb25719c73cd5bd71391ac933f2df25569c8aed38",
       "compatibilityChecks": [
@@ -588,16 +587,6 @@
           "detail": 54
         }
       ],
-      "kindCounts": {
-        "VariableDeclaration": 3,
-        "Literal": 9,
-        "IfStatement": 3,
-        "Identifier": 15,
-        "BlockStatement": 6,
-        "ExpressionStatement": 6,
-        "CallExpression": 6,
-        "MemberExpression": 6
-      },
       "kindAliases": {
         "VariableDeclarator->VariableDeclaration": 3
       },
@@ -606,15 +595,23 @@
         "condition->test": 3,
         "args->arguments": 6
       },
-      "unmappedKinds": {}
+      "mappedKinds": {
+        "VariableDeclaration": 3,
+        "Literal": 9,
+        "IfStatement": 3,
+        "Identifier": 15,
+        "BlockStatement": 6,
+        "ExpressionStatement": 6,
+        "CallExpression": 6,
+        "MemberExpression": 6
+      }
     },
     {
       "name": "equality_and_coercion_target_delta",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 6,
       "nodeCount": 24,
       "artifactSha256": "728218db6301f07e4224853ebac7cebc143638d1026e61871ec3e69ad68db25e",
       "compatibilityChecks": [
@@ -659,15 +656,6 @@
           "detail": 24
         }
       ],
-      "kindCounts": {
-        "VariableDeclaration": 5,
-        "Literal": 4,
-        "BinaryExpression": 3,
-        "Identifier": 9,
-        "ExpressionStatement": 1,
-        "CallExpression": 1,
-        "MemberExpression": 1
-      },
       "kindAliases": {
         "VariableDeclarator->VariableDeclaration": 5
       },
@@ -675,15 +663,22 @@
         "varKind->declarationKind": 5,
         "args->arguments": 1
       },
-      "unmappedKinds": {}
+      "mappedKinds": {
+        "VariableDeclaration": 5,
+        "Literal": 4,
+        "BinaryExpression": 3,
+        "Identifier": 9,
+        "ExpressionStatement": 1,
+        "CallExpression": 1,
+        "MemberExpression": 1
+      }
     },
     {
       "name": "portable_value_semantics_profile",
       "sourceLanguage": "luascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 6,
       "nodeCount": 60,
       "artifactSha256": "32d4f95a790378f3416625c807abab7dfc4923e54c6fc50907986a2f37eaa614",
       "compatibilityChecks": [
@@ -728,7 +723,15 @@
           "detail": 60
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 4
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 4,
+        "condition->test": 1,
+        "args->arguments": 2
+      },
+      "mappedKinds": {
         "VariableDeclaration": 4,
         "ArrayExpression": 1,
         "Literal": 16,
@@ -740,24 +743,14 @@
         "ExpressionStatement": 3,
         "AssignmentExpression": 2,
         "CallExpression": 2
-      },
-      "kindAliases": {
-        "VariableDeclarator->VariableDeclaration": 4
-      },
-      "fieldAliases": {
-        "varKind->declarationKind": 4,
-        "condition->test": 1,
-        "args->arguments": 2
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "control_flow_nested_break_continue_early_return",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 2,
       "nodeCount": 105,
       "artifactSha256": "ac0bac0e748d586975b463f46a9f787da7c7b4b6fa8e817b2a704e7748edd4cb",
       "compatibilityChecks": [
@@ -802,7 +795,20 @@
           "detail": 105
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "Parameter->Identifier": 1,
+        "VariableDeclarator->VariableDeclaration": 4,
+        "UnaryExpression->BinaryExpression": 1
+      },
+      "fieldAliases": {
+        "parameters->params": 1,
+        "varKind->declarationKind": 4,
+        "condition->test": 7,
+        "value->argument": 3,
+        "operand->argument": 1,
+        "args->arguments": 2
+      },
+      "mappedKinds": {
         "FunctionDeclaration": 1,
         "Identifier": 30,
         "BlockStatement": 9,
@@ -819,29 +825,14 @@
         "ForStatement": 2,
         "CallExpression": 2,
         "MemberExpression": 1
-      },
-      "kindAliases": {
-        "Parameter->Identifier": 1,
-        "VariableDeclarator->VariableDeclaration": 4,
-        "UnaryExpression->BinaryExpression": 1
-      },
-      "fieldAliases": {
-        "parameters->params": 1,
-        "varKind->declarationKind": 4,
-        "condition->test": 7,
-        "value->argument": 3,
-        "operand->argument": 1,
-        "args->arguments": 2
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "short_circuit_side_effects",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 4,
       "nodeCount": 43,
       "artifactSha256": "0028580df29a30b62a2357261618390ac20fd93a3ac306cb29c0db24da9dc93a",
       "compatibilityChecks": [
@@ -886,7 +877,17 @@
           "detail": 43
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 1
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 1,
+        "parameters->params": 1,
+        "value->argument": 1,
+        "condition->test": 2,
+        "args->arguments": 3
+      },
+      "mappedKinds": {
         "VariableDeclaration": 1,
         "Literal": 8,
         "FunctionDeclaration": 1,
@@ -899,26 +900,14 @@
         "IfStatement": 2,
         "CallExpression": 3,
         "MemberExpression": 1
-      },
-      "kindAliases": {
-        "VariableDeclarator->VariableDeclaration": 1
-      },
-      "fieldAliases": {
-        "varKind->declarationKind": 1,
-        "parameters->params": 1,
-        "value->argument": 1,
-        "condition->test": 2,
-        "args->arguments": 3
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "control_javascript_switch_conditional",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 2,
       "nodeCount": 33,
       "artifactSha256": "7aa38992d1a6e35a3800f6c7fe96526babb529d7e34be1c75050de0bbc363b54",
       "compatibilityChecks": [
@@ -963,7 +952,16 @@
           "detail": 33
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "Parameter->Identifier": 1,
+        "SwitchCase->BlockStatement": 3
+      },
+      "fieldAliases": {
+        "parameters->params": 1,
+        "value->argument": 3,
+        "args->arguments": 4
+      },
+      "mappedKinds": {
         "FunctionDeclaration": 1,
         "Identifier": 7,
         "BlockStatement": 4,
@@ -974,25 +972,14 @@
         "ExpressionStatement": 1,
         "CallExpression": 4,
         "MemberExpression": 1
-      },
-      "kindAliases": {
-        "Parameter->Identifier": 1,
-        "SwitchCase->BlockStatement": 3
-      },
-      "fieldAliases": {
-        "parameters->params": 1,
-        "value->argument": 3,
-        "args->arguments": 4
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "python_range_forward_control_flow",
       "sourceLanguage": "python",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 3,
       "nodeCount": 25,
       "artifactSha256": "33090c0182a5dc271e1dc3d377504676259b8600ae394509ae0b31b2de0805b8",
       "compatibilityChecks": [
@@ -1037,7 +1024,15 @@
           "detail": 25
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 2
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 2,
+        "condition->test": 1,
+        "args->arguments": 1
+      },
+      "mappedKinds": {
         "VariableDeclaration": 2,
         "Literal": 5,
         "ForStatement": 1,
@@ -1047,24 +1042,14 @@
         "BlockStatement": 1,
         "ExpressionStatement": 2,
         "CallExpression": 1
-      },
-      "kindAliases": {
-        "VariableDeclarator->VariableDeclaration": 2
-      },
-      "fieldAliases": {
-        "varKind->declarationKind": 2,
-        "condition->test": 1,
-        "args->arguments": 1
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "python_range_negative_step_control_flow",
       "sourceLanguage": "python",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 3,
       "nodeCount": 27,
       "artifactSha256": "8a1ecd2770d1d97765f30393291b96507ef77fc62978f0487fbfe68ec6acd772",
       "compatibilityChecks": [
@@ -1109,17 +1094,6 @@
           "detail": 27
         }
       ],
-      "kindCounts": {
-        "VariableDeclaration": 2,
-        "Literal": 5,
-        "ForStatement": 1,
-        "BinaryExpression": 5,
-        "Identifier": 8,
-        "AssignmentExpression": 2,
-        "BlockStatement": 1,
-        "ExpressionStatement": 2,
-        "CallExpression": 1
-      },
       "kindAliases": {
         "VariableDeclarator->VariableDeclaration": 2,
         "UnaryExpression->BinaryExpression": 2
@@ -1130,15 +1104,24 @@
         "operand->argument": 2,
         "args->arguments": 1
       },
-      "unmappedKinds": {}
+      "mappedKinds": {
+        "VariableDeclaration": 2,
+        "Literal": 5,
+        "ForStatement": 1,
+        "BinaryExpression": 5,
+        "Identifier": 8,
+        "AssignmentExpression": 2,
+        "BlockStatement": 1,
+        "ExpressionStatement": 2,
+        "CallExpression": 1
+      }
     },
     {
       "name": "function_scope_closure_shadow_mutation",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 6,
       "nodeCount": 57,
       "artifactSha256": "564e03f66d3572ece2f06ddd1ad46e742afde83a99eb7783b08376d9388fc76e",
       "compatibilityChecks": [
@@ -1183,7 +1166,17 @@
           "detail": 57
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 5,
+        "Parameter->Identifier": 3
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 5,
+        "parameters->params": 3,
+        "value->argument": 3,
+        "args->arguments": 5
+      },
+      "mappedKinds": {
         "VariableDeclaration": 5,
         "Literal": 8,
         "FunctionDeclaration": 3,
@@ -1196,26 +1189,14 @@
         "ArrayExpression": 1,
         "CallExpression": 5,
         "MemberExpression": 3
-      },
-      "kindAliases": {
-        "VariableDeclarator->VariableDeclaration": 5,
-        "Parameter->Identifier": 3
-      },
-      "fieldAliases": {
-        "varKind->declarationKind": 5,
-        "parameters->params": 3,
-        "value->argument": 3,
-        "args->arguments": 5
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "function_recursion_return_normalization",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 3,
       "nodeCount": 42,
       "artifactSha256": "d64c83f4546fd42e95aa141d72c95ddd7c15e0042c298f4f8a6f7d428623c453",
       "compatibilityChecks": [
@@ -1260,7 +1241,16 @@
           "detail": 42
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "Parameter->Identifier": 2
+      },
+      "fieldAliases": {
+        "parameters->params": 2,
+        "condition->test": 2,
+        "value->argument": 4,
+        "args->arguments": 5
+      },
+      "mappedKinds": {
         "FunctionDeclaration": 2,
         "Identifier": 12,
         "BlockStatement": 4,
@@ -1271,25 +1261,14 @@
         "CallExpression": 5,
         "ExpressionStatement": 1,
         "MemberExpression": 1
-      },
-      "kindAliases": {
-        "Parameter->Identifier": 2
-      },
-      "fieldAliases": {
-        "parameters->params": 2,
-        "condition->test": 2,
-        "value->argument": 4,
-        "args->arguments": 5
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "function_extra_arity_target_delta",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 2,
       "nodeCount": 15,
       "artifactSha256": "1969c127193f9f17deec28cbc9ba3275b461d21a5deb5e96f0ccc2f0d3b876e8",
       "compatibilityChecks": [
@@ -1334,16 +1313,6 @@
           "detail": 15
         }
       ],
-      "kindCounts": {
-        "FunctionDeclaration": 1,
-        "Identifier": 5,
-        "BlockStatement": 1,
-        "ReturnStatement": 1,
-        "ExpressionStatement": 1,
-        "CallExpression": 2,
-        "MemberExpression": 1,
-        "Literal": 3
-      },
       "kindAliases": {
         "Parameter->Identifier": 1
       },
@@ -1352,12 +1321,21 @@
         "value->argument": 1,
         "args->arguments": 2
       },
-      "unmappedKinds": {}
+      "mappedKinds": {
+        "FunctionDeclaration": 1,
+        "Identifier": 5,
+        "BlockStatement": 1,
+        "ReturnStatement": 1,
+        "ExpressionStatement": 1,
+        "CallExpression": 2,
+        "MemberExpression": 1,
+        "Literal": 3
+      }
     },
     {
       "name": "unsupported_js_async_function_scope",
       "sourceLanguage": "javascript",
-      "status": "expected-diagnostic",
+      "status": "expected-diagnostic-preserved",
       "phase": "compile",
       "messageIncludes": [
         "Unsupported JavaScript function form: async functions"
@@ -1366,7 +1344,7 @@
     {
       "name": "unsupported_js_generator_function_scope",
       "sourceLanguage": "javascript",
-      "status": "expected-diagnostic",
+      "status": "expected-diagnostic-preserved",
       "phase": "compile",
       "messageIncludes": [
         "Unsupported JavaScript function form: generator functions"
@@ -1375,10 +1353,9 @@
     {
       "name": "data_nested_js_arrays_objects_records",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 6,
       "nodeCount": 88,
       "artifactSha256": "ea9cdce347bb143213f16f2584ec41479a691bdf6338b265cc7266523f7c6e2b",
       "compatibilityChecks": [
@@ -1423,7 +1400,14 @@
           "detail": 88
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 2
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 2,
+        "args->arguments": 1
+      },
+      "mappedKinds": {
         "VariableDeclaration": 2,
         "ObjectExpression": 3,
         "Property": 6,
@@ -1435,23 +1419,14 @@
         "MemberExpression": 20,
         "BinaryExpression": 2,
         "CallExpression": 1
-      },
-      "kindAliases": {
-        "VariableDeclarator->VariableDeclaration": 2
-      },
-      "fieldAliases": {
-        "varKind->declarationKind": 2,
-        "args->arguments": 1
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "data_luascript_portable_length_slice_mutation",
       "sourceLanguage": "luascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 5,
       "nodeCount": 60,
       "artifactSha256": "76fbb9cdfb54b23a363c0e8901c94ce2ef28a2f4466445467ffd29b4e66ab85c",
       "compatibilityChecks": [
@@ -1496,7 +1471,14 @@
           "detail": 60
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 3
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 3,
+        "args->arguments": 2
+      },
+      "mappedKinds": {
         "VariableDeclaration": 3,
         "ArrayExpression": 1,
         "Literal": 12,
@@ -1508,23 +1490,14 @@
         "BinaryExpression": 1,
         "ObjectExpression": 1,
         "Property": 3
-      },
-      "kindAliases": {
-        "VariableDeclarator->VariableDeclaration": 3
-      },
-      "fieldAliases": {
-        "varKind->declarationKind": 3,
-        "args->arguments": 2
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "data_python_list_dict_membership_mutation",
       "sourceLanguage": "python",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 12,
       "nodeCount": 129,
       "artifactSha256": "6d78ad88b93e961e3992c923720881f285be1444a34b8868bb4d24eeb9fac628",
       "compatibilityChecks": [
@@ -1569,7 +1542,17 @@
           "detail": 129
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 4,
+        "UnaryExpression->BinaryExpression": 2
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 4,
+        "args->arguments": 18,
+        "condition->test": 2,
+        "operand->argument": 2
+      },
+      "mappedKinds": {
         "VariableDeclaration": 4,
         "ArrayExpression": 2,
         "Literal": 32,
@@ -1583,26 +1566,14 @@
         "ObjectExpression": 1,
         "Property": 2,
         "MemberExpression": 2
-      },
-      "kindAliases": {
-        "VariableDeclarator->VariableDeclaration": 4,
-        "UnaryExpression->BinaryExpression": 2
-      },
-      "fieldAliases": {
-        "varKind->declarationKind": 4,
-        "args->arguments": 18,
-        "condition->test": 2,
-        "operand->argument": 2
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "data_python_list_iteration_length",
       "sourceLanguage": "python",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 6,
       "nodeCount": 43,
       "artifactSha256": "756a7fc5b8d483f34f96c04d6afe5ba975c1adb639a5e4be19af1325e3694eb4",
       "compatibilityChecks": [
@@ -1647,7 +1618,15 @@
           "detail": 43
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 5
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 5,
+        "condition->test": 1,
+        "args->arguments": 4
+      },
+      "mappedKinds": {
         "VariableDeclaration": 5,
         "ArrayExpression": 1,
         "Literal": 7,
@@ -1658,24 +1637,14 @@
         "BlockStatement": 1,
         "ExpressionStatement": 3,
         "AssignmentExpression": 2
-      },
-      "kindAliases": {
-        "VariableDeclarator->VariableDeclaration": 5
-      },
-      "fieldAliases": {
-        "varKind->declarationKind": 5,
-        "condition->test": 1,
-        "args->arguments": 4
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "data_lua_table_record_fields",
       "sourceLanguage": "lua",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 3,
       "nodeCount": 36,
       "artifactSha256": "1a715da5af1478ecadd34060cee2d2f48054f32a848ba5f1b9c0c76e2b63b1bb",
       "compatibilityChecks": [
@@ -1720,7 +1689,14 @@
           "detail": 36
         }
       ],
-      "kindCounts": {
+      "kindAliases": {
+        "VariableDeclarator->VariableDeclaration": 1
+      },
+      "fieldAliases": {
+        "varKind->declarationKind": 1,
+        "args->arguments": 1
+      },
+      "mappedKinds": {
         "VariableDeclaration": 1,
         "ObjectExpression": 1,
         "Property": 2,
@@ -1732,20 +1708,12 @@
         "MemberExpression": 7,
         "BinaryExpression": 1,
         "CallExpression": 1
-      },
-      "kindAliases": {
-        "VariableDeclarator->VariableDeclaration": 1
-      },
-      "fieldAliases": {
-        "varKind->declarationKind": 1,
-        "args->arguments": 1
-      },
-      "unmappedKinds": {}
+      }
     },
     {
       "name": "unsupported_js_object_spread_structure",
       "sourceLanguage": "javascript",
-      "status": "expected-diagnostic",
+      "status": "expected-diagnostic-preserved",
       "phase": "compile",
       "messageIncludes": [
         "Unsupported JavaScript object spread"
@@ -1754,7 +1722,7 @@
     {
       "name": "unsupported_js_destructuring_structure",
       "sourceLanguage": "javascript",
-      "status": "expected-diagnostic",
+      "status": "expected-diagnostic-preserved",
       "phase": "compile",
       "messageIncludes": [
         "Unsupported JavaScript variable declarator pattern: ObjectPattern"
@@ -1763,10 +1731,9 @@
     {
       "name": "unsupported_target_diagnostic",
       "sourceLanguage": "javascript",
-      "status": "schema-valid-derived-artifact",
+      "status": "bridge-compatible-derived-artifact",
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
-      "moduleBodyCount": 2,
       "nodeCount": 8,
       "artifactSha256": "cae98dd2d6ac8de4f056122c24d502bdd253a2ab8a094054ed4975c403a3b745",
       "compatibilityChecks": [
@@ -1811,14 +1778,6 @@
           "detail": 8
         }
       ],
-      "kindCounts": {
-        "VariableDeclaration": 1,
-        "Literal": 1,
-        "ExpressionStatement": 1,
-        "CallExpression": 1,
-        "MemberExpression": 1,
-        "Identifier": 3
-      },
       "kindAliases": {
         "VariableDeclarator->VariableDeclaration": 1
       },
@@ -1826,12 +1785,19 @@
         "varKind->declarationKind": 1,
         "args->arguments": 1
       },
-      "unmappedKinds": {}
+      "mappedKinds": {
+        "VariableDeclaration": 1,
+        "Literal": 1,
+        "ExpressionStatement": 1,
+        "CallExpression": 1,
+        "MemberExpression": 1,
+        "Identifier": 3
+      }
     },
     {
       "name": "unsupported_js_for_of_control_flow",
       "sourceLanguage": "javascript",
-      "status": "expected-diagnostic",
+      "status": "expected-diagnostic-preserved",
       "phase": "compile",
       "messageIncludes": [
         "Unsupported JavaScript control flow: for-of loops"
@@ -1840,7 +1806,7 @@
     {
       "name": "unsupported_python_continue_control_flow",
       "sourceLanguage": "python",
-      "status": "expected-diagnostic",
+      "status": "expected-diagnostic-preserved",
       "phase": "compile",
       "messageIncludes": [
         "Unsupported Python input feature: continue statements"
@@ -1849,7 +1815,7 @@
     {
       "name": "unsupported_js_try_catch_control_flow",
       "sourceLanguage": "javascript",
-      "status": "expected-diagnostic",
+      "status": "expected-diagnostic-preserved",
       "phase": "compile",
       "messageIncludes": [
         "Unsupported JavaScript exception flow: try/catch/finally"
@@ -1858,7 +1824,7 @@
     {
       "name": "unsupported_js_tagged_template_control_flow",
       "sourceLanguage": "javascript",
-      "status": "expected-diagnostic",
+      "status": "expected-diagnostic-preserved",
       "phase": "compile",
       "messageIncludes": [
         "Unsupported JavaScript template literal form: tagged template literals"
@@ -1867,7 +1833,7 @@
     {
       "name": "unsupported_undefined_value_semantic",
       "sourceLanguage": "javascript",
-      "status": "expected-diagnostic",
+      "status": "expected-diagnostic-preserved",
       "phase": "compile",
       "messageIncludes": [
         "Unsupported JavaScript value semantic: undefined"
@@ -1876,7 +1842,7 @@
     {
       "name": "unsupported_nan_value_semantic",
       "sourceLanguage": "javascript",
-      "status": "expected-diagnostic",
+      "status": "expected-diagnostic-preserved",
       "phase": "compile",
       "messageIncludes": [
         "Unsupported JavaScript value semantic: NaN"
@@ -1885,7 +1851,7 @@
     {
       "name": "unsupported_infinity_value_semantic",
       "sourceLanguage": "javascript",
-      "status": "expected-diagnostic",
+      "status": "expected-diagnostic-preserved",
       "phase": "compile",
       "messageIncludes": [
         "Unsupported JavaScript value semantic: Infinity"

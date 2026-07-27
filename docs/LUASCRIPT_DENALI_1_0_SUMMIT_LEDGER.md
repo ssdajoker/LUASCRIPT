@@ -1845,6 +1845,56 @@ Verification seal:
 | `node --check tests\conformance\schema_artifact_mapping.test.js` | PASS |
 | `npm run test:schema-artifact-map` | PASS: 21/21 positive conformance fixtures produced schema-valid derived artifacts; 11 expected diagnostics preserved |
 
+### 2026-07-27 - Internal Dual-Surface Compatibility Bridge Candidate
+
+Intent:
+
+- Move the schema artifact mapping logic out of the conformance test harness and into an internal reusable bridge module.
+- Validate a formal internal bridge candidate from the current legacy object-tree `CoreLanguageBridge` IR surface to derived schema-valid canonical IR v1 artifacts.
+- Keep the bridge internal-only until release-surface adoption, compatibility versioning, migration policy, and release-blocking invariant policy are deliberately chosen.
+
+Repairs made:
+
+- Added `src/ir/schema_artifact_bridge.js` as the internal compatibility bridge implementation.
+- Refactored `tests/conformance/schema_artifact_mapping.test.js` to use the bridge module and record bridge invariant counts in the existing schema artifact mapping report.
+- Added `npm run test:ir-compatibility-bridge`.
+- Added `tests/conformance/dual_surface_compatibility_bridge.test.js`.
+- Added durable report output at `artifacts/conformance/dual-surface-compatibility-bridge-report.json`.
+- Updated the canonical IR semantics spec, exit criteria, evidence binder, evidence bundle index, Big Remaining Climb ledger, and claims checks for the internal bridge candidate boundary.
+
+Proof scope:
+
+| Evidence | Result |
+| --- | --- |
+| `npm run test:schema-artifact-map` | PASS: 21/21 positive conformance fixtures produced schema-valid derived artifacts; 168/168 bridge invariant checks passed; 11 expected diagnostics preserved |
+| `npm run test:ir-compatibility-bridge` | PASS: 21/21 internal bridge mappings; 168/168 invariant checks; 11 expected diagnostics preserved |
+| Bridge implementation | `src/ir/schema_artifact_bridge.js` |
+| Bridge report | `artifacts/conformance/dual-surface-compatibility-bridge-report.json` |
+| Invariant families | `schema-version`, `module-id-shape`, `module-body-resolves`, `node-ids-match-map-keys`, `node-ids-are-schema-ids`, `node-references-resolve`, `no-unmapped-kinds`, `source-surface-marked` |
+| Public API status | `INTERNAL_ONLY` |
+
+Boundary:
+
+- This does not make the bridge public API.
+- This does not change compiler output.
+- This does not choose the final release IR surface.
+- This does not close canonical `1.0`, source-preserving round trip proof, broad semantic equivalence, exhaustive edge coverage, ISO certification, or true omni-language 100%.
+
+Next route:
+
+- Choose the final release IR surface from the internal bridge candidate or add release compatibility/versioning rules for the bridge.
+- Or add the next real bidirectionality proof layer, preferably Lua structural IR reparse, before final surface adoption.
+
+Verification seal:
+
+| Gate | Result |
+| --- | --- |
+| `node --check src\ir\schema_artifact_bridge.js` | PASS |
+| `node --check tests\conformance\schema_artifact_mapping.test.js` | PASS |
+| `node --check tests\conformance\dual_surface_compatibility_bridge.test.js` | PASS |
+| `npm run test:schema-artifact-map` | PASS: 21/21 positive conformance fixtures; 168/168 bridge invariant checks; 11 expected diagnostics preserved |
+| `npm run test:ir-compatibility-bridge` | PASS: 21/21 positive fixtures; 168/168 invariant checks; 11 expected diagnostics preserved |
+
 ### 2026-07-16 - No-Release Public API Runtime Freeze Candidate
 
 Intent:

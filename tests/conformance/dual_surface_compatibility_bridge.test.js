@@ -23,7 +23,7 @@ const {
 
 const manifestPath = path.join(__dirname, "manifest.json");
 const schemaPath = path.join(repoRoot, "docs", "canonical_ir.schema.json");
-const reportPath = path.join(repoRoot, "artifacts", "conformance", "schema-artifact-mapping-report.json");
+const reportPath = path.join(repoRoot, "artifacts", "conformance", "dual-surface-compatibility-bridge-report.json");
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
 const schemaKinds = schemaKindsFromSchema(schema);
@@ -35,7 +35,7 @@ function pushCount(map, key, amount = 1) {
   map[key] = (map[key] || 0) + amount;
 }
 
-function validateArtifact(validate, artifact) {
+function validateWithAjv(validate, artifact) {
   const ok = validate(artifact);
   return {
     ok,
@@ -56,7 +56,7 @@ function main() {
   const globalKindAliases = {};
   const globalFieldAliases = {};
   const globalMappedKinds = {};
-  const invariantTotals = {
+  const invariantChecks = {
     total: 0,
     passed: 0,
     failed: 0
@@ -67,7 +67,7 @@ function main() {
       results.push({
         name: fixture.name,
         sourceLanguage: fixture.sourceLanguage,
-        status: "expected-diagnostic",
+        status: "expected-diagnostic-preserved",
         phase: fixture.expectedFailure.phase || "compile",
         messageIncludes: fixture.expectedFailure.messageIncludes || []
       });
@@ -77,33 +77,31 @@ function main() {
     try {
       const legacyProgram = bridge.compileToIR(fixture.source, fixture.sourceLanguage);
       const mapping = fixtureToSchemaArtifact(fixture, legacyProgram, { schemaKinds });
-      const validation = validateArtifact(validate, mapping.artifact);
+      const schemaValidation = validateWithAjv(validate, mapping.artifact);
       const compatibility = validateSchemaArtifactCompatibility(mapping);
 
-      assert.strictEqual(validation.ok, true, `${fixture.name} derived schema artifact is schema-valid: ${JSON.stringify(validation.errors)}`);
-      assert.strictEqual(compatibility.ok, true, `${fixture.name} bridge invariants failed: ${JSON.stringify(compatibility.failures)}`);
+      assert.strictEqual(schemaValidation.ok, true, `${fixture.name} bridge artifact is not schema-valid: ${JSON.stringify(schemaValidation.errors)}`);
+      assert.strictEqual(compatibility.ok, true, `${fixture.name} compatibility bridge invariants failed: ${JSON.stringify(compatibility.failures)}`);
 
       for (const [key, count] of Object.entries(mapping.kindAliases)) pushCount(globalKindAliases, key, count);
       for (const [key, count] of Object.entries(mapping.fieldAliases)) pushCount(globalFieldAliases, key, count);
       for (const [key, count] of Object.entries(mapping.kindCounts)) pushCount(globalMappedKinds, key, count);
-      invariantTotals.total += compatibility.checks.length;
-      invariantTotals.passed += compatibility.checks.filter(check => check.passed).length;
-      invariantTotals.failed += compatibility.checks.filter(check => !check.passed).length;
+      invariantChecks.total += compatibility.checks.length;
+      invariantChecks.passed += compatibility.checks.filter(check => check.passed).length;
+      invariantChecks.failed += compatibility.checks.filter(check => !check.passed).length;
 
       results.push({
         name: fixture.name,
         sourceLanguage: fixture.sourceLanguage,
-        status: "schema-valid-derived-artifact",
+        status: "bridge-compatible-derived-artifact",
         legacyRootKind: legacyProgram.kind || null,
         schemaVersion: mapping.artifact.schemaVersion,
-        moduleBodyCount: mapping.artifact.module.body.length,
         nodeCount: Object.keys(mapping.artifact.nodes).length,
         artifactSha256: hashText(JSON.stringify(mapping.artifact)),
         compatibilityChecks: compatibility.checks,
-        kindCounts: mapping.kindCounts,
         kindAliases: mapping.kindAliases,
         fieldAliases: mapping.fieldAliases,
-        unmappedKinds: mapping.unmappedKinds
+        mappedKinds: mapping.kindCounts
       });
     } catch (error) {
       failures.push({
@@ -120,13 +118,13 @@ function main() {
     }
   }
 
-  const positiveResults = results.filter(result => result.status !== "expected-diagnostic");
-  const schemaValidResults = results.filter(result => result.status === "schema-valid-derived-artifact");
-  const expectedDiagnostics = results.filter(result => result.status === "expected-diagnostic");
+  const compatibleResults = results.filter(result => result.status === "bridge-compatible-derived-artifact");
+  const expectedDiagnostics = results.filter(result => result.status === "expected-diagnostic-preserved");
+  const positiveCount = manifest.fixtures.length - expectedDiagnostics.length;
   const report = {
     schemaVersion: 1,
-    kind: "luascript:schema-artifact-mapping",
-    command: "npm run test:schema-artifact-map",
+    kind: "luascript:dual-surface-compatibility-bridge",
+    command: "npm run test:ir-compatibility-bridge",
     generatedAt: new Date().toISOString(),
     elapsedMs: Date.now() - startedAt,
     environment: environmentMetadata(),
@@ -139,30 +137,38 @@ function main() {
     supportMatrixTraceability: supportMatrixTraceability({
       supportRows: [
         "Canonical IR conformance",
-        "Denali 1.0 IR semantics",
-        "Big Remaining Climb schema-valid conformance artifact mapping"
+        "Dual-surface IR compatibility bridge",
+        "Big Remaining Climb final release IR surface"
       ],
-      evidenceRole: "Maps the current legacy object-tree conformance IR to derived schema-valid canonical IR artifacts and records alias gaps for the dual-surface transition.",
-      boundary: "This report proves schema-valid derived artifacts for current positive conformance fixtures only. It does not choose the release IR surface, change compiler output, promote broad source identity, or close canonical 1.0."
+      evidenceRole: "Validates the internal bridge from current legacy object-tree IR to derived schema-valid canonical IR artifacts with invariant checks.",
+      boundary: "This report proves an internal dual-surface compatibility bridge candidate for current positive conformance fixtures only. It does not make the bridge public API, choose the final release IR surface, change compiler output, or close canonical 1.0."
     }),
-    transitionPolicy: {
-      decision: "dual-surface-transition",
+    bridgePolicy: {
+      decision: "formal-dual-surface-compatibility-bridge-candidate",
+      implementation: "src/ir/schema_artifact_bridge.js",
       legacySurface: "CoreLanguageBridge compileToIR legacy object-tree Program",
       schemaSurface: "docs/canonical_ir.schema.json schemaVersion 1.0.0",
+      publicApiStatus: "INTERNAL_ONLY",
       releaseSurfaceStatus: "OPEN",
-      notes: [
-        "The current compiler bridge continues to emit legacy object-tree IR for active emitters.",
-        "The reusable internal bridge module derives schema-valid artifacts for evidence accounting without changing compiler or runtime APIs.",
-        "Release 1.0 still needs a final surface choice or a formal compatibility bridge."
+      invariantFamilies: [
+        "schema-version",
+        "module-id-shape",
+        "module-body-resolves",
+        "node-ids-match-map-keys",
+        "node-ids-are-schema-ids",
+        "node-references-resolve",
+        "no-unmapped-kinds",
+        "source-surface-marked"
       ]
     },
     summary: {
       total: manifest.fixtures.length,
-      positiveFixtures: positiveResults.length,
-      schemaValidDerivedArtifacts: schemaValidResults.length,
+      positiveFixtures: positiveCount,
+      bridgeCompatibleDerivedArtifacts: compatibleResults.length,
+      schemaValidDerivedArtifacts: compatibleResults.length,
       expectedDiagnostics: expectedDiagnostics.length,
       failed: failures.length,
-      invariantChecks: invariantTotals,
+      invariantChecks,
       globalKindAliases,
       globalFieldAliases,
       globalMappedKinds
@@ -173,9 +179,9 @@ function main() {
 
   writeJsonReport(reportPath, report);
   console.log(
-    `Schema artifact mapping passed: ${schemaValidResults.length}/${positiveResults.length} positive conformance fixtures produced schema-valid derived artifacts; ${expectedDiagnostics.length} expected diagnostics preserved; ${invariantTotals.passed}/${invariantTotals.total} bridge invariant checks passed`
+    `Dual-surface compatibility bridge passed: ${compatibleResults.length}/${positiveCount} positive fixtures; ${invariantChecks.passed}/${invariantChecks.total} invariant checks; ${expectedDiagnostics.length} expected diagnostics preserved`
   );
-  console.log(`Schema artifact mapping report: ${path.relative(repoRoot, reportPath)}`);
+  console.log(`Dual-surface compatibility bridge report: ${path.relative(repoRoot, reportPath)}`);
 
   if (failures.length > 0) {
     process.exitCode = 1;
