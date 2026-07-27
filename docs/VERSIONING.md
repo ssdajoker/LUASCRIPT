@@ -1,5 +1,7 @@
 # Canonical IR Versioning Policy
 
+Status: IR schema support reference. This policy governs `schemaVersion`; it is not a LUASCRIPT package release policy and does not change the package/runtime contract in [../PROJECT_STATUS.md](../PROJECT_STATUS.md). Package semver, public API, runtime, and release-action expectations live in [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md).
+
 Canonical URL for the JSON Schema:
 
 - Latest (v1): [canonical_ir.schema.json](https://raw.githubusercontent.com/ssdajoker/LUASCRIPT/refs/heads/main/docs/canonical_ir.schema.json)

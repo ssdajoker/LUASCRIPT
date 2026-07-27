@@ -1,0 +1,319 @@
+{
+  "programs": [
+    {
+      "name": "arithmetic_bindings",
+      "source": "tests/actual_programs/fixtures/arithmetic_bindings.ls",
+      "expectedOutputIncludes": ["sum\t5", "product\t20"]
+    },
+    {
+      "name": "functions_conditionals",
+      "source": "tests/actual_programs/fixtures/functions_conditionals.ls",
+      "expectedOutputIncludes": ["add\t7", "branch\tbig"]
+    },
+    {
+      "name": "loops_for_of",
+      "source": "tests/actual_programs/fixtures/loops_for_of.ls",
+      "expectedOutputIncludes": ["while\t0", "while\t1", "forof\t1", "forof\t2", "forof\t3"]
+    },
+    {
+      "name": "array_runtime_methods",
+      "source": "tests/actual_programs/fixtures/array_runtime_methods.ls",
+      "expectedOutputIncludes": ["mapped\t[2, 4, 6]", "filtered\t[3, 4]", "total\t6"]
+    },
+    {
+      "name": "portable_semantics_index_length_slice",
+      "source": "tests/actual_programs/fixtures/portable_semantics_index_length_slice.ls",
+      "expectedOutputIncludes": ["ring3_profile\tb\t4\tbc\t8\t9\t8\t2\t10"]
+    },
+    {
+      "name": "portable_semantics_truthiness_string_many",
+      "source": "tests/actual_programs/fixtures/portable_semantics_truthiness_string_many.ls",
+      "expectedOutputIncludes": ["ring3_semantics\tlist_truthy\tobject_truthy\tzero_false\tempty_false\tneg_false\tcount=3 flag=false empty=null\t2\tAda\t3\t7\tdone"]
+    },
+    {
+      "name": "default_index_length_slice",
+      "source": "tests/actual_programs/fixtures/default_index_length_slice.ls",
+      "expectedOutputIncludes": ["ring3_default\tb\t4\tbc\t8\t9\t8\t2\t10"]
+    },
+    {
+      "name": "default_truthiness_string_many",
+      "source": "tests/actual_programs/fixtures/default_truthiness_string_many.ls",
+      "expectedOutputIncludes": ["ring3_default_semantics\tlist_truthy\tobject_truthy\tzero_false\tempty_false\tneg_false\tcount=3 flag=false empty=null\t2\tAda\t3\t7\tdone"]
+    },
+    {
+      "name": "class_smoke",
+      "source": "tests/actual_programs/fixtures/class_smoke.ls",
+      "expectedOutputIncludes": ["point\t4\t9"]
+    },
+    {
+      "name": "supported_math_showcase",
+      "source": "examples/supported_math_showcase.ls",
+      "expectedOutputIncludes": ["hypotenuse\t5", "doubled\t[2, 4, 6, 8]", "total\t20"]
+    },
+    {
+      "name": "mathematical_notation_core",
+      "source": "examples/mathematical_notation_core.ls",
+      "expectedOutputIncludes": ["math_notation\t25\t5\t18\ttrue\t28\t1", "math_notation\t25.0\t5\t18\ttrue\t28\t1"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v1",
+      "source": "examples/mathematical_notation_rehab_v1.ls",
+      "expectedOutputIncludes": ["math_rehab\t32\t9\t[2, 4, 6, 8, 10]\t5", "pipe_log"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v2",
+      "source": "examples/mathematical_notation_rehab_v2.ls",
+      "expectedOutputIncludes": ["math_rehab_v2\t10\t9\t120"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v3",
+      "source": "examples/mathematical_notation_rehab_v3.ls",
+      "expectedOutputIncludes": ["math_rehab_v3\t10", "[3, 7]", "\t3\t3\t10\t5\t0"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v4",
+      "source": "examples/mathematical_notation_rehab_v4.ls",
+      "expectedOutputIncludes": ["math_rehab_v4\ttrue\t4"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v5",
+      "source": "examples/mathematical_notation_rehab_v5.ls",
+      "expectedOutputIncludes": ["math_rehab_v5\t55\t24\ttrue\ttrue\ttrue", "math_rehab_v5\t55.0\t24\ttrue\ttrue\ttrue"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v6",
+      "source": "examples/mathematical_notation_rehab_v6.ls",
+      "expectedOutputIncludes": ["math_rehab_v6\t55\t9\t120\t6\ttrue", "math_rehab_v6\t55.0\t9\t120\t6\ttrue"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v7",
+      "source": "examples/mathematical_notation_rehab_v7.ls",
+      "expectedOutputIncludes": ["math_rehab_v7\t55\t15\t9\t120\ttrue\t[1, 3, 6, 10]\tlarge", "math_rehab_v7\t55.0\t15\t9\t120\ttrue\t[1, 3, 6, 10]\tlarge"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v8",
+      "source": "examples/mathematical_notation_rehab_v8.ls",
+      "expectedOutputIncludes": ["math_rehab_v8\ttrue\ttrue\ttrue\t[true, true, true]\tsteep"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v9",
+      "source": "examples/mathematical_notation_rehab_v9.ls",
+      "expectedOutputIncludes": ["math_rehab_v9\ttrue\ttrue\ttrue\t[true, true, true]\tlarge_area"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v10",
+      "source": "examples/mathematical_notation_rehab_v10.ls",
+      "expectedOutputIncludes": ["math_rehab_v10\ttrue\ttrue\ttrue\t[true, true, true]\tbare_integral_ok"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v11",
+      "source": "examples/mathematical_notation_rehab_v11.ls",
+      "expectedOutputIncludes": ["math_rehab_v11\t25\t[8, -6, 0]\t[[3, 6], [4, 8], [0, 0]]\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\tfield_energy_high"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v12",
+      "source": "examples/mathematical_notation_rehab_v12.ls",
+      "expectedOutputIncludes": ["math_rehab_v12\t5\tm\t5\tm/s\t6\ttrue\ttrue\t24\tW\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\timpedance_high"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v13",
+      "source": "examples/mathematical_notation_rehab_v13.ls",
+      "expectedOutputIncludes": ["math_rehab_v13\t5\tm\t6\ttrue\t48\ttrue\t2.5\t[2, 6, 12]\t[[4, 4], [10, 8]]\ttrue\ttrue\ttrue\t3\t[22, 0, 0]\tmatrix_load_high"]
+    },
+    {
+      "name": "mathematical_notation_rehab_v14",
+      "source": "examples/mathematical_notation_rehab_v14.ls",
+      "expectedOutputIncludes": [
+        "math_rehab_v14\tnewton2\tF = (m * a)\tm\t14\tV = (I * R)\t(V / R)\t2",
+        "F = (q * (E + (v ⨯ B)))",
+        "div(E) = (rho / epsilon0)",
+        "S = (E ⨯ H)"
+      ]
+    },
+    {
+      "name": "mathematical_notation_rehab_v15",
+      "source": "examples/mathematical_notation_rehab_v15.ls",
+      "expectedOutputIncludes": [
+        "math_rehab_v15\tV = (I * R)\tP = (V * I)\t(I * R)\tkg m^2 s^-3 A^-1",
+        "(I * (I * R))\tkg m^2 s^-3\t12\t24",
+        "V = (I * R); P = (I * (I * R))"
+      ]
+    },
+    {
+      "name": "mathematical_notation_rehab_v16",
+      "source": "examples/mathematical_notation_rehab_v16.ls",
+      "expectedOutputIncludes": [
+        "math_rehab_v16\t(x * (2 * t))\tm s\t(cos((theta ^ 2)) * (2 * theta))",
+        "(1 / (1 + ((s * R) * C)))\t(((s * R) * C) / (1 + ((s * R) * C)))",
+        "(R / (R + (s * L)))\t(1 / (s * C))\tkg m^2 s^-3 A^-2\t(s * L)\tkg m^2 s^-3 A^-2",
+        "(R / ((1 / (s * C)) + R))\t(1 / (1 + ((s * 1000) * 1e-06)))"
+      ]
+    },
+    {
+      "name": "mathematical_notation_rehab_v17",
+      "source": "examples/mathematical_notation_rehab_v17.ls",
+      "expectedOutputIncludes": [
+        "math_rehab_v17\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue",
+        "((R + (s * L)) + (1 / (s * C)))"
+      ]
+    },
+    {
+      "name": "mathematical_notation_rehab_v18",
+      "source": "examples/mathematical_notation_rehab_v18.ls",
+      "expectedOutputIncludes": [
+        "math_rehab_v18\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue"
+      ]
+    },
+    {
+      "name": "unsupported_math_binder_glyph_placement",
+      "source": "tests/actual_programs/fixtures/unsupported_math_binder_glyph_placement.ls",
+      "expectedFailure": true,
+      "expectedFailurePatterns": [
+        "Compact mathematical binder glyph placement is experimental",
+        "use ∑\\[n = lower\\.\\.upper\\]\\(body\\) or ∑_\\{n=lower\\}\\^\\{upper\\}\\(body\\)"
+      ]
+    },
+    {
+      "name": "unsupported_math_binder_missing_upper",
+      "source": "tests/actual_programs/fixtures/unsupported_math_binder_missing_upper.ls",
+      "expectedFailure": true,
+      "expectedFailurePatterns": ["Expected upper binder clause like \\^\\{5\\}"]
+    },
+    {
+      "name": "unsupported_math_limit_start_value",
+      "source": "tests/actual_programs/fixtures/unsupported_math_limit_start_value.ls",
+      "expectedFailure": true,
+      "expectedFailurePatterns": ["Limit start values are not supported in V8"]
+    },
+    {
+      "name": "unsupported_math_integral_missing_differential",
+      "source": "tests/actual_programs/fixtures/unsupported_math_integral_missing_differential.ls",
+      "expectedFailure": true,
+      "expectedFailurePatterns": ["Definite integral shorthand requires a differential like dx after the body"]
+    },
+    {
+      "name": "unsupported_math_integral_bare_missing_differential",
+      "source": "tests/actual_programs/fixtures/unsupported_math_integral_bare_missing_differential.ls",
+      "expectedFailure": true,
+      "expectedFailurePatterns": ["Definite integral shorthand requires a differential like dx after the body"]
+    },
+    {
+      "name": "unsupported_math_cross_dimension",
+      "source": "tests/actual_programs/fixtures/unsupported_math_cross_dimension.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["math\\.cross: expected two 3D vectors"]
+    },
+    {
+      "name": "unsupported_math_unit_add_dimension",
+      "source": "tests/actual_programs/fixtures/unsupported_math_unit_add_dimension.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["math\\.unit_add: incompatible dimensions"]
+    },
+    {
+      "name": "unsupported_math_unit_operator_dimension",
+      "source": "tests/actual_programs/fixtures/unsupported_math_unit_operator_dimension.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["math\\.unit_add: incompatible dimensions"]
+    },
+    {
+      "name": "unsupported_math_matrix_dimensions",
+      "source": "tests/actual_programs/fixtures/unsupported_math_matrix_dimensions.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["math\\.matmul: inner dimensions must match"]
+    },
+    {
+      "name": "unsupported_math_symbolic_unknown_formula",
+      "source": "tests/actual_programs/fixtures/unsupported_math_symbolic_unknown_formula.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["math\\.physics_formula: unknown formula maxwell_everything"]
+    },
+    {
+      "name": "unsupported_math_symbolic_dimension_mismatch",
+      "source": "tests/actual_programs/fixtures/unsupported_math_symbolic_dimension_mismatch.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["math\\.symbolic: incompatible dimensions for add"]
+    },
+    {
+      "name": "unsupported_math_symbolic_derivative_function",
+      "source": "tests/actual_programs/fixtures/unsupported_math_symbolic_derivative_function.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["math\\.symbolic_derivative: unsupported function tan"]
+    },
+    {
+      "name": "unsupported_math_frequency_response_parameters",
+      "source": "tests/actual_programs/fixtures/unsupported_math_frequency_response_parameters.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["math\\.frequency_response: parameters must be a table"]
+    },
+    {
+      "name": "unsupported_math_rlc_positive_values",
+      "source": "tests/actual_programs/fixtures/unsupported_math_rlc_positive_values.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["math\\.rlc_resonant_frequency capacitance: expected positive value"]
+    },
+    {
+      "name": "unsupported_math_frequency_sweep_count",
+      "source": "tests/actual_programs/fixtures/unsupported_math_frequency_sweep_count.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["math\\.frequency_sweep count: expected integer count >= 2"]
+    },
+    {
+      "name": "unsupported_math_response_crossing_missing",
+      "source": "tests/actual_programs/fixtures/unsupported_math_response_crossing_missing.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["math\\.response_crossing_frequency: target dB not crossed"]
+    },
+    {
+      "name": "nested_closures",
+      "source": "tests/actual_programs/fixtures/nested_closures.ls",
+      "expectedOutputIncludes": ["nested_closure\t12"]
+    },
+    {
+      "name": "object_mutation",
+      "source": "tests/actual_programs/fixtures/object_mutation.ls",
+      "expectedOutputIncludes": ["object_mutation\tAda\t5"]
+    },
+    {
+      "name": "mixed_arrays_objects",
+      "source": "tests/actual_programs/fixtures/mixed_arrays_objects.ls",
+      "expectedOutputIncludes": ["mixed_arrays_objects\tbeta\t7"]
+    },
+    {
+      "name": "nested_loops",
+      "source": "tests/actual_programs/fixtures/nested_loops.ls",
+      "expectedOutputIncludes": ["nested_loops\t18"]
+    },
+    {
+      "name": "string_number_coercion",
+      "source": "tests/actual_programs/fixtures/string_number_coercion.ls",
+      "expectedOutputIncludes": ["string_number_coercion\tcount: 3\t9"]
+    },
+    {
+      "name": "module_like_patterns",
+      "source": "tests/actual_programs/fixtures/module_like_patterns.ls",
+      "expectedOutputIncludes": ["module_like\tmath\t18"]
+    },
+    {
+      "name": "object_loop_state",
+      "source": "tests/actual_programs/fixtures/object_loop_state.ls",
+      "expectedOutputIncludes": ["object_loop_state\ttrue\t3"]
+    },
+    {
+      "name": "short_circuit",
+      "source": "tests/actual_programs/fixtures/short_circuit.ls",
+      "expectedOutputIncludes": ["short_circuit\t0\tfalse\ttrue"]
+    },
+    {
+      "name": "runtime_error_undefined_call",
+      "source": "tests/actual_programs/fixtures/runtime_error_undefined_call.ls",
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": ["runtime_error\\s+before", "nil value", "missingFunction"]
+    },
+    {
+      "name": "unsupported_throw_diagnostic",
+      "source": "tests/actual_programs/fixtures/unsupported_throw_diagnostic.ls",
+      "expectedFailure": true,
+      "expectedFailurePatterns": ["Unsupported JavaScript exception flow: throw statements"]
+    }
+  ]
+}

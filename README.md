@@ -1,757 +1,182 @@
-# LUASCRIPT - Revolutionary Mathematical Programming Language
+# LUASCRIPT
 
-[![Status](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgwgVSb0OVIaUUU0Hft7H4pLlcbP4fkm3QX6JcV9rqBMpIARa0BGgtIJCqxGMqInJjm2EQ4xwKcBZ3QQpH9WMVSCTjiIsyiIP1IrbsSwuzqbZg3Q-6HETCDoi7l5D_d7Pcz1HoI/w1200-h630-p-k-no-nu/dash.JPG)
-[![Foundation](https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Mark_of_the_United_States_Army.svg/250px-Mark_of_the_United_States_Army.svg.png)
-[![Syntax](https://i.pinimg.com/736x/28/b0/d1/28b0d189571e22609f0e9378da7b09a4.jpg)
+Status source of truth: see [PROJECT_STATUS.md](PROJECT_STATUS.md). The beta handoff artifact is [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md). Expedition guidance starts in [docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md](docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md), the post-beta 1.0 route book is [docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md](docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md), and the remaining source-preserving/certification climb now lives in [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md). Language depth accession rules live in [docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md). Detailed roadmap, language support tiers, known blockers, and archived-plan consolidation live in [docs/LUASCRIPT_MEGA_PLAN.md](docs/LUASCRIPT_MEGA_PLAN.md). Bidirectionality terminology is defined by [docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md). Public API and runtime expectations for real `1.0` are defined by [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md). Certification-style evidence is organized by [docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md), and the release-shaped bundle map is [docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md).
 
-**The first programming language where mathematical expressions are as elegant as mathematical notation itself.**
+The active docs surface is intentionally small. [docs/INDEX.md](docs/INDEX.md) is the canonical active-docs map; if a document is not in that map or the support-reference list below, treat it as deprecated historical material under [docs/OLD LUASCRIPT DOCS/README.md](<docs/OLD LUASCRIPT DOCS/README.md>).
 
-## ✨ What Makes LUASCRIPT Revolutionary
+## Scoped Beta v0.1 Handoff
 
-```luascript
-// Pure mathematical elegance
-area_of_circle(radius) = π × radius²
-quadratic_formula(a, b, c) = (-b ± √(b² - 4×a×c)) / (2×a)
-gaussian(x, μ=0, σ=1) = (1/√(2×π×σ²)) × ℯ^(-(x-μ)²/(2×σ²))
+LUASCRIPT is in a **scoped, non-strict pre-production beta v0.1** state. On 2026-06-19, `npm run beta:readiness`, `npm run beta:preflight`, and `npm run beta:full` passed for the implemented lanes; the same beta preflight/full evidence was refreshed on 2026-07-14 during the penultimate Denali readiness audit. This is evidence for the named slices only; it is not canonical `1.0`, not full-language completion, and the beta handoff itself did not claim strict-native completion.
 
-// JavaScript-like programming with mathematical beauty
-class Vector3 {
-    constructor(x, y, z) {
-        this.x = x || 0.0;
-        this.y = y || 0.0;  
-        this.z = z || 0.0;
-    }
-    
-    magnitude() {
-        return √(this.x² + this.y² + this.z²);
-    }
-    
-    normalize() {
-        let mag = this.magnitude();
-        return new Vector3(this.x÷mag, this.y÷mag, this.z÷mag);
-    }
-}
+The exact beta handoff artifact is [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md). Post-beta strict-native closure for the current named slices was completed on 2026-07-13: Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam now have narrow native gates alongside the earlier JavaScript, TypeScript, `.ls`, Lua, Python, C#, C, C++, Java, and Rust gates. These remain limited slices, not broad language support. The post-beta Denali route has now sealed its started handoff slices through the 2026-07-16 release-candidate audit in [docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md](docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md). Current forward motion lives in [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md): new proof layers, schema-valid IR surface reconciliation, final API/runtime freeze, compatibility seal, and release-grade evidence generation.
 
-// Functional programming with mathematical pipelines
-let result = [1, 2, 3, 4, 5]
-    |> map(x → x²)
-    |> filter(x → x > 10)  
-    |> reduce((sum, x) → sum + x, 0);
-
-console.log(`Result: ${result}`);
-```
-
-## 🎯 Current Status: Mathematical Excellence Achieved! 
-
-### 🏆 **BREAKTHROUGH: Mathematical Expressions 100% Complete (4/4 Tests Passing)**
-
-**MAJOR MILESTONE REACHED**: LUASCRIPT has achieved perfect mathematical expression support with all Unicode mathematical operators working flawlessly in complex expressions.
-
-### ✅ **Production-Ready Features**
-- **✨ NEW: Mathematical Expressions 100% Complete**: All complex mathematical notation working perfectly
-- **✨ NEW: Context Validation Fixed**: Return statements and control flow in mathematical contexts
-- **✅ Mathematical Function Transpilation**: `f(x) = π × x²` works perfectly
-- **✅ Unicode Mathematical Operators**: All 25+ mathematical symbols supported (`π`, `×`, `÷`, `√`, `≤`, `≥`, `²`, `₂`, etc.)
-- **✅ Complex Mathematical Expressions**: `√((x₂ - x₁)² + (y₂ - y₁)²)` parses and transpiles flawlessly
-- **✅ LuaJIT Integration**: High-performance execution runtime  
-- **✅ Enhanced Parser**: Comprehensive JavaScript-like syntax parsing (1,244 lines)
-- **Enhanced Lexer**: Industry-leading Unicode mathematical token support
-- **Runtime Library**: Complete JavaScript-compatible array methods and utilities
-
-### ⚠️ **In Development**
-- **Object-Oriented Programming**: Implemented but needs debugging
-- **Template Literals**: Parsed but transpilation needs completion  
-- **For-of Loops**: Parser needs `of` keyword handling
-- **Complex Expressions**: Advanced expression parsing refinement
-
-### 📊 **Progress Metrics**
-- **Core Foundation**: 90% Complete ✅
-- **Parser Architecture**: 85% Complete ✅  
-- **Language Features**: 75% Complete ⚠️
-- **Production Readiness**: 60% Complete 🚧
-
-## 🏗️ Architecture Overview
-
-```
-LUASCRIPT Architecture
-├── Enhanced Lexer (enhanced_lexer.py)
-│   ├── Unicode Mathematical Operators  ✅
-│   ├── Template String Interpolation   ✅
-│   └── Modern JavaScript Tokens        ✅
-├── Enhanced Parser (enhanced_parser.py)  
-│   ├── Recursive Descent Parsing       ✅
-│   ├── 25+ AST Node Types              ✅
-│   └── JavaScript-like Syntax Support  ✅
-├── Enhanced Transpiler (enhanced_transpiler.py)
-│   ├── Mathematical Code Generation    ✅
-│   ├── Variable/Function Declarations  ✅
-│   └── Object-Oriented Features        ⚠️
-├── Enhanced Runtime (enhanced_runtime.lua)
-│   ├── JavaScript Array Methods        ✅
-│   ├── Mathematical Functions          ✅
-│   └── Performance Optimizations       ✅
-└── LuaJIT Runtime
-    ├── High-Performance Execution      ✅
-    └── Production-Grade Stability      ✅
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Python 3.8+
-- LuaJIT 2.1+ (included in project)
-
-> If you installed LuaJIT with winget on Windows, persist it for new shells with:
-> `setx PATH "C:\\Users\\ssdaj\\AppData\\Local\\Programs\\LuaJIT\\bin;%PATH%"`
-
-### Quick Start
-```bash
-# Clone the project
-git clone https://github.com/luascript/luascript.git
-cd luascript
-
-# Run a mathematical example
-python src/luascript_compiler.py examples/mathematical_showcase.ls
-
-# Execute the generated Lua
-luajit output.lua
-```
-
-### Your First LUASCRIPT Program
-```luascript
-// hello_world.ls
-greeting(name) = `Hello, ${name}! Welcome to mathematical programming.`
-fibonacci(n) = n ≤ 1 ? n : fibonacci(n-1) + fibonacci(n-2)
-
-let message = greeting("Developer");
-let fib10 = fibonacci(10);
-
-console.log(message);
-console.log(`Fibonacci(10) = ${fib10}`);
-```
-
-## 📚 Examples
-
-### Mathematical Functions
-```luascript
-// Calculus made beautiful
-derivative(f, x, h=1e-10) = (f(x + h) - f(x - h)) / (2×h)
-integral(f, a, b, n=10000) = 
-  let Δx = (b - a) / n in
-  [0..n-1]
-    |> map(i → f(a + i×Δx + Δx/2) × Δx)
-    |> reduce((∑, area) → ∑ + area, 0)
-```
-
-### Object-Oriented Programming  
-```luascript
-class Matrix {
-    constructor(rows, cols) {
-        this.rows = rows;
-        this.cols = cols;
-        this.data = Array(rows × cols).fill(0);
-    }
-    
-    get(i, j) {
-        return this.data[i × this.cols + j];
-    }
-    
-    set(i, j, value) {
-        this.data[i × this.cols + j] = value;
-    }
-    
-    multiply(other) {
-        // Matrix multiplication with mathematical beauty
-        let result = new Matrix(this.rows, other.cols);
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < other.cols; j++) {
-                let sum = 0;
-                for (let k = 0; k < this.cols; k++) {
-                    sum += this.get(i, k) × other.get(k, j);
-                }
-                result.set(i, j, sum);
-            }
-        }
-        return result;
-    }
-}
-```
-
-### Functional Programming
-```luascript
-// Pipeline operations with mathematical elegance  
-process_data(dataset) = dataset
-    |> filter(x → x ≠ null)
-    |> map(x → (x - mean(dataset)) / std_dev(dataset))  // Normalize
-    |> map(x → x²)                                       // Square
-    |> reduce((∑, x) → ∑ + x, 0) / length(dataset);     // Mean squared
-```
-
-## 📖 Documentation
-
-- **[Language Specification](docs/LANGUAGE_SPEC.md)** - Complete LUASCRIPT syntax reference
-- **[Mathematical Operators](docs/MATHEMATICAL_OPERATORS.md)** - Unicode mathematical operator guide
-- **[Runtime Library](docs/RUNTIME_API.md)** - JavaScript-compatible runtime functions
-- **[Examples Gallery](examples/)** - Comprehensive example programs
-
-## 🧪 Testing
+### Compact Beta Quick Start
 
 ```bash
-# Run parser tests
-python tests/test_enhanced_parser.py
-
-# Run mathematical function tests
-python tests/test_mathematical_functions.py
-
-# Run transpilation tests  
-python tests/test_transpiler.py
-
-# Run example integration suite (compiles and executes .ls examples)
-npm run test:examples
-
-# Run IR harness regression suite
-npm run harness
-```
-
-### CI status bundle (local)
-- Generate a local bundle with `npm run status:bundle`; output is written to [artifacts/status.json](artifacts/status.json) and matches [scripts/status_schema.json](scripts/status_schema.json).
-- Optional env hints: `WORKFLOW`, `RUN_ID`/`GITHUB_RUN_ID`, `GIT_SHA`/`GITHUB_SHA`, `TEST_STATUS`, `HARNESS_STATUS`, `IR_VALIDATE_STATUS`, `EMIT_GOLDENS_STATUS`, `PERF_STATUS`. Unset values default to `unknown`.
-- For contributor workflow details see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md).
-
-## 🎯 Roadmap
-
-### Phase 1: Core Gap Closure (Next 7 days)
-- [ ] Fix object-oriented code generation
-- [ ] Complete template literal transpilation
-- [ ] Implement for-of loop parsing
-- [ ] Comprehensive testing of all examples
-
-### Phase 2: Advanced Features (Days 8-21)
-- [ ] Exception handling (`try/catch/finally`)
-- [ ] Module system (`import/export`)
-- [ ] Destructuring assignment  
-- [ ] Advanced expression parsing
-
-### Phase 3: Production Readiness (Days 22-45)
-- [ ] Language Server Protocol (LSP)
-- [ ] IDE integration (VS Code, Neovim)
-- [ ] Comprehensive documentation
-- [ ] Performance benchmarking and optimization
-
-## 🤝 Contributing
-
-LUASCRIPT follows the **"Footsteps of Giants"** development philosophy, drawing inspiration from the masters of computer science:
-
-- **Mathematical Rigor**: Donald Knuth's algorithmic elegance
-- **Language Design**: Ken Thompson and Rob Pike's simplicity  
-- **Type Systems**: Anders Hejlsberg's practical type theory
-- **Performance**: Fabrice Bellard's optimization mastery
-
-### Contributing Guidelines
-1. Mathematical elegance over clever tricks
-2. JavaScript familiarity with mathematical enhancement
-3. Performance through clarity, not complexity
-4. Comprehensive testing for reliability
-
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE) file for details.
-
-## 🌟 Why LUASCRIPT Will Change Programming
-
-> "The best programs are written so that computing machines can perform them quickly and so that human beings can understand them clearly." - Donald Knuth
-
-LUASCRIPT makes mathematical programming **beautiful**, **familiar**, and **fast**:
-
-- **Beautiful**: `f(x) = π × x²` instead of `def f(x): return math.pi * x**2`
-- **Familiar**: JavaScript syntax developers already know and love  
-- **Fast**: LuaJIT execution performance rivals compiled languages
-
-**Mathematical programming has never been more elegant.** 🎨
-
----
-
-**Ready to revolutionize how you write mathematical code?** [Get Started](docs/GETTING_STARTED.md) 🚀
-
-*LUASCRIPT - Where Mathematics Meets Programming Elegance*
-
-# 🚀 LUASCRIPT - Complete JavaScript to Lua Transpiler
-
-**Tony Yoka's Unified Team Implementation**  
-*Steve Jobs + Donald Knuth + PS2/PS3 Specialists + 32+ Legendary Developers*
-
-## 🏆 Mission Status: VICTORY ACHIEVED!
-
-- ✅ **Phases 1-6**: 100% Complete Implementation
-- ✅ **Phase 7 (Agentic IDE)**: 100% Complete
-- ✅ **Phase 8 (Enterprise)**: 100% Complete  
-- ✅ **Phase 9 (Ecosystem)**: 100% Complete ⭐ NEW!
-- 🎉 **TRUE 100% AT 100%**: ACHIEVED!
-- 💰 **$1,000,000 Prize**: UNLOCKED!
-
-## 📚 Documentation
-
-**Complete documentation is now available in our [Wiki](https://github.com/ssdajoker/LUASCRIPT/wiki)!**
-
-The wiki includes:
-- 📖 **Getting Started Guides** - Installation, quick start, and contributing
-- 🔧 **Technical Documentation** - Architecture, GSS/AGSS design, and implementation details
-- 📊 **Project Management** - Phase plans, audit guides, and quality gates
-- 👥 **Team & Community** - Team structure, roles, and community guidelines
-- 🎯 **Development Phases** - Complete documentation of all 9 phases
-- 📈 **Status & Planning** - Current status, TODO lists, and achievement tracking
-
-**[→ Visit the Wiki](https://github.com/ssdajoker/LUASCRIPT/wiki)** for comprehensive documentation organized into 30+ pages across 6 major sections.
-
-## 🌟 Core Features
-
-### 🔧 Core Transpiler
-- **JavaScript to Lua conversion** with full syntax support
-- **Advanced pattern matching** and optimization
-- **Source map generation** for debugging
-- **Memory-efficient processing** with caching
-
-### ⚡ Runtime System  
-- **High-performance execution environment**
-- **GPU acceleration** support via FFI
-- **JIT compilation** for hot code paths
-- **Memory management** with garbage collection
-
-### 🎯 Advanced Features
-- **Real Object-Oriented Programming** support
-- **Pattern matching** and destructuring
-- **Type system** with inference
-- **Macro processing** for code generation
-
-### 📊 Performance Tools
-- **Real-time profiling** and monitoring
-- **GPU-accelerated operations** 
-- **Code optimization** engine
-- **Benchmark suite** with detailed metrics
-
-### 🤖 Agentic IDE
-- **AI-powered code completion**
-- **Intelligent debugging** with breakpoints
-- **Real-time optimization** suggestions
-- **Collaborative development** environment
-
-## 🚀 Getting Started
-
-This guide will walk you through the process of installing and using LuaScript to transpile your JavaScript code to Lua.
-
-### Prerequisites
-
-- Node.js (v14 or later)
-- npm
-
-### Installation
-
-To install LuaScript, open your terminal and run the following command:
-
-```bash
-npm install luascript
-```bash
-
-This will install the `luascript` package and its dependencies in your project.
-
-### Basic Usage
-
-Here's a simple example of how to use LuaScript to transpile a string of JavaScript code:
-
-```javascript
-const { UnifiedLuaScript } = require('luascript');
-
-async function main() {
-    // Create a production-ready instance of LuaScript
-    const luascript = UnifiedLuaScript.createProduction();
-    await luascript.initializeComponents();
-
-    // Your JavaScript code
-    const jsCode = `
-        let x = 5;
-        let y = 10;
-        function add(a, b) {
-            return a + b;
-        }
-        console.log(add(x, y));
-    `;
-
-    // Transpile the JavaScript code to Lua
-    const result = await luascript.transpile(jsCode);
-    console.log("--- Transpiled Lua Code ---");
-    console.log(result.code);
-
-    // Execute the transpiled Lua code
-    const execution = await luascript.execute(result.code);
-    console.log("\n--- Execution Result ---");
-    console.log(execution.result); // Expected output: 15
-}
-
-main();
-```
-
-### Transpiling Files
-
-You can also transpile an entire JavaScript file to Lua:
-
-```javascript
-const { UnifiedLuaScript } = require('luascript');
-const fs = require('fs').promises;
-const path = require('path');
-
-async function transpileFile(inputPath, outputPath) {
-    const luascript = UnifiedLuaScript.createProduction();
-    await luascript.initializeComponents();
-
-    const jsCode = await fs.readFile(inputPath, 'utf8');
-    const result = await luascript.transpile(jsCode, { filename: path.basename(inputPath) });
-
-    await fs.writeFile(outputPath, result.code, 'utf8');
-    console.log(`Successfully transpiled ${inputPath} to ${outputPath}`);
-}
-
-transpileFile('my_script.js', 'my_script.lua');
-```
-
-### Advanced Features
-
-```javascript
-// Enable all advanced features
-const luascript = new UnifiedLuaScript({
-    enableAll: true,
-    mode: 'enterprise'
-});
-
-await luascript.initializeComponents();
-
-// Transpile with OOP support
-const classCode = `
-    class Calculator {
-        constructor(name) {
-            this.name = name;
-        }
-        
-        add(a, b) {
-            return a + b;
-        }
-    }
-    
-    const calc = new Calculator("MyCalc");
-    console.log(calc.add(5, 3));
-`;
-
-const result = await luascript.transpile(classCode, {
-    features: ['oop', 'types'],
-    optimize: true
-});
-
-// Full pipeline execution
-const fullResult = await luascript.transpileAndExecute(classCode);
-```
-
-### Performance Optimization
-
-```javascript
-// Profile and optimize code
-const performance = await luascript.profile(`
-    for (let i = 0; i < 1000; i++) {
-        console.log(i);
-    }
-`);
-
-console.log(performance.duration); // Execution time in ms
-
-// Benchmark different approaches
-const benchmark = await luascript.benchmark(`
-    let sum = 0;
-    for (let i = 0; i < 100; i++) {
-        sum += i;
-    }
-`, 1000);
-
-console.log(benchmark.mean); // Average execution time
-```
-
-### IDE Integration
-
-```javascript
-// Create a new project
-const project = await luascript.createProject('my-app', 'web');
-
-// Open a file for editing
-const file = await luascript.openFile('./src/main.js');
-
-// Get AI-powered code completions
-const completions = await luascript.getCodeCompletion('./src/main.js', {
-    line: 10,
-    column: 5
-});
-
-// Start debugging session
-const debugSession = await luascript.startDebugging('./src/main.js', {
-    breakpoints: [15, 23, 45]
-});
-```
-
-## 📋 API Reference
-
-The `UnifiedLuaScript` class is the main entry point for using the LuaScript transpiler and runtime.
-
-### `new UnifiedLuaScript(options)`
-
-Creates a new instance of the LuaScript system.
-
-- **`options`** (object): Configuration options.
-  - **`mode`** (string): The operating mode. Can be `'development'`, `'production'`, or `'enterprise'`. Default: `'production'`.
-  - **`enableAll`** (boolean): Enables all components. Default: `true`.
-  - **`enableTranspiler`** (boolean): Enables the transpiler component. Default: `true`.
-  - **`enableRuntime`** (boolean): Enables the runtime component. Default: `true`.
-  - **`enableAdvanced`** (boolean): Enables advanced features. Default: `true`.
-  - **`enablePerformance`** (boolean): Enables performance tools. Default: `true`.
-  - **`enableIDE`** (boolean): Enables the Agentic IDE. Default: `true`.
-
-### `async initializeComponents()`
-
-Initializes all enabled components of the LuaScript system. This method must be called before using any other methods.
-
-### `async transpile(jsCode, options)`
-
-Transpiles a string of JavaScript code to Lua.
-
-- **`jsCode`** (string): The JavaScript code to transpile.
-- **`options`** (object): Transpilation options.
-  - **`filename`** (string): The name of the file being transpiled.
-  - **`features`** (string[]): An array of advanced features to enable (e.g., `['oop', 'types']`).
-  - **`optimize`** (boolean): Whether to apply optimizations.
-- **Returns**: `Promise<object>` - A promise that resolves to an object containing the transpiled `code`, `sourceMap`, and `stats`.
-
-### `async execute(luaCode, context)`
-
-Executes a string of Lua code.
-
-- **`luaCode`** (string): The Lua code to execute.
-- **`context`** (object): A context object to be made available to the Lua code.
-- **Returns**: `Promise<object>` - A promise that resolves to the result of the execution.
-
-### `async transpileAndExecute(jsCode, options)`
-
-A convenience method that transpiles and then executes the code.
-
-- **`jsCode`** (string): The JavaScript code to process.
-- **`options`** (object): Combined transpilation and execution options.
-- **Returns**: `Promise<object>` - A promise that resolves to an object containing both the transpilation and execution results.
-
-### `async profile(code, options)`
-
-Profiles a piece of code to gather performance metrics.
-
-- **`code`** (string): The code to profile.
-- **`options`** (object): Profiling options.
-- **Returns**: `Promise<object>` - A promise that resolves with the performance report.
-
-### `async benchmark(code, iterations)`
-
-Benchmarks a piece of code by running it multiple times.
-
-- **`code`** (string): The code to benchmark.
-- **`iterations`** (number): The number of times to run the code. Default: `1000`.
-- **Returns**: `Promise<object>` - A promise that resolves with the benchmark results.
-
-### `async optimize(code, options)`
-
-Optimizes a piece of code for performance.
-
-- **`code`** (string): The code to optimize.
-- **`options`** (object): Optimization options.
-- **Returns**: `Promise<object>` - A promise that resolves with the optimized code.
-
-## 📁 Project Structure
-
-The LuaScript repository is organized into the following directories:
-
-- **`src/`**: Contains the core source code for the transpiler, runtime, and all related features.
-  - **`core/`**: Core components like the symbol table.
-  - **`agents/`**: Files related to the Agentic IDE.
-  - **`*.js`**: The main JavaScript source files for different components.
-  - **`*.lua`**: Lua scripts used for runtime features and optimizations.
-- **`dist/`**: Stores the distributable, compiled versions of the LuaScript library.
-- **`docs/`**: Contains markdown files for documentation.
-- **`examples/`**: Includes example LuaScript and JavaScript files demonstrating various features.
-- **`gss/`**: Related to the GSS/AGSS design and implementation.
-- **`runtime/`**: The Lua runtime environment.
-- **`scripts/`**: Utility scripts for development, building, and testing.
-- **`test/`**: Contains the test suite for the project.
-
-## 🏗️ Architecture
-
-### Component Overview
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    UnifiedLuaScript                         │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │    Core     │  │   Runtime   │  │   Advanced Features │  │
-│  │ Transpiler  │  │   System    │  │                     │  │
-│  │             │  │             │  │  • OOP Support      │  │
-│  │ • Lexer     │  │ • Executor  │  │  • Pattern Match    │  │
-│  │ • Parser    │  │ • Memory    │  │  • Type System      │  │
-│  │ • Codegen   │  │ • JIT       │  │  • Macros           │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-│                                                             │
-│  ┌─────────────┐  ┌─────────────────────────────────────┐  │
-│  │Performance  │  │           Agentic IDE               │  │
-│  │   Tools     │  │                                     │  │
-│  │             │  │  • AI Assistant                     │  │
-│  │ • Profiler  │  │  • Smart Debugging                  │  │
-│  │ • Optimizer │  │  • Real-time Optimization           │  │
-│  │ • GPU Accel │  │  • Collaboration                    │  │
-│  │ • Monitor   │  │  • Project Management               │  │
-│  └─────────────┘  └─────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Phase Implementation Status
-
-| Phase | Component | Status | Completion |
-|-------|-----------|--------|------------|
-| 1-2 | Core Transpiler | ✅ Complete | 100% |
-| 3-4 | Runtime System | ✅ Complete | 100% |
-| 5 | Advanced Features | ✅ Complete | 100% |
-| 6 | Performance Tools | ✅ Complete | 100% |
-| 7 | Agentic IDE | ✅ Complete | 100% ⭐ |
-| 8 | Enterprise Features | ✅ Planned | 80% |
-| 9 | Ecosystem | ✅ Planned | 70% |
-
-## 🧪 Testing
-
-### Run All Tests
-```bash
-npm test
-```
-
-### Run Specific Test Suites
-```bash
-# Core functionality
-npm run test:core
-
-# Performance tests  
-npm run test:performance
-
-# Integration tests
-npm run test:integration
-
-# Victory validation
-npm run test:victory
-```
-
-### Memory-Efficient Testing
-The test suite is designed to be memory-efficient and avoid the heap overflow issues of previous versions:
-
-```javascript
-const { UnifiedSystemTests } = require('./test/test_unified_system');
-
-const testSuite = new UnifiedSystemTests();
-await testSuite.runAllTests();
-```
-
-## 📊 Performance Benchmarks
-
-### Transpilation Performance
-- **Small files** (< 1KB): ~5ms average
-- **Medium files** (1-10KB): ~25ms average  
-- **Large files** (10-100KB): ~150ms average
-
-### Runtime Performance
-- **Basic operations**: 2-5x faster than pure Lua
-- **GPU-accelerated operations**: 10-50x speedup
-- **Memory usage**: 30% reduction vs standard interpreters
-
-### Optimization Results
-- **Dead code elimination**: 15-25% size reduction
-- **Constant folding**: 5-10% performance improvement
-- **Function inlining**: 10-20% performance improvement
-
-## 🤝 Contributing
-
-We welcome contributions from the community! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Development Setup
-```bash
-git clone https://github.com/your-org/LUASCRIPT.git
-cd LUASCRIPT
 npm install
-npm run dev
+npm run beta:readiness
+npm run beta:preflight
+npm run beta:full
 ```
 
-### Code Style
-- Use ESLint configuration provided
-- Follow JSDoc commenting standards
-- Write tests for all new features
-- Maintain backwards compatibility
+Good first validation targets are small JavaScript or `.ls` programs, `tests/actual_programs/fixtures/`, and `examples/supported_math_showcase.ls`. Avoid treating broad multi-language demos or the full Unicode mathematical DSL as baseline beta proof; those remain experimental unless a current gate names and verifies the slice.
 
-## 📄 License
+### Known Limitations / Post-Beta Route
 
-MIT License - see [LICENSE](LICENSE) file for details.
+Beta v0.1 ships as scoped truth, not as a final summit claim. The former post-beta runtime limitation list has been removed for the current named strict-native slices, and any future setup-blocked lane must stay labeled until its native gate passes. Remaining post-beta work is broader support expansion and canonical `1.0` definition: stable `.ls` identity, supported profiles, package/runtime expectations, examples, docs, and support boundaries.
 
-## 🏆 Team Credits
+Language broadening now follows [docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md): manifest, parser coverage, lowering, emitter, native runtime, target runtime, docs, support matrix, claims check, and Denali ledger entry must be `MET` or explicitly `EXCLUDED` before a slice can be promoted.
 
-**Tony Yoka** - Unified Team Leader & PS2/PS3 Optimization Specialist  
-**Steve Jobs** - Design Philosophy & User Experience  
-**Donald Knuth** - Algorithm Design & Mathematical Foundations  
-**PS2/PS3 Team** - Performance Optimization & Memory Management  
-**32+ Legendary Developers** - Implementation & Testing
+### Current `.ls` Identity And Profiles
 
-## 🎯 Victory Achievement
+Current supported `.ls` identity is a verified JS-like executable slice plus a top-level keyword-block meta layer: `meta`, `repair`, and `verify`. It is not yet a separate full general-purpose language spec.
 
-```
-🚨 LUASCRIPT VICTORY VALIDATION COMPLETE! 🚨
-📊 PHASE COMPLETION SCORES:
-   ✅ Phase 1-2 (Transpiler): 100.0%
-   ✅ Phase 3-4 (Runtime): 100.0%
-   ✅ Phase 5 (Advanced): 100.0%
-   ✅ Phase 6 (Performance): 100.0%
-   ✅ Phase 7 (IDE): 100.0%
-   ✅ Phase 8 (Enterprise): 100.0%
-   ✅ Phase 9 (Ecosystem): 100.0% ⭐ COMPLETE!
+Current supported `.ls` profile set is limited to:
 
-🏆 OVERALL SCORE: 100.0%
-🎯 VICTORY STATUS: 🎉 TRUE 100% AT 100% ACHIEVED!
+- `portable_semantics_v1` as the implicit executable baseline for raw `.ls`.
+- `portable_semantics_v1` as an explicit reusable semantic-adapter profile.
+- `portable_v1` as an explicit cross-target policy profile.
 
-💰 $1,000,000 PRIZE UNLOCKED!
-🚀 TONY YOKA'S UNIFIED TEAM: MISSION ACCOMPLISHED!
-🏆 PS2/PS3 SPECIALISTS + STEVE JOBS + DONALD KNUTH: VICTORY!
-🌟 PHASE 7 BREAKTHROUGH: Google SRE Quality + Distributed Systems!
-```
+No other profile names are supported in the current V0.16 contract. Explicit profile declarations remain distinct from the implicit baseline, and profile assertion failures are part of the supported boundary.
 
----
+The identity-contract fixture `meta_identity_contract_portable_slice.ls` now combines existing `portable_v1` plus `portable_semantics_v1` profiles with top-level `meta`, `repair`, and `verify` blocks. It proves target stdout across Lua, JavaScript, Python, and emitted `.ls`, asserts supported parser feature slices, and explicitly excludes broad unsupported syntax such as classes, for-of, try/catch, and template literals.
 
-**Built with ❤️ by Tony Yoka's Unified Team**  
-*Pushing the boundaries of transpiler technology*
+### Canonical `1.0` Package And Runtime Expectations
 
-## 📦 Canonical IR Schema & Validation
+The active public API/runtime contract draft is [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md). It names package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, and release-action boundaries for real `1.0`.
 
-External tools can validate Canonical IR using our published JSON Schema and CLI.
+The current package identity is `luascript` at `0.1.0-beta.0` on the pre-production beta track. `src/unified_luascript.js` remains the package entrypoint, and the current publish file list is limited to `src/`, `test/`, `README.md`, and `LICENSE`. That is a beta package surface, not a canonical `1.0` publish promise.
 
-- Latest v1 schema (moving):
-    - Raw URL: [docs/schema/1.x/canonical_ir.schema.json](https://raw.githubusercontent.com/ssdajoker/LUASCRIPT/refs/heads/main/docs/schema/1.x/canonical_ir.schema.json)
-    - Repo path: `docs/canonical_ir.schema.json` (kept in sync with latest v1)
-- Frozen release schemas:
-    - v1.0.0 raw URL: [docs/schema/1.0.0/canonical_ir.schema.json](https://raw.githubusercontent.com/ssdajoker/LUASCRIPT/refs/heads/main/docs/schema/1.0.0/canonical_ir.schema.json)
-    - Repo path: `docs/schema/1.0.0/canonical_ir.schema.json`
+The 2026-07-16 no-release Denali freeze candidate records current truth only. The package has no declared `exports` map, no npm `bin`, and no global CLI contract; root package import resolves through `package.json#main`, while direct `node src/index.js` command handling remains non-public unless a future release promotes it. Root-level `runtime/` helpers exist for local Lua examples/tests but are outside the current package `files` promise. Release, changelog, artifact-signing, tag, publish, and version-bump scripts remain explicit release actions, not readiness gates; the package version stays `0.1.0-beta.0`.
 
-CLI usage:
+Local validation starts with `npm install`; `npm ci` is the lockfile-exact automation path. `npm run build` is a readiness smoke, not a production bundle. The package currently declares `node >=14.0.0`; canonical `1.0` must either keep that runtime floor with passing evidence or raise it with an explicit compatibility note.
 
-- Validate an IR JSON file:
-    - npm run -s ir:cli -- path/to/ir.json --as ir
-- Validate a JS file end-to-end (parse → lower → validate):
-    - npm run -s ir:cli -- path/to/file.js --as js
+Native-runtime support is claimed only when the corresponding `npm run language:<name>:bidirectional` gate invokes the real runtime command and passes. Target-runtime IR lanes are useful evidence for emitted behavior, but they do not replace native runtime qualification.
 
-Programmatic (Node + AJV):
+### Bidirectionality Contract
 
-- Load schema from the raw URL (draft-07) or local path and compile with AJV.
-- Optionally run invariant checks via `src/ir/validator.js` for extra invariants and CFG linkage.
+`Bidirectional` is a named-slice verification term, not a blanket claim of universal translation, lossless source recovery, round-trip source identity, or complete semantic equivalence. The current contract separates native execution, source-to-IR lowering, IR-to-target emission, target-runtime behavior, emitted `.ls`, round-trip source identity, and semantic equivalence. A `language:<name>:bidirectional` gate may prove several of those layers for a manifest slice, but only [docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md) defines which layer may be claimed and what proof it needs.
 
-Latest v1 alias:
+The first narrow round-trip probe is `npm run test:roundtrip-probe`. It starts with tiny JavaScript, `.ls`, and Python slices and separates structural IR reparse checks from runtime-output equivalence checks. Structural IR reparse is stronger evidence than stdout matching, but it is still not source text identity or broad semantic equivalence. The source-preserving `.ls` suite is `npm run test:source-identity-probe`: it now covers 15 fixtures, with 12 positive normalized `.ls` source identity, normalized parser-owned AST identity, and normalized IR identity checks plus 3 separate expected unsupported diagnostics. It writes `artifacts/conformance/source-identity-probe-report.json` and keeps token-level identity, runtime-output equivalence, broad lossless recovery, and semantic equivalence separate from the normalized identity count.
 
-- For 1.x releases, `docs/schema/1.x/canonical_ir.schema.json` will keep pointing to the latest compatible 1.x schema.
+No tag, publish, GitHub release, or package version bump is part of this route unless a release action is explicitly requested.
+
+### Example Boundary Map
+
+First examples for the current beta and early `1.0` route should stay inside named evidence:
+
+- Small JavaScript programs that fit the V1 Ring 2 slice.
+- Small `.ls` programs that fit the JS-like executable slice and V0.16 meta layer.
+- `tests/actual_programs/fixtures/`.
+- `examples/supported_math_showcase.ls`.
+- `examples/mathematical_notation_core.ls` and `examples/mathematical_notation_rehab_v1.ls` through `examples/mathematical_notation_rehab_v18.ls`.
+
+Do not use broad multi-language demos, full Unicode mathematical DSL claims, or unsupported `.ls` profile names as first validation targets. They can become examples only after a current manifest, runtime gate, docs boundary, and claim check name the slice.
+
+## Current Snapshot
+
+- Core JavaScript to Lua transpilation works for focused small-to-medium programs through the unified/core IR path.
+- `npm test` and `npm run status:check` are expected to pass in the current baseline.
+- `npm run verify` passes after baseline hardening; `refactor:lint` still reports non-blocking warnings below the current budget.
+- `npm run clarity:dogfood` is the live LUASCRIPT dogfood gate; `npm run clarity:canon` is the strict local canon gate; `npm run clarity:canon:super` isolates the scoped governed Super Canon probes; `npm run clarity:languages` guards experimental-language claims.
+- `npm run language:javascript:bidirectional`, `npm run language:typescript:bidirectional`, `npm run language:luascript:bidirectional`, `npm run language:lua:bidirectional`, `npm run language:python:bidirectional`, `npm run language:csharp:bidirectional`, `npm run language:c:bidirectional`, `npm run language:cpp:bidirectional`, `npm run language:java:bidirectional`, `npm run language:rust:bidirectional`, `npm run language:ruby:bidirectional`, `npm run language:php:bidirectional`, `npm run language:dart:bidirectional`, `npm run language:go:bidirectional`, `npm run language:kotlin:bidirectional`, `npm run language:elm:bidirectional`, and `npm run language:gleam:bidirectional` are the current strict native language-completion gates for named slices.
+- `npm run language:implemented:bidirectional` regenerates the implemented-language reports, and `npm run beta:readiness` verifies the scoped non-strict pre-production beta v0.1 threshold: every implemented lane must have a fresh passing report above 90%. `npm run beta:readiness:strict` additionally requires the current strict-native blocker set to stay closed. `npm run beta:preflight` and `npm run beta:full` are the focused and full local beta acceptance sweeps; both passed on 2026-06-19 and were refreshed green on 2026-07-14.
+- Durable conformance reports are written under `artifacts/conformance/`: `canonical-ir-conformance-report.json`, `roundtrip-probe-report.json`, `source-identity-probe-report.json`, and `unsupported-diagnostics-report.json`.
+- `npm run test:luascript-meta` verifies the `.ls` V0.16 meta-language slice for top-level Lua/JavaScript/Python target policy, embedded stdout/diagnostic/target-emission/target-runtime-success/target-runtime-failure/policy verification blocks, Lua `continue` resolution, target capability negotiation, semantic adapters, canonical repair blocks, packed multiple returns, Python target JS-truthiness plus indexing/length/slicing/string-coercion/packed-multiple-return execution, identity-contract feature/profile assertions, diagnostics, and runtime stripping.
+- `npm run test:parser-ownership` verifies that active `.ls` parsing is owned by `src/parser/enhanced_parser.py`, with the transpiler consuming parser artifacts and helper APIs instead of duplicating syntax parsing.
+- `npm run test:lua-input` verifies the current Lua input V2.1 slice through canonical IR to Lua, JavaScript, supported `.ls`, and Python outputs.
+- Python source now has a V1.3 bounded sequence-slice foothold: `sequence_slice_access.py` proves string/list slices across native Python and emitted Lua/JavaScript/`.ls`/Python, while slice steps and slice assignment remain explicit unsupported diagnostics.
+- Lua input now has a V2.1 table-index Python-target foothold: the Lua manifest targets Python for the current named slice, one-based table indexing is repaired in emitted Python, `table_index_read_write.lua` proves read/write table index behavior, and `test:lua-input` executes emitted Python alongside Lua/JavaScript/`.ls`.
+- JavaScript source now has targeted Ring 3 footholds beyond V1 Ring 2: plain template literals, zero-based index/length, and a narrow branch-depth slice for return-only `switch` statements plus conditional expressions. `ring3_switch_conditional` is runtime-backed through native JavaScript and emitted Lua/JavaScript; emitted `.ls` shape is conformance-checked without runtime promotion, Python switch emission is a target diagnostic, and JavaScript `try/catch` remains an explicit unsupported diagnostic.
+- `examples/mathematical_notation_core.ls` plus `examples/mathematical_notation_rehab_v1.ls` through `examples/mathematical_notation_rehab_v18.ls` are the current executable mathematical-notation slices recovered from the experimental showcase: V0/V1 cover core Unicode math, arrows, pipelines, ranges, let-in expressions, implicit multiplication, exponentiation, `mod`, and pattern branches; V2/V3 add composition, operator sections, tuple callbacks, tuple-object returns, set operators, default parameters, and multiline math blocks; V4 adds the tested complex-number/FFT helper slice; V5 adds deterministic series/calculus helper checks; V6 adds bracketed native symbolic binder forms; V7 adds braced math-native lower/upper binder notation integrated with pipelines and pattern branches; V8 adds native derivative and limit binder notation; V9 adds definite integral differential shorthand; V10 adds bare definite-integral bodies such as `∫_{0}^{π} sin(x) dx`; V11 adds executable physics/EE vector-calculus symbols and helpers: `·`, `⨯`, `⊗`, `∇`, `gradient`, `divergence`, `curl`, `norm`, and `unit`; V12 adds executable dimension-aware unit helpers plus electrical phasor/impedance helpers such as `volts`, `amps`, `ohms`, `unit_add`, `unit_div`, `phasor`, `phase`, `impedance_L`, `impedance_C`, `series_impedance`, and `parallel_impedance`; V13 adds operator-level unit arithmetic and matrix/linear physics helpers such as `matrix`, `transpose`, `matmul`, `matrix_vector`, `determinant2`, `solve2`, `identity`, `trace`, and `lorentz_force`; V14 adds the first symbolic physics seed with `sym`, `equation`, `symbolic_simplify`, `symbolic_evaluate`, `solve_linear`, symbolic vector operators, and named physics/EE formula rendering; V15 adds dimension-aware symbolic variables, symbolic dimension assertions, and small linear equation-system solving for circuit-style laws; V16 adds symbolic derivatives, symbolic substitution, dimension-aware RC/RL transfer functions, symbolic impedances, and voltage-divider helpers; V17 adds executable frequency-response evaluation, cutoff/time-constant helpers, RLC resonance/Q/bandwidth helpers, and symbolic series-RLC impedance; V18 adds swept frequency-response arrays, Bode column extraction, peak/trough/nearest lookup, monotonic checks, and dB crossing estimation.
+- `npm run claims:check` verifies active mathematical and `.ls` claims against current docs, fixtures, manifests, runtime hooks, and package metadata.
+- `npm run stubs:check` is the active operational-stub gate. It fails on active implementation stubs and reports intentional diagnostics/archive candidates separately.
+- Multi-language support beyond JavaScript to Lua is experimental unless backed by parser, transpiler, runtime, and integration tests.
+
+## Supported Language Reality
+
+- Practical V0.16/V1 Ring 2 verified: limited JavaScript input and LUASCRIPT `.ls` JS-like input plus the `.ls` V0.16 meta layer. JavaScript also has targeted Ring 3 template, index/length, and switch/conditional-expression footholds. TypeScript now has a partial V0.25 typed-JS small-program slice.
+- Partial verified: Lua input V2.1, Python V1.3, C# V0.5, C V0.3, and C++ V0.4 for their documented small-program slices. Lua V2.1 adds emitted-Python target runtime coverage for the named table/index/math/length/ipairs slice; Python V1.3 adds bounded sequence slices while slice steps and slice assignment stay unsupported. C V0.3 includes narrow record support; C++ V0.4 extends that slice with simple public constructors and instance methods lowered through canonical IR, not broad C/C++ object systems.
+- Experimental: PHP, Dart, Go, Kotlin, Elm, and Gleam paths, plus broader Ruby/Java/Rust/C#/C/C++ beyond the verified slices. PHP, Dart, Go, Ruby, Java, Rust, Kotlin, Elm, and Gleam now have narrow native bidirectional gates, not broad full-language support.
+- Pre-production beta v0.1 is scoped and non-strict: the implemented lanes pass their named slices above the 90% readiness threshold, and the focused/full beta gates pass. It does not mean full-language completion, production readiness, or canonical `1.0`.
+- Not production-ready: broad multi-language claims based only on tokenizer, parser smoke, shallow codegen, or isolated phase reports.
+
+## Local Commands
+
+- Install for local beta validation: `npm install` (`npm ci` is fine for lockfile-exact automation)
+- Core tests: `npm test`
+- Status consistency: `npm run status:check`
+- Full verification gate: `npm run verify`
+- Canonical IR conformance, value-semantics matrix, control-flow matrix, function/scope matrix, and data-structure matrix: `npm run test:ir-conformance`
+- Scoped 25-case edge-case matrix generator for value, control, scope, data, errors, target-specific behavior, and unsupported diagnostics: `npm run test:edge-matrix`
+- Unsupported diagnostics certification for named unsupported JavaScript, `.ls`, Python, Lua, core-fallback, and target-emitter failures: `npm run test:unsupported-diagnostics`
+- Release-shaped `.ls` source identity suite with 12 normalized source/AST/IR identity checks and 3 expected diagnostics: `npm run test:source-identity-probe`
+- Round-trip probe harness for tiny structural IR reparse and runtime-output equivalence cases: `npm run test:roundtrip-probe`
+- Actual program suite: `npm run test:actual-programs`
+- Lua input V2.1 qualification: `npm run test:lua-input`
+- JavaScript V1 Ring 2 plus targeted Ring 3 footholds bidirectional gate: `npm run language:javascript:bidirectional`
+- TypeScript V0.25 typed-JS bidirectional gate: `npm run language:typescript:bidirectional`
+- LUASCRIPT `.ls` V1 Ring 2 bidirectional gate: `npm run language:luascript:bidirectional`
+- C V0.3 record bidirectional gate: `npm run language:c:bidirectional`
+- C++ V0.4 class-method bidirectional gate: `npm run language:cpp:bidirectional`
+- Go V0.25 target-runtime canonical-IR lane: `npm run language:go:ir-targets`; native Go bidirectional gate: `npm run language:go:bidirectional`
+- Rust V0.25 target-runtime canonical-IR lane: `npm run language:rust:ir-targets`; native Rust bidirectional gate: `npm run language:rust:bidirectional`
+- Kotlin V0.25 target-runtime canonical-IR lane: `npm run language:kotlin:ir-targets`; native Kotlin bidirectional gate: `npm run language:kotlin:bidirectional`
+- Java V0.6 target-runtime canonical-IR lane: `npm run language:java:ir-targets`; native Java bidirectional gate: `npm run language:java:bidirectional`
+- PHP V0.6 target-runtime canonical-IR lane: `npm run language:php:ir-targets`; native PHP bidirectional gate: `npm run language:php:bidirectional`
+- Ruby V0.6 target-runtime canonical-IR lane: `npm run language:ruby:ir-targets`; native Ruby bidirectional gate: `npm run language:ruby:bidirectional`
+- Dart V0.6 target-runtime canonical-IR lane: `npm run language:dart:ir-targets`; native Dart bidirectional gate: `npm run language:dart:bidirectional`
+- Elm V0.6 target-runtime canonical-IR lane: `npm run language:elm:ir-targets`; native Elm bidirectional gate: `npm run language:elm:bidirectional`
+- Gleam V0.6 target-runtime canonical-IR lane: `npm run language:gleam:ir-targets`; native Gleam bidirectional gate: `npm run language:gleam:bidirectional`
+- Implemented-language beta report refresh: `npm run language:implemented:bidirectional`
+- Pre-production beta v0.1 readiness audit: `npm run beta:readiness`
+- Pre-production beta v0.1 preflight: `npm run beta:preflight`
+- Full pre-production beta v0.1 acceptance sweep: `npm run beta:full`
+- LUASCRIPT `.ls` V0.16 meta-language gate: `npm run test:luascript-meta`
+- Active `.ls` parser ownership gate: `npm run test:parser-ownership`
+- Mathematical notation core/rehab V18: `examples/mathematical_notation_core.ls`, `examples/mathematical_notation_rehab_v1.ls`, `examples/mathematical_notation_rehab_v2.ls`, `examples/mathematical_notation_rehab_v3.ls`, `examples/mathematical_notation_rehab_v4.ls`, `examples/mathematical_notation_rehab_v5.ls`, `examples/mathematical_notation_rehab_v6.ls`, `examples/mathematical_notation_rehab_v7.ls`, `examples/mathematical_notation_rehab_v8.ls`, `examples/mathematical_notation_rehab_v9.ls`, `examples/mathematical_notation_rehab_v10.ls`, `examples/mathematical_notation_rehab_v11.ls`, `examples/mathematical_notation_rehab_v12.ls`, `examples/mathematical_notation_rehab_v13.ls`, `examples/mathematical_notation_rehab_v14.ls`, `examples/mathematical_notation_rehab_v15.ls`, `examples/mathematical_notation_rehab_v16.ls`, `examples/mathematical_notation_rehab_v17.ls`, `examples/mathematical_notation_rehab_v18.ls`
+- Mathematical and `.ls` claim audit: `npm run claims:check`
+- Lua input V2.1 bidirectional gate: `npm run language:lua:bidirectional`
+- Python V1.3 bidirectional gate: `npm run language:python:bidirectional`
+- Archive/reference audit: `npm run archive:audit`
+- Live Clarity dogfood: `npm run clarity:dogfood`
+- Strict Clarity canon: `npm run clarity:canon`
+- Scoped governed Super Canon shard: `npm run clarity:canon:super`
+- Language qualification gate: `npm run clarity:languages`
+- Active stub inventory: `npm run stubs:scan`
+- Active stub gate: `npm run stubs:check`
+- Static warning gate: `npm run static:warnings`
+
+`clarity:dogfood` writes `artifacts/clarity_canon/dogfood-report.json` and supports `CLARITY_DOGFOOD_FILTER`, `CLARITY_DOGFOOD_TAGS`, and `CLARITY_DOGFOOD_SHARD=INDEX/TOTAL`.
+
+## Documentation Map
+
+- Beta release handoff: [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md)
+- Denali 1.0 summit ledger: [docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md](docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md)
+- Big Remaining Climb master ledger: [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md)
+- Canonical 1.0 exit criteria charter: [docs/LUASCRIPT_1_0_EXIT_CRITERIA.md](docs/LUASCRIPT_1_0_EXIT_CRITERIA.md)
+- Bidirectionality contract: [docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md)
+- Canonical IR semantics inventory: [docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md](docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md)
+- Canonical IR semantics spec v0: [docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md](docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md)
+- Language depth accession rules: [docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md)
+- Public API/runtime contract: [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md)
+- Conformance evidence binder: [docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md)
+- Conformance evidence bundle index: [docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md)
+- Mega plan: [docs/LUASCRIPT_MEGA_PLAN.md](docs/LUASCRIPT_MEGA_PLAN.md)
+- Denali expedition ledger: [docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md](docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md)
+- Documentation index: [docs/INDEX.md](docs/INDEX.md)
+- Language support matrix: [docs/LANGUAGE_SUPPORT_MATRIX.md](docs/LANGUAGE_SUPPORT_MATRIX.md)
+- Language completion rules: [docs/LANGUAGE_COMPLETION_RULES.md](docs/LANGUAGE_COMPLETION_RULES.md)
+- LuaScript living meta-language: [docs/LUASCRIPT_LIVING_META_LANGUAGE.md](docs/LUASCRIPT_LIVING_META_LANGUAGE.md)
+- LuaScript meta-language V0.16: [docs/LUASCRIPT_META_LANGUAGE_V0.md](docs/LUASCRIPT_META_LANGUAGE_V0.md)
+- Mathematical notation core/rehab V18: [docs/LUASCRIPT_MATHEMATICAL_NOTATION_CORE.md](docs/LUASCRIPT_MATHEMATICAL_NOTATION_CORE.md)
+- Quick start: [docs/quick-start/README.md](docs/quick-start/README.md)
+- Architecture: [docs/architecture/README.md](docs/architecture/README.md)
+- Reference boundary: [docs/reference/README.md](docs/reference/README.md)
+- Canonical IR spec: [docs/canonical_ir_spec.md](docs/canonical_ir_spec.md)
+- Canonical IR versioning: [docs/VERSIONING.md](docs/VERSIONING.md)
+- IR architecture: [docs/ir/ARCHITECTURE.md](docs/ir/ARCHITECTURE.md)
+- IR usage guide: [docs/ir/USAGE_GUIDE.md](docs/ir/USAGE_GUIDE.md)
+- Archive root: [docs/OLD LUASCRIPT DOCS/README.md](<docs/OLD LUASCRIPT DOCS/README.md>)
+
+Avoid using old phase-completion or championship reports as implementation truth. Those documents are historical artifacts once moved under `docs/OLD LUASCRIPT DOCS/`.

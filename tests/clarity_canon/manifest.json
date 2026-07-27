@@ -1,0 +1,2039 @@
+{
+  "defaultTimeoutMs": 420000,
+  "transientRetries": 1,
+  "dogfoodFixtures": [
+    {
+      "name": "actual_arithmetic_bindings",
+      "source": "tests/actual_programs/fixtures/arithmetic_bindings.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "sum\t5",
+        "product\t20"
+      ]
+    },
+    {
+      "name": "actual_functions_conditionals",
+      "source": "tests/actual_programs/fixtures/functions_conditionals.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "add\t7",
+        "branch\tbig"
+      ]
+    },
+    {
+      "name": "actual_loops_for_of",
+      "source": "tests/actual_programs/fixtures/loops_for_of.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "while\t0",
+        "while\t1",
+        "forof\t1",
+        "forof\t2",
+        "forof\t3"
+      ]
+    },
+    {
+      "name": "actual_array_runtime_methods",
+      "source": "tests/actual_programs/fixtures/array_runtime_methods.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "mapped\t[2, 4, 6]",
+        "filtered\t[3, 4]",
+        "total\t6"
+      ]
+    },
+    {
+      "name": "actual_portable_semantics_index_length_slice",
+      "source": "tests/actual_programs/fixtures/portable_semantics_index_length_slice.ls",
+      "tags": [
+        "actual-program",
+        "luascript-meta",
+        "semantic-adapter",
+        "indexing",
+        "length",
+        "slicing",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "ring3_profile\tb\t4\tbc\t8\t9\t8\t2\t10"
+      ]
+    },
+    {
+      "name": "actual_portable_semantics_truthiness_string_many",
+      "source": "tests/actual_programs/fixtures/portable_semantics_truthiness_string_many.ls",
+      "tags": [
+        "actual-program",
+        "luascript-meta",
+        "semantic-adapter",
+        "truthiness",
+        "string-coercion",
+        "multiple-returns",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "ring3_semantics\tlist_truthy\tobject_truthy\tzero_false\tempty_false\tneg_false\tcount=3 flag=false empty=null\t2\tAda\t3\t7\tdone"
+      ]
+    },
+    {
+      "name": "actual_default_index_length_slice",
+      "source": "tests/actual_programs/fixtures/default_index_length_slice.ls",
+      "tags": [
+        "actual-program",
+        "luascript-core",
+        "luascript-ring3",
+        "portable-semantics"
+      ],
+      "expectedOutputIncludes": [
+        "ring3_default\tb\t4\tbc\t8\t9\t8\t2\t10"
+      ]
+    },
+    {
+      "name": "actual_default_truthiness_string_many",
+      "source": "tests/actual_programs/fixtures/default_truthiness_string_many.ls",
+      "tags": [
+        "actual-program",
+        "luascript-core",
+        "luascript-ring3",
+        "portable-semantics"
+      ],
+      "expectedOutputIncludes": [
+        "ring3_default_semantics\tlist_truthy\tobject_truthy\tzero_false\tempty_false\tneg_false\tcount=3 flag=false empty=null\t2\tAda\t3\t7\tdone"
+      ]
+    },
+    {
+      "name": "actual_class_smoke",
+      "source": "tests/actual_programs/fixtures/class_smoke.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "point\t4\t9"
+      ]
+    },
+    {
+      "name": "actual_supported_math_showcase",
+      "source": "examples/supported_math_showcase.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "hypotenuse\t5",
+        "doubled\t[2, 4, 6, 8]",
+        "total\t20"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_core",
+      "source": "examples/mathematical_notation_core.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_notation\t25\t5\t18\ttrue\t28\t1"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v1",
+      "source": "examples/mathematical_notation_rehab_v1.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "pipeline",
+        "range",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab\t32\t9\t[2, 4, 6, 8, 10]\t5",
+        "pipe_log"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v2",
+      "source": "examples/mathematical_notation_rehab_v2.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "composition",
+        "pattern-branches",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v2\t10\t9\t120"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v3",
+      "source": "examples/mathematical_notation_rehab_v3.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "operator-sections",
+        "tuple-callbacks",
+        "set-operators",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v3\t10",
+        "[3, 7]",
+        "\t3\t3\t10\t5\t0"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v4",
+      "source": "examples/mathematical_notation_rehab_v4.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "complex",
+        "fft",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v4\ttrue\t4"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v5",
+      "source": "examples/mathematical_notation_rehab_v5.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "series",
+        "calculus",
+        "limit",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v5\t55\t24\ttrue\ttrue\ttrue"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v6",
+      "source": "examples/mathematical_notation_rehab_v6.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "symbolic-binder",
+        "series",
+        "calculus",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v6\t55\t9\t120\t6\ttrue"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v7",
+      "source": "examples/mathematical_notation_rehab_v7.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "symbolic-binder",
+        "math-native-binder",
+        "series",
+        "calculus",
+        "pipeline",
+        "pattern-branches",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v7\t55\t15\t9\t120\ttrue\t[1, 3, 6, 10]\tlarge"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v8",
+      "source": "examples/mathematical_notation_rehab_v8.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "native-calculus",
+        "limit",
+        "derivative",
+        "pipeline",
+        "pattern-branches",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v8\ttrue\ttrue\ttrue\t[true, true, true]\tsteep"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v9",
+      "source": "examples/mathematical_notation_rehab_v9.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "native-calculus",
+        "integral",
+        "differential",
+        "pipeline",
+        "pattern-branches",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v9\ttrue\ttrue\ttrue\t[true, true, true]\tlarge_area"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v10",
+      "source": "examples/mathematical_notation_rehab_v10.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "native-calculus",
+        "integral",
+        "differential",
+        "bare-integrand",
+        "pipeline",
+        "pattern-branches",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v10\ttrue\ttrue\ttrue\t[true, true, true]\tbare_integral_ok"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v11",
+      "source": "examples/mathematical_notation_rehab_v11.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "electrical-engineering",
+        "vector-calculus",
+        "dot-product",
+        "cross-product",
+        "tensor-product",
+        "nabla",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v11\t25\t[8, -6, 0]\t[[3, 6], [4, 8], [0, 0]]\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\tfield_energy_high"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v12",
+      "source": "examples/mathematical_notation_rehab_v12.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "electrical-engineering",
+        "units",
+        "dimensions",
+        "phasor",
+        "impedance",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v12\t5\tm\t5\tm/s\t6\ttrue\ttrue\t24\tW\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\timpedance_high"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v13",
+      "source": "examples/mathematical_notation_rehab_v13.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "electrical-engineering",
+        "units",
+        "dimensions",
+        "matrix",
+        "linear-algebra",
+        "lorentz-force",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v13\t5\tm\t6\ttrue\t48\ttrue\t2.5\t[2, 6, 12]\t[[4, 4], [10, 8]]\ttrue\ttrue\ttrue\t3\t[22, 0, 0]\tmatrix_load_high"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v14",
+      "source": "examples/mathematical_notation_rehab_v14.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "electrical-engineering",
+        "symbolic-physics",
+        "symbolic-algebra",
+        "equations",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v14\tnewton2\tF = (m * a)\tm\t14\tV = (I * R)\t(V / R)\t2",
+        "F = (q * (E + (v ⨯ B)))",
+        "div(E) = (rho / epsilon0)",
+        "S = (E ⨯ H)"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v15",
+      "source": "examples/mathematical_notation_rehab_v15.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "electrical-engineering",
+        "symbolic-physics",
+        "symbolic-dimensions",
+        "linear-systems",
+        "equations",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v15\tV = (I * R)\tP = (V * I)\t(I * R)\tkg m^2 s^-3 A^-1",
+        "(I * (I * R))\tkg m^2 s^-3\t12\t24",
+        "V = (I * R); P = (I * (I * R))"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v16",
+      "source": "examples/mathematical_notation_rehab_v16.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "electrical-engineering",
+        "symbolic-physics",
+        "symbolic-calculus",
+        "transfer-functions",
+        "symbolic-dimensions",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v16\t(x * (2 * t))\tm s\t(cos((theta ^ 2)) * (2 * theta))",
+        "(1 / (1 + ((s * R) * C)))\t(((s * R) * C) / (1 + ((s * R) * C)))",
+        "(R / (R + (s * L)))\t(1 / (s * C))\tkg m^2 s^-3 A^-2\t(s * L)\tkg m^2 s^-3 A^-2",
+        "(R / ((1 / (s * C)) + R))\t(1 / (1 + ((s * 1000) * 1e-06)))"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v17",
+      "source": "examples/mathematical_notation_rehab_v17.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "electrical-engineering",
+        "frequency-response",
+        "bode",
+        "rlc",
+        "transfer-functions",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v17\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue",
+        "((R + (s * L)) + (1 / (s * C)))"
+      ]
+    },
+    {
+      "name": "actual_mathematical_notation_rehab_v18",
+      "source": "examples/mathematical_notation_rehab_v18.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "electrical-engineering",
+        "frequency-response",
+        "bode",
+        "sweep",
+        "transfer-functions",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "math_rehab_v18\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue\ttrue"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_binder_glyph_placement",
+      "source": "tests/actual_programs/fixtures/unsupported_math_binder_glyph_placement.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "symbolic-binder",
+        "quarantine",
+        "expected-failure"
+      ],
+      "expectedFailure": true,
+      "expectedFailurePatterns": [
+        "Compact mathematical binder glyph placement is experimental",
+        "use ∑\\[n = lower\\.\\.upper\\]\\(body\\) or ∑_\\{n=lower\\}\\^\\{upper\\}\\(body\\)"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_binder_missing_upper",
+      "source": "tests/actual_programs/fixtures/unsupported_math_binder_missing_upper.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "symbolic-binder",
+        "quarantine",
+        "expected-failure"
+      ],
+      "expectedFailure": true,
+      "expectedFailurePatterns": [
+        "Expected upper binder clause like \\^\\{5\\}"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_limit_start_value",
+      "source": "tests/actual_programs/fixtures/unsupported_math_limit_start_value.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "native-calculus",
+        "quarantine",
+        "expected-failure"
+      ],
+      "expectedFailure": true,
+      "expectedFailurePatterns": [
+        "Limit start values are not supported in V8"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_integral_missing_differential",
+      "source": "tests/actual_programs/fixtures/unsupported_math_integral_missing_differential.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "native-calculus",
+        "integral",
+        "quarantine",
+        "expected-failure"
+      ],
+      "expectedFailure": true,
+      "expectedFailurePatterns": [
+        "Definite integral shorthand requires a differential like dx after the body"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_integral_bare_missing_differential",
+      "source": "tests/actual_programs/fixtures/unsupported_math_integral_bare_missing_differential.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "native-calculus",
+        "integral",
+        "bare-integrand",
+        "quarantine",
+        "expected-failure"
+      ],
+      "expectedFailure": true,
+      "expectedFailurePatterns": [
+        "Definite integral shorthand requires a differential like dx after the body"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_cross_dimension",
+      "source": "tests/actual_programs/fixtures/unsupported_math_cross_dimension.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "vector-calculus",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "math\\.cross: expected two 3D vectors"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_unit_add_dimension",
+      "source": "tests/actual_programs/fixtures/unsupported_math_unit_add_dimension.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "units",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "math\\.unit_add: incompatible dimensions"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_unit_operator_dimension",
+      "source": "tests/actual_programs/fixtures/unsupported_math_unit_operator_dimension.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "units",
+        "operator-arithmetic",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "math\\.unit_add: incompatible dimensions"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_matrix_dimensions",
+      "source": "tests/actual_programs/fixtures/unsupported_math_matrix_dimensions.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "matrix",
+        "linear-algebra",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "math\\.matmul: inner dimensions must match"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_symbolic_unknown_formula",
+      "source": "tests/actual_programs/fixtures/unsupported_math_symbolic_unknown_formula.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "symbolic-physics",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "math\\.physics_formula: unknown formula maxwell_everything"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_symbolic_dimension_mismatch",
+      "source": "tests/actual_programs/fixtures/unsupported_math_symbolic_dimension_mismatch.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "symbolic-physics",
+        "symbolic-dimensions",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "math\\.symbolic: incompatible dimensions for add"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_symbolic_derivative_function",
+      "source": "tests/actual_programs/fixtures/unsupported_math_symbolic_derivative_function.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "symbolic-physics",
+        "symbolic-calculus",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "math\\.symbolic_derivative: unsupported function tan"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_frequency_response_parameters",
+      "source": "tests/actual_programs/fixtures/unsupported_math_frequency_response_parameters.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "frequency-response",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "math\\.frequency_response: parameters must be a table"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_rlc_positive_values",
+      "source": "tests/actual_programs/fixtures/unsupported_math_rlc_positive_values.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "rlc",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "math\\.rlc_resonant_frequency capacitance: expected positive value"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_frequency_sweep_count",
+      "source": "tests/actual_programs/fixtures/unsupported_math_frequency_sweep_count.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "frequency-response",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "math\\.frequency_sweep count: expected integer count >= 2"
+      ]
+    },
+    {
+      "name": "actual_unsupported_math_response_crossing_missing",
+      "source": "tests/actual_programs/fixtures/unsupported_math_response_crossing_missing.ls",
+      "tags": [
+        "actual-program",
+        "mathematical-notation",
+        "physics",
+        "frequency-response",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "math\\.response_crossing_frequency: target dB not crossed"
+      ]
+    },
+    {
+      "name": "luascript_meta_resolve_continue",
+      "source": "tests/language_completion/fixtures/luascript/meta_resolve_continue.ls",
+      "tags": [
+        "luascript-meta",
+        "capability",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "meta_continue\t8"
+      ]
+    },
+    {
+      "name": "luascript_meta_forbid_goto_no_continue",
+      "source": "tests/language_completion/fixtures/luascript/meta_forbid_goto_no_continue.ls",
+      "tags": [
+        "luascript-meta",
+        "capability",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "no_goto\t6"
+      ]
+    },
+    {
+      "name": "luascript_meta_verify_stdout",
+      "source": "tests/language_completion/fixtures/luascript/meta_verify_stdout.ls",
+      "tags": [
+        "luascript-meta",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "verify_block\t9"
+      ]
+    },
+    {
+      "name": "luascript_meta_verify_lua_emission",
+      "source": "tests/language_completion/fixtures/luascript/meta_verify_lua_emission.ls",
+      "tags": [
+        "luascript-meta",
+        "verify",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "verify_emit\ty\t2"
+      ]
+    },
+    {
+      "name": "luascript_meta_verify_target_emission",
+      "source": "tests/language_completion/fixtures/luascript/meta_verify_target_emission.ls",
+      "tags": [
+        "luascript-meta",
+        "verify",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "verify_targets\t7"
+      ]
+    },
+    {
+      "name": "luascript_meta_verify_target_runtime",
+      "source": "tests/language_completion/fixtures/luascript/meta_verify_target_runtime.ls",
+      "tags": [
+        "luascript-meta",
+        "verify",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "verify_runtime\t10"
+      ]
+    },
+    {
+      "name": "luascript_meta_verify_target_runtime_failure",
+      "source": "tests/language_completion/fixtures/luascript/meta_verify_target_runtime_failure.ls",
+      "tags": [
+        "luascript-meta",
+        "verify",
+        "runtime",
+        "runtime-failure"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "verify_runtime_failure\\s+before",
+        "missingFunction"
+      ]
+    },
+    {
+      "name": "luascript_meta_policy_assertions",
+      "source": "tests/language_completion/fixtures/luascript/meta_policy_assertions.ls",
+      "tags": [
+        "luascript-meta",
+        "verify",
+        "policy",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "policy_assertions\tok\tbc:10\t3"
+      ]
+    },
+    {
+      "name": "luascript_meta_cross_target_policy_assertions",
+      "source": "tests/language_completion/fixtures/luascript/meta_cross_target_policy_assertions.ls",
+      "tags": [
+        "luascript-meta",
+        "verify",
+        "policy",
+        "cross-target",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "cross_policy\tok\t9"
+      ]
+    },
+    {
+      "name": "luascript_meta_python_truthiness_adapter",
+      "source": "tests/language_completion/fixtures/luascript/meta_python_truthiness_adapter.ls",
+      "tags": [
+        "luascript-meta",
+        "semantic-adapter",
+        "python",
+        "truthiness",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "python_truthy\tlist_truthy\tobject_truthy\tzero_false\tempty_false\tneg_false\tternary_truthy\t1\t1\t2"
+      ]
+    },
+    {
+      "name": "luascript_meta_python_index_length_slice_adapter",
+      "source": "tests/language_completion/fixtures/luascript/meta_python_index_length_slice_adapter.ls",
+      "tags": [
+        "luascript-meta",
+        "semantic-adapter",
+        "python",
+        "indexing",
+        "length",
+        "slicing",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "python_index_length_slice\tb\t4\tbc\t8\t9\t8\t2\t10"
+      ]
+    },
+    {
+      "name": "luascript_meta_string_coercion_adapter",
+      "source": "tests/language_completion/fixtures/luascript/meta_string_coercion_adapter.ls",
+      "tags": [
+        "luascript-meta",
+        "semantic-adapter",
+        "python",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "meta_string\tcount: 3\tflag=false\tempty=null\tnumeric=5"
+      ]
+    },
+    {
+      "name": "luascript_meta_capability_negotiation",
+      "source": "tests/language_completion/fixtures/luascript/meta_capability_negotiation.ls",
+      "tags": [
+        "luascript-meta",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "meta_caps\t6"
+      ]
+    },
+    {
+      "name": "luascript_meta_semantic_adapters",
+      "source": "tests/language_completion/fixtures/luascript/meta_semantic_adapters.ls",
+      "tags": [
+        "luascript-meta",
+        "semantic-adapter",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "meta_adapters\tb\t4\tbc\t8\t9\tzero_false\tempty_false\t0\tfallback\t1"
+      ]
+    },
+    {
+      "name": "luascript_meta_repair_block",
+      "source": "tests/language_completion/fixtures/luascript/meta_repair_block.ls",
+      "tags": [
+        "luascript-meta",
+        "repair",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "repair_blocks\tx\t4\tyz\t9\t7\tok\tfallback\t0\t1"
+      ]
+    },
+    {
+      "name": "luascript_meta_multiple_returns_adapter",
+      "source": "tests/language_completion/fixtures/luascript/meta_multiple_returns_adapter.ls",
+      "tags": [
+        "luascript-meta",
+        "multiple-returns",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "multi_adapter\tAda\t3\t7\tdone"
+      ]
+    },
+    {
+      "name": "luascript_meta_multiple_returns_repair",
+      "source": "tests/language_completion/fixtures/luascript/meta_multiple_returns_repair.ls",
+      "tags": [
+        "luascript-meta",
+        "multiple-returns",
+        "repair",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "multi_repair\tleft\tright\t2"
+      ]
+    },
+    {
+      "name": "luascript_meta_identity_contract_portable_slice",
+      "source": "tests/language_completion/fixtures/luascript/meta_identity_contract_portable_slice.ls",
+      "tags": [
+        "luascript-meta",
+        "identity-contract",
+        "profile",
+        "repair",
+        "verify",
+        "portable-semantics",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "identity_contract\tb\t4\tbc\tlist_truthy\tzero_false\tcount=3\tAda\t3\t2\t8\tdone"
+      ]
+    },
+    {
+      "name": "luascript_meta_resolve_continue_missing_requires",
+      "source": "tests/language_completion/fixtures/luascript/meta_resolve_continue_missing_requires.ls",
+      "tags": [
+        "luascript-meta",
+        "capability",
+        "quarantine",
+        "expected-failure"
+      ],
+      "expectedFailure": true,
+      "expectedFailurePatterns": [
+        "resolve continue using label_goto requires lua.goto"
+      ]
+    },
+    {
+      "name": "luascript_meta_forbid_goto_continue",
+      "source": "tests/language_completion/fixtures/luascript/meta_forbid_goto_continue.ls",
+      "tags": [
+        "luascript-meta",
+        "capability",
+        "quarantine",
+        "expected-failure"
+      ],
+      "expectedFailure": true,
+      "expectedFailurePatterns": [
+        "No policy-compatible lowering for continue on lua target"
+      ]
+    },
+    {
+      "name": "luascript_meta_profile_forbidden_present",
+      "source": "tests/language_completion/fixtures/luascript/meta_profile_forbidden_present.ls",
+      "tags": [
+        "luascript-meta",
+        "profile",
+        "quarantine",
+        "expected-failure"
+      ],
+      "expectedFailure": true,
+      "expectedFailurePatterns": [
+        "Forbidden LUASCRIPT profile assertion present: portable_v1"
+      ]
+    },
+    {
+      "name": "luascript_meta_implicit_profile_forbidden_present",
+      "source": "tests/language_completion/fixtures/luascript/meta_implicit_profile_forbidden_present.ls",
+      "tags": [
+        "luascript-meta",
+        "profile",
+        "quarantine",
+        "expected-failure"
+      ],
+      "expectedFailure": true,
+      "expectedFailurePatterns": [
+        "Forbidden LUASCRIPT implicit profile assertion present: portable_semantics_v1"
+      ]
+    },
+    {
+      "name": "actual_nested_closures",
+      "source": "tests/actual_programs/fixtures/nested_closures.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "nested_closure\t12"
+      ]
+    },
+    {
+      "name": "actual_object_mutation",
+      "source": "tests/actual_programs/fixtures/object_mutation.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "object_mutation\tAda\t5"
+      ]
+    },
+    {
+      "name": "actual_mixed_arrays_objects",
+      "source": "tests/actual_programs/fixtures/mixed_arrays_objects.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "mixed_arrays_objects\tbeta\t7"
+      ]
+    },
+    {
+      "name": "actual_nested_loops",
+      "source": "tests/actual_programs/fixtures/nested_loops.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "nested_loops\t18"
+      ]
+    },
+    {
+      "name": "actual_string_number_coercion",
+      "source": "tests/actual_programs/fixtures/string_number_coercion.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "string_number_coercion\tcount: 3\t9"
+      ]
+    },
+    {
+      "name": "actual_module_like_patterns",
+      "source": "tests/actual_programs/fixtures/module_like_patterns.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "module_like\tmath\t18"
+      ]
+    },
+    {
+      "name": "actual_object_loop_state",
+      "source": "tests/actual_programs/fixtures/object_loop_state.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "object_loop_state\ttrue\t3"
+      ]
+    },
+    {
+      "name": "actual_short_circuit",
+      "source": "tests/actual_programs/fixtures/short_circuit.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedOutputIncludes": [
+        "short_circuit\t0\tfalse\ttrue"
+      ]
+    },
+    {
+      "name": "actual_runtime_error_undefined_call",
+      "source": "tests/actual_programs/fixtures/runtime_error_undefined_call.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "expectedRuntimeFailure": true,
+      "expectedRuntimeFailurePatterns": [
+        "runtime_error\\s+before",
+        "nil value",
+        "missingFunction"
+      ]
+    },
+    {
+      "name": "actual_unsupported_throw_diagnostic",
+      "source": "tests/actual_programs/fixtures/unsupported_throw_diagnostic.ls",
+      "tags": [
+        "actual-program",
+        "javascript-to-lua",
+        "runtime",
+        "quarantine",
+        "expected-failure"
+      ],
+      "expectedFailure": true,
+      "expectedFailurePatterns": [
+        "Unsupported JavaScript exception flow: throw statements"
+      ]
+    },
+    {
+      "name": "mirror_canary",
+      "source": "mirror/modules/mirror_canary.ls",
+      "expectedOutputIncludes": [
+        "mirror_canary\tok\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_conditional_branches",
+      "source": "mirror/modules/mirror_conditional_branches.ls",
+      "expectedOutputIncludes": [
+        "mirror_conditional_branches\t11\t11\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_determinism",
+      "source": "mirror/modules/mirror_determinism.ls",
+      "expectedOutputIncludes": [
+        "mirror_determinism\t120\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_edge_cases",
+      "source": "mirror/modules/mirror_edge_cases.ls",
+      "expectedOutputIncludes": [
+        "mirror_edge_cases\t15\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_ir_stable",
+      "source": "mirror/modules/mirror_ir_stable.ls",
+      "expectedOutputIncludes": [
+        "mirror_ir_stable\t25\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_loop_semantics",
+      "source": "mirror/modules/mirror_loop_semantics.ls",
+      "expectedOutputIncludes": [
+        "mirror_loop_semantics\t45\t10\ttrue\ttrue\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_manifest",
+      "source": "mirror/modules/mirror_manifest.ls",
+      "expectedOutputIncludes": [
+        "mirror_manifest\tProject Mirror\tv0\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_metrics",
+      "source": "mirror/modules/mirror_metrics.ls",
+      "expectedOutputIncludes": [
+        "mirror_metrics\t165\t100\ttests-passing\t5"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_operator_semantics",
+      "source": "mirror/modules/mirror_operator_semantics.ls",
+      "expectedOutputIncludes": [
+        "mirror_operator_semantics\ttrue\ttrue\ttrue\ttrue\tfalse\ttrue\tfalse"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_parity",
+      "source": "mirror/modules/mirror_parity.ls",
+      "expectedOutputIncludes": [
+        "mirror_parity\t5\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_performance",
+      "source": "mirror/modules/mirror_performance.ls",
+      "expectedOutputIncludes": [
+        "mirror_performance\t5050\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_scope_binding",
+      "source": "mirror/modules/mirror_scope_binding.ls",
+      "expectedOutputIncludes": [
+        "mirror_scope_binding\t999\t1\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_smoke",
+      "source": "mirror/modules/mirror_smoke.ls",
+      "expectedOutputIncludes": [
+        "mirror_smoke\t55\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_string_advanced",
+      "source": "mirror/modules/mirror_string_advanced.ls",
+      "expectedOutputIncludes": [
+        "mirror_string_advanced\thello\thello world\ttrue\ttrue\ttrue"
+      ],
+      "tags": [
+        "mirror-root",
+        "javascript-to-lua",
+        "runtime"
+      ]
+    },
+    {
+      "name": "mirror_async_coroutines",
+      "source": "mirror/modules/tier1-showcase/mirror_async_coroutines.ls",
+      "expectedOutputIncludes": [
+        "mirror_async_coroutines\t3"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_async_errhandling",
+      "source": "mirror/modules/tier1-showcase/mirror_async_errhandling.ls",
+      "expectedOutputIncludes": [
+        "mirror_async_errhandling\thandled"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_async_parallel",
+      "source": "mirror/modules/tier1-showcase/mirror_async_parallel.ls",
+      "expectedOutputIncludes": [
+        "mirror_async_parallel\t10"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_async_promises",
+      "source": "mirror/modules/tier1-showcase/mirror_async_promises.ls",
+      "expectedOutputIncludes": [
+        "mirror_async_promises\t3"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_ir_canonical",
+      "source": "mirror/modules/tier1-showcase/mirror_ir_canonical.ls",
+      "expectedOutputIncludes": [
+        "mirror_ir_canonical\t25"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_ir_determinism",
+      "source": "mirror/modules/tier1-showcase/mirror_ir_determinism.ls",
+      "expectedOutputIncludes": [
+        "mirror_ir_determinism\t120"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_ir_tracing",
+      "source": "mirror/modules/tier1-showcase/mirror_ir_tracing.ls",
+      "expectedOutputIncludes": [
+        "mirror_ir_tracing\t3"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_meta_ast",
+      "source": "mirror/modules/tier1-showcase/mirror_meta_ast.ls",
+      "expectedOutputIncludes": [
+        "mirror_meta_ast\t[2, 4, 6]"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_meta_generation",
+      "source": "mirror/modules/tier1-showcase/mirror_meta_generation.ls",
+      "expectedOutputIncludes": [
+        "mirror_meta_generation\t10"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_meta_macros",
+      "source": "mirror/modules/tier1-showcase/mirror_meta_macros.ls",
+      "expectedOutputIncludes": [
+        "mirror_meta_macros\t8"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_meta_reflection",
+      "source": "mirror/modules/tier1-showcase/mirror_meta_reflection.ls",
+      "expectedOutputIncludes": [
+        "mirror_meta_reflection\tfunction"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_patterns_basic",
+      "source": "mirror/modules/tier1-showcase/mirror_patterns_basic.ls",
+      "expectedOutputIncludes": [
+        "mirror_patterns_basic\tmatch"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_patterns_binding",
+      "source": "mirror/modules/tier1-showcase/mirror_patterns_binding.ls",
+      "expectedOutputIncludes": [
+        "mirror_patterns_binding\t2"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_patterns_exhaustive",
+      "source": "mirror/modules/tier1-showcase/mirror_patterns_exhaustive.ls",
+      "expectedOutputIncludes": [
+        "mirror_patterns_exhaustive\t2"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_patterns_guards",
+      "source": "mirror/modules/tier1-showcase/mirror_patterns_guards.ls",
+      "expectedOutputIncludes": [
+        "mirror_patterns_guards\tpass"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_patterns_nested",
+      "source": "mirror/modules/tier1-showcase/mirror_patterns_nested.ls",
+      "expectedOutputIncludes": [
+        "mirror_patterns_nested\tyes"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_patterns_performance",
+      "source": "mirror/modules/tier1-showcase/mirror_patterns_performance.ls",
+      "expectedOutputIncludes": [
+        "mirror_patterns_performance\t15"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_perf_benchmark",
+      "source": "mirror/modules/tier1-showcase/mirror_perf_benchmark.ls",
+      "expectedOutputIncludes": [
+        "mirror_perf_benchmark\t55"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_perf_caching",
+      "source": "mirror/modules/tier1-showcase/mirror_perf_caching.ls",
+      "expectedOutputIncludes": [
+        "mirror_perf_caching\t32"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_perf_constantfolding",
+      "source": "mirror/modules/tier1-showcase/mirror_perf_constantfolding.ls",
+      "expectedOutputIncludes": [
+        "mirror_perf_constantfolding\t14"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_perf_deadcode",
+      "source": "mirror/modules/tier1-showcase/mirror_perf_deadcode.ls",
+      "expectedOutputIncludes": [
+        "mirror_perf_deadcode\talive"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_perf_memoization",
+      "source": "mirror/modules/tier1-showcase/mirror_perf_memoization.ls",
+      "expectedOutputIncludes": [
+        "mirror_perf_memoization\t25"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_sec_audit",
+      "source": "mirror/modules/tier1-showcase/mirror_sec_audit.ls",
+      "expectedOutputIncludes": [
+        "mirror_sec_audit\tsafe"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_sec_crypto",
+      "source": "mirror/modules/tier1-showcase/mirror_sec_crypto.ls",
+      "expectedOutputIncludes": [
+        "mirror_sec_crypto\t6"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_sec_injection",
+      "source": "mirror/modules/tier1-showcase/mirror_sec_injection.ls",
+      "expectedOutputIncludes": [
+        "mirror_sec_injection\tblocked"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_sec_input",
+      "source": "mirror/modules/tier1-showcase/mirror_sec_input.ls",
+      "expectedOutputIncludes": [
+        "mirror_sec_input\tclean"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_type_advanced",
+      "source": "mirror/modules/tier1-showcase/mirror_type_advanced.ls",
+      "expectedOutputIncludes": [
+        "mirror_type_advanced\t3"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_type_basics",
+      "source": "mirror/modules/tier1-showcase/mirror_type_basics.ls",
+      "expectedOutputIncludes": [
+        "mirror_type_basics\t5"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_type_constraints",
+      "source": "mirror/modules/tier1-showcase/mirror_type_constraints.ls",
+      "expectedOutputIncludes": [
+        "mirror_type_constraints\tadult"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_type_generics",
+      "source": "mirror/modules/tier1-showcase/mirror_type_generics.ls",
+      "expectedOutputIncludes": [
+        "mirror_type_generics\t9"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "mirror_type_performance",
+      "source": "mirror/modules/tier1-showcase/mirror_type_performance.ls",
+      "expectedOutputIncludes": [
+        "mirror_type_performance\t10"
+      ],
+      "tags": [
+        "tier1-showcase",
+        "current-language-analog",
+        "javascript-to-lua",
+        "runtime"
+      ],
+      "supportLabel": "current-language-analog",
+      "supportNote": "Runnable current-language analog; not proof that the named async/type/meta/security feature family is implemented."
+    },
+    {
+      "name": "experimental_mathematical_showcase",
+      "source": "examples/experimental/mathematical_showcase.ls",
+      "expectedOutputIncludes": [
+        "LUASCRIPT Mathematical Showcase",
+        "Signal energy:",
+        "Mathematical programming has never been more beautiful!"
+      ],
+      "tags": [
+        "experimental",
+        "mathematical-notation",
+        "runtime"
+      ]
+    }
+  ],
+  "strictCanonScripts": [
+    {
+      "name": "numbers",
+      "script": "tests/clarity_super_canon_step2_numbers.js",
+      "tags": [
+        "legacy-core",
+        "phase5",
+        "numbers"
+      ]
+    },
+    {
+      "name": "json",
+      "script": "tests/clarity_super_canon_json_verification.js",
+      "tags": [
+        "legacy-core",
+        "phase5",
+        "json"
+      ]
+    },
+    {
+      "name": "import_export",
+      "script": "tests/clarity_super_canon_import_export.js",
+      "tags": [
+        "legacy-core",
+        "phase5",
+        "module-system"
+      ]
+    },
+    {
+      "name": "phase5_unit",
+      "script": "tests/clarity_super_canon_phase5_unit_tests.js",
+      "tags": [
+        "legacy-core",
+        "phase5",
+        "unit"
+      ]
+    },
+    {
+      "name": "phase5_integration",
+      "script": "tests/clarity_super_canon_phase5_integration_tests.js",
+      "tags": [
+        "legacy-core",
+        "phase5",
+        "integration"
+      ]
+    },
+    {
+      "name": "exception_handling",
+      "script": "tests/clarity_super_canon_exception_handling.js",
+      "tags": [
+        "legacy-core",
+        "parser",
+        "regression",
+        "exception"
+      ]
+    },
+    {
+      "name": "super_php_dart_parser_memory",
+      "script": "tests/clarity_super_canon_verification_ascii.js",
+      "tags": [
+        "legacy-super-canon",
+        "parser",
+        "memory",
+        "php",
+        "dart"
+      ]
+    },
+    {
+      "name": "super_master_parser_json_probe",
+      "script": "tests/clarity_super_canon_master_verification.js",
+      "tags": [
+        "legacy-super-canon",
+        "parser",
+        "json",
+        "memory",
+        "scoped"
+      ]
+    },
+    {
+      "name": "super_ruby_parser_memory",
+      "script": "tests/ruby_clarity_super_canon_verification.js",
+      "tags": [
+        "legacy-super-canon",
+        "parser",
+        "memory",
+        "ruby",
+        "scoped"
+      ]
+    },
+    {
+      "name": "phase_d_e",
+      "script": "tests/verify_phase_d_e.js",
+      "tags": [
+        "phase-d-e",
+        "multilang",
+        "heavy"
+      ]
+    },
+    {
+      "name": "comprehensive_multilang",
+      "script": "tests/COMPREHENSIVE_VERIFICATION.js",
+      "tags": [
+        "multilang",
+        "heavy",
+        "comprehensive"
+      ]
+    },
+    {
+      "name": "javascript_optimizer_demo",
+      "script": "verify-javascript-optimization.js",
+      "tags": [
+        "optimizer",
+        "legacy-core"
+      ]
+    },
+    {
+      "name": "javascript_optimizer_tests",
+      "script": "tests/optimizers/javascript-optimizer.test.js",
+      "tags": [
+        "optimizer",
+        "regression"
+      ]
+    },
+    {
+      "name": "language_qualification_implemented_shard_1",
+      "script": "tests/clarity_canon/language_qualification_harness.js",
+      "args": [
+        "--group",
+        "implemented",
+        "--reports-only",
+        "--shard",
+        "1/2"
+      ],
+      "timeoutMs": 600000,
+      "tags": [
+        "language-qualification",
+        "implemented",
+        "multilang",
+        "shard"
+      ]
+    },
+    {
+      "name": "language_qualification_implemented_shard_2",
+      "script": "tests/clarity_canon/language_qualification_harness.js",
+      "args": [
+        "--group",
+        "implemented",
+        "--reports-only",
+        "--shard",
+        "2/2"
+      ],
+      "timeoutMs": 600000,
+      "tags": [
+        "language-qualification",
+        "implemented",
+        "multilang",
+        "shard"
+      ]
+    },
+    {
+      "name": "language_qualification_setup_blocked_shard_1",
+      "script": "tests/clarity_canon/language_qualification_harness.js",
+      "args": [
+        "--group",
+        "setup-blocked",
+        "--reports-only",
+        "--shard",
+        "1/2"
+      ],
+      "timeoutMs": 600000,
+      "tags": [
+        "language-qualification",
+        "setup-blocked",
+        "multilang",
+        "shard"
+      ]
+    },
+    {
+      "name": "language_qualification_setup_blocked_shard_2",
+      "script": "tests/clarity_canon/language_qualification_harness.js",
+      "args": [
+        "--group",
+        "setup-blocked",
+        "--reports-only",
+        "--shard",
+        "2/2"
+      ],
+      "timeoutMs": 600000,
+      "tags": [
+        "language-qualification",
+        "setup-blocked",
+        "multilang",
+        "shard"
+      ]
+    },
+    {
+      "name": "beta_readiness",
+      "script": "scripts/beta_readiness.js",
+      "tags": [
+        "beta",
+        "language-qualification",
+        "readiness"
+      ]
+    },
+    {
+      "name": "parser_ownership_regression",
+      "script": "tests/parser_ownership.test.js",
+      "tags": [
+        "parser",
+        "regression"
+      ]
+    },
+    {
+      "name": "stub_operational_regression",
+      "script": "tests/stub_operational_regression.test.js",
+      "tags": [
+        "stub-inventory",
+        "regression"
+      ]
+    },
+    {
+      "name": "stub_inventory_gate",
+      "script": "scripts/stub_inventory.js",
+      "args": [
+        "--check"
+      ],
+      "tags": [
+        "stub-inventory"
+      ]
+    },
+    {
+      "name": "archive_working_tree_audit",
+      "script": "scripts/archive_audit.js",
+      "tags": [
+        "archive",
+        "working-tree"
+      ]
+    }
+  ],
+  "advisoryScripts": []
+}

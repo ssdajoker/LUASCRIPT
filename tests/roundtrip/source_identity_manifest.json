@@ -1,0 +1,267 @@
+{
+  "schemaVersion": 2,
+  "status": "release-shaped-source-identity-suite",
+  "description": "Release-shaped LUASCRIPT .ls source-preserving suite. Positive fixtures prove normalized source identity, normalized parser-owned AST identity, and normalized current bridge IR identity only. Expected-failure fixtures prove named unsupported diagnostics only.",
+  "identityKind": "normalized-source-ast-and-ir-with-diagnostic-boundaries",
+  "minimumFixtures": 12,
+  "requiredCoverage": [
+    "bindings",
+    "expressions",
+    "functions",
+    "conditionals",
+    "loops",
+    "arrays",
+    "objects",
+    "indexing",
+    "slicing",
+    "profile-blocks",
+    "repair-blocks",
+    "verify-blocks",
+    "unsupported-diagnostics"
+  ],
+  "fixtures": [
+    {
+      "name": "ls_arithmetic_bindings_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/arithmetic_locals.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["bindings", "expressions"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for arithmetic bindings",
+      "expectedNormalizedIncludes": [
+        "let x = 2 + 3;",
+        "let y = x * 4 - 5;",
+        "console.log(\"ls_arithmetic\", x, y);"
+      ]
+    },
+    {
+      "name": "ls_expression_precedence_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/roundtrip/fixtures/ls_expression_precedence_identity.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["expressions"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for expression precedence and boolean comparison",
+      "expectedNormalizedIncludes": [
+        "let base = 2 + 3 * 4;",
+        "let grouped = 2 + 3 * 4;",
+        "console.log(\"identity_expr\", base, grouped, compare);"
+      ]
+    },
+    {
+      "name": "ls_functions_conditionals_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/functions_conditionals.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["functions", "conditionals"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for functions and conditionals",
+      "expectedNormalizedIncludes": [
+        "function add(a, b) {",
+        "if (value > 5) {",
+        "console.log(\"ls_branch\", \"small\", value);"
+      ]
+    },
+    {
+      "name": "ls_while_loop_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/while_loop.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["loops"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for while loops",
+      "expectedNormalizedIncludes": [
+        "while (i <= 3) {",
+        "total = total + i;",
+        "console.log(\"ls_while\", total);"
+      ]
+    },
+    {
+      "name": "ls_numeric_for_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/numeric_for.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["loops"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for numeric for loops",
+      "expectedNormalizedIncludes": [
+        "for (let i = 1; i <= 4; i = i + 1) {",
+        "total = total + i;",
+        "console.log(\"ls_for\", total);"
+      ]
+    },
+    {
+      "name": "ls_break_continue_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/ring2_break_continue.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["loops", "conditionals"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for loop break/continue flow",
+      "expectedNormalizedIncludes": [
+        "continue;",
+        "break;",
+        "console.log(\"ring2_control\", total);"
+      ]
+    },
+    {
+      "name": "ls_array_index_length_slice_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/ring3_default_index_length_slice.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["arrays", "indexing", "slicing"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for arrays, indexing, length, and slicing in default syntax",
+      "expectedNormalizedIncludes": [
+        "let values = [5, 7, 9, 11];",
+        "let part = word.slice(1, 3);",
+        "let listPart = values.slice(1, 3);"
+      ]
+    },
+    {
+      "name": "ls_object_mutation_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/object_mutation.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["objects"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for object literals and field mutation",
+      "expectedNormalizedIncludes": [
+        "let user = { name: \"Ada\", score: 5 };",
+        "user.score = user.score + 2;",
+        "console.log(\"ls_object\", user.name, user.score);"
+      ]
+    },
+    {
+      "name": "ls_nested_object_state_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/ring2_nested_object_state.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["objects", "conditionals"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for nested object state and conditional selection",
+      "expectedNormalizedIncludes": [
+        "let store = { alpha:",
+        "chosen = store.beta;",
+        "console.log(\"ring2_object\", chosen.name, total);"
+      ]
+    },
+    {
+      "name": "ls_profile_portable_slice_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/ring3_portable_semantics_index_length_slice.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["profile-blocks", "arrays", "indexing", "slicing"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for portable_semantics_v1 profile, arrays, indexing, length, and slicing",
+      "expectedNormalizedIncludes": [
+        "meta profile portable_semantics_v1;",
+        "let part = word.slice(1, 3);",
+        "console.log(\"ring3_profile\", char, wordLength, part, second, third, listFirst, listPartLength, first);"
+      ]
+    },
+    {
+      "name": "ls_repair_block_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/roundtrip/fixtures/ls_repair_block_identity.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["repair-blocks", "verify-blocks", "indexing", "slicing"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for repair and verify block preservation",
+      "expectedNormalizedIncludes": [
+        "repair {",
+        "verify {",
+        "lua_repair \"slicing=runtime_slice\";"
+      ]
+    },
+    {
+      "name": "ls_verify_block_identity",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/roundtrip/fixtures/ls_verify_block_identity.ls",
+      "tier": "normalized-source-and-ir-identity",
+      "coverage": ["verify-blocks"],
+      "claim": "normalized .ls source identity plus normalized parser-owned AST identity plus normalized current bridge IR identity for verify block preservation",
+      "expectedNormalizedIncludes": [
+        "verify {",
+        "ls_stdout \"identity_verify 9\";",
+        "console.log(\"identity_verify\", value);"
+      ]
+    },
+    {
+      "name": "ls_unsupported_throw_diagnostic",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/unsupported_throw.ls",
+      "tier": "expected-unsupported-diagnostic",
+      "coverage": ["unsupported-diagnostics"],
+      "claim": "named unsupported diagnostic for throw statements; no source identity claimed",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported JavaScript exception flow: throw statements"
+    },
+    {
+      "name": "ls_meta_profile_forbidden_diagnostic",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/meta_profile_forbidden_present.ls",
+      "tier": "expected-unsupported-diagnostic",
+      "coverage": ["unsupported-diagnostics", "profile-blocks", "verify-blocks"],
+      "claim": "named meta profile forbidden diagnostic; no source identity claimed",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Forbidden LUASCRIPT profile assertion present: portable_v1"
+    },
+    {
+      "name": "ls_meta_unknown_repair_strategy_diagnostic",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "luascript",
+      "sourcePath": "tests/language_completion/fixtures/luascript/meta_unknown_repair_strategy.ls",
+      "tier": "expected-unsupported-diagnostic",
+      "coverage": ["unsupported-diagnostics", "repair-blocks"],
+      "claim": "named unsupported repair-strategy diagnostic; no source identity claimed",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported repair strategy for indexing: one_based"
+    }
+  ],
+  "claimTiers": {
+    "normalizedSourceIdentity": "positive fixtures only",
+    "normalizedAstIdentity": "positive fixtures only; parser-owned AST is normalized from src/parser/enhanced_parser.py parse_artifact output and excludes token stream/trivia",
+    "normalizedIrIdentity": "positive fixtures only",
+    "expectedUnsupportedDiagnostics": "expected-failure fixtures only",
+    "tokenLevelTextIdentity": "reported but not required",
+    "runtimeOutputEquivalence": "not claimed by this harness",
+    "broadLosslessRecovery": "not claimed by this harness",
+    "semanticEquivalence": "not claimed by this harness"
+  },
+  "bidirectionalityLayerEvidence": {
+    "language": "luascript",
+    "policy": "This manifest contributes only the .ls source identity layers; language gate, target-runtime, and runtime-output layers remain in the language-completion and round-trip reports.",
+    "layers": {
+      "emittedLs": "proven-named-fixtures",
+      "structuralIrReparse": "proven-named-fixtures",
+      "normalizedSourceIdentity": "proven-12-positive-fixtures",
+      "normalizedAstIdentity": "proven-12-positive-fixtures",
+      "normalizedIrIdentity": "proven-12-positive-fixtures",
+      "tokenIdentity": "measured-non-gating",
+      "runtimeOutputEquivalence": "not-claimed",
+      "semanticEquivalence": "not-claimed"
+    },
+    "evidence": [
+      "Source -> current bridge IR -> emitted .ls -> current bridge IR is checked for 12 positive fixtures.",
+      "Source -> parser-owned AST -> emitted .ls -> parser-owned AST is checked for 12 positive fixtures.",
+      "Token-level text identity is recorded per fixture but is not a gating assertion."
+    ],
+    "boundaries": [
+      "Expected unsupported diagnostic fixtures do not count as identity fixtures.",
+      "This route does not claim token-level identity, runtime-output equivalence, broad lossless recovery, or semantic equivalence."
+    ]
+  },
+  "boundaries": [
+    "This is not token-level text identity.",
+    "Parser-owned normalized AST identity is seeded for positive fixtures only, not for expected unsupported diagnostics or broad .ls syntax.",
+    "This is not broad lossless source recovery.",
+    "This is not runtime-output equivalence.",
+    "This is not broad semantic equivalence.",
+    "Expected unsupported diagnostics do not count as source identity fixtures.",
+    "This is not a 1.0 release seal."
+  ]
+}

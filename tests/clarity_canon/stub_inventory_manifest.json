@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "activeRoots": [
+    "src",
+    "runtime",
+    "scripts",
+    "tests",
+    "test",
+    "examples",
+    "mirror",
+    "README.md",
+    "PROJECT_STATUS.md",
+    "CHANGELOG.md",
+    "docs/INDEX.md",
+    "docs/README.md",
+    "docs/LUASCRIPT_MEGA_PLAN.md",
+    "docs/LUASCRIPT_META_LANGUAGE_V0.md",
+    "docs/LANGUAGE_SUPPORT_MATRIX.md"
+  ],
+  "excludePathIncludes": [
+    "docs/OLD&Deprecated/",
+    "docs/deprecated/",
+    "artifacts/",
+    "coverage/",
+    ".nyc_output/",
+    ".pytest_cache/",
+    "__pycache__/",
+    "node_modules/",
+    "mirror/generated/",
+    "tests/ir/artifacts/",
+    "tests/clarity_canon/stub_inventory_manifest.json",
+    "artifacts/clarity_canon/"
+  ],
+  "excludeFileExtensions": [
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".zip",
+    ".tar",
+    ".gz",
+    ".map",
+    ".pyc",
+    ".lua"
+  ],
+  "rules": [
+    {
+      "id": "emitted-todo-body",
+      "classification": "must-fix",
+      "ownerArea": "language-generators",
+      "pattern": "\\bTODO:\\s*(?:Implement|Function body|Method body)\\b",
+      "recommendedFix": "Emit executable Lua/JavaScript behavior from available metadata or a deterministic neutral return for missing source bodies."
+    },
+    {
+      "id": "emitted-not-implemented-body",
+      "classification": "must-fix",
+      "ownerArea": "language-generators",
+      "pattern": "\\bnot implemented\\b",
+      "recommendedFix": "Use explicit unsupported diagnostics only for intentionally unsupported syntax, otherwise emit executable behavior."
+    },
+    {
+      "id": "function-cache-transpilation-placeholder",
+      "classification": "must-fix",
+      "ownerArea": "javascript-optimizer",
+      "pattern": "Placeholder for actual transpilation|would do proper AST analysis|destructure here|In real implementation",
+      "pathIncludes": [
+        "src/optimizers/javascript/speed/function_cache.js"
+      ],
+      "recommendedFix": "Walk ESTree nodes with cycle guards and compile parameters/body statements into executable Lua."
+    },
+    {
+      "id": "ffi-captured-vars-placeholder",
+      "classification": "must-fix",
+      "ownerArea": "javascript-optimizer",
+      "pattern": "Would analyze function body|return \\[\\];\\s*//\\s*Placeholder",
+      "pathIncludes": [
+        "src/optimizers/javascript/interop/ffi-analyzer.js"
+      ],
+      "recommendedFix": "Analyze callback closure identifiers and report captured variables."
+    },
+    {
+      "id": "interop-fixed-score-placeholder",
+      "classification": "must-fix",
+      "ownerArea": "javascript-optimizer",
+      "pattern": "scores\\.interop\\s*=\\s*50;\\s*//\\s*Placeholder",
+      "pathIncludes": [
+        "src/optimizers/javascript/javascript-optimizer.js"
+      ],
+      "recommendedFix": "Derive the interop score from FFI overhead and batching metrics."
+    },
+    {
+      "id": "python-parser-empty-statement-stubs",
+      "classification": "must-fix",
+      "ownerArea": "python-parser",
+      "pattern": "Stub methods for other statement types|createNode\\(\"(?:IfStatement|ForStatement|WhileStatement|WithStatement|TryStatement)\", \\{\\}\\)",
+      "pathIncludes": [
+        "src/parsers/python_parser.js"
+      ],
+      "recommendedFix": "Parse condition/iterable/body/alternate/handler fields instead of returning empty nodes."
+    },
+    {
+      "id": "enhanced-transpiler-expression-placeholder",
+      "classification": "must-fix",
+      "ownerArea": "enhanced-transpiler",
+      "pattern": "Literal\\(\"expression\"\\).*Placeholder",
+      "pathIncludes": [
+        "src/transpiler/enhanced_transpiler.py"
+      ],
+      "recommendedFix": "Build an AST node from collected expression tokens."
+    },
+    {
+      "id": "synthetic-pass-report",
+      "classification": "archive-candidate",
+      "ownerArea": "test-reports",
+      "pattern": "synthetic pass|hardcoded success|Will be updated by actual parser integration|production ready",
+      "pathIncludes": [
+        "tests/",
+        "test/"
+      ],
+      "recommendedFix": "Convert to live assertions or move report-only files under docs/OLD&Deprecated/clarity-canon/."
+    },
+    {
+      "id": "explicit-unsupported-diagnostic",
+      "classification": "intentional-runtime-diagnostic",
+      "ownerArea": "diagnostics",
+      "pattern": "throw new Error\\([^\\n]*(?:Unsupported|unsupported)|expectedFailure|unsupported-feature",
+      "recommendedFix": "Keep only when covered by a regression test and not masking an implementation stub."
+    }
+  ]
+}

@@ -1,10 +1,45 @@
 # LUASCRIPT CHANGELOG
 ## Development Progress and Implementation History
 
-**Current Version**: 0.9.0-alpha  
-**Status**: Advanced Prototype → Production Ready Sprint
+**Current Version**: 0.1.0-beta.0
+**Status**: Scoped non-strict pre-production beta v0.1
+**Current source of truth**: [PROJECT_STATUS.md](PROJECT_STATUS.md), [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md), and [docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md](docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md)
+
+Historical entries below this beta section are retained as project history. Current support claims, release scope, and limitations are governed by the active docs listed above.
 
 ---
+
+## [0.1.0-beta.0] - 2026-06-19 - Scoped Non-Strict Beta Release Seal
+
+### Release Seal
+
+- Sealed the scoped, non-strict pre-production beta v0.1 handoff around the named implemented lanes.
+- Confirmed `npm run beta:readiness`, `npm run beta:preflight`, and `npm run beta:full` as the beta evidence chain.
+- Added [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md) as the exact beta handoff artifact.
+
+### Documentation
+
+- Clarified in `README.md` and `PROJECT_STATUS.md` that beta v0.1 is scoped and non-strict.
+- Added compact beta quick-start guidance: `npm install`, `npm run beta:readiness`, `npm run beta:preflight`, and `npm run beta:full`.
+- Made strict-native closure and the first canonical `1.0` pass explicit post-beta routes.
+
+### Known Limitations
+
+- Strict-native completion remains open for Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam until the missing runtime/toolchain commands are available and native gates pass.
+- Java and Rust native availability still require strict-gate reconciliation before broad native support claims.
+- This release seal is not canonical `1.0`, not production readiness, and not full-language completion.
+
+### Not Changed
+
+- No compiler API change.
+- No runtime API change.
+- No language syntax change.
+- No package version bump beyond the existing `0.1.0-beta.0` package state.
+- No tag, publish, or GitHub release action.
+
+---
+
+## Historical Entries
 
 ## 🎯 Version 0.9.0-alpha+ (September 29, 2025) - PHASE 1 COMPLETE: CORE FIXES ACHIEVED!
 
@@ -221,9 +256,9 @@ class Vector3 {
 
 #### **❌ Known Issues**
 - **Class Method Bodies**: Generate empty function bodies in Lua output
-- **`this` Keyword Handling**: Not implemented in method contexts
+- **`this` Keyword Handling**: Unsupported in method contexts
 - **Exception Handling**: `try/catch` parsed but not transpiled
-- **Destructuring Assignment**: `let [a, b] = array` not implemented
+- **Destructuring Assignment**: `let [a, b] = array` remains unsupported
 
 ### 📊 **Implementation Statistics**
 
@@ -298,20 +333,9 @@ class Vector3 {
 
 ---
 
-## 🎉 **Historical Significance**
+## Historical Note
 
-**September 29, 2025** marks a **historic milestone** in programming language development. LUASCRIPT achieves the **first successful implementation** of a programming language where:
-
-1. **Mathematical expressions are first-class citizens**: `f(x) = π × x²`
-2. **Unicode mathematical operators work natively**: No escape sequences or special syntax
-3. **JavaScript familiarity meets mathematical elegance**: Best of both worlds
-4. **High performance through LuaJIT**: Production-grade execution speed
-
-**LUASCRIPT represents the future of mathematical programming.** 🌟
-
-The next 45 days will determine whether LUASCRIPT becomes the **definitive language for mathematical computing**, joining the ranks of revolutionary languages like Python, JavaScript, and Julia.
-
-**Status: Advanced Prototype → Production Ready Sprint** 🏁
+The September 29, 2025 material below is retained as alpha-era project history. It is not the current release claim. Current release status is the scoped non-strict beta v0.1 handoff described at the top of this changelog and in [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md).
 
 ---
 

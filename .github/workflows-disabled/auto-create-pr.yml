@@ -1,0 +1,64 @@
+name: Auto Create PR
+
+# Trigger on:
+# - Any push to non-main, non-protected branches
+# - PR exists check to avoid duplicates
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - develop
+      - master
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  auto-create-pr:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Create or update PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const branch = context.ref.replace('refs/heads/', '');
+            
+            // Check if PR already exists for this branch
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: `${context.repo.owner}:${branch}`,
+              base: 'main'
+            });
+            
+            if (prs.length > 0) {
+              console.log(`PR already exists for ${branch}: #${prs[0].number}`);
+              return;
+            }
+            
+            // Create new PR
+            const { data: pr } = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Auto PR: ${branch}`,
+              head: branch,
+              base: 'main',
+              body: `🤖 Auto-created PR for branch \`${branch}\`\n\nTriggered by push event.\n\nWill auto-merge when all checks pass.`
+            });
+            
+            console.log(`Created PR #${pr.number}`);
+            
+            // Add ready-for-review label to trigger workflows
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              labels: ['ready-for-review']
+            });
+            
+            console.log(`Added ready-for-review label to PR #${pr.number}`);

@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 1,
+  "name": "canonical-edge-case-matrix-v0",
+  "status": "scoped-25",
+  "description": "A manifest-driven edge-case matrix for current LUASCRIPT language/runtime features. This scoped matrix classifies representative cases without promoting broad language support.",
+  "artifact": "artifacts/edge_matrix/edge-case-matrix-report.json",
+  "requiredCategories": [
+    "value",
+    "control",
+    "scope",
+    "data",
+    "errors",
+    "target-specific",
+    "unsupported-diagnostics"
+  ],
+  "cases": [
+    {
+      "id": "value-basic-literals-and-arithmetic",
+      "category": "value",
+      "feature": "numbers strings and print normalization",
+      "sourceLanguage": "javascript",
+      "claim": "Simple numeric/string values preserve runtime stdout across current emitted targets.",
+      "source": "let a = 2;\nlet b = 3;\nconsole.log(\"edge_value\", a + b, \"ok\");",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_value 5 ok" },
+        { "language": "python", "expectedOutput": "edge_value 5 ok" },
+        { "language": "lua", "expectedOutput": "edge_value 5 ok" },
+        { "language": "luascript", "expectedOutput": "edge_value 5 ok" }
+      ]
+    },
+    {
+      "id": "value-boolean-null-equivalents",
+      "category": "value",
+      "feature": "booleans and null/nil/None equivalents",
+      "sourceLanguage": "javascript",
+      "claim": "Boolean negation and null-equivalent emission remain explicit across current emitted targets.",
+      "source": "let ok = true && !false;\nlet empty = null;\nconsole.log(\"edge_value_bool_null\", ok, empty);",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_value_bool_null true null" },
+        { "language": "python", "expectedOutput": "edge_value_bool_null True None" },
+        { "language": "lua", "expectedOutput": "edge_value_bool_null true nil" },
+        { "language": "luascript", "expectedOutput": "edge_value_bool_null true nil" }
+      ]
+    },
+    {
+      "id": "value-template-literal-concat",
+      "category": "value",
+      "feature": "plain template literal lowering",
+      "sourceLanguage": "javascript",
+      "claim": "The current plain-template-literal foothold preserves runtime stdout across current emitted targets.",
+      "source": "let name = \"Lua\";\nlet count = \"3\";\nconsole.log(`edge_value_template ${name} ${count}`);",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_value_template Lua 3" },
+        { "language": "python", "expectedOutput": "edge_value_template Lua 3" },
+        { "language": "lua", "expectedOutput": "edge_value_template Lua 3" },
+        { "language": "luascript", "expectedOutput": "edge_value_template Lua 3" }
+      ]
+    },
+    {
+      "id": "value-arithmetic-precedence",
+      "category": "value",
+      "feature": "arithmetic precedence",
+      "sourceLanguage": "javascript",
+      "claim": "A small arithmetic-precedence expression preserves runtime stdout across current emitted targets.",
+      "source": "let value = 2 + 3 * 4 - 5;\nconsole.log(\"edge_value_precedence\", value);",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_value_precedence 9" },
+        { "language": "python", "expectedOutput": "edge_value_precedence 9" },
+        { "language": "lua", "expectedOutput": "edge_value_precedence 9" },
+        { "language": "luascript", "expectedOutput": "edge_value_precedence 9" }
+      ]
+    },
+    {
+      "id": "control-while-break-continue",
+      "category": "control",
+      "feature": "while break continue",
+      "sourceLanguage": "javascript",
+      "claim": "A small while loop with break and continue preserves runtime stdout across current emitted targets.",
+      "source": "let i = 0;\nlet total = 0;\nwhile (i < 5) {\n  i = i + 1;\n  if (i == 2) { continue; }\n  if (i == 5) { break; }\n  total = total + i;\n}\nconsole.log(\"edge_control\", total);",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_control 8" },
+        { "language": "python", "expectedOutput": "edge_control 8" },
+        { "language": "lua", "expectedOutput": "edge_control 8" },
+        { "language": "luascript", "expectedOutput": "edge_control 8" }
+      ]
+    },
+    {
+      "id": "control-numeric-for-accumulation",
+      "category": "control",
+      "feature": "numeric for accumulation",
+      "sourceLanguage": "javascript",
+      "claim": "A narrow numeric for loop preserves runtime stdout across current emitted targets.",
+      "source": "let total = 0;\nfor (let i = 1; i < 5; i = i + 1) {\n  total = total + i;\n}\nconsole.log(\"edge_control_for\", total);",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_control_for 10" },
+        { "language": "python", "expectedOutput": "edge_control_for 10" },
+        { "language": "lua", "expectedOutput": "edge_control_for 10" },
+        { "language": "luascript", "expectedOutput": "edge_control_for 10" }
+      ]
+    },
+    {
+      "id": "control-if-else-early-return",
+      "category": "control",
+      "feature": "if else early returns",
+      "sourceLanguage": "javascript",
+      "claim": "Return-only branch classification preserves runtime stdout across current emitted targets.",
+      "source": "function classify(value) {\n  if (value < 0) {\n    return \"neg\";\n  }\n  if (value == 0) {\n    return \"zero\";\n  }\n  return \"pos\";\n}\nconsole.log(\"edge_control_return\", classify(-1), classify(0), classify(2));",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_control_return neg zero pos" },
+        { "language": "python", "expectedOutput": "edge_control_return neg zero pos" },
+        { "language": "lua", "expectedOutput": "edge_control_return neg zero pos" },
+        { "language": "luascript", "expectedOutput": "edge_control_return neg zero pos" }
+      ]
+    },
+    {
+      "id": "control-short-circuit-side-effects",
+      "category": "control",
+      "feature": "short-circuit side effects",
+      "sourceLanguage": "javascript",
+      "claim": "A small short-circuiting expression with skipped side effects preserves runtime stdout across current emitted targets.",
+      "source": "let count = 0;\nfunction bump() {\n  count = count + 1;\n  return true;\n}\nif (false && bump()) {\n  count = count + 10;\n}\nif (true || bump()) {\n  count = count + 2;\n}\nconsole.log(\"edge_control_short\", count);",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_control_short 2" },
+        { "language": "python", "expectedOutput": "edge_control_short 2" },
+        { "language": "lua", "expectedOutput": "edge_control_short 2" },
+        { "language": "luascript", "expectedOutput": "edge_control_short 2" }
+      ]
+    },
+    {
+      "id": "scope-nested-function-closure-mutation",
+      "category": "scope",
+      "feature": "nested function closure mutation",
+      "sourceLanguage": "javascript",
+      "claim": "A narrow closure-mutation pattern preserves runtime stdout across current emitted targets.",
+      "source": "function makeCounter(start) {\n  let value = start;\n  function inc(step) {\n    value = value + step;\n    return value;\n  }\n  return inc(2) + inc(3);\n}\nconsole.log(\"edge_scope\", makeCounter(5));",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_scope 17" },
+        { "language": "python", "expectedOutput": "edge_scope 17" },
+        { "language": "lua", "expectedOutput": "edge_scope 17" },
+        { "language": "luascript", "expectedOutput": "edge_scope 17" }
+      ]
+    },
+    {
+      "id": "scope-shadowed-local-binding",
+      "category": "scope",
+      "feature": "local shadowing",
+      "sourceLanguage": "javascript",
+      "claim": "A small local-shadowing pattern preserves runtime stdout across current emitted targets.",
+      "source": "let value = 1;\nfunction readValue() {\n  let value = 3;\n  return value;\n}\nconsole.log(\"edge_scope_shadow\", value, readValue());",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_scope_shadow 1 3" },
+        { "language": "python", "expectedOutput": "edge_scope_shadow 1 3" },
+        { "language": "lua", "expectedOutput": "edge_scope_shadow 1 3" },
+        { "language": "luascript", "expectedOutput": "edge_scope_shadow 1 3" }
+      ]
+    },
+    {
+      "id": "scope-recursive-function",
+      "category": "scope",
+      "feature": "recursion",
+      "sourceLanguage": "javascript",
+      "claim": "A small recursive function preserves runtime stdout across current emitted targets.",
+      "source": "function fact(n) {\n  if (n <= 1) {\n    return 1;\n  }\n  return n * fact(n - 1);\n}\nconsole.log(\"edge_scope_recursion\", fact(5));",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_scope_recursion 120" },
+        { "language": "python", "expectedOutput": "edge_scope_recursion 120" },
+        { "language": "lua", "expectedOutput": "edge_scope_recursion 120" },
+        { "language": "luascript", "expectedOutput": "edge_scope_recursion 120" }
+      ]
+    },
+    {
+      "id": "data-python-bounded-sequence-slices",
+      "category": "data",
+      "feature": "bounded sequence slices",
+      "sourceLanguage": "python",
+      "claim": "The Python V1.3 bounded sequence-slice foothold preserves string/list slice stdout across current emitted targets.",
+      "source": "word = \"LuaScript\"\nnumbers = [2, 4, 6, 8, 10]\npart = word[1:4]\nmid = numbers[1:4]\nprint(\"edge_data\", part, len(mid), mid[0], mid[2])",
+      "targets": [
+        { "language": "python", "expectedOutput": "edge_data uaS 3 4 8" },
+        { "language": "javascript", "expectedOutput": "edge_data uaS 3 4 8" },
+        { "language": "lua", "expectedOutput": "edge_data uaS 3 4 8" },
+        { "language": "luascript", "expectedOutput": "edge_data uaS 3 4 8" }
+      ]
+    },
+    {
+      "id": "data-javascript-array-object-mutation",
+      "category": "data",
+      "feature": "array and object mutation",
+      "sourceLanguage": "javascript",
+      "claim": "A small JavaScript array/object mutation pattern preserves runtime stdout across current emitted targets.",
+      "source": "let values = [2, 4];\nlet box = { value: values[1] };\nvalues[0] = box.value + 3;\nbox.value = values[0] + values[1];\nconsole.log(\"edge_data_js_mutation\", values[0], box.value);",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_data_js_mutation 7 11" },
+        { "language": "python", "expectedOutput": "edge_data_js_mutation 7 11" },
+        { "language": "lua", "expectedOutput": "edge_data_js_mutation 7 11" },
+        { "language": "luascript", "expectedOutput": "edge_data_js_mutation 7 11" }
+      ]
+    },
+    {
+      "id": "data-python-list-membership-mutation",
+      "category": "data",
+      "feature": "Python list mutation and membership",
+      "sourceLanguage": "python",
+      "claim": "The current Python list mutation and membership foothold preserves runtime stdout across current emitted JavaScript and Python targets.",
+      "source": "items = [2, 3]\nitems.append(4)\nlast = items.pop()\nitems.append(last + 1)\nprint(\"edge_data_py_list\", len(items), items[0], items[2], 3 in items)",
+      "targets": [
+        { "language": "python", "expectedOutput": "edge_data_py_list 3 2 5 True" },
+        { "language": "javascript", "expectedOutput": "edge_data_py_list 3 2 5 true" }
+      ]
+    },
+    {
+      "id": "data-luascript-portable-length-slice-mutation",
+      "category": "data",
+      "feature": ".ls portable length slice and mutation",
+      "sourceLanguage": "luascript",
+      "claim": "The current .ls portable-semantics profile preserves length, slice, index, and mutation stdout across current emitted targets.",
+      "source": "meta profile portable_semantics_v1;\nlet values = [2, 4, 6, 8];\nlet part = values.slice(1, 3);\nvalues[2] = values[2] + values.length;\nconsole.log(\"edge_data_ls\", values[2], part[0], part.length);",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_data_ls 10 4 2" },
+        { "language": "python", "expectedOutput": "edge_data_ls 10 4 2" },
+        { "language": "lua", "expectedOutput": "edge_data_ls 10 4 2" },
+        { "language": "luascript", "expectedOutput": "edge_data_ls 10 4 2" }
+      ]
+    },
+    {
+      "id": "errors-undefined-call-runtime-diagnostic",
+      "category": "errors",
+      "feature": "runtime undefined-call diagnostics",
+      "sourceLanguage": "javascript",
+      "claim": "Runtime errors remain observable target-runtime failures rather than silently passing.",
+      "source": "console.log(\"edge_error\", missing_call());",
+      "targets": [
+        { "language": "javascript", "expectedRuntimeError": "missing_call" },
+        { "language": "python", "expectedRuntimeError": "missing_call" },
+        { "language": "lua", "expectedRuntimeError": "missing_call" }
+      ]
+    },
+    {
+      "id": "errors-python-undefined-call-runtime-diagnostic",
+      "category": "errors",
+      "feature": "Python runtime undefined-call diagnostics",
+      "sourceLanguage": "python",
+      "claim": "A Python undefined-call pattern remains an observable runtime failure in current Python and JavaScript targets.",
+      "source": "print(\"edge_error_py\", missing_call())",
+      "targets": [
+        { "language": "python", "expectedRuntimeError": "missing_call" },
+        { "language": "javascript", "expectedRuntimeError": "missing_call" }
+      ]
+    },
+    {
+      "id": "errors-python-index-runtime-diagnostic",
+      "category": "errors",
+      "feature": "Python index runtime diagnostics",
+      "sourceLanguage": "python",
+      "claim": "A Python out-of-range list index remains an observable runtime failure in the current Python target.",
+      "source": "items = [1]\nprint(\"edge_error_index\", items[2])",
+      "targets": [
+        { "language": "python", "expectedRuntimeError": "list index out of range" }
+      ]
+    },
+    {
+      "id": "target-specific-lua-one-based-index-repair",
+      "category": "target-specific",
+      "feature": "Lua one-based table index to zero-based targets",
+      "sourceLanguage": "lua",
+      "claim": "Lua one-based table indexes repair to zero-based JavaScript, Python, and emitted .ls targets for the named V2.1 slice.",
+      "source": "local values = {3, 5, 8}\nvalues[2] = values[2] + 4\nprint(\"edge_target\", values[1], values[2], values[3])",
+      "targets": [
+        { "language": "lua", "expectedOutput": "edge_target 3 9 8" },
+        { "language": "javascript", "expectedOutput": "edge_target 3 9 8" },
+        { "language": "python", "expectedOutput": "edge_target 3 9 8" },
+        { "language": "luascript", "expectedOutput": "edge_target 3 9 8" }
+      ]
+    },
+    {
+      "id": "target-specific-python-negative-range",
+      "category": "target-specific",
+      "feature": "Python negative-step range lowering",
+      "sourceLanguage": "python",
+      "claim": "The current Python negative-step range foothold preserves runtime stdout across current emitted targets.",
+      "source": "total = 0\nfor value in range(5, -1, -2):\n    total = total + value\nprint(\"edge_target_py_range\", total)",
+      "targets": [
+        { "language": "python", "expectedOutput": "edge_target_py_range 9" },
+        { "language": "javascript", "expectedOutput": "edge_target_py_range 9" },
+        { "language": "lua", "expectedOutput": "edge_target_py_range 9" },
+        { "language": "luascript", "expectedOutput": "edge_target_py_range 9" }
+      ]
+    },
+    {
+      "id": "target-specific-luascript-portable-truthiness",
+      "category": "target-specific",
+      "feature": ".ls portable JS-like truthiness repair",
+      "sourceLanguage": "luascript",
+      "claim": "The current .ls portable-semantics profile repairs JS-like truthiness across current emitted targets.",
+      "source": "meta profile portable_semantics_v1;\nlet values = [0, 2];\nlet empty = \"\";\nlet score = 0;\nif (values[0] || empty) {\n  score = 10;\n} else {\n  score = 1;\n}\nconsole.log(\"edge_target_ls_truthy\", score);",
+      "targets": [
+        { "language": "javascript", "expectedOutput": "edge_target_ls_truthy 1" },
+        { "language": "python", "expectedOutput": "edge_target_ls_truthy 1" },
+        { "language": "lua", "expectedOutput": "edge_target_ls_truthy 1" },
+        { "language": "luascript", "expectedOutput": "edge_target_ls_truthy 1" }
+      ]
+    },
+    {
+      "id": "unsupported-diagnostics-python-slice-step",
+      "category": "unsupported-diagnostics",
+      "feature": "Python slice step diagnostic",
+      "sourceLanguage": "python",
+      "claim": "Unsupported slice-step syntax remains fail-closed with an explicit diagnostic.",
+      "source": "word = \"LuaScript\"\nprint(word[0:6:2])",
+      "expectedDiagnosticPattern": "Unsupported Python input feature: slice steps"
+    },
+    {
+      "id": "unsupported-diagnostics-javascript-for-of",
+      "category": "unsupported-diagnostics",
+      "feature": "JavaScript for-of diagnostic",
+      "sourceLanguage": "javascript",
+      "claim": "Unsupported JavaScript for-of syntax remains fail-closed with an explicit diagnostic.",
+      "source": "const values = [1, 2, 3];\nfor (const value of values) {\n  console.log(value);\n}",
+      "expectedDiagnosticPattern": "Unsupported JavaScript control flow: for-of loops"
+    },
+    {
+      "id": "unsupported-diagnostics-javascript-try-catch",
+      "category": "unsupported-diagnostics",
+      "feature": "JavaScript try/catch diagnostic",
+      "sourceLanguage": "javascript",
+      "claim": "Unsupported JavaScript try/catch/finally syntax remains fail-closed with an explicit diagnostic.",
+      "source": "try {\n  console.log(\"try-body\");\n} catch (error) {\n  console.log(error);\n}",
+      "expectedDiagnosticPattern": "Unsupported JavaScript exception flow: try/catch/finally"
+    },
+    {
+      "id": "unsupported-diagnostics-javascript-object-spread",
+      "category": "unsupported-diagnostics",
+      "feature": "JavaScript object spread diagnostic",
+      "sourceLanguage": "javascript",
+      "claim": "Unsupported JavaScript object spread remains fail-closed with an explicit diagnostic.",
+      "source": "const base = { a: 1 };\nconst copy = { ...base, b: 2 };\nconsole.log(copy.b);",
+      "expectedDiagnosticPattern": "Unsupported JavaScript object spread"
+    }
+  ]
+}

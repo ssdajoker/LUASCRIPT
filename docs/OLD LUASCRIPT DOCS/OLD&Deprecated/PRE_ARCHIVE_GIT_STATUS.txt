@@ -1,0 +1,259 @@
+ M CHECKLIST_PHASES.md
+ M PHASE_2A_EXECUTIVE_SUMMARY.txt
+ M PROJECT_STATUS.md
+ M README.md
+ M ROUNDS_9_10_COMPLETION_SUMMARY.md
+ M artifacts/harness_results.json
+ M docs/INDEX.md
+ M docs/README.md
+ M package.json
+ M src/ir/lowerer.js
+ M src/optimizers/javascript/algorithms/loop-optimizer.js
+ M src/optimizers/javascript/interop/interop_cache.js
+ M src/optimizers/javascript/interop/marshaling-optimizer.js
+ M src/optimizers/javascript/interop/type-converter.js
+ M src/optimizers/javascript/javascript-optimizer.js
+ M src/optimizers/javascript/memory/memory-profiling.js
+ M src/optimizers/javascript/memory/register-pressure.js
+ M src/optimizers/javascript/quality/quality_gates.js
+ M src/optimizers/javascript/speed/constant-folding.js
+ M src/optimizers/javascript/speed/dead-code-elimination.js
+ M src/parsers/dart_parser.js
+ M src/parsers/php_parser.js
+ M src/parsers/python_parser.js
+ M src/parsers/ruby_parser.js
+ M src/phase1_core_parser.js
+ D test_actual_transpile.js
+ D test_core_transpiler.js
+ D test_edge_cases.js
+ D test_emitter_simple.js
+ D test_json_numbers.js
+ D test_mixed_concat.js
+ D test_optimizations.js
+ M test_output.txt
+ D test_spread.js
+ D test_string_concat_only.js
+ D test_suspicious_metrics.js
+ D test_tokenizer_fix.js
+ D test_work_queue.js
+?? ANALYSIS_INDEX.md
+?? CHAMPIONSHIP_100_PERCENT_COMPLETION.md
+?? CHAMPIONSHIP_COORDINATION_PLAYBOOK.md
+?? CHAMPIONSHIP_VICTORY_FINAL_REPORT.md
+?? CHAMPIONSHIP_VICTORY_INDEX.md
+?? CHAMPIONSHIP_VICTORY_PHASE_B_40_40_COMPLETE.md
+?? CSC_LM_EVO-A_STATUS.md
+?? CSC_LM_EVO-A_v3_CHAMPIONSHIP_COMPLETION.md
+?? CSC_LM_EVO_A_ARCHITECTURE_V3.md
+?? CSC_LM_EVO_A_DOCUMENTATION_INDEX.md
+?? CSC_LM_EVO_A_LAUNCH_SUMMARY.md
+?? CSC_LM_EVO_A_MASTER_STATUS_DASHBOARD.md
+?? CSC_LM_EVO_A_PHASE1_COMPLETION_REPORT.md
+?? CSC_LM_EVO_A_PHASE2_INTERIM_REPORT.md
+?? DART_CHAMPIONSHIP_VICTORY.md
+?? DART_FINAL_STATUS_REPORT.md
+?? DART_VICTORY_CONFIRMATION.txt
+?? EXECUTIVE_SUMMARY_FORENSIC.md
+?? FORENSIC_DEBUG_FRAMEWORK_BLUEPRINT.md
+?? FORENSIC_DOCUMENTATION_INDEX.md
+?? FORENSIC_FINAL_REPORT.md
+?? FSHARP_TIER2_CERTIFICATION_REPORT.md
+?? FSHARP_TIER2_INTEGRATION_GUIDE.md
+?? Files
+?? HASKELL_FORENSIC_EXECUTION_SUMMARY.md
+?? HASKELL_FORENSIC_QUICK_REFERENCE.md
+?? HASKELL_TIER2_CERTIFICATION_REPORT.md
+?? HASKELL_TIER2_INTEGRATION_GUIDE.md
+?? JAVA_PHASE_A_IMPLEMENTATION.md
+?? LANGUAGE_ANALYSIS_COMPLETE.md
+?? LANGUAGE_GAPS_QUICK_REFERENCE.md
+?? LANGUAGE_PRIORITIZATION_MATRIX.md
+?? LANGUAGE_TIER_1_TEMPLATE_GO.md
+?? LANGUAGE_TIER_2_3_QUICK_TEMPLATES.md
+?? LISP_PHASE_C_FINAL_SUMMARY.txt
+?? LISP_PHASE_C_TECHNICAL_DOCUMENTATION.md
+?? LISP_PHASE_C_VISUAL_MAP.md
+?? LISP_PHASE_C_WEEK3_COMPLETION_REPORT.txt
+?? LISP_TIER2_CERTIFICATION_REPORT.md
+?? LISP_TIER2_ELEVATION_FINAL_STATUS.md
+?? LISP_TIER2_INTEGRATION_GUIDE.md
+?? MISSING_LANGUAGES_ANALYSIS.md
+?? PHASE_3C_PHP_COMPLETION_REPORT.md
+?? PHASE_3D_DART_COMPLETION_REPORT.md
+?? PHASE_3_TIER2_COMPLETE.md
+?? PHASE_4_COMPLETION_CHECKLIST.md
+?? PHASE_4_COMPLETION_REPORT.md
+?? PHASE_4_COMPREHENSIVE_IMPLEMENTATION_PLAN.md
+?? PHASE_4_CONTINUATION_BRIEFING.md
+?? PHASE_4_DELIVERABLES_MANIFEST.md
+?? PHASE_4_DEPLOYMENT_PACKAGE.md
+?? PHASE_4_EXECUTIVE_BRIEF.md
+?? PHASE_4_FILE_MANIFEST.md
+?? PHASE_4_FINAL_DELIVERY_SUMMARY.md
+?? PHASE_4_FORENSIC_CERTIFICATION_COMPLETE.md
+?? PHASE_4_IMPLEMENTATION_COMPLETE.js
+?? PHASE_4_IMPLEMENTATION_COMPLETE.md
+?? PHASE_4_IMPLEMENTATION_INDEX.md
+?? PHASE_4_IMPLEMENTATION_RESULTS.md
+?? PHASE_4_IMPLEMENTATION_ROADMAP.md
+?? PHASE_4_INTEGRATION_COMPLETE.md
+?? PHASE_4_LUASCRIPT_INTEGRATION_EXEC_SUMMARY.md
+?? PHASE_4_LUASCRIPT_INTEGRATION_REPORT.md
+?? PHASE_4_MASTER_IMPLEMENTATION_PLAN.md
+?? PHASE_4_QUICK_REFERENCE.md
+?? PHASE_4_QUICK_START_GUIDE.md
+?? PHASE_4_READY_TO_IMPLEMENT_CODE_SAMPLES.md
+?? PHASE_4_WEEK_1_COMPLETION_REPORT.md
+?? PHASE_4_WEEK_1_EXECUTIVE_SUMMARY.md
+?? PHASE_5_FINAL_CERTIFICATION_COMPLETE.md
+?? PHASE_5_IF_PATTERN_ARCHITECTURE.md
+?? PHASE_B_QUICK_REFERENCE.md
+?? PHASE_C_CHAMPIONSHIP_DELIVERY_SUMMARY.md
+?? PHASE_C_CHAMPIONSHIP_STATUS_DASHBOARD.md
+?? PHASE_C_CSC_LM_EVO_A_VALIDATION_REPORT.md
+?? PHASE_C_FSHARP_FORENSIC_VALIDATION_REPORT.md
+?? PHASE_C_HASKELL_FORENSIC_VALIDATION_INDEX.md
+?? PHASE_C_HASKELL_FORENSIC_VALIDATION_REPORT.md
+?? PHASE_C_LISP_FORENSIC_VALIDATION_REPORT.md
+?? PHASE_C_MASTER_INDEX.md
+?? PHASE_C_MASTER_PLAN.md
+?? PHASE_C_RUST_COMPLETION_REPORT.md
+?? PHASE_C_TEST_PATTERNS.md
+?? PHASE_C_TIER3_ELEVATION_PHASE1_COMPLETE.md
+?? PHASE_C_TIER3_TO_TIER2_ELEVATION_MASTER_PLAN.md
+?? PHASE_C_WEEK1_CHAMPIONSHIP_COMPLETION_REPORT.md
+?? PHASE_C_WEEK1_EXECUTION_REPORT.md
+?? PHASE_C_WEEK1_INTEGRATION_STATUS.json
+?? PHASE_C_WEEK2_DELIVERY_INDEX.md
+?? PHASE_C_WEEK2_EXECUTION_SUMMARY.js
+?? PHASE_C_WEEK2_INTEGRATION_CHECKPOINT_COMPLETE.md
+?? PHASE_C_WEEK2_INTEGRATION_CHECKPOINT_DELIVERABLES_INDEX.md
+?? PHASE_C_WEEK2_INTEGRATION_CHECKPOINT_FINAL_COMPLETION.txt
+?? PHASE_C_WEEK2_INTEGRATION_CHECKPOINT_FINAL_REPORT.js
+?? PHASE_C_WEEK2_INTEGRATION_CHECKPOINT_MASTER_SUMMARY.md
+?? PHASE_C_WEEK2_INTEGRATION_CHECKPOINT_SUMMARY.txt
+?? PHASE_C_WEEK2_VALIDATOR_COMPLETION_REPORT.md
+?? PHASE_C_WEEK2_VALIDATOR_QUICK_REFERENCE.md
+?? PHASE_C_WEEK2_VALIDATOR_VERIFICATION_MATRIX.md
+?? PHASE_C_WEEK3_INTEGRATION_CHECKPOINT_FINAL_COMPLETION.txt
+?? PHASE_C_WEEK3_INTEGRATION_STATUS.json
+?? PHASE_C_WEEK3_TIER3_INTEGRATION_PLAN.md
+?? PHP_TIER1_COMPREHENSIVE_VERIFICATION.md
+?? PHP_TIER1_EXECUTIVE_SUMMARY.txt
+?? PHP_TIER1_IMPLEMENTATION_COMPLETE.md
+?? PHP_TIER1_QUICK_REFERENCE.md
+?? PROFESSIONAL_GRADE_CERTIFICATION.md
+?? ROUND_1_PHASE_A_COMPLETE.md
+?? ROUND_1_PHASE_B_ARCHITECTURE.md
+?? ROUND_1_PHASE_B_MILESTONE_75_PERCENT.md
+?? ROUND_1_PHASE_B_PROGRESS.md
+?? ROUND_1_PROGRESS_STATUS.md
+?? RUBY_PHP_DART_COMPLETION_REPORT.md
+?? RUST_PHASE_C_EXECUTION_SUMMARY.md
+?? RUST_PHASE_C_INDEX.md
+?? RUST_PHASE_C_TECHNICAL_REFERENCE.md
+?? SESSION_SUMMARY_CHAMPIONSHIP.md
+?? TIER1_COMPLETE_ARTIFACT_INDEX.md
+?? TIER1_MIRROR_OPTIMIZATION_SESSION_COMPLETE.md
+?? TIER1_OPTIMIZATION_AND_MIRROR_UPDATE.md
+?? TIER1_OPTIMIZATION_INTEGRATION_GUIDE.md
+?? TIER3_CHAMPIONSHIP_ELEVATION_MASTER_PLAN.md
+?? TIER_2_TO_TIER_1_CHAMPIONSHIP_PLAN.md
+?? TYPESCRIPT_PHASE_C_COMPLETION_REPORT.md
+?? TYPESCRIPT_PHASE_C_EXECUTION_SUMMARY.md
+?? TYPESCRIPT_PHASE_C_FINAL_SUMMARY.md
+?? TYPESCRIPT_PHASE_C_INDEX.md
+?? TYPESCRIPT_PHASE_C_TECHNICAL_GUIDE.md
+?? VISUAL_SUMMARY.md
+?? context_memory/
+?? docs/LUASCRIPT_MASTER_INDEX.md
+?? docs/LUASCRIPT_MEGA_PLAN.md
+?? docs/canonical/
+?? docs/rounds/
+?? forensic_gleam_hang.js
+?? forensic_gleam_parse_trace.js
+?? forensic_simple.js
+?? integration_guide_output.txt
+?? mirror/
+?? sessions/
+?? src/backends/dart/
+?? src/backends/php/
+?? src/backends/python/
+?? src/backends/ruby/
+?? src/generators/
+?? src/optimizations/memory_optimization.js
+?? src/optimizers/dart/phase_b/
+?? src/optimizers/dart/phase_c/
+?? src/optimizers/dart/phase_e/
+?? src/optimizers/lua/phase_c/
+?? src/optimizers/php/phase_b/
+?? src/optimizers/php/phase_c/
+?? src/optimizers/php/phase_e/
+?? src/optimizers/python/phase_c/
+?? src/optimizers/ruby/phase_b/
+?? src/optimizers/ruby/phase_c/
+?? src/optimizers/ruby/phase_e/
+?? src/parsers/csharp_parser.js
+?? src/parsers/csharp_parser_extended.js
+?? src/parsers/elm_parser.js
+?? src/parsers/elm_parser_extended.js
+?? src/parsers/gleam_parser.js
+?? src/parsers/gleam_parser_extended.js
+?? src/parsers/java_parser.js
+?? src/parsers/java_parser_extended.js
+?? src/phase_c/
+?? src/tier1_optimization_suite.js
+?? src/tokenizers/
+?? src/utils/error-handler.js
+?? src/utils/performance-monitor.js
+?? test/phase_b_dart_validation.test.js
+?? test/phase_b_php_validation.test.js
+?? test/phase_b_ruby_validation.test.js
+?? test/phase_c_dart_validation.test.js
+?? test/phase_c_php_validation.test.js
+?? test/phase_c_python_validation.test.js
+?? test/phase_c_ruby_validation.test.js
+?? test/phase_de_dart_validation.test.js
+?? test/phase_de_php_validation.test.js
+?? test/phase_de_ruby_validation.test.js
+?? test/tier1_optimization_suite.test.js
+?? test_arrow_output.txt
+?? test_es2018_features.js
+?? test_forensic_tools_integration.js
+?? test_validator_integration.js
+?? tests/APPLY_P1_PERFORMANCE_FIXES.js
+?? tests/COMPREHENSIVE_VERIFICATION.js
+?? tests/DART_PHASE_B_C_TESTS.js
+?? tests/DART_PHASE_E_TESTS.js
+?? tests/FORENSIC_OPTIMIZATION_REPORT.js
+?? tests/FORENSIC_VERIFICATION.js
+?? tests/INTEGRATION_TESTS_COMPREHENSIVE.js
+?? tests/LUA_PHASE_C_PEEPHOLE_TESTS.js
+?? tests/PHASE_4_QUALITY_GATES_EXECUTOR.js
+?? tests/PHASE_4_QUALITY_GATES_REPORT.json
+?? tests/PHP_PHASE_B_C_TESTS.js
+?? tests/PHP_PHASE_E_TESTS.js
+?? tests/PYTHON_PHASE_C_SPEED_OPTIMIZER_TESTS.js
+?? tests/RUBY_PHASE_B_C_TESTS.js
+?? tests/RUBY_PHASE_E_TESTS.js
+?? tests/csc-lm-evo-a/
+?? tests/csharp_phase_a_tests.js
+?? tests/csharp_phase_b_tests.js
+?? tests/elm_phase_a_tests.js
+?? tests/elm_phase_b_tests.js
+?? tests/gleam_phase_a_tests.js
+?? tests/gleam_phase_b_tests.js
+?? tests/ir/artifacts/
+?? tests/java_phase_a_tests.js
+?? tests/java_phase_b_tests.js
+?? tests/mirror/
+?? tests/optimization_integration_guide.js
+?? tests/test_arrow_destructuring.js
+?? tests/test_arrow_destructuring_forensic.js
+?? tests/test_control_flow_patterns.js
+?? tests/test_control_flow_patterns_forensic.js
+?? tests/test_spread_operators.js
+?? tests/test_spread_operators_forensic.js
+?? tests/tier1_performance_profiler.js
+?? validation_tier1_integrations.js
+?? verify_python_phase_c.js

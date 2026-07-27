@@ -1,0 +1,159 @@
+(node:20260) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/ssdaj/LUASCRIPT/LUASCRIPT/eslint.config.js?mtime=1769886286128 is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\ir\validators\validator.js
+   26:25  warning  'buildNodeHandlerMap' is not defined                                    no-undef
+  240:19  warning  'node' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  288:3   warning  'validateMetaPerf' is not defined                                       no-undef
+  289:3   warning  'validateControlFlowGraphs' is not defined                              no-undef
+  321:15  warning  'isBalancedTernaryIdentifier' is not defined                            no-undef
+  440:5   warning  'isFiniteNumber' is not defined                                         no-undef
+  440:37  warning  'isFiniteNumber' is not defined                                         no-undef
+  440:71  warning  'isFiniteNumber' is not defined                                         no-undef
+  441:5   warning  'isFiniteNumber' is not defined                                         no-undef
+  441:35  warning  'isFiniteNumber' is not defined                                         no-undef
+  441:67  warning  'isFiniteNumber' is not defined                                         no-undef
+  473:12  warning  'validateMetaPerf' is defined but never used                            no-unused-vars
+  486:12  warning  'validateControlFlowGraphs' is defined but never used                   no-unused-vars
+  563:12  warning  'buildNodeHandlerMap' is defined but never used                         no-unused-vars
+  594:12  warning  'isFiniteNumber' is defined but never used                              no-unused-vars
+  601:12  warning  'isBalancedTernaryIdentifier' is defined but never used                 no-unused-vars
+  613:12  warning  'decodeBalancedTernaryString' is defined but never used                 no-unused-vars
+  635:3   warning  'isBalancedTernaryIdentifier' is not defined                            no-undef
+  636:3   warning  'decodeBalancedTernaryString' is not defined                            no-undef
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\optimizers\javascript\algorithm\dataflow-analyzer.js
+  124:24  warning  'location' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\optimizers\javascript\algorithm\loop-invariant-motion.js
+  54:34  warning  'options' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\optimizers\javascript\algorithm\strength-reduction-emitter.js
+  144:13  warning  'operator' is assigned a value but never used                           no-unused-vars
+  144:23  warning  'exponent' is assigned a value but never used                           no-unused-vars
+  144:49  warning  'node' is assigned a value but never used                               no-unused-vars
+  473:12  warning  'stmt' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\optimizers\javascript\algorithm\strength-reduction.js
+  211:13  warning  'reason' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\optimizers\javascript\memory\gc-pattern-detection.js
+  132:38  warning  'context' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\optimizers\javascript\memory\memory-profiling.js
+  218:11  warning  'fs' is assigned a value but never used    no-unused-vars
+  219:11  warning  'path' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\optimizers\javascript\memory\register-pressure.js
+   28:40  warning  'scope' is defined but never used. Allowed unused args must match /^_/u    no-unused-vars
+  426:25  warning  'varName' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\optimizers\javascript\memory\stack-analyzer.js
+   29:43  warning  'scope' is defined but never used. Allowed unused args must match /^_/u   no-unused-vars
+  234:26  warning  'node' is defined but never used. Allowed unused args must match /^_/u    no-unused-vars
+  283:30  warning  'parent' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\parsers\dart_parser.js
+  142:7   warning  'returnType' is assigned a value but never used  no-unused-vars
+  191:35  warning  'name' is not defined                            no-undef
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\parsers\typescript_parser.js
+  221:13  warning  'isFunc' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\transpiler_multilang.js
+  114:24  warning  'options' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  253:19  warning  'code' is defined but never used. Allowed unused args must match /^_/u     no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\transpiler_universal.js
+  13:7  warning  'fs' is assigned a value but never used    no-unused-vars
+  14:7  warning  'path' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\utils\diagnostic-framework.js
+   26:19  warning  'spawnSync' is assigned a value but never used  no-unused-vars
+  422:28  warning  'options' is assigned a value but never used    no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\test\compatibility\extension-api.test.js
+  17:3  warning  'ExtensionLoader' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\test\phase3.4\task4.1-lim\lim-tests.js
+  103:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  123:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  142:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  161:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  178:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  210:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  227:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  248:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  273:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  291:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  313:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  324:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  354:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  379:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  406:9  warning  'ast' is assigned a value but never used  no-unused-vars
+  432:9  warning  'ast' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\test\phase3.4\task4.2-cse\gate-verification.js
+   14:7   warning  'fs' is assigned a value but never used        no-unused-vars
+   15:7   warning  'path' is assigned a value but never used      no-unused-vars
+   29:10  warning  'createAST' is defined but never used          no-unused-vars
+  459:9   warning  'analysis' is assigned a value but never used  no-unused-vars
+  653:9   warning  'status' is assigned a value but never used    no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\test\phase3.4\task4.3-sr\gate-verification.js
+   14:7   warning  'fs' is assigned a value but never used        no-unused-vars
+   15:7   warning  'path' is assigned a value but never used      no-unused-vars
+   28:10  warning  'createAST' is defined but never used          no-unused-vars
+  460:9   warning  'analysis' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\test\phase3.4\task4.3-sr\strength-reduction-tests.js
+  319:9  warning  'original' is assigned a value but never used  no-unused-vars
+  333:9  warning  'original' is assigned a value but never used  no-unused-vars
+  341:9  warning  'result' is assigned a value but never used    no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\test\release.test.js
+  12:9  warning  'execSync' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\test\test_ir_stability.js
+  5:7  warning  'assert' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\test\test_strength_reduction_emission_corpus.js
+  476:19  warning  'category' is defined but never used  no-unused-vars
+  506:30  warning  'category' is defined but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\tests\edge-cases\gap_array_methods.test.js
+  30:11  warning  '_hasFunctionCalls' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\tests\edge-cases\gap_function_expr_lua_pattern.test.js
+  30:11  warning  '_hasReturn' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\tests\emitter\emit_from_goldens.js
+  19:7  warning  'skipped' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\tests\future\llvm-backend.test.js
+  128:19  warning  'llvm' is assigned a value but never used     no-unused-vars
+  149:19  warning  'llvm' is assigned a value but never used     no-unused-vars
+  302:30  warning  'options' is assigned a value but never used  no-unused-vars
+  306:32  warning  'options' is assigned a value but never used  no-unused-vars
+  310:26  warning  'code' is defined but never used              no-unused-vars
+  314:30  warning  'code' is defined but never used              no-unused-vars
+  318:26  warning  'exe' is defined but never used               no-unused-vars
+  322:22  warning  'code' is defined but never used              no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\tests\fuzz\run-fuzzer.js
+  8:7  warning  'esprima' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\tests\generator-debug-ir.js
+  7:7  warning  'util' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\tests\generator-verification.js
+  7:9  warning  'IRBuilder' is assigned a value but never used  no-unused-vars
+
+C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\tests\test_memory_management.js
+  217:11  warning  'obj1' is assigned a value but never used  no-unused-vars
+  220:11  warning  'obj2' is assigned a value but never used  no-unused-vars
+
+Γ£û 92 problems (0 errors, 92 warnings)
+

@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "language": "php",
+  "status": "qualified",
+  "supportSlice": "php-v0.6-ir-target-runtime-slice",
+  "nativeRuntime": "verified separately by tests/language_completion/manifests/php.json and npm run language:php:bidirectional",
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_functions",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/arithmetic_functions.php",
+      "skipNative": true,
+      "expectedOutput": "php_arithmetic\n10"
+    },
+    {
+      "name": "control_flow",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/control_flow.php",
+      "skipNative": true,
+      "expectedOutput": "php_flow\n10"
+    },
+    {
+      "name": "math_calls",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/math_calls.php",
+      "skipNative": true,
+      "expectedOutput": "php_math\n5"
+    },
+    {
+      "name": "arrays_indexed",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/arrays_indexed.php",
+      "skipNative": true,
+      "expectedOutput": "php_arrays\n15"
+    },
+    {
+      "name": "foreach_sum",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/foreach_sum.php",
+      "skipNative": true,
+      "expectedOutput": "php_foreach\n15"
+    },
+    {
+      "name": "for_loop_calls",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/for_loop_calls.php",
+      "skipNative": true,
+      "expectedOutput": "php_for\n14"
+    },
+    {
+      "name": "assoc_arrays",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/assoc_arrays.php",
+      "skipNative": true,
+      "expectedOutput": "php_assoc\n16"
+    },
+    {
+      "name": "string_index_strlen",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/string_index_strlen.php",
+      "skipNative": true,
+      "expectedOutput": "php_string\n4\no"
+    },
+    {
+      "name": "boolean_break_continue",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/boolean_break_continue.php",
+      "skipNative": true,
+      "expectedOutput": "php_bool_loop\n9"
+    },
+    {
+      "name": "unsupported_class",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/unsupported_class.php",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported PHP input feature: object system"
+    },
+    {
+      "name": "unsupported_import",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/unsupported_import.php",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported PHP input feature: imports/includes"
+    },
+    {
+      "name": "unsupported_async",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/unsupported_async.php",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported PHP input feature: async"
+    },
+    {
+      "name": "unsupported_lambda",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/unsupported_lambda.php",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported PHP input feature: lambdas/closures"
+    },
+    {
+      "name": "unsupported_foreach_literal",
+      "sourceLanguage": "php",
+      "source": "tests/language_completion/fixtures/php/unsupported_foreach.php",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported PHP input feature: foreach over literal arrays"
+    }
+  ]
+}

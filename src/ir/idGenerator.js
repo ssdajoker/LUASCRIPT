@@ -84,14 +84,14 @@ function encodeBalancedTernary(value) {
 
 function mapDigit(digit) {
   switch (digit) {
-    case -1:
-      return "T";
-    case 0:
-      return "0";
-    case 1:
-      return "1";
-    default:
-      throw new Error(`Invalid balanced ternary digit: ${digit}`);
+  case -1:
+    return "T";
+  case 0:
+    return "0";
+  case 1:
+    return "1";
+  default:
+    throw new Error(`Invalid balanced ternary digit: ${digit}`);
   }
 }
 

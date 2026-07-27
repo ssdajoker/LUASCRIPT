@@ -102,6 +102,28 @@ function M.BinaryOpNode(op, left, right)
     })
 end
 
+-- Async operation node
+function M.AsyncNode(operation, inputs)
+    return M.Node("async", {
+        operation = operation,
+        inputs = inputs or {}
+    })
+end
+
+-- Await node (awaits an async operation)
+function M.AwaitNode(async_node)
+    return M.Node("await", {
+        async_node = async_node
+    })
+end
+
+-- Async block node (groups multiple async operations)
+function M.AsyncBlockNode(operations)
+    return M.Node("async_block", {
+        operations = operations or {}
+    })
+end
+
 -- Utility: Print node
 function M.print_node(node, indent)
     indent = indent or 0
@@ -147,6 +169,16 @@ function M.get_dependencies(node)
     elseif node.type == "binary_op" then
         table.insert(deps, node.left)
         table.insert(deps, node.right)
+    elseif node.type == "async" then
+        for _, input in ipairs(node.inputs) do
+            table.insert(deps, input)
+        end
+    elseif node.type == "await" then
+        table.insert(deps, node.async_node)
+    elseif node.type == "async_block" then
+        for _, op in ipairs(node.operations) do
+            table.insert(deps, op)
+        end
     end
 
     return deps

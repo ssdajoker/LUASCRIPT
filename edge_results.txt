@@ -1,0 +1,126 @@
+
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+≡ƒº¬ DESTRUCTURING EDGE CASES & ARRAY METHODS
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+
+≡ƒöÇ Spread Patterns in Literals
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  Γ¥î Array spread in literal
+     Code: let arr = [1, ...[2, 3], 4];
+     Issues: Missing: "local arr"
+     Generated:
+local node_0 = {1, ...{2, 3}, 4}
+  Γ¥î Nested spread in array
+     Code: let nested = [[1], ...[[2], [3]]];
+     Issues: Missing: "local nested"
+     Generated:
+local node_0 = {{1}, ...{{2}, {3}}}
+  Γ¥î Multiple spreads in array
+     Code: let multi = [...arr1, ...arr2, ...arr3];
+     Issues: Missing: "local multi"
+     Generated:
+local node_0 = {...arr1, ...arr2, ...arr3}
+  Γ¥î Object spread in literal
+     Code: let obj = {a: 1, ...other, b: 2};
+     Issues: Missing: "local obj"
+     Generated:
+ERROR: Transpilation failed: Cannot read properties of null (reading 'name')
+
+≡ƒôÜ Array Methods with Destructuring
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  Γ¥î Array.map with destructuring
+     Code: let results = items.map(([a, b]) => a + b);
+     Issues: Missing: "local results"
+     Generated:
+local node_0 = items.map()
+  Γ¥î Array.filter with destructuring
+     Code: let filtered = items.filter(({type}) => type === "active");
+     Issues: Missing: "local filtered"
+     Generated:
+local node_0 = items.filter()
+  Γ¥î Array.reduce with destructuring
+     Code: let sum = arr.reduce(([a, b], [c, d]) => [[a+c, b+d]], [0, 0]);
+     Issues: Missing: "local sum"
+     Generated:
+local node_0 = arr.reduce(, {0, 0})
+  Γ£à Array.forEach with destructuring
+  Γ¥î Array.find with destructuring
+     Code: let item = items.find(({id}) => id === target);
+     Issues: Missing: "local item"
+     Generated:
+local node_0 = items.find()
+
+≡ƒÄ» Control Flow Edge Cases
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  Γ¥î Destructuring in if condition
+     Code: if (let [x, y] = point) { console.log(x, y); }
+     Issues: Missing: "/local.*destructure/i"
+     Generated:
+ERROR: Transpilation failed: Parse error in main.js: The keyword 'let' is reserved (1:4)
+  Γ¥î Destructuring in while loop
+     Code: while (let [x, y] = getNext()) { use(x, y); }
+     Issues: Missing: "/local.*destructure/i"
+     Generated:
+ERROR: Transpilation failed: Parse error in main.js: The keyword 'let' is reserved (1:7)
+  Γ£à Destructuring in switch case
+  Γ¥î Destructuring in try block
+     Code: try { let {data, error} = await fetch(); } catch (e) {}
+     Issues: Missing: "/local.*destructure/i"
+     Generated:
+ERROR: Transpilation failed: Parse error in main.js: Cannot use keyword 'await' outside an async function (1:26)
+
+≡ƒöº Function Parameter Destructuring
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  Γ£à Function parameter: array
+  Γ£à Function parameter: object
+  Γ£à Function parameter: nested
+  Γ¥î Arrow function parameter: array
+     Code: const sum = ([a, b]) => a + b;
+     Issues: Missing: "local sum"
+     Generated:
+local node_0 =
+  Γ¥î Arrow function parameter: object
+     Code: const greet = ({firstName, lastName}) => `${firstName} ${lastName}`;
+     Issues: Missing: "local greet"
+     Generated:
+local node_0 =
+
+≡ƒî│ Complex Nesting Patterns
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  Γ£à Triple-nested destructuring
+  Γ£à Mixed nesting: array of objects of arrays
+  Γ£à Deeply nested with defaults
+
+≡ƒöä Rest Pattern Edge Cases
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  Γ£à Rest with preceding items
+  Γ£à Rest in object (Phase 4)
+  Γ£à Rest with holes
+
+Γ£ì∩╕Å  Assignment Context
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  Γ¥î Destructuring assignment to variables
+     Code: let a, b; [a, b] = [1, 2];
+     Issues: Missing: "/local a|local b/"
+     Generated:
+local node_0 = nil
+local node_1T = nil
+= {1, 2}
+  Γ¥î Destructuring in expression
+     Code: let x = [a, b] = [1, 2]; // assign to x too
+     Issues: Missing: "/local x|local a|local b/"
+     Generated:
+local node_0 = = {1, 2}
+
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+≡ƒôè Test Results: 11 passed, 15 failed
+   Success Rate: 42.3%
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+

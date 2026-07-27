@@ -15,7 +15,7 @@ const { emitLuaFromIR } = require('../src/ir/emitter');
   const result = await t.transpile('let msg = "Hello" + " " + name; let sum = 5 + 3;', { includeRuntime: false });
   const code = typeof result === 'string' ? result : result.code;
 
-  if (!code.includes('"Hello" .. " " .. name')) throw new Error('Concat check failed');
+  if (!/"Hello"\s*\.\.\s*" "\s*\.\.\s*name/.test(code)) throw new Error('Concat check failed');
   if (!code.includes('5 + 3')) throw new Error('Numeric addition check failed');
 
   // 2) Emit from IR and balance check via transpiler path

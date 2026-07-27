@@ -1,0 +1,5 @@
+pub fn main() {
+  let inc = fn(x) { x + 1 }
+  print(inc(1))
+  Nil
+}

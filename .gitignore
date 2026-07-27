@@ -28,6 +28,13 @@ MANIFEST
 *.swo
 *~
 
+# Allow shared editor settings
+!.vscode/
+!.vscode/settings.json
+
+# Local Codex runtime configuration
+.codex/config.toml
+
 # OS
 .DS_Store
 .DS_Store?
@@ -54,7 +61,6 @@ dist/
 build/
 *.min.js
 *.bundle.js
-artifacts/
 
 # Temporary files
 *.tmp
@@ -75,7 +81,6 @@ __pycache__/
 *.pyc
 
 # IDE specific
-.vscode/
 .idea/
 *.sublime-*
 
@@ -85,8 +90,25 @@ Thumbs.db
 .Trashes
 
 # Test coverage
+artifacts/coverage/
+artifacts/.nyc_output/
 coverage/
 .nyc_output/
+artifacts/lint/
+artifacts/test/
+artifacts/test-output/
+artifacts/tmp/
+artifacts/clarity_canon/
+artifacts/language_completion/
+artifacts/verify/
+artifacts/harness_results.json
+tests/ir/artifacts/
+
+# Local/runtime debris accidentally created at repository root
+/Python/
+/Files
+/context_memory/
+/sessions/
 
 # Environment files
 .env
@@ -124,10 +146,77 @@ pnpm-lock.yaml
 test/temp/
 tests/tmp/
 
+# One-off local runtime probes
+check_runtimes.js
+test_findCommand.js
+test_actual_findCommand.js
+test_python_find.py
+
 # Reports and tmp (do not untrack existing committed files)
 reports/**/tmp/
 reports/**/cache/
 
+# Performance & Artifact Management
+# Perf gate results: generated during CI pipeline, archived separately in artifact management
+artifacts/perf-regression-results.json
+artifacts/perf-*
+artifacts/merge_verification/
+# Performance benchmarks: generated, not version-controlled
+*.benchmark.json
+perf-results/
+benchmarks/output/
+
 # OS/editor histories
 .history/
 .vscode/**.history/
+
+# ============================================================================
+# FILE HANDLING SAFETY - PREVENT EMPTY/PROBLEMATIC FILES
+# ============================================================================
+# Added to prevent "File is empty or binary" errors during development
+# See .tools/FILE_HANDLING_GUIDE.md for details
+
+# Test output files (often created empty or with encoding issues)
+*_results.txt
+*-output.txt
+*-results.txt
+gate_results.txt
+test_output.txt
+test-output.txt
+
+# Debug/trace files (temporary debugging artifacts)
+debug_*.txt
+debug_*.js
+trace_*.txt
+trace_*.js
+debug-*.txt
+debug-*.js
+
+# Temporary audit/lint output (regenerated, may be empty)
+audit/*.txt
+audit_upstream/*.txt
+!audit/README.md
+!audit_upstream/README.md
+
+# Python type stubs (intentionally empty marker files)
+py.typed
+
+# Empty __init__.py files (auto-generated)
+# Note: Comment this if you need to track specific __init__.py files
+# **/__pycache__/__init__.py
+
+# Windows/PowerShell output encoding issues
+*.err
+*.stderr.txt
+*.stdout.txt
+
+# Build tool temporary output
+*.build.log
+*.install.log
+
+# Repocalypse / No-Git machine-local state and receipts
+.nogit/
+.nogit.lock
+.repocalypse/receipts/
+reports/nogit-local/
+*.nogit-receipt.json

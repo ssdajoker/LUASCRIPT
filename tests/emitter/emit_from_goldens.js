@@ -41,6 +41,10 @@ function main() {
     }
   });
 
+  if (skipped > 0) {
+    console.log(`⚠️  Skipped ${skipped} golden file(s) due to unsupported kinds`);
+  }
+
   if (failures > 0) process.exit(1);
   // no strict skip failure: empty modules are treated as success
 }

@@ -3,9 +3,9 @@
  * This file mirrors the TypeScript implementation in resolution-diagnostics.ts.
  */
 
-const DEFAULT_SEVERITY = 'warning';
-const DEFAULT_SOURCE = 'ResolverAgent';
-const DEFAULT_CODE = 'RESOLVER_AMBIGUITY';
+const DEFAULT_SEVERITY = "warning";
+const DEFAULT_SOURCE = "ResolverAgent";
+const DEFAULT_CODE = "RESOLVER_AMBIGUITY";
 
 function mapPropositionsToDiagnostics(filePath, propositions) {
   return propositions.map(proposition => {
@@ -27,7 +27,7 @@ function mapPropositionsToDiagnostics(filePath, propositions) {
 }
 
 function deriveRange(node) {
-  const sourceText = node.source_text || '';
+  const sourceText = node.source_text || "";
   const length = sourceText.length;
   const start = (node.range && node.range.start) || { line: 0, column: 0 };
   const end = (node.range && node.range.end) || {
@@ -51,12 +51,12 @@ function buildHoverMessage(proposition) {
 
   const interpretationLines = resolutions
     .map(resolution => {
-      const confidence = typeof resolution.confidence === 'number'
+      const confidence = typeof resolution.confidence === "number"
         ? (resolution.confidence * 100).toFixed(1)
-        : 'N/A';
+        : "N/A";
       return `• ${resolution.description} (confidence ${confidence}%)`;
     })
-    .join('\n');
+    .join("\n");
 
   return `${proposition.message}\n\n${interpretationLines}`;
 }

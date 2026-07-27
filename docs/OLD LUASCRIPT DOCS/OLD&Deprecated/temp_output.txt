@@ -1,0 +1,24 @@
+=== Test 1: Default Parameter ===
+Parsing statement, current token: { type: 'KEYWORD', value: 'function', line: 1, column: 1, position: 8 }
+Parsing statement, current token: { type: 'KEYWORD', value: 'return', line: 1, column: 34, position: 39 }
+Parsing statement, current token: { type: 'RIGHT_BRACE', value: '}', line: 1, column: 58, position: 58 }
+Success: undefined
+Exception: Cannot read properties of undefined (reading '0')
+
+=== Test 2: Rest Parameters ===
+Parsing statement, current token: { type: 'KEYWORD', value: 'function', line: 1, column: 1, position: 8 }
+Parsing statement, current token: { type: 'KEYWORD', value: 'return', line: 1, column: 28, position: 33 }
+Parsing statement, current token: { type: 'RIGHT_BRACE', value: '}', line: 1, column: 44, position: 44 }
+Success: undefined
+Exception: Cannot read properties of undefined (reading '0')
+
+=== Test 3: This Expression ===
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+Parsing statement, current token: { type: 'KEYWORD', value: 'return', line: 1, column: 49, position: 54 }
+Success: undefined
+Exception: Cannot read properties of undefined (reading '0')
+
+=== Test 4: Spread in Call ===
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+Success: undefined
+Exception: Cannot read properties of undefined (reading '0')

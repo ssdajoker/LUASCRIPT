@@ -1,9 +1,12 @@
 # Canonical Intermediate Representation (IR) Specification
 
-**Status:** v1.0.0 (October 13, 2025)
+**Status:** IR schema support reference, not a LUASCRIPT package/runtime `1.0` release claim
+**Last reviewed:** 2026-07-14
 Schema (latest v1): docs/canonical_ir.schema.json
 Schema (frozen 1.0.0): docs/schema/1.0.0/canonical_ir.schema.json
 Versioning policy: docs/VERSIONING.md
+
+Current LUASCRIPT package/runtime status lives in [../PROJECT_STATUS.md](../PROJECT_STATUS.md), the active-docs map lives in [INDEX.md](INDEX.md), the current live IR semantics inventory is [LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md](LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md), and the first formal semantics draft is [LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md](LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md). This IR reference describes the canonical IR contract used by current gates; it does not promote broad language support by itself.
 
 ## 🎯 Purpose
 
@@ -16,10 +19,10 @@ Provide a single, authoritative schema for the JavaScript → Lua (and future ba
 
 The canonical IR must:
 
-1. **Enable provable correctness and complexity analysis** (Donald Knuth).
-2. **Offer deterministic, inspectable architecture hooks** (Linus Torvalds).
-3. **Remain developer-friendly and easy to extend** (Steve Jobs, Yukihiro Matsumoto).
-4. **Support exhaustive automated validation** (Ada Lovelace).
+1. **Enable provable correctness and complexity analysis**.
+2. **Offer deterministic, inspectable architecture hooks**.
+3. **Remain developer-friendly and easy to extend**.
+4. **Support exhaustive automated validation**.
 
 ---
 
@@ -27,10 +30,10 @@ The canonical IR must:
 
 | Principle | Source | Implication for IR |
 |-----------|--------|-------------------|
-| Formal rigor and proofs | Donald Knuth | Explicit node typing, semantic invariants, replayable lowering steps. |
-| Robust architecture | Linus Torvalds | Immutable structural contract, versioned schema, deterministic serialization. |
-| Delightful developer experience | Steve Jobs, Yukihiro Matsumoto | Human-readable JSON, ergonomic builder APIs, rich comments/tooling metadata. |
-| Comprehensive testing | Ada Lovelace | Schema validation, golden snapshots, differential checks between backends. |
+| Formal rigor and proofs | Correctness | Explicit node typing, semantic invariants, replayable lowering steps. |
+| Robust architecture | Maintainability | Immutable structural contract, versioned schema, deterministic serialization. |
+| Developer experience | Usability | Human-readable JSON, ergonomic builder APIs, rich comments/tooling metadata. |
+| Comprehensive testing | Evidence | Schema validation, golden snapshots, differential checks between backends. |
 
 Additional cross-team expectations:
 
@@ -103,7 +106,7 @@ All IR nodes extend the following structure:
 
 - **`flags`** supports cross-cutting annotations without expanding the node surface.
 - **`meta.cfg`** references control-flow graph fragments (see below).
-- **`meta.auditTags`** allow Donald Knuth / QA to flag nodes requiring proofs or extra review.
+- **`meta.auditTags`** allow QA and review tooling to flag nodes requiring proofs or extra review.
 
 ---
 
@@ -463,10 +466,10 @@ Validator invariants (non-exhaustive):
 
 ## ✅ Acceptance Checklist (per META-TEAM)
 
-- **Donald Knuth**: Complexity proofs attached to lowering invariants, CFG exported, golden IR reviewed weekly.
+- **Correctness review**: Complexity notes attached to lowering invariants, CFG exported, golden IR reviewed when the IR contract changes.
 - **Linus Torvalds**: Deterministic serializer, `npm run ir:validate` in CI, schema version bump policy documented.
 - **Ada Lovelace**: 95%+ test coverage for lowering + emitters, property-based tests for random JS fixtures.
-- **Steve Jobs**: Developer docs published in `/docs`, quickstart added to README, `irBuilder` API has examples.
+- **Developer experience review**: Developer docs published in `/docs`, quickstart added to README, `irBuilder` API has examples.
 
 ---
 

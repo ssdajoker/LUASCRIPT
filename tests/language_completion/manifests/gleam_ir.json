@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "language": "gleam",
+  "status": "qualified",
+  "supportSlice": "gleam-v0.6-ir-target-runtime-slice",
+  "nativeRuntime": {
+    "status": "verified-separately",
+    "script": "npm run language:gleam:bidirectional",
+    "reason": "This target-runtime manifest executes emitted targets only; native Gleam execution is proven by gleam_native.json."
+  },
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_functions",
+      "sourceLanguage": "gleam",
+      "source": "tests/language_completion/fixtures/gleam/arithmetic_functions.gleam",
+      "skipNative": true,
+      "expectedOutput": "gleam_arithmetic\n15"
+    },
+    {
+      "name": "conditionals",
+      "sourceLanguage": "gleam",
+      "source": "tests/language_completion/fixtures/gleam/conditionals.gleam",
+      "skipNative": true,
+      "expectedOutput": "gleam_conditional\n1"
+    },
+    {
+      "name": "list_sum",
+      "sourceLanguage": "gleam",
+      "source": "tests/language_completion/fixtures/gleam/list_sum.gleam",
+      "skipNative": true,
+      "expectedOutput": "gleam_list\n12"
+    },
+    {
+      "name": "boolean_nested_calls_list_at",
+      "sourceLanguage": "gleam",
+      "source": "tests/language_completion/fixtures/gleam/boolean_nested_calls_list_at.gleam",
+      "skipNative": true,
+      "expectedOutput": "gleam_v02\n21"
+    },
+    {
+      "name": "length_helpers",
+      "sourceLanguage": "gleam",
+      "source": "tests/language_completion/fixtures/gleam/length_helpers.gleam",
+      "skipNative": true,
+      "expectedOutput": "gleam_v03\n8"
+    },
+    {
+      "name": "boolean_or_not",
+      "sourceLanguage": "gleam",
+      "source": "tests/language_completion/fixtures/gleam/boolean_or_not.gleam",
+      "skipNative": true,
+      "expectedOutput": "gleam_bool_v04\n2"
+    },
+    {
+      "name": "unsupported_import",
+      "sourceLanguage": "gleam",
+      "source": "tests/language_completion/fixtures/gleam/unsupported_import.gleam",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Gleam input feature: imports/externals"
+    },
+    {
+      "name": "unsupported_type",
+      "sourceLanguage": "gleam",
+      "source": "tests/language_completion/fixtures/gleam/unsupported_type.gleam",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Gleam input feature: custom types"
+    },
+    {
+      "name": "unsupported_anonymous_function",
+      "sourceLanguage": "gleam",
+      "source": "tests/language_completion/fixtures/gleam/unsupported_anonymous_function.gleam",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Gleam input feature: anonymous functions"
+    },
+    {
+      "name": "unsupported_pattern_let",
+      "sourceLanguage": "gleam",
+      "source": "tests/language_completion/fixtures/gleam/unsupported_pattern_let.gleam",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Gleam input feature: pattern matching"
+    },
+    {
+      "name": "unsupported_dynamic_length",
+      "sourceLanguage": "gleam",
+      "source": "tests/language_completion/fixtures/gleam/unsupported_dynamic_length.gleam",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Gleam input feature: dynamic list_length"
+    }
+  ]
+}

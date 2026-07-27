@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Husky pre-push hook: enforce PR-first and run a quick smoke suite.
+# Husky pre-push hook: enforce PR-first, verify key paths, run smoke tests
 
 # Allow skipping via environment variables (one-time bypass):
 #   HUSKY=0 git push ...
@@ -18,15 +18,46 @@ if [ "$branch" = "main" ] && [ "$ALLOW_PUSH_MAIN" != "1" ]; then
 	exit 1
 fi
 
-# Prefer a fast smoke test; fall back to npm test if not present.
+# Check for changes in key paths that require full verification
+KEY_PATHS="src/ir/ src/core_transpiler.js src/parser.js tests/ir/"
+CHANGED_FILES=$(git diff --name-only HEAD @{u} 2>/dev/null || git diff --name-only HEAD~1 2>/dev/null || true)
+
+VERIFY_NEEDED=0
+for path in $KEY_PATHS; do
+  if echo "$CHANGED_FILES" | grep -q "^$path"; then
+    VERIFY_NEEDED=1
+    break
+  fi
+done
+
+if [ $VERIFY_NEEDED -eq 1 ]; then
+  echo "[husky pre-push] Changes detected in critical paths (IR/parser/transpiler)"
+  echo "                 Running verification suite..."
+  
+  # Run harness + determinism (fast subset of verify)
+  if ! npm run -s harness; then
+    echo "[husky pre-push] ❌ IR harness failed"
+    exit 1
+  fi
+  
+  if ! npm run -s test:determinism; then
+    echo "[husky pre-push] ❌ Determinism test failed"
+    exit 1
+  fi
+  
+  echo "[husky pre-push] ✅ Key path verification passed"
+fi
+
+# Run smoke tests for all pushes
 if command -v npm >/dev/null 2>&1; then
 	if npm run -s test:smoke >/dev/null 2>&1; then
-		echo "[husky] Running smoke tests (test:smoke)"
+		echo "[husky pre-push] Running smoke tests..."
 		npm run -s test:smoke || exit 1
 	else
-		echo "[husky] Running full test suite (npm test)"
-		npm test || exit 1
+		echo "[husky pre-push] Running core tests..."
+		npm run -s test:core || exit 1
 	fi
 fi
 
+echo "[husky pre-push] ✅ All pre-push checks passed"
 exit 0

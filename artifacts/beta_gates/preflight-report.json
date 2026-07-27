@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:beta-gates",
+  "profile": "preflight",
+  "generatedAt": "2026-07-14T10:17:50.946Z",
+  "summary": {
+    "batches": 3,
+    "completedBatches": 3,
+    "failedScripts": 0,
+    "elapsedMs": 73649
+  },
+  "batches": [
+    {
+      "index": 1,
+      "scripts": [
+        "clarity:dogfood",
+        "clarity:canon:fast"
+      ],
+      "results": [
+        {
+          "script": "clarity:dogfood",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 37506
+        },
+        {
+          "script": "clarity:canon:fast",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 8735
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "scripts": [
+        "status:check",
+        "stubs:check",
+        "claims:check"
+      ],
+      "results": [
+        {
+          "script": "status:check",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 615
+        },
+        {
+          "script": "stubs:check",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 950
+        },
+        {
+          "script": "claims:check",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 713
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "scripts": [
+        "verify"
+      ],
+      "results": [
+        {
+          "script": "verify",
+          "code": 0,
+          "signal": null,
+          "elapsedMs": 35161
+        }
+      ]
+    }
+  ],
+  "failures": []
+}

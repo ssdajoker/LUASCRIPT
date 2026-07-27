@@ -1,0 +1,349 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-01-30T00:00:00Z",
+  "description": "Learned patterns library for forensic diagnostics - accumulates knowledge from gate failures and fixes",
+  
+  "patterns": [
+    {
+      "id": "stub-001",
+      "gate": "Stub Detection",
+      "regex": "function.*\\{\\s*\\/\\/.*\\}",
+      "description": "Function body contains only comments",
+      "confidence": 0.95,
+      "fix": "Implement real functionality or remove stub",
+      "timeEstimate": 60,
+      "examples": [
+        "function optimize(ir) { // TODO: implement }"
+      ]
+    },
+    {
+      "id": "stub-002",
+      "gate": "Stub Detection",
+      "regex": "return\\s+null\\s*;\\s*\\/\\/\\s*STUB",
+      "description": "Function returns null with STUB comment",
+      "confidence": 0.98,
+      "fix": "Implement real return value logic",
+      "timeEstimate": 45
+    },
+    {
+      "id": "ir-001",
+      "gate": "IR Validation",
+      "regex": "NodeRef.*invalid|NodeRef.*must match",
+      "description": "NodeRef pattern must match ^[^_]+_[T01]+$",
+      "confidence": 0.95,
+      "fix": "Rename nodes to include tier suffix (_T0, _T1, _T2)",
+      "timeEstimate": 20,
+      "examples": [
+        "Bad: 'myNode', Good: 'myNode_T0'"
+      ]
+    },
+    {
+      "id": "ir-002",
+      "gate": "IR Validation",
+      "regex": "Missing required field.*type",
+      "description": "IR node missing required 'type' field",
+      "confidence": 0.90,
+      "fix": "Add 'type' field to node creation, use factory functions",
+      "timeEstimate": 15
+    },
+    {
+      "id": "ir-003",
+      "gate": "IR Validation",
+      "regex": "cyclic dependency|circular reference",
+      "description": "IR contains cyclic node dependencies",
+      "confidence": 0.85,
+      "fix": "Restructure to remove cycles, use NodeRef references instead of embedding",
+      "timeEstimate": 45
+    },
+    {
+      "id": "correctness-001",
+      "gate": "Correctness Tests",
+      "regex": "expected.*actual.*differ",
+      "description": "Test output doesn't match expected value",
+      "confidence": 0.80,
+      "fix": "Review algorithm logic, check for side effect ordering, validate edge cases",
+      "timeEstimate": 90
+    },
+    {
+      "id": "correctness-002",
+      "gate": "Correctness Tests",
+      "regex": "side effect.*wrong order",
+      "description": "Side effects occur in incorrect order",
+      "confidence": 0.88,
+      "fix": "Implement dataflow analysis, track effect dependencies, preserve order",
+      "timeEstimate": 120
+    },
+    {
+      "id": "determinism-001",
+      "gate": "Determinism Verification",
+      "regex": "hash mismatch|inconsistent output",
+      "description": "Output varies across multiple runs",
+      "confidence": 0.92,
+      "fix": "Add canonical ordering, seed RNG, fix Map/Set iteration",
+      "timeEstimate": 45,
+      "examples": [
+        "Use Array.from(mySet).sort() instead of iterating Set directly"
+      ]
+    },
+    {
+      "id": "determinism-002",
+      "gate": "Determinism Verification",
+      "regex": "Array\\.sort\\(\\)|sort without compare",
+      "description": "Array.sort() called without compare function",
+      "confidence": 0.95,
+      "fix": "Add explicit compare function: arr.sort((a,b) => a - b)",
+      "timeEstimate": 10
+    },
+    {
+      "id": "performance-001",
+      "gate": "Performance SLO",
+      "regex": "slower than baseline|regression detected",
+      "description": "Optimization makes code slower",
+      "confidence": 0.85,
+      "fix": "Profile hot paths, add cost model, disable optimization if benefit < threshold",
+      "timeEstimate": 90
+    },
+    {
+      "id": "performance-002",
+      "gate": "Performance SLO",
+      "regex": "O\\(n\\^2\\)|quadratic complexity",
+      "description": "N^2 algorithm introduced",
+      "confidence": 0.90,
+      "fix": "Replace with O(n log n) or O(n) algorithm using better data structure",
+      "timeEstimate": 120
+    },
+    {
+      "id": "integration-001",
+      "gate": "Integration Tests",
+      "regex": "FFI.*failed|marshalling error",
+      "description": "FFI marshalling broken",
+      "confidence": 0.87,
+      "fix": "Preserve parameter order, validate type conversions, test round-trip",
+      "timeEstimate": 60
+    },
+    {
+      "id": "integration-002",
+      "gate": "Integration Tests",
+      "regex": "callback.*not called|wrong timing",
+      "description": "Callback semantics broken",
+      "confidence": 0.83,
+      "fix": "Mark callback patterns as optimization-unsafe, preserve event ordering",
+      "timeEstimate": 75
+    },
+    {
+      "id": "lint-001",
+      "gate": "Linting Rules",
+      "regex": "is defined but never used",
+      "description": "Unused variable declared",
+      "confidence": 0.99,
+      "fix": "Delete variable or prefix with underscore if intentionally unused",
+      "timeEstimate": 2
+    },
+    {
+      "id": "lint-002",
+      "gate": "Linting Rules",
+      "regex": "is not defined",
+      "description": "Variable used but not imported/declared",
+      "confidence": 0.98,
+      "fix": "Add import statement or declare variable",
+      "timeEstimate": 5
+    }
+  ],
+  
+  "timeEstimates": {
+    "Function body contains only comments": 60,
+    "Function returns null with STUB comment": 45,
+    "NodeRef pattern must match ^[^_]+_[T01]+$": 20,
+    "IR node missing required 'type' field": 15,
+    "IR contains cyclic node dependencies": 45,
+    "Test output doesn't match expected value": 90,
+    "Side effects occur in incorrect order": 120,
+    "Output varies across multiple runs": 45,
+    "Array.sort() called without compare function": 10,
+    "Optimization makes code slower": 90,
+    "N^2 algorithm introduced": 120,
+    "FFI marshalling broken": 60,
+    "Callback semantics broken": 75,
+    "Unused variable declared": 2,
+    "Variable used but not imported/declared": 5
+  },
+  
+  "fixes": [
+    {
+      "date": "2026-01-30",
+      "problem": "Stub detection gate failure in buffer-overflow-detection.js",
+      "rootCause": "Function analyzeBufferOverflow had only comment placeholder",
+      "solution": "Implemented full array access analysis with severity classification",
+      "effort": 120,
+      "phase": "3.3",
+      "task": "Buffer Overflow Detection",
+      "forensicReport": "forensic_stub_detection_phase3.3_task3.1.md"
+    },
+    {
+      "date": "2026-01-30",
+      "problem": "Type confusion prevention incomplete",
+      "rootCause": "Binary expression analysis only checked syntax, not semantics",
+      "solution": "Added type inference system and coercion risk classification",
+      "effort": 90,
+      "phase": "3.3",
+      "task": "Type Confusion Prevention",
+      "forensicReport": "forensic_correctness_phase3.3_task3.2.md"
+    }
+  ],
+  
+  "commonPitfalls": {
+    "Phase 3.4 Algorithm Optimization": [
+      {
+        "pitfall": "Moving loop-invariant code with side effects",
+        "prevention": "Implement comprehensive side effect tracking before LIM",
+        "detection": "Correctness tests fail with unexpected side effect order"
+      },
+      {
+        "pitfall": "CSE consolidating non-pure function calls",
+        "prevention": "Build purity analysis, never consolidate I/O or stateful functions",
+        "detection": "Same function called twice produces different results"
+      },
+      {
+        "pitfall": "Strength reduction changes overflow behavior",
+        "prevention": "Add overflow checks, disable for BigInt, test edge cases",
+        "detection": "Large number calculations produce wrong results"
+      },
+      {
+        "pitfall": "Optimization order non-deterministic",
+        "prevention": "Canonical sort all optimizations by name, seed RNG",
+        "detection": "Hash mismatch on run 5 vs run 1"
+      },
+      {
+        "pitfall": "FFI parameter order changed by optimization",
+        "prevention": "Test cross-language interop, preserve parameter identity",
+        "detection": "FFI calls fail with wrong argument errors"
+      }
+    ],
+    "General": [
+      {
+        "pitfall": "Changing gate thresholds instead of fixing problems",
+        "prevention": "Never modify gate requirements without forensic analysis",
+        "detection": "Git history shows threshold increases without corresponding fixes"
+      },
+      {
+        "pitfall": "Skipping test creation before implementation",
+        "prevention": "Always create 15+ test cases before writing optimization code",
+        "detection": "No test files committed with implementation"
+      },
+      {
+        "pitfall": "Not documenting why optimization is safe",
+        "prevention": "Generate forensic report explaining correctness preservation",
+        "detection": "No forensic reports in artifacts/forensics/"
+      }
+    ]
+  },
+  
+  "gateHistory": {
+    "Stub Detection": {
+      "totalFailures": 3,
+      "resolvedFailures": 3,
+      "averageResolutionTime": 75,
+      "commonCauses": [
+        "Comment-only implementations",
+        "TODO placeholders",
+        "Copy-paste without code"
+      ]
+    },
+    "IR Validation": {
+      "totalFailures": 5,
+      "resolvedFailures": 5,
+      "averageResolutionTime": 30,
+      "commonCauses": [
+        "NodeRef pattern mismatch",
+        "Missing required fields",
+        "Cyclic dependencies"
+      ]
+    },
+    "Correctness Tests": {
+      "totalFailures": 8,
+      "resolvedFailures": 7,
+      "averageResolutionTime": 105,
+      "commonCauses": [
+        "Side effect ordering",
+        "Edge cases not handled",
+        "Algorithm semantics changed"
+      ]
+    },
+    "Determinism Verification": {
+      "totalFailures": 4,
+      "resolvedFailures": 4,
+      "averageResolutionTime": 40,
+      "commonCauses": [
+        "Map/Set iteration",
+        "Array.sort() without compare",
+        "Non-canonical ordering"
+      ]
+    },
+    "Performance SLO": {
+      "totalFailures": 2,
+      "resolvedFailures": 2,
+      "averageResolutionTime": 95,
+      "commonCauses": [
+        "Optimization overhead > benefit",
+        "N^2 algorithm introduced"
+      ]
+    },
+    "Integration Tests": {
+      "totalFailures": 3,
+      "resolvedFailures": 3,
+      "averageResolutionTime": 65,
+      "commonCauses": [
+        "FFI parameter order changed",
+        "Type conversion mismatch",
+        "Callback timing broken"
+      ]
+    },
+    "Linting Rules": {
+      "totalFailures": 15,
+      "resolvedFailures": 15,
+      "averageResolutionTime": 8,
+      "commonCauses": [
+        "Unused variables",
+        "Missing imports",
+        "Style violations"
+      ]
+    }
+  },
+  
+  "successPatterns": [
+    {
+      "pattern": "Create test corpus before implementation",
+      "benefit": "Catches edge cases early, prevents correctness failures",
+      "adoption": "100%",
+      "evidence": "Phase 3.3 security tests created first, zero correctness failures"
+    },
+    {
+      "pattern": "Run determinism check after every commit",
+      "benefit": "Catches non-determinism immediately, easy to fix",
+      "adoption": "95%",
+      "evidence": "Phase 3.2 memory optimization never had determinism failures"
+    },
+    {
+      "pattern": "Generate forensic report on first failure",
+      "benefit": "Documents root cause, prevents repeated mistakes",
+      "adoption": "90%",
+      "evidence": "Forensic reports archived in artifacts/forensics/"
+    },
+    {
+      "pattern": "Use factory functions for IR node creation",
+      "benefit": "Ensures all required fields present, prevents schema violations",
+      "adoption": "85%",
+      "evidence": "IR validation failures dropped 70% after factory adoption"
+    }
+  ],
+  
+  "metrics": {
+    "totalGateFailures": 40,
+    "resolvedFailures": 39,
+    "pendingFailures": 1,
+    "averageTimeToResolution": 65,
+    "gateBypassAttempts": 0,
+    "forensicReportsGenerated": 35,
+    "patternMatchSuccessRate": 0.87
+  }
+}

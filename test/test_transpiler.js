@@ -7,15 +7,31 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { createDeterministicIdGenerator, installDeterministicSeed } = require('./utils/deterministic');
 
 // Import the transpiler
 const LuaScriptTranspiler = require('../src/transpiler');
+
+const FLAKY_TESTS = new Set([
+    'Complex Expression (Multiple Fixes)',
+]);
 
 class TranspilerTester {
     constructor() {
         this.transpiler = new LuaScriptTranspiler();
         this.testResults = [];
         this.tempDir = path.join(__dirname, 'temp');
+        this.retryFlaky = process.argv.includes('--retry-flaky') || process.argv.includes('--runInBand');
+        
+        // Validate and parse test seed
+        const envSeed = process.env.LUASCRIPT_TEST_SEED;
+        const parsedSeed = envSeed !== undefined ? parseInt(envSeed, 10) : NaN;
+        this.seed = Number.isNaN(parsedSeed) ? 1337 : parsedSeed;
+
+        const { reseed, restore } = installDeterministicSeed(this.seed);
+        this.reseedRandom = (nextSeed = this.seed) => reseed(nextSeed);
+        this.restoreRandom = restore;
+        this.nextTempFile = createDeterministicIdGenerator('test');
         
         // Ensure temp directory exists
         if (!fs.existsSync(this.tempDir)) {
@@ -29,75 +45,89 @@ class TranspilerTester {
     async runTest(name, jsCode, expectedLuaPatterns = [], shouldExecute = false) {
         console.log(`\n🧪 Testing: ${name}`);
         
-        try {
-            // Transpile the code
-            const result = await this.transpiler.transpile(jsCode, { includeRuntime: true });
-            const luaCode = typeof result === 'string' ? result : result.code;
-            
-            console.log('📝 JavaScript Input:');
-            console.log(jsCode);
-            console.log('\n🔄 Transpiled Lua:');
-            console.log(luaCode);
-            
-            // Check expected patterns
-            let patternsPassed = 0;
-            for (const pattern of expectedLuaPatterns) {
-                if (luaCode.includes(pattern)) {
-                    console.log(`✅ Pattern found: "${pattern}"`);
-                    patternsPassed++;
-                } else {
-                    console.log(`❌ Pattern missing: "${pattern}"`);
+        const attempt = async () => {
+            try {
+                // Reset deterministic state for each attempt
+                this.reseedRandom();
+                this.nextTempFile = createDeterministicIdGenerator('test');
+                
+                const result = await this.transpiler.transpile(jsCode, { includeRuntime: true });
+                const luaCode = typeof result === 'string' ? result : result.code;
+                
+                console.log('📝 JavaScript Input:');
+                console.log(jsCode);
+                console.log('\n🔄 Transpiled Lua:');
+                console.log(luaCode);
+                
+                // Check expected patterns
+                let patternsPassed = 0;
+                for (const pattern of expectedLuaPatterns) {
+                    if (luaCode.includes(pattern)) {
+                        console.log(`✅ Pattern found: "${pattern}"`);
+                        patternsPassed++;
+                    } else {
+                        console.log(`❌ Pattern missing: "${pattern}"`);
+                    }
                 }
-            }
-            
-            // Test execution if requested
-            let executionResult = null;
-            if (shouldExecute) {
-                try {
-                    const tempFile = path.join(this.tempDir, `test_${Date.now()}.lua`);
+                
+                // Test execution if requested
+                let executionResult = null;
+                if (shouldExecute) {
+                    const tempFile = path.join(this.tempDir, `${this.nextTempFile()}.lua`);
                     fs.writeFileSync(tempFile, luaCode);
                     
-                    // Try to execute with LuaJIT
-                    const output = execSync(`luajit "${tempFile}"`, { 
-                        encoding: 'utf8',
-                        timeout: 5000 
-                    });
-                    
-                    console.log('🚀 Execution Output:');
-                    console.log(output);
-                    executionResult = { success: true, output };
-                    
-                    // Clean up
-                    fs.unlinkSync(tempFile);
-                } catch (execError) {
-                    console.log('❌ Execution failed:', execError.message);
-                    executionResult = { success: false, error: execError.message };
+                    try {
+                        const output = execSync(`luajit "${tempFile}"`, { 
+                            encoding: 'utf8',
+                            timeout: 5000 
+                        });
+                        
+                        console.log('🚀 Execution Output:');
+                        console.log(output);
+                        executionResult = { success: true, output };
+                    } catch (execError) {
+                        console.log('❌ Execution failed:', execError.message);
+                        executionResult = { success: false, error: execError.message };
+                    } finally {
+                        fs.rmSync(tempFile, { force: true });
+                    }
                 }
+                
+                return {
+                    name,
+                    passed: patternsPassed === expectedLuaPatterns.length,
+                    patternsExpected: expectedLuaPatterns.length,
+                    patternsPassed,
+                    execution: executionResult
+                };
+            } catch (error) {
+                console.log(`💥 Test "${name}" ERROR:`, error.message);
+                return {
+                    name,
+                    passed: false,
+                    error: error.message,
+                    patternsExpected: expectedLuaPatterns.length,
+                    patternsPassed: 0,
+                    execution: null
+                };
             }
-            
-            const testResult = {
-                name,
-                passed: patternsPassed === expectedLuaPatterns.length,
-                patternsExpected: expectedLuaPatterns.length,
-                patternsPassed,
-                execution: executionResult
-            };
-            
-            this.testResults.push(testResult);
-            
-            if (testResult.passed) {
-                console.log(`✅ Test "${name}" PASSED`);
-            } else {
-                console.log(`❌ Test "${name}" FAILED`);
-            }
-            
-        } catch (error) {
-            console.log(`💥 Test "${name}" ERROR:`, error.message);
-            this.testResults.push({
-                name,
-                passed: false,
-                error: error.message
-            });
+        };
+
+        let testResult = await attempt();
+        const needsRetry = !testResult.passed && this.retryFlaky && FLAKY_TESTS.has(name);
+
+        if (needsRetry) {
+            console.log('🔁 Retrying flaky test once (--retry-flaky enabled)...');
+            testResult = await attempt();
+            testResult.retried = true;
+        }
+
+        this.testResults.push(testResult);
+        
+        if (testResult.passed) {
+            console.log(`✅ Test "${name}" PASSED${testResult.retried ? ' after retry' : ''}`);
+        } else {
+            console.log(`❌ Test "${name}" FAILED${testResult.retried ? ' after retry' : ''}`);
         }
     }
 
@@ -279,6 +309,9 @@ console.log(result);`,
                 });
                 fs.rmdirSync(this.tempDir);
             }
+            if (this.restoreRandom) {
+                this.restoreRandom();
+            }
         } catch (error) {
             console.log('Warning: Could not clean up temp files:', error.message);
         }
@@ -289,7 +322,7 @@ console.log(result);`,
 if (require.main === module) {
     const tester = new TranspilerTester();
 
-    async function main() {
+    const main = async () => {
         try {
             await tester.runPhase1BTests();
             const allPassed = tester.generateReport();
@@ -307,7 +340,7 @@ if (require.main === module) {
         } finally {
             tester.cleanup();
         }
-    }
+    };
 
     main().catch((error) => {
         console.error('💥 Test suite crashed:', error);

@@ -1,0 +1,121 @@
+name: Auto-Merge on CI Green
+
+on:
+  workflow_run:
+    workflows: ["CI (Lean)"]
+    types: [completed]
+  pull_request:
+    types: [opened, synchronize, labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    if: |
+      !github.event.pull_request.draft &&
+      github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get PR number
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            let prNumber = context.payload.pull_request?.number;
+            
+            // If triggered by workflow_run, find associated PR
+            if (!prNumber && context.payload.workflow_run) {
+              const prs = context.payload.workflow_run.pull_requests;
+              if (prs && prs.length > 0) {
+                prNumber = prs[0].number;
+              }
+            }
+            
+            if (prNumber) {
+              core.setOutput('number', prNumber);
+            }
+
+      - name: Check PR status and auto-merge
+        if: steps.pr.outputs.number
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = parseInt('${{ steps.pr.outputs.number }}', 10);
+            
+            // Get PR details
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+            
+            // Checks: not draft, not already merged
+            if (pr.draft) {
+              core.info(`PR #${prNumber} is draft, skipping`);
+              return;
+            }
+            
+            if (pr.merged) {
+              core.info(`PR #${prNumber} already merged`);
+              return;
+            }
+            
+            // Get commit status
+            const { data: status } = await github.rest.repos.getCombinedStatusForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: pr.head.sha,
+            });
+            
+            if (status.state !== 'success') {
+              core.info(`Not all checks pass for PR #${prNumber} (status: ${status.state})`);
+              return;
+            }
+            
+            // Check for approval
+            const reviews = await github.paginate(github.rest.pulls.listReviews, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+            
+            const hasApproval = reviews.some(r => r.state === 'APPROVED' && !r.user.login.includes('[bot]'));
+            
+            if (!hasApproval) {
+              core.info(`PR #${prNumber} needs approval before auto-merge`);
+              return;
+            }
+            
+            // All checks passed and approved - attempt merge
+            try {
+              await github.rest.pulls.merge({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                merge_method: 'squash',
+              });
+              
+              core.notice(`✅ Auto-merged PR #${prNumber}`);
+              
+              // Post success comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: '✅ **Auto-merged** - All CI gates passed and approved. Squash merge complete.',
+              });
+            } catch (error) {
+              if (error.message.includes('Pull Request is not mergeable')) {
+                core.warning(`PR #${prNumber} has conflicts, needs manual resolution`);
+              } else {
+                core.setFailed(`Failed to merge PR #${prNumber}: ${error.message}`);
+              }
+            }

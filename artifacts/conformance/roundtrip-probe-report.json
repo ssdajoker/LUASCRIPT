@@ -1,0 +1,295 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:roundtrip-probe",
+  "command": "npm run test:roundtrip-probe",
+  "generatedAt": "2026-07-16T08:06:40.178Z",
+  "elapsedMs": 557,
+  "environment": {
+    "node": "v24.14.0",
+    "npm": {
+      "command": "cmd.exe",
+      "args": [
+        "/c",
+        "npm",
+        "-v"
+      ],
+      "available": true,
+      "status": 0,
+      "stdout": "11.9.0",
+      "stderr": ""
+    },
+    "platform": "win32",
+    "arch": "x64",
+    "os": {
+      "type": "Windows_NT",
+      "release": "10.0.26200"
+    },
+    "cwd": "C:\\Users\\ssdaj\\Desktop\\LUASCRIPT",
+    "generatedBy": "LUASCRIPT conformance report harness"
+  },
+  "manifest": {
+    "path": "tests/roundtrip/manifest.json",
+    "sha256": "c7f9b561e5e891773e4d32e2900204c568d4c764b399f6d6f4841d7184dbe096",
+    "status": "scoped-round-trip-probe",
+    "version": 1,
+    "fixtureCount": 6,
+    "fixtureHashes": [
+      {
+        "name": "javascript_to_javascript_structural_ir",
+        "sha256": "afb890190d9626c62412bdad4602db9da4a465a39c23cccb237e73b919520e20"
+      },
+      {
+        "name": "javascript_to_luascript_structural_ir",
+        "sha256": "ae0e92d6e2d218d2f6dafba321180602e6181b92b1719c81ae124209446e5a72"
+      },
+      {
+        "name": "luascript_to_javascript_structural_ir",
+        "sha256": "7eaae807fe3ada40e0a6a60bb0b72cbb9d0b36a9f3d7d6f2cb7e22dd095137b1"
+      },
+      {
+        "name": "python_to_python_structural_ir",
+        "sha256": "57fa143ebeee9a9c70916bf19ab0f01a55b0ae4d75a421914fc5151f2f751477"
+      },
+      {
+        "name": "javascript_to_python_runtime_output",
+        "sha256": "bd5a5d9c01385aba1b335894df7c0c5faad68ce6ffd37abf0ff6ddb1b8ffd65f"
+      },
+      {
+        "name": "python_to_javascript_runtime_output",
+        "sha256": "bd35c2f1bba3152f3ad659dae4b8c34da0f423a0257d80d00415b723d0d895d9"
+      }
+    ]
+  },
+  "supportMatrixTraceability": {
+    "supportMatrix": "docs/LANGUAGE_SUPPORT_MATRIX.md",
+    "evidenceBinder": "docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md",
+    "exitCriteria": "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md",
+    "bidirectionalityContract": "docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md",
+    "denaliLedger": "docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md",
+    "boundary": "Report evidence applies only to named manifest slices and does not claim source-preserving round-trip identity, ISO certification, or true omni-language 100%.",
+    "supportRows": [
+      "The first round-trip probe harness",
+      "JavaScript input to Lua output",
+      "LUASCRIPT `.ls` JS-like syntax plus V0.16 meta layer to Lua/Python/JavaScript/`.ls`",
+      "Lua input",
+      "Python"
+    ],
+    "evidenceRole": "Scoped structural IR reparse and runtime-output equivalence probe plus JS/.ls/Python/Lua layer-evidence map. This is not source-preserving round-trip proof."
+  },
+  "languageLayerEvidence": {
+    "statusVocabulary": {
+      "proven-named-slice": "Current gate or fixture evidence proves this layer only for the named slice.",
+      "seeded-probe": "The round-trip probe has at least one tiny representative fixture for this layer.",
+      "partial-runtime-output-only": "Current evidence is stdout/diagnostic behavior for named fixtures, not full semantic equivalence.",
+      "measured-non-gating": "The harness records the measurement, but failure does not fail this route.",
+      "not-claimed": "No current claim is made for this layer."
+    },
+    "requiredLayers": [
+      "nativeExecution",
+      "sourceToIR",
+      "irToTarget",
+      "targetRuntime",
+      "emittedLs",
+      "structuralIrReparse",
+      "normalizedSourceIdentity",
+      "tokenIdentity",
+      "semanticEquivalence"
+    ],
+    "languages": {
+      "javascript": {
+        "languageGate": "npm run language:javascript:bidirectional",
+        "report": "artifacts/language_completion/javascript-report.json",
+        "layers": {
+          "nativeExecution": "proven-named-slice",
+          "sourceToIR": "proven-named-slice",
+          "irToTarget": "proven-named-slice",
+          "targetRuntime": "proven-named-slice",
+          "emittedLs": "proven-named-slice",
+          "structuralIrReparse": "seeded-probe",
+          "normalizedSourceIdentity": "not-claimed",
+          "tokenIdentity": "not-claimed",
+          "semanticEquivalence": "partial-runtime-output-only"
+        },
+        "evidence": [
+          "language:javascript:bidirectional covers the JavaScript named slice through native execution, lowering, target emission, and target runtime checks.",
+          "javascript_to_javascript_structural_ir and javascript_to_luascript_structural_ir seed structural IR reparse evidence.",
+          "javascript_to_python_runtime_output seeds runtime-output equivalence for one JavaScript to Python fixture."
+        ],
+        "boundaries": [
+          "No JavaScript normalized source identity or token identity is claimed.",
+          "Runtime-output equivalence is stdout equivalence for named fixtures, not broad semantic equivalence."
+        ]
+      },
+      "luascript": {
+        "languageGate": "npm run language:luascript:bidirectional",
+        "report": "artifacts/language_completion/luascript-report.json",
+        "sourceIdentityReport": "artifacts/conformance/source-identity-probe-report.json",
+        "layers": {
+          "nativeExecution": "proven-named-slice",
+          "sourceToIR": "proven-named-slice",
+          "irToTarget": "proven-named-slice",
+          "targetRuntime": "proven-named-slice",
+          "emittedLs": "proven-named-slice",
+          "structuralIrReparse": "seeded-probe",
+          "normalizedSourceIdentity": "proven-named-slice",
+          "tokenIdentity": "measured-non-gating",
+          "semanticEquivalence": "partial-runtime-output-only"
+        },
+        "evidence": [
+          "language:luascript:bidirectional covers the .ls named slice through native execution, lowering, target emission, and target runtime checks.",
+          "luascript_to_javascript_structural_ir seeds structural IR reparse evidence.",
+          "test:source-identity-probe proves normalized source, parser-owned AST, and current bridge IR identity for 12 positive .ls fixtures, plus 3 expected unsupported diagnostics."
+        ],
+        "boundaries": [
+          "Token identity is measured but non-gating.",
+          "The source identity suite is normalized fixture evidence only, not broad lossless recovery or broad semantic equivalence."
+        ]
+      },
+      "python": {
+        "languageGate": "npm run language:python:bidirectional",
+        "report": "artifacts/language_completion/python-report.json",
+        "layers": {
+          "nativeExecution": "proven-named-slice",
+          "sourceToIR": "proven-named-slice",
+          "irToTarget": "proven-named-slice",
+          "targetRuntime": "proven-named-slice",
+          "emittedLs": "proven-named-slice",
+          "structuralIrReparse": "seeded-probe",
+          "normalizedSourceIdentity": "not-claimed",
+          "tokenIdentity": "not-claimed",
+          "semanticEquivalence": "partial-runtime-output-only"
+        },
+        "evidence": [
+          "language:python:bidirectional covers the Python named slice through native execution, lowering, target emission, and target runtime checks.",
+          "python_to_python_structural_ir seeds structural IR reparse evidence.",
+          "python_to_javascript_runtime_output seeds runtime-output equivalence for one Python to JavaScript fixture."
+        ],
+        "boundaries": [
+          "No Python normalized source identity or token identity is claimed.",
+          "Runtime-output equivalence is stdout equivalence for named fixtures, not broad semantic equivalence."
+        ]
+      },
+      "lua": {
+        "languageGate": "npm run language:lua:bidirectional",
+        "report": "artifacts/language_completion/lua-report.json",
+        "layers": {
+          "nativeExecution": "proven-named-slice",
+          "sourceToIR": "proven-named-slice",
+          "irToTarget": "proven-named-slice",
+          "targetRuntime": "proven-named-slice",
+          "emittedLs": "proven-named-slice",
+          "structuralIrReparse": "not-claimed",
+          "normalizedSourceIdentity": "not-claimed",
+          "tokenIdentity": "not-claimed",
+          "semanticEquivalence": "partial-runtime-output-only"
+        },
+        "evidence": [
+          "language:lua:bidirectional covers the Lua named slice through native execution, lowering, target emission, and target runtime checks.",
+          "Lua source emits Lua, JavaScript, .ls, and Python for the named V2.1 slice."
+        ],
+        "boundaries": [
+          "No Lua structural IR reparse fixture exists in test:roundtrip-probe yet.",
+          "No Lua normalized source identity or token identity is claimed.",
+          "Runtime-output equivalence is fixture stdout evidence, not broad semantic equivalence."
+        ]
+      }
+    }
+  },
+  "summary": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "structuralIrReparse": 4,
+    "runtimeOutputEquivalence": 2,
+    "sourcePreservingRoundTrip": 0
+  },
+  "runtimeCommandsUsed": [
+    {
+      "fixture": "javascript_to_python_runtime_output",
+      "language": "javascript",
+      "label": "source",
+      "command": "node"
+    },
+    {
+      "fixture": "javascript_to_python_runtime_output",
+      "language": "python",
+      "label": "emitted-target",
+      "command": "python3"
+    },
+    {
+      "fixture": "python_to_javascript_runtime_output",
+      "language": "python",
+      "label": "source",
+      "command": "python3"
+    },
+    {
+      "fixture": "python_to_javascript_runtime_output",
+      "language": "javascript",
+      "label": "emitted-target",
+      "command": "node"
+    }
+  ],
+  "results": [
+    {
+      "name": "javascript_to_javascript_structural_ir",
+      "status": "passed",
+      "mode": "structural-ir-reparse",
+      "sourceLanguage": "javascript",
+      "targetLanguage": "javascript",
+      "claim": "structural IR reparse",
+      "sourcePreservingRoundTrip": false,
+      "notes": "This is a true structural probe for the current bridge IR, not source formatting identity."
+    },
+    {
+      "name": "javascript_to_luascript_structural_ir",
+      "status": "passed",
+      "mode": "structural-ir-reparse",
+      "sourceLanguage": "javascript",
+      "targetLanguage": "luascript",
+      "claim": "structural IR reparse",
+      "sourcePreservingRoundTrip": false,
+      "notes": "This proves emitted .ls can reparse to equivalent current bridge IR for a tiny JS-like slice."
+    },
+    {
+      "name": "luascript_to_javascript_structural_ir",
+      "status": "passed",
+      "mode": "structural-ir-reparse",
+      "sourceLanguage": "luascript",
+      "targetLanguage": "javascript",
+      "claim": "structural IR reparse",
+      "sourcePreservingRoundTrip": false,
+      "notes": "This proves a tiny .ls executable slice can emit JavaScript that reparses to equivalent current bridge IR."
+    },
+    {
+      "name": "python_to_python_structural_ir",
+      "status": "passed",
+      "mode": "structural-ir-reparse",
+      "sourceLanguage": "python",
+      "targetLanguage": "python",
+      "claim": "structural IR reparse",
+      "sourcePreservingRoundTrip": false,
+      "notes": "This is a true structural probe for the current Python bridge slice."
+    },
+    {
+      "name": "javascript_to_python_runtime_output",
+      "status": "passed",
+      "mode": "runtime-output-equivalence",
+      "sourceLanguage": "javascript",
+      "targetLanguage": "python",
+      "claim": "runtime-output equivalence",
+      "sourcePreservingRoundTrip": false,
+      "notes": "Emitted Python helper prologue is not yet reparsed by the Python input slice; this is runtime-output equivalence only."
+    },
+    {
+      "name": "python_to_javascript_runtime_output",
+      "status": "passed",
+      "mode": "runtime-output-equivalence",
+      "sourceLanguage": "python",
+      "targetLanguage": "javascript",
+      "claim": "runtime-output equivalence",
+      "sourcePreservingRoundTrip": false,
+      "notes": "Python print lowers to JavaScript console.log, so this is behavioral runtime-output equivalence, not IR identity."
+    }
+  ],
+  "failures": []
+}

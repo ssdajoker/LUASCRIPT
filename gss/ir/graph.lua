@@ -38,6 +38,27 @@ function M.get_param(graph, name)
     return graph.params[name]
 end
 
+-- Create async operation node
+function M.async_operation(graph, operation, inputs)
+    local node = nodes.AsyncNode(operation, inputs)
+    M.add_node(graph, node)
+    return node
+end
+
+-- Create await node
+function M.await_operation(graph, async_node)
+    local node = nodes.AwaitNode(async_node)
+    M.add_node(graph, node)
+    return node
+end
+
+-- Create async block
+function M.async_block(graph, operations)
+    local node = nodes.AsyncBlockNode(operations)
+    M.add_node(graph, node)
+    return node
+end
+
 -- Topologically sort graph
 function M.sort(graph)
     if not graph.root then
@@ -184,6 +205,22 @@ function M.replace_node(graph, old_node, new_node)
         elseif node.type == "ramp" or node.type == "iso" then
             if node.input == old_node then
                 node.input = new_node
+            end
+        elseif node.type == "async" then
+            for i, input in ipairs(node.inputs) do
+                if input == old_node then
+                    node.inputs[i] = new_node
+                end
+            end
+        elseif node.type == "await" then
+            if node.async_node == old_node then
+                node.async_node = new_node
+            end
+        elseif node.type == "async_block" then
+            for i, op in ipairs(node.operations) do
+                if op == old_node then
+                    node.operations[i] = new_node
+                end
             end
         end
     end

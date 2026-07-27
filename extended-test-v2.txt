@@ -1,0 +1,129 @@
+
+> luascript@1.0.0 test:extended
+> node tests/ir/extended.test.js
+
+
+≡ƒº¬ Extended IR Test Suite
+
+≡ƒôª ArrayPattern Tests:
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à ArrayPattern with RestElement
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à ArrayPattern with holes
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à ArrayPattern with default values
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à Nested ArrayPattern
+
+≡ƒÄ» ObjectPattern Tests:
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à ObjectPattern basic
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à ObjectPattern with renaming
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à ObjectPattern with RestElement
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à ObjectPattern with defaults
+
+Γ₧í∩╕Å  Arrow Function Tests:
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à Arrow function expression
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+Parsing statement, current token: { type: 'KEYWORD', value: 'return', line: 1, column: 21, position: 26 }
+  Γ£à Arrow function with block body
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à Arrow function with no parameters
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à Arrow function with single parameter (no parens)
+
+≡ƒô¥ Template Literal Tests:
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à Template literal basic
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à Template literal with multiple expressions
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à Template literal no interpolation
+
+≡ƒîè Spread Operator Tests:
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à Spread in array literal
+Parsing statement, current token: { type: 'IDENTIFIER', value: 'func', line: 1, column: 1, position: 4 }
+  Γ£à Spread in function call
+
+≡ƒöä For-of Loop Tests:
+Parsing statement, current token: { type: 'KEYWORD', value: 'for', line: 1, column: 1, position: 3 }
+Parsing statement, current token: { type: 'LEFT_BRACE', value: '{', line: 1, column: 27, position: 27 }
+Parsing statement, current token: {
+  type: 'IDENTIFIER',
+  value: 'console',
+  line: 1,
+  column: 29,
+  position: 35
+}
+  Γ£à For-of with array
+Parsing statement, current token: { type: 'KEYWORD', value: 'for', line: 1, column: 1, position: 3 }
+  Γ£à For-of with destructuring
+
+≡ƒ¢í∩╕Å  Try-Catch Tests:
+Parsing statement, current token: { type: 'KEYWORD', value: 'try', line: 1, column: 1, position: 3 }
+Parsing statement, current token: {
+  type: 'IDENTIFIER',
+  value: 'doSomething',
+  line: 1,
+  column: 7,
+  position: 17
+}
+Parsing statement, current token: {
+  type: 'IDENTIFIER',
+  value: 'handleError',
+  line: 1,
+  column: 38,
+  position: 48
+}
+  Γ£à Try-catch basic
+Parsing statement, current token: { type: 'KEYWORD', value: 'try', line: 1, column: 1, position: 3 }
+Parsing statement, current token: {
+  type: 'IDENTIFIER',
+  value: 'doSomething',
+  line: 1,
+  column: 7,
+  position: 17
+}
+Parsing statement, current token: { type: 'IDENTIFIER', value: 'log', line: 1, column: 38, position: 40 }
+Parsing statement, current token: {
+  type: 'IDENTIFIER',
+  value: 'cleanup',
+  line: 1,
+  column: 60,
+  position: 66
+}
+  Γ¥î Try-catch-finally: Expected BlockStatement for id node_1TT0
+
+≡ƒÅ¢∩╕Å  Class Tests:
+Parsing statement, current token: { type: 'KEYWORD', value: 'class', line: 1, column: 1, position: 5 }
+Parsing statement, current token: { type: 'KEYWORD', value: 'this', line: 1, column: 35, position: 38 }
+Parsing statement, current token: { type: 'KEYWORD', value: 'this', line: 1, column: 47, position: 50 }
+  Γ£à Class declaration
+Parsing statement, current token: { type: 'KEYWORD', value: 'class', line: 1, column: 1, position: 5 }
+Parsing statement, current token: { type: 'KEYWORD', value: 'return', line: 1, column: 26, position: 31 }
+Parsing statement, current token: { type: 'KEYWORD', value: 'return', line: 1, column: 59, position: 64 }
+  Γ£à Class with methods
+Parsing statement, current token: { type: 'KEYWORD', value: 'class', line: 1, column: 1, position: 5 }
+Parsing statement, current token: { type: 'KEYWORD', value: 'super', line: 1, column: 46, position: 50 }
+  Γ£à Class inheritance
+
+Γ₧ò Binary Operation Tests:
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à Logical AND/OR
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à Nullish coalescing
+Parsing statement, current token: { type: 'KEYWORD', value: 'const', line: 1, column: 1, position: 5 }
+  Γ£à Optional chaining
+
+==================================================
+Total Tests: 27
+Γ£à Passed: 26
+Γ¥î Failed: 1
+
+Γ¥î Failures:
+  - Try-catch-finally: Expected BlockStatement for id node_1TT0

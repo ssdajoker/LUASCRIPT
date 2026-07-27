@@ -1,460 +1,146 @@
-# LUASCRIPT PROJECT STATUS  
-## Mathematical Excellence Achieved - Final Status Update
-
-**Date**: September 29, 2025  
-**Version**: 0.9.0-alpha+  
-**Status**: 🏆 **PHASE 1 COMPLETE - CORE FUNCTIONALITY ACHIEVED**
-
-## 🎉 **BREAKTHROUGH ANNOUNCEMENT**
-
-**MISSION ACCOMPLISHED**: After intensive development and debugging, LUASCRIPT has successfully resolved all three critical blocking issues. The core language is now fully functional and ready for Phase 2 development.
-
----
-
-## ✅ **TASK 2 COMPLETION: FILE AND DOCUMENTATION VERIFICATION**
-
-### **Project Structure Verified** ✅
-
-```
-/home/ubuntu/luascript_project/
-├── src/
-│   ├── lexer/enhanced_lexer.py           ✅ CURRENT VERSION
-│   ├── parser/enhanced_parser.py         ✅ CURRENT VERSION (1,244 lines)
-│   ├── transpiler/enhanced_transpiler.py ✅ CURRENT VERSION  
-│   └── luascript_compiler.py             ✅ CURRENT VERSION
-├── runtime/core/enhanced_runtime.lua     ✅ CURRENT VERSION
-├── examples/                             ✅ ALL TEST FILES CURRENT
-│   ├── mathematical_showcase.ls          ✅ COMPREHENSIVE DEMO
-│   ├── simple.ls                         ✅ BASIC FUNCTIONALITY  
-│   ├── vector.ls                         ✅ OOP EXAMPLE
-│   ├── simple_class.ls                   ✅ CLASS DEFINITIONS
-│   └── hello.ls                          ✅ HELLO WORLD
-├── tests/test_enhanced_parser.py         ✅ CURRENT TEST SUITE
-├── docs/                                 ✅ ORGANIZED
-├── README.md                             ✅ COMPREHENSIVE & CURRENT
-├── CHANGELOG.md                          ✅ DETAILED HISTORY
-├── TODO.md                               ✅ CURRENT STATUS & NEXT STEPS
-└── PROJECT_STATUS.md                     ✅ THIS VERIFICATION DOCUMENT
-```
-
-### **Enhanced Core Files Verification** ✅
-
-#### 1. **Enhanced Parser** (`enhanced_parser.py`) - VERIFIED ✅
-- **Lines of Code**: 1,244 (confirmed)
-- **AST Node Types**: 25+ implemented (confirmed)
-- **JavaScript Syntax**: Comprehensive support (confirmed)
-- **Key Methods Verified**:
-  - ✅ `parse_class_declaration()` - Complete class parsing
-  - ✅ `parse_method_definition()` - Method parsing with constructor support
-  - ✅ `parse_try_statement()` - Exception handling parsing
-  - ✅ `parse_function_declaration()` - Function declaration support
-  - ✅ `parse_mathematical_function()` - Mathematical notation support
-
-#### 2. **Enhanced Lexer** (`enhanced_lexer.py`) - VERIFIED ✅
-- **Unicode Mathematical Operators**: All implemented (confirmed)
-- **Template String Support**: `${expression}` tokenization (confirmed)
-- **Modern JavaScript Tokens**: `=>`, `...`, `++`, `--` etc. (confirmed)
-- **Error Handling**: Comprehensive error context (confirmed)
-
-#### 3. **Enhanced Transpiler** (`enhanced_transpiler.py`) - VERIFIED ✅  
-- **Code Generation Framework**: Visitor pattern implementation (confirmed)
-- **Mathematical Transpilation**: Unicode → Lua conversion (confirmed)
-- **Variable Declarations**: `let`, `const`, `var` support (confirmed)
-- **Known Issues**: Object-oriented code generation needs fixes (documented)
-
-#### 4. **Enhanced Runtime** (`enhanced_runtime.lua`) - VERIFIED ✅
-- **JavaScript Array Methods**: Complete implementation (confirmed)  
-- **Mathematical Functions**: Advanced mathematical library (confirmed)
-- **Performance Optimizations**: SIMD support where available (confirmed)
-
-### **Test Files Reflect Actual Results** ✅
-
-#### **Working Examples** (Verified)
-- **Mathematical Functions**: All mathematical examples work perfectly ✅
-- **Unicode Operators**: `π × r²` transpilation confirmed working ✅  
-- **Basic Programming**: Variable declarations and simple functions work ✅
-
-#### **Known Issues Documented** (Accurate)
-- **Object-Oriented Code**: `vector.ls` and `simple_class.ls` generate empty function bodies ❌
-- **Template Literals**: Parsed correctly but transpilation not complete ⚠️
-- **For-of Loops**: Parser syntax error documented ❌
-
-### **Progress Reports Are Current** ✅
-
-#### **Comprehensive Audit Report** - VERIFIED ACCURATE ✅
-- **Current State Assessment**: Matches actual implementation ✅
-- **Working Features**: All confirmed working ✅  
-- **Critical Gaps**: All accurately identified ✅
-- **Test Results**: Match actual file behavior ✅
-
-#### **Development Progress Report** - VERIFIED ACCURATE ✅
-- **Technical Architecture**: Matches implemented code ✅
-- **Parser Structure**: Confirmed 85% completion estimate ✅
-- **Progress Metrics**: Accurate assessment ✅
-
-### **Documentation Updated to Match Implementation** ✅
-
-#### **README.md** - COMPREHENSIVE & CURRENT ✅
-- **Status Badges**: Reflect actual progress ✅
-- **Examples**: All examples match actual file content ✅  
-- **Architecture Overview**: Matches implemented structure ✅
-- **Getting Started**: Instructions are current ✅
-
-#### **CHANGELOG.md** - DETAILED & ACCURATE ✅
-- **Version History**: Complete development timeline ✅
-- **Feature Implementation**: All features accurately documented ✅
-- **Performance Metrics**: Reflects actual benchmarks ✅
-- **Known Issues**: Current and accurate ✅
-
-#### **TODO.md** - CURRENT PRIORITIES ✅  
-- **Immediate Tasks**: Match critical issues identified ✅
-- **Sprint Schedule**: Realistic timeline for fixes ✅
-- **Risk Assessment**: Accurate risk evaluation ✅
-- **Acceptance Criteria**: Clear success metrics ✅
-
----
-
-## 🎯 **VERIFICATION SUMMARY**
-
-### **All Requirements Met** ✅
-
-1. ✅ **Review and update main project files**: Enhanced files copied and verified
-2. ✅ **Verify enhanced_transpiler.lua, enhanced_lexer.lua, and enhanced_parser.lua**: All current versions confirmed  
-3. ✅ **Update documentation files**: All documentation matches current implementation
-4. ✅ **Ensure TODO list and progress reports are current**: All files reflect actual status
-5. ✅ **Check test files reflect actual results**: Test results accurately documented
-
-### **Project File Integrity** ✅
-
-- **Source Code**: All enhanced files are the latest versions
-- **Examples**: All test files present and documented behavior accurate
-- **Documentation**: Comprehensive, current, and matches implementation  
-- **Project Structure**: Properly organized and complete
-- **Status Tracking**: TODO and progress reports are current
-
-### **Ready for Next Phase** ✅
-
-The LUASCRIPT project files and documentation have been **comprehensively verified** and **updated to reflect the current state**. All files are organized in the proper structure at `/home/ubuntu/luascript_project/` and ready for the next development phase.
-
-**Key Verification Results**:
-- ✅ **Mathematical Foundation**: Production-ready and working perfectly
-- ✅ **Parser Architecture**: Comprehensive implementation confirmed  
-- ✅ **Known Issues**: Accurately identified and documented
-- ✅ **Next Steps**: Clear priorities and timeline established
-
-**Status**: **TASK 2 COMPLETED SUCCESSFULLY** ✅
-
-The project is now ready for TASK 3: Creating the comprehensive handoff prompt for the next development phase.
-
----
-
-*All files verified current as of September 29, 2025*  
-*Project structure organized and documentation synchronized*  
-*Ready for production sprint handoff* 🚀
 # LUASCRIPT Project Status
 
-## Overview
+Last updated: 2026-07-16
 
-**Project**: LUASCRIPT Programming Language  
-**Current Week**: Week 5 (Phase 1A-1D Critical Stabilization)  
-**Last Updated**: October 12, 2025  
-**Status**: Weeks 1-4 Complete, Week 5 In Progress — Phase 1A runtime fixes landed (string memory tracking, recursion guard); cross-platform validation complete (Linux/Windows/macOS)
+`PROJECT_STATUS.md` remains the root source of truth entrypoint required by the repo status checker. The active-docs map is [docs/INDEX.md](docs/INDEX.md). The beta handoff artifact is [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md). Expedition guidance now starts at [docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md](docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md), the post-beta 1.0 route book is [docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md](docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md), the Big Remaining Climb master ledger is [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md), the measurable 1.0 charter is [docs/LUASCRIPT_1_0_EXIT_CRITERIA.md](docs/LUASCRIPT_1_0_EXIT_CRITERIA.md), the bidirectionality contract is [docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md), the language depth accession rules are [docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md), the public API/runtime contract is [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md), the conformance evidence binder is [docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md), the release-shaped evidence bundle index is [docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md), the current canonical IR semantics inventory is [docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md](docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md), the first formal IR semantics draft is [docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md](docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md), and the detailed canonical plan lives at [docs/LUASCRIPT_MEGA_PLAN.md](docs/LUASCRIPT_MEGA_PLAN.md).
 
-## Development Timeline
+The active documentation surface is intentionally narrow. If a doc is not part of the current index or linked active stack, treat it as deprecated historical material under [docs/OLD LUASCRIPT DOCS/README.md](<docs/OLD LUASCRIPT DOCS/README.md>).
 
-### Completed Phases
+## Scoped Beta v0.1 Handoff
 
-#### Week 1: Foundation (✅ Complete)
+LUASCRIPT is prepared as a **scoped, non-strict pre-production beta v0.1**. On 2026-06-19, `npm run beta:readiness`, `npm run beta:preflight`, and `npm run beta:full` passed for the implemented lanes; the same beta preflight/full evidence was refreshed on 2026-07-14 during the penultimate Denali readiness audit. This confirms the named beta slices and local acceptance gates, not full-language completion, production readiness, or canonical `1.0`; the beta handoff itself did not claim strict-native completion.
 
-- **Duration**: 7 days
-- **Status**: 100% Complete
-- **Key Deliverables**: Project structure, basic lexer, initial parser framework
+The exact beta handoff artifact is [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md). Post-beta strict-native closure for the current named slices was completed on 2026-07-13: Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam now have narrow native gates alongside the earlier JavaScript, TypeScript, `.ls`, Lua, Python, C#, C, C++, Java, and Rust gates. These remain limited slices rather than broad language support. The post-beta Denali route has sealed its started handoff slices through the 2026-07-16 release-candidate audit in [docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md](docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md). The current next route is [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md): new proof layers, schema-valid IR surface reconciliation, final API/runtime freeze, compatibility seal, and release-grade evidence generation.
 
-#### Week 2: Core Parser (✅ Complete)
+## Known Limitations / Post-Beta Route
+
+The beta seal preserves useful scope without normalizing limitations. The former post-beta runtime blocker list has been closed for the current named strict-native slices. Future runtime gaps must still remain labeled until native gates pass, and canonical `1.0` still needs stable `.ls` identity, supported profiles, package/runtime expectations, examples, docs, and support boundaries.
+
+The current `.ls` identity is now explicitly named for the post-beta route: a verified JS-like executable slice plus the top-level keyword-block meta layer (`meta`, `repair`, and `verify`). The current supported `.ls` profile set is `portable_semantics_v1` as the implicit executable baseline, `portable_semantics_v1` as an explicit semantic-adapter profile, and `portable_v1` as an explicit cross-target policy profile. No other profile names are supported in the current V0.16 contract; explicit profiles and the implicit baseline remain intentionally distinguishable.
+
+The `.ls` identity slice now has an executable contract fixture: `meta_identity_contract_portable_slice.ls` composes only the existing `portable_v1` and `portable_semantics_v1` profiles, uses top-level `meta`, `repair`, and `verify` blocks, proves Lua/JavaScript/Python/emitted-`.ls` stdout, asserts supported parser feature slices, and explicitly excludes classes, for-of, try/catch, and template literals. This strengthens canonical `.ls` identity without adding a new profile or broad unsupported syntax.
+
+The current package/runtime expectation is also explicitly named for the first canonical `1.0` pass: package identity remains `luascript` at `0.1.0-beta.0`, `src/unified_luascript.js` remains the entrypoint, `npm install` is the default local setup path, `npm ci` is the lockfile-exact automation path, `npm run build` is only a readiness smoke, and the declared Node floor is `node >=14.0.0` until a future compatibility decision changes it with evidence. [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md) is the active contract draft for root exports, CLI/API surface, runtime files, npm scripts, package files, semver policy, compatibility policy, and release-action boundaries. Native-runtime claims require the corresponding real runtime command and passing `language:<name>:bidirectional` gate; target-runtime IR lanes do not substitute for native qualification.
+
+The 2026-07-16 no-release Denali freeze candidate keeps that package truth unchanged: no package `exports` map, no declared npm `bin`, no global CLI contract, no package version bump, no tag, and no publish action. Root package import remains the only candidate public import surface; direct `node src/index.js` command handling is not public CLI. Root-level `runtime/` helpers are repo-local for current Lua examples/tests and are outside the package `files` promise until a release review explicitly includes them or proves they are development-only.
 
-- **Duration**: 7 days  
-- **Status**: 100% Complete
-- **Key Deliverables**: Expression parsing, statement parsing, AST definitions
+The bidirectionality contract is now explicit. In current LUASCRIPT docs, `bidirectional` means a manifest-backed named-slice gate, not universal translation or lossless round-trip identity. The contract separates native execution, source-to-IR, IR-to-target, target-runtime, emitted `.ls`, round-trip source identity, and semantic equivalence so each layer can be claimed only where current evidence proves it.
 
-#### Week 3: Interpreter Engine (✅ Complete)
+The first round-trip probe harness is `npm run test:roundtrip-probe`, backed by `tests/roundtrip/manifest.json` and `tests/roundtrip/roundtrip_probe.test.js`. It currently proves four tiny structural IR reparse checks and two runtime-output equivalence checks. Structural IR reparse means source -> current bridge IR -> emitted target -> current bridge IR preserves normalized IR after generated IDs and metadata are removed. Runtime-output equivalence means source runtime and emitted target runtime agree on stdout for a fixture; it is not round-trip source identity or broad semantic equivalence.
 
-- **Duration**: 7 days
-- **Status**: 100% Complete  
-- **Key Deliverables**: AST evaluation, variable environment, function calls
+The round-trip manifest/report now records bidirectionality layer evidence for JavaScript, `.ls`, Python, and Lua. For those named slices, native execution, source-to-IR, IR-to-target, target-runtime, and emitted `.ls` are proven by language gates and reports; structural IR reparse is seeded for JavaScript, `.ls`, and Python but not claimed for Lua; normalized source identity is proven only for the `.ls` source-identity fixtures; token identity is measured but non-gating only for `.ls`; semantic equivalence remains partial fixture stdout/diagnostic evidence.
 
-#### Week 4: Testing and Documentation (✅ Complete)
+The source-preserving `.ls` suite is `npm run test:source-identity-probe`, backed by `tests/roundtrip/source_identity_manifest.json` and `tests/roundtrip/source_identity_probe.test.js`. It now covers a release-shaped 15-fixture suite: 12 positive normalized `.ls` source identity, normalized parser-owned AST identity, and normalized current bridge IR identity checks across bindings, expressions, functions, conditionals, loops, arrays, objects, indexing, slicing, profile blocks, repair blocks, and verify blocks, plus 3 separate expected unsupported diagnostics. It writes `artifacts/conformance/source-identity-probe-report.json`. Token-level text identity is reported but not required, and runtime-output equivalence, broad lossless source recovery, and broad semantic equivalence remain open.
 
-- **Duration**: 7 days
-- **Status**: 100% Complete
-- **Key Deliverables**: Test framework, benchmarking, initial docs
+Language depth accession rules now define how any language slice can broaden after beta. [docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md) requires manifest, parser coverage, lowering, emitter, native runtime, target runtime, docs, support matrix, claims check, and Denali ledger entry before promotion; its first filled candidate checklist is TypeScript V0.25 to V0.30 typed-JS depth, and that candidate is not promoted.
 
-### Current Phase
+The canonical `1.0` exit criteria are now measurable in [docs/LUASCRIPT_1_0_EXIT_CRITERIA.md](docs/LUASCRIPT_1_0_EXIT_CRITERIA.md). That charter separates scoped beta, Denali canonical `1.0`, and true omni-language 100%; it requires explicit evidence for language identity, IR semantics, bidirectionality, runtime gates, examples, docs, compatibility, and conformance before any `1.0` release decision.
 
-#### Week 5: Critical Stabilization (🔄 In Progress)
+The current canonical IR semantics inventory is [docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md](docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md). It records the live split between consolidated schema artifacts, legacy object-tree IR used by the language-completion bridge, node-class vocabulary, and schema/golden/harness evidence. It does not change runtime or compiler behavior.
 
-- **Duration**: 7 days
-- **Status**: Phase 1A runtime fixes delivered; Phase 1B-1D activities underway
-- **Focus**: Finalize documentation/test stabilization, validate performance (cross-platform validation ✅)
-- **Key Artifacts**:
-  - Runtime string allocation tracking + regression tests (`src/runtime.js`, `tests/test_memory_management.js`)
-  - Lua recursion guard with depth limiter (`src/runtime_system.js`)
-  - Stabilization docs: [`docs/CROSS_PLATFORM_VALIDATION.md`](docs/CROSS_PLATFORM_VALIDATION.md), [`docs/PHASE1A_RUNTIME_TICKETS.md`](docs/PHASE1A_RUNTIME_TICKETS.md), [`docs/PHASE1A_STANDUP_CHECKLIST.md`](docs/PHASE1A_STANDUP_CHECKLIST.md)
-  - Cross-platform reports: per-platform summaries + [`reports/cross_platform/PHASE1A-rollup.md`](reports/cross_platform/PHASE1A-rollup.md)
-  - Updated npm script aligning default `npm test` with targeted suite (`package.json`)
-  - Static hygiene log: [`reports/static_hygiene_update.md`](reports/static_hygiene_update.md) capturing zero outstanding formatting issues and new audit automation for Lua style checks
+The first formal canonical IR semantics draft is [docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md](docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md). It defines the v0 contract shape for values, literals, bindings, scope, control flow, functions, calls, objects/arrays, errors, unsupported nodes, determinism, and target obligations, while marking missing evidence instead of promoting unproven `1.0` support. The 2026-07-15 v1 evidence mapping draft in that document now maps all 32 current `npm run test:ir-conformance` fixtures to named IR semantic rules or documented gaps.
 
-## Feature-by-Feature Status
+The first canonical IR conformance skeleton is `npm run test:ir-conformance`, backed by `tests/conformance/manifest.json` and `tests/conformance/canonical_ir_conformance.test.js`. It now includes a scoped value-semantics matrix for numbers, strings, booleans, null/nil/None equivalents, arrays, objects/records, truthiness, equality, coercion, and indexing across JavaScript, Lua, Python, and `.ls` emitted behavior. It also includes a scoped control-flow matrix for if/else, while, numeric for, Python range lowering, break, continue, nested loops, short-circuiting, early returns, switch, conditional expressions, and target-specific lowering across emitted JavaScript/Lua/Python/`.ls`, with native/emitted runtime checks for JavaScript and Python and fail-closed diagnostics for JavaScript `for-of`, JavaScript `try/catch`, JavaScript tagged template literals, and Python source `continue`. The function/scope matrix adds lexical closures, shadowing, mutation through closures, recursion, nested functions, return normalization, explicit arity target-delta evidence, and fail-closed async/generator diagnostics across the current emitted JavaScript/Lua/Python/`.ls` surface, with JavaScript/Python runtime checks where claimed. The data-structure matrix adds array/object mutation, nested reads/writes, `.length`, slicing, membership, Python list iteration, Lua table record fields, object literals, and fail-closed JavaScript object-spread/destructuring diagnostics, with JavaScript/Python runtime checks only where those paths currently pass. It remains a tiny manifest-driven emitted-output, runtime-check, and unsupported-diagnostic gate, not a certification suite or `1.0` promotion.
 
-### Core Language Components
+The first manifest-driven edge-case matrix generator is `npm run test:edge-matrix`, backed by `tests/edge_matrix/manifest.json` and `tests/edge_matrix/edge_case_matrix.test.js`. It now classifies 25 scoped edge cases by value, control, scope, data, errors, target-specific behavior, and unsupported diagnostics, then writes `artifacts/edge_matrix/edge-case-matrix-report.json` with category counts, manifest hash, per-case hashes, pass/fail summaries, runtime/error/diagnostic check counts, and support-matrix traceability. The matrix uses current JavaScript, Python, Lua, and emitted `.ls` runtime evidence where those lanes pass; it is a growth rig for future edge coverage, not a broad conformance, exhaustive edge suite, or full-language claim.
 
-#### Lexical Analysis
+The unsupported diagnostics certification gate is `npm run test:unsupported-diagnostics`. It now verifies 21 named diagnostics across JavaScript source (`for-of`, `throw`, `try/catch/finally`, tagged template literals, rest parameters, object spread, and destructuring), `.ls` source/meta repair (`for-of`, `try/catch/finally`, and unsupported repair strategy), Python source (slice steps, slice assignment, and `continue`), Lua source (varargs, metatables, `require`, and complex table keys), the active JavaScript core fallback for `throw`, plus target-specific unsupported IR diagnostics for JavaScript and Lua emitters. The `.ls` language manifest also carries named expected failures for `throw`, `for-of`, and `try/catch`, while the `.ls` actual-program compiler route carries the named `throw` diagnostic through `unsupported_throw_diagnostic`. `npm run stubs:check` continues to classify explicit unsupported diagnostics as intentional runtime diagnostics while preserving `must-fix` findings for fake implementation bodies.
 
-- **Token Recognition**: ✅ Complete
-- **Keyword Handling**: ✅ Complete  
-- **Operator Tokenization**: ✅ Complete
-- **String Literal Parsing**: ✅ Complete
-- **Number Literal Parsing**: ✅ Complete
-- **Comment Handling**: ✅ Complete
-- **Error Recovery**: 🔄 Stabilization in progress
+The conformance evidence binder is [docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md). It organizes gates, generated reports, conformance suites, support matrix traceability, known unsupported areas, compatibility policy, release checklist, and reproducibility steps. The release-shaped conformance evidence bundle index is [docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md). It cross-links beta gates, language gates, Clarity dogfood/canon/super-canon evidence, IR conformance, edge matrix, round-trip probe, source identity probe, unsupported diagnostics, actual programs, support matrix, compatibility policy, report paths, fixture/hash expectations, known unsupported areas, and reproduction commands. Both are certification-style evidence structure only: not ISO certification, not third-party certification, and not a claim of true omni-language completion.
 
-#### Syntax Analysis  
+The Big Remaining Climb master ledger is [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md). It takes over after the penultimate Denali audit for language-depth coverage, formal IR semantics, edge-case expansion, source-preserving round-trip proof, public API/runtime stabilization, conformance tests, compatibility rules, and certification-grade evidence. Its first exact source-preserving slice, `npm run test:source-identity-probe`, is now release-shaped at 15 fixtures: 12 normalized `.ls` source/parser-owned-AST/IR identity checks and 3 expected diagnostics. The edge-case matrix expansion to 25 cases is sealed, the IR semantics v1 evidence map now accounts for all 32 current conformance fixtures, and the JS/.ls/Python/Lua bidirectionality layer map is report-backed. The next executable slice is a real new proof layer, preferably Lua structural IR reparse or a second normalized source-identity lane, before schema-valid conformance artifact mapping and release IR surface reconciliation. The no-release public API/runtime freeze candidate is prepared without bumping `0.1.0-beta.0`.
 
-- **Expression Parsing**: ✅ Complete
-- **Statement Parsing**: ✅ Complete
-- **Function Declaration Parsing**: ✅ Complete
-- **Control Flow Parsing**: ✅ Complete
-- **AST Generation**: ✅ Complete
-- **Syntax Error Reporting**: 🔄 Improvements in progress
+## Current Health
 
-#### Semantic Analysis
+- Core JavaScript to Lua transpilation is usable for small, focused programs.
+- `npm test` passes the current core/runtime baseline.
+- `npm run status:check` passes and protects this status-entrypoint contract.
+- `npm run test:ir-conformance` passes the scoped canonical IR conformance skeleton, value-semantics matrix, control-flow matrix, function/scope matrix, and data-structure matrix for current stable bridge emitters.
+- `npm run test:edge-matrix` passes the scoped 25-case manifest-driven edge-case matrix across value, control, scope, data, errors, target-specific behavior, and unsupported diagnostics.
+- `npm run test:unsupported-diagnostics` passes the named unsupported diagnostics certification gate.
+- `npm run test:roundtrip-probe` passes the narrow round-trip probe harness: JavaScript -> JavaScript, JavaScript -> `.ls`, `.ls` -> JavaScript, and Python -> Python structural IR reparse checks, plus JavaScript -> Python and Python -> JavaScript runtime-output equivalence checks; its report now carries the JavaScript/.ls/Python/Lua bidirectionality layer map without promoting broad source identity or semantic equivalence.
+- `npm run test:source-identity-probe` passes the release-shaped `.ls` source identity suite: 15/15 fixtures, 12 normalized source identity checks, 12 normalized parser-owned AST identity checks, 12 normalized IR identity checks, and 3 expected unsupported diagnostics; token-level identity, runtime-output equivalence, broad lossless recovery, and broad semantic equivalence remain separate/open tiers.
+- Durable conformance reports are now written under `artifacts/conformance/`: `canonical-ir-conformance-report.json`, `roundtrip-probe-report.json`, `source-identity-probe-report.json`, and `unsupported-diagnostics-report.json`.
+- `npm run verify` passes after baseline hardening.
+- `npm run clarity:dogfood` passes the live LUASCRIPT dogfood harness across actual programs, mirror samples, tier1 showcase fixtures, and the experimental mathematical showcase.
+- `npm run clarity:canon` passes the strict local canon gates; `npm run clarity:canon:super` isolates the scoped governed Super Canon parser/memory/JSON probes; stale report-era canon files remain archived as advisory history.
+- `npm run clarity:languages` validates the language-qualification manifest without promoting unsupported production claims. Direct runs can still rerun the underlying evidence scripts; strict canon shards use report-driven verification so the full canon and beta gates stay operational.
+- `npm run language:javascript:bidirectional`, `npm run language:typescript:bidirectional`, `npm run language:luascript:bidirectional`, `npm run language:lua:bidirectional`, `npm run language:python:bidirectional`, `npm run language:csharp:bidirectional`, `npm run language:c:bidirectional`, `npm run language:cpp:bidirectional`, `npm run language:java:bidirectional`, `npm run language:rust:bidirectional`, `npm run language:ruby:bidirectional`, `npm run language:php:bidirectional`, `npm run language:dart:bidirectional`, `npm run language:go:bidirectional`, `npm run language:kotlin:bidirectional`, `npm run language:elm:bidirectional`, and `npm run language:gleam:bidirectional` are the current strict native language completion gates for named slices under the bidirectionality contract. JavaScript is verified through its V1 Ring 2 medium-program slice plus targeted Ring 3 template/index-length/branch-depth footholds. LUASCRIPT `.ls` is verified through its V1 Ring 2 medium-program slice, its V0.16 meta-language slice, and a Ring 3 profiled portable-semantics slice for zero-based indexing, `.length`, and `.slice`. TypeScript is verified for its V0.25 typed-JS small-program slice; C#, C, C++, Java, Rust, Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam are verified only for their named small-program slices. These gates do not claim lossless source recovery, round-trip source identity, or complete semantic equivalence.
+- JavaScript / `.ls` parser-runtime parity work is now active inside the core bridge rather than only in legacy parity tests: plain template literals compile through `src/compilers/js-to-ir.js` and are exercised by strict `ring3_template_literal` fixtures in both bidirectional language lanes.
+- JavaScript source now also has a core-bridge foothold for zero-based computed indexing, index assignment, and `.length` on Lua output through strict `ring3_index_length` coverage. A separate JavaScript Ring 3 branch-depth foothold covers return-only `switch` statements plus conditional expressions through `ring3_switch_conditional`: native JavaScript and emitted Lua/JavaScript runtime checks pass, emitted `.ls` shape is conformance-checked without runtime promotion, Python switch emission remains a target diagnostic, and JavaScript `try/catch`, `throw`, `for-of`, rest parameters, and tagged template literals remain named unsupported diagnostics. LUASCRIPT `.ls` now matches a broader portable-semantics Ring 3 slice across native `.ls`, emitted Lua/JavaScript/Python, actual-program coverage, and dogfood: zero-based indexing, `.length`, `.slice`, JS truthiness, explicit string coercion, and packed multiple returns. `portable_semantics_v1` is now the implicit executable baseline for raw `.ls`, while explicit meta remains the way to declare profile choice, target deltas, repairs, and verification.
+- Emitted `.ls` target parity is now repaired on the core path for Lua input and the verified C#/C/C++ slices: Lua-source indexing is normalized onto zero-based `.ls`, while C-like helper-backed array access now preserves zero-based semantics without reintroducing one-based drift in the `.ls` target.
+- `npm run language:implemented:bidirectional` regenerates all implemented-lane reports for JavaScript, TypeScript, `.ls`, Lua, Python, C#, C, C++, Java, Rust, Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam, plus their target-runtime IR lanes where split manifests exist. `npm run beta:readiness` now passes across every implemented lane and enforces the scoped non-strict pre-production beta v0.1 rule: each implemented lane must have a fresh passing report above the 90% fixture threshold. `npm run beta:readiness:strict` additionally checks that the current strict-native blocker set remains closed. `npm run beta:preflight` and `npm run beta:full` both passed on 2026-06-19 and were refreshed green on 2026-07-14, and strict Clarity canon now validates its language-qualification shards from current reports instead of rerunning the entire matrix inside the canon path.
+- `npm run test:luascript-meta` verifies the `.ls` V0.16 meta-language slice: top-level `meta`, `repair`, and `verify` blocks, Lua/JavaScript/Python target policies, Lua target `continue` resolution, `requires`/`forbid` capability policy that constrains `goto` lowering and forbids prototype access across targets, semantic adapters and canonical repairs for zero-based indexing, `.length`, `.slice`, JS truthiness, string coercion, and packed multiple returns, emitted Python helpers for JS truthiness plus zero-based indexing/slicing/string coercion and packed multiple returns, embedded Lua/JavaScript/Python/`.ls` emission assertions, target-specific runtime stdout and runtime-failure assertions, Lua/JavaScript/Python policy presence/absence assertions, explicit and implicit profile assertions, identity-contract feature/profile/no-feature assertions, configured async diagnostics, unknown-policy diagnostics, and compile-time stripping from emitted Lua.
+- `npm run test:parser-ownership` passes and enforces that the active `.ls` compiler path consumes parser-owned artifacts and helper APIs instead of reintroducing simplified parser logic inside the transpiler.
+- `npm run test:lua-input` passes the Lua input V2.1 qualification gate across parser, lowering, Lua/JavaScript/`.ls`/Python emission, runtime execution, and unsupported diagnostics. Lua-source one-based table indexes now lower correctly to Python zero-based indexing for the named table/index slice.
+- `npm run language:python:bidirectional` now passes the Python V1.3 sequence-slice slice: bounded string/list slices execute across native Python and emitted Lua/JavaScript/`.ls`/Python, while slice steps and slice assignment remain explicit unsupported diagnostics.
+- `npm run claims:check` passes and verifies active mathematical notation and `.ls` claims against docs, package metadata, manifests, fixtures, runtime hooks, transpiler mappings, and conservative unsupported-feature boundaries.
+- `npm run stubs:check` passes with zero `must-fix` or `archive-candidate` findings; remaining findings are intentional runtime diagnostics.
+- `npm run refactor:lint` passes under the current enforced warning policy.
+- Examples integration passes with UTF-8 console settings for `hello`, `simple`, `simple_class`, `vector`, `supported_math_showcase`, `mathematical_notation_core`, and mathematical notation rehab V1 through V18.
+- `examples/mathematical_notation_core.ls` restores the executable mathematical-notation V0 slice: math function notation, Unicode arithmetic/comparison operators, `√`, superscript powers, constants, and subscript identifiers.
+- `examples/mathematical_notation_rehab_v1.ls` restores the executable mathematical-notation V1 slice: Unicode arrow lambdas, pipelines, ranges, `let ... in`, implicit multiplication, exponentiation, `mod`, and simple pattern branches.
+- `examples/mathematical_notation_rehab_v2.ls` and `examples/mathematical_notation_rehab_v3.ls` restore composition, operator sections, multiline mathematical blocks, tuple callbacks, tuple-object returns, set operators, default parameters, and bound symbolic identifiers.
+- `examples/mathematical_notation_rehab_v4.ls` restores the tested complex-number/FFT helper slice: unbound `i` as the imaginary unit, complex arithmetic, `magnitude`, `real_part`, runtime `fft`, runtime `inverse_fft`, and bare pipeline resolution for those helpers.
+- `examples/mathematical_notation_rehab_v5.ls` restores deterministic series/calculus helper checks for `∑`, `∏`, `∫`, `derivative`, and `lim`.
+- `examples/mathematical_notation_rehab_v6.ls` restores native symbolic binder forms such as `∑[n = 1..5](n²)`, including optional step/resolution and bound-index scoping for `i`.
+- `examples/mathematical_notation_rehab_v7.ls` restores braced math-native binder forms such as `∑_{n=1}^{5}(n²)` and `∫_{x=0}^{3, 800}(x²)`, including upper/lower order tolerance, pipeline callback use, and pattern-branch integration.
+- `examples/mathematical_notation_rehab_v8.ls` restores native derivative and limit binder forms such as `∂_{x=2}(x³)` and `lim_{n→∞}((1 + 1/n)^n)`, including optional derivative step size, pipeline callback use, and explicit diagnostics for unsupported limit start values.
+- `examples/mathematical_notation_rehab_v9.ls` restores definite integral shorthand such as `∫_{0}^{π}(sin(x)) dx`, including optional resolution, pipeline callback use, and explicit diagnostics when the differential is missing.
+- `examples/mathematical_notation_rehab_v10.ls` restores bare definite-integral bodies such as `∫_{0}^{π} sin(x) dx`, including implicit-multiplication bodies, pipeline callback use, and explicit diagnostics when a bare integral omits its differential.
+- `examples/mathematical_notation_rehab_v11.ls` restores executable physics/EE vector-calculus notation: dot product `·`, strict 3D cross product `⨯`, tensor/outer product `⊗`, vector helpers `norm`/`unit`, and numerical `∇`/`gradient`, `divergence`, and `curl` helpers with explicit dimensional diagnostics.
+- `examples/mathematical_notation_rehab_v12.ls` restores executable dimension-aware unit helpers and electrical-engineering phasor/impedance helpers: `meters`, `seconds`, `volts`, `amps`, `ohms`, `watts`, `unit_add`, `unit_div`, `unit_compatible`, `phasor`, `phase`, `impedance_R`, `impedance_L`, `impedance_C`, `series_impedance`, and `parallel_impedance`, with explicit incompatible-unit diagnostics.
+- `examples/mathematical_notation_rehab_v13.ls` restores operator-level unit arithmetic and matrix/linear physics helpers: `meters(2) + meters(3)`, `volts(12) / amps(2)`, `watts(24) * seconds(2)`, `matrix`, `transpose`, `matmul`, `matrix_vector`, `determinant2`, `solve2`, `identity`, `trace`, and `lorentz_force`, with explicit matrix-dimension and incompatible-unit diagnostics.
+- `examples/mathematical_notation_rehab_v14.ls` restores the first executable symbolic physics seed: `sym`, `symbolic_simplify`, `symbolic_evaluate`, `equation`, `solve_linear`, symbolic vector operators, and named physics/EE formula rendering for Newton's second law, Ohm's law, Lorentz force, Gauss electric law, Faraday, Ampere-Maxwell, and Poynting forms, with explicit unknown-formula diagnostics.
+- `examples/mathematical_notation_rehab_v15.ls` adds dimension-aware symbolic physics: `physics_dimensions`, dimensioned `sym`, symbolic dimension formatting/assertions, `solve_linear_system`, `solution_get`, and `solution_format` for a tested Ohm/power circuit system, with explicit incompatible symbolic-dimension diagnostics.
+- `examples/mathematical_notation_rehab_v16.ls` adds symbolic calculus and EE transfer-function support: `symbolic_derivative`, `symbolic_substitute`, `symbolic_sin`, symbolic RC/RL transfer functions, symbolic impedances, and voltage-divider helpers, with explicit unsupported symbolic-derivative function diagnostics.
+- `examples/mathematical_notation_rehab_v17.ls` adds executable EE frequency-response checks: `frequency_response`, `response_magnitude`, `response_db`, `response_phase`, RC/RL time constants and cutoff frequencies, RLC resonant frequency/Q/bandwidth, and symbolic series-RLC impedance, with explicit invalid-parameter diagnostics.
+- `examples/mathematical_notation_rehab_v18.ls` adds swept EE response analysis: `frequency_sweep`, `frequency_response_sweep`, magnitude/dB/phase column extraction, peak/trough/nearest response lookup, monotonic dB checks, and dB crossing estimation, with explicit sweep/crossing diagnostics.
+- `examples/experimental/mathematical_showcase.ls` remains experimental Unicode mathematical DSL design material, but now parses, emits Lua, and executes end to end under dogfood. This is not a broad full-DSL production claim.
 
-- **Variable Scope Resolution**: ✅ Complete (minor fixes in progress)
-- **Type Checking**: 🔄 Basic implementation, refinements ongoing
-- **Function Signature Validation**: ✅ Complete
-- **Undefined Variable Detection**: ✅ Complete
+## Language Support
 
-#### Runtime Engine
+- Practical V0.16/V1 Ring 2 verified: JavaScript input and LUASCRIPT `.ls` JS-like input plus the `.ls` V0.16 meta layer, limited to the documented medium-program and meta-policy slices. JavaScript also has targeted Ring 3 template, index/length, and switch/conditional-expression footholds. TypeScript is partial V0.25 verified for typed-JS small programs.
+- Verified actual-program fixtures now cover arithmetic, functions, conditionals, `while`, `for...of`, array runtime methods, class smoke, the supported JS-like math showcase, mathematical notation core V0, and mathematical notation rehab V1 through V18.
+- Bidirectional Ring 2 fixtures now cover lexical closure state, nested object state, nested loops, loop `break`/`continue`, and short-circuit side-effect behavior across native and emitted Lua/JavaScript/`.ls`; targeted JavaScript Ring 3 fixtures add template literals, index/length, and switch/conditional-expression footholds without broad JavaScript promotion. The canonical conformance control-flow and function/scope matrices separately verify emitted JavaScript/Lua/Python/`.ls` snippets plus JavaScript/Python native and emitted runtime behavior for the scoped slices.
+- LuaScript `.ls` V0.16 meta fixtures now cover no-meta compatibility, embedded stdout/diagnostic/Lua/JavaScript/Python/`.ls` emission verification, target-specific runtime stdout verification, target-specific runtime failure verification, Lua/JavaScript/Python policy presence/absence verification, cross-target policy extraction and `.ls` re-emission, Lua `continue` via label/goto, JavaScript/Python native-continue policy metadata, Python target `adapt truthiness using js_truthy`, `adapt indexing using zero_based`, `adapt length using array_length_property`, `adapt slicing using runtime_slice`, `adapt string_coercion using explicit_tostring`, and `adapt multiple_returns using packed_array` runtime behavior, `requires lua.goto`, `requires js.console`, `requires python.print`, `forbid lua.goto`, `forbid js.prototype`, `forbid python.imports`, semantic adapters and canonical repairs for zero-based indexing, `.length`, `.slice`, JS truthiness, string coercion, and packed multiple returns, the `meta_identity_contract_portable_slice.ls` feature/profile/no-feature identity contract, configured async diagnostics, and unknown target/resolver/strategy/adapter/repair failures.
+- Partial verified: Lua input V2.1, Python V1.3, C# V0.5, C V0.3, and C++ V0.4, limited to their documented small-program slices. Lua V2.1 adds emitted-Python runtime coverage for one-based table indexing, length, `ipairs`, and the current named small-program slice; Python V1.3 adds bounded sequence slices while slice steps and slice assignment stay unsupported. C V0.3 adds narrow scalar-field struct support. C++ V0.4 adds public-field records plus simple public constructors and instance methods lowered to canonical IR functions.
+- Java has a V0.6 target-runtime lane and a narrow native V1 gate: `npm run language:java:ir-targets` lowers single-class static-method Java fixtures, primitive arrays, indexed reads/writes, enhanced `for`, boolean flow, `break`/`continue`, `.length`, `String.length()`, `String.charAt`, `Math.*`, and `System.out` through canonical IR and executes emitted Lua/JavaScript/`.ls`/Python/C#; `npm run language:java:bidirectional` now compiles with `javac`, executes with `java`, and passes its native fixture slice.
+- Go has a V0.25 target-runtime lane and a narrow native V0.25 gate: `npm run language:go:ir-targets` lowers package-level functions, typed parameters/returns, `var` and `:=` locals, primitive arrays, `range` over arrays, conditionals, while-style `for`, numeric `for`, `break`/`continue`, simple structs, field access/mutation, `fmt.Println`, `len`, and `math.Sqrt` through canonical IR and executes emitted Lua/JavaScript/`.ls`/Python/C#; `npm run language:go:bidirectional` now executes the same fixture slice with Go 1.26 and passes its native fixture report.
+- Rust has a V0.25 target-runtime lane and a narrow native V0.25 gate: `npm run language:rust:ir-targets` lowers free functions, typed parameters/returns, `let`/`mut` locals, primitive arrays, array iteration, numeric ranges, conditionals, `while`, `break`/`continue`, simple structs, field access/mutation, `println!`, `.len()`, and float `.sqrt()` through canonical IR and executes emitted Lua/JavaScript/`.ls`/Python/C#; `npm run language:rust:bidirectional` now compiles with `rustc`, executes native Rust fixtures, and passes its native fixture slice.
+- Kotlin has a V0.25 target-runtime lane and a narrow native V0.25 gate: `npm run language:kotlin:ir-targets` lowers free functions, typed parameters/returns, `val`/`var` locals, primitive arrays, array iteration, numeric ranges, conditionals, `while`, `break`/`continue`, data-class record fields, field access/mutation, `println`, `.size`/`.length`, and `Math.*` through canonical IR and executes emitted Lua/JavaScript/`.ls`/Python/C#; `npm run language:kotlin:bidirectional` now compiles the same fixture slice with `kotlinc`, runs it on Java, and passes its native fixture report.
+- PHP has a V0.6 target-runtime lane and a narrow native V0.6 gate: `npm run language:php:ir-targets` lowers function-oriented PHP fixtures, numeric arrays, simple associative arrays with string identifier keys, indexed reads/writes, boolean flow, `break`/`continue`, `strlen`, `for`, variable-backed `foreach`, `count`, math calls, and `echo`/`print` through canonical IR and executes emitted Lua/JavaScript/`.ls`/Python/C#; `npm run language:php:bidirectional` now executes the same fixture slice with PHP 8.5 and passes its native fixture report.
+- Ruby has a V0.6 target-runtime lane and a narrow native V0.6 gate: `npm run language:ruby:ir-targets` lowers method-oriented Ruby fixtures, simple arrays/hashes, hash mutation, inclusive numeric ranges, boolean flow, `break`/`next`, string indexing/length, indexed reads/writes, `length`/`size`, math calls, and `puts` through canonical IR and executes emitted Lua/JavaScript/`.ls`/Python/C#; `npm run language:ruby:bidirectional` now executes the same fixture slice with Ruby 3.4 and passes its native fixture report.
+- Dart has a V0.6 target-runtime lane and a narrow native V0.6 gate: `npm run language:dart:ir-targets` lowers top-level Dart fixtures, typed lists, indexed reads/writes, `for`, simple `for ... in`, boolean flow, `break`/`continue`, string length/indexing, math calls, and `print` through canonical IR and executes emitted Lua/JavaScript/`.ls`/Python/C#; `npm run language:dart:bidirectional` now executes the same fixture slice with Dart 3.12 and passes its native fixture report.
+- Elm has a V0.6 target-runtime lane and a narrow native V0.6 gate: `npm run language:elm:ir-targets` lowers expression-oriented top-level Elm definitions, boolean/comparison expressions including `||` and `&&`, unary `not`, nested calls, single-line `let ... in`, literal list access, literal/top-level-constant `length`, string concatenation with `++`, and `print` through canonical IR and executes emitted Lua/JavaScript/`.ls`/Python/C#; `npm run language:elm:bidirectional` now compiles the same fixture slice with `elm make`, executes the generated worker under Node, and passes its native fixture report.
+- Gleam has a V0.6 target-runtime lane and a narrow native V0.6 gate: `npm run language:gleam:ir-targets` lowers simple top-level Gleam `fn` fixtures, `let`, expression returns, conditionals, boolean/comparison expressions including `||` and `&&`, nested calls, list helper calls, local-constant `list_length`/`string_length`, and `print` through canonical IR and executes emitted Lua/JavaScript/`.ls`/Python/C#; `npm run language:gleam:bidirectional` now runs the same fixture slice with `gleam run` and passes its native fixture report.
+- Experimental: PHP, Dart, Go, Kotlin, Elm, and Gleam, plus broader Ruby/Java/Rust/C#/C/C++ beyond the verified slices.
+- Pre-production beta v0.1 readiness is evidence-based and non-strict: implemented lanes may be above the 90% beta-readiness threshold and the beta acceptance sweeps may pass while still not being full-language complete.
+- Not verified as production-ready: any language path without parser, transpiler, emitted-output, runtime, and integration coverage.
 
-- **Expression Evaluation**: ✅ Complete
-- **Statement Execution**: ✅ Complete
-- **Function Call Mechanism**: ✅ Complete
-- **Variable Environment**: ✅ Complete (optimization in progress)
-- **Memory Management**: ✅ Stabilized (string heap tracking deployed; cross-platform sign-off complete)
-- **Error Handling**: ✅ Framework complete, coverage expanding
+## Next Source
 
-### Data Types
+Use [docs/INDEX.md](docs/INDEX.md) as the active-docs map. Use [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md) as the exact scoped beta release-seal artifact. Use [docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md](docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md) for the beta expedition guidance, [docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md](docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md) for the post-beta 1.0 route, [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md) for source-preserving/certification-grade remaining climb planning, [docs/LUASCRIPT_1_0_EXIT_CRITERIA.md](docs/LUASCRIPT_1_0_EXIT_CRITERIA.md) for measurable 1.0 exit criteria, [docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md) for bidirectional claim levels, [docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md) for language depth accession rules, [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md) for public API/runtime expectations, [docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md) for certification-style evidence organization, [docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md) for the release-shaped conformance evidence bundle map, and [docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md](docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md) for the current canonical IR semantics inventory. Use [docs/LUASCRIPT_MEGA_PLAN.md](docs/LUASCRIPT_MEGA_PLAN.md) for the active roadmap, blocker list, archived-plan summary, and language-tier definitions. Use [docs/quick-start/README.md](docs/quick-start/README.md), [docs/architecture/README.md](docs/architecture/README.md), and [docs/reference/README.md](docs/reference/README.md) for the current package/runtime and support-boundary docs. Use `npm run clarity:dogfood`, `npm run clarity:canon`, `npm run clarity:canon:super`, and `npm run clarity:languages` for Clarity Canon evidence. Historical plans and reports should be treated as archive evidence only.
 
-#### Primitive Types
+Use [docs/LANGUAGE_COMPLETION_RULES.md](docs/LANGUAGE_COMPLETION_RULES.md) for the definition of slice-based "100%" language completion.
 
-- **Numbers (Integer)**: ✅ Complete
-- **Numbers (Float)**: ✅ Complete
-- **Strings**: ✅ Complete (leak mitigation released; cross-platform sign-off recorded)
-- **Booleans**: ✅ Complete
-- **Nil/Null**: ✅ Complete
+Use `npm run beta:preflight` for the focused pre-production beta v0.1 gate, and `npm run beta:full` for the full local acceptance sweep across implemented languages, beta readiness, dogfood, canon, language qualification, actual programs, status, stubs, claims, verify, and `npm test`.
 
-#### Composite Types
+## Beta Quick Start
 
-- **Tables/Arrays**: ⏳ Planned for Week 6
-- **Objects**: ⏳ Planned for Week 7
-- **Functions as First-Class**: ✅ Complete
+Run this compact path for the scoped non-strict beta handoff:
 
-### Control Flow
+```bash
+npm install
+npm run beta:readiness
+npm run beta:preflight
+npm run beta:full
+```
 
-#### Conditional Statements
+Use small JavaScript or `.ls` programs, `tests/actual_programs/fixtures/`, and `examples/supported_math_showcase.ls` as first validation targets. Avoid broad multi-language demos and full Unicode DSL claims as beta proof unless a current gate names and verifies that slice.
 
-- **If Statements**: ✅ Complete
-- **If-Else Statements**: ✅ Complete
-- **Nested Conditionals**: ✅ Complete
-- **Ternary Operator**: ⏳ Planned for Week 6
+For the first canonical `1.0` pass, keep the example boundary map narrow: small JavaScript V1 Ring 2 programs, small `.ls` V0.16 meta/executable programs, actual-program fixtures, `examples/supported_math_showcase.ls`, and mathematical notation core/rehab V1 through V18. Broad multi-language demos, unsupported `.ls` profiles, and full Unicode DSL material remain out of first-pass examples until they have a manifest, runtime gate, docs boundary, and claims check.
 
-#### Loops
+## Operational Stub Policy
 
-- **While Loops**: ✅ Complete
-- **For Loops**: ✅ Complete
-- **Break/Continue**: ✅ Complete
-- **Nested Loops**: ✅ Complete (edge case fixes in progress)
-
-#### Functions
-
-- **Function Definition**: ✅ Complete
-- **Function Calls**: ✅ Complete
-- **Parameter Passing**: ✅ Complete
-- **Return Values**: ✅ Complete
-- **Local Functions**: ✅ Complete
-- **Closures**: 🔄 Basic implementation, refinements in progress
-- **Recursion**: ✅ Complete (stack overflow fixes in progress)
-
-### Standard Library
-
-#### Core Functions
-
-- **print()**: ✅ Complete
-- **type()**: ✅ Complete
-- **tostring()**: ✅ Complete
-- **tonumber()**: ✅ Complete
-
-#### String Functions
-
-- **String concatenation**: ✅ Complete (leak mitigation released; regression tests added)
-- **String length**: ✅ Complete
-- **String indexing**: ⏳ Planned for Week 6
-
-#### Math Functions
-
-- **Basic arithmetic**: ✅ Complete
-- **Math library**: ⏳ Planned for Week 6
-
-### Testing Infrastructure
-
-#### Test Framework
-
-- **Unit Test Framework**: ✅ Complete
-- **Test Runner**: ✅ Complete
-- **Assertion Library**: ✅ Complete
-- **Test Reporting**: ✅ Complete
-
-#### Test Coverage
-
-- **Lexer Tests**: ✅ Complete
-- **Parser Tests**: ✅ Complete (flaky test fixes in progress)
-- **Interpreter Tests**: ✅ Complete
-- **Integration Tests**: 🔄 Expanding coverage
-- **Performance Tests**: ✅ Complete (stability improvements in progress)
-- **Runtime Regression Tests**: ✅ New leak/recursion coverage in `tests/test_memory_management.js`
-
-### Performance and Optimization
-
-#### Benchmarking
-
-- **Benchmark Framework**: ✅ Complete
-- **Performance Metrics**: ✅ Complete
-- **Regression Testing**: 🔄 Implementation in progress
-- **Performance Profiling**: 🔄 Validation in progress
-
-#### Optimization
-
-- **Basic Optimizations**: ✅ Complete
-- **Memory Usage**: 🔄 Optimization in progress
-- **Execution Speed**: ✅ Baseline established, improvements ongoing
-
-### Documentation
-
-#### User Documentation
-
-- **README.md**: ✅ Updated for Week 5
-- **Installation Guide**: 🔄 In progress
-- **Getting Started Tutorial**: 🔄 In progress
-- **Language Reference**: 🔄 In progress
-
-#### Developer Documentation
-
-- **API Documentation**: 🔄 In progress
-- **Architecture Overview**: ⏳ Planned
-- **Contributing Guidelines**: ⏳ Planned
-
-#### Project Management
-
-- **TODO.md**: ✅ Updated for Week 5 (Phase 1A tickets tracked in [`docs/PHASE1A_RUNTIME_TICKETS.md`](docs/PHASE1A_RUNTIME_TICKETS.md))
-- **PROJECT_STATUS.md**: ✅ Updated for Week 5
-- **Standup Addendum**: ✅ Available in [`docs/PHASE1A_STANDUP_CHECKLIST.md`](docs/PHASE1A_STANDUP_CHECKLIST.md)
-- **Change Log**: ⏳ Planned
-
-## Current Issues and Fixes
-
-### Critical Issues (Phase 1A)
-
-1. **Memory Leaks**: ✅ Mitigated via string heap tracking — cross-platform validation complete
-2. **Stack Overflows**: ✅ Guardrails deployed (configurable depth limit) — monitor under stress tests
-3. **Cross-Platform**: ✅ Linux/Windows/macOS validation complete (see `docs/CROSS_PLATFORM_VALIDATION.md`)
-
-### Documentation Issues (Phase 1B)
-
-1. **API Accuracy**: Function signatures need documentation
-2. **Usage Examples**: Missing practical examples
-3. **Installation**: No clear installation instructions
-
-### Testing Issues (Phase 1C)
-
-1. **Flaky Tests**: Parser tests occasionally fail
-2. **Test Coverage**: Missing edge case coverage
-3. **CI/CD**: No automated testing pipeline
-
-### Performance Issues (Phase 1D)
-
-1. **Benchmark Validation**: Need to verify claimed performance
-2. **Memory Profiling**: Memory usage patterns need analysis
-3. **Load Testing**: Performance under stress needs validation
-
-### Architectural Gaps (Transpiler)
-
-1. **Canonical IR Missing**: Current transpilers (`src/transpiler.js`, `src/enhanced_transpiler.js`, `src/optimized_transpiler.js`, `src/core_transpiler.js`) perform regex/string transformations with no canonical intermediate representation, blocking multi-backend support and reliable optimization. Track remediation via [`reports/canonical_ir_status.md`](reports/canonical_ir_status.md). Progress as of Oct 12, 2025: canonical IR spec drafted (`docs/canonical_ir_spec.md`), initial `src/ir/` scaffolding implemented with balanced ternary identifiers, and unit tests added (`tests/ir/builder.test.js`).
-
-## Success Metrics
-
-### Week 5 Phase 1A-1D Goals
-
-- **Phase 1A**: Zero critical runtime issues *(runtime fixes merged, cross-platform validation complete)*
-- **Phase 1B**: 100% accurate documentation *(runtime stabilization docs complete; API/user docs ongoing)*
-- **Phase 1C**: 95%+ test reliability *(new regression tests added; CI wiring pending)*
-- **Phase 1D**: Validated performance claims *(re-run benchmarks after cross-platform sign-off)*
-
-### Overall Project Health
-
-- **Code Quality**: High (ongoing improvements)
-- **Test Coverage**: 85% (target: 90%)
-- **Documentation Coverage**: 60% (target: 90%)
-- **Performance**: Meeting baseline targets
-
-## Risk Assessment
-
-### Low Risk
-
-- Core language features are stable
-- Basic functionality is well-tested
-- Architecture is sound
-
-### Medium Risk
-
-- Cross-platform compatibility needs attention
-- Memory management requires optimization
-- Documentation gaps need filling
-
-### High Risk
-
-- None currently identified
-
-## Next Steps
-
-### Immediate (Week 5)
-
-1. Capture roll-up + benchmarks post validation (see `reports/cross_platform/PHASE1A-rollup.md`)
-2. Track Phase 1A tickets to closure via `docs/PHASE1A_RUNTIME_TICKETS.md`
-3. Integrate standup checklist (`docs/PHASE1A_STANDUP_CHECKLIST.md`) into daily rhythm and escalate blockers <24h
-4. Re-run performance benchmarks post-validation and document outcomes
-
-### Short Term (Week 6-8)
-
-1. Implement table/array data structures (design runway in [`docs/WEEK6_RUNWAY_PREP.md`](docs/WEEK6_RUNWAY_PREP.md))
-2. Add object-oriented programming support
-3. Create comprehensive user documentation
-4. Set up CI/CD pipeline (leverage new regression suites)
-
-### Long Term (Week 9+)
-
-1. Advanced language features (async, modules)
-2. JIT compilation
-3. IDE tooling support
-4. Community building
-
----
-
-**Legend**:
-
-- ✅ Complete
-- 🔄 In Progress  
-- ⏳ Planned
-- ❌ Blocked/Issues
-
-**Confidence Level**: High for completed features, Medium for in-progress items
-**Last Review**: Week 5 Start
-**Next Review**: Week 5 Mid-point
+Active source, scripts, tests, examples, mirror fixtures, and status docs must not contain fake implementation bodies, synthetic pass counts, or report-only completion claims. `npm run stubs:check` enforces this by failing on `must-fix` stubs while allowing explicit unsupported-feature diagnostics that are honest about unsupported syntax.

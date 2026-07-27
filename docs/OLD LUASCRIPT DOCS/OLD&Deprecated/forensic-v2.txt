@@ -1,0 +1,219 @@
+======================================================================
+FORENSIC DEBUG: Try-Catch-Finally IR Validation
+======================================================================
+
+≡ƒôï Test Source:
+  try { doSomething(); } catch (err) { log(err); } finally { cleanup(); }
+
+≡ƒöì Step 1: Parsing and lowering...
+Parsing statement, current token: { type: 'KEYWORD', value: 'try', line: 1, column: 1, position: 3 }
+Parsing statement, current token: {
+  type: 'IDENTIFIER',
+  value: 'doSomething',
+  line: 1,
+  column: 7,
+  position: 17
+}
+Parsing statement, current token: { type: 'IDENTIFIER', value: 'log', line: 1, column: 38, position: 40 }
+Parsing statement, current token: {
+  type: 'IDENTIFIER',
+  value: 'cleanup',
+  line: 1,
+  column: 60,
+  position: 66
+}
+
+≡ƒôè IR Structure:
+{
+  schemaVersion: [32m'1.0.0'[39m,
+  module: {
+    body: [
+      [32m'node_1TT1'[39m
+    ],
+    metadata: {
+      metaPerf: {
+        parseMs: [33m9.9279[39m,
+        normalizeMs: [33m1.2272[39m,
+        lowerMs: [33m3.2844[39m,
+        totalMs: [33m15.4768[39m,
+        nodeCount: [33m17[39m
+      }
+    },
+    source: {
+      path: [1mnull[22m,
+      hash: [1mnull[22m
+    },
+    directives: [],
+    toolchain: {
+      parser: [32m'phase1_core_parser@1.0.0'[39m,
+      normalizer: [32m'ir-normalizer@1.0.0'[39m,
+      lowerer: [32m'ir-lowerer@1.0.0'[39m
+    },
+    schemaVersion: [32m'1.0.0'[39m,
+    id: [32m'node_1T0T'[39m
+  },
+  nodes: {
+    node_0: Identifier {
+      kind: [32m'Identifier'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      name: [32m'doSomething'[39m,
+      id: [32m'node_0'[39m
+    },
+    node_1: Call {
+      kind: [32m'CallExpression'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      callee: [32m'node_0'[39m,
+      args: [],
+      optional: [33mfalse[39m,
+      id: [32m'node_1'[39m
+    },
+    node_1T: ExpressionStmt {
+      kind: [32m'ExpressionStatement'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      expression: [32m'node_1'[39m,
+      id: [32m'node_1T'[39m
+    },
+    node_10: Block {
+      kind: [32m'BlockStatement'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      statements: [
+        [32m'node_1T'[39m
+      ],
+      id: [32m'node_10'[39m
+    },
+    node_11: Identifier {
+      kind: [32m'Identifier'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      name: [32m'err'[39m,
+      id: [32m'node_11'[39m
+    },
+    node_1TT: Identifier {
+      kind: [32m'Identifier'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      name: [32m'log'[39m,
+      id: [32m'node_1TT'[39m
+    },
+    node_1T0: Identifier {
+      kind: [32m'Identifier'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      name: [32m'err'[39m,
+      id: [32m'node_1T0'[39m
+    },
+    node_1T1: Call {
+      kind: [32m'CallExpression'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      callee: [32m'node_1TT'[39m,
+      args: [
+        [32m'node_1T0'[39m
+      ],
+      optional: [33mfalse[39m,
+      id: [32m'node_1T1'[39m
+    },
+    node_10T: ExpressionStmt {
+      kind: [32m'ExpressionStatement'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      expression: [32m'node_1T1'[39m,
+      id: [32m'node_10T'[39m
+    },
+    node_100: Block {
+      kind: [32m'BlockStatement'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      statements: [
+        [32m'node_10T'[39m
+      ],
+      id: [32m'node_100'[39m
+    },
+    node_101: CatchClause {
+      kind: [32m'CatchClause'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      param: [32m'node_11'[39m,
+      body: [32m'node_100'[39m,
+      id: [32m'node_101'[39m
+    },
+    node_11T: Identifier {
+      kind: [32m'Identifier'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      name: [32m'cleanup'[39m,
+      id: [32m'node_11T'[39m
+    },
+    node_110: Call {
+      kind: [32m'CallExpression'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      callee: [32m'node_11T'[39m,
+      args: [],
+      optional: [33mfalse[39m,
+      id: [32m'node_110'[39m
+    },
+    node_111: ExpressionStmt {
+      kind: [32m'ExpressionStatement'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      expression: [32m'node_110'[39m,
+      id: [32m'node_111'[39m
+    },
+    node_1TTT: Block {
+      kind: [32m'BlockStatement'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      statements: [
+        [32m'node_111'[39m
+      ],
+      id: [32m'node_1TTT'[39m
+    },
+    node_1TT0: FinallyClause {
+      kind: [32m'FinallyClause'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      body: [32m'node_1TTT'[39m,
+      id: [32m'node_1TT0'[39m
+    },
+    node_1TT1: TryStatement {
+      kind: [32m'TryStatement'[39m,
+      loc: [1mnull[22m,
+      metadata: {},
+      block: [32m'node_10'[39m,
+      handler: [32m'node_101'[39m,
+      finalizer: [32m'node_1TT0'[39m,
+      id: [32m'node_1TT1'[39m
+    }
+  },
+  controlFlowGraphs: {}
+}
+
+≡ƒº¬ Step 2: Validating IR...
+
+Γ£ô Validation result: {"ok":true,"errors":[]}
+
+Γ£à Validation PASSED
+
+≡ƒöä Step 3: Emitting Lua...
+
+Γ¥î ERROR OCCURRED:
+  Type: Error
+  Message: Expected BlockStatement for id node_1TT0
+  Stack: Error: Expected BlockStatement for id node_1TT0
+    at IREmitter.emitBlockById (C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\ir\emitter.js:552:13)
+    at IREmitter.emitFinallySection (C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\ir\emitter.js:238:17)
+    at IREmitter.emitTryStatement (C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\ir\emitter.js:185:14)
+    at TryStatement (C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\ir\emitter.js:51:45)
+    at IREmitter.emitStatement (C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\ir\emitter.js:126:14)
+    at IREmitter.emit (C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\ir\emitter.js:76:28)
+    at emitLuaFromIR (C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\src\ir\emitter.js:1086:18)
+    at Object.<anonymous> (C:\Users\ssdaj\LUASCRIPT\LUASCRIPT\forensic-try-catch.js:40:15)
+    at Module._compile (node:internal/modules/cjs/loader:1760:14)
+    at Object..js (node:internal/modules/cjs/loader:1893:10)
+
+======================================================================

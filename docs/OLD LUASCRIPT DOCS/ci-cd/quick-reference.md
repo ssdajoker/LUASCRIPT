@@ -1,0 +1,117 @@
+﻿# CI/CD Quick Reference
+**Status**: ACTIVE  
+**Phase**: Current  
+**Last updated**: 2025-12-19  
+**Related**: docs/ci-cd/README.md  
+**Sources**: CI_CD_QUICK_REF.md (canonical); CI_CD_QUICK_REFERENCE.md deprecated
+
+---# Quick CI/CD Reference
+
+## Local Development Workflow
+
+### Before creating a PR:
+
+```bash
+# Verify locally (fast - ~30-60s)
+npm run verify
+
+# Check lint (warning-only, won't fail build)
+npm run lint
+```
+
+### Create PR and let CI do the rest:
+
+```bash
+# Create branch
+git checkout -b fix/issue-number
+
+# Make changes
+git add .
+git commit -m "fix: issue description"
+
+# Push and create PR (auto-triggers CI)
+gh pr create --base main
+
+# CI runs automatically
+# â†’ When approved: auto-merge â†’ done
+```
+
+---
+
+## Available Commands
+
+| Command | What it does | Blocks? |
+|---------|-------------|---------|
+| `npm run verify` | Harness + IR validation + parity + determinism | âœ… Yes (blocking) |
+| `npm run lint` | ESLint all code (max 200 warnings) | âŒ No (warnings only) |
+| `npm test` | Core + Phase1 tests | âœ… Yes |
+| `npm run harness` | IR harness tests | âœ… Yes |
+| `npm run test:parity` | Parity verification | âœ… Yes |
+
+---
+
+## CI Gate Flow
+
+```
+Push PR
+  â†“
+CI starts (node 18 + node 20)
+  â”œâ”€ npm run verify âœ… (fast)
+  â””â”€ npm run lint âš ï¸ (warning-only)
+  â†“
+Test results uploaded
+  â†“
+You review + approve in VS Code
+  â†“
+Auto-merge triggers
+  â”œâ”€ Check CI passed? âœ…
+  â”œâ”€ Check approved? âœ…
+  â””â”€ Squash merge â†’ main
+  â†“
+PR closed âœ¨
+```
+
+---
+
+## Common Issues
+
+### "CI passed but won't auto-merge"
+- Ensure PR is approved (1+ review)
+- Check branch is up to date: `git fetch origin main && git rebase`
+
+### "Lint is too strict"
+- Currently allows 200 warnings (temporary)
+- Status: Phase 1/4 backlog cleanup
+- Track progress: `npm run lint | tail -1`
+
+### "Want to manually trigger CI"
+- Re-push to branch: `git commit --allow-empty && git push`
+- Or use: `gh workflow run ci-lean.yml --ref feature-branch`
+
+---
+
+## Lint Backlog Phases
+
+| When | Max Warnings | Status |
+|------|------------|--------|
+| Now  | 200 | ðŸ”´ Codex/team cleanup |
+| 1-2w | 100 | ðŸŸ¡ Phase 2 |
+| 3-4w | 50  | ðŸŸ¡ Phase 3 |
+| 4-6w | 0   | ðŸŸ¢ Production ready |
+
+---
+
+## Need Help?
+
+- **CI failed?** â†’ `gh run view <RUN_ID> --log`
+- **Check PR status?** â†’ `gh pr view`
+- **Download test results?** â†’ `gh run download <RUN_ID>`
+- **Manual merge?** â†’ `gh pr merge --squash`
+
+---
+
+See **[CI_CD_LEAN_SETUP.md](CI_CD_LEAN_SETUP.md)** for detailed setup guide.
+
+---
+See also: CI_CD_QUICK_REFERENCE.md (deprecated in favor of this quick reference).
+

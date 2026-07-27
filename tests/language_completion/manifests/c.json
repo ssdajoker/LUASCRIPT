@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "language": "c",
+  "status": "qualified",
+  "supportSlice": "c-v0.3-record-small-programs",
+  "runtime": "c",
+  "targets": ["lua", "javascript", "luascript", "c", "cpp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_locals",
+      "source": "tests/language_completion/fixtures/c/arithmetic_locals.c",
+      "expectedOutput": "c_arithmetic 5 15"
+    },
+    {
+      "name": "functions_conditionals",
+      "source": "tests/language_completion/fixtures/c/functions_conditionals.c",
+      "expectedOutput": "c_branch big 7"
+    },
+    {
+      "name": "while_loop",
+      "source": "tests/language_completion/fixtures/c/while_loop.c",
+      "expectedOutput": "c_while 6"
+    },
+    {
+      "name": "numeric_for",
+      "source": "tests/language_completion/fixtures/c/numeric_for.c",
+      "expectedOutput": "c_for 10"
+    },
+    {
+      "name": "array_indexing",
+      "source": "tests/language_completion/fixtures/c/array_indexing.c",
+      "expectedOutput": "c_array 8 4"
+    },
+    {
+      "name": "boolean_logic",
+      "source": "tests/language_completion/fixtures/c/boolean_logic.c",
+      "expectedOutput": "c_bool ready"
+    },
+    {
+      "name": "break_continue",
+      "source": "tests/language_completion/fixtures/c/break_continue.c",
+      "expectedOutput": "c_break_continue 12"
+    },
+    {
+      "name": "math_calls",
+      "source": "tests/language_completion/fixtures/c/math_calls.c",
+      "expectedOutput": "c_math 9 -4 4"
+    },
+    {
+      "name": "array_parameter_function",
+      "source": "tests/language_completion/fixtures/c/array_parameter_function.c",
+      "expectedOutput": "c_array_fn 10"
+    },
+    {
+      "name": "sizeof_array",
+      "source": "tests/language_completion/fixtures/c/sizeof_array.c",
+      "expectedOutput": "c_sizeof 4 8"
+    },
+    {
+      "name": "string_len_index",
+      "source": "tests/language_completion/fixtures/c/string_len_index.c",
+      "expectedOutput": "c_string ok 4"
+    },
+    {
+      "name": "struct_fields",
+      "source": "tests/language_completion/fixtures/c/struct_fields.c",
+      "expectedOutput": "c_struct 4 32"
+    },
+    {
+      "name": "struct_return",
+      "source": "tests/language_completion/fixtures/c/struct_return.c",
+      "expectedOutput": "c_struct_return 5 7"
+    },
+    {
+      "name": "canonical_js_arithmetic_to_c",
+      "sourceLanguage": "javascript",
+      "source": "tests/language_completion/fixtures/javascript/arithmetic_locals.js",
+      "targets": ["c"],
+      "expectedOutput": "js_arithmetic 5 15"
+    },
+    {
+      "name": "canonical_luascript_arithmetic_to_c",
+      "sourceLanguage": "luascript",
+      "source": "tests/language_completion/fixtures/luascript/arithmetic_locals.ls",
+      "targets": ["c"],
+      "expectedOutput": "ls_arithmetic 5 15"
+    },
+    {
+      "name": "unsupported_pointer",
+      "source": "tests/language_completion/fixtures/c/unsupported_pointer.c",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C input feature: pointer"
+    },
+    {
+      "name": "unsupported_struct",
+      "source": "tests/language_completion/fixtures/c/unsupported_struct.c",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C input feature: struct array fields"
+    },
+    {
+      "name": "unsupported_macro",
+      "source": "tests/language_completion/fixtures/c/unsupported_macro.c",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C input feature: preprocessor macros"
+    },
+    {
+      "name": "unsupported_switch",
+      "source": "tests/language_completion/fixtures/c/unsupported_switch.c",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C input feature: switch statements"
+    },
+    {
+      "name": "unsupported_malloc",
+      "source": "tests/language_completion/fixtures/c/unsupported_malloc.c",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C input feature: manual memory management"
+    }
+  ]
+}
