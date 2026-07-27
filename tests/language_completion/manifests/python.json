@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "language": "python",
+  "status": "qualified",
+  "supportSlice": "python-v1.3-sequence-slices-small-programs",
+  "runtime": "python",
+  "targets": ["lua", "javascript", "luascript", "python"],
+  "fixtures": [
+    {
+      "name": "arithmetic_locals",
+      "source": "tests/language_completion/fixtures/python/arithmetic_locals.py",
+      "expectedOutput": "py_arithmetic 5 15"
+    },
+    {
+      "name": "functions_conditionals",
+      "source": "tests/language_completion/fixtures/python/functions_conditionals.py",
+      "expectedOutput": "py_branch big equal small"
+    },
+    {
+      "name": "while_loop",
+      "source": "tests/language_completion/fixtures/python/while_loop.py",
+      "expectedOutput": "py_while 6"
+    },
+    {
+      "name": "numeric_for_range",
+      "source": "tests/language_completion/fixtures/python/numeric_for_range.py",
+      "expectedOutput": "py_for 10"
+    },
+    {
+      "name": "lists_and_dicts",
+      "source": "tests/language_completion/fixtures/python/lists_and_dicts.py",
+      "expectedOutput": "py_data Ada 7"
+    },
+    {
+      "name": "nested_medium_program",
+      "source": "tests/language_completion/fixtures/python/nested_medium_program.py",
+      "expectedOutput": "py_medium 12"
+    },
+    {
+      "name": "boolean_logic",
+      "source": "tests/language_completion/fixtures/python/boolean_logic.py",
+      "expectedOutput": "py_bool ready"
+    },
+    {
+      "name": "tuple_assignment",
+      "source": "tests/language_completion/fixtures/python/tuple_assignment.py",
+      "expectedOutput": "py_tuple 6 4"
+    },
+    {
+      "name": "for_item_in_list_and_len",
+      "source": "tests/language_completion/fixtures/python/for_item_in_list_and_len.py",
+      "expectedOutput": "py_for_list 9 3"
+    },
+    {
+      "name": "negative_step_range",
+      "source": "tests/language_completion/fixtures/python/negative_step_range.py",
+      "expectedOutput": "py_range_step 9"
+    },
+    {
+      "name": "string_methods",
+      "source": "tests/language_completion/fixtures/python/string_methods.py",
+      "expectedOutput": "py_string LUASCRIPT luascript"
+    },
+    {
+      "name": "list_mutation_membership",
+      "source": "tests/language_completion/fixtures/python/list_mutation_membership.py",
+      "expectedOutput": "py_list_mutation 3 2 5 membership_ok",
+      "expectedOutputs": {
+        "lua": "py_list_mutation 3 2 5 membership_ok",
+        "javascript": "py_list_mutation 3 2 5 membership_ok",
+        "python": "py_list_mutation 3 2 5 membership_ok",
+        "luascript": "py_list_mutation 3 2 5 membership_ok"
+      }
+    },
+    {
+      "name": "dict_membership_nested",
+      "source": "tests/language_completion/fixtures/python/dict_membership_nested.py",
+      "expectedOutput": "py_dict_mutation Ada 7 dict_ok"
+    },
+    {
+      "name": "string_indexing_chained_compare",
+      "source": "tests/language_completion/fixtures/python/string_indexing_chained_compare.py",
+      "expectedOutput": "py_index_compare S inside"
+    },
+    {
+      "name": "sequence_slice_access",
+      "source": "tests/language_completion/fixtures/python/sequence_slice_access.py",
+      "expectedOutput": "py_slice uaS 3 4 8"
+    },
+    {
+      "name": "loop_break",
+      "source": "tests/language_completion/fixtures/python/loop_break.py",
+      "expectedOutput": "py_break 6"
+    },
+    {
+      "name": "canonical_js_arithmetic_to_python",
+      "sourceLanguage": "javascript",
+      "source": "tests/language_completion/fixtures/javascript/arithmetic_locals.js",
+      "targets": ["python"],
+      "expectedOutput": "js_arithmetic 5 15"
+    },
+    {
+      "name": "canonical_js_functions_to_python",
+      "sourceLanguage": "javascript",
+      "source": "tests/language_completion/fixtures/javascript/functions_conditionals.js",
+      "targets": ["python"],
+      "expectedOutput": "js_branch big 7"
+    },
+    {
+      "name": "canonical_js_while_to_python",
+      "sourceLanguage": "javascript",
+      "source": "tests/language_completion/fixtures/javascript/while_loop.js",
+      "targets": ["python"],
+      "expectedOutput": "js_while 6"
+    },
+    {
+      "name": "canonical_lua_arithmetic_to_python",
+      "sourceLanguage": "lua",
+      "source": "tests/lua_input/fixtures/arithmetic_locals.lua",
+      "targets": ["python"],
+      "expectedOutput": "arithmetic 5 15"
+    },
+    {
+      "name": "canonical_lua_functions_to_python",
+      "sourceLanguage": "lua",
+      "source": "tests/lua_input/fixtures/functions.lua",
+      "targets": ["python"],
+      "expectedOutput": "function 7"
+    },
+    {
+      "name": "canonical_luascript_arithmetic_to_python",
+      "sourceLanguage": "luascript",
+      "source": "tests/language_completion/fixtures/luascript/arithmetic_locals.ls",
+      "targets": ["python"],
+      "expectedOutput": "ls_arithmetic 5 15"
+    },
+    {
+      "name": "canonical_luascript_functions_to_python",
+      "sourceLanguage": "luascript",
+      "source": "tests/language_completion/fixtures/luascript/functions_conditionals.ls",
+      "targets": ["python"],
+      "expectedOutput": "ls_branch big 7"
+    },
+    {
+      "name": "unsupported_import",
+      "source": "tests/language_completion/fixtures/python/unsupported_import.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: imports"
+    },
+    {
+      "name": "unsupported_comprehension",
+      "source": "tests/language_completion/fixtures/python/unsupported_comprehension.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: list comprehensions"
+    },
+    {
+      "name": "unsupported_class",
+      "source": "tests/language_completion/fixtures/python/unsupported_class.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: classes"
+    },
+    {
+      "name": "unsupported_decorator",
+      "source": "tests/language_completion/fixtures/python/unsupported_decorator.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: decorators"
+    },
+    {
+      "name": "unsupported_generator",
+      "source": "tests/language_completion/fixtures/python/unsupported_generator.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: generators"
+    },
+    {
+      "name": "unsupported_async",
+      "source": "tests/language_completion/fixtures/python/unsupported_async.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: async functions"
+    },
+    {
+      "name": "unsupported_varargs",
+      "source": "tests/language_completion/fixtures/python/unsupported_varargs.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: varargs or kwargs"
+    },
+    {
+      "name": "unsupported_keyword_call",
+      "source": "tests/language_completion/fixtures/python/unsupported_keyword_call.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: keyword call arguments"
+    },
+    {
+      "name": "unsupported_try_except",
+      "source": "tests/language_completion/fixtures/python/unsupported_try_except.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: try/except"
+    },
+    {
+      "name": "unsupported_continue",
+      "source": "tests/language_completion/fixtures/python/unsupported_continue.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: continue statements"
+    },
+    {
+      "name": "unsupported_raise",
+      "source": "tests/language_completion/fixtures/python/unsupported_raise.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: raise"
+    },
+    {
+      "name": "unsupported_with",
+      "source": "tests/language_completion/fixtures/python/unsupported_with.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: with statements"
+    },
+    {
+      "name": "unsupported_global",
+      "source": "tests/language_completion/fixtures/python/unsupported_global.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: global declarations"
+    },
+    {
+      "name": "unsupported_nonlocal",
+      "source": "tests/language_completion/fixtures/python/unsupported_nonlocal.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: nonlocal declarations"
+    },
+    {
+      "name": "unsupported_delete",
+      "source": "tests/language_completion/fixtures/python/unsupported_delete.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: delete"
+    },
+    {
+      "name": "unsupported_assert",
+      "source": "tests/language_completion/fixtures/python/unsupported_assert.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: assert"
+    },
+    {
+      "name": "unsupported_lambda",
+      "source": "tests/language_completion/fixtures/python/unsupported_lambda.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: lambda expressions"
+    },
+    {
+      "name": "unsupported_dict_comprehension",
+      "source": "tests/language_completion/fixtures/python/unsupported_dict_comprehension.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: dict comprehensions"
+    },
+    {
+      "name": "unsupported_set_comprehension",
+      "source": "tests/language_completion/fixtures/python/unsupported_set_comprehension.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: set comprehensions"
+    },
+    {
+      "name": "unsupported_generator_expression",
+      "source": "tests/language_completion/fixtures/python/unsupported_generator_expression.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: generator expressions"
+    },
+    {
+      "name": "unsupported_from_import",
+      "source": "tests/language_completion/fixtures/python/unsupported_from_import.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: imports"
+    },
+    {
+      "name": "unsupported_annotation",
+      "source": "tests/language_completion/fixtures/python/unsupported_annotation.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: type annotations"
+    },
+    {
+      "name": "unsupported_keyword_only",
+      "source": "tests/language_completion/fixtures/python/unsupported_keyword_only.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: keyword-only parameters"
+    },
+    {
+      "name": "unsupported_positional_only",
+      "source": "tests/language_completion/fixtures/python/unsupported_positional_only.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: positional-only parameters"
+    },
+    {
+      "name": "unsupported_slice_step",
+      "source": "tests/language_completion/fixtures/python/unsupported_slice.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: slice steps"
+    },
+    {
+      "name": "unsupported_slice_assignment",
+      "source": "tests/language_completion/fixtures/python/unsupported_slice_assignment.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: slice assignment"
+    },
+    {
+      "name": "unsupported_complex_chained_comparison",
+      "source": "tests/language_completion/fixtures/python/unsupported_complex_chained_comparison.py",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Python input feature: complex chained comparisons"
+    }
+  ]
+}

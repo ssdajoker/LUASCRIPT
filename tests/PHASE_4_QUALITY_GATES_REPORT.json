@@ -1,0 +1,96 @@
+{
+  "features": {
+    "arrow_destructuring": {
+      "passed": 79,
+      "failed": 0,
+      "time": 15.3
+    },
+    "spread_operators": {
+      "passed": 84,
+      "failed": 0,
+      "time": 18.7
+    },
+    "control_flow_patterns": {
+      "passed": 74,
+      "failed": 0,
+      "time": 16.2
+    }
+  },
+  "gates": {
+    "passRate": {
+      "name": "Test Pass Rate",
+      "requirement": "100%",
+      "actual": "100.00%",
+      "passed": true,
+      "tests": "237/237"
+    },
+    "performance": {
+      "arrow_destructuring": {
+        "name": "arrow_destructuring Performance",
+        "requirement": "<20ms per test",
+        "actual": "0.19ms",
+        "passed": true
+      },
+      "spread_operators": {
+        "name": "spread_operators Performance",
+        "requirement": "<20ms per test",
+        "actual": "0.22ms",
+        "passed": true
+      },
+      "control_flow_patterns": {
+        "name": "control_flow_patterns Performance",
+        "requirement": "<20ms per test",
+        "actual": "0.22ms",
+        "passed": true
+      }
+    },
+    "zeroHangs": {
+      "name": "Zero Hangs",
+      "requirement": "No timeouts",
+      "actual": "0 timeouts detected",
+      "passed": true
+    },
+    "zeroLeaks": {
+      "name": "Zero Memory Leaks",
+      "requirement": "<50MB heap",
+      "actual": "4.54MB",
+      "passed": true,
+      "details": {
+        "heapUsed": "4.54MB",
+        "heapTotal": "6.05MB",
+        "external": "1.55MB"
+      }
+    },
+    "frameworkOverhead": {
+      "name": "Framework Overhead",
+      "requirement": "<1ms per test",
+      "actual": "0.193ms",
+      "passed": true
+    },
+    "forensicPerformance": {
+      "name": "Forensic Tool Performance",
+      "requirement": "<0.5ms overhead",
+      "actual": "0.193ms",
+      "passed": true
+    },
+    "errorDetection": {
+      "name": "Error Detection",
+      "requirement": ">95% detection",
+      "actual": "0.00%",
+      "passed": false
+    },
+    "allFeaturesComplete": {
+      "name": "All 3 Features Complete",
+      "requirement": "100% (3/3)",
+      "actual": "3/3",
+      "passed": true,
+      "features": [
+        "arrow_destructuring",
+        "spread_operators",
+        "control_flow_patterns"
+      ]
+    }
+  },
+  "overallStatus": "FAIL",
+  "timestamp": "2026-02-05T05:48:19.052Z"
+}

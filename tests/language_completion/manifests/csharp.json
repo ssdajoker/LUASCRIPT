@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "language": "csharp",
+  "status": "qualified",
+  "supportSlice": "csharp-v0.5-program-static-method-small-programs",
+  "runtime": "csharp",
+  "targets": ["lua", "javascript", "luascript", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_locals",
+      "source": "tests/language_completion/fixtures/csharp/arithmetic_locals.cs",
+      "expectedOutput": "cs_arithmetic 5 15"
+    },
+    {
+      "name": "functions_conditionals",
+      "source": "tests/language_completion/fixtures/csharp/functions_conditionals.cs",
+      "expectedOutput": "cs_branch big 7"
+    },
+    {
+      "name": "while_loop",
+      "source": "tests/language_completion/fixtures/csharp/while_loop.cs",
+      "expectedOutput": "cs_while 6"
+    },
+    {
+      "name": "numeric_for",
+      "source": "tests/language_completion/fixtures/csharp/numeric_for.cs",
+      "expectedOutput": "cs_for 10"
+    },
+    {
+      "name": "array_indexing",
+      "source": "tests/language_completion/fixtures/csharp/array_indexing.cs",
+      "expectedOutput": "cs_array 8 4"
+    },
+    {
+      "name": "boolean_logic",
+      "source": "tests/language_completion/fixtures/csharp/boolean_logic.cs",
+      "expectedOutput": "cs_bool ready"
+    },
+    {
+      "name": "foreach_sum",
+      "source": "tests/language_completion/fixtures/csharp/foreach_sum.cs",
+      "expectedOutput": "cs_foreach 10"
+    },
+    {
+      "name": "foreach_continue",
+      "source": "tests/language_completion/fixtures/csharp/foreach_continue.cs",
+      "expectedOutput": "cs_foreach_continue 12"
+    },
+    {
+      "name": "length_and_string_index",
+      "source": "tests/language_completion/fixtures/csharp/length_and_string_index.cs",
+      "expectedOutput": "cs_length 7 5 m"
+    },
+    {
+      "name": "string_interpolation",
+      "source": "tests/language_completion/fixtures/csharp/string_interpolation.cs",
+      "expectedOutput": "cs_interp Ada 7"
+    },
+    {
+      "name": "math_calls",
+      "source": "tests/language_completion/fixtures/csharp/math_calls.cs",
+      "expectedOutput": "cs_math 9 -4 4"
+    },
+    {
+      "name": "canonical_js_arithmetic_to_csharp",
+      "sourceLanguage": "javascript",
+      "source": "tests/language_completion/fixtures/javascript/arithmetic_locals.js",
+      "targets": ["csharp"],
+      "expectedOutput": "js_arithmetic 5 15"
+    },
+    {
+      "name": "canonical_luascript_arithmetic_to_csharp",
+      "sourceLanguage": "luascript",
+      "source": "tests/language_completion/fixtures/luascript/arithmetic_locals.ls",
+      "targets": ["csharp"],
+      "expectedOutput": "ls_arithmetic 5 15"
+    },
+    {
+      "name": "unsupported_linq",
+      "source": "tests/language_completion/fixtures/csharp/unsupported_linq.cs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C# input feature: LINQ query syntax"
+    },
+    {
+      "name": "unsupported_async",
+      "source": "tests/language_completion/fixtures/csharp/unsupported_async.cs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C# input feature: async/await"
+    },
+    {
+      "name": "unsupported_switch",
+      "source": "tests/language_completion/fixtures/csharp/unsupported_switch.cs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C# input feature: switch statements"
+    },
+    {
+      "name": "unsupported_try_catch",
+      "source": "tests/language_completion/fixtures/csharp/unsupported_try_catch.cs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C# input feature: try/catch/finally"
+    },
+    {
+      "name": "unsupported_interface",
+      "source": "tests/language_completion/fixtures/csharp/unsupported_interface.cs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C# input feature: interfaces"
+    },
+    {
+      "name": "unsupported_null_coalescing",
+      "source": "tests/language_completion/fixtures/csharp/unsupported_null_coalescing.cs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C# input feature: null-coalescing or null-conditional operators"
+    },
+    {
+      "name": "unsupported_extra_class",
+      "source": "tests/language_completion/fixtures/csharp/unsupported_extra_class.cs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C# input feature: classes beyond the Program wrapper"
+    }
+  ]
+}

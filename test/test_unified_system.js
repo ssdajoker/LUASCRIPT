@@ -1,7 +1,6 @@
 
 /**
  * LUASCRIPT Unified System Tests - Memory-Efficient Testing
- * Tony Yoka's Unified Team Implementation
  * 
  * Comprehensive but memory-conscious testing of all components
  */
@@ -30,7 +29,7 @@ class UnifiedSystemTests {
             
             // Integration tests
             await this.testFullPipeline();
-            await this.testVictoryValidation();
+            await this.testEvidenceSnapshot();
             
             return this.printResults();
         } catch (error) {
@@ -77,6 +76,12 @@ class UnifiedSystemTests {
             // Note: Lua allows an optional semicolon at the end.
             const expectedRegex = /local my_obj = {\s*key = "value"\s*};?/;
             return expectedRegex.test(result.code);
+        });
+        
+        // Test 5: Async Function declaration
+        await this.runTest('Async Function Declaration', async () => {
+            const result = await system.transpile('async function fetchData() { return 42; }');
+            return result.code.includes('local function fetchData()') && result.code.includes('return coroutine.create(function()');
         });
 
         system.shutdown();
@@ -195,7 +200,9 @@ return ∏(i, 1, 10, foo(3, 4))
         await this.runTest('Code Completion', async () => {
             // Create a temporary file for testing
             const fs = require('fs').promises;
-            const testFile = '/tmp/test.js';
+            const path = require('path');
+            const os = require('os');
+            const testFile = path.join(os.tmpdir(), 'luascript-code-completion-test.js');
             await fs.writeFile(testFile, 'let x = 5;\ncon');
             
             try {
@@ -203,7 +210,7 @@ return ∏(i, 1, 10, foo(3, 4))
                 const completions = await system.getCodeCompletion(testFile, { line: 1, column: 3 });
                 return Array.isArray(completions);
             } finally {
-                try { await fs.unlink(testFile); } catch {}
+                try { await fs.unlink(testFile); } catch (err) { /* ignore cleanup errors */ }
             }
         });
         
@@ -234,13 +241,15 @@ return ∏(i, 1, 10, foo(3, 4))
         system.shutdown();
     }
 
-    async testVictoryValidation() {
-        console.log('\n🏆 Testing Victory Validation...');
+    async testEvidenceSnapshot() {
+        console.log('\nTesting Evidence Snapshot...');
         
-        // Test 1: System validation
-        await this.runTest('Victory Validation', async () => {
-            const validation = await UnifiedLuaScript.validateVictoryStatic();
-            return validation.overall > 0 && validation.phases;
+        // Test 1: System evidence snapshot
+        await this.runTest('Evidence Snapshot', async () => {
+            const validation = await UnifiedLuaScript.validateEvidenceStatic();
+            return validation.advisory === true &&
+                Array.isArray(validation.componentChecks) &&
+                Array.isArray(validation.strictGates);
         });
         
         // Test 2: Performance report
@@ -307,10 +316,10 @@ return ∏(i, 1, 10, foo(3, 4))
                 });
         }
         
-        console.log('\n🏆 LUASCRIPT UNIFIED SYSTEM TESTS COMPLETE!');
+        console.log('\nLUASCRIPT unified system tests complete.');
         
         if (this.passedTests === this.totalTests) {
-            console.log('🎉 ALL TESTS PASSED - VICTORY ACHIEVED!');
+            console.log('All tests passed.');
         } else {
             console.log(`⚠️ ${this.failedTests} tests failed - Review and fix issues`);
         }
@@ -321,7 +330,7 @@ return ∏(i, 1, 10, foo(3, 4))
 }
 
 async function runParserSuite() {
-    console.log('\n🧩 Running Legacy Parser Suite...');
+    console.log('\n🧩 Running Compatibility Parser Suite...');
     const testSuite = new UnifiedSystemTests();
     await testSuite.testBasicTranspilation();
     await testSuite.testAdvancedFeatures();
@@ -329,7 +338,7 @@ async function runParserSuite() {
 }
 
 async function runRuntimeSuite() {
-    console.log('\n⚙️  Running Legacy Runtime Suite...');
+    console.log('\n⚙️  Running Compatibility Runtime Suite...');
     const testSuite = new UnifiedSystemTests();
     await testSuite.testRuntimeExecution();
     await testSuite.testPerformanceTools();
@@ -337,10 +346,10 @@ async function runRuntimeSuite() {
 }
 
 async function runTranspilerSuite() {
-    console.log('\n🚚 Running Legacy Transpiler Suite...');
+    console.log('\n🚚 Running Compatibility Transpiler Suite...');
     const testSuite = new UnifiedSystemTests();
     await testSuite.testFullPipeline();
-    await testSuite.testVictoryValidation();
+    await testSuite.testEvidenceSnapshot();
     return testSuite.printResults();
 }
 
@@ -365,9 +374,7 @@ if (require.main === module) {
     }
 
     runner().then(success => {
-        if (!success) {
-            process.exit(1);
-        }
+        process.exit(success ? 0 : 1);
     }).catch(error => {
         console.error('Test suite failed:', error);
         process.exit(1);

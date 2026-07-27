@@ -1,5 +1,8 @@
 # LUASCRIPT Development Workflow
 ## Established by Linus Torvalds - GitHub Integration Lead
+*"Talk is cheap. Show me the code." - Linus Torvalds*
+
+Status source of truth: `PROJECT_STATUS.md` (all other status docs should align with it). Use `CHECKLIST_PHASES.md` for phase-by-phase acceptance and record deltas in `PROJECT_STATUS.md` before closing any checklist item.
 
 ### Repository Structure
 ```
@@ -48,11 +51,43 @@ git push origin feature/your-feature-name
 # Create PR to develop branch
 ```
 
+**IR / emitter changes:**
+- Keep `PROJECT_STATUS.md` and `README.md` in sync when touching `src/ir/*` (lowerers, emitters, nodes). Capture new helper injection rules or IR shape changes in the status snapshot.
+- Run `npm run ir:validate:all` and `npm run test:parity` locally for IR-affecting work; include the command list in the PR description.
+
 #### 2. Code Review Requirements
 - **Mandatory reviewers**: Donald Knuth (algorithms), Steve Jobs (UX)
 - **Linus approval required** for: Core architecture, build system, CI/CD
 - **Minimum 2 approvals** for any merge to develop
 - **All tests must pass** before merge
+
+### Auto-merge on Green (PRs)
+- Trigger: after "Parity and IR Gates" workflow succeeds on a PR.
+- Requirements: PR is open, non-draft, has at least 1 approval.
+- Action: GitHub auto-merge (SQUASH) is enabled automatically; do not manually merge.
+- Note: If no approvals yet or PR is draft, auto-merge is skipped until ready.
+
+### Amend Workflow (Conflict Fixes / Bot Noise)
+When resolving conflicts or CI-only changes, prefer amending to keep history tidy:
+
+```bash
+# after fixing files locally
+git add -A
+git commit --amend --no-edit
+git push --force-with-lease
+```
+
+- Use this especially when only generated artifacts or CI configs change.
+- Avoid spamming fixup commits; keep PR diffs focused on intent.
+
+### Draft PRs
+- Use draft PRs for exploratory work; CI can still run as needed.
+- Auto-merge is disabled for drafts, becomes eligible once marked "Ready for review".
+
+### Agent & Bot Workflows
+- Auto-fix bot may push commits to refresh IR report/parity artifacts on CI failures.
+- Avoid racing the bot: let it finish, then re-run CI or amend if additional fixes are needed.
+- See also: .github/workflows/auto-merge.yml and .github/workflows/auto-fix-bot.yml.
 
 #### 3. Release Process
 ```bash
@@ -76,24 +111,26 @@ Following conventional commits:
 - `chore:` Build process or auxiliary tool changes
 
 ### Testing Requirements
-- **Unit tests**: All new code must have >90% coverage
-- **Integration tests**: End-to-end transpilation tests
-- **Performance tests**: Benchmark against previous versions
-- **Manual testing**: Web IDE functionality
-- **IR harness**: Run `npm run harness` for fast regression coverage (determinism + timing guard, artifacts in [artifacts/harness_results.json](artifacts/harness_results.json)).
+- **Core gates**: Run `npm run verify` for harness + IR validation + parity + determinism; include `npm run test:parity` and `npm run ir:validate:all` for IR changes as noted in `PROJECT_STATUS.md`.
+- **Lua static warnings**: Run `npm run static:warnings` (wraps `scripts/static_warnings_gate.js`) locally before pushing. The gate enforces a zero-warning budget and now blocks CI in both full and lean pipelines.
+- **Coverage/performance**: Follow the baselines and thresholds recorded in `PROJECT_STATUS.md` (coverage floor and ±15% performance regression gate). Update the status file if gates change.
+- **Manual/UX**: Exercise the web IDE when UI-facing changes land and note results in PR descriptions.
 
-### CI/Status Bundle (local dry-run)
-- Generate a local status bundle with `npm run status:bundle` (uses [scripts/status_bundle.js](scripts/status_bundle.js)).
-- Populate optional env overrides before running: `WORKFLOW`, `RUN_ID` or `GITHUB_RUN_ID`, `GIT_SHA` or `GITHUB_SHA`, and test signals `TEST_STATUS`, `HARNESS_STATUS`, `IR_VALIDATE_STATUS`, `EMIT_GOLDENS_STATUS`, `PERF_STATUS`.
-- Output: [artifacts/status.json](artifacts/status.json) matching [scripts/status_schema.json](scripts/status_schema.json). Fields default to `unknown` if unset.
-- Keep `artifacts/` untracked; it is ignored in version control.
+### Quick-start workflow (non-lint)
+- Install dependencies: `npm ci`
+- Run the fast formatting gate: `npm run -s format:check`
+- Run the fast smoke suite: `npm run -s test:smoke`
+- Husky pre-commit runs the same format/smoke checks automatically; bypass with `SKIP_FORMAT=1` or `SKIP_TESTS=1` if needed.
+### Lint Commands & Weekly Report
+- **Tiered ESLint entrypoints** (mirrors `ESLINT_CLEANUP_GUIDE.md` budgets):  
+	- Core IR (0 warnings): `npm run lint:core`  
+	- Extended IR (≤50 warnings): `npm run lint:extended`  
+	- Backends (≤100 warnings): `npm run lint:backends`  
+	- General src sweep (≤200 warnings): `npm run lint:all`
+- **Weekly lint trend (every Monday UTC)**: run `npm run lint:all:report` (which wraps an `eslint` command to generate `reports/eslint/eslint-weekly-<DATE>.html`), then log warning/error counts in `reports/lint-dashboard.md` (also note latest figures in `PROJECT_STATUS.md`).
 
-### Week 2 Core Features (94% Complete)
-#### Remaining Tasks (6%):
-1. **Memory optimization** in parser (Donald's domain)
-2. **Error message improvements** (Steve's UX focus)
-3. **Performance benchmarking integration** (Linus's infrastructure)
-4. **Documentation updates** (Team effort)
+### Phase alignment
+- Track progress against `CHECKLIST_PHASES.md`; if a claim differs from the canonical snapshot in `PROJECT_STATUS.md`, update the snapshot first, then adjust docs/PR context.
 
 ### Emergency Protocols
 - **Hotfixes**: Direct to main with immediate team notification

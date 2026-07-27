@@ -1,0 +1,1009 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:canonical-ir-conformance",
+  "command": "npm run test:ir-conformance",
+  "generatedAt": "2026-07-16T08:06:21.113Z",
+  "elapsedMs": 4693,
+  "environment": {
+    "node": "v24.14.0",
+    "npm": {
+      "command": "cmd.exe",
+      "args": [
+        "/c",
+        "npm",
+        "-v"
+      ],
+      "available": true,
+      "status": 0,
+      "stdout": "11.9.0",
+      "stderr": ""
+    },
+    "platform": "win32",
+    "arch": "x64",
+    "os": {
+      "type": "Windows_NT",
+      "release": "10.0.26200"
+    },
+    "cwd": "C:\\Users\\ssdaj\\Desktop\\LUASCRIPT",
+    "generatedBy": "LUASCRIPT conformance report harness"
+  },
+  "manifest": {
+    "path": "tests/conformance/manifest.json",
+    "sha256": "0f551a2076df5e6a6319dcab93600bff73213476351a3fd63ea732a5a597b780",
+    "status": "scoped-skeleton",
+    "version": "0.1.0",
+    "fixtureCount": 32,
+    "fixtureHashes": [
+      {
+        "name": "values_bindings_control_flow",
+        "sha256": "ff4a44b6b1ea2011f50165d5066711463c6e39b92803a3dd880d932d1ff27c1e"
+      },
+      {
+        "name": "functions_calls_arrays_objects",
+        "sha256": "9ddf262c1a0792313f61c060f7413036dc92491a5b1633d266429dcdae26b8ab"
+      },
+      {
+        "name": "primitive_values_null_equivalents",
+        "sha256": "14abfb1e11cb3de1cc1dbfba769cec20ae88edf9f6fd26eaa3ac18c1e1cdffe4"
+      },
+      {
+        "name": "arrays_objects_records_indexing",
+        "sha256": "96881f21f0e7f812d1733ad4bda4a540aefde5a095bd86738bce9e1d6eb4824d"
+      },
+      {
+        "name": "truthiness_target_native_delta",
+        "sha256": "ad8e564308680d08a5d2c3f887e12bc417018b5899ae15dc870e7af6593c1366"
+      },
+      {
+        "name": "equality_and_coercion_target_delta",
+        "sha256": "903337546b8125c388131e00f67b2f6d3914af1c7b2953a8fdd1a1082d9244d3"
+      },
+      {
+        "name": "portable_value_semantics_profile",
+        "sha256": "619881a63b87008d7c38e8f525a6dd39f6ffb0886bf45ba9c7a411eaf354c1e8"
+      },
+      {
+        "name": "control_flow_nested_break_continue_early_return",
+        "sha256": "1e018e8a082f500046fe7c11719c3c6b10cb61dc0b42de55ed66061489daa63f"
+      },
+      {
+        "name": "short_circuit_side_effects",
+        "sha256": "c0670c181ac0766081044508766032eb1a1dc306dc0b4c8a2bde9af37ff5986a"
+      },
+      {
+        "name": "control_javascript_switch_conditional",
+        "sha256": "54fb52a5c9f841b0c49760c378452a4646b90cf817acb975b88d36cce33cc864"
+      },
+      {
+        "name": "python_range_forward_control_flow",
+        "sha256": "7df5be4190ebf5d2bda4e2f81751a987e9360aea7cf02211968a457da7323dc8"
+      },
+      {
+        "name": "python_range_negative_step_control_flow",
+        "sha256": "4053d8048f9f4e0f4c60de7e9bbf217e9f3ea4e772ae51dde76e9a40cc9982c1"
+      },
+      {
+        "name": "function_scope_closure_shadow_mutation",
+        "sha256": "45217dc70fd8dd739ba4794d9ba22f0f2060a3707cf0e33d1da78a127b57c514"
+      },
+      {
+        "name": "function_recursion_return_normalization",
+        "sha256": "14e34d03d82f9ed42429aaa6ac2b7897f31ea9d4bac3281aeddec8a442e64e32"
+      },
+      {
+        "name": "function_extra_arity_target_delta",
+        "sha256": "9795884d110992e82f48b166e6e9e477b4242bd212f0e79847b04ed87004001d"
+      },
+      {
+        "name": "unsupported_js_async_function_scope",
+        "sha256": "8ac645ff9adf33ee3c5058e2b521f27b50a44b289d64dd29901d93afda86941f"
+      },
+      {
+        "name": "unsupported_js_generator_function_scope",
+        "sha256": "a596737c0d5ddcf9a66acba9728a8448165c041ab9bb1d25047b99239cc4ef10"
+      },
+      {
+        "name": "data_nested_js_arrays_objects_records",
+        "sha256": "fa1e1ca394d612782e0efc0d84b3c465112bd244cae8c6170f655e1cf1628aab"
+      },
+      {
+        "name": "data_luascript_portable_length_slice_mutation",
+        "sha256": "0ed95a498af33715ab70b7afb5b89867ce882d908b9d51c36b86b0d55344fa71"
+      },
+      {
+        "name": "data_python_list_dict_membership_mutation",
+        "sha256": "4522d3b55bd2ad65a5e160e1a7f4b0f11a0204f05a5785876d4e543177dc56dc"
+      },
+      {
+        "name": "data_python_list_iteration_length",
+        "sha256": "acee5c916899b2ad152ba967eb03f5b729ef078286c28d073b364e34647881d8"
+      },
+      {
+        "name": "data_lua_table_record_fields",
+        "sha256": "742225f61bf7036ae6f6d925dcd810997dffab6358a4e30353c6f83889e664e5"
+      },
+      {
+        "name": "unsupported_js_object_spread_structure",
+        "sha256": "fca467ef367e6236ed9867534b5edb022c870b93516e5612413675e07827c775"
+      },
+      {
+        "name": "unsupported_js_destructuring_structure",
+        "sha256": "97397dda4f2847a1f14efe21e300e702442460d93d24f00ac0c5a53ee8575f2b"
+      },
+      {
+        "name": "unsupported_target_diagnostic",
+        "sha256": "f53668d56c5961d543c58bccb8e9041cdf039466611eaab4a57e42af8345e307"
+      },
+      {
+        "name": "unsupported_js_for_of_control_flow",
+        "sha256": "c60df62166a1e793681ae5be9439951edf17ff947b315610d0a49ebe2593a6d3"
+      },
+      {
+        "name": "unsupported_python_continue_control_flow",
+        "sha256": "cc2aa78f6d65b36a64330050d0badb36575ba11fb5a3b44afe17297394ca6ecb"
+      },
+      {
+        "name": "unsupported_js_try_catch_control_flow",
+        "sha256": "37418b4c5fb513f8f3480adff4f1aab93ab201fd726f3d75f0ac44a8b30effd3"
+      },
+      {
+        "name": "unsupported_js_tagged_template_control_flow",
+        "sha256": "bab1acb55639cd97d0aa7a5a34d9750da6a0e67193ca9b756d2cdafc9484a44c"
+      },
+      {
+        "name": "unsupported_undefined_value_semantic",
+        "sha256": "65e187accc0568ecf9c70f578cfdbac4c5b19855688c2c4050aa412e0fefa2d6"
+      },
+      {
+        "name": "unsupported_nan_value_semantic",
+        "sha256": "f5a3d12811fb3d63a35b3ad865d34bbf9391fe353369a94fac6d5c13ac143a27"
+      },
+      {
+        "name": "unsupported_infinity_value_semantic",
+        "sha256": "491a720c64148a0c41ae35072914ffec1bc4590cb3cc42de4ef2eb296bd51033"
+      }
+    ]
+  },
+  "supportMatrixTraceability": {
+    "supportMatrix": "docs/LANGUAGE_SUPPORT_MATRIX.md",
+    "evidenceBinder": "docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md",
+    "exitCriteria": "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md",
+    "bidirectionalityContract": "docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md",
+    "denaliLedger": "docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md",
+    "boundary": "Report evidence applies only to named manifest slices and does not claim source-preserving round-trip identity, ISO certification, or true omni-language 100%.",
+    "supportRows": [
+      "JavaScript input to Lua output",
+      "LUASCRIPT `.ls` JS-like syntax plus V0.16 meta layer to Lua/Python/JavaScript/`.ls`",
+      "Lua input",
+      "Python",
+      "Canonical IR conformance"
+    ],
+    "evidenceRole": "Scoped canonical IR conformance skeleton for current stable bridge emitters."
+  },
+  "summary": {
+    "total": 32,
+    "passed": 32,
+    "failed": 0,
+    "targetChecks": 80,
+    "expectedDiagnostics": 11,
+    "runtimeChecks": 32
+  },
+  "matrices": {
+    "valueSemantics": {
+      "status": "scoped",
+      "comparisonTargets": [
+        "javascript",
+        "lua",
+        "python",
+        "luascript"
+      ],
+      "covered": [
+        "numbers",
+        "strings",
+        "booleans",
+        "null-nil-none",
+        "arrays",
+        "objects-records",
+        "truthiness",
+        "equality",
+        "coercion",
+        "indexing"
+      ],
+      "unsupportedAsDiagnostics": [
+        "undefined",
+        "NaN",
+        "Infinity"
+      ],
+      "boundary": "This matrix compares current emitted behavior and portable-profile repairs. It is not exhaustive runtime conformance or canonical 1.0."
+    },
+    "controlFlow": {
+      "status": "scoped",
+      "comparisonTargets": [
+        "javascript",
+        "lua",
+        "python",
+        "luascript"
+      ],
+      "runtimeTargets": [
+        "javascript",
+        "python"
+      ],
+      "covered": [
+        "if-else",
+        "while",
+        "numeric-for",
+        "python-range",
+        "break",
+        "continue",
+        "nested-loops",
+        "short-circuiting",
+        "early-returns",
+        "switch",
+        "conditional-expression",
+        "target-specific-lowering"
+      ],
+      "unsupportedAsDiagnostics": [
+        "javascript-for-of",
+        "python-continue-source",
+        "javascript-try-catch",
+        "javascript-tagged-template"
+      ],
+      "boundary": "This matrix checks emitted control-flow snippets across current bridge emitters and native/emitted runtime behavior for JavaScript and Python where local runtimes are available. Lua and .ls runtime equivalence remain outside this scoped conformance pass."
+    },
+    "functionScope": {
+      "status": "scoped",
+      "comparisonTargets": [
+        "javascript",
+        "lua",
+        "python",
+        "luascript"
+      ],
+      "runtimeTargets": [
+        "javascript",
+        "python"
+      ],
+      "covered": [
+        "lexical-closures",
+        "shadowing",
+        "mutation-through-closures",
+        "recursion",
+        "arity-behavior",
+        "nested-functions",
+        "return-normalization",
+        "unsupported-advanced-function-forms"
+      ],
+      "unsupportedAsDiagnostics": [
+        "javascript-async-function",
+        "javascript-generator-function"
+      ],
+      "boundary": "This matrix checks scoped function and lexical-scope behavior across current bridge emitters and native/emitted runtime behavior for JavaScript and Python where local runtimes are available. Extra-arity behavior remains a target-native delta, and Lua/.ls runtime equivalence remain outside this scoped conformance pass."
+    },
+    "dataStructure": {
+      "status": "scoped",
+      "comparisonTargets": [
+        "javascript",
+        "lua",
+        "python",
+        "luascript"
+      ],
+      "runtimeTargets": [
+        "javascript",
+        "python"
+      ],
+      "covered": [
+        "array-mutation",
+        "object-mutation",
+        "nested-reads-writes",
+        "length",
+        "slicing",
+        "membership",
+        "iteration",
+        "record-fields",
+        "object-literals",
+        "unsupported-deep-structures"
+      ],
+      "unsupportedAsDiagnostics": [
+        "javascript-object-spread",
+        "javascript-destructuring-pattern"
+      ],
+      "boundary": "This matrix deepens aggregate data-structure evidence only for parser/lowering/emitter/runtime slices that currently pass. Lua and .ls runtime equivalence remain outside this scoped conformance pass; Lua-source table indexing to Python remains a named target delta rather than a runtime claim."
+    }
+  },
+  "runtimeCommandsUsed": [
+    {
+      "fixture": "control_flow_nested_break_continue_early_return",
+      "language": "javascript",
+      "label": "native",
+      "command": "node"
+    },
+    {
+      "fixture": "control_flow_nested_break_continue_early_return",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    },
+    {
+      "fixture": "control_flow_nested_break_continue_early_return",
+      "language": "python",
+      "label": "emitted python",
+      "command": "python3"
+    },
+    {
+      "fixture": "short_circuit_side_effects",
+      "language": "javascript",
+      "label": "native",
+      "command": "node"
+    },
+    {
+      "fixture": "short_circuit_side_effects",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    },
+    {
+      "fixture": "short_circuit_side_effects",
+      "language": "python",
+      "label": "emitted python",
+      "command": "python3"
+    },
+    {
+      "fixture": "control_javascript_switch_conditional",
+      "language": "javascript",
+      "label": "native",
+      "command": "node"
+    },
+    {
+      "fixture": "control_javascript_switch_conditional",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    },
+    {
+      "fixture": "python_range_forward_control_flow",
+      "language": "python",
+      "label": "native",
+      "command": "python3"
+    },
+    {
+      "fixture": "python_range_forward_control_flow",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    },
+    {
+      "fixture": "python_range_forward_control_flow",
+      "language": "python",
+      "label": "emitted python",
+      "command": "python3"
+    },
+    {
+      "fixture": "python_range_negative_step_control_flow",
+      "language": "python",
+      "label": "native",
+      "command": "python3"
+    },
+    {
+      "fixture": "python_range_negative_step_control_flow",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    },
+    {
+      "fixture": "python_range_negative_step_control_flow",
+      "language": "python",
+      "label": "emitted python",
+      "command": "python3"
+    },
+    {
+      "fixture": "function_scope_closure_shadow_mutation",
+      "language": "javascript",
+      "label": "native",
+      "command": "node"
+    },
+    {
+      "fixture": "function_scope_closure_shadow_mutation",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    },
+    {
+      "fixture": "function_scope_closure_shadow_mutation",
+      "language": "python",
+      "label": "emitted python",
+      "command": "python3"
+    },
+    {
+      "fixture": "function_recursion_return_normalization",
+      "language": "javascript",
+      "label": "native",
+      "command": "node"
+    },
+    {
+      "fixture": "function_recursion_return_normalization",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    },
+    {
+      "fixture": "function_recursion_return_normalization",
+      "language": "python",
+      "label": "emitted python",
+      "command": "python3"
+    },
+    {
+      "fixture": "data_nested_js_arrays_objects_records",
+      "language": "javascript",
+      "label": "native",
+      "command": "node"
+    },
+    {
+      "fixture": "data_nested_js_arrays_objects_records",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    },
+    {
+      "fixture": "data_nested_js_arrays_objects_records",
+      "language": "python",
+      "label": "emitted python",
+      "command": "python3"
+    },
+    {
+      "fixture": "data_luascript_portable_length_slice_mutation",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    },
+    {
+      "fixture": "data_luascript_portable_length_slice_mutation",
+      "language": "python",
+      "label": "emitted python",
+      "command": "python3"
+    },
+    {
+      "fixture": "data_python_list_dict_membership_mutation",
+      "language": "python",
+      "label": "native",
+      "command": "python3"
+    },
+    {
+      "fixture": "data_python_list_dict_membership_mutation",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    },
+    {
+      "fixture": "data_python_list_dict_membership_mutation",
+      "language": "python",
+      "label": "emitted python",
+      "command": "python3"
+    },
+    {
+      "fixture": "data_python_list_iteration_length",
+      "language": "python",
+      "label": "native",
+      "command": "python3"
+    },
+    {
+      "fixture": "data_python_list_iteration_length",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    },
+    {
+      "fixture": "data_python_list_iteration_length",
+      "language": "python",
+      "label": "emitted python",
+      "command": "python3"
+    },
+    {
+      "fixture": "data_lua_table_record_fields",
+      "language": "javascript",
+      "label": "emitted javascript",
+      "command": "node"
+    }
+  ],
+  "results": [
+    {
+      "name": "values_bindings_control_flow",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "values",
+        "bindings",
+        "control-flow"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "functions_calls_arrays_objects",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "functions",
+        "calls",
+        "objects-arrays"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "primitive_values_null_equivalents",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "numbers",
+        "strings",
+        "booleans",
+        "null-nil-none"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "arrays_objects_records_indexing",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "arrays",
+        "objects-records",
+        "indexing"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "truthiness_target_native_delta",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "truthiness"
+      ],
+      "semanticsStatus": "target-native-delta",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "equality_and_coercion_target_delta",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "equality",
+        "coercion"
+      ],
+      "semanticsStatus": "target-native-delta",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "portable_value_semantics_profile",
+      "status": "passed",
+      "sourceLanguage": "luascript",
+      "sections": [
+        "truthiness",
+        "coercion",
+        "indexing",
+        "null-nil-none",
+        "arrays"
+      ],
+      "semanticsStatus": "profile-repaired",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "control_flow_nested_break_continue_early_return",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "control-flow",
+        "if-else",
+        "while",
+        "numeric-for",
+        "break",
+        "continue",
+        "nested-loops",
+        "early-returns",
+        "target-specific-lowering"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 3
+    },
+    {
+      "name": "short_circuit_side_effects",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "control-flow",
+        "short-circuiting",
+        "if-else",
+        "target-specific-lowering"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 3
+    },
+    {
+      "name": "control_javascript_switch_conditional",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "control-flow",
+        "switch",
+        "conditional-expression",
+        "target-specific-lowering"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 3,
+      "unsupportedTargetChecks": 1,
+      "runtimeChecks": 2
+    },
+    {
+      "name": "python_range_forward_control_flow",
+      "status": "passed",
+      "sourceLanguage": "python",
+      "sections": [
+        "control-flow",
+        "python-range",
+        "numeric-for",
+        "target-specific-lowering"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 3
+    },
+    {
+      "name": "python_range_negative_step_control_flow",
+      "status": "passed",
+      "sourceLanguage": "python",
+      "sections": [
+        "control-flow",
+        "python-range",
+        "numeric-for",
+        "target-specific-lowering"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 3
+    },
+    {
+      "name": "function_scope_closure_shadow_mutation",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "functions",
+        "bindings",
+        "scope",
+        "lexical-closures",
+        "shadowing",
+        "mutation-through-closures",
+        "nested-functions"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 3
+    },
+    {
+      "name": "function_recursion_return_normalization",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "functions",
+        "recursion",
+        "return-normalization"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 3
+    },
+    {
+      "name": "function_extra_arity_target_delta",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "functions",
+        "calls",
+        "arity-behavior"
+      ],
+      "semanticsStatus": "target-native-delta",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "unsupported_js_async_function_scope",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "functions",
+        "unsupported-advanced-function-forms"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": true,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "unsupported_js_generator_function_scope",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "functions",
+        "unsupported-advanced-function-forms"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": true,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "data_nested_js_arrays_objects_records",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "arrays",
+        "objects-records",
+        "object-literals",
+        "record-fields",
+        "array-mutation",
+        "object-mutation",
+        "nested-reads-writes"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 3
+    },
+    {
+      "name": "data_luascript_portable_length_slice_mutation",
+      "status": "passed",
+      "sourceLanguage": "luascript",
+      "sections": [
+        "arrays",
+        "objects-records",
+        "length",
+        "slicing",
+        "indexing",
+        "array-mutation",
+        "record-fields"
+      ],
+      "semanticsStatus": "profile-repaired",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 2
+    },
+    {
+      "name": "data_python_list_dict_membership_mutation",
+      "status": "passed",
+      "sourceLanguage": "python",
+      "sections": [
+        "arrays",
+        "objects-records",
+        "membership",
+        "array-mutation",
+        "object-mutation",
+        "nested-reads-writes"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 3
+    },
+    {
+      "name": "data_python_list_iteration_length",
+      "status": "passed",
+      "sourceLanguage": "python",
+      "sections": [
+        "arrays",
+        "iteration",
+        "length"
+      ],
+      "semanticsStatus": "aligned-current-slice",
+      "expectedDiagnostic": false,
+      "targetChecks": 4,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 3
+    },
+    {
+      "name": "data_lua_table_record_fields",
+      "status": "passed",
+      "sourceLanguage": "lua",
+      "sections": [
+        "objects-records",
+        "record-fields",
+        "object-literals",
+        "nested-reads-writes"
+      ],
+      "semanticsStatus": "target-native-delta",
+      "expectedDiagnostic": false,
+      "targetChecks": 3,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 1
+    },
+    {
+      "name": "unsupported_js_object_spread_structure",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "objects-records",
+        "object-literals",
+        "unsupported-deep-structures"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": true,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "unsupported_js_destructuring_structure",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "objects-records",
+        "nested-reads-writes",
+        "unsupported-deep-structures"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": true,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "unsupported_target_diagnostic",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "unsupported-nodes",
+        "target-obligations"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": false,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 1,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "unsupported_js_for_of_control_flow",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "control-flow",
+        "for-of",
+        "unsupported-control-flow"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": true,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "unsupported_python_continue_control_flow",
+      "status": "passed",
+      "sourceLanguage": "python",
+      "sections": [
+        "control-flow",
+        "continue",
+        "unsupported-control-flow"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": true,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "unsupported_js_try_catch_control_flow",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "control-flow",
+        "exceptions",
+        "unsupported-control-flow"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": true,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "unsupported_js_tagged_template_control_flow",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "template-literals",
+        "unsupported-control-flow"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": true,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "unsupported_undefined_value_semantic",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "null-nil-none",
+        "undefined",
+        "unsupported-values"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": true,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "unsupported_nan_value_semantic",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "numbers",
+        "unsupported-values"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": true,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    },
+    {
+      "name": "unsupported_infinity_value_semantic",
+      "status": "passed",
+      "sourceLanguage": "javascript",
+      "sections": [
+        "numbers",
+        "unsupported-values"
+      ],
+      "semanticsStatus": "unsupported-diagnostic",
+      "expectedDiagnostic": true,
+      "targetChecks": 0,
+      "unsupportedTargetChecks": 0,
+      "runtimeChecks": 0
+    }
+  ],
+  "failures": []
+}

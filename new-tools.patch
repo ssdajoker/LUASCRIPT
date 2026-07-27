@@ -1,0 +1,515 @@
+diff --git a/scripts/debug-ir-schema.js b/scripts/debug-ir-schema.js
+new file mode 100644
+index 0000000..7152f8b
+--- /dev/null
++++ b/scripts/debug-ir-schema.js
+@@ -0,0 +1,279 @@
++#!/usr/bin/env node
++"use strict";
++
++/**
++ * 🔍 INTELLIGENT IR SCHEMA DEBUGGER
++ * Deep dive into IR validation failures to find root causes
++ */
++
++const fs = require("fs");
++const path = require("path");
++const util = require("util");
++
++const { IRBuilder } = require("../src/ir/builder");
++
++console.log("╔═════════════════════════════════════════════════════════════════╗");
++console.log("║        🔍 INTELLIGENT IR SCHEMA DEBUGGER - Deep Dive           ║");
++console.log("╚═════════════════════════════════════════════════════════════════╝");
++console.log("");
++
++// ═══════════════════════════════════════════════════════════════
++// STEP 1: Reproduce the minimal failing case
++// ═══════════════════════════════════════════════════════════════
++
++console.log("STEP 1: Reproducing the minimal IR case that fails validation");
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("");
++
++console.log("🔹 Creating IRBuilder...");
++const b = new IRBuilder({
++  schemaVersion: "1.0.0",
++  metadata: { authoredBy: "schema-validator" }
++});
++
++console.log("🔹 Building nodes:");
++console.log("   - identifier('a')");
++const a = b.identifier("a");
++console.log(`     Result: ${a.id}, type=${a.category}`);
++
++console.log("   - identifier('b')");
++const bParam = b.identifier("b");
++console.log(`     Result: ${bParam.id}, type=${bParam.category}`);
++
++console.log("   - binaryExpression(a.id, '+', b.id)");
++const sum = b.binaryExpression(a.id, "+", bParam.id);
++console.log(`     Result: ${sum.id}, type=${sum.category}`);
++
++console.log("   - returnStatement(sum.id)");
++const ret = b.returnStatement(sum.id);
++console.log(`     Result: ${ret.id}, type=${ret.category}`);
++
++console.log("   - blockStatement([ret.id])");
++const block = b.blockStatement([ret.id]);
++console.log(`     Result: ${block.id}, type=${block.category}`);
++
++console.log("   - functionDeclaration('add', [a.id, b.id], block.id, ...)");
++const fn = b.functionDeclaration("add", [a.id, bParam.id], block.id, { meta: {} });
++console.log(`     Result: ${fn.id}, type=${fn.category}`);
++
++console.log("");
++console.log("🔹 Building IR (validate=false)...");
++const ir = b.build({ validate: false });
++
++console.log("");
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("STEP 2: Inspect the generated IR structure");
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("");
++
++// Find all nodes
++const allNodeIds = Object.keys(ir.nodes);
++console.log(`Total nodes in IR: ${allNodeIds.length}`);
++console.log("");
++
++// ═══════════════════════════════════════════════════════════════
++// STEP 3: Find problematic node (node_1TT or similar)
++// ═══════════════════════════════════════════════════════════════
++
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("STEP 3: Looking for problematic 'expression' fields");
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("");
++
++let foundIssues = false;
++
++for (const nodeId of allNodeIds) {
++  const node = ir.nodes[nodeId];
++
++  // Check if node has 'expression' field
++  if ('expression' in node) {
++    const expr = node.expression;
++    const exprType = typeof expr;
++    const isNull = expr === null;
++    const isString = typeof expr === "string";
++    const isValidNodeRef = isString && /^[^_]+_[T01]+$/.test(expr);
++
++    console.log(`🔍 Node ${nodeId}:`);
++    console.log(`   Type: ${node.type}`);
++    console.log(`   Expression field: ${util.inspect(expr, { depth: 2, colors: true })}`);
++    console.log(`   Expression type: ${exprType}`);
++    console.log(`   Is null: ${isNull}`);
++    console.log(`   Is string: ${isString}`);
++    console.log(`   Is valid NodeRef: ${isValidNodeRef}`);
++
++    if (!isNull && !isValidNodeRef) {
++      console.log(`   ❌ PROBLEM FOUND: expression is ${exprType} but should be NodeRef or null`);
++      foundIssues = true;
++
++      // Deep inspect
++      if (typeof expr === 'object') {
++        console.log(`   Full object:`);
++        console.log(util.inspect(expr, { depth: 5, colors: true }));
++      }
++    } else {
++      console.log(`   ✅ Valid`);
++    }
++    console.log("");
++  }
++}
++
++// ═══════════════════════════════════════════════════════════════
++// STEP 4: Check all fields that should be NodeRef or null
++// ═══════════════════════════════════════════════════════════════
++
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("STEP 4: Checking all NodeRef fields across all nodes");
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("");
++
++const nodeRefFields = [
++  'expression', 'left', 'right', 'argument', 'condition',
++  'consequent', 'alternate', 'body', 'callee', 'init',
++  'test', 'update', 'object', 'property', 'superClass'
++];
++
++for (const nodeId of allNodeIds) {
++  const node = ir.nodes[nodeId];
++  let nodeHasIssue = false;
++
++  for (const field of nodeRefFields) {
++    if (field in node) {
++      const value = node[field];
++
++      // Skip arrays and null values (they're fine)
++      if (value === null || Array.isArray(value)) continue;
++
++      // Check if it's a valid NodeRef
++      const isString = typeof value === "string";
++      const isValidNodeRef = isString && /^[^_]+_[T01]+$/.test(value);
++
++      if (!isValidNodeRef) {
++        if (!nodeHasIssue) {
++          console.log(`❌ Node ${nodeId} (${node.type}):`);
++          nodeHasIssue = true;
++          foundIssues = true;
++        }
++        console.log(`   Field '${field}': ${typeof value} = ${util.inspect(value, { depth: 1 })}`);
++      }
++    }
++  }
++
++  if (nodeHasIssue) {
++    console.log("");
++  }
++}
++
++// ═══════════════════════════════════════════════════════════════
++// STEP 5: Run actual schema validation to get exact error
++// ═══════════════════════════════════════════════════════════════
++
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("STEP 5: Running actual schema validation");
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("");
++
++const Ajv = require("ajv");
++const addFormats = require("ajv-formats");
++
++const schemaPath = path.join(__dirname, "..", "docs", "canonical_ir.schema.json");
++const schemaText = fs.readFileSync(schemaPath, "utf8");
++const schema = JSON.parse(schemaText);
++
++const ajv = new Ajv({ allErrors: true, strict: false });
++addFormats(ajv);
++const validate = ajv.compile(schema);
++
++const ok = validate(ir);
++
++if (!ok) {
++  console.log("❌ Schema validation FAILED with errors:");
++  console.log("");
++
++  for (const err of validate.errors) {
++    console.log(`Error at ${err.instancePath || "/"}`);
++    console.log(`  Message: ${err.message}`);
++    console.log(`  Schema: ${JSON.stringify(err.params || {})}`);
++
++    // Try to extract the exact node
++    const pathParts = err.instancePath.split('/');
++    if (pathParts[1] === 'nodes' && pathParts[2]) {
++      const nodeId = pathParts[2];
++      const fieldName = pathParts[3];
++
++      console.log(`  Node ID: ${nodeId}`);
++      if (fieldName) {
++        console.log(`  Field: ${fieldName}`);
++        console.log(`  Actual value: ${util.inspect(ir.nodes[nodeId][fieldName], { depth: 3, colors: true })}`);
++      }
++    }
++    console.log("");
++  }
++} else {
++  console.log("✅ Schema validation PASSED!");
++}
++
++// ═══════════════════════════════════════════════════════════════
++// STEP 6: Root cause analysis
++// ═══════════════════════════════════════════════════════════════
++
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("STEP 6: Root Cause Analysis");
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("");
++
++if (foundIssues) {
++  console.log("🔥 ROOT CAUSE IDENTIFIED:");
++  console.log("");
++  console.log("The IR builder is creating nodes with invalid field types.");
++  console.log("Fields that should be NodeRef (string matching ^[^_]+_[T01]+$) or null");
++  console.log("are being set to objects or other invalid types.");
++  console.log("");
++  console.log("📍 LIKELY LOCATION:");
++  console.log("  - src/ir/builder.js (node creation methods)");
++  console.log("  - src/ir/nodes.js (Node class toJSON methods)");
++  console.log("");
++  console.log("💡 FIX STRATEGY:");
++  console.log("  1. Check how nodes are being serialized in toJSON()");
++  console.log("  2. Ensure all NodeRef fields store only node.id (string), not node objects");
++  console.log("  3. Add validation in IRNode constructors to catch this early");
++  console.log("");
++} else if (!ok) {
++  console.log("⚠️  Schema validation failed but no obvious issues found in node inspection.");
++  console.log("The error may be in module structure or metadata fields.");
++  console.log("");
++} else {
++  console.log("✅ No issues found! IR is valid.");
++  console.log("");
++}
++
++// ═══════════════════════════════════════════════════════════════
++// STEP 7: Write debug artifacts
++// ═══════════════════════════════════════════════════════════════
++
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("STEP 7: Writing debug artifacts");
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("");
++
++const artifactsDir = path.join(__dirname, "..", "artifacts");
++if (!fs.existsSync(artifactsDir)) {
++  fs.mkdirSync(artifactsDir, { recursive: true });
++}
++
++const debugIRPath = path.join(artifactsDir, "debug-ir-full.json");
++fs.writeFileSync(debugIRPath, JSON.stringify(ir, null, 2));
++console.log(`✅ Full IR written to: ${path.relative(process.cwd(), debugIRPath)}`);
++
++const debugErrorPath = path.join(artifactsDir, "debug-ir-errors.json");
++if (!ok) {
++  fs.writeFileSync(debugErrorPath, JSON.stringify(validate.errors, null, 2));
++  console.log(`✅ Validation errors written to: ${path.relative(process.cwd(), debugErrorPath)}`);
++}
++
++console.log("");
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("DEBUGGING COMPLETE");
++console.log("═══════════════════════════════════════════════════════════════");
++console.log("");
++
++process.exit(ok ? 0 : 1);
+diff --git a/scripts/yolo-diagnostic.ps1 b/scripts/yolo-diagnostic.ps1
+new file mode 100644
+index 0000000..1ce0262
+--- /dev/null
++++ b/scripts/yolo-diagnostic.ps1
+@@ -0,0 +1,224 @@
++# 🔍 YOLO DIAGNOSTIC MODE - Check what's actually broken
++# Before we run fixes, let's see what we're really dealing with
++
++param(
++    [switch]$Verbose = $false,
++    [switch]$Full = $false
++)
++
++Write-Host ""
++Write-Host "╔═════════════════════════════════════════════════════════════════╗" -ForegroundColor Yellow
++Write-Host "║        🔍 LUASCRIPT DIAGNOSTIC MODE - Check Real Issues        ║" -ForegroundColor Yellow
++Write-Host "╚═════════════════════════════════════════════════════════════════╝" -ForegroundColor Yellow
++Write-Host ""
++
++$RepoRoot = (Get-Location).Path
++$DiagnosticLog = Join-Path $RepoRoot "diagnostic-report.txt"
++$HasIssues = $false
++
++function Write-Diagnostic {
++    param([string]$Title, [string]$Result, [string]$Color = "White")
++    Write-Host "[$Title]" -ForegroundColor Cyan -NoNewline
++    Write-Host " $Result" -ForegroundColor $Color
++}
++
++function Check-Command {
++    param([string]$Command, [string]$Description)
++
++    Write-Host ""
++    Write-Host "🔹 Testing: $Description" -ForegroundColor Blue
++    Write-Host "   Command: npm $Command" -ForegroundColor DarkGray
++
++    try {
++        $output = & npm run $Command 2>&1
++        $exitCode = $LASTEXITCODE
++
++        if ($exitCode -eq 0) {
++            Write-Diagnostic "RESULT" "✅ PASS" "Green"
++            if ($Verbose -and $output) {
++                $outputLines = @($output) | Select-Object -Last 3
++                $outputLines | ForEach-Object { Write-Host "          $_" -ForegroundColor DarkGray }
++            }
++        } else {
++            Write-Diagnostic "RESULT" "❌ FAIL (exit code: $exitCode)" "Red"
++            $script:HasIssues = $true
++
++            # Extract error summary
++            $errorLines = @($output) | Select-Object -Last 10
++            $errorLines | ForEach-Object {
++                if ($_ -match "Error|error|fail|FAIL") {
++                    Write-Host "   ERROR: $_" -ForegroundColor Red
++                }
++            }
++        }
++
++        return @{
++            ExitCode = $exitCode
++            Output = $output
++            Passed = ($exitCode -eq 0)
++        }
++    } catch {
++        Write-Diagnostic "RESULT" "❌ EXCEPTION: $($_.Exception.Message)" "Red"
++        $script:HasIssues = $true
++        return @{ ExitCode = -1; Output = $_.Exception.Message; Passed = $false }
++    }
++}
++
++# ═════════════════════════════════════════════════════════════════
++# SECTION 1: BASIC GATES
++# ═════════════════════════════════════════════════════════════════
++
++Write-Host "SECTION 1: QUALITY GATE STATUS" -ForegroundColor Magenta
++Write-Host "════════════════════════════════════════════════════════" -ForegroundColor Magenta
++
++$harness = Check-Command "harness" "Harness (parser/transpiler)"
++$irVal = Check-Command "ir:validate:all" "IR Validation"
++$parity = Check-Command "test:parity" "Parity (JS↔Lua)"
++$determinism = Check-Command "test:determinism" "Determinism"
++
++# ═════════════════════════════════════════════════════════════════
++# SECTION 2: LINTING DIAGNOSIS
++# ═════════════════════════════════════════════════════════════════
++
++Write-Host ""
++Write-Host "SECTION 2: ESLINT DIAGNOSIS" -ForegroundColor Magenta
++Write-Host "════════════════════════════════════════════════════════" -ForegroundColor Magenta
++
++Write-Host ""
++Write-Host "🔹 Raw ESLint Version" -ForegroundColor Blue
++$eslintVersion = & npx eslint --version 2>&1
++Write-Host "   $eslintVersion" -ForegroundColor Green
++
++Write-Host ""
++Write-Host "🔹 ESLint Core Tier (src/ir/core/**/*.js)" -ForegroundColor Blue
++Write-Host "   Checking: src/ir/core/**/*.js" -ForegroundColor DarkGray
++
++# Try direct path instead of glob
++$coreFiles = Get-ChildItem -Path "src/ir/core" -Filter "*.js" -Recurse -ErrorAction SilentlyContinue
++Write-Host "   Found: $($coreFiles.Count) files" -ForegroundColor Cyan
++
++if ($coreFiles.Count -gt 0) {
++    $lintResult = & npx eslint @($coreFiles.FullName) --max-warnings 0 2>&1
++    if ($LASTEXITCODE -eq 0) {
++        Write-Host "   ✅ PASS - 0 warnings in core" -ForegroundColor Green
++    } else {
++        $summary = $lintResult | Select-String -Pattern "error|warning" | Select-Object -Last 3
++        Write-Host "   ❌ FAIL - Lint errors detected:" -ForegroundColor Red
++        $summary | ForEach-Object { Write-Host "      $_" -ForegroundColor Yellow }
++        $script:HasIssues = $true
++    }
++} else {
++    Write-Host "   ⚠️ No files found in src/ir/core" -ForegroundColor Yellow
++}
++
++# ═════════════════════════════════════════════════════════════════
++# SECTION 3: COVERAGE DIAGNOSIS
++# ═════════════════════════════════════════════════════════════════
++
++Write-Host ""
++Write-Host "SECTION 3: COVERAGE DIAGNOSIS" -ForegroundColor Magenta
++Write-Host "════════════════════════════════════════════════════════" -ForegroundColor Magenta
++
++Write-Host ""
++Write-Host "🔹 Coverage Report" -ForegroundColor Blue
++$coverage = & npm run test:coverage 2>&1
++$coverageLine = $coverage | Select-String "Statements|Lines" | Select-Object -First 1
++if ($coverageLine) {
++    Write-Host "   $coverageLine" -ForegroundColor Cyan
++}
++
++# Check if coverage file exists
++$coverageFile = "coverage/coverage-summary.json"
++if (Test-Path $coverageFile) {
++    Write-Host "   Coverage file found: $coverageFile" -ForegroundColor Green
++    try {
++        $covData = Get-Content $coverageFile | ConvertFrom-Json
++        $totalData = $covData.total
++        Write-Host "   Lines: $($totalData.lines.pct)% | Functions: $($totalData.functions.pct)% | Branches: $($totalData.branches.pct)%" -ForegroundColor Cyan
++    } catch {
++        Write-Host "   Could not parse coverage file" -ForegroundColor Yellow
++    }
++} else {
++    Write-Host "   ⚠️ No coverage file found" -ForegroundColor Yellow
++}
++
++# ═════════════════════════════════════════════════════════════════
++# SECTION 4: IR SCHEMA ISSUES
++# ═════════════════════════════════════════════════════════════════
++
++Write-Host ""
++Write-Host "SECTION 4: IR SCHEMA VALIDATION" -ForegroundColor Magenta
++Write-Host "════════════════════════════════════════════════════════" -ForegroundColor Magenta
++
++Write-Host ""
++Write-Host "🔹 IR Schema Check Details" -ForegroundColor Blue
++$irReport = & npm run ir:validate 2>&1
++$schemaErrors = $irReport | Select-String "Schema validation failed"
++if ($schemaErrors) {
++    Write-Host "   ❌ Schema validation issues found:" -ForegroundColor Red
++    $schemaErrors | Select-Object -First 5 | ForEach-Object {
++        Write-Host "      $_" -ForegroundColor Yellow
++    }
++    Write-Host ""
++    Write-Host "   💡 This means: IR nodes have invalid expression types" -ForegroundColor Cyan
++    $script:HasIssues = $true
++}
++
++# ═════════════════════════════════════════════════════════════════
++# SECTION 5: REAL BLOCKERS
++# ═════════════════════════════════════════════════════════════════
++
++Write-Host ""
++Write-Host "SECTION 5: ROOT CAUSE ANALYSIS" -ForegroundColor Magenta
++Write-Host "════════════════════════════════════════════════════════" -ForegroundColor Magenta
++
++Write-Host ""
++if ($script:HasIssues) {
++    Write-Host "🚨 REAL ISSUES DETECTED:" -ForegroundColor Red
++    Write-Host ""
++
++    if (-not $irVal.Passed) {
++        Write-Host "1. IR SCHEMA VALIDATION" -ForegroundColor Red
++        Write-Host "   Problem: node_1TT/expression type is invalid" -ForegroundColor Yellow
++        Write-Host "   Action: Run 'npm run ir:validate' and check src/ir/nodes.js" -ForegroundColor Cyan
++        Write-Host ""
++    }
++
++    if (-not $parity.Passed) {
++        Write-Host "2. PARITY FAILURES" -ForegroundColor Red
++        Write-Host "   Problem: JS↔Lua behavior mismatches" -ForegroundColor Yellow
++        Write-Host "   Action: Review failing test case in tests/parity/" -ForegroundColor Cyan
++        Write-Host ""
++    }
++
++    Write-Host "⚠️ AUTO-FIX CANNOT PROCEED - Real code changes needed!" -ForegroundColor Yellow
++} else {
++    Write-Host "✅ All gates appear healthy!" -ForegroundColor Green
++}
++
++# ═════════════════════════════════════════════════════════════════
++# SUMMARY
++# ═════════════════════════════════════════════════════════════════
++
++Write-Host ""
++Write-Host "DIAGNOSTIC SUMMARY" -ForegroundColor Magenta
++Write-Host "════════════════════════════════════════════════════════" -ForegroundColor Magenta
++Write-Host ""
++Write-Host "  Harness:        $(if ($harness.Passed) { '✅' } else { '❌' })" -ForegroundColor $(if ($harness.Passed) { 'Green' } else { 'Red' })
++Write-Host "  IR Validation:  $(if ($irVal.Passed) { '✅' } else { '❌' })" -ForegroundColor $(if ($irVal.Passed) { 'Green' } else { 'Red' })
++Write-Host "  Parity:         $(if ($parity.Passed) { '✅' } else { '❌' })" -ForegroundColor $(if ($parity.Passed) { 'Green' } else { 'Red' })
++Write-Host "  Determinism:    $(if ($determinism.Passed) { '✅' } else { '❌' })" -ForegroundColor $(if ($determinism.Passed) { 'Green' } else { 'Red' })
++Write-Host ""
++
++if ($script:HasIssues) {
++    Write-Host "Next Step:" -ForegroundColor Cyan
++    Write-Host "  1. Pick the biggest blocker above" -ForegroundColor White
++    Write-Host "  2. Read the detailed output" -ForegroundColor White
++    Write-Host "  3. Make targeted code fixes (not auto-fixes)" -ForegroundColor White
++    Write-Host "  4. Re-run diagnostic" -ForegroundColor White
++} else {
++    Write-Host "Next Step:" -ForegroundColor Cyan
++    Write-Host "  All systems nominal - ready to run YOLO mode!" -ForegroundColor Green
++}
++
++Write-Host ""

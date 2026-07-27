@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "language": "dart",
+  "status": "qualified",
+  "supportSlice": "dart-v0.6-ir-target-runtime-slice",
+  "nativeRuntime": "verified separately by tests/language_completion/manifests/dart.json and npm run language:dart:bidirectional",
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_functions",
+      "sourceLanguage": "dart",
+      "source": "tests/language_completion/fixtures/dart/arithmetic_functions.dart",
+      "skipNative": true,
+      "expectedOutput": "dart_arithmetic\n15"
+    },
+    {
+      "name": "control_flow",
+      "sourceLanguage": "dart",
+      "source": "tests/language_completion/fixtures/dart/control_flow.dart",
+      "skipNative": true,
+      "expectedOutput": "dart_control\n13"
+    },
+    {
+      "name": "list_loop",
+      "sourceLanguage": "dart",
+      "source": "tests/language_completion/fixtures/dart/list_loop.dart",
+      "skipNative": true,
+      "expectedOutput": "dart_list\n12"
+    },
+    {
+      "name": "typed_list_indexed",
+      "sourceLanguage": "dart",
+      "source": "tests/language_completion/fixtures/dart/typed_list_indexed.dart",
+      "skipNative": true,
+      "expectedOutput": "dart_indexed\n15"
+    },
+    {
+      "name": "for_math_calls",
+      "sourceLanguage": "dart",
+      "source": "tests/language_completion/fixtures/dart/for_math_calls.dart",
+      "skipNative": true,
+      "expectedOutput": "dart_for_math\n4"
+    },
+    {
+      "name": "for_in_string",
+      "sourceLanguage": "dart",
+      "source": "tests/language_completion/fixtures/dart/for_in_string.dart",
+      "skipNative": true,
+      "expectedOutput": "dart_for_in_string\n9\n4\na"
+    },
+    {
+      "name": "boolean_break_continue",
+      "sourceLanguage": "dart",
+      "source": "tests/language_completion/fixtures/dart/boolean_break_continue.dart",
+      "skipNative": true,
+      "expectedOutput": "dart_bool_loop\n9"
+    },
+    {
+      "name": "unsupported_import",
+      "sourceLanguage": "dart",
+      "source": "tests/language_completion/fixtures/dart/unsupported_import.dart",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Dart input feature: imports/libraries"
+    },
+    {
+      "name": "unsupported_class",
+      "sourceLanguage": "dart",
+      "source": "tests/language_completion/fixtures/dart/unsupported_class.dart",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Dart input feature: object system"
+    },
+    {
+      "name": "unsupported_async",
+      "sourceLanguage": "dart",
+      "source": "tests/language_completion/fixtures/dart/unsupported_async.dart",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Dart input feature: async/generators"
+    },
+    {
+      "name": "unsupported_lambda",
+      "sourceLanguage": "dart",
+      "source": "tests/language_completion/fixtures/dart/unsupported_lambda.dart",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Dart input feature: lambdas/closures"
+    }
+  ]
+}

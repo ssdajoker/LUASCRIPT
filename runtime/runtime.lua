@@ -39,6 +39,23 @@ function runtime.JSON.stringify(obj, indent)
         level = level or 0
         local indent_str = indent and string.rep("  ", level) or ""
         local next_indent_str = indent and string.rep("  ", level + 1) or ""
+        local function format_array(arr)
+            if not indent then
+                return "[" .. table.concat(arr, ",") .. "]"
+            end
+
+            local joined = table.concat(arr, ",\n" .. next_indent_str)
+            return table.concat({"[\n", next_indent_str, joined, "\n", indent_str, "]"})
+        end
+
+        local function format_object(parts)
+            if not indent then
+                return "{" .. table.concat(parts, ",") .. "}"
+            end
+
+            local joined = table.concat(parts, ",\n" .. next_indent_str)
+            return table.concat({"{\n", next_indent_str, joined, "\n", indent_str, "}"})
+        end
         if type(o) == "nil" then
             return "null"
         elseif type(o) == "boolean" then
@@ -63,26 +80,14 @@ function runtime.JSON.stringify(obj, indent)
                 for i = 1, max_index do
                     arr[i] = serialize(o[i], level + 1)
                 end
-                if indent then
-                    return "[\n" .. next_indent_str ..
-                           table.concat(arr, ",\n" .. next_indent_str) ..
-                           "\n" .. indent_str .. "]"
-                else
-                    return "[" .. table.concat(arr, ",") .. "]"
-                end
+                return format_array(arr)
             else
                 local obj_parts = {}
                 for k, v in pairs(o) do
                     local key = type(k) == "string" and ('"' .. k .. '"') or tostring(k)
                     table.insert(obj_parts, key .. ":" .. (indent and " " or "") .. serialize(v, level + 1))
                 end
-                if indent then
-                    return "{\n" .. next_indent_str ..
-                           table.concat(obj_parts, ",\n" .. next_indent_str) ..
-                           "\n" .. indent_str .. "}"
-                else
-                    return "{" .. table.concat(obj_parts, ",") .. "}"
-                end
+                return format_object(obj_parts)
             end
         else
             return '"' .. tostring(o) .. '"'

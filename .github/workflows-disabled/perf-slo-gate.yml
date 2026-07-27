@@ -1,0 +1,120 @@
+name: Performance SLO Gate
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  perf-slo:
+    name: Performance SLO & Budget Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for regression detection
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run core tests (generate perf baseline)
+        run: npm run test:core
+        env:
+          PERF_COLLECT: true
+
+      - name: Run SLO budget check
+        id: slo_check
+        run: node scripts/perf-slo-budget.js
+        continue-on-error: true
+
+      - name: Generate performance report
+        if: always()
+        run: |
+          echo "## Performance SLO Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f "artifacts/perf-dashboard.html" ]; then
+            echo "✅ Performance artifacts generated" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Compare with baseline (regression detection)
+        if: github.event_name == 'pull_request'
+        id: regression_check
+        run: |
+          node scripts/perf-regression-gate.js
+          if [ $? -eq 0 ]; then
+            echo "regression_status=PASS" >> $GITHUB_OUTPUT
+          else
+            echo "regression_status=WARN" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Upload perf artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-artifacts
+          path: |
+            artifacts/perf-*.json
+            artifacts/perf-dashboard.html
+            .perf-baseline.json
+          retention-days: 30
+
+      - name: Publish perf results to Pages
+        if: github.ref == 'refs/heads/main' && always()
+        run: |
+          mkdir -p perf-history
+          cp artifacts/perf-dashboard.html perf-history/index-$(date +%s).html
+          echo "Performance history available in artifact storage"
+
+      - name: Comment PR with SLO status
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const perfFile = fs.readdirSync('artifacts')
+              .filter(f => f.startsWith('perf-') && f.endsWith('.json'))[0];
+            
+            if (perfFile) {
+              const report = JSON.parse(fs.readFileSync(`artifacts/${perfFile}`, 'utf8'));
+              const sloStatus = `
+              ### ⚡ Performance SLO Report
+              
+              **Summary:**
+              - Passing: ${report.summary.passingBudgets}/${report.summary.passingBudgets + report.summary.failingBudgets}
+              - Violations: ${report.summary.failingBudgets}
+              - Warnings: ${report.summary.failingBudgets > 0 ? '🔴 Critical' : '✅ None'}
+              
+              **Status:** ${report.summary.failingBudgets > 0 ? '❌ FAILED' : '✅ PASSED'}
+              
+              [View Performance Dashboard](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
+              `;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: sloStatus
+              });
+            }
+
+      - name: Fail if critical violations
+        if: steps.slo_check.outcome == 'failure'
+        run: |
+          echo "Performance SLO violations detected. Please review and fix."
+          exit 1
+
+      - name: Set status badge
+        if: always()
+        run: |
+          STATUS=${{ steps.slo_check.outcome == 'success' && 'passing' || 'failing' }}
+          echo "PERF_STATUS=$STATUS" >> $GITHUB_ENV

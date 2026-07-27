@@ -1,0 +1,426 @@
+[1mdiff --git a/.github/workflows/matrix.yml b/.github/workflows/matrix.yml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d3ceeec[m
+[1m--- /dev/null[m
+[1m+++ b/.github/workflows/matrix.yml[m
+[36m@@ -0,0 +1,117 @@[m
+[32m+[m[32mname: matrix-audit[m
+[32m+[m
+[32m+[m[32mon:[m
+[32m+[m[32m  push:[m
+[32m+[m[32m    branches: [ "main" ][m
+[32m+[m[32m  pull_request:[m
+[32m+[m[32m    branches: [ "main" ][m
+[32m+[m
+[32m+[m[32mconcurrency:[m
+[32m+[m[32m  group: matrix-audit-${{ github.ref }}[m
+[32m+[m[32m  cancel-in-progress: true[m
+[32m+[m
+[32m+[m[32mjobs:[m
+[32m+[m[32m  matrix-run:[m
+[32m+[m[32m    runs-on: ubuntu-latest[m
+[32m+[m[32m    strategy:[m
+[32m+[m[32m      fail-fast: false[m
+[32m+[m[32m      matrix:[m
+[32m+[m[32m        seed: [1001, 1002, 1003, 2001, 2002, 2003, 3001, 3002, 3003][m
+[32m+[m[32m        axisA_tag: [boundary, typical, adversarial][m
+[32m+[m[32m    steps:[m
+[32m+[m[32m      - name: Checkout[m
+[32m+[m[32m        uses: actions/checkout@v4[m
+[32m+[m
+[32m+[m[32m      - name: Setup Node[m
+[32m+[m[32m        uses: actions/setup-node@v4[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          node-version: 20[m
+[32m+[m
+[32m+[m[32m      - name: Install dependencies[m
+[32m+[m[32m        run: npm ci[m
+[32m+[m
+[32m+[m[32m      - name: Enhanced transpiler sweep[m
+[32m+[m[32m        env:[m
+[32m+[m[32m          LUASCRIPT_SEED: ${{ matrix.seed }}[m
+[32m+[m[32m          AXIS_A_TAG: ${{ matrix.axisA_tag }}[m
+[32m+[m[32m        run: node test/test_enhanced_transpiler.js[m
+[32m+[m
+[32m+[m[32m      - name: IR validation[m
+[32m+[m[32m        run: npm run -s ir:validate:all[m
+[32m+[m
+[32m+[m[32m      - name: Emit goldens parity[m
+[32m+[m[32m        run: npm run -s ir:emit:goldens[m
+[32m+[m
+[32m+[m[32m      - name: Upload artifacts on failure[m
+[32m+[m[32m        if: failure()[m
+[32m+[m[32m        uses: actions/upload-artifact@v4[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          name: matrix-${{ matrix.seed }}-${{ matrix.axisA_tag }}[m
+[32m+[m[32m          path: |[m
+[32m+[m[32m            reports/[m
+[32m+[m[32m            test_report.txt[m
+[32m+[m[32m            static_warnings*.txt[m
+[32m+[m
+[32m+[m[32m  emit-ir-check:[m
+[32m+[m[32m    needs: matrix-run[m
+[32m+[m[32m    runs-on: ubuntu-latest[m
+[32m+[m[32m    strategy:[m
+[32m+[m[32m      matrix:[m
+[32m+[m[32m        seed: [4001, 4002, 4003][m
+[32m+[m[32m    steps:[m
+[32m+[m[32m      - name: Checkout[m
+[32m+[m[32m        uses: actions/checkout@v4[m
+[32m+[m
+[32m+[m[32m      - name: Setup Node[m
+[32m+[m[32m        uses: actions/setup-node@v4[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          node-version: 20[m
+[32m+[m
+[32m+[m[32m      - name: Install dependencies[m
+[32m+[m[32m        run: npm ci[m
+[32m+[m
+[32m+[m[32m      - name: IR status report[m
+[32m+[m[32m        env:[m
+[32m+[m[32m          LUASCRIPT_SEED: ${{ matrix.seed }}[m
+[32m+[m[32m        run: npm run -s ir:report[m
+[32m+[m
+[32m+[m[32m      - name: Golden IR parity[m
+[32m+[m[32m        run: npm run -s ir:golden:parity[m
+[32m+[m
+[32m+[m[32m      - name: Upload IR reports on failure[m
+[32m+[m[32m        if: failure()[m
+[32m+[m[32m        uses: actions/upload-artifact@v4[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          name: ir-status-${{ matrix.seed }}[m
+[32m+[m[32m          path: reports/[m
+[32m+[m
+[32m+[m[32m  harness-check:[m
+[32m+[m[32m    needs:[m
+[32m+[m[32m      - matrix-run[m
+[32m+[m[32m      - emit-ir-check[m
+[32m+[m[32m    runs-on: ubuntu-latest[m
+[32m+[m[32m    steps:[m
+[32m+[m[32m      - name: Checkout[m
+[32m+[m[32m        uses: actions/checkout@v4[m
+[32m+[m
+[32m+[m[32m      - name: Setup Node[m
+[32m+[m[32m        uses: actions/setup-node@v4[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          node-version: 20[m
+[32m+[m
+[32m+[m[32m      - name: Install dependencies[m
+[32m+[m[32m        run: npm ci[m
+[32m+[m
+[32m+[m[32m      - name: Run IR harness tests[m
+[32m+[m[32m        run: node tests/ir/harness.test.js[m
+[32m+[m
+[32m+[m[32m      - name: Upload harness artifacts on failure[m
+[32m+[m[32m        if: failure()[m
+[32m+[m[32m        uses: actions/upload-artifact@v4[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          name: harness-artifacts[m
+[32m+[m[32m          path: |[m
+[32m+[m[32m            artifacts/[m
+[32m+[m[32m            reports/[m
+[32m+[m[32m            tests/tmp/[m
+[32m+[m[32m          if-no-files-found: ignore[m
+[1mdiff --git a/.github/workflows/status-bot.yml b/.github/workflows/status-bot.yml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a6987fa[m
+[1m--- /dev/null[m
+[1m+++ b/.github/workflows/status-bot.yml[m
+[36m@@ -0,0 +1,91 @@[m
+[32m+[m[32mname: status-bot[m
+[32m+[m
+[32m+[m[32mon:[m
+[32m+[m[32m  workflow_run:[m
+[32m+[m[32m    workflows: ["matrix-audit"][m
+[32m+[m[32m    types: [completed][m
+[32m+[m
+[32m+[m[32mpermissions:[m
+[32m+[m[32m  contents: write[m
+[32m+[m[32m  pull-requests: write[m
+[32m+[m[32m  issues: write[m
+[32m+[m
+[32m+[m[32mjobs:[m
+[32m+[m[32m  bundle-status:[m
+[32m+[m[32m    runs-on: ubuntu-latest[m
+[32m+[m[32m    steps:[m
+[32m+[m[32m      - name: Checkout[m
+[32m+[m[32m        uses: actions/checkout@v4[m
+[32m+[m
+[32m+[m[32m      - name: Setup Node[m
+[32m+[m[32m        uses: actions/setup-node@v4[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          node-version: 20[m
+[32m+[m
+[32m+[m[32m      - name: Fetch job conclusions[m
+[32m+[m[32m        id: jobs[m
+[32m+[m[32m        uses: actions/github-script@v7[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          script: |[m
+[32m+[m[32m            const runId = context.payload.workflow_run.id;[m
+[32m+[m[32m            const { data } = await github.rest.actions.listJobsForWorkflowRun({[m
+[32m+[m[32m              owner: context.repo.owner,[m
+[32m+[m[32m              repo: context.repo.repo,[m
+[32m+[m[32m              run_id: runId,[m
+[32m+[m[32m              per_page: 100,[m
+[32m+[m[32m            });[m
+[32m+[m[32m            const harnessJob = data.jobs.find((j) => j.name === 'harness-check');[m
+[32m+[m[32m            core.setOutput('harness', harnessJob ? harnessJob.conclusion || 'unknown' : 'unknown');[m
+[32m+[m
+[32m+[m[32m      - name: Build status bundle[m
+[32m+[m[32m        run: node scripts/status_bundle.js[m
+[32m+[m[32m        env:[m
+[32m+[m[32m          WORKFLOW: ${{ github.event.workflow_run.name }}[m
+[32m+[m[32m          RUN_ID: ${{ github.event.workflow_run.id }}[m
+[32m+[m[32m          GIT_SHA: ${{ github.event.workflow_run.head_sha }}[m
+[32m+[m[32m          TEST_STATUS: ${{ github.event.workflow_run.conclusion }}[m
+[32m+[m[32m          HARNESS_STATUS: ${{ steps.jobs.outputs.harness || github.event.workflow_run.conclusion }}[m
+[32m+[m[32m          IR_VALIDATE_STATUS: ${{ github.event.workflow_run.conclusion }}[m
+[32m+[m[32m          EMIT_GOLDENS_STATUS: ${{ github.event.workflow_run.conclusion }}[m
+[32m+[m[32m          PERF_STATUS: unknown[m
+[32m+[m
+[32m+[m[32m      - name: Upload status bundle[m
+[32m+[m[32m        uses: actions/upload-artifact@v4[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          name: status-bundle-${{ github.event.workflow_run.id }}[m
+[32m+[m[32m          path: artifacts/status.json[m
+[32m+[m
+[32m+[m[32m      - name: Post status issue[m
+[32m+[m[32m        uses: actions/github-script@v7[m
+[32m+[m[32m        env:[m
+[32m+[m[32m          RUN_URL: ${{ github.event.workflow_run.html_url }}[m
+[32m+[m[32m          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}[m
+[32m+[m[32m        with:[m
+[32m+[m[32m          script: |[m
+[32m+[m[32m            const title = 'Autonomous status report';[m
+[32m+[m[32m            const body = `Status: ${process.env.RUN_CONCLUSION}\nRun: ${process.env.RUN_URL}`;[m
+[32m+[m
+[32m+[m[32m            const issues = await github.rest.issues.listForRepo({[m
+[32m+[m[32m              owner: context.repo.owner,[m
+[32m+[m[32m              repo: context.repo.repo,[m
+[32m+[m[32m              state: 'open',[m
+[32m+[m[32m              per_page: 50,[m
+[32m+[m[32m            });[m
+[32m+[m
+[32m+[m[32m            const existing = issues.data.find((i) => i.title === title);[m
+[32m+[m
+[32m+[m[32m            if (existing) {[m
+[32m+[m[32m              await github.rest.issues.createComment({[m
+[32m+[m[32m                owner: context.repo.owner,[m
+[32m+[m[32m                repo: context.repo.repo,[m
+[32m+[m[32m                issue_number: existing.number,[m
+[32m+[m[32m                body,[m
+[32m+[m[32m              });[m
+[32m+[m[32m            } else {[m
+[32m+[m[32m              await github.rest.issues.create({[m
+[32m+[m[32m                owner: context.repo.owner,[m
+[32m+[m[32m                repo: context.repo.repo,[m
+[32m+[m[32m                title,[m
+[32m+[m[32m                body,[m
+[32m+[m[32m              });[m
+[32m+[m[32m            }[m
+\ No newline at end of file[m
+[1mdiff --git a/DEVELOPMENT_WORKFLOW.md b/DEVELOPMENT_WORKFLOW.md[m
+[1mindex 8ada51e..518e2c1 100644[m
+[1m--- a/DEVELOPMENT_WORKFLOW.md[m
+[1m+++ b/DEVELOPMENT_WORKFLOW.md[m
+[36m@@ -80,6 +80,13 @@[m [mFollowing conventional commits:[m
+ - **Integration tests**: End-to-end transpilation tests[m
+ - **Performance tests**: Benchmark against previous versions[m
+ - **Manual testing**: Web IDE functionality[m
+[32m+[m[32m- **IR harness**: Run `npm run harness` for fast regression coverage (determinism + timing guard, artifacts in [artifacts/harness_results.json](artifacts/harness_results.json)).[m
+[32m+[m
+[32m+[m[32m### CI/Status Bundle (local dry-run)[m
+[32m+[m[32m- Generate a local status bundle with `npm run status:bundle` (uses [scripts/status_bundle.js](scripts/status_bundle.js)).[m
+[32m+[m[32m- Populate optional env overrides before running: `WORKFLOW`, `RUN_ID` or `GITHUB_RUN_ID`, `GIT_SHA` or `GITHUB_SHA`, and test signals `TEST_STATUS`, `HARNESS_STATUS`, `IR_VALIDATE_STATUS`, `EMIT_GOLDENS_STATUS`, `PERF_STATUS`.[m
+[32m+[m[32m- Output: [artifacts/status.json](artifacts/status.json) matching [scripts/status_schema.json](scripts/status_schema.json). Fields default to `unknown` if unset.[m
+[32m+[m[32m- Keep `artifacts/` untracked; it is ignored in version control.[m
+ [m
+ ### Week 2 Core Features (94% Complete)[m
+ #### Remaining Tasks (6%):[m
+[1mdiff --git a/README.md b/README.md[m
+[1mindex aee0e4d..4e31eb0 100644[m
+[1m--- a/README.md[m
+[1m+++ b/README.md[m
+[36m@@ -101,6 +101,9 @@[m [mLUASCRIPT Architecture[m
+ - Python 3.8+[m
+ - LuaJIT 2.1+ (included in project)[m
+ [m
+[32m+[m[32m> If you installed LuaJIT with winget on Windows, persist it for new shells with:[m
+[32m+[m[32m> `setx PATH "C:\\Users\\ssdaj\\AppData\\Local\\Programs\\LuaJIT\\bin;%PATH%"`[m
+[32m+[m
+ ### Quick Start[m
+ ```bash[m
+ # Clone the project[m
+[36m@@ -202,8 +205,19 @@[m [mpython tests/test_mathematical_functions.py[m
+ [m
+ # Run transpilation tests  [m
+ python tests/test_transpiler.py[m
+[32m+[m
+[32m+[m[32m# Run example integration suite (compiles and executes .ls examples)[m
+[32m+[m[32mnpm run test:examples[m
+[32m+[m
+[32m+[m[32m# Run IR harness regression suite[m
+[32m+[m[32mnpm run harness[m
+ ```[m
+ [m
+[32m+[m[32m### CI status bundle (local)[m
+[32m+[m[32m- Generate a local bundle with `npm run status:bundle`; output is written to [artifacts/status.json](artifacts/status.json) and matches [scripts/status_schema.json](scripts/status_schema.json).[m
+[32m+[m[32m- Optional env hints: `WORKFLOW`, `RUN_ID`/`GITHUB_RUN_ID`, `GIT_SHA`/`GITHUB_SHA`, `TEST_STATUS`, `HARNESS_STATUS`, `IR_VALIDATE_STATUS`, `EMIT_GOLDENS_STATUS`, `PERF_STATUS`. Unset values default to `unknown`.[m
+[32m+[m[32m- For contributor workflow details see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md).[m
+[32m+[m
+ ## 🎯 Roadmap[m
+ [m
+ ### Phase 1: Core Gap Closure (Next 7 days)[m
+[1mdiff --git a/package.json b/package.json[m
+[1mindex 99df305..c02fe81 100644[m
+[1m--- a/package.json[m
+[1m+++ b/package.json[m
+[36m@@ -9,6 +9,8 @@[m
+     "test:all": "npm test && npm run test:enhanced && npm run test:legacy && npm run test:parity",[m
+     "test:phase1": "node test/test_perfect_parser_phase1.js && node test/test_perfect_parser_phase1_negative.js",[m
+     "test:smoke": "node scripts/smoke_ci.js",[m
+[32m+[m[32m    "status:bundle": "node scripts/status_bundle.js",[m
+[32m+[m[32m    "harness": "node tests/ir/harness.test.js",[m
+     "test:legacy": "node test/test_unified_system.js all",[m
+     "test:legacy:parser": "node test/legacy/parser.suite.js",[m
+     "test:legacy:runtime": "node test/legacy/runtime.suite.js",[m
+[36m@@ -18,11 +20,13 @@[m
+     "test:performance": "node -e \"const {UnifiedSystemTests} = require('./test/test_unified_system.js'); const suite = new UnifiedSystemTests(); suite.testPerformanceTools().then(() => console.log('Performance tests complete'));\"",[m
+     "test:integration": "node -e \"const {UnifiedSystemTests} = require('./test/test_unified_system.js'); const suite = new UnifiedSystemTests(); suite.testFullPipeline().then(() => console.log('Integration tests complete'));\"",[m
+     "test:victory": "node -e \"const {UnifiedLuaScript} = require('./src/unified_luascript.js'); UnifiedLuaScript.validateVictoryStatic().then(() => console.log('Victory validation complete'));\"",[m
+[32m+[m[32m    "test:examples": "node tests/examples_integration.test.js",[m
+     "dev": "node src/unified_luascript.js",[m
+     "build": "node -e \"const {UnifiedLuaScript} = require('./src/unified_luascript.js'); console.log('Build system ready');\"",[m
+     "start": "node src/unified_luascript.js",[m
+     "benchmark": "node -e \"const {UnifiedLuaScript} = require('./src/unified_luascript.js'); const system = UnifiedLuaScript.createProduction(); system.initializeComponents().then(() => system.benchmark('let x = 5;', 100)).then(result => console.log('Benchmark:', result));\"",[m
+     "validate": "npm run test:victory && echo 'LUASCRIPT VALIDATION COMPLETE - VICTORY ACHIEVED!'",[m
+[32m+[m[32m    "validate:install": "node scripts/validate_install.js",[m
+     "ir:validate": "node tests/ir/run_ir_validate.js",[m
+     "ir:validate:schema": "node scripts/validate_ir_schema.js",[m
+     "ir:validate:all": "npm run -s ir:validate && npm run -s ir:validate:schema",[m
+[36m@@ -39,6 +43,7 @@[m
+     "test:parity": "node tests/parity/run_parity_tests.js",[m
+     "test:quick-ugmp": "npm run -s test:core && npm run -s test:parity && npm run -s ir:report",[m
+     "test:normalizer": "node tests/ir/normalizer.smoke.js",[m
+[32m+[m[32m    "ir:normalizer": "npm run -s test:normalizer",[m
+     "test:determinism": "node tests/ir/determinism.test.js",[m
+     "ir:emit:goldens": "node tests/emitter/emit_from_goldens.js"[m
+   },[m
+[1mdiff --git a/reports/harness_dashboard.md b/reports/harness_dashboard.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..08febe8[m
+[1m--- /dev/null[m
+[1m+++ b/reports/harness_dashboard.md[m
+[36m@@ -0,0 +1,19 @@[m
+[32m+[m[32m# Harness Dashboard (stub)[m
+[32m+[m
+[32m+[m[32mThis dashboard captures IR harness health over time. CI uploads `artifacts/harness_results.json` on harness runs; aggregate these per commit to track regressions.[m
+[32m+[m
+[32m+[m[32m## Suggested fields per entry[m
+[32m+[m[32m- commit: git SHA[m
+[32m+[m[32m- conclusion: success|failure[m
+[32m+[m[32m- slowest_case_ms: number[m
+[32m+[m[32m- cases: count[m
+[32m+[m[32m- timestamp: ISO8601[m
+[32m+[m[32m- run_url: link to workflow run[m
+[32m+[m
+[32m+[m[32m## How to update (CI-friendly)[m
+[32m+[m[32m1. After a harness run, parse `artifacts/harness_results.json`.[m
+[32m+[m[32m2. Append a line to this file (or another store) with the fields above.[m
+[32m+[m[32m3. Commit only curated history; artifacts remain untracked.[m
+[32m+[m
+[32m+[m[32m## Current status[m
+[32m+[m[32m- (populate via CI once available)[m
+[1mdiff --git a/tests/ir/harness.test.js b/tests/ir/harness.test.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f42a48a[m
+[1m--- /dev/null[m
+[1m+++ b/tests/ir/harness.test.js[m
+[36m@@ -0,0 +1,87 @@[m
+[32m+[m[32mconst fs = require('fs');[m
+[32m+[m[32mconst path = require('path');[m
+[32m+[m[32mconst assert = require('assert');[m
+[32m+[m[32mconst { parseAndLower } = require('../../src/ir/pipeline');[m
+[32m+[m[32mconst { emitLuaFromIR } = require('../../src/ir/emitter');[m
+[32m+[m[32mconst { validateIR } = require('../../src/ir/validator');[m
+[32m+[m
+[32m+[m[32mconst results = [];[m
+[32m+[m
+[32m+[m[32mfunction runCase(name, source, expectations) {[m
+[32m+[m[32m  const started = process.hrtime.bigint();[m
+[32m+[m
+[32m+[m[32m  const ir1 = parseAndLower(source);[m
+[32m+[m[32m  const validation = validateIR(ir1);[m
+[32m+[m[32m  assert.strictEqual(validation.ok, true, `${name} validation failed: ${JSON.stringify(validation)}`);[m
+[32m+[m[32m  const lua1 = emitLuaFromIR(ir1);[m
+[32m+[m[32m  expectations({ lua: lua1, ir: ir1 });[m
+[32m+[m
+[32m+[m[32m  const ir2 = parseAndLower(source);[m
+[32m+[m[32m  const lua2 = emitLuaFromIR(ir2);[m
+[32m+[m[32m  assert.strictEqual(lua1, lua2, `${name} determinism mismatch between runs`);[m
+[32m+[m
+[32m+[m[32m  const durationMs = Number(process.hrtime.bigint() - started) / 1_000_000;[m
+[32m+[m[32m  results.push({ name, durationMs, bytes: lua1.length });[m
+[32m+[m[32m  assert.ok(durationMs < 2000, `${name} exceeded 2000ms budget (${durationMs.toFixed(2)}ms)`);[m
+[32m+[m
+[32m+[m[32m  return lua1;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction writeArtifacts(summary) {[m
+[32m+[m[32m  try {[m
+[32m+[m[32m    const outDir = path.join(process.cwd(), 'artifacts');[m
+[32m+[m[32m    fs.mkdirSync(outDir, { recursive: true });[m
+[32m+[m[32m    fs.writeFileSync(path.join(outDir, 'harness_results.json'), JSON.stringify(summary, null, 2));[m
+[32m+[m[32m  } catch (err) {[m
+[32m+[m[32m    console.warn('Failed to write harness artifacts:', err && err.stack ? err.stack : err);[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mtry {[m
+[32m+[m[32m  runCase('optional chaining + nullish coalesce', 'const r = (obj?.value ?? 1) | 4;', ({ lua }) => {[m
+[32m+[m[32m    assert.ok(lua.includes('function(__o)'), 'optional guard missing');[m
+[32m+[m[32m    assert.ok(lua.includes('__o ~= nil'), 'optional chain guard condition missing');[m
+[32m+[m[32m    assert.ok(lua.includes('__v == nil then return 1 else return __v'), 'nullish coalesce fallback missing');[m
+[32m+[m[32m    assert.ok(lua.includes('| 4'), 'bitwise OR missing');[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  runCase('nullish assignment', 'x ??= y;', ({ lua }) => {[m
+[32m+[m[32m    assert.ok(lua.includes('local __val = x'), 'nullish assignment temp missing');[m
+[32m+[m[32m    assert.ok(lua.includes('__val == nil then __val = y'), 'nullish assignment guard missing');[m
+[32m+[m[32m    assert.ok(lua.includes('x = __val'), 'nullish assignment writeback missing');[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  runCase('for-of emission', 'function sum(items) { let total = 0; for (const v of items) { total += v; } return total; }', ({ lua }) => {[m
+[32m+[m[32m    assert.ok(lua.includes('for __k, v in pairs(items)'), 'for-of should use pairs iterator');[m
+[32m+[m[32m    assert.ok(lua.includes('total = total + v'), 'accumulation missing');[m
+[32m+[m[32m    assert.ok(lua.includes('return total'), 'return total missing');[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  runCase('for-of array literal', 'function sum(arr) { let s = 0; for (const n of [1,2,3]) { s += n; } return s + arr[0]; }', ({ lua }) => {[m
+[32m+[m[32m    assert.ok(lua.includes('for __k, n in pairs({1, 2, 3})'), 'for-of array literal should desugar to pairs over table');[m
+[32m+[m[32m    assert.ok(lua.includes('s = s + n'), 'accumulation missing in literal loop');[m
+[32m+[m[32m    assert.ok(lua.includes('return s + arr[0]'), 'return expression missing');[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  runCase('template literal basic', 'function greet(name) { const msg = `hi ${name}!`; return msg; }', ({ lua }) => {[m
+[32m+[m[32m    assert.ok(lua.includes('local msg'), 'template literal binding missing');[m
+[32m+[m[32m    assert.ok(lua.includes('string.format("hi %s!", name)'), 'template literal interpolation missing');[m
+[32m+[m[32m    assert.ok(lua.includes('return msg'), 'template literal return missing');[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  runCase('array destructuring', 'function pick(foo) { const [a, , c] = foo; return a + c; }', ({ lua }) => {[m
+[32m+[m[32m    assert.ok(lua.includes('local __ds1 = foo'), 'array destruct temp missing');[m
+[32m+[m[32m    assert.ok(lua.includes('__ds1[0]'), 'first element access missing');[m
+[32m+[m[32m    assert.ok(lua.includes('__ds1[1]'), 'third element access missing');[m
+[32m+[m[32m    assert.ok(lua.match(/return a \+ c/), 'return expression missing');[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  const slowest = results.slice().sort((a, b) => b.durationMs - a.durationMs)[0];[m
+[32m+[m[32m  writeArtifacts({ summary: { cases: results.length, slowest }, cases: results });[m
+[32m+[m[32m  console.log('harness tests passed');[m
+[32m+[m[32m} catch (err) {[m
+[32m+[m[32m  console.error('harness tests failed');[m
+[32m+[m[32m  console.error(err && err.stack ? err.stack : err);[m
+[32m+[m[32m  writeArtifacts({ error: err && err.message ? err.message : 'harness failed', cases: results });[m
+[32m+[m[32m  process.exit(1);[m
+[32m+[m[32m}[m

@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "language": "cpp",
+  "status": "qualified",
+  "supportSlice": "cpp-v0.4-class-method-small-programs",
+  "runtime": "cpp",
+  "targets": ["lua", "javascript", "luascript", "c", "cpp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_locals",
+      "source": "tests/language_completion/fixtures/cpp/arithmetic_locals.cpp",
+      "expectedOutput": "cpp_arithmetic 5 15"
+    },
+    {
+      "name": "functions_conditionals",
+      "source": "tests/language_completion/fixtures/cpp/functions_conditionals.cpp",
+      "expectedOutput": "cpp_branch big 7"
+    },
+    {
+      "name": "while_loop",
+      "source": "tests/language_completion/fixtures/cpp/while_loop.cpp",
+      "expectedOutput": "cpp_while 6"
+    },
+    {
+      "name": "numeric_for",
+      "source": "tests/language_completion/fixtures/cpp/numeric_for.cpp",
+      "expectedOutput": "cpp_for 10"
+    },
+    {
+      "name": "array_indexing",
+      "source": "tests/language_completion/fixtures/cpp/array_indexing.cpp",
+      "expectedOutput": "cpp_array 8 4"
+    },
+    {
+      "name": "boolean_logic",
+      "source": "tests/language_completion/fixtures/cpp/boolean_logic.cpp",
+      "expectedOutput": "cpp_bool ready"
+    },
+    {
+      "name": "break_continue",
+      "source": "tests/language_completion/fixtures/cpp/break_continue.cpp",
+      "expectedOutput": "cpp_break_continue 12"
+    },
+    {
+      "name": "math_calls",
+      "source": "tests/language_completion/fixtures/cpp/math_calls.cpp",
+      "expectedOutput": "cpp_math 9 -4 4"
+    },
+    {
+      "name": "array_parameter_function",
+      "source": "tests/language_completion/fixtures/cpp/array_parameter_function.cpp",
+      "expectedOutput": "cpp_array_fn 10"
+    },
+    {
+      "name": "string_size",
+      "source": "tests/language_completion/fixtures/cpp/string_size.cpp",
+      "expectedOutput": "cpp_string_size 4"
+    },
+    {
+      "name": "string_index",
+      "source": "tests/language_completion/fixtures/cpp/string_index.cpp",
+      "expectedOutput": "cpp_string_index ok"
+    },
+    {
+      "name": "class_public_fields",
+      "source": "tests/language_completion/fixtures/cpp/class_public_fields.cpp",
+      "expectedOutput": "cpp_class 7 10"
+    },
+    {
+      "name": "class_return",
+      "source": "tests/language_completion/fixtures/cpp/class_return.cpp",
+      "expectedOutput": "cpp_class_return 8 13"
+    },
+    {
+      "name": "class_constructor_method",
+      "source": "tests/language_completion/fixtures/cpp/class_constructor_method.cpp",
+      "expectedOutput": "cpp_ctor_method 7 10"
+    },
+    {
+      "name": "class_method_parameter",
+      "source": "tests/language_completion/fixtures/cpp/class_method_parameter.cpp",
+      "expectedOutput": "cpp_method_param 19"
+    },
+    {
+      "name": "canonical_js_arithmetic_to_cpp",
+      "sourceLanguage": "javascript",
+      "source": "tests/language_completion/fixtures/javascript/arithmetic_locals.js",
+      "targets": ["cpp"],
+      "expectedOutput": "js_arithmetic 5 15"
+    },
+    {
+      "name": "canonical_luascript_arithmetic_to_cpp",
+      "sourceLanguage": "luascript",
+      "source": "tests/language_completion/fixtures/luascript/arithmetic_locals.ls",
+      "targets": ["cpp"],
+      "expectedOutput": "ls_arithmetic 5 15"
+    },
+    {
+      "name": "unsupported_class",
+      "source": "tests/language_completion/fixtures/cpp/unsupported_class.cpp",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C\\+\\+ input feature: class method declarations without bodies"
+    },
+    {
+      "name": "unsupported_template",
+      "source": "tests/language_completion/fixtures/cpp/unsupported_template.cpp",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C\\+\\+ input feature: templates"
+    },
+    {
+      "name": "unsupported_exception",
+      "source": "tests/language_completion/fixtures/cpp/unsupported_exception.cpp",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C\\+\\+ input feature: exceptions"
+    },
+    {
+      "name": "unsupported_vector",
+      "source": "tests/language_completion/fixtures/cpp/unsupported_vector.cpp",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C\\+\\+ input feature: std::vector"
+    },
+    {
+      "name": "unsupported_lambda",
+      "source": "tests/language_completion/fixtures/cpp/unsupported_lambda.cpp",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported C\\+\\+ input feature: lambdas"
+    }
+  ]
+}

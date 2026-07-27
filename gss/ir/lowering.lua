@@ -155,6 +155,26 @@ function M.lower_value(value, g, context)
     return nodes.ConstantNode(0)
 end
 
+-- Lower async operation
+function M.lower_async_operation(operation, inputs, g, context)
+    local lowered_inputs = {}
+    for _, input in ipairs(inputs) do
+        table.insert(lowered_inputs, M.lower_field_expr(input, g, context))
+    end
+    
+    local node = nodes.AsyncNode(operation, lowered_inputs)
+    graph.add_node(g, node)
+    return node
+end
+
+-- Lower await expression
+function M.lower_await(async_expr, g, context)
+    local async_node = M.lower_field_expr(async_expr, g, context)
+    local node = nodes.AwaitNode(async_node)
+    graph.add_node(g, node)
+    return node
+end
+
 -- Generate ramp LUT (256 entries)
 function M.generate_ramp_lut(palette, custom_stops)
     if palette == "viridis" then

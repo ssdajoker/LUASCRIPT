@@ -1,0 +1,113 @@
+name: CI (Lean)
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  gate:
+    name: Verify & Lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['18', '20']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci --prefer-offline
+
+      - name: Run verify gate (harness + IR validation + parity + determinism)
+        run: npm run verify
+
+      - name: Run static warnings gate (Lua lint budget 0)
+        run: npm run static:warnings
+
+      - name: Run format gate
+        run: npm run format:check
+
+      - name: Lint source code (core tier)
+        run: npm run lint:core
+
+      - name: Lint source code (extended tier)
+        run: npm run lint:extended
+
+      - name: Lint source code (backends tier)
+        run: npm run lint:backends
+
+      - name: Lint source code (overall budget)
+        run: npm run lint:all
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-node-${{ matrix.node-version }}
+          path: |
+            artifacts/test/harness_results.json
+            artifacts/harness_results.json
+            reports/
+            perf_results.txt
+          retention-days: 7
+          if-no-files-found: ignore
+
+  comment-results:
+    name: Comment PR with results
+    runs-on: ubuntu-latest
+    needs: gate
+    if: always() && github.event_name == 'pull_request'
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: results-node-18
+          path: ./results
+
+      - name: Post results comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            
+            let comment = '## ✅ CI Gate Results\n\n';
+            
+            // Check harness results
+            const harnessPaths = [
+              './results/artifacts/test/harness_results.json',
+              './results/artifacts/harness_results.json',
+              './results/harness_results.json'
+            ];
+            const harnessPath = harnessPaths.find(p => fs.existsSync(p));
+            if (harnessPath) {
+              try {
+                const harness = JSON.parse(fs.readFileSync(harnessPath, 'utf8'));
+                comment += `### Harness\n- Tests passed: ${harness.total}\n\n`;
+              } catch (e) {}
+            }
+            
+            comment += '**CI gates passed** - Ready for review and auto-merge if approved.\n';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

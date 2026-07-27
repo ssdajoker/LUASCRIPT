@@ -9,17 +9,17 @@ function greet(name)
   return string.format("Hello, %s! Welcome to LUASCRIPT v%s", name, version)
 end
 function fibonacci(n)
-  if (n <= 1) then
+  if _LS.truthy((n <= 1)) then
     return n
   end
-  return (fibonacci((n - 1)) + fibonacci((n - 2)))
+  return _LS.add(fibonacci((n - 1)), fibonacci((n - 2)))
 end
 print(message)
 print(greet("World"))
 print("Fibonacci(10):", fibonacci(10))
 local numbers = _LS.array({1, 2, 3, 4, 5})
 local doubled = _LS.map(numbers, function(x) return (x * 2) end)
-local sum = _LS.reduce(doubled, function(a, b) return (a + b) end, 0)
+local sum = _LS.reduce(doubled, function(a, b) return _LS.add(a, b) end, 0)
 print("Original:", numbers)
 print("Doubled:", doubled)
 print("Sum:", sum)

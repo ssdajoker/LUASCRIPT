@@ -15,14 +15,49 @@ from pathlib import Path
 
 # Add paths for our enhanced components
 current_dir = Path(__file__).parent
+repo_root = current_dir.parent
 sys.path.insert(0, str(current_dir / 'lexer'))
 sys.path.insert(0, str(current_dir / 'transpiler'))
+sys.path.insert(0, str(current_dir / 'parser'))
+
+
+def find_command_in_tools(cmd_names):
+    """Find a command in .tools directory, checking both direct and bin/ subdirectory"""
+    tools_dir = repo_root / '.tools'
+    if not tools_dir.exists():
+        return None
+    
+    is_windows = os.name == 'nt'
+    
+    for subdir in tools_dir.iterdir():
+        if subdir.is_dir():
+            for cmd in cmd_names:
+                # Check directly in tool dir
+                if is_windows:
+                    cmd_path = subdir / f'{cmd}.exe'
+                else:
+                    cmd_path = subdir / cmd
+                if cmd_path.exists():
+                    return str(cmd_path)
+                
+                # Check in bin subdirectory
+                bin_dir = subdir / 'bin'
+                if bin_dir.exists():
+                    if is_windows:
+                        cmd_path = bin_dir / f'{cmd}.exe'
+                    else:
+                        cmd_path = bin_dir / cmd
+                    if cmd_path.exists():
+                        return str(cmd_path)
+    
+    return None
 
 try:
     from enhanced_lexer import tokenize_source, LexerError
+    from enhanced_parser import parse_artifact, ParseError
     from enhanced_transpiler import transpile_source, TranspilerError
 except ImportError as e:
-    print(f"❌ Failed to import LUASCRIPT components: {e}")
+    print(f"? Failed to import LUASCRIPT components: {e}")
     print("Make sure enhanced_lexer.py and enhanced_transpiler.py are in the correct directories")
     sys.exit(1)
 
@@ -40,14 +75,14 @@ class LuascriptCompiler:
         try:
             # Read source code
             if verbose:
-                print(f"📖 Reading LUASCRIPT source: {source_path}")
+                print(f"Reading LUASCRIPT source: {source_path}")
                 
             with open(source_path, 'r', encoding='utf-8') as f:
                 source_code = f.read()
             
             # Transpile to Lua
             if verbose:
-                print("🔄 Transpiling with mathematical Unicode support...")
+                print("Transpiling with mathematical Unicode support...")
                 
             lua_code = transpile_source(source_code, source_path)
             
@@ -58,14 +93,14 @@ class LuascriptCompiler:
             
             # Write Lua output
             if verbose:
-                print(f"✍️  Writing compiled Lua: {output_path}")
+                print(f"??  Writing compiled Lua: {output_path}")
                 
             with open(output_path, 'w', encoding='utf-8') as f:
                 f.write(lua_code)
             
             if verbose:
-                print("✅ Compilation successful!")
-                print(f"📊 Source: {len(source_code)} chars → Lua: {len(lua_code)} chars")
+                print("Compilation successful!")
+                print(f"Source: {len(source_code)} chars -> Lua: {len(lua_code)} chars")
                 
             return str(output_path)
             
@@ -83,7 +118,7 @@ class LuascriptCompiler:
             lua_path = self.compile(source_path, verbose=verbose)
             
             if verbose:
-                print(f"🚀 Running compiled Lua: {lua_path}")
+                print(f"Running compiled Lua: {lua_path}")
             
             # Check if runtime library exists
             if not self.runtime_path.exists():
@@ -91,6 +126,13 @@ class LuascriptCompiler:
             
             # Try to run with LuaJIT first, then Lua
             lua_commands = ['luajit', 'lua']
+            # Check if Lua is available in .tools
+            tool_cmd = find_command_in_tools(['luajit', 'lua'])
+            if tool_cmd:
+                lua_commands = [tool_cmd] + [c for c in lua_commands if c not in tool_cmd]
+            
+            if verbose:
+                print(f"Lua commands to try: {lua_commands}")
             
             for lua_cmd in lua_commands:
                 try:
@@ -104,7 +146,7 @@ class LuascriptCompiler:
                         env['LUA_PATH'] = f"{runtime_dir}/?.lua;;"
                     
                     if verbose:
-                        print(f"🔧 Trying {lua_cmd} with runtime path: {runtime_dir}")
+                        print(f"Trying {lua_cmd} with runtime path: {runtime_dir}")
                     
                     # Run the compiled Lua code
                     result = subprocess.run(
@@ -112,6 +154,8 @@ class LuascriptCompiler:
                         env=env,
                         capture_output=not verbose,
                         text=True,
+                        encoding='utf-8',
+                        errors='replace',
                         check=True
                     )
                     
@@ -138,7 +182,7 @@ class LuascriptCompiler:
             
             tokens = tokenize_source(source_code, source_path)
             
-            print(f"📊 Tokenization of {source_path}:")
+            print(f"? Tokenization of {source_path}:")
             print(f"Found {len(tokens)} tokens\n")
             
             # Group tokens by type for better display
@@ -152,28 +196,53 @@ class LuascriptCompiler:
                     regular_tokens.append(token)
             
             if math_tokens:
-                print(f"📐 Mathematical tokens ({len(math_tokens)}):")
+                print(f"? Mathematical tokens ({len(math_tokens)}):")
                 for token in math_tokens:
                     name = token.unicode_name or token.type.name
-                    print(f"  {token.value:>3} → {token.type.name:<20} ({name})")
+                    print(f"  {token.value:>3} ? {token.type.name:<20} ({name})")
                 print()
             
-            print(f"⚙️  Regular tokens ({len(regular_tokens)}):")
+            print(f"??  Regular tokens ({len(regular_tokens)}):")
             for i, token in enumerate(regular_tokens[:20]):  # Show first 20
-                print(f"  {token.value:<15} → {token.type.name}")
+                print(f"  {token.value:<15} ? {token.type.name}")
             
             if len(regular_tokens) > 20:
                 print(f"  ... and {len(regular_tokens) - 20} more")
                 
         except Exception as e:
             raise LuascriptError(f"Tokenization failed: {e}")
+
+    def show_parse(self, source_path: str) -> None:
+        """Debug: Show parser-owned artifact metadata."""
+        try:
+            with open(source_path, 'r', encoding='utf-8') as f:
+                source_code = f.read()
+
+            artifact = parse_artifact(source_code, source_path)
+            features = sorted(artifact.feature_slices)
+            meta_targets = sorted((artifact.meta_policy or {}).get("targets", {}).keys())
+
+            print(f"Parser artifact for {source_path}:")
+            print(f"  statements: {len(artifact.program.statements)}")
+            print(f"  tokens: {len(artifact.tokens)}")
+            print(f"  features: {', '.join(features) if features else 'none'}")
+            print(f"  meta targets: {', '.join(meta_targets) if meta_targets else 'none'}")
+
+            if artifact.verify_policy:
+                verify_keys = sorted(artifact.verify_policy.keys())
+                print(f"  verify policies: {', '.join(verify_keys)}")
+
+        except (LexerError, ParseError) as e:
+            raise LuascriptError(f"Parsing failed: {e}")
+        except Exception as e:
+            raise LuascriptError(f"Unexpected parsing error: {e}")
     
     def benchmark(self, source_path: str, iterations: int = 100) -> None:
         """Run performance benchmark"""
         import time
         
-        print(f"🏁 Running LUASCRIPT benchmark: {iterations} iterations")
-        print(f"📁 Source: {source_path}")
+        print(f"? Running LUASCRIPT benchmark: {iterations} iterations")
+        print(f"? Source: {source_path}")
         
         start_time = time.time()
         
@@ -189,17 +258,17 @@ class LuascriptCompiler:
                     subprocess.run(['lua', lua_path], 
                                  capture_output=True, check=True)
                 except subprocess.CalledProcessError as e:
-                    print(f"❌ Benchmark failed at iteration {i+1}: {e}")
+                    print(f"? Benchmark failed at iteration {i+1}: {e}")
                     return
         
         end_time = time.time()
         total_time = end_time - start_time
         avg_time = total_time / iterations
         
-        print(f"✅ Benchmark complete!")
-        print(f"📊 Total time: {total_time:.4f}s")
-        print(f"⚡ Average per run: {avg_time*1000:.2f}ms")
-        print(f"🚀 Throughput: {iterations/total_time:.1f} compilations/second")
+        print(f"Benchmark complete!")
+        print(f"Total time: {total_time:.4f}s")
+        print(f"Average per run: {avg_time*1000:.2f}ms")
+        print(f"? Throughput: {iterations/total_time:.1f} compilations/second")
 
 def main():
     """Main CLI entry point"""
@@ -211,6 +280,7 @@ Examples:
   luascript compile mathematical_showcase.ls    # Compile to Lua
   luascript run mathematical_showcase.ls        # Compile and run  
   luascript tokens mathematical_showcase.ls     # Show tokenization
+  luascript parse mathematical_showcase.ls      # Show parser artifact
   luascript benchmark mathematical_showcase.ls  # Performance test
   
 LUASCRIPT delivers mathematical programming with Unicode operators,
@@ -237,6 +307,10 @@ array methods, SIMD performance, and AI/ML computational alternatives.
     # Tokens command (debug)
     tokens_parser = subparsers.add_parser('tokens', help='Show tokenization (debug)')
     tokens_parser.add_argument('source', help='LUASCRIPT source file (.ls)')
+
+    # Parse command (debug)
+    parse_parser = subparsers.add_parser('parse', help='Show parser artifact (debug)')
+    parse_parser.add_argument('source', help='LUASCRIPT source file (.ls)')
     
     # Benchmark command
     benchmark_parser = subparsers.add_parser('benchmark', help='Performance benchmark')
@@ -256,22 +330,25 @@ array methods, SIMD performance, and AI/ML computational alternatives.
         if args.command == 'compile':
             output_path = compiler.compile(args.source, args.output, args.verbose)
             if not args.verbose:
-                print(f"✅ Compiled: {args.source} → {output_path}")
+                print(f"Compiled: {args.source} -> {output_path}")
                 
         elif args.command == 'run':
             compiler.run(args.source, args.verbose)
             
         elif args.command == 'tokens':
             compiler.show_tokens(args.source)
+
+        elif args.command == 'parse':
+            compiler.show_parse(args.source)
             
         elif args.command == 'benchmark':
             compiler.benchmark(args.source, args.iterations)
             
     except LuascriptError as e:
-        print(f"❌ {e}", file=sys.stderr)
+        print(f"? {e}", file=sys.stderr)
         sys.exit(1)
     except KeyboardInterrupt:
-        print("\n⏹️  Interrupted")
+        print("\n??  Interrupted")
         sys.exit(1)
 
 if __name__ == "__main__":

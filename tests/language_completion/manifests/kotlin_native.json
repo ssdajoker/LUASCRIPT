@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "language": "kotlin",
+  "status": "qualified",
+  "supportSlice": "kotlin-v0.25-native-bidirectional",
+  "runtime": "kotlin",
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_functions",
+      "sourceLanguage": "kotlin",
+      "source": "tests/language_completion/fixtures/kotlin/arithmetic_functions.kt",
+      "expectedOutput": "kotlin_arithmetic 13"
+    },
+    {
+      "name": "control_flow",
+      "sourceLanguage": "kotlin",
+      "source": "tests/language_completion/fixtures/kotlin/control_flow.kt",
+      "expectedOutput": "kotlin_control ready 5"
+    },
+    {
+      "name": "array_for_size",
+      "sourceLanguage": "kotlin",
+      "source": "tests/language_completion/fixtures/kotlin/array_for_size.kt",
+      "expectedOutput": "kotlin_array 10 4"
+    },
+    {
+      "name": "numeric_until_break_continue",
+      "sourceLanguage": "kotlin",
+      "source": "tests/language_completion/fixtures/kotlin/numeric_until_break_continue.kt",
+      "expectedOutput": "kotlin_loop 13"
+    },
+    {
+      "name": "data_class_fields",
+      "sourceLanguage": "kotlin",
+      "source": "tests/language_completion/fixtures/kotlin/data_class_fields.kt",
+      "expectedOutput": "kotlin_record 5 4"
+    },
+    {
+      "name": "math_calls",
+      "sourceLanguage": "kotlin",
+      "source": "tests/language_completion/fixtures/kotlin/math_calls.kt",
+      "expectedOutput": "kotlin_math 4 7"
+    },
+    {
+      "name": "unsupported_class",
+      "sourceLanguage": "kotlin",
+      "source": "tests/language_completion/fixtures/kotlin/unsupported_class.kt",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Kotlin input feature: classes beyond data-class records"
+    },
+    {
+      "name": "unsupported_when",
+      "sourceLanguage": "kotlin",
+      "source": "tests/language_completion/fixtures/kotlin/unsupported_when.kt",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Kotlin input feature: when expressions"
+    },
+    {
+      "name": "unsupported_lambda",
+      "sourceLanguage": "kotlin",
+      "source": "tests/language_completion/fixtures/kotlin/unsupported_lambda.kt",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Kotlin input feature: lambdas"
+    },
+    {
+      "name": "unsupported_import",
+      "sourceLanguage": "kotlin",
+      "source": "tests/language_completion/fixtures/kotlin/unsupported_import.kt",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Kotlin input feature: imports"
+    },
+    {
+      "name": "unsupported_nullable",
+      "sourceLanguage": "kotlin",
+      "source": "tests/language_completion/fixtures/kotlin/unsupported_nullable.kt",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Kotlin input feature: safe calls"
+    }
+  ]
+}

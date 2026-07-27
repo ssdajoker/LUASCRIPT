@@ -36,10 +36,10 @@ const variableNodes = bodyNodeIds
 
 assert.ok(variableNodes.length >= 1, "Expected variable declaration for arrow function assignment");
 
-const arrowFunctionId = Object.values(nodes).find(
-  (node) => node.kind === "ArrowFunctionExpression"
+const arrowFunctionNode = Object.values(nodes).find(
+  (node) => node.kind === "FunctionDeclaration" && node.arrow
 );
-assert.ok(arrowFunctionId, "Arrow function expression should be lowered");
+assert.ok(arrowFunctionNode, "Arrow function expression should be lowered");
 
 const cfgEntries = Object.keys(ir.controlFlowGraphs || {});
 assert.ok(cfgEntries.length >= 1, "Function lowering should register a CFG");

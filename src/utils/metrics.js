@@ -17,7 +17,9 @@ const state = {
 function ensureDirSync(dir) {
   try {
     fs.mkdirSync(dir, { recursive: true });
-  } catch {}
+  } catch {
+    // Directory already exists or permission denied - non-critical
+  }
 }
 
 function nowNs() {

@@ -1,0 +1,6 @@
+artifacts/
+coverage/
+.nyc_output/
+reports/
+*.log
+static_warnings*.txt

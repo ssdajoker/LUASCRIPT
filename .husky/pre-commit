@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+# Pre-commit hook: keep fast formatting and smoke tests (no ESLint to avoid conflicts)
+
+if [ "$HUSKY" = "0" ]; then
+  exit 0
+fi
+
+HOOK_PREFIX="[husky pre-commit]"
+
+if ! command -v npm >/dev/null 2>&1; then
+  echo "$HOOK_PREFIX npm is not available; skipping checks"
+  exit 0
+fi
+
+if [ "$SKIP_CHECKS" = "1" ]; then
+  echo "$HOOK_PREFIX Checks skipped via SKIP_CHECKS=1"
+  exit 0
+fi
+
+echo "$HOOK_PREFIX Running formatting gate..."
+if [ "$SKIP_FORMAT" != "1" ]; then
+  if ! npm run -s format:check; then
+    echo "$HOOK_PREFIX ❌ Formatting gate failed"
+    exit 1
+  fi
+else
+  echo "$HOOK_PREFIX Formatting skipped via SKIP_FORMAT=1"
+fi
+
+echo "$HOOK_PREFIX Running smoke tests..."
+if [ "$SKIP_TESTS" != "1" ]; then
+  if ! npm run -s test:smoke; then
+    echo "$HOOK_PREFIX ❌ Smoke tests failed"
+    exit 1
+  fi
+else
+  echo "$HOOK_PREFIX Smoke tests skipped via SKIP_TESTS=1"
+fi
+
+echo "$HOOK_PREFIX ✅ Formatting + smoke tests passed"
+exit 0

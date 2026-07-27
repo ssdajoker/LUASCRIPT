@@ -1,0 +1,98 @@
+# Quick Start
+
+**Status**: ACTIVE
+**Track**: scoped non-strict pre-production beta v0.1
+**Last updated**: 2026-07-14
+
+Use this guide to validate the current LUASCRIPT beta surface without accidentally treating it as strict-native complete or canonical `1.0`.
+
+The exact scoped beta release-seal artifact is [BETA_RELEASE_HANDOFF_V0_1.md](../BETA_RELEASE_HANDOFF_V0_1.md).
+
+## What This Beta Means
+
+LUASCRIPT has passing scoped beta evidence for its implemented lanes. On 2026-06-19:
+
+- `npm run beta:readiness` passed with 17/17 implemented lanes beta-ready.
+- `npm run beta:preflight` passed with 3/3 batches and 0 failed scripts.
+- `npm run beta:full` passed with 4/4 batches and 0 failed scripts.
+
+This is a scoped, non-strict beta handoff. It does not mean full-language completion, production readiness, or canonical `1.0`; the beta handoff itself did not claim strict-native completion.
+
+Post-beta strict-native closure for the current named slices was completed on 2026-07-13. Ruby, PHP, Dart, Java, Go, Rust, Kotlin, Elm, and Gleam now have narrow native gates, but they remain limited slices rather than broad language support.
+
+## Install And Validate
+
+```bash
+npm install
+npm run beta:readiness
+npm run beta:preflight
+npm run beta:full
+```
+
+Use `npm ci` instead of `npm install` when you need lockfile-exact automation.
+
+## Package And Runtime Contract
+
+The full public API/runtime contract draft is [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](../LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md). This quick-start only summarizes the beta validation path.
+
+The current package identity is `luascript` at `0.1.0-beta.0` on the pre-production beta track. `src/unified_luascript.js` is the current package entrypoint, and the current package file surface is `src/`, `test/`, `README.md`, and `LICENSE`. Treat that as the beta package surface, not a final canonical `1.0` publish promise.
+
+The package currently declares `node >=14.0.0`. `npm run build` is a readiness smoke, not a production bundle. Native-runtime support is claimed only when the real runtime command is available and the matching `language:<name>:bidirectional` gate passes. Target-runtime IR lanes prove emitted behavior for named slices, but they do not substitute for native qualification.
+
+No tag, publish, GitHub release, or package version bump is part of the beta or `1.0` docs route unless a release action is explicitly requested.
+
+## Good First Examples
+
+Start with the passing scoped surface:
+
+- small JavaScript programs that use variables, arithmetic, functions, conditionals, loops, arrays, objects, and console output
+- small `.ls` programs in the verified JS-like and meta-language slices
+- `tests/actual_programs/fixtures/`
+- `examples/supported_math_showcase.ls`
+- `examples/mathematical_notation_core.ls`
+- `examples/mathematical_notation_rehab_v1.ls` through `examples/mathematical_notation_rehab_v18.ls`
+
+Avoid using broad multi-language demos or the full Unicode mathematical DSL as beta proof. Those are experimental unless a current manifest and gate names the exact slice.
+
+## Useful Focused Gates
+
+- Core/runtime baseline: `npm test`
+- Status consistency: `npm run status:check`
+- Full verification: `npm run verify`
+- Claims audit: `npm run claims:check`
+- Stub gate: `npm run stubs:check`
+- Live dogfood: `npm run clarity:dogfood`
+- Strict local canon: `npm run clarity:canon`
+- Language qualification: `npm run clarity:languages`
+- `.ls` meta-language: `npm run test:luascript-meta`
+- Lua input V2: `npm run test:lua-input`
+- Actual programs: `npm run test:actual-programs`
+
+## Language Reality
+
+The strongest current paths are the named JavaScript, LUASCRIPT `.ls`, Lua input, Python, C#, C, C++, TypeScript typed-JS, and target-runtime/native narrow slices documented in [LANGUAGE_SUPPORT_MATRIX.md](../LANGUAGE_SUPPORT_MATRIX.md).
+
+Experimental target-runtime lanes exist for Ruby, PHP, Dart, Java, Go, Rust, Kotlin, Elm, and Gleam, and each has a matching narrow native gate. Broader promotion still requires expanded parser/lowering/runtime fixtures.
+
+## After The Beta Handoff
+
+The next documented route is:
+
+1. keep the scoped beta release messaging and examples aligned with the passing gates
+2. keep strict-native narrow-slice gates green as the language matrix expands
+3. promote broader language support only after parser/lowering/runtime fixtures expand
+4. start the `1.0` canon pass for stable `.ls` identity, supported profiles, package/runtime expectations, examples, docs, and support boundaries
+5. keep this quick-start aligned with the package/runtime contract before any release action
+
+## Navigation
+
+- [Project Status](../../PROJECT_STATUS.md)
+- [Documentation Index](../INDEX.md)
+- [Public API And Runtime Contract](../LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md)
+- [Beta Release Handoff v0.1](../BETA_RELEASE_HANDOFF_V0_1.md)
+- [Denali Soloist Ledger](../LUASCRIPT_DENALI_SOLOIST_LEDGER.md)
+- [Mega Plan](../LUASCRIPT_MEGA_PLAN.md)
+- [Architecture And Runtime Boundaries](../architecture/README.md)
+- [Reference Boundary](../reference/README.md)
+- [Language Support Matrix](../LANGUAGE_SUPPORT_MATRIX.md)
+- [Language Completion Rules](../LANGUAGE_COMPLETION_RULES.md)

@@ -1,0 +1,1748 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:edge-case-matrix",
+  "generatedAt": "2026-07-16T08:08:36.842Z",
+  "environment": {
+    "node": "v24.14.0",
+    "npm": {
+      "command": "cmd.exe",
+      "args": [
+        "/c",
+        "npm",
+        "-v"
+      ],
+      "available": true,
+      "status": 0,
+      "stdout": "11.9.0",
+      "stderr": ""
+    },
+    "platform": "win32",
+    "arch": "x64",
+    "os": {
+      "type": "Windows_NT",
+      "release": "10.0.26200"
+    },
+    "cwd": "C:\\Users\\ssdaj\\Desktop\\LUASCRIPT",
+    "generatedBy": "LUASCRIPT conformance report harness"
+  },
+  "manifest": {
+    "path": "tests/edge_matrix/manifest.json",
+    "sha256": "79adf4eff8a2cc0b8e4699bf2d69c345e3398da5a01400d122d27151e7e4588d",
+    "status": "scoped-25",
+    "version": 1,
+    "fixtureCount": 25,
+    "fixtureHashes": [
+      {
+        "name": "value-basic-literals-and-arithmetic",
+        "sha256": "114aa3b0db50da753f596d0af7595c64bed7d389e31f18def586f66733f22c4a"
+      },
+      {
+        "name": "value-boolean-null-equivalents",
+        "sha256": "e8aa41a03a7f7415d00463646f5629bc84b315ad2796726c521d3013bcf69fe0"
+      },
+      {
+        "name": "value-template-literal-concat",
+        "sha256": "5a49f261b9f5e26f80a3d416afff339dcd6b5f2159db44666937fcbf1846ffa1"
+      },
+      {
+        "name": "value-arithmetic-precedence",
+        "sha256": "6ad83e0d11174b8b5094e7da9d9dc7c5ba38d14269d48d4fba93807fc1c1b0e4"
+      },
+      {
+        "name": "control-while-break-continue",
+        "sha256": "9638cc0cb2bd2d4da03c234ab29d0458489a8e1c8295308e29a6d551243ea22d"
+      },
+      {
+        "name": "control-numeric-for-accumulation",
+        "sha256": "16278458afbd174ef359a44b010e2f8365520a728ae77f73a4c4242ca7333974"
+      },
+      {
+        "name": "control-if-else-early-return",
+        "sha256": "e9d47876fcc953e9014ee53f94225d294786ba2f492c8600d57ee69d7a9645a7"
+      },
+      {
+        "name": "control-short-circuit-side-effects",
+        "sha256": "9f99ac0ef25baffccac7dfa25e20a850460dd8bc7c53747e6bfd9bdc1f3f2ee9"
+      },
+      {
+        "name": "scope-nested-function-closure-mutation",
+        "sha256": "068f23203b2ff41618677d141e9e22fb5e4350a1f89750ed9c8fab567d8e2c01"
+      },
+      {
+        "name": "scope-shadowed-local-binding",
+        "sha256": "f5137ec9ae5b159eae7120bf4b5419789b5344273bc0ee0c4355fcccb5cf895e"
+      },
+      {
+        "name": "scope-recursive-function",
+        "sha256": "76b76ac44e9b5e3cdd624c993b82a93f4e74b06ff05093ccc207a89532b44907"
+      },
+      {
+        "name": "data-python-bounded-sequence-slices",
+        "sha256": "78cb96dcbc24523e0807c97038703a57e55c3a60f794a014dbf8d8c7d4c40bb4"
+      },
+      {
+        "name": "data-javascript-array-object-mutation",
+        "sha256": "4699b9326c418dd15704bb4a9359b4bb38ab57098247b005194f35534506a633"
+      },
+      {
+        "name": "data-python-list-membership-mutation",
+        "sha256": "fb40f1baae44c4562c6f66102ece4f21331edd1562cd61293a1f225d6b63b844"
+      },
+      {
+        "name": "data-luascript-portable-length-slice-mutation",
+        "sha256": "64187a8cdec5abafd23a253eb8fe0b0a621e837efdcef72bbd80908db59ed908"
+      },
+      {
+        "name": "errors-undefined-call-runtime-diagnostic",
+        "sha256": "76660e6fb47802d1f89ef2e56c25e3146eb334bb731888d0a2808a5fe6335d17"
+      },
+      {
+        "name": "errors-python-undefined-call-runtime-diagnostic",
+        "sha256": "724b582a6141554bef5ebf97428e267f92f0d16d6f23daebf22ac5c6f77bdbdc"
+      },
+      {
+        "name": "errors-python-index-runtime-diagnostic",
+        "sha256": "440e940e1e7ef78f465862b243e2d9cf346db968673854376111f6869edd7f43"
+      },
+      {
+        "name": "target-specific-lua-one-based-index-repair",
+        "sha256": "ed888578daef7633e6bf66cf3b736e1f49150ba5c920818559f5e20fdb2ab7d6"
+      },
+      {
+        "name": "target-specific-python-negative-range",
+        "sha256": "f69cb262c51778de858ff8130094dc978c985e04f07806684617421aece30e09"
+      },
+      {
+        "name": "target-specific-luascript-portable-truthiness",
+        "sha256": "6f806082e0cc162a51775e8e69e9582c80dfd9885fda053d08517844cd145ce4"
+      },
+      {
+        "name": "unsupported-diagnostics-python-slice-step",
+        "sha256": "f3486b0930971f085f0e8289015db1b1166be8fad53d297352942dfc26b30b90"
+      },
+      {
+        "name": "unsupported-diagnostics-javascript-for-of",
+        "sha256": "14513267ecdcf8438afebff0dd5048d9fb324b088fdf4518c88040c68c7b8982"
+      },
+      {
+        "name": "unsupported-diagnostics-javascript-try-catch",
+        "sha256": "9971f24cf15fe4a776894d9bece92533c1720fa4cfcde3df13b18f61d6c17867"
+      },
+      {
+        "name": "unsupported-diagnostics-javascript-object-spread",
+        "sha256": "d53003e8ff67d5018e20727859311c9ce60f71aa2761de17adbfa65274a2f0a3"
+      }
+    ],
+    "name": "canonical-edge-case-matrix-v0",
+    "requiredCategories": [
+      "value",
+      "control",
+      "scope",
+      "data",
+      "errors",
+      "target-specific",
+      "unsupported-diagnostics"
+    ],
+    "categoryCounts": {
+      "value": 4,
+      "control": 4,
+      "scope": 3,
+      "data": 4,
+      "errors": 3,
+      "target-specific": 3,
+      "unsupported-diagnostics": 4
+    }
+  },
+  "supportMatrixTraceability": {
+    "supportMatrix": "docs/LANGUAGE_SUPPORT_MATRIX.md",
+    "evidenceBinder": "docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md",
+    "exitCriteria": "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md",
+    "bidirectionalityContract": "docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md",
+    "denaliLedger": "docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md",
+    "boundary": "Report evidence applies only to named edge matrix cases and does not claim exhaustive edge coverage, canonical 1.0 completion, ISO certification, or true omni-language 100%.",
+    "supportRows": [
+      "The first seeded edge-case matrix generator",
+      "LUASCRIPT `.ls` JS-like syntax plus V0.16 meta layer to Lua/Python/JavaScript/`.ls`",
+      "Python V1.3 sequence-slice slice",
+      "Lua input V2.1 table-index Python-target support slice"
+    ],
+    "evidenceRole": "Scoped 25-case edge-case matrix across value, control, scope, data, errors, target-specific behavior, and unsupported diagnostics."
+  },
+  "summary": {
+    "total": 25,
+    "passed": 25,
+    "failed": 0,
+    "categoryCounts": {
+      "value": 4,
+      "control": 4,
+      "scope": 3,
+      "data": 4,
+      "errors": 3,
+      "target-specific": 3,
+      "unsupported-diagnostics": 4
+    },
+    "runtimeTargetChecks": 70,
+    "runtimeErrorChecks": 6,
+    "unsupportedDiagnosticChecks": 4
+  },
+  "matrix": {
+    "value": {
+      "total": 4,
+      "passed": 4,
+      "cases": [
+        "value-basic-literals-and-arithmetic",
+        "value-boolean-null-equivalents",
+        "value-template-literal-concat",
+        "value-arithmetic-precedence"
+      ]
+    },
+    "control": {
+      "total": 4,
+      "passed": 4,
+      "cases": [
+        "control-while-break-continue",
+        "control-numeric-for-accumulation",
+        "control-if-else-early-return",
+        "control-short-circuit-side-effects"
+      ]
+    },
+    "scope": {
+      "total": 3,
+      "passed": 3,
+      "cases": [
+        "scope-nested-function-closure-mutation",
+        "scope-shadowed-local-binding",
+        "scope-recursive-function"
+      ]
+    },
+    "data": {
+      "total": 4,
+      "passed": 4,
+      "cases": [
+        "data-python-bounded-sequence-slices",
+        "data-javascript-array-object-mutation",
+        "data-python-list-membership-mutation",
+        "data-luascript-portable-length-slice-mutation"
+      ]
+    },
+    "errors": {
+      "total": 3,
+      "passed": 3,
+      "cases": [
+        "errors-undefined-call-runtime-diagnostic",
+        "errors-python-undefined-call-runtime-diagnostic",
+        "errors-python-index-runtime-diagnostic"
+      ]
+    },
+    "target-specific": {
+      "total": 3,
+      "passed": 3,
+      "cases": [
+        "target-specific-lua-one-based-index-repair",
+        "target-specific-python-negative-range",
+        "target-specific-luascript-portable-truthiness"
+      ]
+    },
+    "unsupported-diagnostics": {
+      "total": 4,
+      "passed": 4,
+      "cases": [
+        "unsupported-diagnostics-python-slice-step",
+        "unsupported-diagnostics-javascript-for-of",
+        "unsupported-diagnostics-javascript-try-catch",
+        "unsupported-diagnostics-javascript-object-spread"
+      ]
+    }
+  },
+  "results": [
+    {
+      "id": "value-basic-literals-and-arithmetic",
+      "category": "value",
+      "feature": "numbers strings and print normalization",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-basic-literals-and-arithmetic-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-basic-literals-and-arithmetic-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value 5 ok",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-basic-literals-and-arithmetic-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-basic-literals-and-arithmetic-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value 5 ok",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-basic-literals-and-arithmetic-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-basic-literals-and-arithmetic-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value\t5\tok",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-basic-literals-and-arithmetic-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-basic-literals-and-arithmetic-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value\t5\tok",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "value-boolean-null-equivalents",
+      "category": "value",
+      "feature": "booleans and null/nil/None equivalents",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-boolean-null-equivalents-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-boolean-null-equivalents-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_bool_null true null",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-boolean-null-equivalents-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-boolean-null-equivalents-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_bool_null True None",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-boolean-null-equivalents-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-boolean-null-equivalents-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_bool_null\ttrue\tnil",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-boolean-null-equivalents-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-boolean-null-equivalents-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_bool_null\ttrue\tnil",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "value-template-literal-concat",
+      "category": "value",
+      "feature": "plain template literal lowering",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-template-literal-concat-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-template-literal-concat-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_template Lua 3",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-template-literal-concat-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-template-literal-concat-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_template Lua 3",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-template-literal-concat-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-template-literal-concat-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_template Lua 3",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-template-literal-concat-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-template-literal-concat-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_template Lua 3",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "value-arithmetic-precedence",
+      "category": "value",
+      "feature": "arithmetic precedence",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-arithmetic-precedence-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-arithmetic-precedence-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_precedence 9",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-arithmetic-precedence-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-arithmetic-precedence-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_precedence 9",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-arithmetic-precedence-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-arithmetic-precedence-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_precedence\t9",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "value-arithmetic-precedence-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/value-arithmetic-precedence-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_value_precedence\t9",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "control-while-break-continue",
+      "category": "control",
+      "feature": "while break continue",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-while-break-continue-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-while-break-continue-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control 8",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-while-break-continue-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-while-break-continue-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control 8",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-while-break-continue-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-while-break-continue-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control\t8",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-while-break-continue-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-while-break-continue-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control\t8",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "control-numeric-for-accumulation",
+      "category": "control",
+      "feature": "numeric for accumulation",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-numeric-for-accumulation-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-numeric-for-accumulation-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_for 10",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-numeric-for-accumulation-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-numeric-for-accumulation-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_for 10",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-numeric-for-accumulation-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-numeric-for-accumulation-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_for\t10",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-numeric-for-accumulation-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-numeric-for-accumulation-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_for\t10",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "control-if-else-early-return",
+      "category": "control",
+      "feature": "if else early returns",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-if-else-early-return-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-if-else-early-return-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_return neg zero pos",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-if-else-early-return-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-if-else-early-return-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_return neg zero pos",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-if-else-early-return-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-if-else-early-return-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_return\tneg\tzero\tpos",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-if-else-early-return-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-if-else-early-return-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_return\tneg\tzero\tpos",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "control-short-circuit-side-effects",
+      "category": "control",
+      "feature": "short-circuit side effects",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-short-circuit-side-effects-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-short-circuit-side-effects-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_short 2",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-short-circuit-side-effects-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-short-circuit-side-effects-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_short 2",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-short-circuit-side-effects-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-short-circuit-side-effects-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_short\t2",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "control-short-circuit-side-effects-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/control-short-circuit-side-effects-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_control_short\t2",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "scope-nested-function-closure-mutation",
+      "category": "scope",
+      "feature": "nested function closure mutation",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-nested-function-closure-mutation-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-nested-function-closure-mutation-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope 17",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-nested-function-closure-mutation-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-nested-function-closure-mutation-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope 17",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-nested-function-closure-mutation-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-nested-function-closure-mutation-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope\t17",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-nested-function-closure-mutation-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-nested-function-closure-mutation-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope\t17",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "scope-shadowed-local-binding",
+      "category": "scope",
+      "feature": "local shadowing",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-shadowed-local-binding-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-shadowed-local-binding-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope_shadow 1 3",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-shadowed-local-binding-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-shadowed-local-binding-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope_shadow 1 3",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-shadowed-local-binding-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-shadowed-local-binding-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope_shadow\t1\t3",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-shadowed-local-binding-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-shadowed-local-binding-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope_shadow\t1\t3",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "scope-recursive-function",
+      "category": "scope",
+      "feature": "recursion",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-recursive-function-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-recursive-function-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope_recursion 120",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-recursive-function-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-recursive-function-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope_recursion 120",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-recursive-function-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-recursive-function-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope_recursion\t120",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "scope-recursive-function-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/scope-recursive-function-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_scope_recursion\t120",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-python-bounded-sequence-slices",
+      "category": "data",
+      "feature": "bounded sequence slices",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-python-bounded-sequence-slices-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-python-bounded-sequence-slices-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data uaS 3 4 8",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-python-bounded-sequence-slices-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-python-bounded-sequence-slices-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data uaS 3 4 8",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-python-bounded-sequence-slices-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-python-bounded-sequence-slices-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data\tuaS\t3\t4\t8",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-python-bounded-sequence-slices-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-python-bounded-sequence-slices-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data\tuaS\t3\t4\t8",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-javascript-array-object-mutation",
+      "category": "data",
+      "feature": "array and object mutation",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-javascript-array-object-mutation-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-javascript-array-object-mutation-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data_js_mutation 7 11",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-javascript-array-object-mutation-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-javascript-array-object-mutation-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data_js_mutation 7 11",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-javascript-array-object-mutation-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-javascript-array-object-mutation-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data_js_mutation\t7\t11",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-javascript-array-object-mutation-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-javascript-array-object-mutation-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data_js_mutation\t7\t11",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-python-list-membership-mutation",
+      "category": "data",
+      "feature": "Python list mutation and membership",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-python-list-membership-mutation-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-python-list-membership-mutation-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data_py_list 3 2 5 True",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-python-list-membership-mutation-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-python-list-membership-mutation-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data_py_list 3 2 5 true",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-luascript-portable-length-slice-mutation",
+      "category": "data",
+      "feature": ".ls portable length slice and mutation",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-luascript-portable-length-slice-mutation-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-luascript-portable-length-slice-mutation-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data_ls 10 4 2",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-luascript-portable-length-slice-mutation-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-luascript-portable-length-slice-mutation-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data_ls 10 4 2",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-luascript-portable-length-slice-mutation-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-luascript-portable-length-slice-mutation-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data_ls\t10\t4\t2",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "data-luascript-portable-length-slice-mutation-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/data-luascript-portable-length-slice-mutation-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_data_ls\t10\t4\t2",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "errors-undefined-call-runtime-diagnostic",
+      "category": "errors",
+      "feature": "runtime undefined-call diagnostics",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-error",
+          "status": "passed",
+          "command": {
+            "label": "errors-undefined-call-runtime-diagnostic-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/errors-undefined-call-runtime-diagnostic-javascript.js"
+            ],
+            "status": 1,
+            "signal": null,
+            "stdout": "",
+            "stderr": "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-onXQ3H\\errors-undefined-call-runtime-diagnostic-javascript.js:1\nconsole.log(\"edge_error\", missing_call());\n        ^\n\nReferenceError: missing_call is not defined\n    at Object.<anonymous> (C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-onXQ3H\\errors-undefined-call-runtime-diagnostic-javascript.js:1:9)\n    at Module._compile (node:internal/modules/cjs/loader:1812:14)\n    at Object..js (node:internal/modules/cjs/loader:1943:10)\n    at Module.load (node:internal/modules/cjs/loader:1533:32)\n    at Module._load (node:internal/modules/cjs/loader:1335:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47\n\nNode.js v24.14.0",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-error",
+          "status": "passed",
+          "command": {
+            "label": "errors-undefined-call-runtime-diagnostic-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/errors-undefined-call-runtime-diagnostic-python.py"
+            ],
+            "status": 1,
+            "signal": null,
+            "stdout": "",
+            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-8kKCeo\\errors-undefined-call-runtime-diagnostic-python.py\", line 10, in <module>\n    __ls_print(\"edge_error\", missing_call())\n                             ^^^^^^^^^^^^\nNameError: name 'missing_call' is not defined",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-error",
+          "status": "passed",
+          "command": {
+            "label": "errors-undefined-call-runtime-diagnostic-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/errors-undefined-call-runtime-diagnostic-lua.lua"
+            ],
+            "status": 1,
+            "signal": null,
+            "stdout": "",
+            "stderr": "luajit: ...-3sIgzM\\errors-undefined-call-runtime-diagnostic-lua.lua:4: attempt to call global 'missing_call' (a nil value)\nstack traceback:\n\t...-3sIgzM\\errors-undefined-call-runtime-diagnostic-lua.lua:4: in main chunk\n\t[C]: at 0x7ff743364840",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "errors-python-undefined-call-runtime-diagnostic",
+      "category": "errors",
+      "feature": "Python runtime undefined-call diagnostics",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "python",
+          "mode": "runtime-error",
+          "status": "passed",
+          "command": {
+            "label": "errors-python-undefined-call-runtime-diagnostic-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/errors-python-undefined-call-runtime-diagnostic-python.py"
+            ],
+            "status": 1,
+            "signal": null,
+            "stdout": "",
+            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-SnCKeH\\errors-python-undefined-call-runtime-diagnostic-python.py\", line 1, in <module>\n    print(\"edge_error_py\", missing_call())\n                           ^^^^^^^^^^^^\nNameError: name 'missing_call' is not defined",
+            "error": null
+          }
+        },
+        {
+          "language": "javascript",
+          "mode": "runtime-error",
+          "status": "passed",
+          "command": {
+            "label": "errors-python-undefined-call-runtime-diagnostic-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/errors-python-undefined-call-runtime-diagnostic-javascript.js"
+            ],
+            "status": 1,
+            "signal": null,
+            "stdout": "",
+            "stderr": "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-QlUuoc\\errors-python-undefined-call-runtime-diagnostic-javascript.js:1\nconsole.log(\"edge_error_py\", missing_call());\n        ^\n\nReferenceError: missing_call is not defined\n    at Object.<anonymous> (C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-QlUuoc\\errors-python-undefined-call-runtime-diagnostic-javascript.js:1:9)\n    at Module._compile (node:internal/modules/cjs/loader:1812:14)\n    at Object..js (node:internal/modules/cjs/loader:1943:10)\n    at Module.load (node:internal/modules/cjs/loader:1533:32)\n    at Module._load (node:internal/modules/cjs/loader:1335:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47\n\nNode.js v24.14.0",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "errors-python-index-runtime-diagnostic",
+      "category": "errors",
+      "feature": "Python index runtime diagnostics",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "python",
+          "mode": "runtime-error",
+          "status": "passed",
+          "command": {
+            "label": "errors-python-index-runtime-diagnostic-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/errors-python-index-runtime-diagnostic-python.py"
+            ],
+            "status": 1,
+            "signal": null,
+            "stdout": "",
+            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-jlMT05\\errors-python-index-runtime-diagnostic-python.py\", line 2, in <module>\n    print(\"edge_error_index\", items[2])\n                              ~~~~~^^^\nIndexError: list index out of range",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "target-specific-lua-one-based-index-repair",
+      "category": "target-specific",
+      "feature": "Lua one-based table index to zero-based targets",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-lua-one-based-index-repair-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-lua-one-based-index-repair-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target\t3\t9\t8",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-lua-one-based-index-repair-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-lua-one-based-index-repair-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target 3 9 8",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-lua-one-based-index-repair-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-lua-one-based-index-repair-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target 3 9 8",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-lua-one-based-index-repair-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-lua-one-based-index-repair-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target\t3\t9\t8",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "target-specific-python-negative-range",
+      "category": "target-specific",
+      "feature": "Python negative-step range lowering",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-python-negative-range-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-python-negative-range-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target_py_range 9",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-python-negative-range-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-python-negative-range-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target_py_range 9",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-python-negative-range-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-python-negative-range-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target_py_range\t9",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-python-negative-range-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-python-negative-range-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target_py_range\t9",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "target-specific-luascript-portable-truthiness",
+      "category": "target-specific",
+      "feature": ".ls portable JS-like truthiness repair",
+      "status": "passed",
+      "targets": [
+        {
+          "language": "javascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-luascript-portable-truthiness-javascript javascript",
+            "cmd": "node",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-luascript-portable-truthiness-javascript.js"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target_ls_truthy 1",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "python",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-luascript-portable-truthiness-python python",
+            "cmd": "python3",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-luascript-portable-truthiness-python.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target_ls_truthy 1",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "lua",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-luascript-portable-truthiness-lua lua",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-luascript-portable-truthiness-lua.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target_ls_truthy\t1",
+            "stderr": "",
+            "error": null
+          }
+        },
+        {
+          "language": "luascript",
+          "mode": "runtime-output",
+          "status": "passed",
+          "command": {
+            "label": "target-specific-luascript-portable-truthiness-luascript luascript runtime",
+            "cmd": "luajit",
+            "args": [
+              "<os-tmp>/<luascript-edge-temp>/target-specific-luascript-portable-truthiness-luascript.lua"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdout": "edge_target_ls_truthy\t1",
+            "stderr": "",
+            "error": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "unsupported-diagnostics-python-slice-step",
+      "category": "unsupported-diagnostics",
+      "feature": "Python slice step diagnostic",
+      "status": "passed",
+      "diagnostic": "Python compilation error: Unsupported Python input feature: slice steps at line 2"
+    },
+    {
+      "id": "unsupported-diagnostics-javascript-for-of",
+      "category": "unsupported-diagnostics",
+      "feature": "JavaScript for-of diagnostic",
+      "status": "passed",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript control flow: for-of loops are not canonicalized for cross-target emission yet"
+    },
+    {
+      "id": "unsupported-diagnostics-javascript-try-catch",
+      "category": "unsupported-diagnostics",
+      "feature": "JavaScript try/catch diagnostic",
+      "status": "passed",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript exception flow: try/catch/finally is not canonicalized for cross-target emission yet"
+    },
+    {
+      "id": "unsupported-diagnostics-javascript-object-spread",
+      "category": "unsupported-diagnostics",
+      "feature": "JavaScript object spread diagnostic",
+      "status": "passed",
+      "diagnostic": "JavaScript compilation error: Unsupported JavaScript object spread is not canonicalized for cross-target emission yet"
+    }
+  ],
+  "failures": []
+}

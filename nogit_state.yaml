@@ -1,0 +1,56 @@
+project: LUASCRIPT
+lineage: main
+version: 0.1.0-beta.0
+phase: 0
+status: beta
+backend:
+  type: git
+  trunk: main
+  repo_path: .
+  tag_prefix: v
+gates:
+  tests_command: node scripts/repocalypse_verify.js
+  require_green_for_release: true
+  require_clean_worktree_for_release: true
+  verify:
+    # LUASCRIPT's hand-maintained README, changelog, and setup documentation
+    # remain authoritative; No-Git derivation drift is advisory here.
+    fail_on_drift: false
+    fail_on_unknown_files: false
+    allow_generated_changes_only_on_fix: true
+  coverage:
+    enabled: false
+    min_percent: null
+transport:
+  mode: online
+  preferred: remote
+  bundle_refs: --all
+  include_tags: true
+  output_dir: dist
+  name_template: "{project}-{version}-{sha}"
+  handoff_instructions: true
+  allow_remote_ops: true
+  require_capsule_for_release: true
+  required_refs: --all
+  require_signed_tags: false
+derivation:
+  timezone: UTC
+  ignore_types:
+    - chore
+  section_order:
+    - Added
+    - Changed
+    - Fixed
+    - Removed
+  reports_dir: reports
+  purpose_map_json: nogit_purpose_map.json
+  audit_markdown: nogit_audit.md
+bridge:
+  ivc:
+    enabled: true
+    mode: hybrid
+    repository_path: ../LUASCRIPT.ivc-mirror
+    packet_path: .nogit/bridge/ivc_export.json
+    target_reality: main
+    required: false
+    stale_after_hours: 168

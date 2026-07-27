@@ -2,9 +2,9 @@ name: Parity and IR Gates
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
   parity-ir:
@@ -12,21 +12,60 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then npm ci; else npm i; fi
+        run: npm ci
+
+      - name: Verify pinned runtime configs
+        run: npm run -s runtime:verify
+
+      - name: Run harness smoke
+        run: npm run -s harness
+
+      - name: Run determinism tests
+        run: npm run -s test:determinism
+
+      - name: Run fuzz smoke
+        run: node tests/fuzz/run-fuzzer.js 25
 
       - name: Run parity tests
+        id: parity
         run: npm run -s test:parity
 
       - name: Run IR report
+        id: ir-report
         run: npm run -s ir:report
+
+      - name: Run coverage suite
+        run: npm run -s test:coverage
+
+      - name: Enforce coverage ratchet
+        run: npm run -s coverage:check
+
+      - name: Run performance gate
+        run: npm run -s perf:gate
+
+      - name: Upload IR and performance artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-ir-reports
+          path: |
+            reports/
+            perf_results.txt
+            artifacts/coverage/
+            artifacts/test/harness_results.json
+            artifacts/harness_results.json
+          retention-days: 30
+          if-no-files-found: ignore
 
       - name: Upload IR status artifact
         if: always()

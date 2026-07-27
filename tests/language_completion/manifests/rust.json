@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "language": "rust",
+  "status": "qualified",
+  "supportSlice": "rust-v0.25-target-runtime-small-programs",
+  "nativeRuntime": {
+    "status": "verified-separately",
+    "reason": "Native Rust is verified separately by tests/language_completion/manifests/rust_native.json and npm run language:rust:bidirectional; this manifest remains the target-runtime lane."
+  },
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_functions",
+      "sourceLanguage": "rust",
+      "source": "tests/language_completion/fixtures/rust/arithmetic_functions.rs",
+      "skipNative": true,
+      "expectedOutput": "rust_arithmetic 13"
+    },
+    {
+      "name": "control_flow",
+      "sourceLanguage": "rust",
+      "source": "tests/language_completion/fixtures/rust/control_flow.rs",
+      "skipNative": true,
+      "expectedOutput": "rust_control ready 5"
+    },
+    {
+      "name": "array_for_len",
+      "sourceLanguage": "rust",
+      "source": "tests/language_completion/fixtures/rust/array_for_len.rs",
+      "skipNative": true,
+      "expectedOutput": "rust_array 10 4"
+    },
+    {
+      "name": "numeric_range_break_continue",
+      "sourceLanguage": "rust",
+      "source": "tests/language_completion/fixtures/rust/numeric_range_break_continue.rs",
+      "skipNative": true,
+      "expectedOutput": "rust_loop 13"
+    },
+    {
+      "name": "struct_fields",
+      "sourceLanguage": "rust",
+      "source": "tests/language_completion/fixtures/rust/struct_fields.rs",
+      "skipNative": true,
+      "expectedOutput": "rust_struct 5 4"
+    },
+    {
+      "name": "float_sqrt",
+      "sourceLanguage": "rust",
+      "source": "tests/language_completion/fixtures/rust/float_sqrt.rs",
+      "skipNative": true,
+      "expectedOutput": "rust_math 4 7"
+    },
+    {
+      "name": "unsupported_trait",
+      "sourceLanguage": "rust",
+      "source": "tests/language_completion/fixtures/rust/unsupported_trait.rs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Rust input feature: traits"
+    },
+    {
+      "name": "unsupported_enum",
+      "sourceLanguage": "rust",
+      "source": "tests/language_completion/fixtures/rust/unsupported_enum.rs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Rust input feature: enums"
+    },
+    {
+      "name": "unsupported_match",
+      "sourceLanguage": "rust",
+      "source": "tests/language_completion/fixtures/rust/unsupported_match.rs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Rust input feature: match expressions"
+    },
+    {
+      "name": "unsupported_borrow",
+      "sourceLanguage": "rust",
+      "source": "tests/language_completion/fixtures/rust/unsupported_borrow.rs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Rust input feature: borrowing/references"
+    },
+    {
+      "name": "unsupported_closure",
+      "sourceLanguage": "rust",
+      "source": "tests/language_completion/fixtures/rust/unsupported_closure.rs",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Rust input feature: closures"
+    }
+  ]
+}

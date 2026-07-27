@@ -165,6 +165,12 @@ describe('Transpiler', () => {
 });
 ```
 
+### Flaky test handling
+
+- Run the transpiler suite with `node test/test_transpiler.js --retry-flaky` (or `--runInBand`) to retry the known flaky case ("Complex Expression (Multiple Fixes)") once before failing.
+- Tests that rely on runtime randomness share a seeded generator. Override with `LUASCRIPT_TEST_SEED=<number>` to keep module and transpiler specs deterministic across retries.
+- Keep setup/teardown idempotent: temp directories are created per run and cleaned in `finally` blocks so that retries do not carry state between attempts.
+
 ## 🔍 Code Review Process
 
 ### What We Look For

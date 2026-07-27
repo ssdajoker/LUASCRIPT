@@ -1,0 +1,8 @@
+[
+  {
+    "file": "test/test_transpiler.js",
+    "testName": "Complex Expression (Multiple Fixes)",
+    "evidence": "test_report.txt shows intermittent pattern mismatch and Lua execution errors when concatenating the age/message string.",
+    "mitigation": "Deterministic temp files, seeded randomness via LUASCRIPT_TEST_SEED, and an optional --retry-flaky/--runInBand retry."
+  }
+]

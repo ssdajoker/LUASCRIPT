@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "language": "ruby",
+  "status": "qualified",
+  "supportSlice": "ruby-v0.6-ir-target-runtime-slice",
+  "nativeRuntime": {
+    "status": "verified-separately",
+    "reason": "Native Ruby is verified separately by tests/language_completion/manifests/ruby.json and npm run language:ruby:bidirectional; this manifest remains the target-runtime lane."
+  },
+  "targets": ["lua", "javascript", "luascript", "python", "csharp"],
+  "fixtures": [
+    {
+      "name": "arithmetic_methods",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/arithmetic_methods.rb",
+      "skipNative": true,
+      "expectedOutput": "ruby_arithmetic\n12"
+    },
+    {
+      "name": "control_flow",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/control_flow.rb",
+      "skipNative": true,
+      "expectedOutput": "ruby_control\n12"
+    },
+    {
+      "name": "array_iteration",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/array_iteration.rb",
+      "skipNative": true,
+      "expectedOutput": "ruby_array\n12"
+    },
+    {
+      "name": "indexed_reads",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/indexed_reads.rb",
+      "skipNative": true,
+      "expectedOutput": "ruby_index\n13"
+    },
+    {
+      "name": "hash_lookup",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/hash_lookup.rb",
+      "skipNative": true,
+      "expectedOutput": "ruby_hash\n12"
+    },
+    {
+      "name": "math_calls",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/math_calls.rb",
+      "skipNative": true,
+      "expectedOutput": "ruby_math\n10"
+    },
+    {
+      "name": "range_string",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/range_string.rb",
+      "skipNative": true,
+      "expectedOutput": "ruby_range_string\n9\nb\n4"
+    },
+    {
+      "name": "hash_mutation",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/hash_mutation.rb",
+      "skipNative": true,
+      "expectedOutput": "ruby_hash_mutation\n7"
+    },
+    {
+      "name": "boolean_break_next",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/boolean_break_next.rb",
+      "skipNative": true,
+      "expectedOutput": "ruby_bool_loop\n9"
+    },
+    {
+      "name": "unsupported_class",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/unsupported_class.rb",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Ruby input feature: object system"
+    },
+    {
+      "name": "unsupported_block",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/unsupported_block.rb",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Ruby input feature: block methods"
+    },
+    {
+      "name": "unsupported_require",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/unsupported_require.rb",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Ruby input feature: imports"
+    },
+    {
+      "name": "unsupported_exception",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/unsupported_exception.rb",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Ruby input feature: exceptions"
+    },
+    {
+      "name": "unsupported_hash_key",
+      "sourceLanguage": "ruby",
+      "source": "tests/language_completion/fixtures/ruby/unsupported_hash_key.rb",
+      "expectedFailure": true,
+      "expectedDiagnosticPattern": "Unsupported Ruby input feature: hash key"
+    }
+  ]
+}

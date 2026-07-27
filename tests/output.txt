@@ -1,0 +1,94 @@
+
+[36m================================================================================[0m
+[36mΓòæ  STEP 1: CLARITY SUPER CANON VERIFICATION - PHP & DART                      Γòæ[0m
+[36m================================================================================[0m
+
+
+[34m≡ƒôè PHP Parser - Parsing Correctness[0m
+[32m  Γ£à Variable             | Objects: 5[0m
+[32m  Γ£à String concat        | Objects: 5[0m
+[32m  Γ£à Array                | Objects: 6[0m
+[32m  Γ£à Function call        | Objects: 5[0m
+[32m  Γ£à Object access        | Objects: 6[0m
+[32m  Γ£à Ternary              | Objects: 11[0m
+[32m  Γ£à Assignment ops       | Objects: 7[0m
+[32m  Γ£à Comparison           | Objects: 5[0m
+[32m  Γ£à Logical              | Objects: 5[0m
+[32m  Γ£à New instance         | Objects: 5[0m
+
+[34m≡ƒôè Dart Parser - Parsing Correctness[0m
+[32m  Γ£à Variable             | Objects: 4[0m
+[32m  Γ£à String               | Objects: 3[0m
+[32m  Γ£à List                 | Objects: 6[0m
+[32m  Γ£à Map                  | Objects: 5[0m
+[32m  Γ£à Function call        | Objects: 5[0m
+[32m  Γ£à Cascade              | Objects: 11[0m
+[32m  Γ£à Null coalesce        | Objects: 5[0m
+[32m  Γ£à Null safe            | Objects: 6[0m
+[32m  Γ£à Spread               | Objects: 7[0m
+[32m  Γ£à Type                 | Objects: 7[0m
+
+[34m≡ƒôè Memory Leak Verification - 100 Sequential Parses[0m
+[0m
+PHP Parser:[0m
+[0m  Iteration 0:   5 objects[0m
+[0m  Iteration 99:  5 objects[0m
+[32m  Memory growth: 0.0% [PASS][0m
+[0m  Min/Max: 5 / 11 objects[0m
+[0m
+Dart Parser:[0m
+[0m  Iteration 0:   4 objects[0m
+[0m  Iteration 99:  7 objects[0m
+[31m  Memory growth: 75.0% [FAIL][0m
+[0m  Min/Max: 3 / 11 objects[0m
+
+[34m≡ƒôè Object Pool Efficiency Analysis[0m
+[0m
+PHP Parser:[0m
+[0m  Pool capacity: 5000 nodes[0m
+[0m  Memory limit: 50000 objects[0m
+[0m  Current pool: 0 nodes pooled[0m
+[0m
+Dart Parser:[0m
+[0m  Pool capacity: 5000 nodes[0m
+[0m  Memory limit: 50000 objects[0m
+[0m  Current pool: 0 nodes pooled[0m
+
+[34m≡ƒôè Tokenizer Validation - No Infinite Loops[0m
+[0m
+PHP Parser:[0m
+[32m  Tokens: 4[0m
+[0m  Duration: 0ms[0m
+[32m  Γ£à Tokenizer healthy[0m
+[0m
+Dart Parser:[0m
+[32m  Tokens: 5[0m
+[0m  Duration: 1ms[0m
+[32m  Γ£à Tokenizer healthy[0m
+
+[34m≡ƒôè Consistency Checks - Repeated Parsing[0m
+[0m
+PHP Parser:[0m
+[32m  Γ£à Consistent AST output over 5 parses[0m
+[0m
+Dart Parser:[0m
+[32m  Γ£à Consistent AST output over 5 parses[0m
+
+[36m================================================================================[0m
+[36mΓòæ  STEP 1 VERIFICATION REPORT                                                 Γòæ[0m
+[36m================================================================================[0m
+
+[0m
+PHP Parser: Γ£à PASS[0m
+[0m  Passed: 10/10 (100.0%)[0m
+[0m
+Dart Parser: Γ£à PASS[0m
+[0m  Passed: 10/10 (100.0%)[0m
+[0m
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[0m
+[0mTotal: 20 passed, 0 failed[0m
+[32m
+Γ£à STEP 1 COMPLETE: PHP AND DART VERIFIED[0m
+[0m
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+[0m

@@ -1,0 +1,495 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:beta-readiness",
+  "betaTarget": "pre-production beta v0.1",
+  "packageVersion": "0.1.0-beta.0",
+  "generatedAt": "2026-07-14T10:17:57.368Z",
+  "minimumPassPercent": 90,
+  "summary": {
+    "implementedLanes": 17,
+    "betaReadyLanes": 17,
+    "failedLanes": 0,
+    "readyPercent": 100,
+    "strictNativeRequired": false,
+    "overallStrictReady": true,
+    "nativeSetupBlockedLanes": 0,
+    "elapsedMs": 3675
+  },
+  "lanes": [
+    {
+      "id": "javascript",
+      "tier": "native",
+      "language": "javascript",
+      "supportSlice": "javascript-v1-ring2-medium-programs",
+      "manifest": "tests\\language_completion\\manifests\\javascript.json",
+      "report": "artifacts\\language_completion\\javascript-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 16,
+      "expectedFailures": 3,
+      "runnableFixtures": 13,
+      "passed": 16,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "typescript",
+      "tier": "native",
+      "language": "typescript",
+      "supportSlice": "typescript-v0.25-typed-js-small-programs",
+      "manifest": "tests\\language_completion\\manifests\\typescript.json",
+      "report": "artifacts\\language_completion\\typescript-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 11,
+      "expectedFailures": 4,
+      "runnableFixtures": 7,
+      "passed": 11,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "luascript",
+      "tier": "native",
+      "language": "luascript",
+      "supportSlice": "luascript-v0.16-meta-plus-v1-ring2-medium-programs-and-ring3-portable-semantics",
+      "manifest": "tests\\language_completion\\manifests\\luascript.json",
+      "report": "artifacts\\language_completion\\luascript-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 75,
+      "expectedFailures": 31,
+      "runnableFixtures": 44,
+      "passed": 75,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "lua",
+      "tier": "native",
+      "language": "lua",
+      "supportSlice": "lua-input-v2.1-table-index-python-target-small-programs",
+      "manifest": "tests\\language_completion\\manifests\\lua.json",
+      "report": "artifacts\\language_completion\\lua-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 11,
+      "expectedFailures": 1,
+      "runnableFixtures": 10,
+      "passed": 11,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "python",
+      "tier": "native",
+      "language": "python",
+      "supportSlice": "python-v1.3-sequence-slices-small-programs",
+      "manifest": "tests\\language_completion\\manifests\\python.json",
+      "report": "artifacts\\language_completion\\python-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 50,
+      "expectedFailures": 27,
+      "runnableFixtures": 23,
+      "passed": 50,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "csharp",
+      "tier": "native",
+      "language": "csharp",
+      "supportSlice": "csharp-v0.5-program-static-method-small-programs",
+      "manifest": "tests\\language_completion\\manifests\\csharp.json",
+      "report": "artifacts\\language_completion\\csharp-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 20,
+      "expectedFailures": 7,
+      "runnableFixtures": 13,
+      "passed": 20,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "c",
+      "tier": "native",
+      "language": "c",
+      "supportSlice": "c-v0.3-record-small-programs",
+      "manifest": "tests\\language_completion\\manifests\\c.json",
+      "report": "artifacts\\language_completion\\c-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 20,
+      "expectedFailures": 5,
+      "runnableFixtures": 15,
+      "passed": 20,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "cpp",
+      "tier": "native",
+      "language": "cpp",
+      "supportSlice": "cpp-v0.4-class-method-small-programs",
+      "manifest": "tests\\language_completion\\manifests\\cpp.json",
+      "report": "artifacts\\language_completion\\cpp-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 22,
+      "expectedFailures": 5,
+      "runnableFixtures": 17,
+      "passed": 22,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "go_ir",
+      "tier": "target-runtime",
+      "language": "go",
+      "supportSlice": "go-v0.25-target-runtime-small-programs",
+      "manifest": "tests\\language_completion\\manifests\\go.json",
+      "report": "artifacts\\language_completion\\go-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 11,
+      "expectedFailures": 5,
+      "runnableFixtures": 6,
+      "passed": 11,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "rust_ir",
+      "tier": "target-runtime",
+      "language": "rust",
+      "supportSlice": "rust-v0.25-target-runtime-small-programs",
+      "manifest": "tests\\language_completion\\manifests\\rust.json",
+      "report": "artifacts\\language_completion\\rust-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 11,
+      "expectedFailures": 5,
+      "runnableFixtures": 6,
+      "passed": 11,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "kotlin_ir",
+      "tier": "target-runtime",
+      "language": "kotlin",
+      "supportSlice": "kotlin-v0.25-target-runtime-small-programs",
+      "manifest": "tests\\language_completion\\manifests\\kotlin.json",
+      "report": "artifacts\\language_completion\\kotlin-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 11,
+      "expectedFailures": 5,
+      "runnableFixtures": 6,
+      "passed": 11,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "ruby_ir",
+      "tier": "target-runtime",
+      "language": "ruby",
+      "supportSlice": "ruby-v0.6-ir-target-runtime-slice",
+      "manifest": "tests\\language_completion\\manifests\\ruby_ir.json",
+      "report": "artifacts\\language_completion\\ruby_ir-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 14,
+      "expectedFailures": 5,
+      "runnableFixtures": 9,
+      "passed": 14,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "php_ir",
+      "tier": "target-runtime",
+      "language": "php",
+      "supportSlice": "php-v0.6-ir-target-runtime-slice",
+      "manifest": "tests\\language_completion\\manifests\\php_ir.json",
+      "report": "artifacts\\language_completion\\php_ir-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 14,
+      "expectedFailures": 5,
+      "runnableFixtures": 9,
+      "passed": 14,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "dart_ir",
+      "tier": "target-runtime",
+      "language": "dart",
+      "supportSlice": "dart-v0.6-ir-target-runtime-slice",
+      "manifest": "tests\\language_completion\\manifests\\dart_ir.json",
+      "report": "artifacts\\language_completion\\dart_ir-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 11,
+      "expectedFailures": 4,
+      "runnableFixtures": 7,
+      "passed": 11,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "java_ir",
+      "tier": "target-runtime",
+      "language": "java",
+      "supportSlice": "java-v0.6-ir-target-runtime-slice",
+      "manifest": "tests\\language_completion\\manifests\\java.json",
+      "report": "artifacts\\language_completion\\java-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 13,
+      "expectedFailures": 6,
+      "runnableFixtures": 7,
+      "passed": 13,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "elm_ir",
+      "tier": "target-runtime",
+      "language": "elm",
+      "supportSlice": "elm-v0.6-ir-target-runtime-slice",
+      "manifest": "tests\\language_completion\\manifests\\elm_ir.json",
+      "report": "artifacts\\language_completion\\elm_ir-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 11,
+      "expectedFailures": 5,
+      "runnableFixtures": 6,
+      "passed": 11,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    },
+    {
+      "id": "gleam_ir",
+      "tier": "target-runtime",
+      "language": "gleam",
+      "supportSlice": "gleam-v0.6-ir-target-runtime-slice",
+      "manifest": "tests\\language_completion\\manifests\\gleam_ir.json",
+      "report": "artifacts\\language_completion\\gleam_ir-report.json",
+      "manifestStatus": "qualified",
+      "fixtureCount": 11,
+      "expectedFailures": 5,
+      "runnableFixtures": 6,
+      "passed": 11,
+      "failed": 0,
+      "passPercent": 100,
+      "betaReady": true,
+      "failures": []
+    }
+  ],
+  "nativeBlockers": [
+    {
+      "id": "ruby_native",
+      "language": "ruby",
+      "supportSlice": "ruby-v0.6-native-bidirectional",
+      "manifest": "tests\\language_completion\\manifests\\ruby.json",
+      "report": "artifacts\\language_completion\\ruby-report.json",
+      "manifestStatus": "qualified",
+      "commands": [
+        {
+          "command": "ruby",
+          "available": true
+        }
+      ],
+      "setupBlocked": false,
+      "passed": 14,
+      "total": 14,
+      "nativeReady": true,
+      "failures": [],
+      "failure": null
+    },
+    {
+      "id": "php_native",
+      "language": "php",
+      "supportSlice": "php-v0.6-native-bidirectional",
+      "manifest": "tests\\language_completion\\manifests\\php.json",
+      "report": "artifacts\\language_completion\\php-report.json",
+      "manifestStatus": "qualified",
+      "commands": [
+        {
+          "command": "php",
+          "available": true
+        }
+      ],
+      "setupBlocked": false,
+      "passed": 14,
+      "total": 14,
+      "nativeReady": true,
+      "failures": [],
+      "failure": null
+    },
+    {
+      "id": "dart_native",
+      "language": "dart",
+      "supportSlice": "dart-v0.6-native-bidirectional",
+      "manifest": "tests\\language_completion\\manifests\\dart.json",
+      "report": "artifacts\\language_completion\\dart-report.json",
+      "manifestStatus": "qualified",
+      "commands": [
+        {
+          "command": "dart",
+          "available": true
+        }
+      ],
+      "setupBlocked": false,
+      "passed": 11,
+      "total": 11,
+      "nativeReady": true,
+      "failures": [],
+      "failure": null
+    },
+    {
+      "id": "java_native",
+      "language": "java",
+      "supportSlice": "java-v1-native-bidirectional",
+      "manifest": "tests\\language_completion\\manifests\\java_native.json",
+      "report": "artifacts\\language_completion\\java_native-report.json",
+      "manifestStatus": "qualified",
+      "commands": [
+        {
+          "command": "java",
+          "available": true
+        },
+        {
+          "command": "javac",
+          "available": true
+        }
+      ],
+      "setupBlocked": false,
+      "passed": 3,
+      "total": 3,
+      "nativeReady": true,
+      "failures": [],
+      "failure": null
+    },
+    {
+      "id": "go_native",
+      "language": "go",
+      "supportSlice": "go-v0.25-native-bidirectional",
+      "manifest": "tests\\language_completion\\manifests\\go_native.json",
+      "report": "artifacts\\language_completion\\go_native-report.json",
+      "manifestStatus": "qualified",
+      "commands": [
+        {
+          "command": "go",
+          "available": true
+        }
+      ],
+      "setupBlocked": false,
+      "passed": 11,
+      "total": 11,
+      "nativeReady": true,
+      "failures": [],
+      "failure": null
+    },
+    {
+      "id": "rust_native",
+      "language": "rust",
+      "supportSlice": "rust-v0.25-native-bidirectional",
+      "manifest": "tests\\language_completion\\manifests\\rust_native.json",
+      "report": "artifacts\\language_completion\\rust_native-report.json",
+      "manifestStatus": "qualified",
+      "commands": [
+        {
+          "command": "rustc",
+          "available": true
+        }
+      ],
+      "setupBlocked": false,
+      "passed": 2,
+      "total": 2,
+      "nativeReady": true,
+      "failures": [],
+      "failure": null
+    },
+    {
+      "id": "kotlin_native",
+      "language": "kotlin",
+      "supportSlice": "kotlin-v0.25-native-bidirectional",
+      "manifest": "tests\\language_completion\\manifests\\kotlin_native.json",
+      "report": "artifacts\\language_completion\\kotlin_native-report.json",
+      "manifestStatus": "qualified",
+      "commands": [
+        {
+          "command": "kotlinc",
+          "available": true
+        }
+      ],
+      "setupBlocked": false,
+      "passed": 11,
+      "total": 11,
+      "nativeReady": true,
+      "failures": [],
+      "failure": null
+    },
+    {
+      "id": "elm_native",
+      "language": "elm",
+      "supportSlice": "elm-v0.6-native-bidirectional",
+      "manifest": "tests\\language_completion\\manifests\\elm_native.json",
+      "report": "artifacts\\language_completion\\elm_native-report.json",
+      "manifestStatus": "qualified",
+      "commands": [
+        {
+          "command": "elm",
+          "available": true
+        }
+      ],
+      "setupBlocked": false,
+      "passed": 11,
+      "total": 11,
+      "nativeReady": true,
+      "failures": [],
+      "failure": null
+    },
+    {
+      "id": "gleam_native",
+      "language": "gleam",
+      "supportSlice": "gleam-v0.6-native-bidirectional",
+      "manifest": "tests\\language_completion\\manifests\\gleam_native.json",
+      "report": "artifacts\\language_completion\\gleam_native-report.json",
+      "manifestStatus": "qualified",
+      "commands": [
+        {
+          "command": "gleam",
+          "available": true
+        }
+      ],
+      "setupBlocked": false,
+      "passed": 11,
+      "total": 11,
+      "nativeReady": true,
+      "failures": [],
+      "failure": null
+    }
+  ]
+}

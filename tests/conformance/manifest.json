@@ -1,0 +1,786 @@
+{
+  "version": "0.1.0",
+  "status": "scoped-skeleton",
+  "description": "Tiny canonical IR conformance skeleton for current stable bridge emitters.",
+  "defaultTargets": ["lua", "javascript", "luascript", "python"],
+  "valueSemanticsMatrix": {
+    "status": "scoped",
+    "comparisonTargets": ["javascript", "lua", "python", "luascript"],
+    "covered": [
+      "numbers",
+      "strings",
+      "booleans",
+      "null-nil-none",
+      "arrays",
+      "objects-records",
+      "truthiness",
+      "equality",
+      "coercion",
+      "indexing"
+    ],
+    "unsupportedAsDiagnostics": ["undefined", "NaN", "Infinity"],
+    "boundary": "This matrix compares current emitted behavior and portable-profile repairs. It is not exhaustive runtime conformance or canonical 1.0."
+  },
+  "controlFlowMatrix": {
+    "status": "scoped",
+    "comparisonTargets": ["javascript", "lua", "python", "luascript"],
+    "runtimeTargets": ["javascript", "python"],
+    "covered": [
+      "if-else",
+      "while",
+      "numeric-for",
+      "python-range",
+      "break",
+      "continue",
+      "nested-loops",
+      "short-circuiting",
+      "early-returns",
+      "switch",
+      "conditional-expression",
+      "target-specific-lowering"
+    ],
+    "unsupportedAsDiagnostics": ["javascript-for-of", "python-continue-source", "javascript-try-catch", "javascript-tagged-template"],
+    "boundary": "This matrix checks emitted control-flow snippets across current bridge emitters and native/emitted runtime behavior for JavaScript and Python where local runtimes are available. Lua and .ls runtime equivalence remain outside this scoped conformance pass."
+  },
+  "functionScopeMatrix": {
+    "status": "scoped",
+    "comparisonTargets": ["javascript", "lua", "python", "luascript"],
+    "runtimeTargets": ["javascript", "python"],
+    "covered": [
+      "lexical-closures",
+      "shadowing",
+      "mutation-through-closures",
+      "recursion",
+      "arity-behavior",
+      "nested-functions",
+      "return-normalization",
+      "unsupported-advanced-function-forms"
+    ],
+    "unsupportedAsDiagnostics": ["javascript-async-function", "javascript-generator-function"],
+    "boundary": "This matrix checks scoped function and lexical-scope behavior across current bridge emitters and native/emitted runtime behavior for JavaScript and Python where local runtimes are available. Extra-arity behavior remains a target-native delta, and Lua/.ls runtime equivalence remain outside this scoped conformance pass."
+  },
+  "dataStructureMatrix": {
+    "status": "scoped",
+    "comparisonTargets": ["javascript", "lua", "python", "luascript"],
+    "runtimeTargets": ["javascript", "python"],
+    "covered": [
+      "array-mutation",
+      "object-mutation",
+      "nested-reads-writes",
+      "length",
+      "slicing",
+      "membership",
+      "iteration",
+      "record-fields",
+      "object-literals",
+      "unsupported-deep-structures"
+    ],
+    "unsupportedAsDiagnostics": ["javascript-object-spread", "javascript-destructuring-pattern"],
+    "boundary": "This matrix deepens aggregate data-structure evidence only for parser/lowering/emitter/runtime slices that currently pass. Lua and .ls runtime equivalence remain outside this scoped conformance pass; Lua-source table indexing to Python remains a named target delta rather than a runtime claim."
+  },
+  "fixtures": [
+    {
+      "name": "values_bindings_control_flow",
+      "sourceLanguage": "javascript",
+      "sections": ["values", "bindings", "control-flow"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "let total = 0;\nfor (let i = 0; i < 3; i = i + 1) {\n  total = total + i;\n}\nif (total > 2) {\n  console.log(total);\n} else {\n  console.log(0);\n}\n",
+      "targets": {
+        "lua": {
+          "includes": ["local total = 0", "while (i < 3) do", "print(total)"]
+        },
+        "javascript": {
+          "includes": ["let total = 0;", "for (let i = 0;", "console.log(total);"]
+        },
+        "luascript": {
+          "includes": ["let total = 0;", "for (let i = 0;", "console.log(total);"]
+        },
+        "python": {
+          "includes": ["def __ls_print", "total = 0", "while (i < 3):", "__ls_print(total)"]
+        }
+      }
+    },
+    {
+      "name": "functions_calls_arrays_objects",
+      "sourceLanguage": "javascript",
+      "sections": ["functions", "calls", "objects-arrays"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "function add(a, b) {\n  return a + b;\n}\nconst values = [2, 4, 6];\nconst box = { value: values[1] };\nconsole.log(add(values[0], box.value));\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function __ls_index", "local function add", "local values = {2, 4, 6}", "print(add(__ls_index(values, 0), box.value))"]
+        },
+        "javascript": {
+          "includes": ["function add(a, b)", "const values = [2, 4, 6];", "console.log(add(values[0], box.value));"]
+        },
+        "luascript": {
+          "includes": ["function add(a, b)", "const values = [2, 4, 6];", "console.log(add(values[0], box.value));"]
+        },
+        "python": {
+          "includes": ["def add(a, b):", "values = [2, 4, 6]", "box = {\"value\": values[1]}", "__ls_print(add(values[0], box[\"value\"]))"]
+        }
+      }
+    },
+    {
+      "name": "primitive_values_null_equivalents",
+      "sourceLanguage": "javascript",
+      "sections": ["numbers", "strings", "booleans", "null-nil-none"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "const n = 42;\nconst s = \"denali\";\nconst ok = true;\nconst empty = null;\nconsole.log(n, s, ok, empty);\n",
+      "targets": {
+        "lua": {
+          "includes": ["local n = 42", "local s = \"denali\"", "local ok = true", "local empty = nil", "print(n, s, ok, empty)"]
+        },
+        "javascript": {
+          "includes": ["const n = 42;", "const s = \"denali\";", "const ok = true;", "const empty = null;", "console.log(n, s, ok, empty);"]
+        },
+        "luascript": {
+          "includes": ["const n = 42;", "const s = \"denali\";", "const ok = true;", "const empty = null;", "console.log(n, s, ok, empty);"]
+        },
+        "python": {
+          "includes": ["n = 42", "s = \"denali\"", "ok = True", "empty = None", "__ls_print(n, s, ok, empty)"]
+        }
+      }
+    },
+    {
+      "name": "arrays_objects_records_indexing",
+      "sourceLanguage": "javascript",
+      "sections": ["arrays", "objects-records", "indexing"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "const values = [10, 20, 30];\nconst record = { first: values[0], second: values[1] };\nvalues[2] = record.first + record.second;\nconsole.log(values[0], values[2], record.second);\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function __ls_index", "local function __ls_set_index", "local values = {10, 20, 30}", "first = __ls_index(values, 0)", "__ls_set_index(values, 2, (record.first + record.second))", "print(__ls_index(values, 0), __ls_index(values, 2), record.second)"]
+        },
+        "javascript": {
+          "includes": ["const values = [10, 20, 30];", "first: values[0]", "values[2] = (record.first + record.second);", "console.log(values[0], values[2], record.second);"]
+        },
+        "luascript": {
+          "includes": ["const values = [10, 20, 30];", "const record = { first: values[0], second: values[1] };", "values[2] = record.first + record.second;", "console.log(values[0], values[2], record.second);"]
+        },
+        "python": {
+          "includes": ["values = [10, 20, 30]", "record = {\"first\": values[0], \"second\": values[1]}", "values[2] = (record[\"first\"] + record[\"second\"])", "__ls_print(values[0], values[2], record[\"second\"])"]
+        }
+      }
+    },
+    {
+      "name": "truthiness_target_native_delta",
+      "sourceLanguage": "javascript",
+      "sections": ["truthiness"],
+      "semanticsStatus": "target-native-delta",
+      "source": "const zero = 0;\nconst empty = \"\";\nconst yes = \"x\";\nif (zero) {\n  console.log(\"zero yes\");\n} else {\n  console.log(\"zero no\");\n}\nif (empty) {\n  console.log(\"empty yes\");\n} else {\n  console.log(\"empty no\");\n}\nif (yes) {\n  console.log(\"yes yes\");\n} else {\n  console.log(\"yes no\");\n}\n",
+      "targets": {
+        "lua": {
+          "includes": ["local zero = 0", "local empty = \"\"", "if zero then", "if empty then", "if yes then"]
+        },
+        "javascript": {
+          "includes": ["const zero = 0;", "const empty = \"\";", "if (zero)", "if (empty)", "if (yes)"]
+        },
+        "luascript": {
+          "includes": ["const zero = 0;", "const empty = \"\";", "if (zero)", "if (empty)", "if (yes)"]
+        },
+        "python": {
+          "includes": ["zero = 0", "empty = \"\"", "if zero:", "if empty:", "if yes:"]
+        }
+      },
+      "notes": "Raw JavaScript source currently emits target-native truthiness in Lua and Python. Use the .ls portable profile fixture for repaired JS-like truthiness."
+    },
+    {
+      "name": "equality_and_coercion_target_delta",
+      "sourceLanguage": "javascript",
+      "sections": ["equality", "coercion"],
+      "semanticsStatus": "target-native-delta",
+      "source": "const a = 1;\nconst b = \"1\";\nconst strict = a === 1;\nconst loose = a == b;\nconst text = \"v\" + a;\nconsole.log(strict, loose, text);\n",
+      "targets": {
+        "lua": {
+          "includes": ["local strict = (a == 1)", "local loose = (a == b)", "local text = (\"v\" .. tostring(a))", "print(strict, loose, text)"]
+        },
+        "javascript": {
+          "includes": ["const strict = (a === 1);", "const loose = (a == b);", "const text = (\"v\" + a);", "console.log(strict, loose, text);"]
+        },
+        "luascript": {
+          "includes": ["const strict = a === 1;", "const loose = a == b;", "const text = \"v\" + a;", "console.log(strict, loose, text);"]
+        },
+        "python": {
+          "includes": ["strict = (a == 1)", "loose = (a == b)", "text = (\"v\" + a)", "__ls_print(strict, loose, text)"]
+        }
+      },
+      "notes": "Loose equality and string-number coercion are target-native for raw JavaScript source. The Python emission is intentionally recorded as a non-canonical delta, not runtime-proof."
+    },
+    {
+      "name": "portable_value_semantics_profile",
+      "sourceLanguage": "luascript",
+      "sections": ["truthiness", "coercion", "indexing", "null-nil-none", "arrays"],
+      "semanticsStatus": "profile-repaired",
+      "source": "meta profile portable_semantics_v1;\nlet values = [0, 2, 4];\nlet empty = \"\";\nlet gate = 0;\nif (values[0] || empty) {\n  gate = gate + 10;\n} else {\n  gate = gate + 1;\n}\nlet label = \"gate=\" + gate + \" first=\" + values[0] + \" nil=\" + null;\nconsole.log(label, values.length, values.slice(1, 3)[0]);\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function __ls_truthy", "local function __ls_add", "local function __ls_index", "local function __ls_length", "local function __ls_slice", "if __ls_truthy(__ls_logical_or", "print(label, __ls_length(values), __ls_index(__ls_slice(values, 1, 3), 0))"]
+        },
+        "javascript": {
+          "includes": ["let values = [0, 2, 4];", "if ((values[0] || empty))", "let label = (((((\"gate=\" + gate) + \" first=\") + values[0]) + \" nil=\") + null);", "console.log(label, values.length, values.slice(1, 3)[0]);"]
+        },
+        "luascript": {
+          "includes": ["meta profile portable_semantics_v1;", "let values = [0, 2, 4];", "let label = \"gate=\" + gate + \" first=\" + values[0] + \" nil=\" + null;", "console.log(label, values.length, values.slice(1, 3)[0]);"]
+        },
+        "python": {
+          "includes": ["def __ls_truthy", "def __ls_add", "def __ls_index", "def __ls_slice", "if __ls_truthy(__ls_or", "__ls_print(label, len(values), __ls_index(__ls_slice(values, 1, 3), 0))"]
+        }
+      }
+    },
+    {
+      "name": "control_flow_nested_break_continue_early_return",
+      "sourceLanguage": "javascript",
+      "sections": ["control-flow", "if-else", "while", "numeric-for", "break", "continue", "nested-loops", "early-returns", "target-specific-lowering"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "function classify(limit) {\n  let total = 0;\n  if (limit < 1) {\n    return -1;\n  } else {\n    total = total + 0;\n  }\n  let i = 0;\n  while (i < limit) {\n    i = i + 1;\n    if (i == 2) {\n      continue;\n    }\n    if (i > 4) {\n      break;\n    }\n    total = total + i;\n  }\n  for (let outer = 0; outer < 2; outer = outer + 1) {\n    for (let inner = 0; inner < 3; inner = inner + 1) {\n      if (inner == 1 && outer == 1) {\n        return total + inner;\n      }\n      total = total + inner;\n    }\n  }\n  return total;\n}\nconsole.log(\"control_matrix\", classify(6));\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function classify", "if (limit < 1) then", "return - 1", "goto __continue_", "break", "while (outer < 2) do", "while (inner < 3) do", "return (total + inner)", "print(\"control_matrix\", classify(6))"]
+        },
+        "javascript": {
+          "includes": ["function classify(limit)", "if ((limit < 1))", "return -1;", "while ((i < limit))", "continue;", "break;", "for (let outer = 0;", "for (let inner = 0;", "return (total + inner);", "console.log(\"control_matrix\", classify(6));"]
+        },
+        "luascript": {
+          "includes": ["function classify(limit)", "if (limit < 1)", "return -1;", "while (i < limit)", "continue;", "break;", "for (let outer = 0;", "for (let inner = 0;", "return total + inner;", "console.log(\"control_matrix\", classify(6));"]
+        },
+        "python": {
+          "includes": ["def classify(limit):", "if (limit < 1):", "return -1", "while (i < limit):", "continue", "break", "while (outer < 2):", "while (inner < 3):", "return (total + inner)", "__ls_print(\"control_matrix\", classify(6))"]
+        }
+      },
+      "runtimeChecks": {
+        "native": {
+          "expectedOutput": "control_matrix 12"
+        },
+        "targets": {
+          "javascript": {
+            "expectedOutput": "control_matrix 12"
+          },
+          "python": {
+            "expectedOutput": "control_matrix 12"
+          }
+        }
+      }
+    },
+    {
+      "name": "short_circuit_side_effects",
+      "sourceLanguage": "javascript",
+      "sections": ["control-flow", "short-circuiting", "if-else", "target-specific-lowering"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "let count = 0;\nfunction bump() {\n  count = count + 1;\n  return true;\n}\nif (false && bump()) {\n  count = count + 10;\n} else if (true || bump()) {\n  count = count + 2;\n}\nconsole.log(\"short_circuit\", count);\n",
+      "targets": {
+        "lua": {
+          "includes": ["local count = 0", "local function bump", "if (false and bump()) then", "elseif (true or bump()) then", "print(\"short_circuit\", count)"]
+        },
+        "javascript": {
+          "includes": ["let count = 0;", "function bump()", "if ((false && bump()))", "else if ((true || bump()))", "console.log(\"short_circuit\", count);"]
+        },
+        "luascript": {
+          "includes": ["let count = 0;", "function bump()", "if (false && bump())", "if (true || bump())", "console.log(\"short_circuit\", count);"]
+        },
+        "python": {
+          "includes": ["count = 0", "def bump():", "if (False and bump()):", "elif (True or bump()):", "__ls_print(\"short_circuit\", count)"]
+        }
+      },
+      "runtimeChecks": {
+        "native": {
+          "expectedOutput": "short_circuit 2"
+        },
+        "targets": {
+          "javascript": {
+            "expectedOutput": "short_circuit 2"
+          },
+          "python": {
+            "expectedOutput": "short_circuit 2"
+          }
+        }
+      }
+    },
+    {
+      "name": "control_javascript_switch_conditional",
+      "sourceLanguage": "javascript",
+      "sections": ["control-flow", "switch", "conditional-expression", "target-specific-lowering"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "function classify(value) {\n  switch (value) {\n    case 1:\n      return \"one\";\n    case 2:\n      return value > 1 ? \"two\" : \"low\";\n    default:\n      return \"many\";\n  }\n}\nconsole.log(\"js_switch_conditional\", classify(1), classify(2), classify(5));\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function classify", "local __switch_", "elseif __switch_", "return (((value > 1)) and {\"two\"} or {\"low\"})[1]", "print(\"js_switch_conditional\", classify(1), classify(2), classify(5))"]
+        },
+        "javascript": {
+          "includes": ["function classify(value)", "switch (value)", "case 2:", "return ((value > 1) ? \"two\" : \"low\");", "console.log(\"js_switch_conditional\", classify(1), classify(2), classify(5));"]
+        },
+        "luascript": {
+          "includes": ["function classify(value)", "switch (value)", "return (value > 1 ? \"two\" : \"low\");", "console.log(\"js_switch_conditional\", classify(1), classify(2), classify(5));"]
+        }
+      },
+      "unsupportedTargets": {
+        "python": {
+          "messageIncludes": ["Unsupported IR node kind for Python emission: SwitchStatement"]
+        }
+      },
+      "runtimeChecks": {
+        "native": {
+          "expectedOutput": "js_switch_conditional one two many"
+        },
+        "targets": {
+          "javascript": {
+            "expectedOutput": "js_switch_conditional one two many"
+          }
+        }
+      },
+      "notes": "Switch plus conditional-expression branching is runtime-backed for native JavaScript and emitted Lua/JavaScript in this slice. Emitted .ls shape is checked without runtime qualification, and Python switch emission stays an explicit target diagnostic."
+    },
+    {
+      "name": "python_range_forward_control_flow",
+      "sourceLanguage": "python",
+      "sections": ["control-flow", "python-range", "numeric-for", "target-specific-lowering"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "total = 0\nfor value in range(1, 5):\n    total = total + value\nprint(\"py_range_forward\", total)\n",
+      "targets": {
+        "lua": {
+          "includes": ["local total = 0", "local value = 1", "while (value < 5) do", "total = (total + value)", "value = (value + 1)", "print(\"py_range_forward\", total)"]
+        },
+        "javascript": {
+          "includes": ["let total = 0;", "for (let value = 1; (value < 5); value = (value + 1))", "console.log(\"py_range_forward\", total);"]
+        },
+        "luascript": {
+          "includes": ["let total = 0;", "for (let value = 1; value < 5; value = value + 1)", "console.log(\"py_range_forward\", total);"]
+        },
+        "python": {
+          "includes": ["total = 0", "value = 1", "while (value < 5):", "value = (value + 1)", "print(\"py_range_forward\", total)"]
+        }
+      },
+      "runtimeChecks": {
+        "native": {
+          "expectedOutput": "py_range_forward 10"
+        },
+        "targets": {
+          "javascript": {
+            "expectedOutput": "py_range_forward 10"
+          },
+          "python": {
+            "expectedOutput": "py_range_forward 10"
+          }
+        }
+      }
+    },
+    {
+      "name": "python_range_negative_step_control_flow",
+      "sourceLanguage": "python",
+      "sections": ["control-flow", "python-range", "numeric-for", "target-specific-lowering"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "total = 0\nfor value in range(5, -1, -2):\n    total = total + value\nprint(\"py_range_step\", total)\n",
+      "targets": {
+        "lua": {
+          "includes": ["local total = 0", "local value = 5", "while (value > - 1) do", "total = (total + value)", "value = (value + - 2)", "print(\"py_range_step\", total)"]
+        },
+        "javascript": {
+          "includes": ["let total = 0;", "for (let value = 5; (value > -1); value = (value + -2))", "console.log(\"py_range_step\", total);"]
+        },
+        "luascript": {
+          "includes": ["let total = 0;", "for (let value = 5; value > -1; value = value + -2)", "console.log(\"py_range_step\", total);"]
+        },
+        "python": {
+          "includes": ["total = 0", "value = 5", "while (value > -1):", "value = (value + -2)", "print(\"py_range_step\", total)"]
+        }
+      },
+      "runtimeChecks": {
+        "native": {
+          "expectedOutput": "py_range_step 9"
+        },
+        "targets": {
+          "javascript": {
+            "expectedOutput": "py_range_step 9"
+          },
+          "python": {
+            "expectedOutput": "py_range_step 9"
+          }
+        }
+      }
+    },
+    {
+      "name": "function_scope_closure_shadow_mutation",
+      "sourceLanguage": "javascript",
+      "sections": ["functions", "bindings", "scope", "lexical-closures", "shadowing", "mutation-through-closures", "nested-functions"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "const seed = 100;\nfunction makeCounter(seed) {\n  let value = seed;\n  function step(delta) {\n    value = value + delta;\n    return value;\n  }\n  function readShadow(value) {\n    return value + seed;\n  }\n  return [step, readShadow];\n}\nconst tools = makeCounter(3);\nconst step = tools[0];\nconst readShadow = tools[1];\nconsole.log(\"closure_scope\", step(2), step(5), readShadow(7), seed);\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function makeCounter", "local function step(delta)", "value = (value + delta)", "local function readShadow(value)", "local step = __ls_index(tools, 0)", "print(\"closure_scope\", step(2), step(5), readShadow(7), seed)"]
+        },
+        "javascript": {
+          "includes": ["const seed = 100;", "function makeCounter(seed)", "function step(delta)", "value = (value + delta);", "function readShadow(value)", "console.log(\"closure_scope\", step(2), step(5), readShadow(7), seed);"]
+        },
+        "luascript": {
+          "includes": ["const seed = 100;", "function makeCounter(seed)", "function step(delta)", "value = value + delta;", "function readShadow(value)", "console.log(\"closure_scope\", step(2), step(5), readShadow(7), seed);"]
+        },
+        "python": {
+          "includes": ["def makeCounter(seed):", "def step(delta):", "nonlocal value", "def readShadow(value):", "__ls_print(\"closure_scope\", step(2), step(5), readShadow(7), seed)"]
+        }
+      },
+      "runtimeChecks": {
+        "native": {
+          "expectedOutput": "closure_scope 5 10 10 100"
+        },
+        "targets": {
+          "javascript": {
+            "expectedOutput": "closure_scope 5 10 10 100"
+          },
+          "python": {
+            "expectedOutput": "closure_scope 5 10 10 100"
+          }
+        }
+      }
+    },
+    {
+      "name": "function_recursion_return_normalization",
+      "sourceLanguage": "javascript",
+      "sections": ["functions", "recursion", "return-normalization"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "function fact(n) {\n  if (n <= 1) {\n    return 1;\n  }\n  return n * fact(n - 1);\n}\nfunction maybe(flag) {\n  if (flag) {\n    return 7;\n  }\n  return;\n}\nconsole.log(\"function_returns\", fact(5), maybe(true), maybe(false));\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function fact(n)", "return (n * fact((n - 1)))", "local function maybe(flag)", "return", "print(\"function_returns\", fact(5), maybe(true), maybe(false))"]
+        },
+        "javascript": {
+          "includes": ["function fact(n)", "return (n * fact((n - 1)));", "function maybe(flag)", "return;", "console.log(\"function_returns\", fact(5), maybe(true), maybe(false));"]
+        },
+        "luascript": {
+          "includes": ["function fact(n)", "return n * fact(n - 1);", "function maybe(flag)", "return;", "console.log(\"function_returns\", fact(5), maybe(true), maybe(false));"]
+        },
+        "python": {
+          "includes": ["def fact(n):", "return (n * fact((n - 1)))", "def maybe(flag):", "return", "__ls_print(\"function_returns\", fact(5), maybe(True), maybe(False))"]
+        }
+      },
+      "runtimeChecks": {
+        "native": {
+          "expectedOutput": "function_returns 120 7 undefined"
+        },
+        "targets": {
+          "javascript": {
+            "expectedOutput": "function_returns 120 7 undefined"
+          },
+          "python": {
+            "expectedOutput": "function_returns 120 7 None"
+          }
+        }
+      }
+    },
+    {
+      "name": "function_extra_arity_target_delta",
+      "sourceLanguage": "javascript",
+      "sections": ["functions", "calls", "arity-behavior"],
+      "semanticsStatus": "target-native-delta",
+      "source": "function first(a) {\n  return a;\n}\nconsole.log(\"arity_extra\", first(9, 10));\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function first(a)", "print(\"arity_extra\", first(9, 10))"]
+        },
+        "javascript": {
+          "includes": ["function first(a)", "console.log(\"arity_extra\", first(9, 10));"]
+        },
+        "luascript": {
+          "includes": ["function first(a)", "console.log(\"arity_extra\", first(9, 10));"]
+        },
+        "python": {
+          "includes": ["def first(a):", "__ls_print(\"arity_extra\", first(9, 10))"]
+        }
+      },
+      "notes": "JavaScript and Lua accept extra arguments in this shape, while emitted Python currently preserves a strict Python call that raises at runtime. This is recorded as a target-native delta, not as canonical arity support."
+    },
+    {
+      "name": "unsupported_js_async_function_scope",
+      "sourceLanguage": "javascript",
+      "sections": ["functions", "unsupported-advanced-function-forms"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "async function loadValue() {\n  return 1;\n}\nconsole.log(loadValue());\n",
+      "expectedFailure": {
+        "phase": "compile",
+        "messageIncludes": ["Unsupported JavaScript function form: async functions"]
+      }
+    },
+    {
+      "name": "unsupported_js_generator_function_scope",
+      "sourceLanguage": "javascript",
+      "sections": ["functions", "unsupported-advanced-function-forms"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "function* values() {\n  yield 1;\n}\nconsole.log(values().next().value);\n",
+      "expectedFailure": {
+        "phase": "compile",
+        "messageIncludes": ["Unsupported JavaScript function form: generator functions"]
+      }
+    },
+    {
+      "name": "data_nested_js_arrays_objects_records",
+      "sourceLanguage": "javascript",
+      "sections": ["arrays", "objects-records", "object-literals", "record-fields", "array-mutation", "object-mutation", "nested-reads-writes"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "const profile = { name: \"Ada\", scores: [2, 4], meta: { active: false } };\nprofile.scores[1] = profile.scores[1] + 3;\nprofile.meta.active = true;\nconst rows = [{ label: profile.name, points: profile.scores[1] }];\nrows[0].points = rows[0].points + 1;\nconsole.log(\"js_nested_structures\", rows[0].label, rows[0].points, profile.meta.active);\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function __ls_set_index", "local profile = {", "scores = {2, 4}", "__ls_set_index(profile.scores, 1, (__ls_index(profile.scores, 1) + 3))", "profile.meta.active = true", "local rows = {{", "__ls_index(rows, 0).points = (__ls_index(rows, 0).points + 1)", "print(\"js_nested_structures\", __ls_index(rows, 0).label, __ls_index(rows, 0).points, profile.meta.active)"]
+        },
+        "javascript": {
+          "includes": ["const profile = {", "scores: [2, 4]", "profile.scores[1] = (profile.scores[1] + 3);", "profile.meta.active = true;", "const rows = [{", "rows[0].points = (rows[0].points + 1);", "console.log(\"js_nested_structures\", rows[0].label, rows[0].points, profile.meta.active);"]
+        },
+        "luascript": {
+          "includes": ["const profile = { name: \"Ada\", scores: [2, 4], meta: { active: false } };", "profile.scores[1] = profile.scores[1] + 3;", "profile.meta.active = true;", "const rows = [{ label: profile.name, points: profile.scores[1] }];", "rows[0].points = rows[0].points + 1;", "console.log(\"js_nested_structures\", rows[0].label, rows[0].points, profile.meta.active);"]
+        },
+        "python": {
+          "includes": ["profile = {\"name\": \"Ada\", \"scores\": [2, 4], \"meta\": {\"active\": False}}", "profile[\"scores\"][1] = (profile[\"scores\"][1] + 3)", "profile[\"meta\"][\"active\"] = True", "rows = [{\"label\": profile[\"name\"], \"points\": profile[\"scores\"][1]}]", "rows[0][\"points\"] = (rows[0][\"points\"] + 1)", "__ls_print(\"js_nested_structures\", rows[0][\"label\"], rows[0][\"points\"], profile[\"meta\"][\"active\"])"]
+        }
+      },
+      "runtimeChecks": {
+        "native": {
+          "expectedOutput": "js_nested_structures Ada 8 true"
+        },
+        "targets": {
+          "javascript": {
+            "expectedOutput": "js_nested_structures Ada 8 true"
+          },
+          "python": {
+            "expectedOutput": "js_nested_structures Ada 8 True"
+          }
+        }
+      }
+    },
+    {
+      "name": "data_luascript_portable_length_slice_mutation",
+      "sourceLanguage": "luascript",
+      "sections": ["arrays", "objects-records", "length", "slicing", "indexing", "array-mutation", "record-fields"],
+      "semanticsStatus": "profile-repaired",
+      "source": "meta profile portable_semantics_v1;\nlet values = [2, 4, 6, 8];\nlet part = values.slice(1, 3);\nvalues[2] = values[2] + values.length;\nlet record = { name: \"Ada\", points: values[2], part: part };\nconsole.log(\"ls_data_structures\", record.name, record.points, record.part[0], record.part.length);\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function __ls_slice", "local function __ls_length", "local values = {2, 4, 6, 8}", "local part = __ls_slice(values, 1, 3)", "__ls_set_index(values, 2, __ls_add(__ls_index(values, 2), __ls_length(values)))", "print(\"ls_data_structures\", record.name, record.points, __ls_index(record.part, 0), __ls_length(record.part))"]
+        },
+        "javascript": {
+          "includes": ["let values = [2, 4, 6, 8];", "let part = values.slice(1, 3);", "values[2] = (values[2] + values.length);", "console.log(\"ls_data_structures\", record.name, record.points, record.part[0], record.part.length);"]
+        },
+        "luascript": {
+          "includes": ["meta profile portable_semantics_v1;", "let values = [2, 4, 6, 8];", "let part = values.slice(1, 3);", "values[2] = values[2] + values.length;", "console.log(\"ls_data_structures\", record.name, record.points, record.part[0], record.part.length);"]
+        },
+        "python": {
+          "includes": ["def __ls_slice", "values = [2, 4, 6, 8]", "part = __ls_slice(values, 1, 3)", "__ls_set_index(values, 2, __ls_add(__ls_index(values, 2), len(values)))", "record = {\"name\": \"Ada\", \"points\": __ls_index(values, 2), \"part\": part}", "__ls_print(\"ls_data_structures\", record[\"name\"], record[\"points\"], __ls_index(record[\"part\"], 0), len(record[\"part\"]))"]
+        }
+      },
+      "runtimeChecks": {
+        "targets": {
+          "javascript": {
+            "expectedOutput": "ls_data_structures Ada 10 4 2"
+          },
+          "python": {
+            "expectedOutput": "ls_data_structures Ada 10 4 2"
+          }
+        }
+      }
+    },
+    {
+      "name": "data_python_list_dict_membership_mutation",
+      "sourceLanguage": "python",
+      "sections": ["arrays", "objects-records", "membership", "array-mutation", "object-mutation", "nested-reads-writes"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "items = [2, 3]\nitems.append(4)\nlast = items.pop()\nitems.append(last + 1)\n\nif 3 in items and not (4 in items):\n    status = \"membership_ok\"\nelse:\n    status = \"membership_bad\"\n\nprint(\"py_list_mutation\", len(items), items[0], items[2], status)\n\nprofile = {\"name\": \"Ada\", \"scores\": [2, 4]}\nprofile[\"scores\"][1] = profile[\"scores\"][1] + 3\nprofile[\"active\"] = 1\n\nif \"name\" in profile and not (\"missing\" in profile):\n    status = \"dict_ok\"\nelse:\n    status = \"dict_bad\"\n\nprint(\"py_dict_mutation\", profile[\"name\"], profile[\"scores\"][1], status)\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function __py_append", "local function __py_pop", "local function __py_in_value", "local function __py_in_key", "local items = {2, 3}", "__py_append(items, 4)", "local last = __py_pop(items)", "__py_append(items, (last + 1))", "if (__py_in_value(3, items) and not __py_in_value(4, items)) then", "__ls_set_index(__py_index(profile, \"scores\"), 1, (__py_index(__py_index(profile, \"scores\"), 1) + 3))", "profile[\"active\"] = 1", "print(\"py_dict_mutation\", __py_index(profile, \"name\"), __py_index(__py_index(profile, \"scores\"), 1), status)"]
+        },
+        "javascript": {
+          "includes": ["function __py_append", "function __py_pop", "function __py_in_value", "function __py_in_key", "let items = [2, 3];", "__py_append(items, 4);", "let last = __py_pop(items);", "__py_append(items, (last + 1));", "if ((__py_in_value(3, items) && !__py_in_value(4, items)))", "__py_index(profile, \"scores\")[1] = (__py_index(__py_index(profile, \"scores\"), 1) + 3);", "profile[\"active\"] = 1;", "console.log(\"py_dict_mutation\", __py_index(profile, \"name\"), __py_index(__py_index(profile, \"scores\"), 1), status);"]
+        },
+        "luascript": {
+          "includes": ["function __py_append", "function __py_pop", "function __py_in_value", "function __py_in_key", "let items = [2, 3];", "__py_append(items, 4);", "let last = __py_pop(items);", "__py_append(items, last + 1);", "__py_index(profile, \"scores\")[1] = __py_index(__py_index(profile, \"scores\"), 1) + 3;", "console.log(\"py_dict_mutation\", __py_index(profile, \"name\"), __py_index(__py_index(profile, \"scores\"), 1), status);"]
+        },
+        "python": {
+          "includes": ["items = [2, 3]", "items.append(4)", "last = items.pop()", "items.append((last + 1))", "if ((3 in items) and (not (4 in items))):", "profile = {\"name\": \"Ada\", \"scores\": [2, 4]}", "profile[\"scores\"][1] = (profile[\"scores\"][1] + 3)", "profile[\"active\"] = 1", "if ((\"name\" in profile) and (not (\"missing\" in profile))):", "print(\"py_dict_mutation\", profile[\"name\"], profile[\"scores\"][1], status)"]
+        }
+      },
+      "runtimeChecks": {
+        "native": {
+          "expectedOutput": "py_list_mutation 3 2 5 membership_ok\npy_dict_mutation Ada 7 dict_ok"
+        },
+        "targets": {
+          "javascript": {
+            "expectedOutput": "py_list_mutation 3 2 5 membership_ok\npy_dict_mutation Ada 7 dict_ok"
+          },
+          "python": {
+            "expectedOutput": "py_list_mutation 3 2 5 membership_ok\npy_dict_mutation Ada 7 dict_ok"
+          }
+        }
+      }
+    },
+    {
+      "name": "data_python_list_iteration_length",
+      "sourceLanguage": "python",
+      "sections": ["arrays", "iteration", "length"],
+      "semanticsStatus": "aligned-current-slice",
+      "source": "items = [2, 3, 4]\ntotal = 0\nfor item in items:\n    total = total + item\n\nprint(\"py_for_list\", total, len(items))\n",
+      "targets": {
+        "lua": {
+          "includes": ["local function __py_len", "local function __py_index", "local items = {2, 3, 4}", "local __py_iter_0 = items", "while (__py_index_1 < __py_len(__py_iter_0)) do", "local item = __py_index(__py_iter_0, __py_index_1)", "print(\"py_for_list\", total, __py_len(items))"]
+        },
+        "javascript": {
+          "includes": ["function __py_len", "function __py_index", "let items = [2, 3, 4];", "let __py_iter_0 = items;", "while ((__py_index_1 < __py_len(__py_iter_0)))", "let item = __py_index(__py_iter_0, __py_index_1);", "console.log(\"py_for_list\", total, __py_len(items));"]
+        },
+        "luascript": {
+          "includes": ["function __py_len", "function __py_index", "let items = [2, 3, 4];", "let __py_iter_0 = items;", "while (__py_index_1 < __py_len(__py_iter_0))", "let item = __py_index(__py_iter_0, __py_index_1);", "console.log(\"py_for_list\", total, __py_len(items));"]
+        },
+        "python": {
+          "includes": ["items = [2, 3, 4]", "__py_iter_0 = items", "while (__py_index_1 < len(__py_iter_0)):", "item = __py_iter_0[__py_index_1]", "print(\"py_for_list\", total, len(items))"]
+        }
+      },
+      "runtimeChecks": {
+        "native": {
+          "expectedOutput": "py_for_list 9 3"
+        },
+        "targets": {
+          "javascript": {
+            "expectedOutput": "py_for_list 9 3"
+          },
+          "python": {
+            "expectedOutput": "py_for_list 9 3"
+          }
+        }
+      }
+    },
+    {
+      "name": "data_lua_table_record_fields",
+      "sourceLanguage": "lua",
+      "sections": ["objects-records", "record-fields", "object-literals", "nested-reads-writes"],
+      "semanticsStatus": "target-native-delta",
+      "source": "local profile = { name = \"Lua\", scores = {2, 4} }\nprofile.scores[2] = profile.scores[2] + 3\nprint(\"lua_table_record\", profile.name, profile.scores[2])\n",
+      "targets": {
+        "lua": {
+          "includes": ["local profile = {", "name = \"Lua\"", "scores = {2, 4}", "profile.scores[2] = (profile.scores[2] + 3)", "print(\"lua_table_record\", profile.name, profile.scores[2])"]
+        },
+        "javascript": {
+          "includes": ["let profile = {", "name: \"Lua\"", "scores: [2, 4]", "profile.scores[1] = (profile.scores[1] + 3);", "console.log(\"lua_table_record\", profile.name, profile.scores[1]);"]
+        },
+        "luascript": {
+          "includes": ["let profile = { name: \"Lua\", scores: [2, 4] };", "profile.scores[1] = profile.scores[1] + 3;", "console.log(\"lua_table_record\", profile.name, profile.scores[1]);"]
+        }
+      },
+      "runtimeChecks": {
+        "targets": {
+          "javascript": {
+            "expectedOutput": "lua_table_record Lua 7"
+          }
+        }
+      },
+      "notes": "Lua-source table indexing is proven for emitted JavaScript in this matrix. Python runtime is not claimed here because Lua one-based table indexing to emitted Python is not canonicalized in this slice."
+    },
+    {
+      "name": "unsupported_js_object_spread_structure",
+      "sourceLanguage": "javascript",
+      "sections": ["objects-records", "object-literals", "unsupported-deep-structures"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "const base = { a: 1 };\nconst copy = { ...base, b: 2 };\nconsole.log(copy.b);\n",
+      "expectedFailure": {
+        "phase": "compile",
+        "messageIncludes": ["Unsupported JavaScript object spread"]
+      }
+    },
+    {
+      "name": "unsupported_js_destructuring_structure",
+      "sourceLanguage": "javascript",
+      "sections": ["objects-records", "nested-reads-writes", "unsupported-deep-structures"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "const profile = { meta: { score: 7 } };\nconst { meta: { score } } = profile;\nconsole.log(score);\n",
+      "expectedFailure": {
+        "phase": "compile",
+        "messageIncludes": ["Unsupported JavaScript variable declarator pattern: ObjectPattern"]
+      }
+    },
+    {
+      "name": "unsupported_target_diagnostic",
+      "sourceLanguage": "javascript",
+      "sections": ["unsupported-nodes", "target-obligations"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "const value = 1;\nconsole.log(value);\n",
+      "unsupportedTargets": {
+        "sql": {
+          "messageIncludes": ["Unsupported target language: sql"]
+        }
+      }
+    },
+    {
+      "name": "unsupported_js_for_of_control_flow",
+      "sourceLanguage": "javascript",
+      "sections": ["control-flow", "for-of", "unsupported-control-flow"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "const values = [1, 2, 3];\nfor (const value of values) {\n  console.log(value);\n}\n",
+      "expectedFailure": {
+        "phase": "compile",
+        "messageIncludes": ["Unsupported JavaScript control flow: for-of loops"]
+      }
+    },
+    {
+      "name": "unsupported_python_continue_control_flow",
+      "sourceLanguage": "python",
+      "sections": ["control-flow", "continue", "unsupported-control-flow"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "total = 0\nfor value in range(0, 3):\n    if value == 1:\n        continue\n    total = total + value\nprint(total)\n",
+      "expectedFailure": {
+        "phase": "compile",
+        "messageIncludes": ["Unsupported Python input feature: continue statements"]
+      }
+    },
+    {
+      "name": "unsupported_js_try_catch_control_flow",
+      "sourceLanguage": "javascript",
+      "sections": ["control-flow", "exceptions", "unsupported-control-flow"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "try {\n  console.log(\"try-body\");\n} catch (error) {\n  console.log(error);\n}\n",
+      "expectedFailure": {
+        "phase": "compile",
+        "messageIncludes": ["Unsupported JavaScript exception flow: try/catch/finally"]
+      },
+      "notes": "Exception handling remains outside the current JavaScript Ring 3 branch-depth slice."
+    },
+    {
+      "name": "unsupported_js_tagged_template_control_flow",
+      "sourceLanguage": "javascript",
+      "sections": ["template-literals", "unsupported-control-flow"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "function tag(parts, value) {\n  return parts[0] + value;\n}\nconsole.log(tag`tagged ${1}`);\n",
+      "expectedFailure": {
+        "phase": "compile",
+        "messageIncludes": ["Unsupported JavaScript template literal form: tagged template literals"]
+      },
+      "notes": "Plain template literals are in the Ring 3 foothold; tagged template literals remain outside the current JavaScript source slice."
+    },
+    {
+      "name": "unsupported_undefined_value_semantic",
+      "sourceLanguage": "javascript",
+      "sections": ["null-nil-none", "undefined", "unsupported-values"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "const missing = undefined;\nconsole.log(missing);\n",
+      "expectedFailure": {
+        "phase": "compile",
+        "messageIncludes": ["Unsupported JavaScript value semantic: undefined"]
+      }
+    },
+    {
+      "name": "unsupported_nan_value_semantic",
+      "sourceLanguage": "javascript",
+      "sections": ["numbers", "unsupported-values"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "const value = NaN;\nconsole.log(value);\n",
+      "expectedFailure": {
+        "phase": "compile",
+        "messageIncludes": ["Unsupported JavaScript value semantic: NaN"]
+      }
+    },
+    {
+      "name": "unsupported_infinity_value_semantic",
+      "sourceLanguage": "javascript",
+      "sections": ["numbers", "unsupported-values"],
+      "semanticsStatus": "unsupported-diagnostic",
+      "source": "const value = Infinity;\nconsole.log(value);\n",
+      "expectedFailure": {
+        "phase": "compile",
+        "messageIncludes": ["Unsupported JavaScript value semantic: Infinity"]
+      }
+    }
+  ]
+}
