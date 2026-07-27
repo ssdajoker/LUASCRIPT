@@ -28,11 +28,15 @@ $env:REPOCALYPSE_HOME = 'C:\Users\ssdaj\Desktop\ACE-9\Repocalypse-beta.1-clean\R
 .\scripts\repocalypse-sync.ps1 prefetch
 .\scripts\repocalypse-sync.ps1 push-dry-run
 .\scripts\repocalypse-sync.ps1 push
+.\scripts\repocalypse-sync.ps1 bridge-packet-refresh
 .\scripts\repocalypse-sync.ps1 mirror-update
 ```
 
 `npm run repocalypse:verify` is the shared required gate. The wrapper refuses
 to run unless both IVC and No-Git report version 1.5.1.
+
+If `doctor` reports a missing or mismatched local IVC bridge packet, run
+`bridge-packet-refresh` before attempting the heavier `mirror-update` route.
 
 The tracked `nogit_state.yaml` is stable project configuration. Mutable
 `.nogit` caches, bridge packets, locks, and local receipts are intentionally

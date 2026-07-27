@@ -8,6 +8,7 @@ param(
         'prefetch',
         'push-dry-run',
         'push',
+        'bridge-packet-refresh',
         'mirror-update'
     )]
     [string]$Command = 'status',
@@ -61,6 +62,38 @@ function Invoke-Checked {
     }
 }
 
+function Resolve-IVCMirrorPath {
+    param([string]$CandidatePath)
+
+    if ([string]::IsNullOrWhiteSpace($CandidatePath)) {
+        if (-not [string]::IsNullOrWhiteSpace($env:LUASCRIPT_IVC_MIRROR)) {
+            $CandidatePath = $env:LUASCRIPT_IVC_MIRROR
+        } else {
+            $CandidatePath = Join-Path (Split-Path -Parent $repoRoot) 'LUASCRIPT.ivc-mirror'
+        }
+    }
+
+    $resolvedMirror = [System.IO.Path]::GetFullPath($CandidatePath)
+    if (-not (Test-Path -LiteralPath (Join-Path $resolvedMirror '.ivc') -PathType Container)) {
+        throw "IVC mirror is not initialized: $resolvedMirror"
+    }
+
+    return $resolvedMirror
+}
+
+function Write-BridgePacket {
+    param([string]$ResolvedMirror)
+
+    $packet = Join-Path $repoRoot '.nogit\bridge\ivc_export.json'
+    $packetParent = Split-Path -Parent $packet
+    New-Item -ItemType Directory -Path $packetParent -Force | Out-Null
+    Invoke-Checked $ivc @(
+        'bridge', 'nogit', 'export-empty-packet',
+        '--repo-path', $ResolvedMirror,
+        '--output', $packet
+    )
+}
+
 Assert-ToolVersion -ToolPath $nogit -ToolName 'No-Git'
 Assert-ToolVersion -ToolPath $ivc -ToolName 'IVC'
 
@@ -85,24 +118,19 @@ try {
         'push' {
             Invoke-Checked $nogit @('push')
         }
+        'bridge-packet-refresh' {
+            $resolvedMirror = Resolve-IVCMirrorPath -CandidatePath $MirrorPath
+            Write-BridgePacket -ResolvedMirror $resolvedMirror
+        }
         'mirror-update' {
-            if ([string]::IsNullOrWhiteSpace($MirrorPath)) {
-                if (-not [string]::IsNullOrWhiteSpace($env:LUASCRIPT_IVC_MIRROR)) {
-                    $MirrorPath = $env:LUASCRIPT_IVC_MIRROR
-                } else {
-                    $MirrorPath = Join-Path (Split-Path -Parent $repoRoot) 'LUASCRIPT.ivc-mirror'
-                }
-            }
-
-            $resolvedMirror = [System.IO.Path]::GetFullPath($MirrorPath)
-            if (-not (Test-Path -LiteralPath (Join-Path $resolvedMirror '.ivc') -PathType Container)) {
-                throw "IVC mirror is not initialized: $resolvedMirror"
-            }
+            $resolvedMirror = Resolve-IVCMirrorPath -CandidatePath $MirrorPath
 
             $gitSha = (& git rev-parse HEAD).Trim()
             if ($LASTEXITCODE -ne 0) {
                 throw 'Unable to resolve the current Git HEAD.'
             }
+
+            Write-BridgePacket -ResolvedMirror $resolvedMirror
 
             Invoke-Checked $ivc @(
                 'bridge', 'git', 'export-to-ivc',
@@ -111,14 +139,6 @@ try {
                 '--message', "Git sync $gitSha"
             )
 
-            $packet = Join-Path $repoRoot '.nogit\bridge\ivc_export.json'
-            $packetParent = Split-Path -Parent $packet
-            New-Item -ItemType Directory -Path $packetParent -Force | Out-Null
-            Invoke-Checked $ivc @(
-                'bridge', 'nogit', 'export-empty-packet',
-                '--repo-path', $repoRoot,
-                '--output', $packet
-            )
             Invoke-Checked $ivc @(
                 'bridge', 'git', 'translate',
                 '--repo-path', $repoRoot,
