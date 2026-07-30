@@ -48,7 +48,14 @@ class ReleaseTestSuite {
       assert.strictEqual(patch, '1.0.1', 'Patch bump failed');
       console.log('✓ Patch version bump: 1.0.0 -> 1.0.1');
 
+      // Test promotion from the live prerelease shape
+      bumper.currentVersion = '0.1.0-beta.0';
+      const promoted = bumper.getNextVersion('patch');
+      assert.strictEqual(promoted, '0.1.0', 'Prerelease promotion failed');
+      console.log('✓ Prerelease promotion: 0.1.0-beta.0 -> 0.1.0');
+
       // Test specific version
+      bumper.currentVersion = '1.0.0';
       const specific = bumper.getNextVersion('1.5.3');
       assert.strictEqual(specific, '1.5.3', 'Specific version failed');
       console.log('✓ Specific version: 1.5.3 -> 1.5.3');
@@ -182,7 +189,13 @@ class ReleaseTestSuite {
       const bumper = new VersionBump();
 
       // Valid versions
-      const versions = ['1.0.0', '0.0.1', '10.20.30'];
+      const versions = [
+        '1.0.0',
+        '0.0.1',
+        '10.20.30',
+        '0.1.0-beta.0',
+        '1.0.0-rc.1+build.7',
+      ];
       for (const version of versions) {
         const parsed = bumper.parseVersion(version);
         assert(parsed.major !== undefined);
@@ -192,14 +205,13 @@ class ReleaseTestSuite {
       console.log(`✓ Parsed ${versions.length} valid versions`);
 
       // Invalid versions
-      const invalid = ['1', '1.0', 'latest', '1.0.0-beta'];
+      const invalid = ['1', '1.0', 'latest', '1.0.0-01', '1.0.0+'];
       for (const version of invalid) {
-        try {
-          bumper.parseVersion(version);
-          assert.fail(`Should reject ${version}`);
-        } catch {
-          // Expected
-        }
+        assert.throws(
+          () => bumper.parseVersion(version),
+          /Invalid version format/,
+          `Should reject ${version}`
+        );
       }
       console.log(`✓ Rejected ${invalid.length} invalid versions`);
 

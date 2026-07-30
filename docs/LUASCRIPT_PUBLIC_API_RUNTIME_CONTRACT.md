@@ -1,7 +1,7 @@
 # LUASCRIPT Public API And Runtime Contract
 
-Status: active contract draft; no-release freeze candidate prepared
-Last updated: 2026-07-16
+Status: active tested no-release freeze candidate; final release authorization remains open
+Last updated: 2026-07-29
 Track: Denali canonical `1.0`
 
 This document defines the public API and runtime expectations for real LUASCRIPT `1.0`. It is a contract draft for the Denali `1.0` route, not a version bump, release tag, npm publish, GitHub release, or broad support promotion.
@@ -10,8 +10,8 @@ This document defines the public API and runtime expectations for real LUASCRIPT
 
 - The current package remains `luascript` at `0.1.0-beta.0`.
 - The current release track remains pre-production beta.
-- No package version, source API, compiler behavior, language syntax, or runtime behavior changes by this document alone.
-- The 2026-07-16 no-release freeze candidate audits current truth only; it is not a release seal, `1.0` promotion, tag, publish, or version bump.
+- No package version, language syntax, package `bin`, package `exports`, or release state changes in this bearing.
+- The 2026-07-29 package bearing repairs clean-consumer importability, package metadata, `enableAll` behavior, and status-version alignment without adding a root export or claiming `1.0`.
 - Canonical `1.0` can ship only after the exit criteria in [LUASCRIPT_1_0_EXIT_CRITERIA.md](LUASCRIPT_1_0_EXIT_CRITERIA.md) are met or explicitly excluded with rationale.
 
 ## Package Identity And Entry Points
@@ -23,8 +23,10 @@ Current package metadata:
 - Root module entrypoint: `src/unified_luascript.js`.
 - Declared package `exports` map: none.
 - Declared npm `bin`: none.
-- Node engine floor: `>=14.0.0`.
-- Current package file list: `src/`, `test/`, `README.md`, and `LICENSE`.
+- Node engine floor: `>=14.17.0`.
+- Current package file list: `src/`, `test/`, `examples/package/`, `README.md`, and `LICENSE`.
+- Runtime dependencies: `acorn`, `esprima`, `luaparse`, and exact `typescript@5.9.3`.
+- Repository metadata: `https://github.com/ssdajoker/LUASCRIPT`.
 
 The no-release Denali freeze candidate preserves the current root-package import surface: `require("luascript")` resolves through `package.json#main` to `src/unified_luascript.js`. There is no package `exports` map, so no subpath import is frozen by this candidate. The current root module exports these names:
 
@@ -35,7 +37,7 @@ The no-release Denali freeze candidate preserves the current root-package import
 - `PerformanceTools`
 - `AgenticIDE`
 
-For this no-release candidate, those six root export names are the only candidate public exports. `UnifiedLuaScript` currently exposes constructor options plus instance methods `initializeComponents`, `transpile`, `transpileSource`, `execute`, `transpileAndExecute`, `profile`, `benchmark`, `optimize`, `createProject`, `openFile`, `getCodeCompletion`, `startDebugging`, `transformWithOOP`, `transformWithPatterns`, `transformWithTypes`, `getSystemStatus`, `getPerformanceReport`, `validateEvidence`, `clearCaches`, and `shutdown`, plus static helpers `createDevelopment`, `createProduction`, `createEnterprise`, and `validateEvidenceStatic`. Those method names are candidate API inventory, not a behavior-complete `1.0` compatibility guarantee until API-specific tests and migration notes are sealed. Deep imports from `src/`, `src/index.js`, compiler internals, test helpers, and generated artifacts are not public API unless a future contract names them.
+For this no-release candidate, those six root export names are the only candidate public exports. `UnifiedLuaScript` currently exposes constructor options plus instance methods `initializeComponents`, `transpile`, `transpileSource`, `execute`, `transpileAndExecute`, `profile`, `benchmark`, `optimize`, `createProject`, `openFile`, `getCodeCompletion`, `startDebugging`, `transformWithOOP`, `transformWithPatterns`, `transformWithTypes`, `getSystemStatus`, `getPerformanceReport`, `validateEvidence`, `clearCaches`, and `shutdown`, plus static helpers `createDevelopment`, `createProduction`, `createEnterprise`, and `validateEvidenceStatic`. `enableAll: false` is a master disable and initializes zero components. `getSystemStatus().version` is sourced from the live package version rather than a future-version literal. Those names and two behaviors are tested candidate inventory, not a behavior-complete `1.0` guarantee. Deep imports from `src/`, `src/index.js`, compiler internals, test helpers, and generated artifacts are not public API unless a future contract names them.
 
 ## CLI Surface
 
@@ -53,11 +55,14 @@ No-release freeze candidate CLI stance: no global CLI binary is part of the publ
 
 Runtime expectations:
 
-- The declared Node floor is `node >=14.0.0` until a future compatibility decision changes it with evidence.
-- A `1.0` Node floor must be paired with install, smoke, verification, and compatibility notes.
+- The declared consumer Node floor is `node >=14.17.0`.
+- Exact `typescript@5.9.3` is an eager runtime dependency of the shipped TypeScript compiler and declares Node `>=14.17`; the package floor must not contradict it.
+- The executable floor probe uses Node `14.17.1`, the first available npm-distributed patch in that line, and performs an installed-package root import plus JS-to-Lua smoke.
 - `src/runtime.js`, `src/runtime_system.js`, and `src/runtime/` helpers are included by the current `src/` package file entry.
-- Root-level `runtime/runtime.lua` and `runtime/core/enhanced_runtime.lua` exist in the repository and are used by local Lua execution tests and examples through `LUA_PATH`, but the current package file list does not include root-level `runtime/`.
-- No-release freeze candidate runtime stance: root-level `runtime/` remains outside the current publish file promise unless a later release review explicitly includes it. Before `1.0`, package review must either include root-level `runtime/` or prove that those helpers are development/example/test material only.
+- Root-level `runtime/runtime.lua` and `runtime/core/enhanced_runtime.lua` remain outside the package. They are referenced by non-public `src/transpiler.js` and `src/luascript_compiler.py`, not by the candidate root JavaScript import graph.
+- No-release freeze candidate runtime stance: root-level `runtime/` is explicitly excluded. The two deep tools that expect it are repository-local/non-public until a future package contract deliberately promotes and packages them.
+
+`npm run test:package-contract` writes `artifacts/conformance/public-api-runtime-package-report.json`. It must pack the live source, inspect the actual tarball, install it in a clean temporary consumer, import `luascript`, check the exact six root exports and method inventory, run a CoreTranspiler smoke, execute every shipped public-root example, verify version and `enableAll` behavior, prove the root-runtime exclusion, and exercise the installed package at the declared Node line. The test cleans only its unique temporary directory.
 
 Native language runtime claims require real runtime commands and passing `language:<name>:bidirectional` gates. Target-runtime IR lanes prove emitted behavior for named slices only; they do not substitute for native runtime qualification.
 
@@ -77,18 +82,34 @@ The current package `files` surface is beta-scoped:
 
 - `src/`
 - `test/`
+- `examples/package/`
 - `README.md`
 - `LICENSE`
 
-This list is not yet a canonical `1.0` publish promise. Before `1.0`, the release review must confirm:
+This list is now a tested no-release candidate, not yet a canonical `1.0` publish promise. The package contract confirms:
 
-- required runtime helpers are included or intentionally excluded;
-- public docs needed by package users are included or linked from README;
-- test files included in the package are deliberate;
-- generated reports, archive material, local artifacts, and development-only caches are excluded;
-- the chosen package file list is reflected in docs and `claims:check`.
+- `package.json`, `README.md`, `LICENSE`, the required `src/` root, and the exact `examples/package/` public-example set are present;
+- root-level `runtime/` is intentionally absent from the candidate package;
+- generated reports, docs, archives, Python bytecode/cache files, backups, nested source tests, and source-local prompt files are absent;
+- an actual tarball installs, its root import/transpile smoke succeeds, and its two public-root examples execute.
 
-No-release freeze candidate package-file stance: keep the current `files` list unchanged and do not add `runtime/`, `docs/`, generated reports, archives, or local artifacts as part of this pass. That stance is a candidate boundary only, not a final `1.0` publish seal.
+The additive `examples/package/` entry is deliberately narrow. `examples/package/transpile-js-to-lua.cjs` and `examples/package/minimal-system.cjs` use only the six-name root API. The wider `examples/` tree and all `tests/actual_programs/` fixtures remain repository-local compiler evidence; they are not shipped package examples and do not define consumer compatibility.
+
+Root `.npmignore` records repository-wide exclusions; `src/.npmignore` is the effective nested filter for the explicitly included `src/` tree. This remains a candidate boundary only, not a final `1.0` publish seal.
+
+## Migration And Changelog Policy
+
+The unreleased Denali package-bearing changes are documented in [LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md](LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md) and the top unreleased section of [CHANGELOG.md](../CHANGELOG.md):
+
+- consumers must use Node `>=14.17.0` rather than the previously declared `>=14.0.0`;
+- TypeScript is now an exact runtime dependency, so a clean tarball import has every eager dependency it needs;
+- YAML and `@types/esprima` are development-only because the candidate root runtime does not load them;
+- `enableAll: false` now actually disables all five components;
+- status version reporting now matches `package.json`;
+- repository, bugs, and homepage metadata point to `ssdajoker/LUASCRIPT`.
+- two installed-package examples now exercise only the public root import, while repository-local `.ls` and actual-program suites remain explicitly outside the package contract.
+
+Before `1.0`, every protected-surface change must add an unreleased changelog entry. If a consumer must change code, configuration, runtime version, import path, or deployment packaging, the same bearing must add or update a migration note with old behavior, new behavior, required action, fallback, and verification command. Changelog generation or sealing remains a release action and is not run by readiness gates.
 
 ## Semver Policy
 
@@ -102,7 +123,9 @@ For `1.0` and later:
 
 IR schema versioning remains separate and is governed by [VERSIONING.md](VERSIONING.md). Package semver, IR schema versioning, and language-slice support levels are related evidence streams, not the same version number.
 
-Release-script caveat: `version:bump` and `release:*` are release-action tools, not readiness checks. The current `scripts/version-bump.js` parser accepts stable `x.y.z` versions, while the live package is `0.1.0-beta.0`; before any real release, release tooling must be reviewed or updated so pre-release-to-`1.0` transitions are deliberate and reproducible.
+The chosen internal release-IR transition is [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md). It keeps operational Program IR and its one-way canonical artifact projection internal for this bearing. `legacyProgramToSchemaArtifact`, `RELEASE_IR_SURFACE_CONTRACT`, and `src/ir` deep imports are not added to the six-name root export candidate, and existing transpilation result `.ir` behavior is not redefined. Any future package-root `IR` namespace is a separate public API decision requiring API-specific tests, package review, migration notes, and an explicit contract update.
+
+Release-script caveat: `version:bump` and `release:*` are release-action tools, not readiness checks. The reviewed tooling accepts SemVer prereleases such as the live `0.1.0-beta.0`, computes stable promotion deliberately, invokes readiness commands without Unix-only pipelines, and refuses to create a tag unless the intended package version is already committed at `HEAD`. Those safeguards do not authorize a bump, commit, tag, publish, or release.
 
 ## Compatibility Policy
 
@@ -123,28 +146,30 @@ Compatibility does not apply to:
 - generated artifacts and local reports;
 - broad language behavior beyond named fixtures;
 - target-runtime lanes when native support is the claim being evaluated;
-- experimental examples unless a current manifest and support doc promote them.
+- repository-local or experimental examples unless a current manifest and support doc promote them.
+
+The two executable programs under `examples/package/`, alongside their local README, are the only installed-package examples in this candidate. Their successful execution proves those exact public-root workflows only; it does not promote the legacy Python compiler, root `runtime/`, the 55-entry actual-program suite, or the wider mathematical/example tree into the package surface.
 
 Any compatibility-impacting change must update this contract, [PROJECT_STATUS.md](../PROJECT_STATUS.md), [README.md](../README.md), the support matrix or active docs as needed, and `claims:check`.
 
 ## No-Release Freeze Candidate Audit
 
-Audit date: 2026-07-16.
+Original audit date: 2026-07-16. Current package proof: 2026-07-29.
 
 | Surface | Current repo truth | Candidate boundary |
 | --- | --- | --- |
 | Package identity | `package.json` name is `luascript`; version is `0.1.0-beta.0`; `package.json#luascript.version` also says `0.1.0-beta.0` | No bump; no `1.0` package identity until explicit release action |
 | Root entrypoint | `package.json#main` is `src/unified_luascript.js` | Candidate public import surface remains root package import only |
 | Exports map | No `exports` map is declared | No subpath imports are frozen; deep imports stay internal |
-| Root exports | `UnifiedLuaScript`, `CoreTranspiler`, `RuntimeSystem`, `AdvancedFeatures`, `PerformanceTools`, `AgenticIDE` | Six root export names are candidate public exports; method behavior still needs API-specific compatibility tests before final release |
+| Root exports | `UnifiedLuaScript`, `CoreTranspiler`, `RuntimeSystem`, `AdvancedFeatures`, `PerformanceTools`, `AgenticIDE` | Exact six-name surface, method inventory, no-IR-internal boundary, version alignment, and `enableAll` behavior are package-tested |
 | CLI/API surface | No package `bin`; `npm start` and `npm run dev` execute `src/unified_luascript.js`; `src/index.js` has direct CLI-like handling but is not package main or bin | No global CLI in the public contract; `src/index.js` remains non-public unless promoted later |
-| Node floor | `engines.node` is `>=14.0.0` | Keep candidate floor until a compatibility decision changes it with evidence |
-| Runtime helpers | `src/runtime*` and `src/runtime/` are package-included through `src/`; root `runtime/` helpers are repo-local and outside `files` | Do not silently promise root `runtime/` in published packages; include or exclude explicitly before `1.0` |
+| Node floor | `engines.node` is `>=14.17.0`; exact TypeScript declares `>=14.17` | Clean installed-package smoke is required on Node `14.17.1` and the current verification Node |
+| Runtime helpers | `src/runtime*` and `src/runtime/` are package-included through `src/`; root `runtime/` is absent | Exclusion is deliberate; deep Python/legacy helpers that expect root runtime remain non-public |
 | Npm scripts | Local workflow, evidence gates, language gates, and release-action scripts coexist in `package.json` | Only documented local workflow and evidence gates are readiness surfaces; release scripts require explicit release request |
-| Package files | `src/`, `test/`, `README.md`, `LICENSE` | Keep unchanged for this no-release candidate; final `1.0` must review docs/runtime inclusion |
-| Semver policy | Pre-`1.0` mutability plus post-`1.0` MAJOR/MINOR/PATCH policy is documented here | Adopted as candidate policy; release tooling still needs pre-release transition review |
+| Package files | `src/`, `test/`, `examples/package/`, `README.md`, `LICENSE`; nested package hygiene filters active | Actual tarball contents, clean install, and exact public-example execution are tested; final authorization remains open |
+| Semver policy | Pre-`1.0` mutability plus post-`1.0` MAJOR/MINOR/PATCH policy is documented here | Adopted as candidate policy; prerelease parsing and commit-before-tag invariants are tested, but every release action still needs authorization |
 | Compatibility policy | Applies only to documented public surfaces and named supported slices | Candidate protects root import, root exports, no-bin stance, Node floor, package files, named slices, and named diagnostics |
-| Changelog expectations | `CHANGELOG.md` current active top entry is `0.1.0-beta.0`; `changelog:generate` exists but writes release notes only when invoked | No changelog seal in this pass; release notes must name compatibility-impacting changes before release |
+| Changelog expectations | `CHANGELOG.md` has an unreleased Denali package-boundary section and a migration-note link | No changelog seal in this pass; compatibility-impacting changes must stay visible before release |
 | Release-action boundaries | Release, version bump, changelog generation, artifact signing, tags, publish, and GitHub release are scriptable but not run | No tag, publish, version bump, GitHub release, artifact signing, or changelog seal without explicit release request |
 
 ## Release Actions
@@ -163,10 +188,10 @@ Before any `1.0` release action, rerun the minimum gate set in [LUASCRIPT_1_0_EX
 ## 1.0 Exit Checklist For This Contract
 
 - Root package import strategy is frozen or deliberately changed with migration notes.
-- Public root exports are documented and tested, or narrowed before release.
+- Public root exports and candidate method inventory are documented and package-tested.
 - CLI position is chosen: no global `bin`, or a tested/documented `bin`.
-- Node floor is chosen and verified.
-- Runtime helper inclusion/exclusion is proven by package file review.
+- Node floor is chosen and exercised at Node `14.17.1`; `npm run test:compatibility-matrix` binds that package proof to the current-host native/runtime/schema/doc matrix, while other operating systems and architectures remain unclaimed.
+- Runtime helper inclusion/exclusion is proven by actual tarball review and clean consumer import.
 - Public npm workflow scripts are named.
 - Evidence-gate scripts required for release are named.
 - Semver and compatibility policies are adopted by active docs.

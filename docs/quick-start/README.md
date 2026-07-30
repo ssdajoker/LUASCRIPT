@@ -2,7 +2,7 @@
 
 **Status**: ACTIVE
 **Track**: scoped non-strict pre-production beta v0.1
-**Last updated**: 2026-07-14
+**Last updated**: 2026-07-29
 
 Use this guide to validate the current LUASCRIPT beta surface without accidentally treating it as strict-native complete or canonical `1.0`.
 
@@ -35,9 +35,9 @@ Use `npm ci` instead of `npm install` when you need lockfile-exact automation.
 
 The full public API/runtime contract draft is [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](../LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md). This quick-start only summarizes the beta validation path.
 
-The current package identity is `luascript` at `0.1.0-beta.0` on the pre-production beta track. `src/unified_luascript.js` is the current package entrypoint, and the current package file surface is `src/`, `test/`, `README.md`, and `LICENSE`. Treat that as the beta package surface, not a final canonical `1.0` publish promise.
+The current package identity is `luascript` at `0.1.0-beta.0` on the pre-production beta track. `src/unified_luascript.js` is the current package entrypoint, and the current package file surface is `src/`, `test/`, `examples/package/`, `README.md`, and `LICENSE`. Treat that as the beta package surface, not a final canonical `1.0` publish promise.
 
-The package currently declares `node >=14.0.0`. `npm run build` is a readiness smoke, not a production bundle. Native-runtime support is claimed only when the real runtime command is available and the matching `language:<name>:bidirectional` gate passes. Target-runtime IR lanes prove emitted behavior for named slices, but they do not substitute for native qualification.
+The package declares consumer Node `>=14.17.0`, aligned with exact runtime TypeScript `5.9.3`. `npm run build` is a readiness smoke, not a production bundle; `npm run test:package-contract` packs, installs, imports, and smoke-tests the actual package on the current runtime and Node `14.17.1`. Native-runtime support is claimed only when the real runtime command is available and the matching `language:<name>:bidirectional` gate passes. Target-runtime IR lanes prove emitted behavior for named slices, but they do not substitute for native qualification.
 
 No tag, publish, GitHub release, or package version bump is part of the beta or `1.0` docs route unless a release action is explicitly requested.
 
@@ -45,6 +45,7 @@ No tag, publish, GitHub release, or package version bump is part of the beta or 
 
 Start with the passing scoped surface:
 
+- installed-package consumers: `examples/package/transpile-js-to-lua.cjs` and `examples/package/minimal-system.cjs`
 - small JavaScript programs that use variables, arithmetic, functions, conditionals, loops, arrays, objects, and console output
 - small `.ls` programs in the verified JS-like and meta-language slices
 - `tests/actual_programs/fixtures/`
@@ -52,7 +53,7 @@ Start with the passing scoped surface:
 - `examples/mathematical_notation_core.ls`
 - `examples/mathematical_notation_rehab_v1.ls` through `examples/mathematical_notation_rehab_v18.ls`
 
-Avoid using broad multi-language demos or the full Unicode mathematical DSL as beta proof. Those are experimental unless a current manifest and gate names the exact slice.
+Only the first bullet is a shipped installed-package example surface. The actual-program, mathematical, and wider example trees are repository-local evidence. Avoid using broad multi-language demos or the full Unicode mathematical DSL as beta proof; those are experimental unless a current manifest and gate names the exact slice.
 
 ## Useful Focused Gates
 
@@ -89,6 +90,8 @@ The next documented route is:
 - [Project Status](../../PROJECT_STATUS.md)
 - [Documentation Index](../INDEX.md)
 - [Public API And Runtime Contract](../LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md)
+- [Denali Compatibility Matrix](../LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md)
+- [Denali Release-Blocking Policy](../LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md)
 - [Beta Release Handoff v0.1](../BETA_RELEASE_HANDOFF_V0_1.md)
 - [Denali Soloist Ledger](../LUASCRIPT_DENALI_SOLOIST_LEDGER.md)
 - [Mega Plan](../LUASCRIPT_MEGA_PLAN.md)

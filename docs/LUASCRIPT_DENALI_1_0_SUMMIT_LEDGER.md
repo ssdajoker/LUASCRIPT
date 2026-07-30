@@ -2275,3 +2275,234 @@ Verification seal:
 | `npm run stubs:check` | PASS: 1341 files scanned, 346 intentional runtime diagnostics, 0 blocking findings |
 | `npm run archive:audit` | PASS: 769 active files scanned |
 | Package version no-bump check | PASS: `0.1.0-beta.0` |
+
+### 2026-07-29 - Lua Structural IR Reparse Seed
+
+Intent:
+
+- Add one real Lua bidirectionality proof layer before the release-IR surface decision.
+- Reuse the generic round-trip harness and avoid compiler changes unless the current bridge failed the fixture.
+- Keep normalized structural parity separate from source-text identity, token/comment/format preservation, runtime equivalence, and broad semantics.
+
+Implementation:
+
+- Added `lua_to_lua_structural_ir` to `tests/roundtrip/manifest.json`.
+- The fixture lowers `local total = 2 + 3` and `print("rt_lua", total)` to current bridge Program IR, emits Lua, reparses the emitted Lua, preserves and compares semantic metadata including `sourceLanguage` and `luaLocal`, strips only `loc`, `range`, `raw`, and generated `id` fields, and compares normalized Program IR.
+- The generic structural-reparse harness now reports its normalization policy: same-language proofs preserve metadata, while cross-language proofs explicitly exclude source-specific metadata. No compiler or runtime change was required.
+- Promoted only Lua `structuralIrReparse` from `not-claimed` to `seeded-probe`; Lua normalized source identity and token identity remain `not-claimed`.
+- Strengthened `scripts/claims_check.js` to validate the live manifest hash, exact fixture/mode counts, exact report summary, Lua layer state, passed Lua result record, metadata-preserving normalization policy, ignored-field list, and Lua fixture hash.
+- Reconciled current status, README, support matrix, bidirectionality contract, exit criteria, evidence binder/index, and Big Remaining Climb ledger.
+
+Evidence:
+
+| Evidence | Result |
+| --- | --- |
+| Round-trip probe | PASS: 7/7 total, 5 structural IR reparse checks, 2 runtime-output equivalence checks, source-preserving round-trip count 0 |
+| Lua fixture | PASS: source -> Program IR -> emitted Lua -> reparsed Program IR has normalized parity |
+| Emitted Lua | `local total = (2 + 3)` then `print("rt_lua", total)` |
+| Round-trip manifest SHA-256 | `1b4aca945d2b4fd7daccdc34aea4d6a7e53fe9bf5c7d24159c6253001531cff1` |
+| Lua fixture SHA-256 | `15ca8a23dc6c505b1d79f098a4bc727b71b74368e0b42a5d84d7dc09d5aa3649` |
+
+Boundary:
+
+- This is one tiny normalized current-bridge Program-IR parity fixture.
+- It is not Lua source-text identity, token identity, comment/format preservation, broad round-trip support, broad runtime equivalence, or broad semantic equivalence.
+- No compiler behavior, runtime behavior, public API, package files, npm `bin`, package `exports`, version, tag, publish action, GitHub release, or release channel changed.
+
+Next route:
+
+- Choose and formalize the final release IR surface.
+- Prefer a documented, versioned dual-surface transition preserving working legacy Program IR while validating the consolidated schema artifact unless current adoption and compatibility evidence proves another route safer.
+- Define alias/version policy, compatibility invariants, migration/deprecation rules, and release-facing tests before any public-surface promotion.
+
+Verification seal:
+
+| Gate | Result |
+| --- | --- |
+| `node --check scripts\claims_check.js` | PASS |
+| `npm run test:roundtrip-probe` | PASS: 7 fixtures, 5 structural IR reparse checks, 2 runtime-output equivalence checks |
+| `npm run language:lua:bidirectional` | PASS: 11/11 Lua language fixtures; `test:lua-input` 19/19 |
+| `npm run test:ir-conformance` | PASS: 32 fixtures, 80 target checks, 11 expected diagnostics, 32 runtime checks |
+| `npm run test:schema-artifact-map` | PASS: 21/21 positive mappings, 11 expected diagnostics, 168/168 invariants |
+| `npm run test:ir-compatibility-bridge` | PASS: 21/21 positive mappings, 168/168 invariants, 11 expected diagnostics |
+| `npm run claims:check` | PASS: 2847 checks |
+| `npm run status:check` | PASS: 0 errors, 0 warnings |
+| `npm run stubs:check` | PASS: 1346 files scanned, 352 intentional runtime diagnostics, 0 blocking findings |
+| `npm run archive:audit` | PASS: 774 active files scanned |
+| `npm run verify` | PASS: all requested verify suites |
+| Package version no-bump check | PASS: `0.1.0-beta.0` |
+
+### 2026-07-29 - Versioned One-Way Release IR Surface Contract
+
+Intent:
+
+- Resolve the Denali release-IR surface from current compiler, emitter, schema, package, and conformance evidence without breaking the working Program IR.
+- Formalize one versioned direction of travel before any public API promotion.
+- Keep the surface choice separate from a version bump, release, reverse converter, or broad semantic-equivalence claim.
+
+Decision:
+
+| Contract item | Sealed value |
+| --- | --- |
+| Contract version | `1.0.0-rc.1` |
+| Operational surface | Legacy Program IR `v0` remains the operational compiler/emitter authority. |
+| Canonical surface | Canonical artifact `1.0.0` is a derived evidence/serialization projection. |
+| Direction | Legacy Program IR -> canonical artifact only; canonical -> legacy is unsupported. |
+| Public status | `INTERNAL_ONLY`; the bridge is not exported from the package root. |
+| Compatibility horizon | Legacy Program IR remains supported through package `1.x`; removal cannot precede package `2.0.0`, equivalent canonical-emitter evidence, migration notice, and explicit operator authorization. |
+
+Implementation:
+
+- Added `src/ir/release_ir_surface_contract.js` as a deep-frozen machine-readable policy for versions, direction, compatibility, migration, deprecation, kind aliases, and field aliases.
+- Hardened `src/ir/schema_artifact_bridge.js` so undeclared aliases, missing schema kind enums, alias targets absent from the schema, and malformed current original-kind shapes fail closed.
+- Corrected the current bridge mapping for `ConditionalExpression.condition -> test`; the former projection silently omitted the condition.
+- Repaired `docs/schema/1.0.0/canonical_ir.schema.json` as a pre-release RC correction so it is semantically equal to `docs/canonical_ir.schema.json` except for `$id`; `docs/schema/1.x/canonical_ir.schema.json` continues to resolve to the pinned snapshot.
+- Documented the contract, compatibility encodings, known lossy deltas, migration path, deprecation horizon, validation limits, and no-public-surface boundary in [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md).
+
+Pinned evidence:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Current canonical schema | `78f8cb23636bd10d807168dbb06a26da26cf8908a62a66873d91474d843703ff` |
+| Pinned `1.0.0` schema | `55777393b5adb3902605f5f5f1fefc02a3553e5ae43c3dcd7688d177e925a740` |
+| `1.x` resolver schema | `e9579c2b1cd4da6a8f3d35fa40b8c27c2df2b43cedf35b89abfc1d4cdb58b73c` |
+| Conformance manifest | `0f551a2076df5e6a6319dcab93600bff73213476351a3fd63ea732a5a597b780` |
+
+Verification seal:
+
+| Gate | Result |
+| --- | --- |
+| `npm run test:schema-artifact-map` | PASS: 21/21 positive mappings; 11 expected diagnostics; 168/168 base invariants; 147/147 release-contract checks |
+| `npm run test:ir-compatibility-bridge` | PASS: 21/21 positive fixtures; 168/168 base invariants; 10/10 static contract checks; 147/147 mapping-contract checks; 21/21 deterministic artifacts; 1/1 supplemental DoWhile shape proof; 12/12 malformed-shape negatives; 5/5 malformed-source rejections; 11 expected diagnostics |
+| `npm run ir:validate:schema` | PASS |
+| `npm run test:core-language-bridge` | PASS |
+| `npm run ir:golden:check` and `npm run ir:golden:parity` | PASS |
+| `npm run test:roundtrip-probe` | PASS: 7/7 total, 5 structural checks, 2 runtime-output checks |
+| `npm run verify` | PASS: all requested verify suites |
+| `npm run status:check` | PASS: 0 errors, 0 warnings |
+| `npm run stubs:check` | PASS: 1347 files scanned, 352 intentional runtime diagnostics, 0 blocking findings |
+| `npm run archive:audit` | PASS: 776 active files scanned |
+| `npm run claims:check` | PASS: 2902 checks |
+| Package version/no-release check | PASS: `0.1.0-beta.0`; no version bump, tag, publish, release, commit, push, PR, package `bin`, or package `exports` change |
+
+Boundary:
+
+- The alias registry is a compatibility encoding, not a declaration that aliased kinds are semantically identical.
+- Current shape checks prove the 21 named positive fixtures and 6 named malformed cases; they are not a general-purpose canonical-IR authoring validator.
+- The canonical projection is not lossless and cannot become emitter authority without a separately evidenced reverse/migration route.
+- Existing compiler, emitter, root-import, and public transpilation-result behavior remains unchanged.
+
+Next route:
+
+- Next route: freeze and test the public API/runtime/package boundary while keeping the chosen internal IR bridge out of root exports.
+- Review exact root import keys, Node floor, package-file/runtime-helper inclusion, installed-package behavior, migration/changelog requirements, and compatibility evidence before any final `1.0` freeze.
+
+### 2026-07-29 - Tested Public API Runtime Package Boundary
+
+Intent:
+
+- Turn the public API/runtime contract from a documentation-only candidate into an actual packed-consumer proof.
+- Preserve the beta version, root export surface, no-`bin` stance, no-`exports` stance, and internal-only release-IR bridge.
+- Make dependency, Node-floor, runtime-helper, package-content, migration, and changelog decisions explicit before the wider compatibility matrix.
+
+Corrections:
+
+- Moved exact `typescript@5.9.3` from development-only to runtime dependencies because the clean tarball root import eagerly loads `src/compilers/typescript-to-ir.js`.
+- Moved YAML and `@types/esprima` to development-only because the candidate root runtime does not load them.
+- Raised the declared consumer Node floor from `>=14.0.0` to `>=14.17.0`, matching TypeScript's declared engine.
+- Corrected repository, bugs, and homepage metadata from stale `ssdajoker/LUAS` URLs to `ssdajoker/LUASCRIPT`.
+- Made `enableAll: false` a real master disable for all five facade components.
+- Sourced `getSystemStatus().version` from `package.json` instead of the false future-looking literal `1.0.0`.
+- Added `src/.npmignore`, the effective nested hygiene filter under explicit package `files: ["src/"]`; Python bytecode/cache files, backups, source-local tests, and prompt files no longer ship.
+
+Package decision:
+
+| Surface | Tested no-release candidate |
+| --- | --- |
+| Package identity | `luascript@0.1.0-beta.0` |
+| Main | `src/unified_luascript.js` |
+| Root exports | Exactly `UnifiedLuaScript`, `CoreTranspiler`, `RuntimeSystem`, `AdvancedFeatures`, `PerformanceTools`, and `AgenticIDE` |
+| CLI | No npm `bin` |
+| Subpaths | No package `exports` map; deep imports remain non-public |
+| Consumer Node | `>=14.17.0`; executable installed-package floor probe at Node `14.17.1` |
+| Runtime dependencies | `acorn`, `esprima`, `luaparse`, exact `typescript@5.9.3` |
+| Package files | Existing `src/`, `test/`, `README.md`, and `LICENSE` boundary |
+| Root runtime | Deliberately excluded; deep legacy/Python routes that expect it remain non-public |
+
+Evidence:
+
+| Evidence | Result |
+| --- | --- |
+| Package report | PASS: 30/30 exact checks, 0 failures |
+| Tarball | 395 files; 1,008,937 packed bytes; 5,185,399 unpacked bytes |
+| Tarball SHA-256 | `fa7ed04d15a97079346068f239aee16c0d433d4fcd2ceabd24cc17edd5ade827` |
+| Sorted package-path SHA-256 | `9810e6a48ce7d4f2c7435e73ee1227ab2763d9654bae3c4f257468e22866e010` |
+| Clean consumer | PASS: install, root import, exact six exports, TypeScript `5.9.3`, JS-to-Lua `local answer = (6 * 7)` |
+| Node floor | PASS: Node `v14.17.1`, exact six exports, same JS-to-Lua smoke |
+| Package hygiene | PASS: no Python cache/bytecode, backups, nested source tests/prompts, docs, artifacts, archives, lockfiles, or root `runtime/` |
+| Production dependency audit | PASS: 0 known production vulnerabilities at audit time; development dependency findings remain separate |
+| Migration/changelog | Unreleased migration note and changelog section added; no changelog seal |
+
+Verification seal:
+
+| Gate | Result |
+| --- | --- |
+| `npm run test:package-contract` | PASS: 30/30 |
+| `npm run build` | PASS |
+| `npm run test:core-language-bridge` | PASS |
+| `npm run language:typescript:bidirectional` | PASS: 11/11 |
+| `npm run test:ir-compatibility-bridge` | PASS: 21/21 positives; 11 expected diagnostics; all invariant/contract/determinism/malformed checks pass |
+| `npm run status:check` | PASS: 0 errors, 0 warnings |
+| `npm run archive:audit` | PASS: 778 active files scanned |
+| `npm run claims:check` | PASS: 2939 checks |
+| Package version/no-release check | PASS: still `0.1.0-beta.0`; no version bump, tag, publish, GitHub release, changelog seal, commit, push, PR, `bin`, or `exports` |
+
+Boundary:
+
+- This seals the tested no-release package candidate, not the final `1.0` authorization.
+- Node `14.17.1` proves the installed consumer smoke only; it does not claim the modern development dependency suite supports Node 14.
+- Root-level `runtime/` is excluded, not repaired or promoted. The non-public deep Python/legacy routes need their own installed-package proof before any future promotion.
+- No language support, release-IR public API, canonical `1.0`, broad production readiness, or omni-language claim is added.
+
+Next route:
+
+- Seal the compatibility matrix across package, Node, IR schema, named native runtimes, examples, and setup notes.
+- Build the deterministic one-command evidence bundle and release-blocking policy.
+- Repair release-tooling preflight defects without executing any release action.
+
+### 2026-07-29 - Denali Local Release Candidate Evidence Seal
+
+Intent:
+
+- Reconcile the completed post-beta bearings into one truthful, reproducible Denali release-candidate handoff.
+- Preserve the historical route entries while replacing their former open next steps with current evidence.
+- Stop before any release action.
+
+Closure evidence:
+
+| Surface | Scoped release-candidate proof |
+| --- | --- |
+| Language provenance | Schema v2 binds 26 report pairs/424 fixtures; current-host native compatibility binds 17 lanes/317 fixtures |
+| Release IR | Contract `1.0.0-rc.1`; Program IR `v0` remains operational; canonical artifact `1.0.0` remains a one-way internal projection |
+| Package | Real packed/clean-installed consumer; six root exports; no `bin`; no `exports`; Node `>=14.17.0`; exact runtime dependencies; two installed examples |
+| Repository examples | Actual programs 55/55 with explicit repository-legacy/no-package-compatibility boundary |
+| Parser ownership | 35/35 assertions with a durable report |
+| Compatibility | Current-host package, Node floor, schemas, release IR, native tools, manifests, docs, examples, and setup notes; zero `OPEN` or `FAIL` is required |
+| Evidence policy | Required Clarity/language/package/IR/edge/identity/diagnostic/example/ownership/compatibility reports fail closed; informational Clarity variants remain visible but nonblocking |
+| Reproduction | `npm run denali:rc:preflight` runs 26 ordered steps and generates the deterministic release evidence bundle last |
+| Release tooling | Readiness delegates only to the authoritative preflight; `--force` cannot bypass it; commit-before-tag/version-at-HEAD invariants are enforced |
+
+Boundary:
+
+- The seal is local/current-host and slice-specific. It does not claim broad language semantics, universal bidirectionality, lossless source/token/comment/format identity, cross-platform certification, third-party certification, or true omni-language completion.
+- Package identity remains `luascript@0.1.0-beta.0`.
+- No version bump, changelog seal, commit, tag, publish, GitHub release, push, pull request, artifact upload, package `bin`, or package `exports` action occurred.
+
+Verification seal:
+
+- Authoritative command: `npm run denali:rc:preflight`.
+- Non-mutating policy view: `npm run denali:rc:preflight:list`.
+- Final artifact: `artifacts/release_evidence/denali-release-evidence-bundle.json`.
+- Readiness condition: `releaseReady: true` with zero release blockers.
+
+Denali 1.0 release candidate ready; awaiting explicit operator authorization to version, tag, publish, or release.

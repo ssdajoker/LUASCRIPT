@@ -6,7 +6,7 @@ Language completion is slice-based and evidence-driven. A language is complete o
 
 ## Package/Runtime Boundary
 
-Package identity and runtime claims follow the active package/runtime contract: `luascript` at `0.1.0-beta.0`, entrypoint `src/unified_luascript.js`, default `npm install`, lockfile-exact `npm ci`, Node floor `node >=14.0.0`, and `npm run build` as a readiness smoke only. Native-runtime claims require the real runtime command plus a passing `language:<name>:bidirectional` gate. Target-runtime IR lanes prove emitted behavior for named slices, but they do not substitute for native qualification. No tag, publish, GitHub release, or package version bump is part of this route unless explicitly requested.
+Package identity and runtime claims follow the active package/runtime contract: `luascript` at `0.1.0-beta.0`, entrypoint `src/unified_luascript.js`, default `npm install`, lockfile-exact `npm ci`, consumer Node floor `node >=14.17.0`, exact runtime TypeScript `5.9.3`, and `npm run build` as a readiness smoke only. `npm run test:package-contract` is the installed-package boundary gate. Native-runtime claims require the real runtime command plus a passing `language:<name>:bidirectional` gate. Target-runtime IR lanes prove emitted behavior for named slices, but they do not substitute for native qualification. No tag, publish, GitHub release, or package version bump is part of this route unless explicitly requested.
 
 The active-docs map is [INDEX.md](INDEX.md). Archived reports, phase documents, generated snapshots, and old completion summaries cannot promote a language claim unless the current support matrix, manifests, runtime gates, and claims checks agree.
 
@@ -76,6 +76,23 @@ Pre-production beta readiness is not a full-language claim. It means every imple
 
 `npm run language:implemented:bidirectional` regenerates the implemented-lane reports for JavaScript, TypeScript, LUASCRIPT `.ls`, Lua, Python, C#, C, C++, Java, Rust, Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam, plus their target-runtime IR lanes where split manifests exist. `npm run beta:preflight` runs those language gates, then `beta:readiness`, `status:check`, `stubs:check`, `claims:check`, and `verify`.
 
+Every regenerated language report uses schema version 2. A release-facing report
+must bind the live manifest and each fixture by SHA-256, retain the fixture
+source hash on its result, record the loaded compiler/harness implementation
+hashes, record successful bounded version probes for every resolved runtime,
+capture Node/OS/architecture/cwd/timeout metadata, and hash the support matrix,
+these completion rules, the public package contract, and the package migration
+notes. A passing fixture count without that live provenance is historical
+evidence only and remains `OPEN` for Denali compatibility.
+
+`npm run test:compatibility-matrix` is the read-only Denali compatibility
+binding gate. It checks the 17 implemented-native manifests and 317 fixtures,
+replays recorded runtime probes, verifies exact package/dependency/Node-floor
+evidence, binds release-IR schemas/reports and active manifests, and writes
+`artifacts/conformance/denali-compatibility-matrix-report.json`. It does not
+rerun language behavior, certify another operating system, or broaden a
+language slice; run the language aggregate first.
+
 `npm run clarity:canon` includes the beta readiness audit as a strict gate, so stale reports, manifest drift, or a sub-90% implemented lane will fail the local canon. `npm run beta:full` is the full local acceptance sweep: implemented language gates, beta readiness, dogfood, canon, language qualification, actual programs, status, stubs, claims, verify, and `npm test`.
 
 Kotlin, Elm, and Gleam joined the strict-native named-slice set on 2026-07-13. Java, Rust, Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam now have narrow native gates with live reports, but target-runtime IR lanes and narrow native slices are still not the same as broad native bidirectional support.
@@ -103,3 +120,5 @@ Runtime harness notes:
 
 - Bidirectional gates execute emitted programs with a strict runtime timeout. The default is 15000 ms and can be overridden with `LANGUAGE_RUNTIME_TIMEOUT_MS` for slower local environments.
 - Timeout changes are harness ergonomics only; they do not change expected stdout, runtime-failure, or unsupported-diagnostic assertions.
+- `--version` availability in the compatibility matrix is setup evidence, not a substitute for the behavior proven by the matching fresh language report.
+- `examples/package/` is the installed-package example surface. The wider `examples/` tree and `tests/actual_programs/` are repository-local evidence unless a future package contract deliberately promotes them.

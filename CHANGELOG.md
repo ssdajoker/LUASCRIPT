@@ -9,6 +9,46 @@ Historical entries below this beta section are retained as project history. Curr
 
 ---
 
+## [Unreleased] - Denali Package Boundary Candidate
+
+### Package And Runtime
+
+- Moved exact `typescript@5.9.3` into runtime dependencies so a clean installed tarball can import the package and use the TypeScript compiler path.
+- Moved repository-only YAML and `@types/esprima` dependencies to development scope.
+- Raised the declared consumer Node floor from `>=14.0.0` to `>=14.17.0` to match the shipped TypeScript engine contract.
+- Corrected repository, bugs, and homepage metadata to `ssdajoker/LUASCRIPT`.
+- Added nested npm-package hygiene so Python caches/bytecode, backups, nested source tests, and source-local prompts do not ship.
+- Added only `examples/package/` to the package `files` list; the no-`bin` stance, no-`exports` stance, and root-level `runtime/` exclusion remain unchanged.
+- Added two installed-package examples that use only the public root API and explicitly separated them from repository-local actual-program and mathematical evidence.
+
+### Public Facade Fixes
+
+- Made `enableAll: false` disable all five unified-system components.
+- Made system status report the live package version instead of the future-looking literal `1.0.0`.
+- Added a packed-tarball, clean-consumer, exact-root-surface, installed-example, and Node-floor evidence gate.
+- Repaired prerelease version calculation and made tag creation require an exact committed package version at `HEAD`; no release action was run.
+
+### Release-Candidate Evidence
+
+- Added schema-v2 language reports with live manifest, fixture, implementation, runtime, environment, and governing-document provenance.
+- Added first-class actual-program and parser-ownership reports while keeping the 55-entry actual-program suite explicitly repository-local.
+- Added a current-host Denali compatibility matrix covering the package boundary, Node floor, release IR/schema surface, 17 native lanes, setup notes, examples, manifests, and active docs.
+- Added a deterministic release evidence bundle with fail-closed missing/stale/failing/unbound required-evidence detection.
+- Added the authoritative 26-step `npm run denali:rc:preflight`; evidence generation runs last with `--require-ready`.
+- Made release readiness delegate only to that preflight and made `--force` unable to bypass it.
+
+### Migration
+
+- Consumers on Node 14.0 through 14.16 must move to Node 14.17 or newer before adopting a package carrying this boundary.
+- See [docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md](docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md).
+
+### Not Released
+
+- Package identity remains `0.1.0-beta.0`.
+- No version bump, tag, publish, GitHub release, changelog seal, commit, push, or pull request occurred.
+
+---
+
 ## [0.1.0-beta.0] - 2026-06-19 - Scoped Non-Strict Beta Release Seal
 
 ### Release Seal

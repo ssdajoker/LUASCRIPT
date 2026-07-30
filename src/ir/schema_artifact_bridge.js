@@ -1,13 +1,12 @@
 "use strict";
 
 const crypto = require("crypto");
-
-const KIND_ALIASES = Object.freeze({
-  Parameter: "Identifier",
-  VariableDeclarator: "VariableDeclaration",
-  SwitchCase: "BlockStatement",
-  UnaryExpression: "BinaryExpression"
-});
+const {
+  KIND_ALIASES,
+  KIND_ALIAS_POLICIES,
+  FIELD_ALIAS_POLICIES,
+  RELEASE_IR_SURFACE_CONTRACT
+} = require("./release_ir_surface_contract");
 
 const DEFAULT_SCHEMA_KINDS = new Set([
   "Identifier",
@@ -151,12 +150,16 @@ function schemaKindsFromSchema(schema) {
     schema.$defs.Node.properties &&
     schema.$defs.Node.properties.kind &&
     schema.$defs.Node.properties.kind.enum;
-  return new Set(Array.isArray(kinds) ? kinds : Array.from(DEFAULT_SCHEMA_KINDS));
+  if (!Array.isArray(kinds) || kinds.length === 0) {
+    throw new Error("Canonical IR schema must declare a non-empty $defs.Node.properties.kind.enum");
+  }
+  return new Set(kinds);
 }
 
 function mapKind(kind, schemaKinds = DEFAULT_SCHEMA_KINDS) {
   if (schemaKinds.has(kind)) return kind;
-  return KIND_ALIASES[kind] || null;
+  const aliasTarget = KIND_ALIASES[kind];
+  return aliasTarget && schemaKinds.has(aliasTarget) ? aliasTarget : null;
 }
 
 function isIrNode(value) {
@@ -172,16 +175,36 @@ function addMeta(out, node, mappedKind) {
       originalKind,
       mappedKind,
       sourceSurface: "legacy-object-tree",
-      artifactSurface: "canonical-ir-schema-v1-derived"
+      sourceSurfaceVersion: RELEASE_IR_SURFACE_CONTRACT.surfaces.operational.version,
+      artifactSurface: "canonical-ir-schema-v1-derived",
+      artifactSurfaceVersion: RELEASE_IR_SURFACE_CONTRACT.surfaces.canonical.version,
+      releaseIrContractVersion: RELEASE_IR_SURFACE_CONTRACT.contractVersion
     }
   };
+}
+
+function pushDeclaredFieldAlias(map, aliasId) {
+  if (!Object.prototype.hasOwnProperty.call(FIELD_ALIAS_POLICIES, aliasId)) {
+    throw new Error(`Undeclared release IR field alias: ${aliasId}`);
+  }
+  pushCount(map, aliasId);
 }
 
 function legacyProgramToSchemaArtifact(legacyProgram, options = {}) {
   const fixtureName = options.fixtureName || options.name || "anonymous_fixture";
   const schemaKinds = options.schemaKinds || DEFAULT_SCHEMA_KINDS;
+  if (!isIrNode(legacyProgram) ||
+      legacyProgram.kind !== RELEASE_IR_SURFACE_CONTRACT.surfaces.operational.rootKind) {
+    throw new Error(
+      `Release IR mapping requires operational root ${RELEASE_IR_SURFACE_CONTRACT.surfaces.operational.rootKind}`
+    );
+  }
+  if (!Array.isArray(legacyProgram.body)) {
+    throw new Error("Release IR operational Program.body must be an array");
+  }
   const nodes = {};
   const seen = new Map();
+  const sourceNodeOwners = new Map();
   const kindCounts = {};
   const kindAliases = {};
   const fieldAliases = {};
@@ -199,22 +222,45 @@ function legacyProgramToSchemaArtifact(legacyProgram, options = {}) {
 
   function ref(value, seed) {
     if (value === null || value === undefined) return null;
-    if (typeof value === "string") return isSchemaId(value) ? value : null;
+    if (typeof value === "string") {
+      if (isSchemaId(value)) return value;
+      throw new Error(`Release IR node reference at ${seed} is not a schema id`);
+    }
     if (isIrNode(value)) return visit(value, seed);
-    return null;
+    throw new Error(`Release IR child at ${seed} is not an IR node or schema id`);
   }
 
   function refs(values, seed) {
-    return (values || []).map((value, index) => ref(value, `${seed}:${index}`)).filter(Boolean);
+    if (values === null || values === undefined) return [];
+    if (!Array.isArray(values)) {
+      throw new Error(`Release IR child list at ${seed} must be an array`);
+    }
+    return values.map((value, index) => {
+      if (value === null || value === undefined) {
+        throw new Error(`Release IR child list at ${seed}:${index} contains a null entry`);
+      }
+      const mappedRef = ref(value, `${seed}:${index}`);
+      if (mappedRef === null) {
+        throw new Error(`Release IR child list at ${seed}:${index} did not produce a node ref`);
+      }
+      return mappedRef;
+    });
   }
 
   function visit(node, seed) {
-    if (!isIrNode(node)) return null;
-    if (node.kind === "Program") return null;
+    if (!isIrNode(node)) {
+      throw new Error(`Release IR child at ${seed} is not an IR node`);
+    }
+    if (node.kind === "Program") {
+      throw new Error(`Nested Program node is invalid at ${seed}`);
+    }
 
-    const id = nodeId(node, seed);
     if (seen.has(node)) return seen.get(node);
-    if (nodes[id]) return id;
+    const id = nodeId(node, seed);
+    if (sourceNodeOwners.has(id) && sourceNodeOwners.get(id) !== node) {
+      throw new Error(`Duplicate release IR source node id: ${id}`);
+    }
+    sourceNodeOwners.set(id, node);
 
     const mappedKind = mapKind(node.kind, schemaKinds);
     if (!mappedKind) {
@@ -254,7 +300,7 @@ function legacyProgramToSchemaArtifact(legacyProgram, options = {}) {
       out.literalKind = node.literalKind || (node.type && node.type.primitiveType) || typeof node.value;
       break;
     case "VariableDeclarator":
-      pushCount(fieldAliases, "varKind->declarationKind");
+      pushDeclaredFieldAlias(fieldAliases, "varKind->declarationKind");
       out.declarationKind = node.varKind || "let";
       out.declarations = [{
         id,
@@ -266,7 +312,7 @@ function legacyProgramToSchemaArtifact(legacyProgram, options = {}) {
       }];
       break;
     case "FunctionDeclaration":
-      pushCount(fieldAliases, "parameters->params");
+      pushDeclaredFieldAlias(fieldAliases, "parameters->params");
       out.params = refs(node.parameters || node.params, `${id}:params`);
       out.body = ref(node.body, `${id}:body`);
       out.returnType = sanitize(node.returnType);
@@ -279,17 +325,17 @@ function legacyProgramToSchemaArtifact(legacyProgram, options = {}) {
       out.expression = ref(node.expression, `${id}:expression`);
       break;
     case "ReturnStatement":
-      pushCount(fieldAliases, "value->argument");
+      pushDeclaredFieldAlias(fieldAliases, "value->argument");
       out.argument = ref(node.argument || node.value, `${id}:argument`);
       break;
     case "IfStatement":
-      pushCount(fieldAliases, "condition->test");
+      pushDeclaredFieldAlias(fieldAliases, "condition->test");
       out.test = ref(node.test || node.condition, `${id}:test`);
       out.consequent = ref(node.consequent, `${id}:consequent`);
       out.alternate = ref(node.alternate, `${id}:alternate`);
       break;
     case "ForStatement":
-      pushCount(fieldAliases, "condition->test");
+      pushDeclaredFieldAlias(fieldAliases, "condition->test");
       out.init = ref(node.init, `${id}:init`);
       out.test = ref(node.test || node.condition, `${id}:test`);
       out.update = ref(node.update, `${id}:update`);
@@ -297,7 +343,7 @@ function legacyProgramToSchemaArtifact(legacyProgram, options = {}) {
       break;
     case "WhileStatement":
     case "DoWhileStatement":
-      pushCount(fieldAliases, "condition->test");
+      pushDeclaredFieldAlias(fieldAliases, "condition->test");
       out.test = ref(node.test || node.condition, `${id}:test`);
       out.body = ref(node.body, `${id}:body`);
       break;
@@ -315,7 +361,7 @@ function legacyProgramToSchemaArtifact(legacyProgram, options = {}) {
       out.right = ref(node.right, `${id}:right`);
       break;
     case "UnaryExpression":
-      pushCount(fieldAliases, "operand->argument");
+      pushDeclaredFieldAlias(fieldAliases, "operand->argument");
       out.operator = `unary:${node.operator || ""}`;
       out.argument = ref(node.argument || node.operand, `${id}:argument`);
       break;
@@ -327,12 +373,15 @@ function legacyProgramToSchemaArtifact(legacyProgram, options = {}) {
       out.argument = ref(node.argument, `${id}:argument`);
       break;
     case "ConditionalExpression":
-      out.test = ref(node.test, `${id}:test`);
+      if (node.condition && !node.test) {
+        pushDeclaredFieldAlias(fieldAliases, "condition->test");
+      }
+      out.test = ref(node.test || node.condition, `${id}:test`);
       out.consequent = ref(node.consequent, `${id}:consequent`);
       out.alternate = ref(node.alternate, `${id}:alternate`);
       break;
     case "CallExpression":
-      pushCount(fieldAliases, "args->arguments");
+      pushDeclaredFieldAlias(fieldAliases, "args->arguments");
       out.callee = ref(node.callee, `${id}:callee`);
       out.arguments = refs(node.args || node.arguments, `${id}:args`);
       out.optional = Boolean(node.optional);
@@ -374,7 +423,7 @@ function legacyProgramToSchemaArtifact(legacyProgram, options = {}) {
   const body = refs(legacyProgram.body || [], `${fixtureName}:body`);
   const moduleId = isSchemaId(legacyProgram.id) ? legacyProgram.id : nextId(`${fixtureName}:module`);
   const artifact = {
-    schemaVersion: "1.0.0",
+    schemaVersion: RELEASE_IR_SURFACE_CONTRACT.surfaces.canonical.version,
     module: {
       id: moduleId,
       source: {
@@ -386,7 +435,11 @@ function legacyProgramToSchemaArtifact(legacyProgram, options = {}) {
         sourceLanguage: options.sourceLanguage || null,
         fixture: fixtureName,
         legacyRootKind: legacyProgram.kind || null,
-        transitionPolicy: "dual-surface-derived-artifact"
+        transitionPolicy: RELEASE_IR_SURFACE_CONTRACT.decision,
+        transitionMarker: RELEASE_IR_SURFACE_CONTRACT.compatibility.artifactMetadataMarker,
+        releaseIrContractVersion: RELEASE_IR_SURFACE_CONTRACT.contractVersion,
+        sourceSurface: `${RELEASE_IR_SURFACE_CONTRACT.surfaces.operational.id}/${RELEASE_IR_SURFACE_CONTRACT.surfaces.operational.version}`,
+        targetSurface: `${RELEASE_IR_SURFACE_CONTRACT.surfaces.canonical.id}/${RELEASE_IR_SURFACE_CONTRACT.surfaces.canonical.version}`
       }
     },
     nodes
@@ -398,6 +451,227 @@ function legacyProgramToSchemaArtifact(legacyProgram, options = {}) {
     kindAliases,
     fieldAliases,
     unmappedKinds
+  };
+}
+
+function collectReleaseNodeShapeFailures(artifact) {
+  const failures = [];
+
+  function requireField(nodeId, node, field, predicate, expectation) {
+    if (!Object.prototype.hasOwnProperty.call(node, field) || !predicate(node[field])) {
+      failures.push(`${nodeId}.${field} must be ${expectation}`);
+    }
+  }
+
+  function refOrNull(value) {
+    return value === null || isSchemaId(value);
+  }
+
+  function refList(value) {
+    return Array.isArray(value) && value.every(isSchemaId);
+  }
+
+  function nonEmptyString(value) {
+    return typeof value === "string" && value.length > 0;
+  }
+
+  for (const [nodeId, node] of Object.entries(artifact.nodes || {})) {
+    const mappingMeta = node.meta && node.meta.schemaArtifactMapping;
+    const originalKind = mappingMeta && mappingMeta.originalKind;
+    const aliasPolicy = Object.values(KIND_ALIAS_POLICIES)
+      .find(policy => policy.sourceKind === originalKind);
+    const expectedMappedKind = aliasPolicy ? aliasPolicy.targetKind : originalKind;
+
+    if (!nonEmptyString(originalKind)) {
+      failures.push(`${nodeId} must declare a non-empty original kind`);
+    }
+    if (node.kind !== expectedMappedKind) {
+      failures.push(
+        `${nodeId}.kind must be ${String(expectedMappedKind)} for original kind ${String(originalKind)}`
+      );
+    }
+    if (!mappingMeta || mappingMeta.mappedKind !== expectedMappedKind) {
+      failures.push(
+        `${nodeId}.meta.schemaArtifactMapping.mappedKind must be ${String(expectedMappedKind)}`
+      );
+    }
+
+    switch (originalKind) {
+    case "Identifier":
+    case "Parameter":
+      requireField(nodeId, node, "binding", value => typeof value === "string", "a binding string");
+      break;
+    case "Literal":
+      requireField(nodeId, node, "value", () => true, "present");
+      requireField(nodeId, node, "literalKind", value => typeof value === "string", "a literal kind string");
+      break;
+    case "VariableDeclarator":
+      requireField(nodeId, node, "declarationKind", nonEmptyString, "a non-empty declaration kind string");
+      requireField(nodeId, node, "declarations", value =>
+        Array.isArray(value) &&
+        value.length === 1 &&
+        value.every(declaration =>
+          declaration &&
+          declaration.id === nodeId &&
+          refOrNull(declaration.pattern) &&
+          refOrNull(declaration.init) &&
+          (isSchemaId(declaration.pattern) || nonEmptyString(declaration.name))),
+      "one declaration envelope with a binding name or pattern and resolvable refs");
+      break;
+    case "FunctionDeclaration":
+      requireField(nodeId, node, "params", refList, "a node-ref list");
+      requireField(nodeId, node, "body", isSchemaId, "a node ref");
+      break;
+    case "BlockStatement":
+      requireField(nodeId, node, "statements", refList, "a node-ref list");
+      break;
+    case "ExpressionStatement":
+      requireField(nodeId, node, "expression", isSchemaId, "a node ref");
+      break;
+    case "ReturnStatement":
+      requireField(nodeId, node, "argument", refOrNull, "a node ref or null");
+      break;
+    case "IfStatement":
+      requireField(nodeId, node, "test", isSchemaId, "a node ref");
+      requireField(nodeId, node, "consequent", isSchemaId, "a node ref");
+      requireField(nodeId, node, "alternate", refOrNull, "a node ref or null");
+      break;
+    case "ForStatement":
+      requireField(nodeId, node, "init", refOrNull, "a node ref or null");
+      requireField(nodeId, node, "test", refOrNull, "a node ref or null");
+      requireField(nodeId, node, "update", refOrNull, "a node ref or null");
+      requireField(nodeId, node, "body", isSchemaId, "a node ref");
+      break;
+    case "WhileStatement":
+    case "DoWhileStatement":
+      requireField(nodeId, node, "test", isSchemaId, "a node ref");
+      requireField(nodeId, node, "body", isSchemaId, "a node ref");
+      break;
+    case "SwitchStatement":
+      requireField(nodeId, node, "discriminant", isSchemaId, "a node ref");
+      requireField(nodeId, node, "cases", refList, "a node-ref list");
+      break;
+    case "SwitchCase":
+      requireField(nodeId, node, "test", refOrNull, "a node ref or null");
+      requireField(nodeId, node, "statements", refList, "a node-ref list");
+      break;
+    case "BinaryExpression":
+    case "LogicalExpression":
+      requireField(nodeId, node, "operator", nonEmptyString, "a non-empty operator string");
+      requireField(nodeId, node, "left", isSchemaId, "a node ref");
+      requireField(nodeId, node, "right", isSchemaId, "a node ref");
+      break;
+    case "UnaryExpression":
+      requireField(nodeId, node, "operator", value =>
+        typeof value === "string" &&
+        value.startsWith("unary:") &&
+        value.length > "unary:".length,
+      "a unary-prefixed non-empty operator");
+      requireField(nodeId, node, "argument", isSchemaId, "a node ref");
+      break;
+    case "AssignmentExpression":
+      requireField(nodeId, node, "operator", nonEmptyString, "a non-empty operator string");
+      requireField(nodeId, node, "left", isSchemaId, "a node ref");
+      requireField(nodeId, node, "right", isSchemaId, "a node ref");
+      break;
+    case "ConditionalExpression":
+      requireField(nodeId, node, "test", isSchemaId, "a node ref");
+      requireField(nodeId, node, "consequent", isSchemaId, "a node ref");
+      requireField(nodeId, node, "alternate", isSchemaId, "a node ref");
+      break;
+    case "CallExpression":
+      requireField(nodeId, node, "callee", isSchemaId, "a node ref");
+      requireField(nodeId, node, "arguments", refList, "a node-ref list");
+      break;
+    case "MemberExpression":
+      requireField(nodeId, node, "object", isSchemaId, "a node ref");
+      requireField(nodeId, node, "property", isSchemaId, "a node ref");
+      break;
+    case "ArrayExpression":
+      requireField(nodeId, node, "elements", refList, "a node-ref list");
+      break;
+    case "ObjectExpression":
+      requireField(nodeId, node, "properties", refList, "a node-ref list");
+      break;
+    case "Property":
+      requireField(nodeId, node, "key", isSchemaId, "a node ref");
+      requireField(nodeId, node, "valueRef", isSchemaId, "a node ref");
+      break;
+    case "BreakStatement":
+    case "ContinueStatement":
+      break;
+    default:
+      failures.push(`${nodeId} has no Denali RC release-shape policy for original kind ${String(originalKind)}`);
+      break;
+    }
+  }
+
+  return failures;
+}
+
+function validateReleaseIrSurfaceMapping(mapping) {
+  const artifact = mapping.artifact || mapping;
+  const metadata = artifact.module && artifact.module.metadata;
+  const declaredKindAliases = new Set(Object.keys(KIND_ALIAS_POLICIES));
+  const declaredFieldAliases = new Set(Object.keys(FIELD_ALIAS_POLICIES));
+  const nodeShapeFailures = collectReleaseNodeShapeFailures(artifact);
+  const checks = [
+    {
+      name: "release-contract-version-marked",
+      passed: metadata && metadata.releaseIrContractVersion === RELEASE_IR_SURFACE_CONTRACT.contractVersion,
+      detail: metadata && metadata.releaseIrContractVersion
+    },
+    {
+      name: "release-transition-marked",
+      passed: metadata &&
+        metadata.transitionPolicy === RELEASE_IR_SURFACE_CONTRACT.decision &&
+        metadata.transitionMarker === RELEASE_IR_SURFACE_CONTRACT.compatibility.artifactMetadataMarker,
+      detail: metadata && {
+        transitionPolicy: metadata.transitionPolicy,
+        transitionMarker: metadata.transitionMarker
+      }
+    },
+    {
+      name: "release-surfaces-versioned",
+      passed: metadata &&
+        metadata.sourceSurface === `${RELEASE_IR_SURFACE_CONTRACT.surfaces.operational.id}/${RELEASE_IR_SURFACE_CONTRACT.surfaces.operational.version}` &&
+        metadata.targetSurface === `${RELEASE_IR_SURFACE_CONTRACT.surfaces.canonical.id}/${RELEASE_IR_SURFACE_CONTRACT.surfaces.canonical.version}`,
+      detail: metadata && {
+        sourceSurface: metadata.sourceSurface,
+        targetSurface: metadata.targetSurface
+      }
+    },
+    {
+      name: "release-operational-root-kind",
+      passed: metadata &&
+        metadata.legacyRootKind === RELEASE_IR_SURFACE_CONTRACT.surfaces.operational.rootKind,
+      detail: metadata && metadata.legacyRootKind
+    },
+    {
+      name: "release-aliases-declared",
+      passed: Object.keys(mapping.kindAliases || {}).every(alias => declaredKindAliases.has(alias)) &&
+        Object.keys(mapping.fieldAliases || {}).every(alias => declaredFieldAliases.has(alias)),
+      detail: {
+        kindAliases: Object.keys(mapping.kindAliases || {}),
+        fieldAliases: Object.keys(mapping.fieldAliases || {})
+      }
+    },
+    {
+      name: "release-schema-version-aligned",
+      passed: artifact.schemaVersion === RELEASE_IR_SURFACE_CONTRACT.surfaces.canonical.version,
+      detail: artifact.schemaVersion
+    },
+    {
+      name: "release-original-kind-shapes",
+      passed: nodeShapeFailures.length === 0,
+      detail: nodeShapeFailures
+    }
+  ];
+
+  return {
+    ok: checks.every(check => check.passed),
+    checks,
+    failures: checks.filter(check => !check.passed)
   };
 }
 
@@ -512,9 +786,13 @@ function validateSchemaArtifactCompatibility(mapping) {
 
 module.exports = {
   KIND_ALIASES,
+  KIND_ALIAS_POLICIES,
+  FIELD_ALIAS_POLICIES,
+  RELEASE_IR_SURFACE_CONTRACT,
   schemaKindsFromSchema,
   legacyProgramToSchemaArtifact,
   fixtureToSchemaArtifact,
   validateSchemaArtifactCompatibility,
+  validateReleaseIrSurfaceMapping,
   hashText
 };

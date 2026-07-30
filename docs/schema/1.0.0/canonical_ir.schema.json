@@ -20,6 +20,14 @@
     }
   },
   "$defs": {
+    "CatchHandler": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "param": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] },
+        "body": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] }
+      }
+    },
     "IRId": {
       "type": "string",
       "description": "Balanced-ternary encoded identifier with any prefix (e.g., id_T01, node_10T, mod_001).",
@@ -132,7 +140,51 @@
       "additionalProperties": true,
       "properties": {
         "id": { "$ref": "#/$defs/IRId" },
-        "kind": { "$ref": "#/properties/nodes/additionalProperties/properties/kind" },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Identifier",
+            "Literal",
+            "BinaryExpression",
+            "LogicalExpression",
+            "AssignmentExpression",
+            "UpdateExpression",
+            "ConditionalExpression",
+            "CallExpression",
+            "MemberExpression",
+            "NewExpression",
+            "ArrayExpression",
+            "ObjectExpression",
+            "TemplateLiteral",
+            "ArrowFunctionExpression",
+            "FunctionDeclaration",
+            "VariableDeclaration",
+            "BlockStatement",
+            "ExpressionStatement",
+            "ReturnStatement",
+            "IfStatement",
+            "SwitchStatement",
+            "ForStatement",
+            "ForOfStatement",
+            "WhileStatement",
+            "DoWhileStatement",
+            "BreakStatement",
+            "ContinueStatement",
+            "ThrowStatement",
+            "TryStatement",
+            "ImportDeclaration",
+            "ExportDeclaration",
+            "ClassDeclaration",
+            "ClassBody",
+            "MethodDefinition",
+            "Property",
+            "ObjectPattern",
+            "ArrayPattern",
+            "RestElement",
+            "AssignmentPattern",
+            "ProgramComment"
+          ]
+        },
         "span": { "anyOf": [{ "$ref": "#/$defs/Span" }, { "type": "null" }] },
         "flags": {
           "type": "object",
@@ -185,7 +237,11 @@
         "arguments": {
           "type": ["array", "null"],
           "items": { "$ref": "#/$defs/NodeRef" }
-        }
+        },
+        "superClass": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] },
+        "block": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] },
+        "handler": { "anyOf": [ { "$ref": "#/$defs/CatchHandler" }, { "type": "null" } ] },
+        "finalizer": { "anyOf": [ { "$ref": "#/$defs/NodeRef" }, { "type": "null" } ] }
       }
     },
     "ControlFlowGraph": {

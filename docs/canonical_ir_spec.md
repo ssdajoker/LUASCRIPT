@@ -1,16 +1,17 @@
 # Canonical Intermediate Representation (IR) Specification
 
-**Status:** IR schema support reference, not a LUASCRIPT package/runtime `1.0` release claim
-**Last reviewed:** 2026-07-14
+**Status:** IR schema support reference under the chosen internal Denali RC transition, not a LUASCRIPT package/runtime `1.0` release claim
+**Last reviewed:** 2026-07-29
 Schema (latest v1): docs/canonical_ir.schema.json
-Schema (frozen 1.0.0): docs/schema/1.0.0/canonical_ir.schema.json
+Schema (pinned 1.0.0 Denali RC snapshot): docs/schema/1.0.0/canonical_ir.schema.json
 Versioning policy: docs/VERSIONING.md
+Release IR surface contract: docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md
 
-Current LUASCRIPT package/runtime status lives in [../PROJECT_STATUS.md](../PROJECT_STATUS.md), the active-docs map lives in [INDEX.md](INDEX.md), the current live IR semantics inventory is [LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md](LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md), and the first formal semantics draft is [LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md](LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md). This IR reference describes the canonical IR contract used by current gates; it does not promote broad language support by itself.
+Current LUASCRIPT package/runtime status lives in [../PROJECT_STATUS.md](../PROJECT_STATUS.md), the active-docs map lives in [INDEX.md](INDEX.md), the current live IR semantics inventory is [LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md](LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md), the first formal semantics draft is [LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md](LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md), and the chosen one-way transition is [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md). This IR reference describes the canonical artifact schema used by current gates; it does not promote broad language support, expose a package-root IR API, or make the projection a lossless replacement for operational Program IR.
 
 ## 🎯 Purpose
 
-Provide a single, authoritative schema for the JavaScript → Lua (and future backend) transpilation pipeline. This document encodes the shared expectations captured in:
+Provide the authoritative canonical artifact schema and destination architecture for the JavaScript → Lua (and future backend) pipeline. Under the current Denali RC transition, working compilers and emitters still consume legacy Program IR `v0`; the schema artifact is the versioned one-way evidence/serialization projection. This document encodes the shared expectations captured in:
 
 - `reports/canonical_ir_status.md` (audit findings, remediation plan)
 - `META_OVERSIGHT.md` (META-TEAM responsibilities)
@@ -37,8 +38,8 @@ The canonical IR must:
 
 Additional cross-team expectations:
 
-- **Parser integration**: `src/parser.js` / `src/language/parser.ts` lower into this IR before any backend codegen.
-- **Backend parity**: Lua emitter, WASM backend, and future targets must consume the same IR nodes.
+- **Parser integration destination**: parser routes should converge on this schema only after compatibility evidence replaces the current Program-IR operational route.
+- **Backend parity destination**: Lua, WASM, and future backends should eventually consume the same canonical nodes; current emitters remain Program-IR consumers through package `1.x`.
 - **Auditability**: Each IR artifact carries trace metadata for tooling (`PerformanceTools`, audit scripts).
 
 ---
@@ -473,10 +474,10 @@ Validator invariants (non-exhaustive):
 
 ---
 
-## 📆 Next Steps
+## 📆 Current Route
 
-1. Implement `src/ir/` scaffolding (builder, normalizer, schema validator).
-2. Wire parser output into lowerer (`src/parser.js` → IR).
-3. Update Lua / WASM emitters to consume canonical IR.
-4. Add CI jobs: `npm run ir:lint`, `npm run ir:test`.
-5. Present schema to META-TEAM for sign-off (record meeting notes in `reports/ir_signoff_2025-10-xx.md`).
+1. Maintain semantic parity between the latest and pinned Denali RC schemas except for `$id`.
+2. Expand original-kind-aware validation and conformance evidence only when a promoted Program-IR node family requires it.
+3. Keep current emitters on Program IR `v0` through package `1.x`; canonical-emitter migration requires equivalent fixture/runtime evidence and a breaking-release decision no earlier than package `2.0.0`.
+4. Complete the public API/runtime/package compatibility seal while keeping the release-IR bridge internal.
+5. Add cross-version compatibility matrices, target semantic delta tables, helper versioning, and release-blocking evidence before any canonical `1.0` release action.

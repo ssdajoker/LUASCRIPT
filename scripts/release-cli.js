@@ -18,14 +18,70 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 const VersionBump = require('./version-bump');
 const ChangelogGenerator = require('./changelog-generator');
 const ArtifactSigner = require('./sign-artifacts');
 
+const READINESS_CHECKS = Object.freeze([
+  Object.freeze({
+    key: 'denaliRcPreflightPass',
+    label: 'Authoritative Denali RC preflight',
+    script: 'denali:rc:preflight',
+    args: ['run', 'denali:rc:preflight'],
+  }),
+]);
+
+function resolveNpmInvocation(args) {
+  if (process.platform !== 'win32') {
+    return { command: 'npm', args };
+  }
+
+  const npmCliCandidates = [
+    process.env.npm_execpath,
+    path.join(path.dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js'),
+  ].filter(Boolean);
+  const npmCli = npmCliCandidates.find(candidate => fs.existsSync(candidate));
+
+  if (!npmCli) {
+    throw new Error(
+      'Unable to locate npm-cli.js for a shell-free Windows readiness check'
+    );
+  }
+
+  return {
+    command: process.execPath,
+    args: [npmCli, ...args],
+  };
+}
+
+function runCommand(command, args, options = {}) {
+  const invocation =
+    command === 'npm'
+      ? resolveNpmInvocation(args)
+      : { command, args };
+  return execFileSync(invocation.command, invocation.args, {
+    ...options,
+    maxBuffer: options.maxBuffer || 50 * 1024 * 1024,
+  });
+}
+
+function readinessExitCode(isReady) {
+  return isReady ? 0 : 1;
+}
+
 class ReleaseCLI {
-  constructor(repoRoot = process.cwd()) {
+  constructor(repoRoot = process.cwd(), options = {}) {
     this.repoRoot = repoRoot;
+    this.runCommand = options.runCommand || runCommand;
+    this.readinessChecks = READINESS_CHECKS;
+  }
+
+  execute(command, args, options = {}) {
+    return this.runCommand(command, args, {
+      cwd: this.repoRoot,
+      ...options,
+    });
   }
 
   /**
@@ -36,15 +92,12 @@ class ReleaseCLI {
 
     const checks = {
       gitClean: false,
-      testsPass: false,
-      perfPass: false,
-      gatesPass: false,
+      denaliRcPreflightPass: false,
     };
 
     // Check git status
     try {
-      const status = execSync('git status --porcelain', {
-        cwd: this.repoRoot,
+      const status = this.execute('git', ['status', '--porcelain'], {
         encoding: 'utf8',
       });
 
@@ -59,40 +112,16 @@ class ReleaseCLI {
       console.log('✗ Git error:', error.message);
     }
 
-    // Check test suite
-    try {
-      execSync('npm test 2>&1 | head -5', {
-        cwd: this.repoRoot,
-        stdio: 'ignore',
-      });
-      console.log('✓ Unit tests available');
-      checks.testsPass = true;
-    } catch {
-      console.log('⚠ Tests may need attention');
-    }
-
-    // Check performance gates
-    try {
-      execSync('npm run test:perf 2>&1 | head -5', {
-        cwd: this.repoRoot,
-        stdio: 'ignore',
-      });
-      console.log('✓ Performance gates available');
-      checks.perfPass = true;
-    } catch {
-      console.log('⚠ Performance gates may need attention');
-    }
-
-    // Check completeness gates
-    try {
-      execSync('npm run test:gates 2>&1 | head -5', {
-        cwd: this.repoRoot,
-        stdio: 'ignore',
-      });
-      console.log('✓ Completeness gates available');
-      checks.gatesPass = true;
-    } catch {
-      console.log('⚠ Completeness gates may need attention');
+    for (const readinessCheck of this.readinessChecks) {
+      try {
+        this.execute('npm', readinessCheck.args, {
+          stdio: 'ignore',
+        });
+        console.log(`✓ ${readinessCheck.label} passed`);
+        checks[readinessCheck.key] = true;
+      } catch {
+        console.log(`⚠ ${readinessCheck.label} need attention`);
+      }
     }
 
     const allPass = Object.values(checks).every(v => v);
@@ -103,9 +132,22 @@ class ReleaseCLI {
   }
 
   /**
+   * The Denali RC preflight is authoritative and has no force override.
+   */
+  validateReleaseOptions(options = {}) {
+    if (options.force) {
+      throw new Error(
+        '--force cannot override the authoritative denali:rc:preflight policy'
+      );
+    }
+  }
+
+  /**
    * Perform full release
    */
   async release(bumpType, options = {}) {
+    this.validateReleaseOptions(options);
+
     const isDryRun = options.dryRun || false;
     const skipGit = options.skipGit || false;
     const skipGpg = options.skipGpg || false;
@@ -116,10 +158,10 @@ class ReleaseCLI {
     // Step 1: Check readiness
     if (!isDryRun) {
       const ready = this.checkReadiness();
-      if (!ready && !options.force) {
-        console.log('\n⚠ Release blocked by readiness check');
-        console.log('Use --force to override');
-        process.exit(1);
+      if (!ready) {
+        throw new Error(
+          'Release blocked by the authoritative denali:rc:preflight readiness check'
+        );
       }
     }
 
@@ -223,7 +265,7 @@ Arguments:
 
 Options:
   --dry-run      Show what would be done without making changes
-  --force        Skip readiness checks
+  --force        Rejected: the authoritative Denali RC preflight cannot be bypassed
   --skip-gpg     Sign artifacts with SHA256 only (no GPG)
   --skip-git     Don't create git tag (for testing)
   --help         Show this help message
@@ -245,18 +287,15 @@ Examples:
   # Check readiness
   node scripts/release-cli.js --status
 
-  # Force release without checks
-  node scripts/release-cli.js patch --force
-
 Release Workflow:
-  1. Check readiness (tests, gates, git status)
+  1. Check readiness (clean Git state + authoritative Denali RC preflight)
   2. Bump version (package.json, git tag)
   3. Generate changelog (conventional commits)
   4. Sign artifacts (SHA256, optionally GPG)
   5. Push to GitHub (triggers release workflow)
 
 The release workflow will:
-  ✓ Run all quality gates (lint, tests, perf, completeness)
+  ✓ Run the complete denali:rc:preflight evidence policy
   ✓ Build artifacts and generate checksums
   ✓ Create GPG signatures if available
   ✓ Create GitHub release with notes
@@ -281,8 +320,7 @@ if (require.main === module) {
   }
 
   if (command === '--status') {
-    cli.checkReadiness();
-    process.exit(0);
+    process.exit(readinessExitCode(cli.checkReadiness()));
   }
 
   if (command === '--verify') {
@@ -316,3 +354,6 @@ if (require.main === module) {
 }
 
 module.exports = ReleaseCLI;
+module.exports.READINESS_CHECKS = READINESS_CHECKS;
+module.exports.resolveNpmInvocation = resolveNpmInvocation;
+module.exports.readinessExitCode = readinessExitCode;

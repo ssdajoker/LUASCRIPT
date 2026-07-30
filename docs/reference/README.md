@@ -2,7 +2,7 @@
 
 **Status**: ACTIVE  
 **Track**: scoped beta v0.1 plus first canonical `1.0` boundary route  
-**Last updated**: 2026-07-14
+**Last updated**: 2026-07-29
 
 This reference page records the current public-facing contract boundary. It is not a complete API reference yet.
 
@@ -13,10 +13,13 @@ The full public API/runtime contract draft is [LUASCRIPT_PUBLIC_API_RUNTIME_CONT
 - Package name: `luascript`.
 - Current version: `0.1.0-beta.0`.
 - Current entrypoint: `src/unified_luascript.js`.
-- Current package file surface: `src/`, `test/`, `README.md`, and `LICENSE`.
+- Current package file surface: `src/`, `test/`, `examples/package/`, `README.md`, and `LICENSE`.
 - Default local setup: `npm install`.
 - Lockfile-exact automation setup: `npm ci`.
-- Current Node floor: `node >=14.0.0`.
+- Current consumer Node floor: `node >=14.17.0`; the package contract exercises Node `14.17.1`.
+- Runtime compiler dependency: exact `typescript@5.9.3`.
+- Installed-package gate: `npm run test:package-contract`.
+- Installed-package examples: `examples/package/transpile-js-to-lua.cjs` and `examples/package/minimal-system.cjs`; wider examples and actual programs remain repository-local.
 - Build command status: `npm run build` is a readiness smoke, not a production bundle.
 
 Native-runtime support requires a real runtime command and a passing `language:<name>:bidirectional` gate. Target-runtime IR lanes are emitted-behavior evidence for named slices only; they do not substitute for native qualification.
@@ -33,6 +36,8 @@ No tag, publish, GitHub release, or package version bump is part of the current 
 - [Canonical 1.0 Exit Criteria Charter](../LUASCRIPT_1_0_EXIT_CRITERIA.md)
 - [Bidirectionality Contract](../LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md)
 - [Public API And Runtime Contract](../LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md)
+- [Denali Compatibility Matrix](../LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md)
+- [Denali Release-Blocking Policy](../LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md)
 - [Canonical IR Semantics Inventory](../LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md)
 - [Canonical IR Semantics Spec v0](../LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md)
 - [Language Support Matrix](../LANGUAGE_SUPPORT_MATRIX.md)

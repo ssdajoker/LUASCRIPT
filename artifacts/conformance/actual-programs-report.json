@@ -1,0 +1,1054 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:actual-programs:repository-legacy",
+  "command": "npm run test:actual-programs",
+  "generatedAt": "2026-07-30T03:46:51.498Z",
+  "elapsedMs": 14681,
+  "status": "passed",
+  "boundary": {
+    "evidenceScope": "repository-local legacy compiler and runtime behavior",
+    "packageCompatibilityClaimed": false,
+    "statement": "This suite exercises src/luascript_compiler.py and the repository runtime; it is not evidence for the installed public JavaScript package API."
+  },
+  "environment": {
+    "node": "v24.14.0",
+    "platform": "win32",
+    "arch": "x64",
+    "os": {
+      "type": "Windows_NT",
+      "release": "10.0.26200"
+    },
+    "cwd": "C:\\Users\\ssdaj\\Desktop\\LUASCRIPT",
+    "runtimeTimeoutMs": 30000
+  },
+  "inputs": {
+    "manifest": {
+      "path": "tests/actual_programs/manifest.json",
+      "sha256": "61fb3f4f0384fdf907f938261a9ac2fa126057829c338b3d277d413d39be85ef",
+      "sizeBytes": 14179,
+      "exists": true
+    },
+    "harness": {
+      "path": "tests/actual_programs.test.js",
+      "sha256": "6fe5292ad8722794d99807d02d900bcdd50eee331afd5fd79bbb1190ab055b32",
+      "sizeBytes": 13936,
+      "exists": true
+    },
+    "implementationEvidence": [
+      {
+        "path": "src/luascript_compiler.py",
+        "sha256": "017f89b1b0709010302325d91d4d9f9cae15705c4bbf0cf21d89e979c44cf2ef",
+        "sizeBytes": 14237,
+        "exists": true
+      },
+      {
+        "path": "src/lexer/enhanced_lexer.py",
+        "sha256": "46b6a57d11f840022c134a887c9bdb95baa1018db71866f1345695e2ae35e3fd",
+        "sizeBytes": 30832,
+        "exists": true
+      },
+      {
+        "path": "src/parser/enhanced_parser.py",
+        "sha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+        "sizeBytes": 130886,
+        "exists": true
+      },
+      {
+        "path": "src/transpiler/enhanced_transpiler.py",
+        "sha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+        "sizeBytes": 74595,
+        "exists": true
+      },
+      {
+        "path": "runtime/runtime.lua",
+        "sha256": "685b0d60cfdba7fbc46c1a909bed6a861809c5d206e02659b8244c742581ea3e",
+        "sizeBytes": 30822,
+        "exists": true
+      },
+      {
+        "path": "runtime/core/enhanced_runtime.lua",
+        "sha256": "886b5164ae43472ce248fa8af40804676aac017d8ca8015e25ce3609a322ef7d",
+        "sizeBytes": 110805,
+        "exists": true
+      }
+    ],
+    "sourceCount": 55
+  },
+  "runtimeEvidence": [
+    {
+      "name": "python",
+      "command": "python3",
+      "probe": {
+        "args": [
+          "--version"
+        ],
+        "status": 0,
+        "signal": null,
+        "stdout": "Python 3.14.3",
+        "stderr": "",
+        "error": null
+      }
+    },
+    {
+      "name": "lua",
+      "command": "luajit",
+      "probe": {
+        "args": [
+          "-v"
+        ],
+        "status": 0,
+        "signal": null,
+        "stdout": "LuaJIT 2.1.1720049189 -- Copyright (C) 2005-2023 Mike Pall. https://luajit.org/",
+        "stderr": "",
+        "error": null
+      }
+    }
+  ],
+  "results": [
+    {
+      "name": "arithmetic_bindings",
+      "source": "tests/actual_programs/fixtures/arithmetic_bindings.ls",
+      "sourceSha256": "86f07e439502eb3243c7108cbe383efc6066e448874bc0af799c8036aa307739",
+      "sourceSizeBytes": 81,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 2,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "functions_conditionals",
+      "source": "tests/actual_programs/fixtures/functions_conditionals.ls",
+      "sourceSha256": "a98c1ba9f5a989178dfacfc0178f23b644f897bb09b9b1aa361f9daa1a7e936a",
+      "sourceSizeBytes": 192,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 2,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "loops_for_of",
+      "source": "tests/actual_programs/fixtures/loops_for_of.ls",
+      "sourceSha256": "2d956792621ac5ac1c9978cf6623dc851f62968e74b44ed44c4ff6f42b0d0aa5",
+      "sourceSizeBytes": 163,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 5,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "array_runtime_methods",
+      "source": "tests/actual_programs/fixtures/array_runtime_methods.ls",
+      "sourceSha256": "965d1e9a777680c8fdac8df8c5fb7f8a4837bbf60712703f6448878cb066915a",
+      "sourceSizeBytes": 267,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 3,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "portable_semantics_index_length_slice",
+      "source": "tests/actual_programs/fixtures/portable_semantics_index_length_slice.ls",
+      "sourceSha256": "191bafbdfd2f57e9a29a5a96db840ce670b1cdd4de6e81da6fa33c6e9d31f771",
+      "sourceSizeBytes": 483,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "portable_semantics_truthiness_string_many",
+      "source": "tests/actual_programs/fixtures/portable_semantics_truthiness_string_many.ls",
+      "sourceSha256": "8619b47cde9470e0476814740107fb7f9ce36c33818e3d3d408e2412f8c72c2e",
+      "sourceSizeBytes": 951,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "default_index_length_slice",
+      "source": "tests/actual_programs/fixtures/default_index_length_slice.ls",
+      "sourceSha256": "f51484cb3795ee38ab13089c6fe7c798558fa7c38566a37652a2e12988bd9526",
+      "sourceSizeBytes": 446,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "default_truthiness_string_many",
+      "source": "tests/actual_programs/fixtures/default_truthiness_string_many.ls",
+      "sourceSha256": "adb10fcffafdde1877a57d8b2ecd51085f809e446a9afb2a1e6e8050e5ad0547",
+      "sourceSizeBytes": 922,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "class_smoke",
+      "source": "tests/actual_programs/fixtures/class_smoke.ls",
+      "sourceSha256": "d49699cb9e78b0b6c615d0960beb0a39f889c5df3fa227b8841033560d26f4c2",
+      "sourceSizeBytes": 145,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "supported_math_showcase",
+      "source": "examples/supported_math_showcase.ls",
+      "sourceSha256": "6f903455636277f2162da4faf84f3233a3d6fc0fcf0708483655f0e7148db93e",
+      "sourceSizeBytes": 483,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 3,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_core",
+      "source": "examples/mathematical_notation_core.ls",
+      "sourceSha256": "ad25d6e53b0c50294744639f5f6349a033080aedf5776821a6acc71f4f8c75cf",
+      "sourceSizeBytes": 713,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 2,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v1",
+      "source": "examples/mathematical_notation_rehab_v1.ls",
+      "sourceSha256": "cde068540ef46e8faffdcda4bfd44833811fd65b14d46f5ee18e895ae777595a",
+      "sourceSizeBytes": 658,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 2,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v2",
+      "source": "examples/mathematical_notation_rehab_v2.ls",
+      "sourceSha256": "7c643f820a578ba298dc200ae21f954410c3299cd4653c44dc4196d332537883",
+      "sourceSizeBytes": 451,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v3",
+      "source": "examples/mathematical_notation_rehab_v3.ls",
+      "sourceSha256": "f70679886d11ba988af14b403a356fe0889942b2d771b954784f9d394e17c1a3",
+      "sourceSizeBytes": 793,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 3,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v4",
+      "source": "examples/mathematical_notation_rehab_v4.ls",
+      "sourceSha256": "98628bb6a2fd9f33ad25d61287a4cfcd1e0223c7f0208dd3b7d002654e3a7beb",
+      "sourceSizeBytes": 322,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v5",
+      "source": "examples/mathematical_notation_rehab_v5.ls",
+      "sourceSha256": "4e77c4c6dc5fd9cd94bf64c653a470930c7e4d4e1b3aba7233dd3ec067b9c0b3",
+      "sourceSizeBytes": 507,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 2,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v6",
+      "source": "examples/mathematical_notation_rehab_v6.ls",
+      "sourceSha256": "115d0a98ea0a943de096bf3ee0796affa82d69ee6ab8f9acd9f35d96549bf52d",
+      "sourceSizeBytes": 423,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 2,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v7",
+      "source": "examples/mathematical_notation_rehab_v7.ls",
+      "sourceSha256": "838b4c1cae5c22342049fa09ce04a5b44539243d30958d3fb75f1499e4614c60",
+      "sourceSizeBytes": 597,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 2,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v8",
+      "source": "examples/mathematical_notation_rehab_v8.ls",
+      "sourceSha256": "32956736647e0aa89914967c8e3256190f53f0dded2d22c3f0b79490d09e68b8",
+      "sourceSizeBytes": 529,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v9",
+      "source": "examples/mathematical_notation_rehab_v9.ls",
+      "sourceSha256": "ce336287f5118048d7f03f16a930850f7f5368db3b4b065bc3132320ba154e0d",
+      "sourceSizeBytes": 584,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v10",
+      "source": "examples/mathematical_notation_rehab_v10.ls",
+      "sourceSha256": "bd8fdd7f8f5ff0265c4996ba6ab8e2c78998773343e14f658e20eb5bd86bf98f",
+      "sourceSizeBytes": 630,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v11",
+      "source": "examples/mathematical_notation_rehab_v11.ls",
+      "sourceSha256": "3ab3f6252ac3a40ea765761a13ac5b4c439d3e023768b0c362de071c89de844c",
+      "sourceSizeBytes": 1008,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v12",
+      "source": "examples/mathematical_notation_rehab_v12.ls",
+      "sourceSha256": "f5cd233e161953d237da4f3fa076189fdb6868cb40138a3eeffc0a83b4b0f634",
+      "sourceSizeBytes": 1253,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v13",
+      "source": "examples/mathematical_notation_rehab_v13.ls",
+      "sourceSha256": "22c13f494e9d056be7699a095fd9ec41bd3dc8297b5c0ee97b28ec374228b5db",
+      "sourceSizeBytes": 1216,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v14",
+      "source": "examples/mathematical_notation_rehab_v14.ls",
+      "sourceSha256": "fae5735fb6d0c25d678bd1c568e155e39aea07600bcedd4127d33d82d979aa7e",
+      "sourceSizeBytes": 1082,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 4,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v15",
+      "source": "examples/mathematical_notation_rehab_v15.ls",
+      "sourceSha256": "d88912d550bf80f976d7422959a602cddc22e116c04487e52e1855c2d8eecb32",
+      "sourceSizeBytes": 1199,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 3,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v16",
+      "source": "examples/mathematical_notation_rehab_v16.ls",
+      "sourceSha256": "44a49ecdbe1fea40b035d678a03c525c0b59f2d311f3ac7544af73c54c754398",
+      "sourceSizeBytes": 1305,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 4,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v17",
+      "source": "examples/mathematical_notation_rehab_v17.ls",
+      "sourceSha256": "df78f68e6db5d4bf331528a75d34bbc04ba12264f9ece78125cf42a6ffb0445c",
+      "sourceSizeBytes": 2148,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 2,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mathematical_notation_rehab_v18",
+      "source": "examples/mathematical_notation_rehab_v18.ls",
+      "sourceSha256": "7f0187c014d8f4cb6df4a8dd79f30e44e50f8cf0d34dac4246ca3d6872fde654",
+      "sourceSizeBytes": 1933,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_binder_glyph_placement",
+      "source": "tests/actual_programs/fixtures/unsupported_math_binder_glyph_placement.ls",
+      "sourceSha256": "05c709489b620e1d8dbe6b91694c5fcdae56fa15bbede984407bcb5d5bad5864",
+      "sourceSizeBytes": 145,
+      "classification": "expected-compile-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 1,
+        "executionStatus": null,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 2,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 2
+      }
+    },
+    {
+      "name": "unsupported_math_binder_missing_upper",
+      "source": "tests/actual_programs/fixtures/unsupported_math_binder_missing_upper.ls",
+      "sourceSha256": "d53e293a68d17df75f3835f6d6e90e585ea4d3fa7d52433d52cabcd55e5463a0",
+      "sourceSizeBytes": 129,
+      "classification": "expected-compile-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 1,
+        "executionStatus": null,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 1,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_limit_start_value",
+      "source": "tests/actual_programs/fixtures/unsupported_math_limit_start_value.ls",
+      "sourceSha256": "4f00d5178c2df97a043b1077fa0626b66d18d9e17240f037060d1fa91da4f555",
+      "sourceSizeBytes": 143,
+      "classification": "expected-compile-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 1,
+        "executionStatus": null,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 1,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_integral_missing_differential",
+      "source": "tests/actual_programs/fixtures/unsupported_math_integral_missing_differential.ls",
+      "sourceSha256": "d37d5f21566325a63323b96c6af21625c15540c985f5ab5279ce482d22d47866",
+      "sourceSizeBytes": 161,
+      "classification": "expected-compile-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 1,
+        "executionStatus": null,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 1,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_integral_bare_missing_differential",
+      "source": "tests/actual_programs/fixtures/unsupported_math_integral_bare_missing_differential.ls",
+      "sourceSha256": "1c142e745e5b0de439c6275dd43719731b8953974d9b7c8b48e484454848de9e",
+      "sourceSizeBytes": 151,
+      "classification": "expected-compile-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 1,
+        "executionStatus": null,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 1,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_cross_dimension",
+      "source": "tests/actual_programs/fixtures/unsupported_math_cross_dimension.ls",
+      "sourceSha256": "a0858068c1b18d7d4665174376d052c82c6cb33cf4da2e70d5e016b76f194362",
+      "sourceSizeBytes": 148,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 1,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_unit_add_dimension",
+      "source": "tests/actual_programs/fixtures/unsupported_math_unit_add_dimension.ls",
+      "sourceSha256": "c5456176d56db6bd6a26d1eae7735bf9c1cf8d42e4b1b9a7799644819d18b67b",
+      "sourceSizeBytes": 91,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 1,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_unit_operator_dimension",
+      "source": "tests/actual_programs/fixtures/unsupported_math_unit_operator_dimension.ls",
+      "sourceSha256": "694c7d12bb0cbff82cbfcdc8c3a6b81e81b58e88448f1a2ea427a9fbfa066d9e",
+      "sourceSizeBytes": 82,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 1,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_matrix_dimensions",
+      "source": "tests/actual_programs/fixtures/unsupported_math_matrix_dimensions.ls",
+      "sourceSha256": "3dcba047035d25744049438d99642538379c73a63313b77ccd6381178ecdd11b",
+      "sourceSizeBytes": 78,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 1,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_symbolic_unknown_formula",
+      "source": "tests/actual_programs/fixtures/unsupported_math_symbolic_unknown_formula.ls",
+      "sourceSha256": "516c4d400411299ad26944ff7522689d66aa6831d01d9074171006d45c96b664",
+      "sourceSizeBytes": 110,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 1,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_symbolic_dimension_mismatch",
+      "source": "tests/actual_programs/fixtures/unsupported_math_symbolic_dimension_mismatch.ls",
+      "sourceSha256": "871426f5c4becf3a74ead00c9049d4e7afdbe7cbe74a67f04751598d284c5d6d",
+      "sourceSizeBytes": 181,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 1,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_symbolic_derivative_function",
+      "source": "tests/actual_programs/fixtures/unsupported_math_symbolic_derivative_function.ls",
+      "sourceSha256": "9f488a0e15b69598796357d06d854d3e7b73aa8f042b8358ea44f390a56069ef",
+      "sourceSizeBytes": 136,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 1,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_frequency_response_parameters",
+      "source": "tests/actual_programs/fixtures/unsupported_math_frequency_response_parameters.ls",
+      "sourceSha256": "904f76e1c179a08915cd04d4e22917773c1d863297302fb388290e5056dd32aa",
+      "sourceSizeBytes": 308,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 1,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_rlc_positive_values",
+      "source": "tests/actual_programs/fixtures/unsupported_math_rlc_positive_values.ls",
+      "sourceSha256": "abc0013d4a1f23779e7a3452cb54bbbd21a8b10cb65425d7318de6598b553ac0",
+      "sourceSizeBytes": 85,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 1,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_frequency_sweep_count",
+      "source": "tests/actual_programs/fixtures/unsupported_math_frequency_sweep_count.ls",
+      "sourceSha256": "18ab55a8507d5adb93241f3b8da17a02140ceb840d947f89fabe6cf85cd9824d",
+      "sourceSizeBytes": 105,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 1,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "unsupported_math_response_crossing_missing",
+      "source": "tests/actual_programs/fixtures/unsupported_math_response_crossing_missing.ls",
+      "sourceSha256": "19acb92f39038b4fc73d6948f3dd732e535da89f7685aa2cc943bdc4c1977536",
+      "sourceSizeBytes": 392,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 1,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "nested_closures",
+      "source": "tests/actual_programs/fixtures/nested_closures.ls",
+      "sourceSha256": "e0e37d030d72ef1e04d9730daa9c9a195d21e912ff800749b3efb61a6324a352",
+      "sourceSizeBytes": 136,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "object_mutation",
+      "source": "tests/actual_programs/fixtures/object_mutation.ls",
+      "sourceSha256": "1b75dc0a1d2b9bc4535a0dfd23bdd94c9be14cdde86eb0e758c403f298ceb5db",
+      "sourceSizeBytes": 124,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "mixed_arrays_objects",
+      "source": "tests/actual_programs/fixtures/mixed_arrays_objects.ls",
+      "sourceSha256": "130fe900b5e79bf633e73e47899cf75861970d29d385377b98611f7ebb1489b3",
+      "sourceSizeBytes": 231,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "nested_loops",
+      "source": "tests/actual_programs/fixtures/nested_loops.ls",
+      "sourceSha256": "8950316ffb870d22fb705781acf74a30a8bc6591d7db5eac72f78bf70f4984f3",
+      "sourceSizeBytes": 174,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "string_number_coercion",
+      "source": "tests/actual_programs/fixtures/string_number_coercion.ls",
+      "sourceSha256": "06a21ab38e7a9e43e2d304935c52731bc56cc7d573911a7bf5e3b1c78c0a2aa7",
+      "sourceSizeBytes": 100,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "module_like_patterns",
+      "source": "tests/actual_programs/fixtures/module_like_patterns.ls",
+      "sourceSha256": "61ff4d24a933efa60d68b1bbbe4bf1bff936c8c00f5b720b377788765fe28142",
+      "sourceSizeBytes": 190,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "object_loop_state",
+      "source": "tests/actual_programs/fixtures/object_loop_state.ls",
+      "sourceSha256": "d347e5a130658ac23dff6e5298c1101cda2b307ff3367cc6d48c0a429f67bbeb",
+      "sourceSizeBytes": 170,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "short_circuit",
+      "source": "tests/actual_programs/fixtures/short_circuit.ls",
+      "sourceSha256": "85738129eda6303f951c8085208e040b83f31c2ed3d55ada79ae634218f5b4d9",
+      "sourceSizeBytes": 188,
+      "classification": "positive-runtime",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 0,
+        "expectedOutputAlternativeCount": 1,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    },
+    {
+      "name": "runtime_error_undefined_call",
+      "source": "tests/actual_programs/fixtures/runtime_error_undefined_call.ls",
+      "sourceSha256": "8f5fe8a135f39ed79ce87811478ac9ef356bedadafc2b840b565ba543a2c56de",
+      "sourceSizeBytes": 100,
+      "classification": "expected-runtime-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 0,
+        "executionStatus": 1,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 0,
+        "expectedRuntimeDiagnosticCount": 3,
+        "matchedExpectationCount": 3
+      }
+    },
+    {
+      "name": "unsupported_throw_diagnostic",
+      "source": "tests/actual_programs/fixtures/unsupported_throw_diagnostic.ls",
+      "sourceSha256": "bc63b3903e335d5f9b7d645d112721e1713eba86c85ec7445c2cd8f7b9dc05fd",
+      "sourceSizeBytes": 45,
+      "classification": "expected-compile-diagnostic",
+      "status": "passed",
+      "checks": {
+        "sourcePresent": true,
+        "compileStatus": 1,
+        "executionStatus": null,
+        "expectedOutputAlternativeCount": 0,
+        "expectedCompileDiagnosticCount": 1,
+        "expectedRuntimeDiagnosticCount": 0,
+        "matchedExpectationCount": 1
+      }
+    }
+  ],
+  "summary": {
+    "total": 55,
+    "passed": 55,
+    "failed": 0,
+    "notRun": 0,
+    "positiveRuntime": 37,
+    "expectedCompileDiagnostic": 6,
+    "expectedRuntimeDiagnostic": 12
+  },
+  "failures": []
+}

@@ -16,6 +16,10 @@
     "test:ir-conformance": "node tests/conformance/canonical_ir_conformance.test.js",
     "test:schema-artifact-map": "node tests/conformance/schema_artifact_mapping.test.js",
     "test:ir-compatibility-bridge": "node tests/conformance/dual_surface_compatibility_bridge.test.js",
+    "test:package-contract": "node tests/package/public_api_runtime_package_contract.test.js",
+    "test:compatibility-matrix": "node tests/compatibility/denali_compatibility_matrix.test.js",
+    "test:release-evidence": "node tests/release_evidence/release_evidence_bundle.test.js",
+    "test:release-tooling": "node tests/release/release_tooling_contract.test.js && node tests/release/denali_rc_preflight_contract.test.js",
     "test:edge-matrix": "node tests/edge_matrix/edge_case_matrix.test.js",
     "test:roundtrip-probe": "node tests/roundtrip/roundtrip_probe.test.js",
     "test:source-identity-probe": "node tests/roundtrip/source_identity_probe.test.js",
@@ -24,6 +28,9 @@
     "stubs:scan": "node scripts/stub_inventory.js",
     "stubs:check": "node scripts/stub_inventory.js --check",
     "archive:audit": "node scripts/archive_audit.js",
+    "evidence:release": "node scripts/generate_release_evidence_bundle.js --require-ready",
+    "denali:rc:preflight": "node scripts/denali_rc_preflight.js",
+    "denali:rc:preflight:list": "node scripts/denali_rc_preflight.js --list",
     "repocalypse:verify": "node scripts/repocalypse_verify.js",
     "claims:check": "node scripts/claims_check.js",
     "claims:math": "node scripts/claims_check.js --math",
@@ -255,17 +262,17 @@
   "author": "LUASCRIPT contributors",
   "license": "MIT",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=14.17.0"
   },
   "dependencies": {
-    "@types/esprima": "^4.0.6",
     "acorn": "^8.15.0",
     "esprima": "^4.0.1",
     "luaparse": "^0.3.1",
-    "yaml": "^2.8.2"
+    "typescript": "5.9.3"
   },
   "devDependencies": {
     "@angular/core": "^19.2.0",
+    "@types/esprima": "^4.0.6",
     "@types/node": "^20.11.19",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
@@ -281,8 +288,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tsx": "^4.7.0",
-    "typescript": "^5.4.0",
-    "vue": "^3.5.20"
+    "vue": "^3.5.20",
+    "yaml": "^2.8.2"
   },
   "overrides": {
     "glob": "^10.4.5",
@@ -290,15 +297,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ssdajoker/LUAS.git"
+    "url": "https://github.com/ssdajoker/LUASCRIPT.git"
   },
   "bugs": {
-    "url": "https://github.com/ssdajoker/LUAS/issues"
+    "url": "https://github.com/ssdajoker/LUASCRIPT/issues"
   },
-  "homepage": "https://github.com/ssdajoker/LUAS#readme",
+  "homepage": "https://github.com/ssdajoker/LUASCRIPT#readme",
   "files": [
     "src/",
     "test/",
+    "examples/package/",
     "README.md",
     "LICENSE"
   ],

@@ -1,0 +1,365 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:parser-ownership",
+  "command": "npm run test:parser-ownership",
+  "generatedAt": "2026-07-30T03:46:51.942Z",
+  "elapsedMs": 156,
+  "status": "passed",
+  "boundary": {
+    "evidenceScope": "repository parser ownership and delegated helper behavior",
+    "packageCompatibilityClaimed": false
+  },
+  "environment": {
+    "node": "v24.14.0",
+    "platform": "win32",
+    "arch": "x64",
+    "os": {
+      "type": "Windows_NT",
+      "release": "10.0.26200"
+    },
+    "cwd": "C:\\Users\\ssdaj\\Desktop\\LUASCRIPT",
+    "runtimeTimeoutMs": 10000
+  },
+  "inputs": {
+    "harness": {
+      "path": "tests/parser_ownership.test.js",
+      "sha256": "d68671232d0e6a59824b3adc3d16be7467c66f045a388b0371e702ed9da7141d",
+      "sizeBytes": 11745,
+      "exists": true
+    },
+    "runnerUtilities": {
+      "path": "tests/clarity_canon/runner_utils.js",
+      "sha256": "02c1a183867c4f1127b59abbb7fa727edf8a775ffe99097b3e001dcf7c1ce872",
+      "sizeBytes": 5504,
+      "exists": true
+    },
+    "implementationEvidence": [
+      {
+        "path": "src/lexer/enhanced_lexer.py",
+        "sha256": "46b6a57d11f840022c134a887c9bdb95baa1018db71866f1345695e2ae35e3fd",
+        "sizeBytes": 30832,
+        "exists": true
+      },
+      {
+        "path": "src/parser/enhanced_parser.py",
+        "sha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+        "sizeBytes": 130886,
+        "exists": true
+      },
+      {
+        "path": "src/transpiler/enhanced_transpiler.py",
+        "sha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+        "sizeBytes": 74595,
+        "exists": true
+      }
+    ]
+  },
+  "runtimeEvidence": [
+    {
+      "name": "python",
+      "command": "python3",
+      "probe": {
+        "args": [
+          "--version"
+        ],
+        "status": 0,
+        "signal": null,
+        "stdout": "Python 3.14.3",
+        "stderr": "",
+        "error": null
+      }
+    }
+  ],
+  "results": [
+    {
+      "name": "parser-required-marker-01",
+      "category": "required-marker",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "expected": "class ParseArtifact:"
+    },
+    {
+      "name": "parser-required-marker-02",
+      "category": "required-marker",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "expected": "def parse_artifact("
+    },
+    {
+      "name": "parser-required-marker-03",
+      "category": "required-marker",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "expected": "def collect_feature_slices("
+    },
+    {
+      "name": "parser-required-marker-04",
+      "category": "required-marker",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "expected": "def make_parser_for_tokens("
+    },
+    {
+      "name": "parser-required-marker-05",
+      "category": "required-marker",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "expected": "def parse_statement_tokens("
+    },
+    {
+      "name": "parser-required-marker-06",
+      "category": "required-marker",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "expected": "def parse_expression_tokens("
+    },
+    {
+      "name": "parser-required-marker-07",
+      "category": "required-marker",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "expected": "def parse_template_tokens("
+    },
+    {
+      "name": "parser-required-marker-08",
+      "category": "required-marker",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "expected": "def parse_array_tokens("
+    },
+    {
+      "name": "transpiler-parser-delegation-01",
+      "category": "required-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "expected": "artifact = parse_artifact(source, filename)"
+    },
+    {
+      "name": "transpiler-parser-delegation-02",
+      "category": "required-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "expected": "return parser_parse_tokens(tokens)"
+    },
+    {
+      "name": "transpiler-parser-delegation-03",
+      "category": "required-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "expected": "return parser_parse_statement_tokens(tokens, start)"
+    },
+    {
+      "name": "transpiler-parser-delegation-04",
+      "category": "required-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "expected": "parser_parse_expression_tokens(significant)"
+    },
+    {
+      "name": "transpiler-parser-delegation-05",
+      "category": "required-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "expected": "return parser_parse_template_tokens(tokens, start)"
+    },
+    {
+      "name": "transpiler-parser-delegation-06",
+      "category": "required-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "expected": "return parser_parse_array_tokens(tokens, start)"
+    },
+    {
+      "name": "transpiler-drift-marker-absent-01",
+      "category": "forbidden-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "forbidden": "globals().update("
+    },
+    {
+      "name": "transpiler-drift-marker-absent-02",
+      "category": "forbidden-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "forbidden": "from enhanced_parser import EnhancedParser"
+    },
+    {
+      "name": "transpiler-drift-marker-absent-03",
+      "category": "forbidden-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "forbidden": "parser = EnhancedParser()"
+    },
+    {
+      "name": "transpiler-drift-marker-absent-04",
+      "category": "forbidden-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "forbidden": "Parse a single statement (simplified)"
+    },
+    {
+      "name": "transpiler-drift-marker-absent-05",
+      "category": "forbidden-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "forbidden": "Build a small expression AST from collected token data"
+    },
+    {
+      "name": "transpiler-drift-marker-absent-06",
+      "category": "forbidden-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "forbidden": "Parse template literal with ${} expressions"
+    },
+    {
+      "name": "transpiler-drift-marker-absent-07",
+      "category": "forbidden-marker",
+      "source": "src/transpiler/enhanced_transpiler.py",
+      "sourceSha256": "dad9babf94f78b300c86b20cd10ad29b643fc97d8282db811a37fe29a26dc96e",
+      "status": "passed",
+      "forbidden": "This is simplified - in full implementation would parse complete expressions"
+    },
+    {
+      "name": "runtime-function-declaration-type",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:function-declaration-type"
+    },
+    {
+      "name": "runtime-function-mathematical-flag",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:function-mathematical-flag"
+    },
+    {
+      "name": "runtime-function-current-advanced",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:function-current-advanced"
+    },
+    {
+      "name": "runtime-binary-expression-type",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:binary-expression-type"
+    },
+    {
+      "name": "runtime-binary-current-advanced",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:binary-current-advanced"
+    },
+    {
+      "name": "runtime-array-expression-type",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:array-expression-type"
+    },
+    {
+      "name": "runtime-array-element-count",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:array-element-count"
+    },
+    {
+      "name": "runtime-array-spread-element",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:array-spread-element"
+    },
+    {
+      "name": "runtime-array-current-advanced",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:array-current-advanced"
+    },
+    {
+      "name": "runtime-template-literal-type",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:template-literal-type"
+    },
+    {
+      "name": "runtime-template-quasi-count",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:template-quasi-count"
+    },
+    {
+      "name": "runtime-template-expression-count",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:template-expression-count"
+    },
+    {
+      "name": "runtime-template-current-advanced",
+      "category": "runtime-assertion",
+      "source": "src/parser/enhanced_parser.py",
+      "sourceSha256": "994850d23ab49741e86e0491e999684bd8dcd06302c6ef52408e6768abf53caf",
+      "status": "passed",
+      "marker": "PARSER_OWNERSHIP_ASSERT:template-current-advanced"
+    },
+    {
+      "name": "runtime-completion-output",
+      "category": "runtime-completion",
+      "source": "tests/parser_ownership.test.js",
+      "sourceSha256": "d68671232d0e6a59824b3adc3d16be7467c66f045a388b0371e702ed9da7141d",
+      "status": "passed",
+      "expected": "parser helper execution ok"
+    }
+  ],
+  "summary": {
+    "total": 35,
+    "passed": 35,
+    "failed": 0,
+    "notRun": 0,
+    "staticAssertions": 21,
+    "runtimeAssertions": 13,
+    "completionAssertions": 1
+  },
+  "failures": []
+}

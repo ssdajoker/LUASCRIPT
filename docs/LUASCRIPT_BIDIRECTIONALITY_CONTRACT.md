@@ -1,7 +1,7 @@
 # LUASCRIPT Bidirectionality Contract
 
 Status: active contract
-Last updated: 2026-07-16
+Last updated: 2026-07-29
 Track: Denali canonical `1.0`, criterion `1.0-BIDIRECTIONALITY`
 
 This document defines what LUASCRIPT means by `bidirectional`. The term is slice-based and evidence-based. It does not mean universal language-to-language translation, lossless source recovery, full round-trip identity, or complete semantic equivalence unless a specific slice, fixture set, gate, and doc explicitly prove that narrower claim.
@@ -43,10 +43,10 @@ The first narrow probe is `npm run test:roundtrip-probe`, backed by `tests/round
 
 It has two modes:
 
-- `structural-ir-reparse`: source -> current bridge IR -> emitted target -> current bridge IR must preserve normalized IR after generated IDs and non-semantic metadata are removed. This is real IR reparse evidence for the tiny fixture, but it is not source text identity, formatting preservation, comment preservation, raw-literal preservation, or a full language semantic proof.
+- `structural-ir-reparse`: source -> current bridge IR -> emitted target -> current bridge IR must preserve normalized IR after generated IDs, source locations, and raw literal fields are removed. Same-language probes preserve and compare metadata; cross-language probes exclude source-specific metadata and report that weaker normalization policy. This is real IR reparse evidence for the tiny fixture, but it is not source text identity, formatting preservation, comment preservation, raw-literal preservation, or a full language semantic proof.
 - `runtime-output-equivalence`: source runtime and emitted target runtime must produce the same stdout for the fixture. This is useful behavioral evidence, but it is weaker than structural IR reparse because the emitted target may use helpers or target idioms that are not yet reparsed by the target input slice.
 
-Current tiny structural IR reparse probes cover JavaScript -> JavaScript, JavaScript -> emitted `.ls`, `.ls` -> JavaScript, and Python -> Python. Current runtime-output equivalence probes cover JavaScript -> Python and Python -> JavaScript. The harness intentionally does not claim broad round-trip source identity or complete semantic equivalence.
+Current tiny structural IR reparse probes cover JavaScript -> JavaScript, JavaScript -> emitted `.ls`, `.ls` -> JavaScript, Python -> Python, and Lua -> Lua. The same-language probes compare metadata; the Lua probe preserves `sourceLanguage` and `luaLocal` metadata while excluding only `loc`, `range`, `raw`, and generated `id` fields. It does not prove source-text, token, comment, or formatting identity. Current runtime-output equivalence probes cover JavaScript -> Python and Python -> JavaScript. The harness intentionally does not claim broad round-trip source identity or complete semantic equivalence.
 
 `tests/roundtrip/manifest.json` now also records a per-language layer-evidence map for JavaScript, `.ls`, Python, and Lua, and `artifacts/conformance/roundtrip-probe-report.json` writes that map alongside the probe results. This map is accounting, not promotion: it records which layers are proven, seeded, partial, measured, or not claimed.
 
@@ -57,7 +57,7 @@ Current tiny structural IR reparse probes cover JavaScript -> JavaScript, JavaSc
 | JavaScript | `PROVEN` named slice via `npm run language:javascript:bidirectional` | `PROVEN` named slice | `PROVEN` named targets | `PROVEN` named targets plus tiny JS -> Python runtime-output probe | `PROVEN` emitted target for named fixtures | `SEEDED` by JS -> JS and JS -> `.ls` probes | `NOT CLAIMED` | `NOT CLAIMED` | `PARTIAL`: fixture stdout/diagnostics only |
 | `.ls` | `PROVEN` named slice via `npm run language:luascript:bidirectional` | `PROVEN` named slice | `PROVEN` named targets | `PROVEN` named targets where the manifest/profile requires execution | `PROVEN` emitted target and identity fixtures | `SEEDED` by `.ls` -> JS plus `.ls` -> `.ls` source-identity IR checks | `PROVEN` for 12 positive source-identity fixtures | `MEASURED`, non-gating | `PARTIAL`: language/runtime fixture behavior only |
 | Python | `PROVEN` named slice via `npm run language:python:bidirectional` | `PROVEN` named slice | `PROVEN` named targets | `PROVEN` named targets plus tiny Python -> JS runtime-output probe | `PROVEN` emitted target for named fixtures | `SEEDED` by Python -> Python probe | `NOT CLAIMED` | `NOT CLAIMED` | `PARTIAL`: fixture stdout/diagnostics only |
-| Lua | `PROVEN` named slice via `npm run language:lua:bidirectional` | `PROVEN` named slice | `PROVEN` named targets | `PROVEN` named targets | `PROVEN` emitted target for named fixtures | `NOT CLAIMED` by the current round-trip probe | `NOT CLAIMED` | `NOT CLAIMED` | `PARTIAL`: fixture stdout/diagnostics only |
+| Lua | `PROVEN` named slice via `npm run language:lua:bidirectional` | `PROVEN` named slice | `PROVEN` named targets | `PROVEN` named targets | `PROVEN` emitted target for named fixtures | `SEEDED` by one Lua -> Lua normalized Program-IR reparse probe | `NOT CLAIMED` | `NOT CLAIMED` | `PARTIAL`: fixture stdout/diagnostics only |
 
 ## Current `.ls` Source Identity Probe
 

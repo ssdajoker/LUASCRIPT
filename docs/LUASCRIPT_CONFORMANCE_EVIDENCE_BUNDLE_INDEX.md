@@ -1,140 +1,325 @@
 # LUASCRIPT Conformance Evidence Bundle Index
 
 Status: active evidence bundle index
-Last updated: 2026-07-27
-Track: Denali canonical `1.0` evidence structure
+Last updated: 2026-07-29
+Track: Denali canonical `1.0` release-candidate evidence
 
 This is a release-shaped conformance evidence bundle index for LUASCRIPT. It is certification-style evidence, not certification: it is not ISO certification, third-party certification, production certification, a release artifact, a package publish, canonical `1.0`, or the user's true omni-language 100% summit.
 
-The index cross-links the current report-producing gates, manifest evidence, support boundaries, compatibility policy, and reproducibility steps. It does not promote any language, runtime, profile, package surface, or source-preservation claim by itself.
+The package remains `luascript@0.1.0-beta.0`. This index describes the
+evidence bundle; it does not authorize an external release action.
 
-Coverage lanes: beta gates, language gates, Clarity dogfood/canon/super-canon evidence, IR conformance, schema artifact mapping, dual-surface compatibility bridge, edge matrix, round-trip probe, source identity probe, unsupported diagnostics, actual programs, support matrix, compatibility policy, report paths, fixture/hash expectations, known unsupported areas, and reproducibility steps.
+Coverage lanes include beta gates, language gates, Clarity dogfood/canon/super-canon evidence, IR conformance, schema artifact mapping, dual-surface compatibility bridge, public package contract, edge matrix, round-trip probe, source identity probe, unsupported diagnostics, actual programs, support matrix, compatibility policy, parser ownership, current-host compatibility, release-blocking policy, and deterministic bundle identity.
+
+## One Authoritative Reproduction Command
+
+Run from the repository root:
+
+```bash
+npm run denali:rc:preflight
+```
+
+Inspect the exact ordered policy without executing it:
+
+```bash
+npm run denali:rc:preflight:list
+```
+
+The fail-closed orchestrator runs 26 ordered steps. It regenerates each
+required report before dependent validation, runs compatibility after every
+report producer it hash-binds, and runs the evidence generator last. Its
+stdout receipt is transient. The generator owns the durable path:
+
+`artifacts/release_evidence/denali-release-evidence-bundle.json`
+
+The authoritative order and no-release boundary are defined in
+[LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md](LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md).
 
 ## Evidence Boundary
 
-- Scoped beta, Denali canonical `1.0`, and true omni-language 100% remain separate.
-- A support claim is current only when the support matrix, manifest, report, docs, and claims checks agree.
-- Report evidence applies only to named fixtures or cases in the current manifests.
-- Fixture/hash expectations mean report-level manifest hashes, fixture or case hashes, pass/fail summaries, environment metadata, and support-matrix traceability where the harness currently writes them.
-- Report paths under `artifacts/` are generated local evidence and must be refreshed before any release decision.
-- No version bump, tag, publish, GitHub release, changelog seal, artifact signing, compiler API change, runtime API change, package `bin`, or package `exports` map change is implied by this index.
+- Scoped beta, Denali RC readiness, an authorized `1.0` release, and true
+  omni-language 100% remain separate.
+- A support claim is current only while its support-matrix row, manifest,
+  report, source hashes, runtime evidence, docs, and claims checks agree.
+- Report evidence applies only to named fixtures and cases.
+- Fixture/hash expectations mean report-level manifest hashes, fixture or case hashes, pass/fail summaries, environment metadata, and support-matrix traceability, plus implementation/runtime evidence where the owning schema requires them.
+- A prior passing count does not survive a live hash mismatch.
+- No version bump, tag, publish, GitHub release, changelog seal, artifact signing, commit, push, pull request, package `bin`, package `exports`, public API mutation, or language promotion is implied by this index.
 
-## Bundle Inventory
+## Deterministic Bundle Contract
 
-| Evidence lane | Command or source | Report path | Manifest / fixture source | Fixture/hash expectation | Support traceability and boundary |
-| --- | --- | --- | --- | --- | --- |
-| Scoped beta gates | `npm run beta:readiness`, `npm run beta:readiness:strict`, `npm run beta:preflight`, `npm run beta:full` | `artifacts/beta_readiness.json`, `artifacts/beta_gates/preflight-report.json`, `artifacts/beta_gates/full-report.json` | `scripts/beta_readiness.js`, `scripts/beta_gate_runner.js`, language manifests | Reports capture generated time and gate summaries; beta readiness links per-lane language reports | Scoped beta evidence only; not canonical `1.0`, not broad production readiness |
-| Language gates | `npm run language:implemented:bidirectional`, `npm run language:all:bidirectional`, `npm run language:<name>:bidirectional`, `npm run language:<name>:ir-targets` | `artifacts/language_completion/*-report.json` | `tests/language_completion/manifests/*.json`, `tests/language_completion/fixtures/**`, `tests/language_completion/bidirectional_harness.js` | Current reports are per-manifest gate evidence; release bundle should preserve manifest and fixture hashes before promotion | Trace through `docs/LANGUAGE_SUPPORT_MATRIX.md` and `docs/LANGUAGE_COMPLETION_RULES.md`; named slices only |
-| Clarity dogfood and canon | `npm run clarity:dogfood`, `npm run clarity:canon`, `npm run clarity:canon:super`, `npm run clarity:languages` | `artifacts/clarity_canon/dogfood-report.json`, `artifacts/clarity_canon/canon-report.json`, `artifacts/clarity_canon/canon-super-report.json`, `artifacts/clarity_canon/canon-languages-report.json` | `tests/clarity_canon/manifest.json`, `tests/clarity_canon/language_qualification_manifest.json`, dogfood fixtures, actual programs, canon shards | Reports capture generated time and pass/fail summaries; future release bundle should add manifest hash coverage for every clarity shard | Dogfood/canon evidence is scoped to active manifests and reports; archived canon docs remain historical only |
-| Canonical IR conformance | `npm run test:ir-conformance` | `artifacts/conformance/canonical-ir-conformance-report.json` | `tests/conformance/manifest.json`, `tests/conformance/canonical_ir_conformance.test.js` | Current report writes environment metadata, manifest hash, 32 fixture hashes, pass/fail summaries, and support-matrix traceability | 32 fixtures mapped to named IR semantic rules or documented gaps; not a schema-valid release IR surface by itself |
-| Schema artifact mapping | `npm run test:schema-artifact-map` | `artifacts/conformance/schema-artifact-mapping-report.json` | `tests/conformance/manifest.json`, `tests/conformance/schema_artifact_mapping.test.js`, `docs/canonical_ir.schema.json` | Current report writes environment metadata, manifest hash, schema hash, 32 fixture hashes, 21 derived artifact hashes, pass/fail summaries, and alias gap counts | Dual-surface transition evidence; not release IR surface selection, not compiler-output change |
-| Dual-surface compatibility bridge | `npm run test:ir-compatibility-bridge` | `artifacts/conformance/dual-surface-compatibility-bridge-report.json` | `src/ir/schema_artifact_bridge.js`, `tests/conformance/manifest.json`, `tests/conformance/dual_surface_compatibility_bridge.test.js`, `docs/canonical_ir.schema.json` | Current report writes environment metadata, manifest hash, schema hash, 32 fixture hashes, 21 derived artifact hashes, 168 invariant checks, pass/fail summaries, and alias gap counts | Internal-only bridge candidate; not public API, not release IR surface selection, not compiler-output change |
-| Edge-case matrix | `npm run test:edge-matrix` | `artifacts/edge_matrix/edge-case-matrix-report.json` | `tests/edge_matrix/manifest.json`, `tests/edge_matrix/edge_case_matrix.test.js` | Current report writes environment metadata, manifest hash, 25 case hashes, category counts, pass/fail summaries, and support-matrix traceability | Scoped value/control/scope/data/errors/target-specific/unsupported-diagnostic matrix; not exhaustive edge coverage |
-| Round-trip probe | `npm run test:roundtrip-probe` | `artifacts/conformance/roundtrip-probe-report.json` | `tests/roundtrip/manifest.json`, `tests/roundtrip/roundtrip_probe.test.js` | Current report writes environment metadata, manifest hash, 6 fixture hashes, pass/fail summaries, layer evidence, and support-matrix traceability | Structural IR reparse and runtime-output equivalence only; source-preserving round-trip count remains 0 |
-| Source identity probe | `npm run test:source-identity-probe` | `artifacts/conformance/source-identity-probe-report.json` | `tests/roundtrip/source_identity_manifest.json`, `tests/roundtrip/source_identity_probe.test.js`, `tests/roundtrip/fixtures/**` | Current report writes environment metadata, manifest hash, 15 fixture hashes, tier counts, pass/fail summaries, token observations, and support-matrix traceability | 12 positive `.ls` normalized source/parser-owned-AST/IR identity checks plus 3 expected diagnostics; token identity is measured but non-gating |
-| Unsupported diagnostics | `npm run test:unsupported-diagnostics` | `artifacts/conformance/unsupported-diagnostics-report.json` | `tests/ir/unsupported_diagnostics.test.js`, stable active compiler diagnostics | Current report writes environment metadata, 21 case hashes, pass/fail summaries, diagnostic categories, and support-matrix traceability | Named current unsupported catalog only; unsupported behavior is fail-closed evidence, not implementation support |
-| Actual programs and active examples | `npm run test:actual-programs`, `npm run test:luascript-meta`, `npm run test:lua-input`, `npm run test:parser-ownership` | No single durable bundle report yet; dogfood report includes actual-program evidence | `tests/actual_programs/manifest.json`, `tests/lua_input/manifest.json`, `tests/language_completion/fixtures/luascript/**`, `examples/**` | Current evidence is manifest/test output plus dogfood report; future release bundle should add first-class report hashes for actual-program and parser-ownership gates | Current executable examples only; broad demos and unsupported profiles cannot promote support |
-| Support matrix | `docs/LANGUAGE_SUPPORT_MATRIX.md`, `docs/LANGUAGE_COMPLETION_RULES.md`, `npm run claims:check` | No JSON report; guarded by `claims:check` output | Active docs, language manifests, report paths, accession rules | Claims check guards exact wording and report references; release bundle should snapshot the exact source state | Support rows broaden only through accession rules and Denali ledger evidence |
-| Compatibility policy | `docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md`, `docs/VERSIONING.md`, `package.json`, `README.md`, `PROJECT_STATUS.md` | No JSON report; guarded by `status:check` and `claims:check` | Package metadata, root exports, Node floor, package files, semver/versioning docs | Package version no-bump check confirms `0.1.0-beta.0`; release bundle should capture `node -v`, `npm -v`, OS, native runtime versions, and package metadata | No-release freeze candidate only; final `1.0` public API/runtime freeze remains open |
-| Reproducibility | Commands in this document and `docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md` | Durable reports above | Preserved source state, package lock, manifests, docs, and generated reports | Minimum current bundle needs environment metadata, manifest hashes, fixture/case hashes, pass/fail summaries, and support-matrix traceability for report-producing gates | A passing local reproduction proves named slices only; not certification or true omni-language completion |
+`npm run evidence:release` runs
+`scripts/generate_release_evidence_bundle.js --require-ready`. It writes only
+the default bundle path above and exits nonzero when required evidence has any
+blocker. It inventories evidence; it does not rerun an owning gate or repair a
+stale report.
+
+The normal inventory contains 46 entries:
+
+- 42 required entries: bundle implementation sources, 4 required Clarity
+  reports, 26 language report/manifest pairs, actual programs, parser
+  ownership, and 9 conformance report lanes;
+- 4 informational entries: Clarity fast, heavy, legacy, and setup-blocked
+  variants.
+
+Release-ready requires every required entry to exist, parse, report no
+failures, and validate every required live path/SHA-256 reference. Required
+legacy Clarity reports without embedded hashes must instead pass the explicit
+`generatedAt` versus declared-input-mtime freshness fallback. Missing,
+malformed, failing, stale, or unbound required evidence is release-blocking.
+
+Informational entries never counterfeit readiness. Their missing, failing,
+stale, or unbound state is retained as an informational warning.
+
+Evidence entries are sorted by ID; blockers and warnings are sorted by
+severity, code, evidence ID, path, and message; references are sorted by path
+and expected SHA-256. Bundle identity uses SHA-256 over UTF-8 JSON after
+recursively sorting object keys while preserving defined array order. Only
+top-level `generatedAt` and `contentIdentity` are excluded from identity
+inputs; timestamps inside inventoried reports remain bound evidence.
+
+## Current Bundle Inventory
+
+| Evidence lane | Command or source | Report path | Current evidence and boundary |
+| --- | --- | --- | --- |
+| Bundle implementation | `scripts/generate_release_evidence_bundle.js`; focused bundle tests | Final bundle path | Required source-set integrity; generator is evidence code, not a release command |
+| Language completion | `npm run language:implemented:bidirectional` | `artifacts/language_completion/*-report.json` | 26 schema-v2 report/manifest pairs and 424/424 fixtures; 17 native reports and 317/317 fixtures, plus 9 target-runtime reports and 107 fixtures; named slices only |
+| Required Clarity | `clarity:dogfood`, `clarity:canon`, `clarity:canon:super`, `clarity:canon:languages` | `artifacts/clarity_canon/dogfood-report.json`, `canon-report.json`, `canon-super-report.json`, `canon-languages-report.json` | Four required legacy-format reports; passing result plus fail-closed input freshness required |
+| Informational Clarity | `clarity:canon:fast`, `:heavy`, `:legacy`, `:setup-blocked` | Corresponding `artifacts/clarity_canon/*.json` reports | Diagnostic/shard evidence; inventoried as warnings, not blockers |
+| Clarity language validation | `npm run clarity:languages:reports` | No Clarity report is written | Validates schema-v2 language JSON after `canon-languages` produces the required language-canon report |
+| Public package | `npm run test:package-contract` | `artifacts/conformance/public-api-runtime-package-report.json` | 32/32 actual-tarball checks, clean install/import/transpile, six exact root exports, 3-file installed example surface, current Node and Node `14.17.1`; no release/registry/platform promotion |
+| Actual programs | `npm run test:actual-programs` | `artifacts/conformance/actual-programs-report.json` | 55/55 source-hash-bound results: 37 positive runtime, 6 expected compile diagnostics, 12 expected runtime diagnostics; repository-local legacy route, `packageCompatibilityClaimed: false` |
+| Parser ownership | `npm run test:parser-ownership` | `artifacts/conformance/parser-ownership-report.json` | 35/35: 21 static, 13 runtime, 1 completion assertion; repository parser-ownership evidence |
+| Current-host compatibility | `npm run test:compatibility-matrix` | `artifacts/conformance/denali-compatibility-matrix-report.json` | 88/88 checks when live-bound: Windows x64 tools, package/dependencies/Node floor, 17 native lanes, release IR, reports, manifests, and docs; not cross-platform certification |
+| Canonical IR conformance | `npm run test:ir-conformance` | `artifacts/conformance/canonical-ir-conformance-report.json` | 32 fixtures mapped to named v1 semantic rules or documented gaps |
+| Schema artifact mapping | `npm run test:schema-artifact-map` | `artifacts/conformance/schema-artifact-mapping-report.json` | 21 positive mappings, 11 expected diagnostics, 168 base invariants, 147 release-contract checks. Chosen one-way current-fixture projection; not compiler-output change, reverse conversion, or semantic equivalence |
+| Dual-surface compatibility bridge | `npm run test:ir-compatibility-bridge` | `artifacts/conformance/dual-surface-compatibility-bridge-report.json` | Contract `1.0.0-rc.1`; positive, static, mapping, determinism, supplemental, and negative checks pass. Chosen internal one-way release-IR transition; not public API, compiler-output change, reverse conversion, or broad semantics |
+| Edge-case matrix | `npm run test:edge-matrix` | `artifacts/edge_matrix/edge-case-matrix-report.json` | 25 scoped cases with manifest/case hashes and category counts; not exhaustive |
+| Round-trip probe | `npm run test:roundtrip-probe` | `artifacts/conformance/roundtrip-probe-report.json` | Report carries environment metadata, manifest hash, 7 fixture hashes, pass/fail summaries, layer evidence, and support-matrix traceability; 5 structural plus 2 runtime-output checks, source-preserving count 0 |
+| Source identity | `npm run test:source-identity-probe` | `artifacts/conformance/source-identity-probe-report.json` | 12 positive normalized `.ls` source/parser-owned-AST/IR checks plus 3 expected diagnostics; token identity observed but non-gating |
+| Unsupported diagnostics | `npm run test:unsupported-diagnostics` | `artifacts/conformance/unsupported-diagnostics-report.json` | 21 named fail-closed cases; not a complete unsupported-feature catalog |
+| Status and quality | `status:check`, `stubs:check`, `archive:audit`, `claims:check`, `verify`, `npm test`, `test:performance`, `ci:gates` | Preflight stdout receipt and owning outputs | Release-blocking validation after report production; no support broadening |
+| Final bundle | `npm run evidence:release` | `artifacts/release_evidence/denali-release-evidence-bundle.json` | Runs last and requires zero blockers; deterministic identity and exact evidence inventory |
+
+Supplemental scoped-beta artifacts remain available:
+
+- `artifacts/beta_readiness.json`
+- `artifacts/beta_gates/preflight-report.json`
+- `artifacts/beta_gates/full-report.json`
+
+They describe the scoped beta route. They do not replace the Denali RC
+preflight or its final deterministic bundle.
+
+## Language Schema-v2 Evidence
+
+Every accepted language report records:
+
+- schema version 2 and `kind: language:bidirectional`;
+- language/support-slice identity and generated time;
+- manifest path, SHA-256, status, version, support slice, fixture count, and
+  ordered fixture records;
+- manifest-entry SHA-256, source SHA-256, and byte size for every fixture;
+- per-result source identity and status;
+- loaded implementation file paths and SHA-256 values;
+- resolved runtime commands and successful bounded version probes;
+- Node, OS, platform, architecture, cwd, and timeout environment metadata;
+- hashes for governing support/completion/package documents.
+
+The full implemented aggregate is 26 reports and 424 passing fixtures. The
+native aggregate is 17 reports and 317 passing fixtures. The release bundle
+inventories all 26; the compatibility matrix binds the 17 native lanes because
+those are the named native support claims.
+
+A count without matching live manifest, fixture, result, implementation,
+runtime, environment, and governing-document provenance is `OPEN` or stale,
+not a qualified pass.
+
+## Package Tarball And Installed Examples
+
+The current package report proves the real `npm pack` output:
+
+| Field | Current contract |
+| --- | --- |
+| Package | `luascript@0.1.0-beta.0` |
+| Tarball | `luascript-0.1.0-beta.0.tgz` |
+| Tarball SHA-256 | `92947fab9eabdaf79efed47b114b787cc6d7a5195e0320d28d407f558b2c7461` |
+| Packed / unpacked bytes | 1,010,433 / 5,189,594 |
+| Entry count | 398 |
+| File-list SHA-256 | `cc16e4bce689b57ae8f6c5334ae43935fd2493f09dd98befa5395929f7028977` |
+| Installed package examples | README plus two executable root-API programs: `examples/package/README.md`, `examples/package/minimal-system.cjs`, `examples/package/transpile-js-to-lua.cjs` |
+| Root exports | exactly 6 protected names |
+| Declared Node floor | `>=14.17.0`; installed-consumer probe on `14.17.1` |
+| Package report result | 32/32 |
+
+The harness clean-installs the tarball, imports the package root, transpiles a
+consumer program, checks exact TypeScript `5.9.3`, confirms the forbidden
+internal IR names are absent from the root API, executes both packaged
+examples, verifies root-level `runtime/` is absent, and removes the temporary
+consumer exactly.
+
+Only `examples/package/` is installed-package example evidence. The 55-entry
+actual-program suite and wider `examples/` tree are repository-local. Their
+passing behavior cannot be averaged into package compatibility.
+
+## Actual Programs And Parser Ownership
+
+The actual-program report is no longer an inferred dogfood result. It is a
+first-class release-binding report with:
+
+- 55 manifest programs and 55 unique results;
+- 55 present source files and 55 matching source SHA-256 bindings;
+- 55 passing classifications;
+- environment and runtime evidence;
+- the explicit boundary
+  `repository-local legacy compiler and runtime behavior`;
+- `packageCompatibilityClaimed: false`.
+
+Dogfood remains supplemental traceability; the first-class report is the
+release-binding source.
+
+The parser-ownership report is also first-class. Its 35/35 checks bind the
+active parser/transpiler/harness sources and separate 21 static, 13 runtime,
+and 1 completion assertion. The source-identity report is related evidence,
+but it does not substitute for execution of `tests/parser_ownership.test.js`.
+
+## Current-Host Compatibility
+
+The current matrix reports 88/88 when all live hashes agree. It records:
+
+- Windows x64, Node `v24.14.0`, npm `11.9.0`, and exact bounded tool probes;
+- declared, locked, and installed identities for `acorn@8.15.0`,
+  `esprima@4.0.1`, `luaparse@0.3.1`, and exact
+  `typescript@5.9.3`;
+- the separate Node `14.17.1` installed-package floor smoke;
+- 17 native reports and 317 fixtures;
+- latest, pinned `1.0.0`, and `1.x` release-IR schemas and reports;
+- bound manifests, package/runtime documents, migration notes, support matrix,
+  and completion rules.
+
+A version probe proves command availability, not compilation, linking, SDK
+targeting, package-cache health, or runtime semantics. Those behaviors belong
+to the owning package and language gates.
+
+The matrix runs after package, language, Clarity, actual-program, parser, IR,
+edge, round-trip, source-identity, and diagnostic producers. This ordering
+prevents a later producer from silently making a green compatibility artifact
+stale before bundle generation.
+
+## Required Versus Informational Clarity
+
+Required:
+
+- `artifacts/clarity_canon/dogfood-report.json`
+- `artifacts/clarity_canon/canon-report.json`
+- `artifacts/clarity_canon/canon-super-report.json`
+- `artifacts/clarity_canon/canon-languages-report.json`
+
+Informational:
+
+- `canon-fast-report.json`
+- `canon-heavy-report.json`
+- `canon-legacy-report.json`
+- `canon-setup-blocked-report.json`
+
+The required reports block on missing, failing, stale, or unverifiable
+freshness. Informational variants produce warnings under the same inventory
+logic but do not block the active release contract.
+
+Because these legacy reports do not embed the current path/hash shape, the
+bundle:
+
+1. discovers declared inputs and freshness roots;
+2. hash-binds the current input content set into the bundle;
+3. requires report `generatedAt` to be at or after the newest input mtime;
+4. rejects missing inputs, future/untrustworthy report timestamps, stale
+   inputs, and unverifiable state;
+5. uses no arbitrary age threshold.
+
+`clarity:languages:reports` validates language reports but writes no Clarity
+report. The preflight therefore runs `clarity:canon:languages` first to create
+the required language-canon artifact.
 
 ## Required Report Fields
 
-Durable report-producing conformance lanes should carry:
+Hash-bearing release reports now carry, as applicable:
 
-- environment metadata: Node, npm, OS/platform/arch, cwd, and generating harness;
-- manifest hash when a manifest owns the fixture list;
-- fixture hashes or case hashes for every executed item;
-- pass/fail summaries with total, passed, and failed counts;
-- diagnostic or tier summaries where the suite distinguishes positive, expected-unsupported, token-observation, or runtime-error checks;
-- support-matrix traceability naming the support matrix, evidence binder, exit criteria, bidirectionality contract, Denali ledger, support rows, evidence role, and boundary.
+- environment and generating-harness metadata;
+- manifest and governing-source hashes;
+- fixture/case/result source hashes and exact counts;
+- pass/fail summaries and failure arrays;
+- implementation-source hashes;
+- runtime command/probe evidence;
+- support-matrix and contract traceability;
+- explicit package, legacy-route, source-identity, compatibility, or
+  no-release boundaries.
 
-Current lanes already satisfying this shape:
+The schema-v2 language reports, actual-program report, parser-ownership report,
+public-package report, current-host compatibility report, IR reports, edge
+report, round-trip report, source-identity report, and unsupported-diagnostic
+report are first-class bundle inputs now. They are not future placeholders.
 
-- `artifacts/conformance/canonical-ir-conformance-report.json`;
-- `artifacts/conformance/schema-artifact-mapping-report.json`;
-- `artifacts/conformance/dual-surface-compatibility-bridge-report.json`;
-- `artifacts/edge_matrix/edge-case-matrix-report.json`;
-- `artifacts/conformance/roundtrip-probe-report.json`;
-- `artifacts/conformance/source-identity-probe-report.json`;
-- `artifacts/conformance/unsupported-diagnostics-report.json`.
+The Clarity reports are the explicit legacy-format exception and use the
+fail-closed freshness mechanism above.
 
-Current lanes still needing first-class bundle hash/report expansion before a release-candidate evidence seal:
+## Release-Blocking Interpretation
 
-- clarity dogfood/canon/super-canon/languages reports;
-- per-language completion reports;
-- actual-program, `.ls` meta, Lua input, and parser-ownership gates;
-- compatibility and package-surface checks;
-- native runtime version capture for every strict-native language gate.
+A generated bundle may be read as release-ready only when:
+
+- `summary.releaseReady` is `true`;
+- `summary.releaseBlockingIssues` is `0`;
+- every required entry is passing;
+- every required embedded binding is verified or an allowed Clarity freshness
+  fallback is verified;
+- the bundle was generated last by the current preflight against the source
+  state under review.
+
+A passing report summary with a stale hash remains a blocker. An
+informational-warning count does not make required evidence fail, but warnings
+must remain visible. A release-ready bundle is necessary for a local Denali RC
+handoff and still does not authorize release.
 
 ## Known Unsupported Areas
 
-Known unsupported or not-yet-release-sealed areas include:
+Known unsupported or explicitly excluded areas include:
 
-- broad full-language support beyond named manifest slices;
+- broad full-language support beyond named schema-v2 manifest slices;
 - true omni-language universal IR coverage;
-- ISO, third-party, or production certification;
-- release IR surface selection beyond the current internal dual-surface compatibility bridge candidate;
-- token-level source identity as a gating claim;
-- broad parser-owned AST identity beyond the 12 positive `.ls` fixtures;
-- broad lossless source recovery;
-- broad semantic equivalence beyond named runtime-output fixtures;
-- exhaustive edge-case coverage beyond the 25-case matrix;
-- full unsupported-feature catalog beyond the 21 named diagnostics;
-- cross-platform CI evidence with preserved native runtime versions;
-- final package `bin`, package `exports`, package file surface, and runtime-helper release decisions.
+- ISO, third-party, production, security, or standards certification;
+- universal/lossless bidirectional translation;
+- token/comment/format-preserving source identity;
+- broad lossless recovery and broad semantic equivalence;
+- exhaustive edge cases and a complete unsupported-feature catalog;
+- Linux, macOS, other architectures, alternative toolchains, and untested
+  runtime versions;
+- npm ownership, registry authentication, signing keys, package-name
+  availability, and network release access;
+- permission to version, tag, publish, or release.
 
-Unsupported features must remain explicit expected diagnostics or documented exclusions. They must not be counted as implementation support, semantic equivalence, source identity, or canonical `1.0` completion.
+Unsupported behavior must remain an expected named diagnostic or documented
+exclusion. It cannot count as implementation support or disappear as an
+implicit skip.
 
-## Bundle Reproduction Steps
+## Bundle Reproduction
 
-Baseline release-shaped evidence reproduction:
-
-```bash
-npm install
-npm run test:ir-conformance
-npm run test:schema-artifact-map
-npm run test:ir-compatibility-bridge
-npm run test:edge-matrix
-npm run test:roundtrip-probe
-npm run test:source-identity-probe
-npm run test:unsupported-diagnostics
-npm run test:actual-programs
-npm run test:luascript-meta
-npm run test:lua-input
-npm run test:parser-ownership
-npm run status:check
-npm run claims:check
-npm run stubs:check
-npm run archive:audit
-node -e "const pkg=require('./package.json'); if (pkg.version !== '0.1.0-beta.0') process.exit(1); console.log(pkg.version)"
-```
-
-Release-candidate expansion, only when a release decision is explicitly requested:
+The complete release-shaped local reproduction is:
 
 ```bash
-npm run beta:readiness
-npm run beta:readiness:strict
-npm run beta:preflight
-npm run beta:full
-npm run language:implemented:bidirectional
-npm run language:all:bidirectional
-npm run clarity:dogfood
-npm run clarity:canon
-npm run clarity:canon:super
-npm run clarity:languages
-npm run verify
-npm test
+npm run denali:rc:preflight
 ```
 
-After reproduction, compare this index, [LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md), [LUASCRIPT_1_0_EXIT_CRITERIA.md](LUASCRIPT_1_0_EXIT_CRITERIA.md), [LANGUAGE_SUPPORT_MATRIX.md](LANGUAGE_SUPPORT_MATRIX.md), [LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md](LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md), and [LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md). Any disagreement is evidence drift.
+Do not manually move compatibility earlier or evidence generation earlier.
+Use the list command to audit the contract:
 
-## Next Evidence Route
+```bash
+npm run denali:rc:preflight:list
+```
 
-The bundle index is now the evidence navigation layer. The next executable climb remains one of:
+After a run, compare this index with
+[LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md),
+[LUASCRIPT_1_0_EXIT_CRITERIA.md](LUASCRIPT_1_0_EXIT_CRITERIA.md),
+[LANGUAGE_SUPPORT_MATRIX.md](LANGUAGE_SUPPORT_MATRIX.md),
+[LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md](LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md),
+[LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md](LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md),
+and the current Denali ledger. Any disagreement is evidence drift.
 
-- add a real new bidirectionality proof layer, preferably Lua structural IR reparse;
-- choose the final release IR surface from the internal bridge candidate or add release compatibility/versioning rules for the bridge;
-- add first-class report hashes for clarity, language, actual-program, parser-ownership, and compatibility gates.
-
-Do not broaden claims while doing those routes. The index should become denser, not louder.
+The Lua structural IR reparse seed and versioned one-way release-IR surface choice are sealed foundations. The current route is no longer “add first-class language, actual-program, parser-ownership, compatibility, or bundle reports”: those reports and policies now exist. The remaining work is to keep their live bindings green, expand only named supported depth, collect equivalent cross-platform receipts before making cross-platform claims, and stop before release without explicit authorization.

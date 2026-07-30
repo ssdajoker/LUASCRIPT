@@ -1,7 +1,7 @@
 # LUASCRIPT Canonical 1.0 Exit Criteria Charter
 
 Status: active charter
-Last updated: 2026-07-16
+Last updated: 2026-07-29
 Track: Denali canonical `1.0`
 
 This charter defines the measurable exit criteria for canonical LUASCRIPT `1.0`. It separates three different summits:
@@ -26,44 +26,50 @@ Status must be updated only from current repo evidence, not archived reports.
 | Summit | What it means | Required evidence | Current charter status |
 | --- | --- | --- | --- |
 | Scoped beta v0.1 | Named implemented lanes pass scoped beta gates above the beta threshold | `npm run beta:readiness`, `npm run beta:preflight`, `npm run beta:full`, beta handoff docs | `MET` for the documented beta handoff |
-| Denali canonical `1.0` | Stable `.ls` identity, formalized IR contract, named support boundaries, conformance evidence, package/runtime expectations, compatibility rules, and active docs agree | This charter plus language gates, IR validation, conformance reports, [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md), compatibility docs, claims checks, and release notes | `OPEN` |
+| Denali canonical `1.0` | Stable `.ls` identity, formalized IR contract, named support boundaries, conformance evidence, package/runtime expectations, compatibility rules, and active docs agree | This charter plus `npm run denali:rc:preflight`, the deterministic release evidence bundle, release-IR/package/compatibility reports, active docs, and claims checks | `MET` for the scoped no-release candidate; release authorization remains `OPEN` |
 | True omni-language 100% | Universal bidirectional IR across arbitrary languages, exhaustive edge cases, certification-grade evidence, and external-quality conformance expectations | Formal semantics, massive language-depth matrices, broad bidirectionality proofs, compatibility suites, and independent certification-grade evidence | `EXCLUDED` from Denali `1.0` |
 
 ## Denali 1.0 Required Criteria
 
 | ID | Criterion | Measurable exit condition | Required gates/evidence | Current status |
 | --- | --- | --- | --- | --- |
-| `1.0-IDENTITY` | Stable `.ls` language identity | The `.ls` spec names supported syntax, profile names, default profile behavior, repair blocks, verify blocks, unsupported diagnostics, and examples; no doc claims unsupported profiles | `docs/LUASCRIPT_META_LANGUAGE_V0.md`, `docs/LUASCRIPT_LIVING_META_LANGUAGE.md`, `docs/LANGUAGE_SUPPORT_MATRIX.md`, `meta_identity_contract_portable_slice.ls`, `npm run language:luascript:bidirectional`, `npm run test:luascript-meta`, `npm run clarity:dogfood`, `npm run claims:check` | `OPEN` until identity is frozen for release |
-| `1.0-IR-SEMANTICS` | Canonical IR semantics contract | IR spec defines node semantics, value model, control flow, errors/diagnostics, determinism, serialization, and target obligations for every `1.0` supported node | `docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md`, `docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md` v1 evidence map for all 32 current conformance fixtures, `npm run test:schema-artifact-map`, `artifacts/conformance/schema-artifact-mapping-report.json`, `npm run test:ir-compatibility-bridge`, `artifacts/conformance/dual-surface-compatibility-bridge-report.json`, `docs/canonical_ir_spec.md`, `docs/VERSIONING.md`, schema files, IR validation gates, golden IR checks, conformance fixtures | `OPEN` |
-| `1.0-BIDIRECTIONALITY` | Layered bidirectionality without overclaim | Every `1.0` supported language/profile has manifest-backed evidence for the layers named in [LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md): native execution, source-to-IR, IR-to-target, target-runtime, emitted `.ls` if claimed, structural IR reparse status, normalized source identity status, token identity status, semantic equivalence status, and negative diagnostics | `npm run language:implemented:bidirectional`, per-language `language:<name>:bidirectional`, `npm run test:roundtrip-probe`, `npm run test:source-identity-probe`, manifest report totals matching fixture counts, [LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md), `npm run beta:readiness:strict` | `OPEN` |
-| `1.0-RUNTIME-GATES` | Runtime support is real, not assumed | Every native runtime claim has a real command, a passing native gate, timeout policy, report artifact, and setup note; setup-blocked lanes are excluded from `1.0` support | `npm run language:implemented:native`, `npm run language:all:bidirectional`, `npm run beta:readiness:strict`, language reports under `artifacts/language_completion/` | `OPEN` |
-| `1.0-LANGUAGE-ACCESSION` | Language slice broadening follows a formal gate | Every promoted language-depth expansion has manifest, parser coverage, lowering, emitter, native runtime, target runtime, docs, support matrix, claims check, and Denali ledger entry marked `MET` or explicitly `EXCLUDED` with rationale | [LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](LUASCRIPT_LANGUAGE_ACCESSION_RULES.md), `docs/LANGUAGE_SUPPORT_MATRIX.md`, `docs/LANGUAGE_COMPLETION_RULES.md`, per-language manifests, `npm run claims:check`, `npm run archive:audit` | `MET` for the accession contract, `OPEN` for future language-depth promotions |
-| `1.0-EXAMPLES` | Examples stay inside named support | Every first-party `1.0` example is listed in docs or manifests, has expected output/diagnostic evidence, and is not a broad demo masquerading as support | `npm run test:actual-programs`, examples integration, clarity dogfood, `npm run claims:check` | `OPEN` |
-| `1.0-DOCS` | Active docs and archive boundary are sealed | README, `PROJECT_STATUS.md`, docs index, support matrix, completion rules, reference, architecture, and this charter agree; archive docs remain evidence only | `npm run status:check`, `npm run claims:check`, `npm run stubs:check`, `npm run archive:audit` | `MET` for the active-docs map, `OPEN` for final release docs |
-| `1.0-PUBLIC-API-RUNTIME` | Public API and runtime contract is explicit | Package entrypoints, root exports, CLI/API surface, Node floor, runtime files, npm scripts, package files, semver policy, compatibility policy, and release-action boundaries are written and checked | [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md), `package.json`, `README.md`, `PROJECT_STATUS.md`, `npm run claims:check`, `npm run status:check` | `OPEN` until the contract is frozen for release |
-| `1.0-COMPATIBILITY` | Package/runtime compatibility is explicit | Node floor, package entrypoint, package file surface, CLI/runtime expectations, native tool expectations, semver policy, changelog, and migration notes are written and checked | [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md), `package.json`, `docs/reference/README.md`, `docs/VERSIONING.md`, release notes/changelog, `npm run claims:check` | `OPEN` |
-| `1.0-CONFORMANCE` | Conformance evidence exists as a release artifact | A conformance-style suite names required positive, negative, edge-case, runtime, and compatibility cases for each supported slice, writes reports, and blocks release on drift | [LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md), `npm run test:ir-conformance`, `artifacts/conformance/canonical-ir-conformance-report.json`, `npm run test:schema-artifact-map`, `artifacts/conformance/schema-artifact-mapping-report.json`, `npm run test:ir-compatibility-bridge`, `artifacts/conformance/dual-surface-compatibility-bridge-report.json`, `npm run test:roundtrip-probe`, `artifacts/conformance/roundtrip-probe-report.json`, `npm run test:source-identity-probe`, `artifacts/conformance/source-identity-probe-report.json`, `npm run test:unsupported-diagnostics`, `artifacts/conformance/unsupported-diagnostics-report.json`, value-semantics matrix, control-flow matrix including the JavaScript switch/conditional-expression branch-depth fixture and `try/catch` diagnostic, function/scope matrix, data-structure matrix, language manifests, actual-program fixtures, edge matrices, `npm run claims:check` | `OPEN` |
-| `1.0-RELEASE-SEAL` | Release action is deliberate and gated | A tag, publish, GitHub release, or version bump occurs only after the above criteria are `MET` or explicitly `EXCLUDED` with rationale | Release checklist, changelog, package metadata, rerun beta/full/conformance gates | `OPEN`; no release action is part of this charter creation |
+| `1.0-IDENTITY` | Stable `.ls` language identity | The `.ls` spec names supported syntax, profile names, default profile behavior, repair blocks, verify blocks, unsupported diagnostics, and examples; no doc claims unsupported profiles | `docs/LUASCRIPT_META_LANGUAGE_V0.md`, `docs/LUASCRIPT_LIVING_META_LANGUAGE.md`, `docs/LANGUAGE_SUPPORT_MATRIX.md`, `meta_identity_contract_portable_slice.ls`, schema-v2 LUASCRIPT reports, meta tests, dogfood, and claims | `MET` for the named V0.16/profile slices; broader identity is `EXCLUDED` |
+| `1.0-IR-SEMANTICS` | Canonical IR semantics contract | IR spec defines node semantics, value model, control flow, errors/diagnostics, determinism, serialization, and target obligations for every `1.0` supported node | Semantics inventory/spec, [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md), 32-fixture IR conformance, 21-fixture schema mapping/compatibility reports, pinned schemas, golden IR, diagnostics | `MET` for the versioned named release surface; broader semantics and reverse conversion are `EXCLUDED` |
+| `1.0-BIDIRECTIONALITY` | Layered bidirectionality without overclaim | Every supported language/profile has manifest-backed evidence for only the layers named in [LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md) | 26 schema-v2 language reports/424 fixtures, 7 round-trip probes, 15 source-identity fixtures, compatibility binding, and claims | `MET` for the declared layers; lossless/broad identity and semantic equivalence are `EXCLUDED` |
+| `1.0-RUNTIME-GATES` | Runtime support is real, not assumed | Every native runtime claim has a real command, a passing native gate, timeout policy, report artifact, and setup note; setup-blocked lanes are excluded | 17 native schema-v2 reports/317 fixtures, captured runtime probes/tool versions, compatibility report, and aggregate report validation | `MET` for the current-host named native slices; untested platforms/toolchains are `EXCLUDED` |
+| `1.0-LANGUAGE-ACCESSION` | Language slice broadening follows a formal gate | Every promoted language-depth expansion has manifest, parser coverage, lowering, emitter, native runtime, target runtime, docs, support matrix, claims check, and Denali ledger entry | [LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](LUASCRIPT_LANGUAGE_ACCESSION_RULES.md), support matrix/rules, manifests, claims, and archive guard | `MET`; future promotions remain separate accession work |
+| `1.0-EXAMPLES` | Examples stay inside named support | Every first-party installed example is package-root-only and tested after clean install; repository examples remain classified as evidence | Two `examples/package/` programs through `test:package-contract`; 55/55 actual-program report; dogfood/meta/parser reports and docs | `MET` for the classified package and repository evidence surfaces |
+| `1.0-DOCS` | Active docs and archive boundary are sealed | README, status, docs index, support matrix, completion rules, reference, architecture, contracts, policy, and charter agree; archive docs remain evidence only | `status:check`, `claims:check`, `stubs:check`, `archive:audit`, deterministic bundle | `MET` for the no-release candidate |
+| `1.0-PUBLIC-API-RUNTIME` | Public API and runtime contract is explicit | Entry, six root exports/facade, no CLI, Node floor, dependencies, package files, semver, compatibility, and release-action boundaries are written and packed-tarball tested | [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md), 32-check package report, installed examples, current Node and Node `14.17.1`, migration/changelog docs | `MET` for the no-release candidate; public release remains unauthorized |
+| `1.0-COMPATIBILITY` | Package/runtime compatibility is explicit | Package, Node floor, release IR/schema, native tools, examples, docs, manifests, changelog, and migration notes agree on the current host | [LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md](LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md), compatibility report with zero `OPEN`/`FAIL`, package report, versioning/migration docs, release-tooling contracts | `MET` for current-host RC compatibility; cross-platform certification is `EXCLUDED` |
+| `1.0-CONFORMANCE` | Conformance evidence exists as a release artifact | Required positive, negative, edge, runtime, ownership, package, and compatibility reports are hash-bound and release-block on drift | [LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md), deterministic release evidence bundle, [LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md](LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md), and `npm run denali:rc:preflight` | `MET` for the scoped local release candidate |
+| `1.0-RELEASE-SEAL` | Release action is deliberate and gated | A version bump, tag, publish, or GitHub release occurs only after RC evidence and explicit authorization | Authoritative preflight, release CLI safeguards, changelog/package metadata, operator decision | `OPEN`; deliberately stopped before every release action |
 
-## 2026-07-16 Release-Candidate Audit
+## 2026-07-16 Release-Candidate Audit (Historical Verdict)
 
 Release-candidate audit verdict: Denali canonical `1.0` is **78% done / 22% remaining**. The user's true omni-language 100% summit is **7% done / 93% remaining**. The Denali ledger cannot close as a canonical `1.0` release ledger yet; it must hand off to the Big Remaining Climb route for source-preserving proof layers, schema-valid IR surface reconciliation, final public API/runtime freeze, compatibility seal, and release-grade conformance expansion.
 
 The audit marks a criterion `MET` only when current passing gates and stable active docs satisfy the criterion. Scoped local proof, partial evidence, and no-release candidates remain `OPEN` for `1.0` release closure.
 
-| Criterion | RC status | Current proven evidence | Exact blocker before Denali `1.0` closure |
+## 2026-07-29 Denali Local Release-Candidate Closure Audit
+
+This audit supersedes the historical completion percentage for current-route decisions without rewriting that history. The scoped Denali no-release candidate is closed by the authoritative 26-step preflight and a zero-blocker deterministic evidence bundle. `0.1.0-beta.0` remains the package identity until a separate authorized release action.
+
+| Criterion | RC status | Current proven evidence | Deliberate exclusion or post-RC boundary |
 | --- | --- | --- | --- |
-| `1.0-IDENTITY` | `OPEN` | `.ls` V0.16 identity docs, supported profile map, meta/repair/verify boundaries, and source-identity fixtures exist | Final release identity freeze still needs the full identity gate set, example classification, and no drift across README, support matrix, meta docs, and claims |
-| `1.0-IR-SEMANTICS` | `OPEN` | `npm run test:ir-conformance` covers 32 fixtures; the v1 evidence map ties every fixture to a named rule or documented gap; `npm run test:schema-artifact-map` proves schema-valid derived artifacts for 21/21 positive fixtures; `npm run test:ir-compatibility-bridge` proves 21/21 internal bridge mappings and 168/168 invariant checks while preserving 11 expected diagnostics | Release IR surface remains undecided: final surface adoption or bridge compatibility/versioning, helper versioning, release invariant policy, and target delta tables remain open |
-| `1.0-BIDIRECTIONALITY` | `OPEN` | `npm run test:roundtrip-probe` records 6 probes and JS/.ls/Python/Lua layer evidence; `npm run test:source-identity-probe` proves 12 positive normalized `.ls` source/parser-owned-AST/IR identity fixtures plus 3 expected diagnostics | Source-preserving round-trip count is still 0 for the round-trip probe, Lua structural IR reparse is unclaimed, token identity is non-gating, and broad semantic equivalence is unclaimed |
-| `1.0-RUNTIME-GATES` | `OPEN` | Prior strict-native evidence closed the seven runtime-command blockers for named slices, and current package scripts expose strict runtime gates | A final release candidate must rerun `npm run beta:readiness:strict`, `npm run language:implemented:bidirectional`, and `npm run language:all:bidirectional` with runtime version capture and setup notes |
-| `1.0-LANGUAGE-ACCESSION` | `MET` for accession contract, `OPEN` for future promotions | Accession rules, support matrix wording, language manifests, claims checks, and Denali route entries define the promotion gate | Future language-depth promotions remain route-by-route; no broad language support is promoted by the contract |
-| `1.0-EXAMPLES` | `OPEN` | Actual-program, `.ls` meta, Lua input, parser ownership, and dogfood lanes are indexed by the evidence binder and bundle index | Final `1.0` needs first-class example classification, report hashes for actual-program/parser-ownership lanes, and release example support declarations |
-| `1.0-DOCS` | `MET` for current active-doc integrity, `OPEN` for release docs | `status:check`, `claims:check`, `stubs:check`, and `archive:audit` are the active docs guardrails | Final release docs still need release notes, changelog seal, migration notes if any compatibility surface changes, and a final no-drift pass after all release freezes |
-| `1.0-PUBLIC-API-RUNTIME` | `OPEN` | The no-release public API/runtime freeze candidate documents root entrypoint, no `bin`, no `exports`, Node floor, package files, semver, compatibility, and release-action boundaries | Final `1.0` API compatibility tests, package-file/runtime-helper inclusion decision, and explicit release freeze remain open |
-| `1.0-COMPATIBILITY` | `OPEN` | Public API/runtime contract and versioning docs exist and are claim-checked | Compatibility matrix, migration-note/changelog policy, runtime-helper release surface, and release-package review are not sealed |
-| `1.0-CONFORMANCE` | `OPEN` | Current report-producing gates cover IR conformance, schema artifact mapping, internal dual-surface compatibility bridge, 25 edge cases, 6 round-trip probes, 15 source-identity fixtures, and 21 unsupported diagnostics with report/hash expectations | One-command release bundle, cross-platform/runtime metadata, language/clarity/actual-program first-class hashes, compatibility reports, release IR surface adoption or bridge compatibility/versioning, and release-blocking policy remain open |
+| `1.0-IDENTITY` | `MET` | `.ls` V0.16 identity/profile docs and manifests, meta/repair/verify behavior, LUASCRIPT language reports, source-identity fixtures, dogfood, and claims agree | New profiles or broader syntax require accession evidence |
+| `1.0-IR-SEMANTICS` | `MET` for named surface | Contract `1.0.0-rc.1` keeps Program IR `v0` operational and canonical artifact `1.0.0` as a one-way projection; IR/mapping/compatibility reports bind the surface | Reverse conversion and broader semantics are excluded |
+| `1.0-BIDIRECTIONALITY` | `MET` for declared layers | Schema-v2 reports cover 26 report pairs/424 fixtures; round-trip is 7/7 and source identity is 15/15 | Broad lossless/token/comment/format identity and broad semantic equivalence are excluded |
+| `1.0-RUNTIME-GATES` | `MET` for current host | Compatibility binds 17 native lanes/317 fixtures to successful probes and exact tool versions | Untested hosts and toolchains are excluded |
+| `1.0-LANGUAGE-ACCESSION` | `MET` | Promotion rules and evidence boundaries are claim-checked | Future depth is route-by-route |
+| `1.0-EXAMPLES` | `MET` | Two installed examples run from a clean package; actual programs report 55/55; parser ownership reports 35/35 | Wider examples remain repository-local |
+| `1.0-DOCS` | `MET` | Active-doc, claims, stub, archive, and deterministic evidence policies agree | Changelog seal belongs to the authorized release action |
+| `1.0-PUBLIC-API-RUNTIME` | `MET` for no-release candidate | Packed package protects six root exports, no `bin`, no `exports`, Node `>=14.17.0`, runtime dependencies, exact files, and examples | Version/publication remains unauthorized |
+| `1.0-COMPATIBILITY` | `MET` for current host | Compatibility matrix has zero `OPEN`/`FAIL` and binds package, schemas, 17 native lanes, docs, manifests, examples, and setup notes | Linux/macOS/other architectures remain unclaimed |
+| `1.0-CONFORMANCE` | `MET` for scoped local RC | The fail-closed preflight regenerates all owning reports and produces a zero-blocker release evidence bundle last | Independent/third-party certification remains excluded |
 | `1.0-RELEASE-SEAL` | `OPEN` | No version bump, tag, publish, package `bin`, package `exports`, compiler API change, or runtime API change occurred | Release action requires all in-scope criteria to become `MET` or explicitly `EXCLUDED`, then a deliberate version/tag/publish decision |
+
+Denali 1.0 release candidate ready; awaiting explicit operator authorization to version, tag, publish, or release.
 
 ## Measurement Rules
 
@@ -112,28 +118,12 @@ Denali `1.0` should point toward that horizon, but it must not claim to have rea
 ## Minimum Gate Set Before Any 1.0 Release Decision
 
 ```bash
-npm run beta:full
-npm run beta:readiness:strict
-npm run language:implemented:bidirectional
-npm run language:all:bidirectional
-npm run test:actual-programs
-npm run test:luascript-meta
-npm run clarity:dogfood
-npm run clarity:canon
-npm run clarity:languages
-npm run test:ir-conformance
-npm run test:schema-artifact-map
-npm run test:ir-compatibility-bridge
-npm run test:edge-matrix
-npm run test:unsupported-diagnostics
-npm run test:roundtrip-probe
-npm run test:source-identity-probe
-npm run status:check
-npm run claims:check
-npm run stubs:check
-npm run archive:audit
-npm run verify
-npm test
+npm run denali:rc:preflight
 ```
 
-The current conformance and edge-case gates are scoped skeletons only. Future broader conformance gates must join this minimum set before any `1.0` release decision.
+Use `npm run denali:rc:preflight:list` to inspect the exact 26-step policy. The
+preflight regenerates owning reports in dependency order and ends with
+`npm run evidence:release`, whose `--require-ready` generator exits nonzero
+unless the deterministic bundle has zero release blockers. Future support
+broadening must join the owning reports and this policy before it can enter a
+later release decision.

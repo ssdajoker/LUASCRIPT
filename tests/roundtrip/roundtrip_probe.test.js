@@ -53,15 +53,16 @@ function compactOutput(value) {
     .join("\n");
 }
 
-function stableIr(value) {
+function stableIr(value, preserveMetadata = false) {
   if (Array.isArray(value)) {
-    return value.map(stableIr);
+    return value.map(item => stableIr(item, preserveMetadata));
   }
   if (value && typeof value === "object") {
     const result = {};
     for (const key of Object.keys(value).sort()) {
-      if (["metadata", "loc", "range", "raw", "id"].includes(key)) continue;
-      result[key] = stableIr(value[key]);
+      if (["loc", "range", "raw", "id"].includes(key)) continue;
+      if (key === "metadata" && !preserveMetadata) continue;
+      result[key] = stableIr(value[key], preserveMetadata);
     }
     return result;
   }
@@ -142,11 +143,21 @@ function assertRuntimePassed(fixture, language, source, expectedOutput, label) {
 
 function runStructuralIrReparse(fixture, sourceIr, emitted) {
   const reparsedIr = bridge.compileToIR(emitted, fixture.targetLanguage);
+  const preserveMetadata = fixture.sourceLanguage === fixture.targetLanguage;
+  const normalizationPolicy = preserveMetadata
+    ? "same-language-preserve-metadata"
+    : "cross-language-exclude-source-specific-metadata";
   assert.deepStrictEqual(
-    stableIr(reparsedIr),
-    stableIr(sourceIr),
+    stableIr(reparsedIr, preserveMetadata),
+    stableIr(sourceIr, preserveMetadata),
     `${fixture.name} did not preserve normalized current bridge IR after emitted ${fixture.targetLanguage} reparse`
   );
+  return {
+    normalizationPolicy,
+    ignoredFields: preserveMetadata
+      ? ["loc", "range", "raw", "id"]
+      : ["metadata", "loc", "range", "raw", "id"]
+  };
 }
 
 function runRuntimeOutputEquivalence(fixture, emitted) {
@@ -217,7 +228,7 @@ function runFixture(fixture) {
   assertTargetIncludes(fixture, emitted);
 
   if (fixture.mode === "structural-ir-reparse") {
-    runStructuralIrReparse(fixture, sourceIr, emitted);
+    const normalization = runStructuralIrReparse(fixture, sourceIr, emitted);
     return {
       name: fixture.name,
       status: "passed",
@@ -225,6 +236,7 @@ function runFixture(fixture) {
       sourceLanguage: fixture.sourceLanguage,
       targetLanguage: fixture.targetLanguage,
       claim: "structural IR reparse",
+      normalization,
       sourcePreservingRoundTrip: false,
       notes: fixture.notes
     };

@@ -1,0 +1,3729 @@
+{
+  "schemaVersion": 1,
+  "kind": "luascript:public-api-runtime-package-contract",
+  "command": "npm run test:package-contract",
+  "generatedAt": "2026-07-30T03:46:05.928Z",
+  "elapsedMs": 9412,
+  "environment": {
+    "node": "v24.14.0",
+    "npm": {
+      "available": true,
+      "version": "11.9.0",
+      "stderr": ""
+    },
+    "platform": "win32",
+    "arch": "x64",
+    "os": {
+      "type": "Windows_NT",
+      "release": "10.0.26200"
+    },
+    "cwd": "C:\\Users\\ssdaj\\Desktop\\LUASCRIPT",
+    "nodeFloorExecutableProbe": "v14.17.1"
+  },
+  "inputs": {
+    "packageJson": {
+      "path": "package.json",
+      "sha256": "c942dfb64ddf267968c3445f50cdd465787046649d0596bef2efe6a233c41079"
+    },
+    "packageLock": {
+      "path": "package-lock.json",
+      "sha256": "1d93f7b91fe9901a3753c9ea44a77bb632619ebb073c475201d3e131736ab219"
+    },
+    "rootNpmIgnore": {
+      "path": ".npmignore",
+      "sha256": "4036bb747c0065d129f8f225c21eaf189939b8c6e558e15d336ef5c4668d4366"
+    },
+    "sourceNpmIgnore": {
+      "path": "src/.npmignore",
+      "sha256": "d6283397592baae52aab0b1493a2634be133c4e907f9b56a095d2a52cd7c7a34"
+    },
+    "rootModule": {
+      "path": "src/unified_luascript.js",
+      "sha256": "c9856861913642ada0d026e79258c9426070e2d502b16d05af1d1088bc10ba3f"
+    },
+    "harness": {
+      "path": "tests/package/public_api_runtime_package_contract.test.js",
+      "sha256": "7bfa392cb24fc44ffec8c186769e9b74fc1e7787f635af2f591cfbf3b61603f9"
+    },
+    "contract": {
+      "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
+      "sha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a"
+    },
+    "packageExampleReadme": {
+      "path": "examples/package/README.md",
+      "sha256": "eef7d4523db0e18fd3a2845854a1aceb17859827567cd1082b62895c866bdb88"
+    },
+    "packageExampleMinimalSystem": {
+      "path": "examples/package/minimal-system.cjs",
+      "sha256": "79d5db79bb9c889c833b0772087092147d604c53476592a3b06d3d2315738d59"
+    },
+    "packageExampleTranspile": {
+      "path": "examples/package/transpile-js-to-lua.cjs",
+      "sha256": "9ab39817c5c6f367e8b9a25d4994ecfaa5c9cbb018991c9ef528a4ea9cc10855"
+    }
+  },
+  "expected": {
+    "package": {
+      "name": "luascript",
+      "version": "0.1.0-beta.0",
+      "releaseTrack": "pre-production beta",
+      "main": "src/unified_luascript.js",
+      "engines": {
+        "node": ">=14.17.0"
+      },
+      "files": [
+        "src/",
+        "test/",
+        "examples/package/",
+        "README.md",
+        "LICENSE"
+      ],
+      "runtimeDependencies": {
+        "acorn": "^8.15.0",
+        "esprima": "^4.0.1",
+        "luaparse": "^0.3.1",
+        "typescript": "5.9.3"
+      },
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/ssdajoker/LUASCRIPT.git"
+      },
+      "bugs": {
+        "url": "https://github.com/ssdajoker/LUASCRIPT/issues"
+      },
+      "homepage": "https://github.com/ssdajoker/LUASCRIPT#readme"
+    },
+    "rootExports": [
+      "AdvancedFeatures",
+      "AgenticIDE",
+      "CoreTranspiler",
+      "PerformanceTools",
+      "RuntimeSystem",
+      "UnifiedLuaScript"
+    ],
+    "unifiedInstanceMethods": [
+      "benchmark",
+      "clearCaches",
+      "createProject",
+      "execute",
+      "getCodeCompletion",
+      "getPerformanceReport",
+      "getSystemStatus",
+      "initializeComponents",
+      "openFile",
+      "optimize",
+      "profile",
+      "shutdown",
+      "startDebugging",
+      "transformWithOOP",
+      "transformWithPatterns",
+      "transformWithTypes",
+      "transpile",
+      "transpileAndExecute",
+      "transpileSource",
+      "validateEvidence"
+    ],
+    "unifiedStaticMethods": [
+      "createDevelopment",
+      "createEnterprise",
+      "createProduction",
+      "validateEvidenceStatic"
+    ],
+    "forbiddenIrRootNames": [
+      "FIELD_ALIAS_POLICIES",
+      "IR",
+      "KIND_ALIASES",
+      "KIND_ALIAS_POLICIES",
+      "RELEASE_IR_SURFACE_CONTRACT",
+      "fixtureToSchemaArtifact",
+      "ir",
+      "legacyProgramToSchemaArtifact",
+      "validateReleaseIrSurfaceMapping",
+      "validateSchemaArtifactCompatibility"
+    ],
+    "packageExamples": [
+      "examples/package/README.md",
+      "examples/package/minimal-system.cjs",
+      "examples/package/transpile-js-to-lua.cjs"
+    ],
+    "nodeFloorExecutableProbe": {
+      "package": "node@14.17.1",
+      "expectedVersion": "v14.17.1"
+    }
+  },
+  "tarball": {
+    "name": "luascript",
+    "version": "0.1.0-beta.0",
+    "filename": "luascript-0.1.0-beta.0.tgz",
+    "sha256": "92947fab9eabdaf79efed47b114b787cc6d7a5195e0320d28d407f558b2c7461",
+    "sizeBytes": 1010433,
+    "npmReportedSizeBytes": 1010433,
+    "npmReportedUnpackedSizeBytes": 5189594,
+    "fileCount": 398,
+    "npmReportedEntryCount": 398,
+    "fileListSha256": "cc16e4bce689b57ae8f6c5334ae43935fd2493f09dd98befa5395929f7028977",
+    "files": [
+      "LICENSE",
+      "README.md",
+      "examples/package/README.md",
+      "examples/package/minimal-system.cjs",
+      "examples/package/transpile-js-to-lua.cjs",
+      "package.json",
+      "src/advanced_async.js",
+      "src/advanced_features.js",
+      "src/agentic_ide.js",
+      "src/agents/auditor-agent.ts",
+      "src/agents/resolver-agent.ts",
+      "src/backends/dart/performance_optimizer.js",
+      "src/backends/dart/tier2_optimizer.js",
+      "src/backends/dart/transpiler.js",
+      "src/backends/index.js",
+      "src/backends/llvm/index.js",
+      "src/backends/llvm/ir-to-llvm.js",
+      "src/backends/llvm/optimizer.js",
+      "src/backends/mlir/dialect.js",
+      "src/backends/mlir/index.js",
+      "src/backends/mlir/ir-to-mlir.js",
+      "src/backends/mlir/optimizer.js",
+      "src/backends/php/performance_optimizer.js",
+      "src/backends/php/tier2_optimizer.js",
+      "src/backends/php/transpiler.js",
+      "src/backends/python/tier2_optimizer.js",
+      "src/backends/ruby/performance_optimizer.js",
+      "src/backends/ruby/tier2_optimizer.js",
+      "src/backends/ruby/transpiler.js",
+      "src/backends/wasm/ir-to-wasm.js",
+      "src/compilers/c-like-to-ir.js",
+      "src/compilers/core-language-bridge.js",
+      "src/compilers/csharp-to-ir.js",
+      "src/compilers/dart-to-ir.js",
+      "src/compilers/elm-to-ir.js",
+      "src/compilers/gleam-to-ir.js",
+      "src/compilers/go-to-ir.js",
+      "src/compilers/index-internal.js",
+      "src/compilers/index.js",
+      "src/compilers/ir-to-c.js",
+      "src/compilers/ir-to-cpp.js",
+      "src/compilers/ir-to-csharp.js",
+      "src/compilers/ir-to-js.js",
+      "src/compilers/ir-to-ls.js",
+      "src/compilers/ir-to-lua.js",
+      "src/compilers/ir-to-python.js",
+      "src/compilers/java-to-ir.js",
+      "src/compilers/js-to-ir.js",
+      "src/compilers/kotlin-to-ir.js",
+      "src/compilers/lua-to-ir.js",
+      "src/compilers/luascript-to-ir.js",
+      "src/compilers/php-to-ir.js",
+      "src/compilers/python-to-ir.js",
+      "src/compilers/ruby-to-ir.js",
+      "src/compilers/rust-to-ir.js",
+      "src/compilers/typescript-to-ir.js",
+      "src/core/symbol-table.ts",
+      "src/core_transpiler.js",
+      "src/enhanced_operators.js",
+      "src/enhanced_transpiler.js",
+      "src/error_handler.py",
+      "src/extensions/api.js",
+      "src/generators/csharp_codegen.js",
+      "src/generators/csharp_codegen_extended.js",
+      "src/generators/elm_codegen.js",
+      "src/generators/elm_codegen_extended.js",
+      "src/generators/gleam_codegen.js",
+      "src/generators/gleam_codegen_extended.js",
+      "src/generators/java_codegen.js",
+      "src/generators/java_codegen_extended.js",
+      "src/ide/resolution-diagnostics.js",
+      "src/ide/resolution-diagnostics.ts",
+      "src/index.js",
+      "src/ir/base_emitter.js",
+      "src/ir/builder.js",
+      "src/ir/calling_conventions.js",
+      "src/ir/canonical_ir_schema.js",
+      "src/ir/class_lowerer.js",
+      "src/ir/dart_ir_lowerer_phase_b.js",
+      "src/ir/emitter-enhanced.js",
+      "src/ir/emitter.js",
+      "src/ir/emitter_bash.js",
+      "src/ir/emitter_css.js",
+      "src/ir/emitter_dart.js",
+      "src/ir/emitter_fortran.js",
+      "src/ir/emitter_groovy.js",
+      "src/ir/emitter_html.js",
+      "src/ir/emitter_pascal.js",
+      "src/ir/emitter_perl.js",
+      "src/ir/emitter_php.js",
+      "src/ir/emitter_python.js",
+      "src/ir/emitter_python_phase_b.js",
+      "src/ir/emitter_ruby.js",
+      "src/ir/emitter_typescript.js",
+      "src/ir/emitter_v.js",
+      "src/ir/error_reporter.js",
+      "src/ir/idGenerator.js",
+      "src/ir/index.js",
+      "src/ir/loop_lowerer.js",
+      "src/ir/lowerer-enhanced.js",
+      "src/ir/lowerer.js",
+      "src/ir/lowerer_dart.js",
+      "src/ir/lowerer_php.js",
+      "src/ir/lowerer_python.js",
+      "src/ir/lowerer_ruby.js",
+      "src/ir/lowerer_universal.js",
+      "src/ir/memory_model.js",
+      "src/ir/nodes.js",
+      "src/ir/normalizer.js",
+      "src/ir/php_ir_lowerer_phase_b.js",
+      "src/ir/pipeline-integration.js",
+      "src/ir/pipeline.js",
+      "src/ir/pipeline_python_phase_a.js",
+      "src/ir/pipeline_python_phase_b.js",
+      "src/ir/pipeline_python_phase_c.js",
+      "src/ir/pipeline_python_phase_d.js",
+      "src/ir/pipeline_python_phase_e.js",
+      "src/ir/python_ir_lowerer_phase_b.js",
+      "src/ir/release_ir_surface_contract.js",
+      "src/ir/ruby_ir_lowerer_phase_b.js",
+      "src/ir/schema_artifact_bridge.js",
+      "src/ir/semantic_preservation_verifier.js",
+      "src/ir/serializer.js",
+      "src/ir/statement_dispatch.js",
+      "src/ir/transforms/serializer.js",
+      "src/ir/try_lowerer.js",
+      "src/ir/type_constraint_solver.js",
+      "src/ir/type_system_bridge.js",
+      "src/ir/types.js",
+      "src/ir/validator.js",
+      "src/ir/validators/validator.js",
+      "src/language/language_traits.js",
+      "src/language/parser.ts",
+      "src/language/tokenizer.ts",
+      "src/language_traits.js",
+      "src/lexer/enhanced_lexer.py",
+      "src/luascript_compiler.py",
+      "src/meta_team_activation.lua",
+      "src/optimizations/memory_optimization.js",
+      "src/optimizations/security_algorithm_optimization.js",
+      "src/optimizations/speed_optimization.js",
+      "src/optimized_transpiler.js",
+      "src/optimizers/dart/dart_performance_optimizer.js",
+      "src/optimizers/dart/dart_security_validator.js",
+      "src/optimizers/dart/phase_b/multilingual-optimizer.js",
+      "src/optimizers/dart/phase_c/speed-optimizer.js",
+      "src/optimizers/dart/phase_e/hardening.js",
+      "src/optimizers/javascript/algorithm/common-subexpression-elimination.js",
+      "src/optimizers/javascript/algorithm/complexity-analyzer.js",
+      "src/optimizers/javascript/algorithm/dataflow-analyzer.js",
+      "src/optimizers/javascript/algorithm/loop-invariant-motion.js",
+      "src/optimizers/javascript/algorithm/side-effect-detector.js",
+      "src/optimizers/javascript/algorithm/strength-reduction-emitter.js",
+      "src/optimizers/javascript/algorithm/strength-reduction.js",
+      "src/optimizers/javascript/algorithm/value-numbering.js",
+      "src/optimizers/javascript/algorithms/algorithm_optimizer.js",
+      "src/optimizers/javascript/algorithms/loop-optimizer.js",
+      "src/optimizers/javascript/interop/boundary-optimizer.js",
+      "src/optimizers/javascript/interop/ffi-analyzer.js",
+      "src/optimizers/javascript/interop/interop_cache.js",
+      "src/optimizers/javascript/interop/marshaling-optimizer.js",
+      "src/optimizers/javascript/interop/type-converter.js",
+      "src/optimizers/javascript/ir-utils.js",
+      "src/optimizers/javascript/javascript-optimizer.js",
+      "src/optimizers/javascript/memory/gc-pattern-detection.js",
+      "src/optimizers/javascript/memory/gc_optimizer.js",
+      "src/optimizers/javascript/memory/memory-profiling.js",
+      "src/optimizers/javascript/memory/pool_manager.js",
+      "src/optimizers/javascript/memory/register-pressure.js",
+      "src/optimizers/javascript/memory/stack-analyzer.js",
+      "src/optimizers/javascript/quality/determinism-verifier.js",
+      "src/optimizers/javascript/quality/quality_gates.js",
+      "src/optimizers/javascript/quality/slo-gates.js",
+      "src/optimizers/javascript/security/bounds-checking-emitter.js",
+      "src/optimizers/javascript/security/buffer-overflow-detection.js",
+      "src/optimizers/javascript/security/security_hardeners.js",
+      "src/optimizers/javascript/security/security_validators.js",
+      "src/optimizers/javascript/security/type-confusion-prevention.js",
+      "src/optimizers/javascript/speed/cache_manager.js",
+      "src/optimizers/javascript/speed/constant-folding.js",
+      "src/optimizers/javascript/speed/dead-code-elimination.js",
+      "src/optimizers/javascript/speed/function_cache.js",
+      "src/optimizers/javascript/speed/pattern_cache.js",
+      "src/optimizers/javascript/speed/speed-optimizer.js",
+      "src/optimizers/javascript/speed/tail-call-optimization.js",
+      "src/optimizers/lua/phase_c/peephole-optimizer.js",
+      "src/optimizers/lua/phase_f/lua_optimizer.js",
+      "src/optimizers/php/phase_b/multilingual-optimizer.js",
+      "src/optimizers/php/phase_c/speed-optimizer.js",
+      "src/optimizers/php/phase_e/hardening.js",
+      "src/optimizers/php/php_performance_optimizer.js",
+      "src/optimizers/php/php_security_validator.js",
+      "src/optimizers/python/phase2c/python_extended_features.js",
+      "src/optimizers/python/phase2d/python_performance_optimizer.js",
+      "src/optimizers/python/phase_c/speed-optimizer.js",
+      "src/optimizers/python/phase_d/python_gc_detector.js",
+      "src/optimizers/python/phase_d/python_memory_profiler.js",
+      "src/optimizers/python/phase_d/python_pool_manager.js",
+      "src/optimizers/python/phase_d/python_stack_analyzer.js",
+      "src/optimizers/python/phase_e/python_buffer_overflow_detector.js",
+      "src/optimizers/python/phase_e/python_ffi_generator.js",
+      "src/optimizers/python/phase_e/python_phase_e_security_integration.js",
+      "src/optimizers/python/quality/python_phase_e_quality_runner.js",
+      "src/optimizers/python/quality/python_security_validator.js",
+      "src/optimizers/ruby/phase_b/multilingual-optimizer.js",
+      "src/optimizers/ruby/phase_c/speed-optimizer.js",
+      "src/optimizers/ruby/phase_e/hardening.js",
+      "src/optimizers/ruby/ruby_performance_optimizer.js",
+      "src/optimizers/ruby/ruby_security_validator.js",
+      "src/parser.js",
+      "src/parser/enhanced_parser.py",
+      "src/parsers/base_parser.js",
+      "src/parsers/bash_parser.js",
+      "src/parsers/csharp_parser.js",
+      "src/parsers/csharp_parser_extended.js",
+      "src/parsers/css_parser.js",
+      "src/parsers/dart_parser.js",
+      "src/parsers/elm_parser.js",
+      "src/parsers/elm_parser_extended.js",
+      "src/parsers/fortran_parser.js",
+      "src/parsers/gleam_parser.js",
+      "src/parsers/gleam_parser_extended.js",
+      "src/parsers/groovy_parser.js",
+      "src/parsers/html_parser.js",
+      "src/parsers/java_parser.js",
+      "src/parsers/java_parser_extended.js",
+      "src/parsers/json_parser.js",
+      "src/parsers/pascal_parser.js",
+      "src/parsers/perl_parser.js",
+      "src/parsers/php_parser.js",
+      "src/parsers/python_parser.js",
+      "src/parsers/ruby_parser.js",
+      "src/parsers/typescript_parser.js",
+      "src/parsers/v_parser.js",
+      "src/performance_monitor.py",
+      "src/performance_tools.js",
+      "src/phase1_core_ast.js",
+      "src/phase1_core_lexer.js",
+      "src/phase1_core_parser.js",
+      "src/phase2_core_interpreter.js",
+      "src/phase2_core_modules.js",
+      "src/phase3_advanced_features.lua",
+      "src/phase3_compiler_optimizations.lua",
+      "src/phase4_debugging_profiling.lua",
+      "src/phase4_ecosystem_integration.lua",
+      "src/phase5_enterprise_optimization.js",
+      "src/phase6_production_deployment.js",
+      "src/phase8_complete.js",
+      "src/phase9_ecosystem.js",
+      "src/phase_c/forensic_debug_tools.js",
+      "src/phase_c/forensic_debug_tools_showcase.js",
+      "src/phase_c/forensic_debug_tools_test.js",
+      "src/phase_c/framework/abstract_generator.js",
+      "src/phase_c/framework/abstract_parser.js",
+      "src/phase_c/framework/abstract_tokenizer.js",
+      "src/phase_c/hang_detector.js",
+      "src/phase_c/languages/fsharp_generator.js",
+      "src/phase_c/languages/fsharp_parser.js",
+      "src/phase_c/languages/fsharp_tokenizer.js",
+      "src/phase_c/languages/go_generator.js",
+      "src/phase_c/languages/go_parser.js",
+      "src/phase_c/languages/go_tokenizer.js",
+      "src/phase_c/languages/haskell_generator.js",
+      "src/phase_c/languages/haskell_parser.js",
+      "src/phase_c/languages/haskell_tokenizer.js",
+      "src/phase_c/languages/kotlin_generator.js",
+      "src/phase_c/languages/kotlin_parser.js",
+      "src/phase_c/languages/kotlin_tokenizer.js",
+      "src/phase_c/languages/lisp_generator.js",
+      "src/phase_c/languages/lisp_parser.js",
+      "src/phase_c/languages/lisp_tokenizer.js",
+      "src/phase_c/languages/ocaml_generator.js",
+      "src/phase_c/languages/ocaml_parser.js",
+      "src/phase_c/languages/ocaml_tokenizer.js",
+      "src/phase_c/languages/python_complete_validation.js",
+      "src/phase_c/languages/python_generator.js",
+      "src/phase_c/languages/python_parser.js",
+      "src/phase_c/languages/python_tokenizer.js",
+      "src/phase_c/languages/rust_generator.js",
+      "src/phase_c/languages/rust_parser.js",
+      "src/phase_c/languages/rust_tokenizer.js",
+      "src/phase_c/languages/scala_generator.js",
+      "src/phase_c/languages/scala_parser.js",
+      "src/phase_c/languages/scala_tokenizer.js",
+      "src/phase_c/languages/typescript_generator.js",
+      "src/phase_c/languages/typescript_parser.js",
+      "src/phase_c/languages/typescript_tokenizer.js",
+      "src/phase_c/macro_expansion_debugger.js",
+      "src/phase_c/validators/VALIDATOR_INTEGRATION_GUIDE.js",
+      "src/phase_c/validators/concurrency_validator.js",
+      "src/phase_c/validators/dsl_validator.js",
+      "src/phase_c/validators/performance_validator.js",
+      "src/phase_c/validators/semantic_validator.js",
+      "src/phase_c/validators/type_validator.js",
+      "src/phase_c/validators/validator_framework.js",
+      "src/phase_c/validators/validator_tests.js",
+      "src/python/buffer_overflow_detector.js",
+      "src/python/ffi_generator.js",
+      "src/python/gc_detector.js",
+      "src/python/memory_profiler.js",
+      "src/python/object_pool_manager.js",
+      "src/python/security_integration.js",
+      "src/python/stack_analyzer.js",
+      "src/runtime.js",
+      "src/runtime/generator-helpers.js",
+      "src/runtime/generator-helpers.lua",
+      "src/runtime_system.js",
+      "src/tier1_optimization_suite.js",
+      "src/tokenizers/csharp_tokenizer.js",
+      "src/tokenizers/csharp_tokenizer_extended.js",
+      "src/tokenizers/elm_tokenizer.js",
+      "src/tokenizers/elm_tokenizer_extended.js",
+      "src/tokenizers/gleam_tokenizer.js",
+      "src/tokenizers/gleam_tokenizer_extended.js",
+      "src/tokenizers/java_tokenizer.js",
+      "src/tokenizers/java_tokenizer_extended.js",
+      "src/transpiler.js",
+      "src/transpiler/enhanced_transpiler.py",
+      "src/transpiler_multilang.js",
+      "src/transpiler_universal.js",
+      "src/unified_luascript.js",
+      "src/utils/diagnostic-framework.js",
+      "src/utils/error-handler.js",
+      "src/utils/logger.js",
+      "src/utils/metrics.js",
+      "src/utils/performance-monitor.js",
+      "src/validation/ast-validator.js",
+      "src/validation/ir-validator.js",
+      "src/wasm_backend.js",
+      "src/work-queue-file.js",
+      "test/backends/test_integration.js",
+      "test/backends/test_llvm.js",
+      "test/backends/test_llvm_comprehensive.js",
+      "test/backends/test_mlir.js",
+      "test/backends/test_wasm_ir.js",
+      "test/benchmark_strength_reduction.js",
+      "test/compatibility/extension-api.test.js",
+      "test/ir/test_compilers.js",
+      "test/ir/test_ir_basic.js",
+      "test/ir/test_roundtrip.js",
+      "test/javascript/regression-suite.js",
+      "test/legacy/parser.suite.js",
+      "test/legacy/runtime.suite.js",
+      "test/legacy/transpiler.suite.js",
+      "test/phase3.3/task3.1-buffer-overflow/gate-verification.js",
+      "test/phase3.3/task3.2-type-confusion/gate-verification.js",
+      "test/phase3.3/task3.3-bounds-emitter/gate-verification.js",
+      "test/phase3.4/task4.1-lim/gate-verification.js",
+      "test/phase3.4/task4.1-lim/lim-tests.js",
+      "test/phase3.4/task4.2-cse/cse-tests.js",
+      "test/phase3.4/task4.2-cse/gate-verification.js",
+      "test/phase3.4/task4.3-sr/gate-verification.js",
+      "test/phase3.4/task4.3-sr/strength-reduction-tests.js",
+      "test/phase3.4/task4.4-complexity/gate-verification.js",
+      "test/phase3.5/task5.1-ffi/gate-verification.js",
+      "test/phase3.5/task5.2-boundary/gate-verification.js",
+      "test/phase3.5/task5.3-marshaling/gate-verification.js",
+      "test/phase3.5/task5.4-type-converter/gate-verification.js",
+      "test/phase3.6/debug-determinism.js",
+      "test/phase3.6/determinism-test.js",
+      "test/phase3.6/final-summary.js",
+      "test/phase3.6/slo-gates-test.js",
+      "test/phase_b_dart_validation.test.js",
+      "test/phase_b_php_validation.test.js",
+      "test/phase_b_ruby_validation.test.js",
+      "test/phase_c_dart_validation.test.js",
+      "test/phase_c_php_validation.test.js",
+      "test/phase_c_python_validation.test.js",
+      "test/phase_c_ruby_validation.test.js",
+      "test/phase_de_dart_validation.test.js",
+      "test/phase_de_php_validation.test.js",
+      "test/phase_de_ruby_validation.test.js",
+      "test/release.test.js",
+      "test/sr-integration-helpers.js",
+      "test/test_compiler_pipeline_integration.js",
+      "test/test_core_transpiler_braces.js",
+      "test/test_edge_cases_comprehensive.js",
+      "test/test_enhanced_transpiler.js",
+      "test/test_ir_stability.js",
+      "test/test_math_operators.js",
+      "test/test_modules.js",
+      "test/test_perfect_parser_phase1.js",
+      "test/test_perfect_parser_phase1_negative.js",
+      "test/test_phase1_6_comprehensive.js",
+      "test/test_phase3_implementation.lua",
+      "test/test_phase4_debugging.lua",
+      "test/test_phase4_implementation.lua",
+      "test/test_phase9_ecosystem.js",
+      "test/test_strength_reduction_corpus.js",
+      "test/test_strength_reduction_emission_corpus.js",
+      "test/test_strength_reduction_emission_gates.js",
+      "test/test_strength_reduction_gates.js",
+      "test/test_strength_reduction_integration.js",
+      "test/test_transpiler.js",
+      "test/test_unified_system.js",
+      "test/test_wasm_backend.js",
+      "test/tier1_optimization_suite.test.js",
+      "test/utils/deterministic.js"
+    ]
+  },
+  "installedConsumer": {
+    "package": {
+      "name": "luascript",
+      "version": "0.1.0-beta.0",
+      "main": "src/unified_luascript.js"
+    },
+    "rootExports": [
+      "AdvancedFeatures",
+      "AgenticIDE",
+      "CoreTranspiler",
+      "PerformanceTools",
+      "RuntimeSystem",
+      "UnifiedLuaScript"
+    ],
+    "irRootNamesPresent": [],
+    "smoke": {
+      "source": "const answer = 6 * 7;",
+      "lua": "local answer = (6 * 7)",
+      "passed": true
+    },
+    "typescript": {
+      "version": "5.9.3",
+      "engines": {
+        "node": ">=14.17"
+      }
+    },
+    "rootRuntimePresent": false,
+    "publicRootReferencesRootRuntime": false
+  },
+  "installedPackageExamples": {
+    "examples": [
+      {
+        "path": "examples/package/minimal-system.cjs",
+        "exists": true,
+        "sha256": "79d5db79bb9c889c833b0772087092147d604c53476592a3b06d3d2315738d59",
+        "status": 0,
+        "signal": null,
+        "error": null,
+        "stdout": "LUASCRIPT_PACKAGE_EXAMPLE=minimal-system version=0.1.0-beta.0 components=0\n",
+        "stderr": ""
+      },
+      {
+        "path": "examples/package/transpile-js-to-lua.cjs",
+        "exists": true,
+        "sha256": "9ab39817c5c6f367e8b9a25d4994ecfaa5c9cbb018991c9ef528a4ea9cc10855",
+        "status": 0,
+        "signal": null,
+        "error": null,
+        "stdout": "LUASCRIPT_PACKAGE_EXAMPLE=transpile-js-to-lua\nlocal answer = (6 * 7)\n",
+        "stderr": ""
+      }
+    ]
+  },
+  "nodeFloor": {
+    "declaredFloor": ">=14.17.0",
+    "requestedExecutableProbe": "node@14.17.1",
+    "rationale": "node@14.17.0 is unavailable; 14.17.1 is the first available compatible patch for the declared >=14.17.0 floor",
+    "command": [
+      "C:\\Users\\ssdaj\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\node.exe",
+      "C:\\Users\\ssdaj\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\node_modules\\npm\\bin\\npm-cli.js",
+      "exec",
+      "--yes",
+      "--package=node@14.17.1",
+      "--",
+      "node",
+      "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-9Tn89u\\consumer\\node-floor-consumer-smoke.cjs"
+    ],
+    "status": 0,
+    "signal": null,
+    "error": null,
+    "stdout": "LUASCRIPT_NODE_FLOOR_RESULT={\"nodeVersion\":\"v14.17.1\",\"rootExports\":[\"AdvancedFeatures\",\"AgenticIDE\",\"CoreTranspiler\",\"PerformanceTools\",\"RuntimeSystem\",\"UnifiedLuaScript\"],\"lua\":\"local answer = (6 * 7)\"}\n",
+    "stderr": "",
+    "scriptSha256": "8d4bb56bbc664af001de66f2dbb162a9ce879377c78c681395b1d6bd08c2f4fd",
+    "observed": {
+      "nodeVersion": "v14.17.1",
+      "rootExports": [
+        "AdvancedFeatures",
+        "AgenticIDE",
+        "CoreTranspiler",
+        "PerformanceTools",
+        "RuntimeSystem",
+        "UnifiedLuaScript"
+      ],
+      "lua": "local answer = (6 * 7)"
+    }
+  },
+  "cleanup": {
+    "prefix": "luascript-public-package-contract-",
+    "removed": true
+  },
+  "checks": [
+    {
+      "name": "package-metadata-identity-and-status",
+      "passed": true,
+      "detail": {
+        "name": "luascript",
+        "version": "0.1.0-beta.0",
+        "main": "src/unified_luascript.js",
+        "embeddedVersion": "0.1.0-beta.0",
+        "releaseTrack": "pre-production beta"
+      }
+    },
+    {
+      "name": "package-version-status-contract-alignment",
+      "passed": true,
+      "detail": {
+        "packageIdentityPresent": true,
+        "releaseTrackPresent": true,
+        "mainPresent": true
+      }
+    },
+    {
+      "name": "package-engine-and-repository-metadata",
+      "passed": true,
+      "detail": {
+        "engines": {
+          "node": ">=14.17.0"
+        },
+        "repository": {
+          "type": "git",
+          "url": "https://github.com/ssdajoker/LUASCRIPT.git"
+        },
+        "bugs": {
+          "url": "https://github.com/ssdajoker/LUASCRIPT/issues"
+        },
+        "homepage": "https://github.com/ssdajoker/LUASCRIPT#readme"
+      }
+    },
+    {
+      "name": "public-contract-node-floor-alignment",
+      "passed": true,
+      "detail": {
+        "declaredEngine": ">=14.17.0",
+        "contractMentionsDeclaredFloor": true
+      }
+    },
+    {
+      "name": "runtime-dependency-boundary",
+      "passed": true,
+      "detail": {
+        "expectedRuntimeDependencies": {
+          "acorn": "^8.15.0",
+          "esprima": "^4.0.1",
+          "luaparse": "^0.3.1",
+          "typescript": "5.9.3"
+        },
+        "actualRuntimeDependencies": {
+          "acorn": "^8.15.0",
+          "esprima": "^4.0.1",
+          "luaparse": "^0.3.1",
+          "typescript": "5.9.3"
+        },
+        "yamlDevDependency": "^2.8.2",
+        "esprimaTypesDevDependency": "^4.0.6"
+      }
+    },
+    {
+      "name": "package-lock-runtime-boundary-alignment",
+      "passed": true,
+      "detail": {
+        "lockRuntimeDependencies": {
+          "acorn": "^8.15.0",
+          "esprima": "^4.0.1",
+          "luaparse": "^0.3.1",
+          "typescript": "5.9.3"
+        },
+        "lockEngine": {
+          "node": ">=14.17.0"
+        },
+        "lockTypescript": {
+          "version": "5.9.3",
+          "resolved": "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz",
+          "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
+          "license": "Apache-2.0",
+          "bin": {
+            "tsc": "bin/tsc",
+            "tsserver": "bin/tsserver"
+          },
+          "engines": {
+            "node": ">=14.17"
+          }
+        },
+        "lockYamlDev": true,
+        "lockEsprimaTypesDev": true
+      }
+    },
+    {
+      "name": "package-files-boundary-unchanged",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "src/",
+          "test/",
+          "examples/package/",
+          "README.md",
+          "LICENSE"
+        ],
+        "actual": [
+          "src/",
+          "test/",
+          "examples/package/",
+          "README.md",
+          "LICENSE"
+        ]
+      }
+    },
+    {
+      "name": "package-has-no-bin-or-exports-map",
+      "passed": true,
+      "detail": {
+        "hasBin": false,
+        "hasExports": false
+      }
+    },
+    {
+      "name": "root-export-surface-exact",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "AdvancedFeatures",
+          "AgenticIDE",
+          "CoreTranspiler",
+          "PerformanceTools",
+          "RuntimeSystem",
+          "UnifiedLuaScript"
+        ],
+        "actual": [
+          "AdvancedFeatures",
+          "AgenticIDE",
+          "CoreTranspiler",
+          "PerformanceTools",
+          "RuntimeSystem",
+          "UnifiedLuaScript"
+        ],
+        "types": {
+          "AdvancedFeatures": "function",
+          "AgenticIDE": "function",
+          "CoreTranspiler": "function",
+          "PerformanceTools": "function",
+          "RuntimeSystem": "function",
+          "UnifiedLuaScript": "function"
+        }
+      }
+    },
+    {
+      "name": "ir-internals-absent-from-root",
+      "passed": true,
+      "detail": {
+        "forbidden": [
+          "FIELD_ALIAS_POLICIES",
+          "IR",
+          "KIND_ALIASES",
+          "KIND_ALIAS_POLICIES",
+          "RELEASE_IR_SURFACE_CONTRACT",
+          "fixtureToSchemaArtifact",
+          "ir",
+          "legacyProgramToSchemaArtifact",
+          "validateReleaseIrSurfaceMapping",
+          "validateSchemaArtifactCompatibility"
+        ],
+        "present": []
+      }
+    },
+    {
+      "name": "unified-instance-method-surface-exact",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "benchmark",
+          "clearCaches",
+          "createProject",
+          "execute",
+          "getCodeCompletion",
+          "getPerformanceReport",
+          "getSystemStatus",
+          "initializeComponents",
+          "openFile",
+          "optimize",
+          "profile",
+          "shutdown",
+          "startDebugging",
+          "transformWithOOP",
+          "transformWithPatterns",
+          "transformWithTypes",
+          "transpile",
+          "transpileAndExecute",
+          "transpileSource",
+          "validateEvidence"
+        ],
+        "actual": [
+          "benchmark",
+          "clearCaches",
+          "createProject",
+          "execute",
+          "getCodeCompletion",
+          "getPerformanceReport",
+          "getSystemStatus",
+          "initializeComponents",
+          "openFile",
+          "optimize",
+          "profile",
+          "shutdown",
+          "startDebugging",
+          "transformWithOOP",
+          "transformWithPatterns",
+          "transformWithTypes",
+          "transpile",
+          "transpileAndExecute",
+          "transpileSource",
+          "validateEvidence"
+        ]
+      }
+    },
+    {
+      "name": "unified-static-method-surface-exact",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "createDevelopment",
+          "createEnterprise",
+          "createProduction",
+          "validateEvidenceStatic"
+        ],
+        "actual": [
+          "createDevelopment",
+          "createEnterprise",
+          "createProduction",
+          "validateEvidenceStatic"
+        ]
+      }
+    },
+    {
+      "name": "unified-enable-all-false-and-explicit-component-controls",
+      "passed": true,
+      "detail": {
+        "enableAllFalse": {
+          "components": [],
+          "componentsLoaded": 0,
+          "initialized": true,
+          "version": "0.1.0-beta.0",
+          "flags": {
+            "enableTranspiler": false,
+            "enableRuntime": false,
+            "enableAdvanced": false,
+            "enablePerformance": false,
+            "enableIDE": false
+          }
+        },
+        "explicitComponents": [
+          {
+            "name": "transpiler",
+            "components": [
+              "transpiler"
+            ],
+            "componentsLoaded": 1,
+            "initialized": true,
+            "version": "0.1.0-beta.0",
+            "passed": true
+          },
+          {
+            "name": "runtime",
+            "components": [
+              "runtime"
+            ],
+            "componentsLoaded": 1,
+            "initialized": true,
+            "version": "0.1.0-beta.0",
+            "passed": true
+          },
+          {
+            "name": "advanced",
+            "components": [
+              "advanced"
+            ],
+            "componentsLoaded": 1,
+            "initialized": true,
+            "version": "0.1.0-beta.0",
+            "passed": true
+          },
+          {
+            "name": "performance",
+            "components": [
+              "performance"
+            ],
+            "componentsLoaded": 1,
+            "initialized": true,
+            "version": "0.1.0-beta.0",
+            "passed": true
+          },
+          {
+            "name": "ide",
+            "components": [
+              "ide"
+            ],
+            "componentsLoaded": 1,
+            "initialized": true,
+            "version": "0.1.0-beta.0",
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "root-npmignore-hygiene-rules",
+      "passed": true,
+      "detail": {
+        "required": [
+          "artifacts/",
+          "coverage/",
+          ".nyc_output/",
+          "reports/",
+          "*.log",
+          "static_warnings*.txt",
+          "**/__pycache__/**",
+          "**/*.pyc",
+          "**/*.pyo",
+          "**/*.backup",
+          "**/*.bak",
+          "src/**/*.test.ts",
+          "src/**/tests/**",
+          "src/**/*.prompt.md"
+        ],
+        "actual": [
+          "artifacts/",
+          "coverage/",
+          ".nyc_output/",
+          "reports/",
+          "*.log",
+          "static_warnings*.txt",
+          "**/__pycache__/**",
+          "**/*.pyc",
+          "**/*.pyo",
+          "**/*.backup",
+          "**/*.bak",
+          "src/**/*.test.ts",
+          "src/**/tests/**",
+          "src/**/*.prompt.md"
+        ],
+        "missing": []
+      }
+    },
+    {
+      "name": "source-npmignore-hygiene-rules",
+      "passed": true,
+      "detail": {
+        "required": [
+          "__pycache__/",
+          "**/__pycache__/",
+          "*.pyc",
+          "**/*.pyc",
+          "*.pyo",
+          "**/*.pyo",
+          "*.backup",
+          "**/*.backup",
+          "*.bak",
+          "**/*.bak",
+          "*.test.ts",
+          "**/*.test.ts",
+          "tests/",
+          "**/tests/",
+          "*.prompt.md",
+          "**/*.prompt.md"
+        ],
+        "actual": [
+          "__pycache__/",
+          "**/__pycache__/",
+          "*.pyc",
+          "**/*.pyc",
+          "*.pyo",
+          "**/*.pyo",
+          "*.backup",
+          "**/*.backup",
+          "*.bak",
+          "**/*.bak",
+          "*.test.ts",
+          "**/*.test.ts",
+          "tests/",
+          "**/tests/",
+          "*.prompt.md",
+          "**/*.prompt.md"
+        ],
+        "missing": []
+      }
+    },
+    {
+      "name": "public-root-source-does-not-reference-root-runtime",
+      "passed": true,
+      "detail": [
+        {
+          "pattern": "../runtime",
+          "present": false
+        },
+        {
+          "pattern": "runtime/runtime.lua",
+          "present": false
+        },
+        {
+          "pattern": "runtime/core/enhanced_runtime.lua",
+          "present": false
+        }
+      ]
+    },
+    {
+      "name": "npm-pack-ignore-scripts-json",
+      "passed": true,
+      "detail": {
+        "command": [
+          "C:\\Users\\ssdaj\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\node.exe",
+          "C:\\Users\\ssdaj\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\node_modules\\npm\\bin\\npm-cli.js",
+          "pack",
+          "C:\\Users\\ssdaj\\Desktop\\LUASCRIPT",
+          "--ignore-scripts",
+          "--json"
+        ],
+        "status": 0,
+        "signal": null,
+        "error": null,
+        "stdout": "[\n  {\n    \"id\": \"luascript@0.1.0-beta.0\",\n    \"name\": \"luascript\",\n    \"version\": \"0.1.0-beta.0\",\n    \"size\": 1010433,\n    \"unpackedSize\": 5189594,\n    \"shasum\": \"0a23a41020c46830ebe7e3094bfe0e6fbfdff91f\",\n    \"integrity\": \"sha512-/8VP012Rr3hDz/fzMZacLlYTnU3WvV1ULhkhxrSbhiDmCLMNDYGN8NIdBtNDwVmLvHVVY+A/+U/E2imx6ISdxA==\",\n    \"filename\": \"luascript-0.1.0-beta.0.tgz\",\n    \"files\": [\n      {\n        \"path\": \"LICENSE\",\n        \"size\": 11357,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"README.md\",\n        \"size\": 28886,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"examples/package/minimal-system.cjs\",\n        \"size\": 776,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"examples/package/README.md\",\n        \"size\": 665,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"examples/package/transpile-js-to-lua.cjs\",\n        \"size\": 548,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"package.json\",\n        \"size\": 28504,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/advanced_async.js\",\n        \"size\": 15617,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/advanced_features.js\",\n        \"size\": 18035,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/agentic_ide.js\",\n        \"size\": 49441,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/agents/auditor-agent.ts\",\n        \"size\": 2315,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/agents/resolver-agent.ts\",\n        \"size\": 1903,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/dart/performance_optimizer.js\",\n        \"size\": 11798,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/dart/tier2_optimizer.js\",\n        \"size\": 19146,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/dart/transpiler.js\",\n        \"size\": 20554,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/index.js\",\n        \"size\": 1972,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/llvm/index.js\",\n        \"size\": 255,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/llvm/ir-to-llvm.js\",\n        \"size\": 25978,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/llvm/optimizer.js\",\n        \"size\": 7866,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/mlir/dialect.js\",\n        \"size\": 9769,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/mlir/index.js\",\n        \"size\": 272,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/mlir/ir-to-mlir.js\",\n        \"size\": 19550,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/mlir/optimizer.js\",\n        \"size\": 5092,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/php/performance_optimizer.js\",\n        \"size\": 15345,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/php/tier2_optimizer.js\",\n        \"size\": 25581,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/php/transpiler.js\",\n        \"size\": 22212,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/python/tier2_optimizer.js\",\n        \"size\": 19245,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/ruby/performance_optimizer.js\",\n        \"size\": 12860,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/ruby/tier2_optimizer.js\",\n        \"size\": 24389,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/ruby/transpiler.js\",\n        \"size\": 21018,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/backends/wasm/ir-to-wasm.js\",\n        \"size\": 29206,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/c-like-to-ir.js\",\n        \"size\": 34152,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/core-language-bridge.js\",\n        \"size\": 6258,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/csharp-to-ir.js\",\n        \"size\": 24921,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/dart-to-ir.js\",\n        \"size\": 3291,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/elm-to-ir.js\",\n        \"size\": 18257,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/gleam-to-ir.js\",\n        \"size\": 8961,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/go-to-ir.js\",\n        \"size\": 7130,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/index-internal.js\",\n        \"size\": 1803,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/index.js\",\n        \"size\": 2025,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/ir-to-c.js\",\n        \"size\": 16647,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/ir-to-cpp.js\",\n        \"size\": 14659,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/ir-to-csharp.js\",\n        \"size\": 12120,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/ir-to-js.js\",\n        \"size\": 14785,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/ir-to-ls.js\",\n        \"size\": 15118,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/ir-to-lua.js\",\n        \"size\": 33314,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/ir-to-python.js\",\n        \"size\": 23770,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/java-to-ir.js\",\n        \"size\": 4596,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/js-to-ir.js\",\n        \"size\": 13054,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/kotlin-to-ir.js\",\n        \"size\": 8335,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/lua-to-ir.js\",\n        \"size\": 17697,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/luascript-to-ir.js\",\n        \"size\": 26732,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/php-to-ir.js\",\n        \"size\": 6327,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/python-to-ir.js\",\n        \"size\": 31101,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/ruby-to-ir.js\",\n        \"size\": 10354,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/rust-to-ir.js\",\n        \"size\": 10189,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/compilers/typescript-to-ir.js\",\n        \"size\": 4726,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/core_transpiler.js\",\n        \"size\": 26732,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/core/symbol-table.ts\",\n        \"size\": 4193,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/enhanced_operators.js\",\n        \"size\": 9827,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/enhanced_transpiler.js\",\n        \"size\": 31304,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/error_handler.py\",\n        \"size\": 3610,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/extensions/api.js\",\n        \"size\": 14094,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/generators/csharp_codegen_extended.js\",\n        \"size\": 10161,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/generators/csharp_codegen.js\",\n        \"size\": 4213,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/generators/elm_codegen_extended.js\",\n        \"size\": 6141,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/generators/elm_codegen.js\",\n        \"size\": 3578,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/generators/gleam_codegen_extended.js\",\n        \"size\": 6666,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/generators/gleam_codegen.js\",\n        \"size\": 2140,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/generators/java_codegen_extended.js\",\n        \"size\": 7950,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/generators/java_codegen.js\",\n        \"size\": 8592,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ide/resolution-diagnostics.js\",\n        \"size\": 1797,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ide/resolution-diagnostics.ts\",\n        \"size\": 2069,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/index.js\",\n        \"size\": 14361,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/base_emitter.js\",\n        \"size\": 8624,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/builder.js\",\n        \"size\": 21368,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/calling_conventions.js\",\n        \"size\": 14097,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/canonical_ir_schema.js\",\n        \"size\": 2163,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/class_lowerer.js\",\n        \"size\": 2583,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/dart_ir_lowerer_phase_b.js\",\n        \"size\": 10568,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_bash.js\",\n        \"size\": 3584,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_css.js\",\n        \"size\": 3580,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_dart.js\",\n        \"size\": 3907,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_fortran.js\",\n        \"size\": 3596,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_groovy.js\",\n        \"size\": 3594,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_html.js\",\n        \"size\": 3584,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_pascal.js\",\n        \"size\": 3592,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_perl.js\",\n        \"size\": 3584,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_php.js\",\n        \"size\": 4775,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_python_phase_b.js\",\n        \"size\": 11163,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_python.js\",\n        \"size\": 18552,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_ruby.js\",\n        \"size\": 16998,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_typescript.js\",\n        \"size\": 5115,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter_v.js\",\n        \"size\": 3574,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter-enhanced.js\",\n        \"size\": 33947,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/emitter.js\",\n        \"size\": 40252,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/error_reporter.js\",\n        \"size\": 5621,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/idGenerator.js\",\n        \"size\": 2452,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/index.js\",\n        \"size\": 730,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/loop_lowerer.js\",\n        \"size\": 3224,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/lowerer_dart.js\",\n        \"size\": 13668,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/lowerer_php.js\",\n        \"size\": 12415,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/lowerer_python.js\",\n        \"size\": 13248,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/lowerer_ruby.js\",\n        \"size\": 10975,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/lowerer_universal.js\",\n        \"size\": 14645,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/lowerer-enhanced.js\",\n        \"size\": 21028,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/lowerer.js\",\n        \"size\": 47937,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/memory_model.js\",\n        \"size\": 12669,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/nodes.js\",\n        \"size\": 42140,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/normalizer.js\",\n        \"size\": 13545,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/php_ir_lowerer_phase_b.js\",\n        \"size\": 12522,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/pipeline_python_phase_a.js\",\n        \"size\": 11612,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/pipeline_python_phase_b.js\",\n        \"size\": 2152,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/pipeline_python_phase_c.js\",\n        \"size\": 12486,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/pipeline_python_phase_d.js\",\n        \"size\": 10330,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/pipeline_python_phase_e.js\",\n        \"size\": 11312,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/pipeline-integration.js\",\n        \"size\": 5877,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/pipeline.js\",\n        \"size\": 2376,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/python_ir_lowerer_phase_b.js\",\n        \"size\": 21274,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/release_ir_surface_contract.js\",\n        \"size\": 5630,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/ruby_ir_lowerer_phase_b.js\",\n        \"size\": 10656,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/schema_artifact_bridge.js\",\n        \"size\": 27097,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/semantic_preservation_verifier.js\",\n        \"size\": 10929,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/serializer.js\",\n        \"size\": 53,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/statement_dispatch.js\",\n        \"size\": 2788,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/transforms/serializer.js\",\n        \"size\": 5972,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/try_lowerer.js\",\n        \"size\": 921,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/type_constraint_solver.js\",\n        \"size\": 9023,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/type_system_bridge.js\",\n        \"size\": 12546,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/types.js\",\n        \"size\": 10996,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/validator.js\",\n        \"size\": 20784,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/ir/validators/validator.js\",\n        \"size\": 18958,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/language_traits.js\",\n        \"size\": 15000,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/language/language_traits.js\",\n        \"size\": 16582,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/language/parser.ts\",\n        \"size\": 9553,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/language/tokenizer.ts\",\n        \"size\": 5749,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/lexer/enhanced_lexer.py\",\n        \"size\": 30832,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/luascript_compiler.py\",\n        \"size\": 14237,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/meta_team_activation.lua\",\n        \"size\": 7440,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizations/memory_optimization.js\",\n        \"size\": 9706,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizations/security_algorithm_optimization.js\",\n        \"size\": 10909,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizations/speed_optimization.js\",\n        \"size\": 9536,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimized_transpiler.js\",\n        \"size\": 29091,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/dart/dart_performance_optimizer.js\",\n        \"size\": 12546,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/dart/dart_security_validator.js\",\n        \"size\": 13646,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/dart/phase_b/multilingual-optimizer.js\",\n        \"size\": 4901,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/dart/phase_c/speed-optimizer.js\",\n        \"size\": 4816,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/dart/phase_e/hardening.js\",\n        \"size\": 3731,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/algorithm/common-subexpression-elimination.js\",\n        \"size\": 18553,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/algorithm/complexity-analyzer.js\",\n        \"size\": 12319,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/algorithm/dataflow-analyzer.js\",\n        \"size\": 13995,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/algorithm/loop-invariant-motion.js\",\n        \"size\": 11494,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/algorithm/side-effect-detector.js\",\n        \"size\": 10657,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/algorithm/strength-reduction-emitter.js\",\n        \"size\": 15412,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/algorithm/strength-reduction.js\",\n        \"size\": 14375,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/algorithm/value-numbering.js\",\n        \"size\": 5242,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/algorithms/algorithm_optimizer.js\",\n        \"size\": 3753,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/algorithms/loop-optimizer.js\",\n        \"size\": 17748,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/interop/boundary-optimizer.js\",\n        \"size\": 12704,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/interop/ffi-analyzer.js\",\n        \"size\": 16368,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/interop/interop_cache.js\",\n        \"size\": 10416,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/interop/marshaling-optimizer.js\",\n        \"size\": 15331,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/interop/type-converter.js\",\n        \"size\": 17137,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/ir-utils.js\",\n        \"size\": 1187,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/javascript-optimizer.js\",\n        \"size\": 20514,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/memory/gc_optimizer.js\",\n        \"size\": 4599,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/memory/gc-pattern-detection.js\",\n        \"size\": 12839,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/memory/memory-profiling.js\",\n        \"size\": 11032,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/memory/pool_manager.js\",\n        \"size\": 4243,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/memory/register-pressure.js\",\n        \"size\": 14096,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/memory/stack-analyzer.js\",\n        \"size\": 15205,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/quality/determinism-verifier.js\",\n        \"size\": 2668,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/quality/quality_gates.js\",\n        \"size\": 11091,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/quality/slo-gates.js\",\n        \"size\": 1560,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/security/bounds-checking-emitter.js\",\n        \"size\": 3829,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/security/buffer-overflow-detection.js\",\n        \"size\": 9859,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/security/security_hardeners.js\",\n        \"size\": 7019,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/security/security_validators.js\",\n        \"size\": 4671,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/security/type-confusion-prevention.js\",\n        \"size\": 8640,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/speed/cache_manager.js\",\n        \"size\": 8501,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/speed/constant-folding.js\",\n        \"size\": 11692,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/speed/dead-code-elimination.js\",\n        \"size\": 15519,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/speed/function_cache.js\",\n        \"size\": 24999,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/speed/pattern_cache.js\",\n        \"size\": 8038,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/speed/speed-optimizer.js\",\n        \"size\": 11078,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/javascript/speed/tail-call-optimization.js\",\n        \"size\": 12878,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/lua/phase_c/peephole-optimizer.js\",\n        \"size\": 13737,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/lua/phase_f/lua_optimizer.js\",\n        \"size\": 5821,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/php/phase_b/multilingual-optimizer.js\",\n        \"size\": 5704,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/php/phase_c/speed-optimizer.js\",\n        \"size\": 4552,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/php/phase_e/hardening.js\",\n        \"size\": 3729,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/php/php_performance_optimizer.js\",\n        \"size\": 20216,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/php/php_security_validator.js\",\n        \"size\": 17058,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/phase_c/speed-optimizer.js\",\n        \"size\": 16468,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/phase_d/python_gc_detector.js\",\n        \"size\": 15524,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/phase_d/python_memory_profiler.js\",\n        \"size\": 9839,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/phase_d/python_pool_manager.js\",\n        \"size\": 10483,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/phase_d/python_stack_analyzer.js\",\n        \"size\": 13005,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/phase_e/python_buffer_overflow_detector.js\",\n        \"size\": 17826,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/phase_e/python_ffi_generator.js\",\n        \"size\": 15896,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/phase_e/python_phase_e_security_integration.js\",\n        \"size\": 6153,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/phase2c/python_extended_features.js\",\n        \"size\": 10200,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/phase2d/python_performance_optimizer.js\",\n        \"size\": 14092,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/quality/python_phase_e_quality_runner.js\",\n        \"size\": 2979,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/python/quality/python_security_validator.js\",\n        \"size\": 14709,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/ruby/phase_b/multilingual-optimizer.js\",\n        \"size\": 5507,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/ruby/phase_c/speed-optimizer.js\",\n        \"size\": 4591,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/ruby/phase_e/hardening.js\",\n        \"size\": 3758,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/ruby/ruby_performance_optimizer.js\",\n        \"size\": 13992,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/optimizers/ruby/ruby_security_validator.js\",\n        \"size\": 13355,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parser.js\",\n        \"size\": 43419,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parser/enhanced_parser.py\",\n        \"size\": 130886,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/base_parser.js\",\n        \"size\": 8352,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/bash_parser.js\",\n        \"size\": 9776,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/csharp_parser_extended.js\",\n        \"size\": 15712,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/csharp_parser.js\",\n        \"size\": 2865,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/css_parser.js\",\n        \"size\": 9678,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/dart_parser.js\",\n        \"size\": 25018,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/elm_parser_extended.js\",\n        \"size\": 9336,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/elm_parser.js\",\n        \"size\": 2894,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/fortran_parser.js\",\n        \"size\": 9842,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/gleam_parser_extended.js\",\n        \"size\": 9013,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/gleam_parser.js\",\n        \"size\": 1739,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/groovy_parser.js\",\n        \"size\": 9803,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/html_parser.js\",\n        \"size\": 9720,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/java_parser_extended.js\",\n        \"size\": 14147,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/java_parser.js\",\n        \"size\": 1794,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/json_parser.js\",\n        \"size\": 12732,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/pascal_parser.js\",\n        \"size\": 9819,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/perl_parser.js\",\n        \"size\": 9788,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/php_parser.js\",\n        \"size\": 20975,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/python_parser.js\",\n        \"size\": 26660,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/ruby_parser.js\",\n        \"size\": 23460,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/typescript_parser.js\",\n        \"size\": 25960,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/parsers/v_parser.js\",\n        \"size\": 9774,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/performance_monitor.py\",\n        \"size\": 9173,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/performance_tools.js\",\n        \"size\": 25724,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/forensic_debug_tools_showcase.js\",\n        \"size\": 12397,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/forensic_debug_tools_test.js\",\n        \"size\": 16323,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/forensic_debug_tools.js\",\n        \"size\": 10818,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/framework/abstract_generator.js\",\n        \"size\": 10144,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/framework/abstract_parser.js\",\n        \"size\": 14018,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/framework/abstract_tokenizer.js\",\n        \"size\": 14091,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/hang_detector.js\",\n        \"size\": 10477,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/fsharp_generator.js\",\n        \"size\": 13407,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/fsharp_parser.js\",\n        \"size\": 18779,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/fsharp_tokenizer.js\",\n        \"size\": 9272,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/go_generator.js\",\n        \"size\": 12561,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/go_parser.js\",\n        \"size\": 15884,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/go_tokenizer.js\",\n        \"size\": 14829,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/haskell_generator.js\",\n        \"size\": 10614,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/haskell_parser.js\",\n        \"size\": 16675,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/haskell_tokenizer.js\",\n        \"size\": 8936,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/kotlin_generator.js\",\n        \"size\": 13327,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/kotlin_parser.js\",\n        \"size\": 19577,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/kotlin_tokenizer.js\",\n        \"size\": 17332,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/lisp_generator.js\",\n        \"size\": 17189,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/lisp_parser.js\",\n        \"size\": 14904,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/lisp_tokenizer.js\",\n        \"size\": 9797,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/ocaml_generator.js\",\n        \"size\": 15466,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/ocaml_parser.js\",\n        \"size\": 21048,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/ocaml_tokenizer.js\",\n        \"size\": 11759,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/python_complete_validation.js\",\n        \"size\": 11789,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/python_generator.js\",\n        \"size\": 13538,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/python_parser.js\",\n        \"size\": 20269,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/python_tokenizer.js\",\n        \"size\": 13821,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/rust_generator.js\",\n        \"size\": 12853,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/rust_parser.js\",\n        \"size\": 15794,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/rust_tokenizer.js\",\n        \"size\": 18060,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/scala_generator.js\",\n        \"size\": 19275,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/scala_parser.js\",\n        \"size\": 17479,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/scala_tokenizer.js\",\n        \"size\": 15633,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/typescript_generator.js\",\n        \"size\": 11318,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/typescript_parser.js\",\n        \"size\": 13278,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/languages/typescript_tokenizer.js\",\n        \"size\": 13493,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/macro_expansion_debugger.js\",\n        \"size\": 17119,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/validators/concurrency_validator.js\",\n        \"size\": 10351,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/validators/dsl_validator.js\",\n        \"size\": 10205,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/validators/performance_validator.js\",\n        \"size\": 15780,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/validators/semantic_validator.js\",\n        \"size\": 10544,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/validators/type_validator.js\",\n        \"size\": 8521,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/validators/validator_framework.js\",\n        \"size\": 10310,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/validators/VALIDATOR_INTEGRATION_GUIDE.js\",\n        \"size\": 8221,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase_c/validators/validator_tests.js\",\n        \"size\": 16221,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase1_core_ast.js\",\n        \"size\": 24593,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase1_core_lexer.js\",\n        \"size\": 17779,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase1_core_parser.js\",\n        \"size\": 58687,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase2_core_interpreter.js\",\n        \"size\": 38616,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase2_core_modules.js\",\n        \"size\": 21648,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase3_advanced_features.lua\",\n        \"size\": 8798,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase3_compiler_optimizations.lua\",\n        \"size\": 7796,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase4_debugging_profiling.lua\",\n        \"size\": 14136,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase4_ecosystem_integration.lua\",\n        \"size\": 18640,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase5_enterprise_optimization.js\",\n        \"size\": 26334,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase6_production_deployment.js\",\n        \"size\": 35669,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase8_complete.js\",\n        \"size\": 11901,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/phase9_ecosystem.js\",\n        \"size\": 46041,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/python/buffer_overflow_detector.js\",\n        \"size\": 388,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/python/ffi_generator.js\",\n        \"size\": 293,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/python/gc_detector.js\",\n        \"size\": 415,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/python/memory_profiler.js\",\n        \"size\": 301,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/python/object_pool_manager.js\",\n        \"size\": 880,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/python/security_integration.js\",\n        \"size\": 464,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/python/stack_analyzer.js\",\n        \"size\": 702,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/runtime_system.js\",\n        \"size\": 26320,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/runtime.js\",\n        \"size\": 23338,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/runtime/generator-helpers.js\",\n        \"size\": 2306,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/runtime/generator-helpers.lua\",\n        \"size\": 1928,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/tier1_optimization_suite.js\",\n        \"size\": 10851,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/tokenizers/csharp_tokenizer_extended.js\",\n        \"size\": 7404,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/tokenizers/csharp_tokenizer.js\",\n        \"size\": 7764,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/tokenizers/elm_tokenizer_extended.js\",\n        \"size\": 7399,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/tokenizers/elm_tokenizer.js\",\n        \"size\": 7768,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/tokenizers/gleam_tokenizer_extended.js\",\n        \"size\": 6431,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/tokenizers/gleam_tokenizer.js\",\n        \"size\": 4576,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/tokenizers/java_tokenizer_extended.js\",\n        \"size\": 6554,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/tokenizers/java_tokenizer.js\",\n        \"size\": 6111,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/transpiler_multilang.js\",\n        \"size\": 15834,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/transpiler_universal.js\",\n        \"size\": 9112,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/transpiler.js\",\n        \"size\": 39917,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/transpiler/enhanced_transpiler.py\",\n        \"size\": 74595,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/unified_luascript.js\",\n        \"size\": 19533,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/utils/diagnostic-framework.js\",\n        \"size\": 20604,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/utils/error-handler.js\",\n        \"size\": 8037,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/utils/logger.js\",\n        \"size\": 1745,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/utils/metrics.js\",\n        \"size\": 1920,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/utils/performance-monitor.js\",\n        \"size\": 8982,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/validation/ast-validator.js\",\n        \"size\": 9263,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/validation/ir-validator.js\",\n        \"size\": 7540,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/wasm_backend.js\",\n        \"size\": 16397,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"src/work-queue-file.js\",\n        \"size\": 4604,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/backends/test_integration.js\",\n        \"size\": 6099,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/backends/test_llvm_comprehensive.js\",\n        \"size\": 4384,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/backends/test_llvm.js\",\n        \"size\": 6307,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/backends/test_mlir.js\",\n        \"size\": 4336,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/backends/test_wasm_ir.js\",\n        \"size\": 3708,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/benchmark_strength_reduction.js\",\n        \"size\": 14419,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/compatibility/extension-api.test.js\",\n        \"size\": 15717,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/ir/test_compilers.js\",\n        \"size\": 11873,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/ir/test_ir_basic.js\",\n        \"size\": 11511,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/ir/test_roundtrip.js\",\n        \"size\": 16814,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/javascript/regression-suite.js\",\n        \"size\": 7356,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/legacy/parser.suite.js\",\n        \"size\": 279,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/legacy/runtime.suite.js\",\n        \"size\": 282,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/legacy/transpiler.suite.js\",\n        \"size\": 291,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase_b_dart_validation.test.js\",\n        \"size\": 13132,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase_b_php_validation.test.js\",\n        \"size\": 12622,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase_b_ruby_validation.test.js\",\n        \"size\": 10915,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase_c_dart_validation.test.js\",\n        \"size\": 14635,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase_c_php_validation.test.js\",\n        \"size\": 23308,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase_c_python_validation.test.js\",\n        \"size\": 17780,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase_c_ruby_validation.test.js\",\n        \"size\": 18926,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase_de_dart_validation.test.js\",\n        \"size\": 19650,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase_de_php_validation.test.js\",\n        \"size\": 15814,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase_de_ruby_validation.test.js\",\n        \"size\": 9809,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.3/task3.1-buffer-overflow/gate-verification.js\",\n        \"size\": 17172,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.3/task3.2-type-confusion/gate-verification.js\",\n        \"size\": 15287,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.3/task3.3-bounds-emitter/gate-verification.js\",\n        \"size\": 18121,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.4/task4.1-lim/gate-verification.js\",\n        \"size\": 22339,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.4/task4.1-lim/lim-tests.js\",\n        \"size\": 13667,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.4/task4.2-cse/cse-tests.js\",\n        \"size\": 17611,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.4/task4.2-cse/gate-verification.js\",\n        \"size\": 22474,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.4/task4.3-sr/gate-verification.js\",\n        \"size\": 21002,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.4/task4.3-sr/strength-reduction-tests.js\",\n        \"size\": 17499,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.4/task4.4-complexity/gate-verification.js\",\n        \"size\": 19910,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.5/task5.1-ffi/gate-verification.js\",\n        \"size\": 17590,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.5/task5.2-boundary/gate-verification.js\",\n        \"size\": 21087,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.5/task5.3-marshaling/gate-verification.js\",\n        \"size\": 16762,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.5/task5.4-type-converter/gate-verification.js\",\n        \"size\": 17214,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.6/debug-determinism.js\",\n        \"size\": 1459,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.6/determinism-test.js\",\n        \"size\": 3363,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.6/final-summary.js\",\n        \"size\": 5239,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/phase3.6/slo-gates-test.js\",\n        \"size\": 2396,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/release.test.js\",\n        \"size\": 8510,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/sr-integration-helpers.js\",\n        \"size\": 7393,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_compiler_pipeline_integration.js\",\n        \"size\": 1843,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_core_transpiler_braces.js\",\n        \"size\": 849,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_edge_cases_comprehensive.js\",\n        \"size\": 23747,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_enhanced_transpiler.js\",\n        \"size\": 21004,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_ir_stability.js\",\n        \"size\": 2072,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_math_operators.js\",\n        \"size\": 1285,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_modules.js\",\n        \"size\": 10288,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_perfect_parser_phase1_negative.js\",\n        \"size\": 1328,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_perfect_parser_phase1.js\",\n        \"size\": 17697,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_phase1_6_comprehensive.js\",\n        \"size\": 23796,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_phase3_implementation.lua\",\n        \"size\": 3738,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_phase4_debugging.lua\",\n        \"size\": 3929,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_phase4_implementation.lua\",\n        \"size\": 5048,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_phase9_ecosystem.js\",\n        \"size\": 17312,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_strength_reduction_corpus.js\",\n        \"size\": 19682,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_strength_reduction_emission_corpus.js\",\n        \"size\": 20438,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_strength_reduction_emission_gates.js\",\n        \"size\": 17053,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_strength_reduction_gates.js\",\n        \"size\": 19614,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_strength_reduction_integration.js\",\n        \"size\": 31632,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_transpiler.js\",\n        \"size\": 11904,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_unified_system.js\",\n        \"size\": 13491,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/test_wasm_backend.js\",\n        \"size\": 9608,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/tier1_optimization_suite.test.js\",\n        \"size\": 12973,\n        \"mode\": 420\n      },\n      {\n        \"path\": \"test/utils/deterministic.js\",\n        \"size\": 706,\n        \"mode\": 420\n      }\n    ],\n    \"entryCount\": 398,\n    \"bundled\": []\n  }\n]\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "npm-pack-json-record",
+      "passed": true,
+      "detail": {
+        "id": "luascript@0.1.0-beta.0",
+        "name": "luascript",
+        "version": "0.1.0-beta.0",
+        "size": 1010433,
+        "unpackedSize": 5189594,
+        "shasum": "0a23a41020c46830ebe7e3094bfe0e6fbfdff91f",
+        "integrity": "sha512-/8VP012Rr3hDz/fzMZacLlYTnU3WvV1ULhkhxrSbhiDmCLMNDYGN8NIdBtNDwVmLvHVVY+A/+U/E2imx6ISdxA==",
+        "filename": "luascript-0.1.0-beta.0.tgz",
+        "files": [
+          {
+            "path": "LICENSE",
+            "size": 11357,
+            "mode": 420
+          },
+          {
+            "path": "README.md",
+            "size": 28886,
+            "mode": 420
+          },
+          {
+            "path": "examples/package/minimal-system.cjs",
+            "size": 776,
+            "mode": 420
+          },
+          {
+            "path": "examples/package/README.md",
+            "size": 665,
+            "mode": 420
+          },
+          {
+            "path": "examples/package/transpile-js-to-lua.cjs",
+            "size": 548,
+            "mode": 420
+          },
+          {
+            "path": "package.json",
+            "size": 28504,
+            "mode": 420
+          },
+          {
+            "path": "src/advanced_async.js",
+            "size": 15617,
+            "mode": 420
+          },
+          {
+            "path": "src/advanced_features.js",
+            "size": 18035,
+            "mode": 420
+          },
+          {
+            "path": "src/agentic_ide.js",
+            "size": 49441,
+            "mode": 420
+          },
+          {
+            "path": "src/agents/auditor-agent.ts",
+            "size": 2315,
+            "mode": 420
+          },
+          {
+            "path": "src/agents/resolver-agent.ts",
+            "size": 1903,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/dart/performance_optimizer.js",
+            "size": 11798,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/dart/tier2_optimizer.js",
+            "size": 19146,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/dart/transpiler.js",
+            "size": 20554,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/index.js",
+            "size": 1972,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/llvm/index.js",
+            "size": 255,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/llvm/ir-to-llvm.js",
+            "size": 25978,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/llvm/optimizer.js",
+            "size": 7866,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/mlir/dialect.js",
+            "size": 9769,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/mlir/index.js",
+            "size": 272,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/mlir/ir-to-mlir.js",
+            "size": 19550,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/mlir/optimizer.js",
+            "size": 5092,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/php/performance_optimizer.js",
+            "size": 15345,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/php/tier2_optimizer.js",
+            "size": 25581,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/php/transpiler.js",
+            "size": 22212,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/python/tier2_optimizer.js",
+            "size": 19245,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/ruby/performance_optimizer.js",
+            "size": 12860,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/ruby/tier2_optimizer.js",
+            "size": 24389,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/ruby/transpiler.js",
+            "size": 21018,
+            "mode": 420
+          },
+          {
+            "path": "src/backends/wasm/ir-to-wasm.js",
+            "size": 29206,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/c-like-to-ir.js",
+            "size": 34152,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/core-language-bridge.js",
+            "size": 6258,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/csharp-to-ir.js",
+            "size": 24921,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/dart-to-ir.js",
+            "size": 3291,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/elm-to-ir.js",
+            "size": 18257,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/gleam-to-ir.js",
+            "size": 8961,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/go-to-ir.js",
+            "size": 7130,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/index-internal.js",
+            "size": 1803,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/index.js",
+            "size": 2025,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/ir-to-c.js",
+            "size": 16647,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/ir-to-cpp.js",
+            "size": 14659,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/ir-to-csharp.js",
+            "size": 12120,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/ir-to-js.js",
+            "size": 14785,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/ir-to-ls.js",
+            "size": 15118,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/ir-to-lua.js",
+            "size": 33314,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/ir-to-python.js",
+            "size": 23770,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/java-to-ir.js",
+            "size": 4596,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/js-to-ir.js",
+            "size": 13054,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/kotlin-to-ir.js",
+            "size": 8335,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/lua-to-ir.js",
+            "size": 17697,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/luascript-to-ir.js",
+            "size": 26732,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/php-to-ir.js",
+            "size": 6327,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/python-to-ir.js",
+            "size": 31101,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/ruby-to-ir.js",
+            "size": 10354,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/rust-to-ir.js",
+            "size": 10189,
+            "mode": 420
+          },
+          {
+            "path": "src/compilers/typescript-to-ir.js",
+            "size": 4726,
+            "mode": 420
+          },
+          {
+            "path": "src/core_transpiler.js",
+            "size": 26732,
+            "mode": 420
+          },
+          {
+            "path": "src/core/symbol-table.ts",
+            "size": 4193,
+            "mode": 420
+          },
+          {
+            "path": "src/enhanced_operators.js",
+            "size": 9827,
+            "mode": 420
+          },
+          {
+            "path": "src/enhanced_transpiler.js",
+            "size": 31304,
+            "mode": 420
+          },
+          {
+            "path": "src/error_handler.py",
+            "size": 3610,
+            "mode": 420
+          },
+          {
+            "path": "src/extensions/api.js",
+            "size": 14094,
+            "mode": 420
+          },
+          {
+            "path": "src/generators/csharp_codegen_extended.js",
+            "size": 10161,
+            "mode": 420
+          },
+          {
+            "path": "src/generators/csharp_codegen.js",
+            "size": 4213,
+            "mode": 420
+          },
+          {
+            "path": "src/generators/elm_codegen_extended.js",
+            "size": 6141,
+            "mode": 420
+          },
+          {
+            "path": "src/generators/elm_codegen.js",
+            "size": 3578,
+            "mode": 420
+          },
+          {
+            "path": "src/generators/gleam_codegen_extended.js",
+            "size": 6666,
+            "mode": 420
+          },
+          {
+            "path": "src/generators/gleam_codegen.js",
+            "size": 2140,
+            "mode": 420
+          },
+          {
+            "path": "src/generators/java_codegen_extended.js",
+            "size": 7950,
+            "mode": 420
+          },
+          {
+            "path": "src/generators/java_codegen.js",
+            "size": 8592,
+            "mode": 420
+          },
+          {
+            "path": "src/ide/resolution-diagnostics.js",
+            "size": 1797,
+            "mode": 420
+          },
+          {
+            "path": "src/ide/resolution-diagnostics.ts",
+            "size": 2069,
+            "mode": 420
+          },
+          {
+            "path": "src/index.js",
+            "size": 14361,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/base_emitter.js",
+            "size": 8624,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/builder.js",
+            "size": 21368,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/calling_conventions.js",
+            "size": 14097,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/canonical_ir_schema.js",
+            "size": 2163,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/class_lowerer.js",
+            "size": 2583,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/dart_ir_lowerer_phase_b.js",
+            "size": 10568,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_bash.js",
+            "size": 3584,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_css.js",
+            "size": 3580,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_dart.js",
+            "size": 3907,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_fortran.js",
+            "size": 3596,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_groovy.js",
+            "size": 3594,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_html.js",
+            "size": 3584,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_pascal.js",
+            "size": 3592,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_perl.js",
+            "size": 3584,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_php.js",
+            "size": 4775,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_python_phase_b.js",
+            "size": 11163,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_python.js",
+            "size": 18552,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_ruby.js",
+            "size": 16998,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_typescript.js",
+            "size": 5115,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter_v.js",
+            "size": 3574,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter-enhanced.js",
+            "size": 33947,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/emitter.js",
+            "size": 40252,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/error_reporter.js",
+            "size": 5621,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/idGenerator.js",
+            "size": 2452,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/index.js",
+            "size": 730,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/loop_lowerer.js",
+            "size": 3224,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/lowerer_dart.js",
+            "size": 13668,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/lowerer_php.js",
+            "size": 12415,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/lowerer_python.js",
+            "size": 13248,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/lowerer_ruby.js",
+            "size": 10975,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/lowerer_universal.js",
+            "size": 14645,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/lowerer-enhanced.js",
+            "size": 21028,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/lowerer.js",
+            "size": 47937,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/memory_model.js",
+            "size": 12669,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/nodes.js",
+            "size": 42140,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/normalizer.js",
+            "size": 13545,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/php_ir_lowerer_phase_b.js",
+            "size": 12522,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/pipeline_python_phase_a.js",
+            "size": 11612,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/pipeline_python_phase_b.js",
+            "size": 2152,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/pipeline_python_phase_c.js",
+            "size": 12486,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/pipeline_python_phase_d.js",
+            "size": 10330,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/pipeline_python_phase_e.js",
+            "size": 11312,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/pipeline-integration.js",
+            "size": 5877,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/pipeline.js",
+            "size": 2376,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/python_ir_lowerer_phase_b.js",
+            "size": 21274,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/release_ir_surface_contract.js",
+            "size": 5630,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/ruby_ir_lowerer_phase_b.js",
+            "size": 10656,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/schema_artifact_bridge.js",
+            "size": 27097,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/semantic_preservation_verifier.js",
+            "size": 10929,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/serializer.js",
+            "size": 53,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/statement_dispatch.js",
+            "size": 2788,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/transforms/serializer.js",
+            "size": 5972,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/try_lowerer.js",
+            "size": 921,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/type_constraint_solver.js",
+            "size": 9023,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/type_system_bridge.js",
+            "size": 12546,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/types.js",
+            "size": 10996,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/validator.js",
+            "size": 20784,
+            "mode": 420
+          },
+          {
+            "path": "src/ir/validators/validator.js",
+            "size": 18958,
+            "mode": 420
+          },
+          {
+            "path": "src/language_traits.js",
+            "size": 15000,
+            "mode": 420
+          },
+          {
+            "path": "src/language/language_traits.js",
+            "size": 16582,
+            "mode": 420
+          },
+          {
+            "path": "src/language/parser.ts",
+            "size": 9553,
+            "mode": 420
+          },
+          {
+            "path": "src/language/tokenizer.ts",
+            "size": 5749,
+            "mode": 420
+          },
+          {
+            "path": "src/lexer/enhanced_lexer.py",
+            "size": 30832,
+            "mode": 420
+          },
+          {
+            "path": "src/luascript_compiler.py",
+            "size": 14237,
+            "mode": 420
+          },
+          {
+            "path": "src/meta_team_activation.lua",
+            "size": 7440,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizations/memory_optimization.js",
+            "size": 9706,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizations/security_algorithm_optimization.js",
+            "size": 10909,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizations/speed_optimization.js",
+            "size": 9536,
+            "mode": 420
+          },
+          {
+            "path": "src/optimized_transpiler.js",
+            "size": 29091,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/dart/dart_performance_optimizer.js",
+            "size": 12546,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/dart/dart_security_validator.js",
+            "size": 13646,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/dart/phase_b/multilingual-optimizer.js",
+            "size": 4901,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/dart/phase_c/speed-optimizer.js",
+            "size": 4816,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/dart/phase_e/hardening.js",
+            "size": 3731,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/algorithm/common-subexpression-elimination.js",
+            "size": 18553,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/algorithm/complexity-analyzer.js",
+            "size": 12319,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/algorithm/dataflow-analyzer.js",
+            "size": 13995,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/algorithm/loop-invariant-motion.js",
+            "size": 11494,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/algorithm/side-effect-detector.js",
+            "size": 10657,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/algorithm/strength-reduction-emitter.js",
+            "size": 15412,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/algorithm/strength-reduction.js",
+            "size": 14375,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/algorithm/value-numbering.js",
+            "size": 5242,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/algorithms/algorithm_optimizer.js",
+            "size": 3753,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/algorithms/loop-optimizer.js",
+            "size": 17748,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/interop/boundary-optimizer.js",
+            "size": 12704,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/interop/ffi-analyzer.js",
+            "size": 16368,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/interop/interop_cache.js",
+            "size": 10416,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/interop/marshaling-optimizer.js",
+            "size": 15331,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/interop/type-converter.js",
+            "size": 17137,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/ir-utils.js",
+            "size": 1187,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/javascript-optimizer.js",
+            "size": 20514,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/memory/gc_optimizer.js",
+            "size": 4599,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/memory/gc-pattern-detection.js",
+            "size": 12839,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/memory/memory-profiling.js",
+            "size": 11032,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/memory/pool_manager.js",
+            "size": 4243,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/memory/register-pressure.js",
+            "size": 14096,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/memory/stack-analyzer.js",
+            "size": 15205,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/quality/determinism-verifier.js",
+            "size": 2668,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/quality/quality_gates.js",
+            "size": 11091,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/quality/slo-gates.js",
+            "size": 1560,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/security/bounds-checking-emitter.js",
+            "size": 3829,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/security/buffer-overflow-detection.js",
+            "size": 9859,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/security/security_hardeners.js",
+            "size": 7019,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/security/security_validators.js",
+            "size": 4671,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/security/type-confusion-prevention.js",
+            "size": 8640,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/speed/cache_manager.js",
+            "size": 8501,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/speed/constant-folding.js",
+            "size": 11692,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/speed/dead-code-elimination.js",
+            "size": 15519,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/speed/function_cache.js",
+            "size": 24999,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/speed/pattern_cache.js",
+            "size": 8038,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/speed/speed-optimizer.js",
+            "size": 11078,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/javascript/speed/tail-call-optimization.js",
+            "size": 12878,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/lua/phase_c/peephole-optimizer.js",
+            "size": 13737,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/lua/phase_f/lua_optimizer.js",
+            "size": 5821,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/php/phase_b/multilingual-optimizer.js",
+            "size": 5704,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/php/phase_c/speed-optimizer.js",
+            "size": 4552,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/php/phase_e/hardening.js",
+            "size": 3729,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/php/php_performance_optimizer.js",
+            "size": 20216,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/php/php_security_validator.js",
+            "size": 17058,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/phase_c/speed-optimizer.js",
+            "size": 16468,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/phase_d/python_gc_detector.js",
+            "size": 15524,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/phase_d/python_memory_profiler.js",
+            "size": 9839,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/phase_d/python_pool_manager.js",
+            "size": 10483,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/phase_d/python_stack_analyzer.js",
+            "size": 13005,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/phase_e/python_buffer_overflow_detector.js",
+            "size": 17826,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/phase_e/python_ffi_generator.js",
+            "size": 15896,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/phase_e/python_phase_e_security_integration.js",
+            "size": 6153,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/phase2c/python_extended_features.js",
+            "size": 10200,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/phase2d/python_performance_optimizer.js",
+            "size": 14092,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/quality/python_phase_e_quality_runner.js",
+            "size": 2979,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/python/quality/python_security_validator.js",
+            "size": 14709,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/ruby/phase_b/multilingual-optimizer.js",
+            "size": 5507,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/ruby/phase_c/speed-optimizer.js",
+            "size": 4591,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/ruby/phase_e/hardening.js",
+            "size": 3758,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/ruby/ruby_performance_optimizer.js",
+            "size": 13992,
+            "mode": 420
+          },
+          {
+            "path": "src/optimizers/ruby/ruby_security_validator.js",
+            "size": 13355,
+            "mode": 420
+          },
+          {
+            "path": "src/parser.js",
+            "size": 43419,
+            "mode": 420
+          },
+          {
+            "path": "src/parser/enhanced_parser.py",
+            "size": 130886,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/base_parser.js",
+            "size": 8352,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/bash_parser.js",
+            "size": 9776,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/csharp_parser_extended.js",
+            "size": 15712,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/csharp_parser.js",
+            "size": 2865,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/css_parser.js",
+            "size": 9678,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/dart_parser.js",
+            "size": 25018,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/elm_parser_extended.js",
+            "size": 9336,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/elm_parser.js",
+            "size": 2894,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/fortran_parser.js",
+            "size": 9842,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/gleam_parser_extended.js",
+            "size": 9013,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/gleam_parser.js",
+            "size": 1739,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/groovy_parser.js",
+            "size": 9803,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/html_parser.js",
+            "size": 9720,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/java_parser_extended.js",
+            "size": 14147,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/java_parser.js",
+            "size": 1794,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/json_parser.js",
+            "size": 12732,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/pascal_parser.js",
+            "size": 9819,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/perl_parser.js",
+            "size": 9788,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/php_parser.js",
+            "size": 20975,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/python_parser.js",
+            "size": 26660,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/ruby_parser.js",
+            "size": 23460,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/typescript_parser.js",
+            "size": 25960,
+            "mode": 420
+          },
+          {
+            "path": "src/parsers/v_parser.js",
+            "size": 9774,
+            "mode": 420
+          },
+          {
+            "path": "src/performance_monitor.py",
+            "size": 9173,
+            "mode": 420
+          },
+          {
+            "path": "src/performance_tools.js",
+            "size": 25724,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/forensic_debug_tools_showcase.js",
+            "size": 12397,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/forensic_debug_tools_test.js",
+            "size": 16323,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/forensic_debug_tools.js",
+            "size": 10818,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/framework/abstract_generator.js",
+            "size": 10144,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/framework/abstract_parser.js",
+            "size": 14018,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/framework/abstract_tokenizer.js",
+            "size": 14091,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/hang_detector.js",
+            "size": 10477,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/fsharp_generator.js",
+            "size": 13407,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/fsharp_parser.js",
+            "size": 18779,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/fsharp_tokenizer.js",
+            "size": 9272,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/go_generator.js",
+            "size": 12561,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/go_parser.js",
+            "size": 15884,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/go_tokenizer.js",
+            "size": 14829,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/haskell_generator.js",
+            "size": 10614,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/haskell_parser.js",
+            "size": 16675,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/haskell_tokenizer.js",
+            "size": 8936,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/kotlin_generator.js",
+            "size": 13327,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/kotlin_parser.js",
+            "size": 19577,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/kotlin_tokenizer.js",
+            "size": 17332,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/lisp_generator.js",
+            "size": 17189,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/lisp_parser.js",
+            "size": 14904,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/lisp_tokenizer.js",
+            "size": 9797,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/ocaml_generator.js",
+            "size": 15466,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/ocaml_parser.js",
+            "size": 21048,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/ocaml_tokenizer.js",
+            "size": 11759,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/python_complete_validation.js",
+            "size": 11789,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/python_generator.js",
+            "size": 13538,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/python_parser.js",
+            "size": 20269,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/python_tokenizer.js",
+            "size": 13821,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/rust_generator.js",
+            "size": 12853,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/rust_parser.js",
+            "size": 15794,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/rust_tokenizer.js",
+            "size": 18060,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/scala_generator.js",
+            "size": 19275,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/scala_parser.js",
+            "size": 17479,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/scala_tokenizer.js",
+            "size": 15633,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/typescript_generator.js",
+            "size": 11318,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/typescript_parser.js",
+            "size": 13278,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/languages/typescript_tokenizer.js",
+            "size": 13493,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/macro_expansion_debugger.js",
+            "size": 17119,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/validators/concurrency_validator.js",
+            "size": 10351,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/validators/dsl_validator.js",
+            "size": 10205,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/validators/performance_validator.js",
+            "size": 15780,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/validators/semantic_validator.js",
+            "size": 10544,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/validators/type_validator.js",
+            "size": 8521,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/validators/validator_framework.js",
+            "size": 10310,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/validators/VALIDATOR_INTEGRATION_GUIDE.js",
+            "size": 8221,
+            "mode": 420
+          },
+          {
+            "path": "src/phase_c/validators/validator_tests.js",
+            "size": 16221,
+            "mode": 420
+          },
+          {
+            "path": "src/phase1_core_ast.js",
+            "size": 24593,
+            "mode": 420
+          },
+          {
+            "path": "src/phase1_core_lexer.js",
+            "size": 17779,
+            "mode": 420
+          },
+          {
+            "path": "src/phase1_core_parser.js",
+            "size": 58687,
+            "mode": 420
+          },
+          {
+            "path": "src/phase2_core_interpreter.js",
+            "size": 38616,
+            "mode": 420
+          },
+          {
+            "path": "src/phase2_core_modules.js",
+            "size": 21648,
+            "mode": 420
+          },
+          {
+            "path": "src/phase3_advanced_features.lua",
+            "size": 8798,
+            "mode": 420
+          },
+          {
+            "path": "src/phase3_compiler_optimizations.lua",
+            "size": 7796,
+            "mode": 420
+          },
+          {
+            "path": "src/phase4_debugging_profiling.lua",
+            "size": 14136,
+            "mode": 420
+          },
+          {
+            "path": "src/phase4_ecosystem_integration.lua",
+            "size": 18640,
+            "mode": 420
+          },
+          {
+            "path": "src/phase5_enterprise_optimization.js",
+            "size": 26334,
+            "mode": 420
+          },
+          {
+            "path": "src/phase6_production_deployment.js",
+            "size": 35669,
+            "mode": 420
+          },
+          {
+            "path": "src/phase8_complete.js",
+            "size": 11901,
+            "mode": 420
+          },
+          {
+            "path": "src/phase9_ecosystem.js",
+            "size": 46041,
+            "mode": 420
+          },
+          {
+            "path": "src/python/buffer_overflow_detector.js",
+            "size": 388,
+            "mode": 420
+          },
+          {
+            "path": "src/python/ffi_generator.js",
+            "size": 293,
+            "mode": 420
+          },
+          {
+            "path": "src/python/gc_detector.js",
+            "size": 415,
+            "mode": 420
+          },
+          {
+            "path": "src/python/memory_profiler.js",
+            "size": 301,
+            "mode": 420
+          },
+          {
+            "path": "src/python/object_pool_manager.js",
+            "size": 880,
+            "mode": 420
+          },
+          {
+            "path": "src/python/security_integration.js",
+            "size": 464,
+            "mode": 420
+          },
+          {
+            "path": "src/python/stack_analyzer.js",
+            "size": 702,
+            "mode": 420
+          },
+          {
+            "path": "src/runtime_system.js",
+            "size": 26320,
+            "mode": 420
+          },
+          {
+            "path": "src/runtime.js",
+            "size": 23338,
+            "mode": 420
+          },
+          {
+            "path": "src/runtime/generator-helpers.js",
+            "size": 2306,
+            "mode": 420
+          },
+          {
+            "path": "src/runtime/generator-helpers.lua",
+            "size": 1928,
+            "mode": 420
+          },
+          {
+            "path": "src/tier1_optimization_suite.js",
+            "size": 10851,
+            "mode": 420
+          },
+          {
+            "path": "src/tokenizers/csharp_tokenizer_extended.js",
+            "size": 7404,
+            "mode": 420
+          },
+          {
+            "path": "src/tokenizers/csharp_tokenizer.js",
+            "size": 7764,
+            "mode": 420
+          },
+          {
+            "path": "src/tokenizers/elm_tokenizer_extended.js",
+            "size": 7399,
+            "mode": 420
+          },
+          {
+            "path": "src/tokenizers/elm_tokenizer.js",
+            "size": 7768,
+            "mode": 420
+          },
+          {
+            "path": "src/tokenizers/gleam_tokenizer_extended.js",
+            "size": 6431,
+            "mode": 420
+          },
+          {
+            "path": "src/tokenizers/gleam_tokenizer.js",
+            "size": 4576,
+            "mode": 420
+          },
+          {
+            "path": "src/tokenizers/java_tokenizer_extended.js",
+            "size": 6554,
+            "mode": 420
+          },
+          {
+            "path": "src/tokenizers/java_tokenizer.js",
+            "size": 6111,
+            "mode": 420
+          },
+          {
+            "path": "src/transpiler_multilang.js",
+            "size": 15834,
+            "mode": 420
+          },
+          {
+            "path": "src/transpiler_universal.js",
+            "size": 9112,
+            "mode": 420
+          },
+          {
+            "path": "src/transpiler.js",
+            "size": 39917,
+            "mode": 420
+          },
+          {
+            "path": "src/transpiler/enhanced_transpiler.py",
+            "size": 74595,
+            "mode": 420
+          },
+          {
+            "path": "src/unified_luascript.js",
+            "size": 19533,
+            "mode": 420
+          },
+          {
+            "path": "src/utils/diagnostic-framework.js",
+            "size": 20604,
+            "mode": 420
+          },
+          {
+            "path": "src/utils/error-handler.js",
+            "size": 8037,
+            "mode": 420
+          },
+          {
+            "path": "src/utils/logger.js",
+            "size": 1745,
+            "mode": 420
+          },
+          {
+            "path": "src/utils/metrics.js",
+            "size": 1920,
+            "mode": 420
+          },
+          {
+            "path": "src/utils/performance-monitor.js",
+            "size": 8982,
+            "mode": 420
+          },
+          {
+            "path": "src/validation/ast-validator.js",
+            "size": 9263,
+            "mode": 420
+          },
+          {
+            "path": "src/validation/ir-validator.js",
+            "size": 7540,
+            "mode": 420
+          },
+          {
+            "path": "src/wasm_backend.js",
+            "size": 16397,
+            "mode": 420
+          },
+          {
+            "path": "src/work-queue-file.js",
+            "size": 4604,
+            "mode": 420
+          },
+          {
+            "path": "test/backends/test_integration.js",
+            "size": 6099,
+            "mode": 420
+          },
+          {
+            "path": "test/backends/test_llvm_comprehensive.js",
+            "size": 4384,
+            "mode": 420
+          },
+          {
+            "path": "test/backends/test_llvm.js",
+            "size": 6307,
+            "mode": 420
+          },
+          {
+            "path": "test/backends/test_mlir.js",
+            "size": 4336,
+            "mode": 420
+          },
+          {
+            "path": "test/backends/test_wasm_ir.js",
+            "size": 3708,
+            "mode": 420
+          },
+          {
+            "path": "test/benchmark_strength_reduction.js",
+            "size": 14419,
+            "mode": 420
+          },
+          {
+            "path": "test/compatibility/extension-api.test.js",
+            "size": 15717,
+            "mode": 420
+          },
+          {
+            "path": "test/ir/test_compilers.js",
+            "size": 11873,
+            "mode": 420
+          },
+          {
+            "path": "test/ir/test_ir_basic.js",
+            "size": 11511,
+            "mode": 420
+          },
+          {
+            "path": "test/ir/test_roundtrip.js",
+            "size": 16814,
+            "mode": 420
+          },
+          {
+            "path": "test/javascript/regression-suite.js",
+            "size": 7356,
+            "mode": 420
+          },
+          {
+            "path": "test/legacy/parser.suite.js",
+            "size": 279,
+            "mode": 420
+          },
+          {
+            "path": "test/legacy/runtime.suite.js",
+            "size": 282,
+            "mode": 420
+          },
+          {
+            "path": "test/legacy/transpiler.suite.js",
+            "size": 291,
+            "mode": 420
+          },
+          {
+            "path": "test/phase_b_dart_validation.test.js",
+            "size": 13132,
+            "mode": 420
+          },
+          {
+            "path": "test/phase_b_php_validation.test.js",
+            "size": 12622,
+            "mode": 420
+          },
+          {
+            "path": "test/phase_b_ruby_validation.test.js",
+            "size": 10915,
+            "mode": 420
+          },
+          {
+            "path": "test/phase_c_dart_validation.test.js",
+            "size": 14635,
+            "mode": 420
+          },
+          {
+            "path": "test/phase_c_php_validation.test.js",
+            "size": 23308,
+            "mode": 420
+          },
+          {
+            "path": "test/phase_c_python_validation.test.js",
+            "size": 17780,
+            "mode": 420
+          },
+          {
+            "path": "test/phase_c_ruby_validation.test.js",
+            "size": 18926,
+            "mode": 420
+          },
+          {
+            "path": "test/phase_de_dart_validation.test.js",
+            "size": 19650,
+            "mode": 420
+          },
+          {
+            "path": "test/phase_de_php_validation.test.js",
+            "size": 15814,
+            "mode": 420
+          },
+          {
+            "path": "test/phase_de_ruby_validation.test.js",
+            "size": 9809,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.3/task3.1-buffer-overflow/gate-verification.js",
+            "size": 17172,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.3/task3.2-type-confusion/gate-verification.js",
+            "size": 15287,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.3/task3.3-bounds-emitter/gate-verification.js",
+            "size": 18121,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.4/task4.1-lim/gate-verification.js",
+            "size": 22339,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.4/task4.1-lim/lim-tests.js",
+            "size": 13667,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.4/task4.2-cse/cse-tests.js",
+            "size": 17611,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.4/task4.2-cse/gate-verification.js",
+            "size": 22474,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.4/task4.3-sr/gate-verification.js",
+            "size": 21002,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.4/task4.3-sr/strength-reduction-tests.js",
+            "size": 17499,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.4/task4.4-complexity/gate-verification.js",
+            "size": 19910,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.5/task5.1-ffi/gate-verification.js",
+            "size": 17590,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.5/task5.2-boundary/gate-verification.js",
+            "size": 21087,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.5/task5.3-marshaling/gate-verification.js",
+            "size": 16762,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.5/task5.4-type-converter/gate-verification.js",
+            "size": 17214,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.6/debug-determinism.js",
+            "size": 1459,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.6/determinism-test.js",
+            "size": 3363,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.6/final-summary.js",
+            "size": 5239,
+            "mode": 420
+          },
+          {
+            "path": "test/phase3.6/slo-gates-test.js",
+            "size": 2396,
+            "mode": 420
+          },
+          {
+            "path": "test/release.test.js",
+            "size": 8510,
+            "mode": 420
+          },
+          {
+            "path": "test/sr-integration-helpers.js",
+            "size": 7393,
+            "mode": 420
+          },
+          {
+            "path": "test/test_compiler_pipeline_integration.js",
+            "size": 1843,
+            "mode": 420
+          },
+          {
+            "path": "test/test_core_transpiler_braces.js",
+            "size": 849,
+            "mode": 420
+          },
+          {
+            "path": "test/test_edge_cases_comprehensive.js",
+            "size": 23747,
+            "mode": 420
+          },
+          {
+            "path": "test/test_enhanced_transpiler.js",
+            "size": 21004,
+            "mode": 420
+          },
+          {
+            "path": "test/test_ir_stability.js",
+            "size": 2072,
+            "mode": 420
+          },
+          {
+            "path": "test/test_math_operators.js",
+            "size": 1285,
+            "mode": 420
+          },
+          {
+            "path": "test/test_modules.js",
+            "size": 10288,
+            "mode": 420
+          },
+          {
+            "path": "test/test_perfect_parser_phase1_negative.js",
+            "size": 1328,
+            "mode": 420
+          },
+          {
+            "path": "test/test_perfect_parser_phase1.js",
+            "size": 17697,
+            "mode": 420
+          },
+          {
+            "path": "test/test_phase1_6_comprehensive.js",
+            "size": 23796,
+            "mode": 420
+          },
+          {
+            "path": "test/test_phase3_implementation.lua",
+            "size": 3738,
+            "mode": 420
+          },
+          {
+            "path": "test/test_phase4_debugging.lua",
+            "size": 3929,
+            "mode": 420
+          },
+          {
+            "path": "test/test_phase4_implementation.lua",
+            "size": 5048,
+            "mode": 420
+          },
+          {
+            "path": "test/test_phase9_ecosystem.js",
+            "size": 17312,
+            "mode": 420
+          },
+          {
+            "path": "test/test_strength_reduction_corpus.js",
+            "size": 19682,
+            "mode": 420
+          },
+          {
+            "path": "test/test_strength_reduction_emission_corpus.js",
+            "size": 20438,
+            "mode": 420
+          },
+          {
+            "path": "test/test_strength_reduction_emission_gates.js",
+            "size": 17053,
+            "mode": 420
+          },
+          {
+            "path": "test/test_strength_reduction_gates.js",
+            "size": 19614,
+            "mode": 420
+          },
+          {
+            "path": "test/test_strength_reduction_integration.js",
+            "size": 31632,
+            "mode": 420
+          },
+          {
+            "path": "test/test_transpiler.js",
+            "size": 11904,
+            "mode": 420
+          },
+          {
+            "path": "test/test_unified_system.js",
+            "size": 13491,
+            "mode": 420
+          },
+          {
+            "path": "test/test_wasm_backend.js",
+            "size": 9608,
+            "mode": 420
+          },
+          {
+            "path": "test/tier1_optimization_suite.test.js",
+            "size": 12973,
+            "mode": 420
+          },
+          {
+            "path": "test/utils/deterministic.js",
+            "size": 706,
+            "mode": 420
+          }
+        ],
+        "entryCount": 398,
+        "bundled": []
+      }
+    },
+    {
+      "name": "tarball-path-confined-to-temp-pack-directory",
+      "passed": true,
+      "detail": {
+        "filename": "luascript-0.1.0-beta.0.tgz",
+        "confined": true,
+        "exists": true
+      }
+    },
+    {
+      "name": "tarball-required-package-files",
+      "passed": true,
+      "detail": {
+        "required": [
+          "package.json",
+          "README.md",
+          "LICENSE",
+          "src/unified_luascript.js",
+          "examples/package/README.md",
+          "examples/package/minimal-system.cjs",
+          "examples/package/transpile-js-to-lua.cjs"
+        ],
+        "missing": [],
+        "hasSourceFiles": true
+      }
+    },
+    {
+      "name": "tarball-hygiene-exclusions",
+      "passed": true,
+      "detail": {
+        "forbiddenMatches": [],
+        "unexpectedTopLevelFiles": []
+      }
+    },
+    {
+      "name": "tarball-public-example-surface-exact",
+      "passed": true,
+      "detail": {
+        "expected": [
+          "examples/package/README.md",
+          "examples/package/minimal-system.cjs",
+          "examples/package/transpile-js-to-lua.cjs"
+        ],
+        "actual": [
+          "examples/package/README.md",
+          "examples/package/minimal-system.cjs",
+          "examples/package/transpile-js-to-lua.cjs"
+        ]
+      }
+    },
+    {
+      "name": "tarball-root-runtime-intentionally-absent",
+      "passed": true,
+      "detail": {
+        "rootRuntimeFiles": [],
+        "sourceRuntimePresent": true
+      }
+    },
+    {
+      "name": "tarball-lockfiles-not-published",
+      "passed": true,
+      "detail": {
+        "packageLockFiles": []
+      }
+    },
+    {
+      "name": "tarball-size-and-file-count-consistent",
+      "passed": true,
+      "detail": {
+        "name": "luascript",
+        "version": "0.1.0-beta.0",
+        "filename": "luascript-0.1.0-beta.0.tgz",
+        "sha256": "92947fab9eabdaf79efed47b114b787cc6d7a5195e0320d28d407f558b2c7461",
+        "sizeBytes": 1010433,
+        "npmReportedSizeBytes": 1010433,
+        "npmReportedUnpackedSizeBytes": 5189594,
+        "fileCount": 398,
+        "npmReportedEntryCount": 398,
+        "fileListSha256": "cc16e4bce689b57ae8f6c5334ae43935fd2493f09dd98befa5395929f7028977",
+        "files": [
+          "LICENSE",
+          "README.md",
+          "examples/package/README.md",
+          "examples/package/minimal-system.cjs",
+          "examples/package/transpile-js-to-lua.cjs",
+          "package.json",
+          "src/advanced_async.js",
+          "src/advanced_features.js",
+          "src/agentic_ide.js",
+          "src/agents/auditor-agent.ts",
+          "src/agents/resolver-agent.ts",
+          "src/backends/dart/performance_optimizer.js",
+          "src/backends/dart/tier2_optimizer.js",
+          "src/backends/dart/transpiler.js",
+          "src/backends/index.js",
+          "src/backends/llvm/index.js",
+          "src/backends/llvm/ir-to-llvm.js",
+          "src/backends/llvm/optimizer.js",
+          "src/backends/mlir/dialect.js",
+          "src/backends/mlir/index.js",
+          "src/backends/mlir/ir-to-mlir.js",
+          "src/backends/mlir/optimizer.js",
+          "src/backends/php/performance_optimizer.js",
+          "src/backends/php/tier2_optimizer.js",
+          "src/backends/php/transpiler.js",
+          "src/backends/python/tier2_optimizer.js",
+          "src/backends/ruby/performance_optimizer.js",
+          "src/backends/ruby/tier2_optimizer.js",
+          "src/backends/ruby/transpiler.js",
+          "src/backends/wasm/ir-to-wasm.js",
+          "src/compilers/c-like-to-ir.js",
+          "src/compilers/core-language-bridge.js",
+          "src/compilers/csharp-to-ir.js",
+          "src/compilers/dart-to-ir.js",
+          "src/compilers/elm-to-ir.js",
+          "src/compilers/gleam-to-ir.js",
+          "src/compilers/go-to-ir.js",
+          "src/compilers/index-internal.js",
+          "src/compilers/index.js",
+          "src/compilers/ir-to-c.js",
+          "src/compilers/ir-to-cpp.js",
+          "src/compilers/ir-to-csharp.js",
+          "src/compilers/ir-to-js.js",
+          "src/compilers/ir-to-ls.js",
+          "src/compilers/ir-to-lua.js",
+          "src/compilers/ir-to-python.js",
+          "src/compilers/java-to-ir.js",
+          "src/compilers/js-to-ir.js",
+          "src/compilers/kotlin-to-ir.js",
+          "src/compilers/lua-to-ir.js",
+          "src/compilers/luascript-to-ir.js",
+          "src/compilers/php-to-ir.js",
+          "src/compilers/python-to-ir.js",
+          "src/compilers/ruby-to-ir.js",
+          "src/compilers/rust-to-ir.js",
+          "src/compilers/typescript-to-ir.js",
+          "src/core/symbol-table.ts",
+          "src/core_transpiler.js",
+          "src/enhanced_operators.js",
+          "src/enhanced_transpiler.js",
+          "src/error_handler.py",
+          "src/extensions/api.js",
+          "src/generators/csharp_codegen.js",
+          "src/generators/csharp_codegen_extended.js",
+          "src/generators/elm_codegen.js",
+          "src/generators/elm_codegen_extended.js",
+          "src/generators/gleam_codegen.js",
+          "src/generators/gleam_codegen_extended.js",
+          "src/generators/java_codegen.js",
+          "src/generators/java_codegen_extended.js",
+          "src/ide/resolution-diagnostics.js",
+          "src/ide/resolution-diagnostics.ts",
+          "src/index.js",
+          "src/ir/base_emitter.js",
+          "src/ir/builder.js",
+          "src/ir/calling_conventions.js",
+          "src/ir/canonical_ir_schema.js",
+          "src/ir/class_lowerer.js",
+          "src/ir/dart_ir_lowerer_phase_b.js",
+          "src/ir/emitter-enhanced.js",
+          "src/ir/emitter.js",
+          "src/ir/emitter_bash.js",
+          "src/ir/emitter_css.js",
+          "src/ir/emitter_dart.js",
+          "src/ir/emitter_fortran.js",
+          "src/ir/emitter_groovy.js",
+          "src/ir/emitter_html.js",
+          "src/ir/emitter_pascal.js",
+          "src/ir/emitter_perl.js",
+          "src/ir/emitter_php.js",
+          "src/ir/emitter_python.js",
+          "src/ir/emitter_python_phase_b.js",
+          "src/ir/emitter_ruby.js",
+          "src/ir/emitter_typescript.js",
+          "src/ir/emitter_v.js",
+          "src/ir/error_reporter.js",
+          "src/ir/idGenerator.js",
+          "src/ir/index.js",
+          "src/ir/loop_lowerer.js",
+          "src/ir/lowerer-enhanced.js",
+          "src/ir/lowerer.js",
+          "src/ir/lowerer_dart.js",
+          "src/ir/lowerer_php.js",
+          "src/ir/lowerer_python.js",
+          "src/ir/lowerer_ruby.js",
+          "src/ir/lowerer_universal.js",
+          "src/ir/memory_model.js",
+          "src/ir/nodes.js",
+          "src/ir/normalizer.js",
+          "src/ir/php_ir_lowerer_phase_b.js",
+          "src/ir/pipeline-integration.js",
+          "src/ir/pipeline.js",
+          "src/ir/pipeline_python_phase_a.js",
+          "src/ir/pipeline_python_phase_b.js",
+          "src/ir/pipeline_python_phase_c.js",
+          "src/ir/pipeline_python_phase_d.js",
+          "src/ir/pipeline_python_phase_e.js",
+          "src/ir/python_ir_lowerer_phase_b.js",
+          "src/ir/release_ir_surface_contract.js",
+          "src/ir/ruby_ir_lowerer_phase_b.js",
+          "src/ir/schema_artifact_bridge.js",
+          "src/ir/semantic_preservation_verifier.js",
+          "src/ir/serializer.js",
+          "src/ir/statement_dispatch.js",
+          "src/ir/transforms/serializer.js",
+          "src/ir/try_lowerer.js",
+          "src/ir/type_constraint_solver.js",
+          "src/ir/type_system_bridge.js",
+          "src/ir/types.js",
+          "src/ir/validator.js",
+          "src/ir/validators/validator.js",
+          "src/language/language_traits.js",
+          "src/language/parser.ts",
+          "src/language/tokenizer.ts",
+          "src/language_traits.js",
+          "src/lexer/enhanced_lexer.py",
+          "src/luascript_compiler.py",
+          "src/meta_team_activation.lua",
+          "src/optimizations/memory_optimization.js",
+          "src/optimizations/security_algorithm_optimization.js",
+          "src/optimizations/speed_optimization.js",
+          "src/optimized_transpiler.js",
+          "src/optimizers/dart/dart_performance_optimizer.js",
+          "src/optimizers/dart/dart_security_validator.js",
+          "src/optimizers/dart/phase_b/multilingual-optimizer.js",
+          "src/optimizers/dart/phase_c/speed-optimizer.js",
+          "src/optimizers/dart/phase_e/hardening.js",
+          "src/optimizers/javascript/algorithm/common-subexpression-elimination.js",
+          "src/optimizers/javascript/algorithm/complexity-analyzer.js",
+          "src/optimizers/javascript/algorithm/dataflow-analyzer.js",
+          "src/optimizers/javascript/algorithm/loop-invariant-motion.js",
+          "src/optimizers/javascript/algorithm/side-effect-detector.js",
+          "src/optimizers/javascript/algorithm/strength-reduction-emitter.js",
+          "src/optimizers/javascript/algorithm/strength-reduction.js",
+          "src/optimizers/javascript/algorithm/value-numbering.js",
+          "src/optimizers/javascript/algorithms/algorithm_optimizer.js",
+          "src/optimizers/javascript/algorithms/loop-optimizer.js",
+          "src/optimizers/javascript/interop/boundary-optimizer.js",
+          "src/optimizers/javascript/interop/ffi-analyzer.js",
+          "src/optimizers/javascript/interop/interop_cache.js",
+          "src/optimizers/javascript/interop/marshaling-optimizer.js",
+          "src/optimizers/javascript/interop/type-converter.js",
+          "src/optimizers/javascript/ir-utils.js",
+          "src/optimizers/javascript/javascript-optimizer.js",
+          "src/optimizers/javascript/memory/gc-pattern-detection.js",
+          "src/optimizers/javascript/memory/gc_optimizer.js",
+          "src/optimizers/javascript/memory/memory-profiling.js",
+          "src/optimizers/javascript/memory/pool_manager.js",
+          "src/optimizers/javascript/memory/register-pressure.js",
+          "src/optimizers/javascript/memory/stack-analyzer.js",
+          "src/optimizers/javascript/quality/determinism-verifier.js",
+          "src/optimizers/javascript/quality/quality_gates.js",
+          "src/optimizers/javascript/quality/slo-gates.js",
+          "src/optimizers/javascript/security/bounds-checking-emitter.js",
+          "src/optimizers/javascript/security/buffer-overflow-detection.js",
+          "src/optimizers/javascript/security/security_hardeners.js",
+          "src/optimizers/javascript/security/security_validators.js",
+          "src/optimizers/javascript/security/type-confusion-prevention.js",
+          "src/optimizers/javascript/speed/cache_manager.js",
+          "src/optimizers/javascript/speed/constant-folding.js",
+          "src/optimizers/javascript/speed/dead-code-elimination.js",
+          "src/optimizers/javascript/speed/function_cache.js",
+          "src/optimizers/javascript/speed/pattern_cache.js",
+          "src/optimizers/javascript/speed/speed-optimizer.js",
+          "src/optimizers/javascript/speed/tail-call-optimization.js",
+          "src/optimizers/lua/phase_c/peephole-optimizer.js",
+          "src/optimizers/lua/phase_f/lua_optimizer.js",
+          "src/optimizers/php/phase_b/multilingual-optimizer.js",
+          "src/optimizers/php/phase_c/speed-optimizer.js",
+          "src/optimizers/php/phase_e/hardening.js",
+          "src/optimizers/php/php_performance_optimizer.js",
+          "src/optimizers/php/php_security_validator.js",
+          "src/optimizers/python/phase2c/python_extended_features.js",
+          "src/optimizers/python/phase2d/python_performance_optimizer.js",
+          "src/optimizers/python/phase_c/speed-optimizer.js",
+          "src/optimizers/python/phase_d/python_gc_detector.js",
+          "src/optimizers/python/phase_d/python_memory_profiler.js",
+          "src/optimizers/python/phase_d/python_pool_manager.js",
+          "src/optimizers/python/phase_d/python_stack_analyzer.js",
+          "src/optimizers/python/phase_e/python_buffer_overflow_detector.js",
+          "src/optimizers/python/phase_e/python_ffi_generator.js",
+          "src/optimizers/python/phase_e/python_phase_e_security_integration.js",
+          "src/optimizers/python/quality/python_phase_e_quality_runner.js",
+          "src/optimizers/python/quality/python_security_validator.js",
+          "src/optimizers/ruby/phase_b/multilingual-optimizer.js",
+          "src/optimizers/ruby/phase_c/speed-optimizer.js",
+          "src/optimizers/ruby/phase_e/hardening.js",
+          "src/optimizers/ruby/ruby_performance_optimizer.js",
+          "src/optimizers/ruby/ruby_security_validator.js",
+          "src/parser.js",
+          "src/parser/enhanced_parser.py",
+          "src/parsers/base_parser.js",
+          "src/parsers/bash_parser.js",
+          "src/parsers/csharp_parser.js",
+          "src/parsers/csharp_parser_extended.js",
+          "src/parsers/css_parser.js",
+          "src/parsers/dart_parser.js",
+          "src/parsers/elm_parser.js",
+          "src/parsers/elm_parser_extended.js",
+          "src/parsers/fortran_parser.js",
+          "src/parsers/gleam_parser.js",
+          "src/parsers/gleam_parser_extended.js",
+          "src/parsers/groovy_parser.js",
+          "src/parsers/html_parser.js",
+          "src/parsers/java_parser.js",
+          "src/parsers/java_parser_extended.js",
+          "src/parsers/json_parser.js",
+          "src/parsers/pascal_parser.js",
+          "src/parsers/perl_parser.js",
+          "src/parsers/php_parser.js",
+          "src/parsers/python_parser.js",
+          "src/parsers/ruby_parser.js",
+          "src/parsers/typescript_parser.js",
+          "src/parsers/v_parser.js",
+          "src/performance_monitor.py",
+          "src/performance_tools.js",
+          "src/phase1_core_ast.js",
+          "src/phase1_core_lexer.js",
+          "src/phase1_core_parser.js",
+          "src/phase2_core_interpreter.js",
+          "src/phase2_core_modules.js",
+          "src/phase3_advanced_features.lua",
+          "src/phase3_compiler_optimizations.lua",
+          "src/phase4_debugging_profiling.lua",
+          "src/phase4_ecosystem_integration.lua",
+          "src/phase5_enterprise_optimization.js",
+          "src/phase6_production_deployment.js",
+          "src/phase8_complete.js",
+          "src/phase9_ecosystem.js",
+          "src/phase_c/forensic_debug_tools.js",
+          "src/phase_c/forensic_debug_tools_showcase.js",
+          "src/phase_c/forensic_debug_tools_test.js",
+          "src/phase_c/framework/abstract_generator.js",
+          "src/phase_c/framework/abstract_parser.js",
+          "src/phase_c/framework/abstract_tokenizer.js",
+          "src/phase_c/hang_detector.js",
+          "src/phase_c/languages/fsharp_generator.js",
+          "src/phase_c/languages/fsharp_parser.js",
+          "src/phase_c/languages/fsharp_tokenizer.js",
+          "src/phase_c/languages/go_generator.js",
+          "src/phase_c/languages/go_parser.js",
+          "src/phase_c/languages/go_tokenizer.js",
+          "src/phase_c/languages/haskell_generator.js",
+          "src/phase_c/languages/haskell_parser.js",
+          "src/phase_c/languages/haskell_tokenizer.js",
+          "src/phase_c/languages/kotlin_generator.js",
+          "src/phase_c/languages/kotlin_parser.js",
+          "src/phase_c/languages/kotlin_tokenizer.js",
+          "src/phase_c/languages/lisp_generator.js",
+          "src/phase_c/languages/lisp_parser.js",
+          "src/phase_c/languages/lisp_tokenizer.js",
+          "src/phase_c/languages/ocaml_generator.js",
+          "src/phase_c/languages/ocaml_parser.js",
+          "src/phase_c/languages/ocaml_tokenizer.js",
+          "src/phase_c/languages/python_complete_validation.js",
+          "src/phase_c/languages/python_generator.js",
+          "src/phase_c/languages/python_parser.js",
+          "src/phase_c/languages/python_tokenizer.js",
+          "src/phase_c/languages/rust_generator.js",
+          "src/phase_c/languages/rust_parser.js",
+          "src/phase_c/languages/rust_tokenizer.js",
+          "src/phase_c/languages/scala_generator.js",
+          "src/phase_c/languages/scala_parser.js",
+          "src/phase_c/languages/scala_tokenizer.js",
+          "src/phase_c/languages/typescript_generator.js",
+          "src/phase_c/languages/typescript_parser.js",
+          "src/phase_c/languages/typescript_tokenizer.js",
+          "src/phase_c/macro_expansion_debugger.js",
+          "src/phase_c/validators/VALIDATOR_INTEGRATION_GUIDE.js",
+          "src/phase_c/validators/concurrency_validator.js",
+          "src/phase_c/validators/dsl_validator.js",
+          "src/phase_c/validators/performance_validator.js",
+          "src/phase_c/validators/semantic_validator.js",
+          "src/phase_c/validators/type_validator.js",
+          "src/phase_c/validators/validator_framework.js",
+          "src/phase_c/validators/validator_tests.js",
+          "src/python/buffer_overflow_detector.js",
+          "src/python/ffi_generator.js",
+          "src/python/gc_detector.js",
+          "src/python/memory_profiler.js",
+          "src/python/object_pool_manager.js",
+          "src/python/security_integration.js",
+          "src/python/stack_analyzer.js",
+          "src/runtime.js",
+          "src/runtime/generator-helpers.js",
+          "src/runtime/generator-helpers.lua",
+          "src/runtime_system.js",
+          "src/tier1_optimization_suite.js",
+          "src/tokenizers/csharp_tokenizer.js",
+          "src/tokenizers/csharp_tokenizer_extended.js",
+          "src/tokenizers/elm_tokenizer.js",
+          "src/tokenizers/elm_tokenizer_extended.js",
+          "src/tokenizers/gleam_tokenizer.js",
+          "src/tokenizers/gleam_tokenizer_extended.js",
+          "src/tokenizers/java_tokenizer.js",
+          "src/tokenizers/java_tokenizer_extended.js",
+          "src/transpiler.js",
+          "src/transpiler/enhanced_transpiler.py",
+          "src/transpiler_multilang.js",
+          "src/transpiler_universal.js",
+          "src/unified_luascript.js",
+          "src/utils/diagnostic-framework.js",
+          "src/utils/error-handler.js",
+          "src/utils/logger.js",
+          "src/utils/metrics.js",
+          "src/utils/performance-monitor.js",
+          "src/validation/ast-validator.js",
+          "src/validation/ir-validator.js",
+          "src/wasm_backend.js",
+          "src/work-queue-file.js",
+          "test/backends/test_integration.js",
+          "test/backends/test_llvm.js",
+          "test/backends/test_llvm_comprehensive.js",
+          "test/backends/test_mlir.js",
+          "test/backends/test_wasm_ir.js",
+          "test/benchmark_strength_reduction.js",
+          "test/compatibility/extension-api.test.js",
+          "test/ir/test_compilers.js",
+          "test/ir/test_ir_basic.js",
+          "test/ir/test_roundtrip.js",
+          "test/javascript/regression-suite.js",
+          "test/legacy/parser.suite.js",
+          "test/legacy/runtime.suite.js",
+          "test/legacy/transpiler.suite.js",
+          "test/phase3.3/task3.1-buffer-overflow/gate-verification.js",
+          "test/phase3.3/task3.2-type-confusion/gate-verification.js",
+          "test/phase3.3/task3.3-bounds-emitter/gate-verification.js",
+          "test/phase3.4/task4.1-lim/gate-verification.js",
+          "test/phase3.4/task4.1-lim/lim-tests.js",
+          "test/phase3.4/task4.2-cse/cse-tests.js",
+          "test/phase3.4/task4.2-cse/gate-verification.js",
+          "test/phase3.4/task4.3-sr/gate-verification.js",
+          "test/phase3.4/task4.3-sr/strength-reduction-tests.js",
+          "test/phase3.4/task4.4-complexity/gate-verification.js",
+          "test/phase3.5/task5.1-ffi/gate-verification.js",
+          "test/phase3.5/task5.2-boundary/gate-verification.js",
+          "test/phase3.5/task5.3-marshaling/gate-verification.js",
+          "test/phase3.5/task5.4-type-converter/gate-verification.js",
+          "test/phase3.6/debug-determinism.js",
+          "test/phase3.6/determinism-test.js",
+          "test/phase3.6/final-summary.js",
+          "test/phase3.6/slo-gates-test.js",
+          "test/phase_b_dart_validation.test.js",
+          "test/phase_b_php_validation.test.js",
+          "test/phase_b_ruby_validation.test.js",
+          "test/phase_c_dart_validation.test.js",
+          "test/phase_c_php_validation.test.js",
+          "test/phase_c_python_validation.test.js",
+          "test/phase_c_ruby_validation.test.js",
+          "test/phase_de_dart_validation.test.js",
+          "test/phase_de_php_validation.test.js",
+          "test/phase_de_ruby_validation.test.js",
+          "test/release.test.js",
+          "test/sr-integration-helpers.js",
+          "test/test_compiler_pipeline_integration.js",
+          "test/test_core_transpiler_braces.js",
+          "test/test_edge_cases_comprehensive.js",
+          "test/test_enhanced_transpiler.js",
+          "test/test_ir_stability.js",
+          "test/test_math_operators.js",
+          "test/test_modules.js",
+          "test/test_perfect_parser_phase1.js",
+          "test/test_perfect_parser_phase1_negative.js",
+          "test/test_phase1_6_comprehensive.js",
+          "test/test_phase3_implementation.lua",
+          "test/test_phase4_debugging.lua",
+          "test/test_phase4_implementation.lua",
+          "test/test_phase9_ecosystem.js",
+          "test/test_strength_reduction_corpus.js",
+          "test/test_strength_reduction_emission_corpus.js",
+          "test/test_strength_reduction_emission_gates.js",
+          "test/test_strength_reduction_gates.js",
+          "test/test_strength_reduction_integration.js",
+          "test/test_transpiler.js",
+          "test/test_unified_system.js",
+          "test/test_wasm_backend.js",
+          "test/tier1_optimization_suite.test.js",
+          "test/utils/deterministic.js"
+        ]
+      }
+    },
+    {
+      "name": "clean-consumer-npm-install-ignore-scripts",
+      "passed": true,
+      "detail": {
+        "command": [
+          "C:\\Users\\ssdaj\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\node.exe",
+          "C:\\Users\\ssdaj\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\node_modules\\npm\\bin\\npm-cli.js",
+          "install",
+          "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-9Tn89u\\pack\\luascript-0.1.0-beta.0.tgz",
+          "--ignore-scripts",
+          "--omit=dev",
+          "--no-audit",
+          "--no-fund",
+          "--package-lock=false"
+        ],
+        "status": 0,
+        "signal": null,
+        "error": null,
+        "stdout": "\nadded 5 packages in 4s\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "installed-consumer-root-import-and-smoke",
+      "passed": true,
+      "detail": {
+        "package": {
+          "name": "luascript",
+          "version": "0.1.0-beta.0",
+          "main": "src/unified_luascript.js"
+        },
+        "rootExports": [
+          "AdvancedFeatures",
+          "AgenticIDE",
+          "CoreTranspiler",
+          "PerformanceTools",
+          "RuntimeSystem",
+          "UnifiedLuaScript"
+        ],
+        "irRootNamesPresent": [],
+        "smoke": {
+          "source": "const answer = 6 * 7;",
+          "lua": "local answer = (6 * 7)",
+          "passed": true
+        },
+        "typescript": {
+          "version": "5.9.3",
+          "engines": {
+            "node": ">=14.17"
+          }
+        },
+        "rootRuntimePresent": false,
+        "publicRootReferencesRootRuntime": false
+      }
+    },
+    {
+      "name": "installed-consumer-typescript-runtime-dependency",
+      "passed": true,
+      "detail": {
+        "version": "5.9.3",
+        "engines": {
+          "node": ">=14.17"
+        }
+      }
+    },
+    {
+      "name": "installed-consumer-root-runtime-boundary",
+      "passed": true,
+      "detail": {
+        "rootRuntimePresent": false,
+        "publicRootReferencesRootRuntime": false
+      }
+    },
+    {
+      "name": "installed-package-public-examples-execute",
+      "passed": true,
+      "detail": {
+        "examples": [
+          {
+            "path": "examples/package/minimal-system.cjs",
+            "exists": true,
+            "sha256": "79d5db79bb9c889c833b0772087092147d604c53476592a3b06d3d2315738d59",
+            "status": 0,
+            "signal": null,
+            "error": null,
+            "stdout": "LUASCRIPT_PACKAGE_EXAMPLE=minimal-system version=0.1.0-beta.0 components=0\n",
+            "stderr": ""
+          },
+          {
+            "path": "examples/package/transpile-js-to-lua.cjs",
+            "exists": true,
+            "sha256": "9ab39817c5c6f367e8b9a25d4994ecfaa5c9cbb018991c9ef528a4ea9cc10855",
+            "status": 0,
+            "signal": null,
+            "error": null,
+            "stdout": "LUASCRIPT_PACKAGE_EXAMPLE=transpile-js-to-lua\nlocal answer = (6 * 7)\n",
+            "stderr": ""
+          }
+        ]
+      }
+    },
+    {
+      "name": "node-14-17-1-installed-consumer-floor-smoke",
+      "passed": true,
+      "detail": {
+        "declaredFloor": ">=14.17.0",
+        "requestedExecutableProbe": "node@14.17.1",
+        "rationale": "node@14.17.0 is unavailable; 14.17.1 is the first available compatible patch for the declared >=14.17.0 floor",
+        "command": [
+          "C:\\Users\\ssdaj\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\node.exe",
+          "C:\\Users\\ssdaj\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\node_modules\\npm\\bin\\npm-cli.js",
+          "exec",
+          "--yes",
+          "--package=node@14.17.1",
+          "--",
+          "node",
+          "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-9Tn89u\\consumer\\node-floor-consumer-smoke.cjs"
+        ],
+        "status": 0,
+        "signal": null,
+        "error": null,
+        "stdout": "LUASCRIPT_NODE_FLOOR_RESULT={\"nodeVersion\":\"v14.17.1\",\"rootExports\":[\"AdvancedFeatures\",\"AgenticIDE\",\"CoreTranspiler\",\"PerformanceTools\",\"RuntimeSystem\",\"UnifiedLuaScript\"],\"lua\":\"local answer = (6 * 7)\"}\n",
+        "stderr": "",
+        "scriptSha256": "8d4bb56bbc664af001de66f2dbb162a9ce879377c78c681395b1d6bd08c2f4fd",
+        "observed": {
+          "nodeVersion": "v14.17.1",
+          "rootExports": [
+            "AdvancedFeatures",
+            "AgenticIDE",
+            "CoreTranspiler",
+            "PerformanceTools",
+            "RuntimeSystem",
+            "UnifiedLuaScript"
+          ],
+          "lua": "local answer = (6 * 7)"
+        }
+      }
+    },
+    {
+      "name": "exact-temporary-root-cleaned",
+      "passed": true,
+      "detail": {
+        "prefix": "luascript-public-package-contract-",
+        "removed": true
+      }
+    }
+  ],
+  "summary": {
+    "total": 32,
+    "passed": 32,
+    "failed": 0
+  },
+  "failures": []
+}

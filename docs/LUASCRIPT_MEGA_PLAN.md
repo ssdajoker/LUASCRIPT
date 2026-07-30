@@ -1,6 +1,6 @@
 # LUASCRIPT Mega Plan
 
-Last updated: 2026-07-14
+Last updated: 2026-07-29
 
 This is the canonical implementation plan and reality snapshot for LUASCRIPT. Older phase plans, completion reports, championship reports, work queues, duplicate status documents, and superseded reference material are historical evidence only after they are moved under `docs/OLD LUASCRIPT DOCS/`.
 
@@ -21,28 +21,34 @@ Verified baseline:
 - `npm run language:javascript:bidirectional`, `npm run language:typescript:bidirectional`, `npm run language:luascript:bidirectional`, `npm run language:lua:bidirectional`, `npm run language:python:bidirectional`, `npm run language:csharp:bidirectional`, `npm run language:c:bidirectional`, `npm run language:cpp:bidirectional`, `npm run language:java:bidirectional`, `npm run language:rust:bidirectional`, `npm run language:ruby:bidirectional`, `npm run language:php:bidirectional`, `npm run language:dart:bidirectional`, `npm run language:go:bidirectional`, `npm run language:kotlin:bidirectional`, `npm run language:elm:bidirectional`, and `npm run language:gleam:bidirectional` pass the current verified native slice completion gates. JavaScript and `.ls` are verified through V1 Ring 2 medium-program fixtures; TypeScript is verified for a V0.25 typed-JS small-program slice; C#, C, C++, Java, Rust, Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam are verified only for their named small-program slices.
 - `npm run language:implemented:bidirectional` regenerates the implemented-language report set for JavaScript, TypeScript, `.ls`, Lua, Python, C#, C, C++, Java, Rust, Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam, plus their target-runtime IR lanes where split manifests exist. `npm run beta:readiness` enforces the pre-production beta v0.1 threshold by requiring every implemented lane to have a fresh passing report above 90%. `npm run beta:readiness:strict` additionally checks that the current strict-native blocker set remains closed. This readiness audit is now part of the strict Clarity canon.
 - `npm run test:luascript-meta` passes the `.ls` V0.16 meta-language slice for top-level Lua/JavaScript/Python target policy, Lua `continue` resolution, capability-constrained `goto` lowering, semantic adapters, canonical repair blocks, packed multiple returns, Python target JS-truthiness plus indexing/length/slicing/string-coercion/packed-multiple-return execution, embedded Lua/JavaScript/Python/`.ls` emission assertions, target-specific runtime stdout assertions, target-specific runtime-failure assertions, Lua/JavaScript/Python policy presence/absence assertions, configured diagnostics, cross-target `.ls` policy re-emission, and compile-time stripping from emitted Lua.
-- `npm run test:parser-ownership` passes and protects the active `.ls` parser contract: `enhanced_parser.py` owns parse artifacts and helper-level syntax parsing, while `enhanced_transpiler.py` consumes those parser APIs instead of carrying a parallel mini-parser.
+- `npm run test:actual-programs` writes a first-class repository-legacy evidence report for 55/55 fixtures: 37 positive runtime cases, 6 expected compile diagnostics, and 12 expected runtime diagnostics. This suite is not an installed-package compatibility promise.
+- `npm run test:parser-ownership` protects the active `.ls` parser contract—`enhanced_parser.py` owns parse artifacts and helper-level syntax parsing while `enhanced_transpiler.py` consumes those APIs—and writes a first-class 35/35 evidence report: 21 static assertions, 13 runtime assertions, and 1 completion assertion.
 - `npm run test:lua-input` passes the Lua input V2 qualification gate through canonical IR to Lua, JavaScript, and supported `.ls` outputs.
 - `npm run claims:check` passes and verifies active mathematical notation and `.ls` claims against current docs, package metadata, manifests, fixtures, runtime hooks, transpiler mappings, and conservative unsupported-feature boundaries.
+- `npm run test:package-contract` packs and clean-installs the actual package, protects the exact six-name root API, executes both installed examples, and probes the declared Node floor at Node `14.17.1`.
+- `npm run test:compatibility-matrix` release-binds the current-host package, release-IR, language-report, native-tool, documentation, and manifest evidence. It is a current-host matrix, not universal platform certification.
+- `npm run denali:rc:preflight` is the authoritative fail-closed local release-candidate sweep. It regenerates required evidence in dependency order and runs `evidence:release` with `--require-ready` last; it performs no release action.
 - `examples/mathematical_notation_core.ls` and `examples/mathematical_notation_rehab_v1.ls` through `examples/mathematical_notation_rehab_v18.ls` compile and run as the recovered mathematical-notation V0 through V18 slices.
 - Small JavaScript examples can lower through the unified/core path and emit Lua.
 - The root `npm run build` command is a readiness smoke, not a real production build.
 
-Known blockers:
+Known boundaries and blockers:
 
 - Lint/refactor quality output is enforced by the current verify/lint gate configuration; support claims should describe the active passing policy, not stale historical warning totals.
 - Examples integration requires UTF-8 console output on Windows.
 - Mathematical notation core/rehab V18 is practical for a narrow executable slice. V14 adds a symbolic physics formula/equation seed; V15 adds dimension-aware symbolic variables, symbolic dimension assertions, and small linear equation-system solving. V16 covers symbolic derivatives, symbolic substitution, dimension-aware RC/RL transfer functions, symbolic impedances, and symbolic voltage-divider helpers. V17 covers frequency-response evaluation, RC/RL cutoff and time constants, RLC resonance/Q/bandwidth helpers, and symbolic series-RLC impedance. V18 covers swept frequency-response arrays, Bode column extraction, peak/trough/nearest lookup, monotonic checks, and dB crossing estimation. The full Unicode mathematical DSL remains experimental; `examples/experimental/mathematical_showcase.ls` now executes end to end as an experimental dogfood fixture, but it is not a broad full-DSL production claim.
 - `src/transpiler_universal.js` is now a bridge-based advisory facade. It is useful only as an honest view over active core routing, not as proof of broad all-pairs language support.
 - Some IR/codegen paths still need requalification; class-like IR emission now fails explicitly instead of emitting placeholder Lua.
+- Cross-platform operating-system coverage, broad language semantics, lossless all-language source recovery, and independent certification remain outside the scoped Denali release candidate.
+- Version bump, tag, publish, GitHub release, commit, push, and pull request remain blocked on explicit operator authorization even after a passing local release-candidate preflight.
 
 First canonical `1.0` package/runtime expectations:
 
 - The active public API/runtime contract draft is `docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md`; it owns package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, and release-action boundaries for real `1.0`.
 - Current package identity is `luascript` at `0.1.0-beta.0` on the pre-production beta track; this is not a `1.0` package version.
-- `src/unified_luascript.js` is the current package entrypoint, and the present package file list is `src/`, `test/`, `README.md`, and `LICENSE`. Treat that as the beta surface until a deliberate publish-surface review changes it.
+- `src/unified_luascript.js` is the current package entrypoint. The tested package file list is `src/`, `test/`, the deliberately narrow `examples/package/`, `README.md`, and `LICENSE`; the wider examples tree remains repository-local evidence.
 - Setup starts with `npm install`; `npm ci` is the lockfile-exact automation path.
-- The package currently declares `node >=14.0.0`. Canonical `1.0` must either keep that floor with passing evidence or raise it with an explicit compatibility note.
+- The package declares consumer Node `>=14.17.0`, aligned with exact runtime TypeScript `5.9.3`; `npm run test:package-contract` exercises an installed package on Node `14.17.1` and the current verification runtime. `npm run test:compatibility-matrix` owns the wider current-host compatibility seal; other operating systems remain explicitly unclaimed.
 - `npm run build` is a readiness smoke, not a production bundle.
 - Native-runtime support requires the corresponding runtime command on PATH and a passing `language:<name>:bidirectional` gate. Target-runtime IR lanes prove emitted behavior for named slices, but they do not count as native runtime qualification.
 - Tagging, publishing, GitHub releases, or version bumps are release actions and stay out of this route unless explicitly requested.
@@ -69,7 +75,7 @@ First canonical `1.0` package/runtime expectations:
 - Pre-production beta v0.1 candidate lanes are considered ready only for their named slices when `npm run beta:readiness` passes. This is a 90%+ implemented-lane evidence threshold, not a full-language or production-readiness claim. `npm run beta:preflight` is the focused beta gate; `npm run beta:full` is the full local acceptance sweep before tagging or publishing a beta.
 - Core declarations, expressions, simple functions, and basic runtime usage are the safest test area.
 - Actual-program fixtures currently cover arithmetic, functions, conditionals, `while`, `for...of`, array runtime methods, class smoke, the supported JS-like math showcase, mathematical notation core V0, and mathematical notation rehab V1 through V18.
-- First-pass example boundaries for canonical `1.0` should stay inside named evidence: small JavaScript V1 Ring 2 programs, small `.ls` V0.16 executable/meta programs, actual-program fixtures, `examples/supported_math_showcase.ls`, and mathematical notation core/rehab V1 through V18. Broad multi-language demos, unsupported profile names, and full Unicode DSL material stay out until a manifest, runtime gate, docs boundary, and claim check name the slice.
+- Installed-package examples are exactly `examples/package/transpile-js-to-lua.cjs` and `examples/package/minimal-system.cjs`, both exercised through the package root API by `npm run test:package-contract`. Repository evidence may additionally use small JavaScript V1 Ring 2 programs, small `.ls` V0.16 executable/meta programs, the 55-entry actual-program suite, `examples/supported_math_showcase.ls`, and mathematical notation core/rehab V1 through V18. Broad multi-language demos, unsupported profile names, and full Unicode DSL material stay out until a manifest, runtime gate, docs boundary, and claim check name the slice.
 - Bidirectional Ring 2 fixtures currently cover lexical closure state, nested object state, nested loops, loop `break`/`continue`, and short-circuit side-effect behavior across native and emitted targets.
 - `.ls` V0.16 meta fixtures currently cover no-meta compatibility, top-level `verify` blocks for stdout, diagnostics, Lua/JavaScript/Python/`.ls` emitted-output contains/not-contains assertions, Lua/JavaScript/Python/`.ls` target-specific runtime stdout assertions, Lua/JavaScript/`.ls` target-specific runtime-failure assertions, and Lua/JavaScript/Python policy presence/absence assertions, `meta { target lua/javascript/python { ... } }` policy extraction, `repair { target lua/javascript/python { ... } }` canonical lowering repairs, `requires lua.goto`, `requires js.console`, `requires python.print`, `forbid lua.goto`, `forbid js.prototype`, `forbid python.imports`, `resolve continue using label_goto`, JavaScript/Python `native_continue` policy metadata, Python target runtime behavior for JS truthiness, zero-based indexing, `.length`, `.slice`, mixed scalar string coercion, and packed multiple returns, semantic adapters for zero-based indexing, `.length`, `.slice`, JS truthiness, string coercion, and packed multiple returns, configured `async` diagnostics, unknown-policy diagnostics, cross-target `.ls` policy re-emission, and no compile-time syntax in emitted Lua.
 - Current `.ls` identity is deliberately narrow: a verified JS-like executable slice plus the top-level `meta`, `repair`, and `verify` contract layer. Current supported `.ls` profile set is `portable_semantics_v1` as the implicit executable baseline, `portable_semantics_v1` as an explicit semantic-adapter profile, and `portable_v1` as an explicit cross-target policy profile. Additional profiles should not be introduced until they remove real duplication that those profiles cannot remove cleanly.
@@ -257,7 +263,25 @@ Exit criteria:
 - New docs do not contradict `PROJECT_STATUS.md` or this file.
 - Historical claims stay in the archive unless reverified.
 
-## 7. Acceptance Criteria
+### Step 7: Seal The Scoped Denali Release Candidate
+
+The earlier nested steps remain useful provenance, but their scoped deliverables are now represented by live gates. The active closure route is:
+
+- Keep package identity at `0.1.0-beta.0` and preserve the no-`bin`, no-`exports`, six-name root API.
+- Regenerate all 26 schema-v2 language reports and require exact live manifest, fixture, implementation, runtime, environment, and governing-document provenance.
+- Run the packed-package contract, required Clarity lanes, actual-program and parser-ownership reports, release-IR conformance, edge/round-trip/source-identity/diagnostic suites, then the current-host compatibility matrix.
+- Run status, stubs, archive, claims, verify, core, performance, and CI gates.
+- Generate `artifacts/release_evidence/denali-release-evidence-bundle.json` last with `--require-ready`; any missing, stale, failing, or unbound required evidence blocks readiness.
+- Stop after a passing local RC seal. Versioning, tagging, publishing, a GitHub release, commit, push, and pull request require explicit operator authorization.
+
+Exit criteria:
+
+- `npm run denali:rc:preflight` passes all 26 ordered steps.
+- The deterministic release evidence bundle reports `releaseReady: true` with zero blockers.
+- `package.json` still reports `luascript@0.1.0-beta.0`.
+- Current docs distinguish the scoped Denali RC from universal semantics, cross-platform certification, true omni-language completion, and an authorized release.
+
+## 8. Acceptance Criteria
 
 LUASCRIPT can claim a feature or language as supported only when:
 

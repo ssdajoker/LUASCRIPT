@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:source-identity-probe",
   "command": "npm run test:source-identity-probe",
-  "generatedAt": "2026-07-16T08:06:50.810Z",
-  "elapsedMs": 8405,
+  "generatedAt": "2026-07-30T03:47:09.841Z",
+  "elapsedMs": 3316,
   "environment": {
     "node": "v24.14.0",
     "npm": {

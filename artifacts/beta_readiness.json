@@ -3,7 +3,7 @@
   "kind": "luascript:beta-readiness",
   "betaTarget": "pre-production beta v0.1",
   "packageVersion": "0.1.0-beta.0",
-  "generatedAt": "2026-07-14T10:17:57.368Z",
+  "generatedAt": "2026-07-30T03:46:33.762Z",
   "minimumPassPercent": 90,
   "summary": {
     "implementedLanes": 17,
@@ -13,7 +13,7 @@
     "strictNativeRequired": false,
     "overallStrictReady": true,
     "nativeSetupBlockedLanes": 0,
-    "elapsedMs": 3675
+    "elapsedMs": 3160
   },
   "lanes": [
     {
@@ -24,10 +24,10 @@
       "manifest": "tests\\language_completion\\manifests\\javascript.json",
       "report": "artifacts\\language_completion\\javascript-report.json",
       "manifestStatus": "qualified",
-      "fixtureCount": 16,
-      "expectedFailures": 3,
+      "fixtureCount": 18,
+      "expectedFailures": 5,
       "runnableFixtures": 13,
-      "passed": 16,
+      "passed": 18,
       "failed": 0,
       "passPercent": 100,
       "betaReady": true,
@@ -58,10 +58,10 @@
       "manifest": "tests\\language_completion\\manifests\\luascript.json",
       "report": "artifacts\\language_completion\\luascript-report.json",
       "manifestStatus": "qualified",
-      "fixtureCount": 75,
-      "expectedFailures": 31,
+      "fixtureCount": 77,
+      "expectedFailures": 33,
       "runnableFixtures": 44,
-      "passed": 75,
+      "passed": 77,
       "failed": 0,
       "passPercent": 100,
       "betaReady": true,

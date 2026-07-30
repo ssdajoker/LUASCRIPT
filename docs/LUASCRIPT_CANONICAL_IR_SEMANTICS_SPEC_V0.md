@@ -1,7 +1,7 @@
 # LUASCRIPT Canonical IR Semantics Spec v0
 
 Status: active v0 draft
-Last updated: 2026-07-27
+Last updated: 2026-07-29
 Track: Denali canonical `1.0`, criterion `1.0-IR-SEMANTICS`
 
 This is the first formal semantics draft for the LUASCRIPT canonical IR. It is not canonical `1.0`, not a release promotion, and not a claim that every clause below is fully implemented or proven. It turns the current inventory into a contract shape: each section states the intended `1.0` semantics, then ties the clause to existing evidence or marks it `MISSING EVIDENCE`.
@@ -10,9 +10,9 @@ The 2026-07-15 evidence-map pass advances this draft toward v1 by mapping every 
 
 The 2026-07-27 schema-artifact mapping pass adds `npm run test:schema-artifact-map`. That harness compiles the current conformance fixtures through the active `CoreLanguageBridge`, derives schema-valid `docs/canonical_ir.schema.json` v1 artifacts for the positive fixtures, validates them with AJV, records field/kind alias gaps, and writes `artifacts/conformance/schema-artifact-mapping-report.json`. This is a dual-surface transition evidence route, not a compiler-output change or final release IR surface choice.
 
-The 2026-07-27 dual-surface compatibility bridge pass adds `src/ir/schema_artifact_bridge.js` and `npm run test:ir-compatibility-bridge`. That harness validates the internal bridge candidate for the same positive conformance fixtures, records 168/168 invariant checks, writes `artifacts/conformance/dual-surface-compatibility-bridge-report.json`, and keeps the bridge internal-only until release compatibility/versioning rules are chosen.
+The 2026-07-27 dual-surface compatibility bridge pass adds `src/ir/schema_artifact_bridge.js` and `npm run test:ir-compatibility-bridge`. That historical pass validated the internal bridge candidate for the same positive conformance fixtures, recorded 168/168 invariant checks, and wrote `artifacts/conformance/dual-surface-compatibility-bridge-report.json`.
 
-The release canonical IR surface is not yet chosen. Current LUASCRIPT still has a consolidated schema artifact surface and a legacy object-tree IR surface used by the language-completion bridge. This draft describes the intended release contract that those surfaces must converge on, constrain, or explicitly bridge before `1.0`.
+The 2026-07-29 release-IR bearing chooses [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md), contract `1.0.0-rc.1`: legacy object-tree Program IR `v0` remains the operational compiler/emitter surface, and canonical schema artifact `1.0.0` is a one-way evidence/serialization projection. The gate now checks latest/pinned/`1.x` schema routes, exact alias policies, original-kind-aware required shapes, deterministic artifacts, migration/deprecation rules, unchanged root exports, and malformed-shape negatives. Reverse conversion, semantic equivalence, source preservation, and public package IR API remain unclaimed.
 
 Every semantics section below is tied to current evidence or marked `MISSING EVIDENCE`. No runtime, compiler, lowerer, emitter, schema, or package API behavior is changed by this spec draft.
 
@@ -29,8 +29,8 @@ Every semantics section below is tied to current evidence or marked `MISSING EVI
 
 | Rule | Draft contract | Evidence |
 | --- | --- | --- |
-| IR surface | A `1.0` IR artifact must have one documented release surface, or an explicitly documented dual-surface bridge with compatibility rules. | `PARTIAL`: [LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md](LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md) records the current split; `npm run test:ir-compatibility-bridge` proves the internal bridge candidate for 21/21 positive conformance fixtures and 168/168 invariant checks. Final release adoption and versioning remain open. |
-| Schema validity | Every release-supported node emitted by the release lowerer must be valid against the release schema and pass invariant checks. | `PARTIAL`: `npm run test:schema-artifact-map` proves schema-valid derived artifacts for 21/21 positive conformance fixtures and preserves 11 expected diagnostics; `npm run test:ir-compatibility-bridge` proves 168/168 internal bridge invariant checks; `npm run ir:validate:schema`, `npm run ir:validate`, and `npm run ir:golden:check` pass for current smoke/golden slices. The active bridge still emits legacy object-tree `Program` IR, so release surface adoption and compatibility policy remain open. |
+| IR surface | A `1.0` IR artifact must have one documented release surface, or an explicitly documented dual-surface bridge with compatibility rules. | `EVIDENCED` for the internal Denali RC choice: [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md) and `npm run test:ir-compatibility-bridge` choose and enforce the versioned one-way dual-surface transition without changing compiler output or package API. |
+| Schema validity | Every release-supported node emitted by the release lowerer must be valid against the release schema and pass invariant checks. | `PARTIAL`: `npm run test:schema-artifact-map` proves schema-valid derived artifacts for 21/21 positive conformance fixtures and preserves 11 expected diagnostics; `npm run test:ir-compatibility-bridge` validates latest, pinned `1.0.0`, and resolved `1.x` schema routes plus bridge and original-kind-aware shape rules. Broader authoring-schema semantics and node families remain open. |
 | Runtime claim boundary | A semantic clause is supported only for named source/target/profile slices backed by current gates. | `EVIDENCED`: `npm run claims:check`, `npm run status:check`, language manifests, and support matrix boundaries. |
 | Bidirectionality boundary | Bidirectional claims must identify the proven layer: native execution, source-to-IR, IR-to-target, target-runtime, emitted `.ls`, round-trip source identity, or semantic equivalence. | `EVIDENCED`: [LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md) defines the current claim levels; `npm run test:roundtrip-probe` adds tiny structural IR reparse and runtime-output equivalence probes; broad round-trip source identity and broad semantic equivalence remain open unless fixtures prove them. |
 | Unsupported behavior | Unsupported nodes or unsupported semantic combinations must fail with deterministic diagnostics, not silent best-effort emission. | `PARTIAL`: `tests/ir/unsupported_diagnostics.test.js`, language manifest expected failures, and `npm run stubs:check`. |
@@ -222,7 +222,7 @@ Evidence:
 | --- | --- | --- |
 | Unsupported target/source diagnostics in current narrow slices | `EVIDENCED` | Source compiler diagnostics, `tests/ir/unsupported_diagnostics.test.js`, and manifest expected failures. |
 | Complete node-kind support/exclusion matrix | `PARTIAL` | `npm run test:schema-artifact-map` records current positive-fixture mapped node kinds and aliases, including `VariableDeclarator->VariableDeclaration`, `Parameter->Identifier`, `UnaryExpression->BinaryExpression`, and `SwitchCase->BlockStatement`. The final release support/exclusion matrix remains open. |
-| Schema enum / frozen schema / `NodeCategory` reconciliation | `PARTIAL` | The schema-artifact mapping route validates derived artifacts against the frozen v1 schema and records alias gaps, but it does not change the active bridge output or choose the release IR surface. |
+| Schema enum / pinned schema / `NodeCategory` reconciliation | `PARTIAL` | Latest and pinned Denali RC schemas now have semantic parity except `$id`, and the `1.x` alias resolves in the compatibility gate. `NodeCategory`, broader validators, and node families still need reconciliation; active bridge output intentionally remains legacy Program IR. |
 
 ## Determinism And Serialization
 
@@ -241,7 +241,7 @@ Evidence:
 | Golden IR validation and selected parity | `EVIDENCED` | `npm run ir:golden:check` and `npm run ir:golden:parity`. |
 | Basic IR validation smoke | `EVIDENCED` | `npm run ir:validate` and `npm run ir:validate:schema`. |
 | Broader determinism stress | `PARTIAL` | Existing IR determinism tests are part of the broader verification surface, but release serialization rules are not yet a standalone conformance contract. |
-| Stable release artifact format, volatile metadata policy, migration compatibility matrix | `PARTIAL` | `artifacts/conformance/schema-artifact-mapping-report.json` records schema path/hash, manifest hash, derived artifact hashes, and dual-surface transition policy. `artifacts/conformance/dual-surface-compatibility-bridge-report.json` records the internal bridge candidate, invariant families, and internal-only public API status. Final release artifact format and migration compatibility matrix remain open. |
+| Stable release artifact format, volatile metadata policy, migration compatibility matrix | `PARTIAL` | Contract `1.0.0-rc.1` fixes the internal surface versions, exact aliases, one-way direction, deterministic projection rule, migration path, and package-`2.0.0`-or-later deprecation horizon. Broader metadata semantics, consumer APIs, and cross-version artifact matrices remain open. |
 
 ## Target Obligations
 
@@ -301,7 +301,7 @@ This section maps every current `tests/conformance/manifest.json` fixture to a n
 Shared evidence rules that apply across the table:
 
 - `IR-DET-001`: deterministic local evidence is provided by `artifacts/conformance/canonical-ir-conformance-report.json`, including manifest hash, per-fixture hashes, pass/fail summary, runtime command evidence, and support-matrix traceability. This is report determinism, not final release serialization determinism.
-- `IR-GOV-GAP-001`: all current positive fixtures compile through the legacy object-tree `Program` IR in `CoreLanguageBridge`; this maps behavior evidence but does not resolve the release canonical IR surface.
+- `IR-GOV-001`: all current positive fixtures compile through legacy object-tree Program IR and derive the chosen versioned canonical artifact projection; this resolves the internal surface choice without claiming lossless replacement or public API.
 - `IR-TGT-001`: target obligations are evidenced only where a fixture declares emitted-output snippets, runtime checks, or deterministic unsupported-target diagnostics for the current stable bridge emitters.
 
 ### V1 Rule Catalog
@@ -372,13 +372,13 @@ Shared evidence rules that apply across the table:
 
 ### Remaining V1 Evidence Gaps
 
-- The release canonical IR surface is still not chosen: consolidated schema artifact, legacy object tree, or an explicitly documented dual-surface transition.
-- Schema-valid derived artifacts and internal bridge invariants are proven for the current positive conformance fixtures; release compiler output, final IR surface adoption, compatibility/versioning rules, and release invariant policy remain open.
-- Determinism is currently report-level determinism with fixture hashes, not a final serialization, volatile-metadata, migration, or compatibility contract.
+- The release canonical IR transition is chosen, but original-kind-aware shape and semantic policies must expand with every promoted node family.
+- Schema-valid derived artifacts and internal bridge invariants are proven for current positive conformance fixtures; general authoring validation, broader semantic fidelity, and release-blocking policy remain open.
+- Artifact determinism is now checked for identical current inputs/options; canonical serialization across platforms, volatile metadata, and cross-version compatibility matrices remain open.
 - Lua and `.ls` runtime equivalence are outside this conformance matrix unless a separate gate proves a named slice.
 - Full value edge semantics remain open for `NaN`, infinities, `-0`, integer width, overflow, BigInt, decimal precision, object identity, aliasing, and deep equality.
 - Full error semantics remain open for throw values, catch scope, stack behavior, rethrow, finalizer order, and target exception interop.
-- Helper versioning, per-target semantic delta tables, and release compatibility rules remain outside this v1 evidence map.
+- Transition migration/deprecation rules are sealed by contract `1.0.0-rc.1`; helper versioning, per-target semantic delta tables, cross-version matrices, and wider release compatibility rules remain outside this v1 evidence map.
 
 ## Round-Trip Probe Harness
 
@@ -386,9 +386,9 @@ The current round-trip probe harness is `tests/roundtrip/manifest.json` plus `te
 
 Scope:
 
-- It uses `structural-ir-reparse` for tiny cases where source -> current bridge IR -> emitted target -> current bridge IR preserves normalized IR after generated IDs and metadata are removed.
+- It uses `structural-ir-reparse` for tiny cases where source -> current bridge IR -> emitted target -> current bridge IR preserves normalized IR. Same-language probes preserve semantic metadata and exclude only `loc`, `range`, `raw`, and generated `id`; cross-language probes explicitly exclude source-specific metadata.
 - It uses `runtime-output-equivalence` for tiny cases where source runtime and emitted target runtime agree on stdout, but emitted target helpers or idioms do not yet support honest IR identity.
-- It currently covers JavaScript -> JavaScript, JavaScript -> `.ls`, `.ls` -> JavaScript, and Python -> Python structural IR reparse; JavaScript -> Python and Python -> JavaScript runtime-output equivalence.
+- It currently covers JavaScript -> JavaScript, JavaScript -> `.ls`, `.ls` -> JavaScript, Python -> Python, and Lua -> Lua structural IR reparse; JavaScript -> Python and Python -> JavaScript runtime-output equivalence.
 
 Boundary:
 
@@ -400,15 +400,14 @@ Boundary:
 
 These gaps block this draft from becoming a canonical `1.0` IR semantics contract:
 
-1. Choose or constrain the release canonical IR surface.
-2. Reconcile latest schema enum, frozen schema, `NodeCategory`, validators, and live parser/lowerer output.
-3. Define exact field aliases or migration rules for `params`/`parameters`, `args`/`arguments`, `value`/`argument`, `condition`/`test`, `metadata`/`meta`, and related pairs.
-4. Promote the internal dual-surface compatibility bridge candidate into a final release IR surface or formal release compatibility/versioning contract.
-5. Add value/operator/control-flow/function/call/object/error edge matrices with positive, negative, and target-runtime expectations.
-6. Decide whether language-completion gates must emit and preserve a schema-valid canonical IR artifact as part of `1.0` bidirectionality.
-7. Expand `npm run test:roundtrip-probe` from tiny structural IR reparse probes into broader declared-equivalence coverage.
-8. Broaden explicit round-trip source identity beyond the current 12 positive normalized `.ls` source/parser-owned-AST/IR fixtures before claiming broad source-preserving bidirectionality.
-9. Add semantic-equivalence matrices with target deltas before claiming behavior beyond stdout/diagnostic fixture agreement.
+1. Expand the chosen release-shape validator and compatibility evidence with every promoted original node kind.
+2. Reconcile the schema enum, `NodeCategory`, broader validators, and live parser/lowerer vocabularies beyond the current derived-fixture surface.
+3. Add migration rules before changing the exact kind/field alias registries or transition contract.
+4. Add value/operator/control-flow/function/call/object/error edge matrices with positive, negative, and target-runtime expectations.
+5. Decide whether every language-completion gate must emit and preserve a schema-valid canonical artifact as part of `1.0` bidirectionality.
+6. Expand `npm run test:roundtrip-probe` from tiny structural IR reparse probes into broader declared-equivalence coverage.
+7. Broaden explicit round-trip source identity beyond the current 12 positive normalized `.ls` source/parser-owned-AST/IR fixtures before claiming broad source-preserving bidirectionality.
+8. Add semantic-equivalence matrices with target deltas before claiming behavior beyond stdout/diagnostic fixture agreement.
 
 ## Minimum Evidence Before Promotion
 

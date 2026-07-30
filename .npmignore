@@ -4,3 +4,11 @@ coverage/
 reports/
 *.log
 static_warnings*.txt
+**/__pycache__/**
+**/*.pyc
+**/*.pyo
+**/*.backup
+**/*.bak
+src/**/*.test.ts
+src/**/tests/**
+src/**/*.prompt.md

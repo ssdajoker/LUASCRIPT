@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:schema-artifact-mapping",
   "command": "npm run test:schema-artifact-map",
-  "generatedAt": "2026-07-27T05:35:59.916Z",
-  "elapsedMs": 413,
+  "generatedAt": "2026-07-30T03:46:55.770Z",
+  "elapsedMs": 312,
   "environment": {
     "node": "v24.14.0",
     "npm": {
@@ -169,29 +169,67 @@
     "sha256": "78f8cb23636bd10d807168dbb06a26da26cf8908a62a66873d91474d843703ff",
     "schemaVersion": "1.0.0"
   },
+  "governingContract": {
+    "path": "docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md",
+    "sha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7"
+  },
+  "implementationEvidence": [
+    {
+      "path": "src/compilers/core-language-bridge.js",
+      "sha256": "0ac89fd35c51a18d481337b1cf2ac182fffac22a97e25f7c0ac8ec99110c670c"
+    },
+    {
+      "path": "src/ir/release_ir_surface_contract.js",
+      "sha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4"
+    },
+    {
+      "path": "src/ir/schema_artifact_bridge.js",
+      "sha256": "0eae56e71c97a9c3a457310fe86a8a6a090d4c0ed4a2e063ab4a008c2e76ec20"
+    },
+    {
+      "path": "tests/conformance/schema_artifact_mapping.test.js",
+      "sha256": "91c57adcf684a51f147689574cf258fb1ca3dda7054e9abfec02a74e7dd31998"
+    }
+  ],
   "supportMatrixTraceability": {
     "supportMatrix": "docs/LANGUAGE_SUPPORT_MATRIX.md",
     "evidenceBinder": "docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md",
     "exitCriteria": "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md",
     "bidirectionalityContract": "docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md",
     "denaliLedger": "docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md",
-    "boundary": "This report proves schema-valid derived artifacts for current positive conformance fixtures only. It does not choose the release IR surface, change compiler output, promote broad source identity, or close canonical 1.0.",
+    "boundary": "This report proves derived artifacts for current positive conformance fixtures only. It does not change compiler output or package API, provide reverse conversion, prove semantic equivalence or source preservation, promote broad source identity, or release canonical 1.0.",
     "supportRows": [
       "Canonical IR conformance",
       "Denali 1.0 IR semantics",
       "Big Remaining Climb schema-valid conformance artifact mapping"
     ],
-    "evidenceRole": "Maps the current legacy object-tree conformance IR to derived schema-valid canonical IR artifacts and records alias gaps for the dual-surface transition."
+    "evidenceRole": "Maps current legacy object-tree conformance IR to the chosen versioned canonical artifact surface and records declared compatibility encodings."
   },
   "transitionPolicy": {
-    "decision": "dual-surface-transition",
-    "legacySurface": "CoreLanguageBridge compileToIR legacy object-tree Program",
-    "schemaSurface": "docs/canonical_ir.schema.json schemaVersion 1.0.0",
-    "releaseSurfaceStatus": "OPEN",
+    "contractVersion": "1.0.0-rc.1",
+    "decision": "versioned-one-way-dual-surface-transition",
+    "direction": "legacy-to-canonical",
+    "legacySurface": {
+      "id": "legacy-object-tree-program",
+      "version": "v0",
+      "rootKind": "Program",
+      "role": "compiler-and-emitter-operational",
+      "publicApiStatus": "INTERNAL_ONLY"
+    },
+    "schemaSurface": {
+      "id": "canonical-ir-schema",
+      "version": "1.0.0",
+      "schemaPath": "docs/canonical_ir.schema.json",
+      "pinnedSchemaPath": "docs/schema/1.0.0/canonical_ir.schema.json",
+      "majorAliasPath": "docs/schema/1.x/canonical_ir.schema.json",
+      "role": "release-evidence-and-serialization",
+      "publicApiStatus": "SUPPORT_REFERENCE_NOT_ROOT_EXPORT"
+    },
+    "releaseSurfaceStatus": "CHOSEN_VERSIONED_ONE_WAY_DUAL_SURFACE",
     "notes": [
       "The current compiler bridge continues to emit legacy object-tree IR for active emitters.",
-      "The reusable internal bridge module derives schema-valid artifacts for evidence accounting without changing compiler or runtime APIs.",
-      "Release 1.0 still needs a final surface choice or a formal compatibility bridge."
+      "The reusable internal bridge derives schema-valid artifacts without changing compiler, runtime, or package APIs.",
+      "The canonical projection is one-way and is not a semantic-equivalence, source-preservation, or reverse-conversion claim."
     ]
   },
   "summary": {
@@ -205,6 +243,11 @@
       "passed": 168,
       "failed": 0
     },
+    "releaseContractChecks": {
+      "total": 147,
+      "passed": 147,
+      "failed": 0
+    },
     "globalKindAliases": {
       "VariableDeclarator->VariableDeclaration": 52,
       "Parameter->Identifier": 10,
@@ -213,7 +256,7 @@
     },
     "globalFieldAliases": {
       "varKind->declarationKind": 52,
-      "condition->test": 22,
+      "condition->test": 23,
       "args->arguments": 65,
       "parameters->params": 10,
       "value->argument": 16,
@@ -221,10 +264,10 @@
     },
     "globalMappedKinds": {
       "VariableDeclaration": 52,
-      "Literal": 192,
+      "Literal": 193,
       "ForStatement": 5,
-      "BinaryExpression": 65,
-      "Identifier": 308,
+      "BinaryExpression": 66,
+      "Identifier": 309,
       "AssignmentExpression": 32,
       "BlockStatement": 43,
       "ExpressionStatement": 57,
@@ -252,7 +295,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 3,
       "nodeCount": 38,
-      "artifactSha256": "cbd299feb3895847fa91bb566e49c9b70773b86805b8a5fdf9b46c2ad4045fab",
+      "artifactSha256": "7ce5e44a2506e897e197688aac768229ad575bc43a71a76175016507f87754bb",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -295,6 +338,58 @@
           "detail": 38
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "condition->test",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 2,
         "Literal": 6,
@@ -326,7 +421,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 4,
       "nodeCount": 33,
-      "artifactSha256": "456391744c937daa25de58998f5d84cf35200410e656f5fde9645b9bde5606ec",
+      "artifactSha256": "381cff32a3b2204dd7e53c80d587a42f43de5e1547db8e80685e63acbb62cecb",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -369,6 +464,60 @@
           "detail": 33
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "Parameter->Identifier",
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "parameters->params",
+              "value->argument",
+              "varKind->declarationKind",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "FunctionDeclaration": 1,
         "Identifier": 12,
@@ -404,7 +553,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 5,
       "nodeCount": 17,
-      "artifactSha256": "b8e0c105bc0c5e856cc5e34f2b49e2e78a387070569193502deb2d97b16f5049",
+      "artifactSha256": "6b44bcdd2f94d0190dc436cf4a0cbac256571934f38dac365b84fb5d6a19f7cc",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -447,6 +596,57 @@
           "detail": 17
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 4,
         "Literal": 4,
@@ -472,7 +672,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 4,
       "nodeCount": 43,
-      "artifactSha256": "2f63ed390367ffba9c447763fe9c5576cfde19a830ac97aa86607328cd760d95",
+      "artifactSha256": "65cd4b8f973dc48572f743df1ed27036442a5b4b948d07b09a4718bc47fd7a72",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -515,6 +715,57 @@
           "detail": 43
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 2,
         "ArrayExpression": 1,
@@ -545,7 +796,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 54,
-      "artifactSha256": "bb4bf404410ee52476ae327bb25719c73cd5bd71391ac933f2df25569c8aed38",
+      "artifactSha256": "8ae808fce548f0a7b8342b753b789773729448cf30bc63a676d1773c94006424",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -588,6 +839,58 @@
           "detail": 54
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "condition->test",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 3,
         "Literal": 9,
@@ -616,7 +919,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 24,
-      "artifactSha256": "728218db6301f07e4224853ebac7cebc143638d1026e61871ec3e69ad68db25e",
+      "artifactSha256": "2200d2e56f820fea23b1946b16bbf749417c806b1b5fa0cc94603c98a37b8cb5",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -659,6 +962,57 @@
           "detail": 24
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 5,
         "Literal": 4,
@@ -685,7 +1039,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 60,
-      "artifactSha256": "32d4f95a790378f3416625c807abab7dfc4923e54c6fc50907986a2f37eaa614",
+      "artifactSha256": "8cb65ebe02a2e0944baf14ce82bba1007c89218d166574ba9fd21a4fc81ce6ea",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -728,6 +1082,58 @@
           "detail": 60
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "condition->test",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 4,
         "ArrayExpression": 1,
@@ -759,7 +1165,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 2,
       "nodeCount": 105,
-      "artifactSha256": "ac0bac0e748d586975b463f46a9f787da7c7b4b6fa8e817b2a704e7748edd4cb",
+      "artifactSha256": "c48cf5d157f6a1b2d2965d4a0bf7494b7e1cf2436d638fa55c894d9f54ac4bb5",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -800,6 +1206,63 @@
           "name": "source-surface-marked",
           "passed": true,
           "detail": 105
+        }
+      ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "Parameter->Identifier",
+              "VariableDeclarator->VariableDeclaration",
+              "UnaryExpression->BinaryExpression"
+            ],
+            "fieldAliases": [
+              "parameters->params",
+              "varKind->declarationKind",
+              "condition->test",
+              "value->argument",
+              "operand->argument",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
         }
       ],
       "kindCounts": {
@@ -843,7 +1306,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 4,
       "nodeCount": 43,
-      "artifactSha256": "0028580df29a30b62a2357261618390ac20fd93a3ac306cb29c0db24da9dc93a",
+      "artifactSha256": "cc46ed333a41b59e6608c644fbc17a63bb9b8a2888fbfbd622a6c3f8f9cbdcd9",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -886,6 +1349,60 @@
           "detail": 43
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "parameters->params",
+              "value->argument",
+              "condition->test",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 1,
         "Literal": 8,
@@ -919,8 +1436,8 @@
       "legacyRootKind": "Program",
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 2,
-      "nodeCount": 33,
-      "artifactSha256": "7aa38992d1a6e35a3800f6c7fe96526babb529d7e34be1c75050de0bbc363b54",
+      "nodeCount": 36,
+      "artifactSha256": "21bc4bbf22ea8559bb4964ffe0b99f66be6c88ff4fdaf94787d497289c951920",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -940,12 +1457,12 @@
         {
           "name": "node-ids-match-map-keys",
           "passed": true,
-          "detail": 33
+          "detail": 36
         },
         {
           "name": "node-ids-are-schema-ids",
           "passed": true,
-          "detail": 33
+          "detail": 36
         },
         {
           "name": "node-references-resolve",
@@ -960,17 +1477,72 @@
         {
           "name": "source-surface-marked",
           "passed": true,
-          "detail": 33
+          "detail": 36
+        }
+      ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "Parameter->Identifier",
+              "SwitchCase->BlockStatement"
+            ],
+            "fieldAliases": [
+              "parameters->params",
+              "value->argument",
+              "condition->test",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
         }
       ],
       "kindCounts": {
         "FunctionDeclaration": 1,
-        "Identifier": 7,
+        "Identifier": 8,
         "BlockStatement": 4,
         "SwitchStatement": 1,
-        "Literal": 10,
+        "Literal": 11,
         "ReturnStatement": 3,
         "ConditionalExpression": 1,
+        "BinaryExpression": 1,
         "ExpressionStatement": 1,
         "CallExpression": 4,
         "MemberExpression": 1
@@ -982,6 +1554,7 @@
       "fieldAliases": {
         "parameters->params": 1,
         "value->argument": 3,
+        "condition->test": 1,
         "args->arguments": 4
       },
       "unmappedKinds": {}
@@ -994,7 +1567,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 3,
       "nodeCount": 25,
-      "artifactSha256": "33090c0182a5dc271e1dc3d377504676259b8600ae394509ae0b31b2de0805b8",
+      "artifactSha256": "56cb6626dcf4e388d05be16e3557c9faac4f36a3893420c62d77a8362369033e",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1037,6 +1610,58 @@
           "detail": 25
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "condition->test",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 2,
         "Literal": 5,
@@ -1066,7 +1691,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 3,
       "nodeCount": 27,
-      "artifactSha256": "8a1ecd2770d1d97765f30393291b96507ef77fc62978f0487fbfe68ec6acd772",
+      "artifactSha256": "9996905b6407bb15495915bfbb3a3fa044f54eaba96dc74814c8c5569f4da479",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1109,6 +1734,60 @@
           "detail": 27
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration",
+              "UnaryExpression->BinaryExpression"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "condition->test",
+              "operand->argument",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 2,
         "Literal": 5,
@@ -1140,7 +1819,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 57,
-      "artifactSha256": "564e03f66d3572ece2f06ddd1ad46e742afde83a99eb7783b08376d9388fc76e",
+      "artifactSha256": "aaf0067839b73bede195e4d1878b756075012c261cb039e80b2444b2f8961221",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1183,6 +1862,60 @@
           "detail": 57
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration",
+              "Parameter->Identifier"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "parameters->params",
+              "value->argument",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 5,
         "Literal": 8,
@@ -1217,7 +1950,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 3,
       "nodeCount": 42,
-      "artifactSha256": "d64c83f4546fd42e95aa141d72c95ddd7c15e0042c298f4f8a6f7d428623c453",
+      "artifactSha256": "897274f5f764638478edbd59846909261e6ea1260d8bfbee229b6e6ce53d4c47",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1260,6 +1993,59 @@
           "detail": 42
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "Parameter->Identifier"
+            ],
+            "fieldAliases": [
+              "parameters->params",
+              "condition->test",
+              "value->argument",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "FunctionDeclaration": 2,
         "Identifier": 12,
@@ -1291,7 +2077,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 2,
       "nodeCount": 15,
-      "artifactSha256": "1969c127193f9f17deec28cbc9ba3275b461d21a5deb5e96f0ccc2f0d3b876e8",
+      "artifactSha256": "0ef3cd46b1fcaae8993d863ad985bb2587166a4fedb5b03098c3985596a1aafd",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1332,6 +2118,58 @@
           "name": "source-surface-marked",
           "passed": true,
           "detail": 15
+        }
+      ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "Parameter->Identifier"
+            ],
+            "fieldAliases": [
+              "parameters->params",
+              "value->argument",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
         }
       ],
       "kindCounts": {
@@ -1380,7 +2218,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 88,
-      "artifactSha256": "ea9cdce347bb143213f16f2584ec41479a691bdf6338b265cc7266523f7c6e2b",
+      "artifactSha256": "66b632b6e70745f9df4510d393c27fd4dca708c5b7f272db81efaf54cf14d498",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1423,6 +2261,57 @@
           "detail": 88
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 2,
         "ObjectExpression": 3,
@@ -1453,7 +2342,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 5,
       "nodeCount": 60,
-      "artifactSha256": "76fbb9cdfb54b23a363c0e8901c94ce2ef28a2f4466445467ffd29b4e66ab85c",
+      "artifactSha256": "070c311b5a02575d45cdb723c6d22fb445f8c51606e7aeee49d42fbab3976ac4",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1496,6 +2385,57 @@
           "detail": 60
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 3,
         "ArrayExpression": 1,
@@ -1526,7 +2466,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 12,
       "nodeCount": 129,
-      "artifactSha256": "6d78ad88b93e961e3992c923720881f285be1444a34b8868bb4d24eeb9fac628",
+      "artifactSha256": "2cb2fefc939804dcff2537556fe1372e757dea305b474574d4d1b44c4960376a",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1569,6 +2509,60 @@
           "detail": 129
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration",
+              "UnaryExpression->BinaryExpression"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "args->arguments",
+              "condition->test",
+              "operand->argument"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 4,
         "ArrayExpression": 2,
@@ -1604,7 +2598,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 43,
-      "artifactSha256": "756a7fc5b8d483f34f96c04d6afe5ba975c1adb639a5e4be19af1325e3694eb4",
+      "artifactSha256": "1c484545d9d74e76885932e114c42aa27d23b8f0c1d263ffb97d39e8cb80ce4b",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1647,6 +2641,58 @@
           "detail": 43
         }
       ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "condition->test",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
+        }
+      ],
       "kindCounts": {
         "VariableDeclaration": 5,
         "ArrayExpression": 1,
@@ -1677,7 +2723,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 3,
       "nodeCount": 36,
-      "artifactSha256": "1a715da5af1478ecadd34060cee2d2f48054f32a848ba5f1b9c0c76e2b63b1bb",
+      "artifactSha256": "920601e2208cae086a3f58e852524b04a19b166ddcd346a5f582ed2507ea4c4c",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1718,6 +2764,57 @@
           "name": "source-surface-marked",
           "passed": true,
           "detail": 36
+        }
+      ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
         }
       ],
       "kindCounts": {
@@ -1768,7 +2865,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 2,
       "nodeCount": 8,
-      "artifactSha256": "cae98dd2d6ac8de4f056122c24d502bdd253a2ab8a094054ed4975c403a3b745",
+      "artifactSha256": "2e24586b79621a75988dd716852484a512c3009e44852e36ac41da6d5366896a",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1809,6 +2906,57 @@
           "name": "source-surface-marked",
           "passed": true,
           "detail": 8
+        }
+      ],
+      "releaseContractChecks": [
+        {
+          "name": "release-contract-version-marked",
+          "passed": true,
+          "detail": "1.0.0-rc.1"
+        },
+        {
+          "name": "release-transition-marked",
+          "passed": true,
+          "detail": {
+            "transitionPolicy": "versioned-one-way-dual-surface-transition",
+            "transitionMarker": "versioned-dual-surface-denali-rc"
+          }
+        },
+        {
+          "name": "release-surfaces-versioned",
+          "passed": true,
+          "detail": {
+            "sourceSurface": "legacy-object-tree-program/v0",
+            "targetSurface": "canonical-ir-schema/1.0.0"
+          }
+        },
+        {
+          "name": "release-operational-root-kind",
+          "passed": true,
+          "detail": "Program"
+        },
+        {
+          "name": "release-aliases-declared",
+          "passed": true,
+          "detail": {
+            "kindAliases": [
+              "VariableDeclarator->VariableDeclaration"
+            ],
+            "fieldAliases": [
+              "varKind->declarationKind",
+              "args->arguments"
+            ]
+          }
+        },
+        {
+          "name": "release-schema-version-aligned",
+          "passed": true,
+          "detail": "1.0.0"
+        },
+        {
+          "name": "release-original-kind-shapes",
+          "passed": true,
+          "detail": []
         }
       ],
       "kindCounts": {

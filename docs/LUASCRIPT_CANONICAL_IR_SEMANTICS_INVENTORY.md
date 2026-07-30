@@ -1,7 +1,7 @@
 # LUASCRIPT Canonical IR Semantics Inventory
 
 Status: active inventory
-Last updated: 2026-07-14
+Last updated: 2026-07-29
 Track: Denali canonical `1.0`, criterion `1.0-IR-SEMANTICS`
 
 This document inventories the current canonical IR surfaces as they exist in the repo. It is descriptive, not a release promotion and not a refactor plan. It records what the schema, lowerers, emitters, golden tests, and language-completion harness prove today, then names the semantics gaps that must be closed before canonical `1.0`.
@@ -11,7 +11,7 @@ This document inventories the current canonical IR surfaces as they exist in the
 | Surface | Files read | Current role |
 | --- | --- | --- |
 | Published latest schema | `docs/canonical_ir.schema.json` | AJV-validated schema used by golden checks and the default schema smoke |
-| Frozen schema copy | `docs/schema/1.0.0/canonical_ir.schema.json`, `docs/schema/1.x/canonical_ir.schema.json` | Versioned compatibility copy; `1.x` aliases `1.0.0` |
+| Pinned Denali RC schema snapshot | `docs/schema/1.0.0/canonical_ir.schema.json`, `docs/schema/1.x/canonical_ir.schema.json` | Pre-release versioned snapshot; `1.x` aliases `1.0.0`; latest/pinned semantic parity except `$id` is release-gated |
 | Node classes and builders | `src/ir/nodes.js`, `src/ir/builder.js`, `src/ir/canonical_ir_schema.js` | Implementation vocabularies and convenience constructors |
 | Parser/lowerer pipeline | `src/ir/pipeline.js`, `src/ir/lowerer.js`, `src/ir/lowerer-enhanced.js`, `src/ir/normalizer.js` | JavaScript parser to consolidated IR route used by IR tests and goldens |
 | Emitters and generators | `src/ir/emitter.js`, `src/ir/emitter-enhanced.js`, `src/compilers/ir-to-*.js` | Lua and target-specific code generation from mixed IR shapes |
@@ -25,7 +25,7 @@ LUASCRIPT currently has more than one live IR shape. That is the central `1.0` s
 
 | Surface | Shape | Primary users | Status |
 | --- | --- | --- | --- |
-| Consolidated schema artifact | `{ schemaVersion, module: { body: [nodeId] }, nodes: { nodeId: node }, controlFlowGraphs }` | `parseAndLower`, `tests/golden_ir`, `src/ir/emitter.js`, schema docs | Active, but schema and live lowerer output do not fully agree |
+| Consolidated schema artifact | `{ schemaVersion, module: { body: [nodeId] }, nodes: { nodeId: node }, controlFlowGraphs }` | `parseAndLower`, `tests/golden_ir`, `src/ir/emitter.js`, schema docs, derived release evidence | Active canonical evidence/serialization projection; not the operational compiler/emitter authority |
 | Legacy object-tree IR | `{ kind: "Program", body: [node] }` with nested child nodes | `CoreLanguageBridge`, `src/compilers/*-to-ir.js`, `src/compilers/ir-to-*.js`, language completion harness | Active for language qualification |
 | Node class vocabulary | `src/ir/nodes.js` classes and `NodeCategory` strings | `IRBuilder`, old validators, enhanced lowerer/emitter | Active implementation vocabulary, broader than schema enum |
 | Conceptual type vocabulary | `src/ir/canonical_ir_schema.js` with `Module`, `Function`, `Class`, `Struct`, etc. | Phase B/type-system reference code | Legacy/conceptual, not the enforced schema enum |
@@ -109,8 +109,8 @@ These node kinds appear in node classes, validators, lowerers, emitters, or test
 
 ## Ambiguous Or Duplicate Behavior
 
-- Current 1.0 semantics blocker: the live parser/lowerer path can pass lightweight invariants while failing the published JSON Schema enum for common nodes such as `Parameter` and `VariableDeclarator`.
-- `docs/schema/1.0.0/canonical_ir.schema.json` does not match `docs/canonical_ir.schema.json`: the frozen copy's `kind` field is a self-reference and does not carry the latest 40-kind enum.
+- Current 1.0 semantics boundary: live compiler/lowerer Program IR still uses kinds such as `Parameter` and `VariableDeclarator`; contract `1.0.0-rc.1` now maps those through explicit versioned compatibility encodings for canonical evidence without changing operational output.
+- The pre-release `docs/schema/1.0.0/canonical_ir.schema.json` snapshot was corrected on 2026-07-29; it now compiles and is semantically identical to `docs/canonical_ir.schema.json` except for `$id`, while `docs/schema/1.x/` resolves to it.
 - The language-completion bridge uses a legacy object-tree IR surface, not only the consolidated schema artifact.
 - `src/ir/canonical_ir_schema.js` defines a separate conceptual vocabulary (`Module`, `Function`, `Class`, `Struct`, `Enum`, `Interface`, etc.) that is not the same as the current schema enum.
 - Field aliases are widespread: `parameters`/`params`, `args`/`arguments`, `value`/`argument`, `condition`/`test`, `loc`/`span`, `metadata`/`meta`, and `varKind`/`declarationKind`.
@@ -142,14 +142,16 @@ These node kinds appear in node classes, validators, lowerers, emitters, or test
 - Golden validation: `tests/golden_ir/check_golden_ir.js` validates committed goldens against AJV schema plus lightweight invariants.
 - Golden parity: `tests/golden_ir/compare_pipeline_to_goldens.js` compares selected pipeline outputs to projected golden shapes, not exhaustive semantics.
 - Language completion: the 26 manifest files exercise native runtime behavior plus emitted target runtime behavior for named slices, but through the legacy object-tree bridge rather than a single schema-valid artifact.
-- Conformance skeleton: `npm run test:ir-conformance` uses `tests/conformance/manifest.json` to run tiny emitted-output, runtime-check, value-semantics, control-flow, function/scope, data-structure, and unsupported-diagnostic checks over the current stable bridge emitters. The current value matrix covers numbers, strings, booleans, null/nil/None equivalents, arrays, objects/records, truthiness, equality, coercion, indexing, `.ls` portable-profile repairs, and fail-closed diagnostics for `undefined`, `NaN`, and `Infinity`. The current control-flow matrix covers if/else, while, numeric for, Python range lowering, break, continue, nested loops, short-circuiting, early returns, switch, conditional expressions, target-specific lowering, JavaScript/Python native and emitted runtime checks, and fail-closed diagnostics for JavaScript `for-of`, JavaScript `try/catch`, JavaScript tagged template literals, and Python source `continue`; the JavaScript switch/conditional slice checks emitted `.ls` shape without runtime promotion and records Python switch emission as a target diagnostic. The current function/scope matrix covers lexical closures, shadowing, mutation through closures, recursion, nested functions, return normalization, JavaScript/Python native and emitted runtime checks, fail-closed diagnostics for JavaScript async/generator functions, and an explicit extra-arity target-native delta. The current data-structure matrix covers array/object mutation, nested reads/writes, length, slicing, membership, Python list iteration, Lua table record fields, object literals, JavaScript/Python runtime checks where those paths pass, fail-closed diagnostics for JavaScript object spread and destructuring, and an explicit Lua-source table-indexing-to-Python target delta. It is not a certification suite, does not prove Lua/`.ls` runtime equivalence in this matrix, and does not resolve the schema/live-output split.
+- Conformance skeleton: `npm run test:ir-conformance` uses `tests/conformance/manifest.json` to run tiny emitted-output, runtime-check, value-semantics, control-flow, function/scope, data-structure, and unsupported-diagnostic checks over the current stable bridge emitters. The current value matrix covers numbers, strings, booleans, null/nil/None equivalents, arrays, objects/records, truthiness, equality, coercion, indexing, `.ls` portable-profile repairs, and fail-closed diagnostics for `undefined`, `NaN`, and `Infinity`. The current control-flow matrix covers if/else, while, numeric for, Python range lowering, break, continue, nested loops, short-circuiting, early returns, switch, conditional expressions, target-specific lowering, JavaScript/Python native and emitted runtime checks, and fail-closed diagnostics for JavaScript `for-of`, JavaScript `try/catch`, JavaScript tagged template literals, and Python source `continue`; the JavaScript switch/conditional slice checks emitted `.ls` shape without runtime promotion and records Python switch emission as a target diagnostic. The current function/scope matrix covers lexical closures, shadowing, mutation through closures, recursion, nested functions, return normalization, JavaScript/Python native and emitted runtime checks, fail-closed diagnostics for JavaScript async/generator functions, and an explicit extra-arity target-native delta. The current data-structure matrix covers array/object mutation, nested reads/writes, length, slicing, membership, Python list iteration, Lua table record fields, object literals, JavaScript/Python runtime checks where those paths pass, fail-closed diagnostics for JavaScript object spread and destructuring, and an explicit Lua-source table-indexing-to-Python target delta. The one-way transition now resolves which surface is operational and which is canonical evidence for Denali RC, but this remains a scoped local suite: it does not prove Lua/`.ls` runtime equivalence in this matrix, arbitrary canonical-authoring validity, lossless recovery, or broad semantics.
 
 ## 1.0 Semantics Work Queue
 
-1. Choose the release canonical IR surface: consolidated schema artifact, legacy object tree, or a documented dual-surface transition.
-2. Make `docs/canonical_ir.schema.json`, `docs/schema/1.0.0/canonical_ir.schema.json`, `src/ir/nodes.js`, and `src/ir/validator.js` agree on the supported `1.0` node set.
+The release surface choice is now [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md): legacy object-tree Program IR `v0` remains operational, canonical schema artifact `1.0.0` is the one-way evidence/serialization projection, and transition contract `1.0.0-rc.1` governs aliases, deltas, validation, migration, and deprecation. This closes the choice, not the wider semantics program.
+
+1. Maintain the chosen one-way dual-surface contract while expanding original-kind-aware shape and semantic evidence.
+2. Keep `docs/canonical_ir.schema.json` and the pinned Denali RC snapshot semantically identical except for `$id`, then reconcile `src/ir/nodes.js` and `src/ir/validator.js` with the supported `1.0` node set.
 3. Add schema coverage for every release-supported live kind or explicitly mark it experimental/outside `1.0`.
-4. Define field aliases and migrate or document compatibility rules for `parameters`/`params`, `value`/`argument`, `condition`/`test`, and related pairs.
+4. Maintain the exact declared field aliases for `parameters`/`params`, `value`/`argument`, `condition`/`test`, `args`/`arguments`, `varKind`/`declarationKind`, and `operand`/`argument`; add migration rules before any expansion.
 5. Define formal semantics for value model, operator model, control flow, errors, module/class boundaries, target helpers, determinism, and serialization.
 6. Convert golden parity into conformance-style evidence with positive, negative, target-runtime, and schema-validity expectations.
 7. Decide whether language-completion manifests must emit a schema-valid IR artifact as part of the `1.0` gate.

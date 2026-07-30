@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
 const repoRoot = path.resolve(__dirname, "..");
 const args = new Set(process.argv.slice(2));
@@ -34,6 +35,14 @@ function readText(relativePath) {
 
 function readJson(relativePath) {
   return JSON.parse(readText(relativePath));
+}
+
+function sha256Text(text) {
+  return crypto.createHash("sha256").update(text).digest("hex");
+}
+
+function sha256File(relativePath) {
+  return crypto.createHash("sha256").update(fs.readFileSync(relPath(relativePath))).digest("hex");
 }
 
 function check(condition, message) {
@@ -71,14 +80,207 @@ function checkManifestEntry(entries, name, manifestLabel, predicate, detail) {
   return entry;
 }
 
+function isExactPassingSummary(summary, expectedTotal) {
+  return Boolean(summary) &&
+    summary.total === expectedTotal &&
+    summary.passed === expectedTotal &&
+    summary.failed === 0;
+}
+
+function hasExactPassedDetails(entries, expectedTotal) {
+  return Array.isArray(entries) &&
+    entries.length === expectedTotal &&
+    entries.every(entry => entry && entry.passed === true);
+}
+
+function hasExactLiveImplementationEvidence(entries, expectedPaths) {
+  if (!Array.isArray(entries) || entries.length !== expectedPaths.length) {
+    return false;
+  }
+
+  const actualPaths = entries.map(entry => entry && entry.path).sort();
+  const sortedExpectedPaths = [...expectedPaths].sort();
+  if (JSON.stringify(actualPaths) !== JSON.stringify(sortedExpectedPaths)) {
+    return false;
+  }
+
+  return entries.every(entry =>
+    entry &&
+    typeof entry.sha256 === "string" &&
+    entry.sha256 === sha256Text(readText(entry.path)));
+}
+
+function hasExactLiveInputEvidence(inputs, expectedInputs) {
+  if (!inputs || typeof inputs !== "object") {
+    return false;
+  }
+
+  const actualKeys = Object.keys(inputs).sort();
+  const expectedKeys = Object.keys(expectedInputs).sort();
+  if (JSON.stringify(actualKeys) !== JSON.stringify(expectedKeys)) {
+    return false;
+  }
+
+  return expectedKeys.every(key => {
+    const entry = inputs[key];
+    const expectedPath = expectedInputs[key];
+    return entry &&
+      entry.path === expectedPath &&
+      entry.sha256 === sha256File(expectedPath);
+  });
+}
+
+function normalizeEvidencePath(relativePath) {
+  return String(relativePath || "").replace(/\\/g, "/").replace(/^\.\//, "");
+}
+
+function resolveEvidenceFile(relativePath) {
+  const normalized = normalizeEvidencePath(relativePath);
+  if (!normalized || path.isAbsolute(normalized)) {
+    return null;
+  }
+  const absolute = path.resolve(repoRoot, normalized);
+  const relative = path.relative(repoRoot, absolute);
+  if (
+    !relative ||
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relative) ||
+    !fs.existsSync(absolute) ||
+    !fs.statSync(absolute).isFile()
+  ) {
+    return null;
+  }
+  return { normalized, absolute };
+}
+
+function liveFileEvidenceMatches(entry, expectedPath = null) {
+  if (!entry || typeof entry !== "object") {
+    return false;
+  }
+  const resolved = resolveEvidenceFile(entry.path);
+  if (
+    !resolved ||
+    (expectedPath !== null &&
+      resolved.normalized !== normalizeEvidencePath(expectedPath)) ||
+    !/^[a-f0-9]{64}$/.test(String(entry.sha256 || "")) ||
+    entry.sha256 !==
+      crypto.createHash("sha256").update(fs.readFileSync(resolved.absolute)).digest("hex")
+  ) {
+    return false;
+  }
+  return !Object.prototype.hasOwnProperty.call(entry, "sizeBytes") ||
+    entry.sizeBytes === fs.statSync(resolved.absolute).size;
+}
+
+function exactLiveEvidenceList(entries, expectedPaths) {
+  return Array.isArray(entries) &&
+    entries.length === expectedPaths.length &&
+    entries.every((entry, index) =>
+      liveFileEvidenceMatches(entry, expectedPaths[index]));
+}
+
+function successfulRuntimeProbe(entry) {
+  return Boolean(entry) &&
+    typeof entry.name === "string" &&
+    entry.name.length > 0 &&
+    typeof entry.command === "string" &&
+    entry.command.length > 0 &&
+    entry.probe &&
+    Array.isArray(entry.probe.args) &&
+    entry.probe.args.length > 0 &&
+    entry.probe.status === 0 &&
+    entry.probe.signal === null &&
+    entry.probe.error === null &&
+    typeof entry.probe.stdout === "string" &&
+    typeof entry.probe.stderr === "string";
+}
+
+function exactCounts(entries, key) {
+  const counts = {};
+  for (const entry of Array.isArray(entries) ? entries : []) {
+    const value = entry && entry[key];
+    counts[value] = (counts[value] || 0) + 1;
+  }
+  return counts;
+}
+
+function canonicalizeClaimValue(value) {
+  if (Array.isArray(value)) {
+    return value.map(canonicalizeClaimValue);
+  }
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map(key => [key, canonicalizeClaimValue(value[key])])
+    );
+  }
+  return value;
+}
+
+function collectStoredExpectedHashReferences(value, references = []) {
+  if (!value || typeof value !== "object") {
+    return references;
+  }
+  if (Array.isArray(value)) {
+    value.forEach(entry =>
+      collectStoredExpectedHashReferences(entry, references));
+    return references;
+  }
+  if (
+    typeof value.path === "string" &&
+    /^[a-f0-9]{64}$/i.test(String(value.expectedSha256 || ""))
+  ) {
+    references.push({
+      path: value.path,
+      expectedSha256: value.expectedSha256,
+      locations: []
+    });
+  }
+  Object.values(value).forEach(entry =>
+    collectStoredExpectedHashReferences(entry, references));
+  return references;
+}
+
 function checkPackageMetadata() {
   const pkg = readJson("package.json");
+  const packageLock = readJson("package-lock.json");
+  const publicApiRuntimePackageReport = readJson(
+    "artifacts/conformance/public-api-runtime-package-report.json"
+  );
+  const schemaArtifactReport = readJson("artifacts/conformance/schema-artifact-mapping-report.json");
+  const dualSurfaceReport = readJson("artifacts/conformance/dual-surface-compatibility-bridge-report.json");
+  const {
+    KIND_ALIAS_POLICIES,
+    FIELD_ALIAS_POLICIES,
+    RELEASE_IR_SURFACE_CONTRACT
+  } = require(relPath("src", "ir", "release_ir_surface_contract.js"));
+  const packageRootExports = Object.keys(require(relPath("src", "unified_luascript.js"))).sort();
   const scripts = pkg.scripts || {};
   const pythonManifest = readJson("tests/language_completion/manifests/python.json");
   const luaManifest = readJson("tests/language_completion/manifests/lua.json");
   const luaInputManifest = readJson("tests/lua_input/manifest.json");
   const edgeMatrixManifest = readJson("tests/edge_matrix/manifest.json");
   const sourceIdentityManifest = readJson("tests/roundtrip/source_identity_manifest.json");
+  const releaseIrConformanceManifest = readJson("tests/conformance/manifest.json");
+  const expectedPublicPackageFiles = [
+    "src/",
+    "test/",
+    "examples/package/",
+    "README.md",
+    "LICENSE"
+  ];
+  const expectedRuntimeDependencies = {
+    acorn: "^8.15.0",
+    esprima: "^4.0.1",
+    luaparse: "^0.3.1",
+    typescript: "5.9.3"
+  };
+  const expectedRepositoryMetadata = {
+    type: "git",
+    url: "https://github.com/ssdajoker/LUASCRIPT.git"
+  };
 
   check(scripts["claims:check"] === "node scripts/claims_check.js",
     "package.json exposes npm run claims:check");
@@ -205,6 +407,9 @@ function checkPackageMetadata() {
     "package.json exposes npm run test:roundtrip-probe");
   check(scripts["test:source-identity-probe"] === "node tests/roundtrip/source_identity_probe.test.js",
     "package.json exposes npm run test:source-identity-probe");
+  check(scripts["test:package-contract"] ===
+    "node tests/package/public_api_runtime_package_contract.test.js",
+  "package.json exposes npm run test:package-contract");
   check(pkg.version === "0.1.0-beta.0", "package.json uses pre-production beta v0.1 package version");
   check(pkg.name === "luascript", "package.json keeps canonical package name");
   check(pkg.main === "src/unified_luascript.js", "package.json keeps current package entrypoint");
@@ -212,10 +417,33 @@ function checkPackageMetadata() {
     "package.json has no package exports map for no-release freeze candidate");
   check(!Object.prototype.hasOwnProperty.call(pkg, "bin"),
     "package.json has no npm bin for no-release freeze candidate");
-  check(pkg.engines && pkg.engines.node === ">=14.0.0", "package.json declares current Node runtime floor");
-  check(Array.isArray(pkg.files) &&
-    ["src/", "test/", "README.md", "LICENSE"].every((entry) => pkg.files.includes(entry)),
-  "package.json exposes the current beta package file surface");
+  check(pkg.engines && pkg.engines.node === ">=14.17.0", "package.json declares current Node runtime floor");
+  check(JSON.stringify(pkg.files) === JSON.stringify(expectedPublicPackageFiles),
+    "package.json keeps the exact current beta package file surface");
+  check(JSON.stringify(pkg.dependencies) === JSON.stringify(expectedRuntimeDependencies),
+    "package.json keeps the exact four runtime dependencies");
+  check(pkg.devDependencies &&
+    pkg.devDependencies.yaml === "^2.8.2" &&
+    pkg.devDependencies["@types/esprima"] === "^4.0.6" &&
+    !Object.prototype.hasOwnProperty.call(pkg.dependencies || {}, "yaml") &&
+    !Object.prototype.hasOwnProperty.call(pkg.dependencies || {}, "@types/esprima"),
+  "package.json keeps yaml and @types/esprima development-only");
+  check(JSON.stringify(pkg.repository) === JSON.stringify(expectedRepositoryMetadata) &&
+    pkg.bugs &&
+    pkg.bugs.url === "https://github.com/ssdajoker/LUASCRIPT/issues" &&
+    pkg.homepage === "https://github.com/ssdajoker/LUASCRIPT#readme",
+  "package.json keeps corrected LUASCRIPT repository, bugs, and homepage URLs");
+  const packageLockRoot = packageLock.packages && packageLock.packages[""];
+  check(packageLockRoot &&
+    packageLockRoot.name === "luascript" &&
+    packageLockRoot.version === "0.1.0-beta.0" &&
+    JSON.stringify(packageLockRoot.dependencies) === JSON.stringify(expectedRuntimeDependencies) &&
+    packageLockRoot.engines &&
+    packageLockRoot.engines.node === ">=14.17.0" &&
+    packageLockRoot.devDependencies &&
+    packageLockRoot.devDependencies.yaml === "^2.8.2" &&
+    packageLockRoot.devDependencies["@types/esprima"] === "^4.0.6",
+  "package-lock root keeps package identity, runtime dependency boundary, and Node floor aligned");
   check(pkg.luascript && pkg.luascript.releaseTrack === "pre-production beta",
     "package.json declares LUASCRIPT release track as pre-production beta");
   check(pkg.luascript && pkg.luascript.version === pkg.version,
@@ -227,18 +455,373 @@ function checkPackageMetadata() {
     pkg.luascript.verifiedSlices.includes("Python V1.3 sequence-slices small-program slice"),
   "package.json names Python V1.3 verified slice");
 
+  [
+    "package-lock.json",
+    ".npmignore",
+    "src/.npmignore",
+    "tests/package/public_api_runtime_package_contract.test.js",
+    "examples/package/README.md",
+    "examples/package/minimal-system.cjs",
+    "examples/package/transpile-js-to-lua.cjs",
+    "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
+    "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
+    "CHANGELOG.md",
+    "artifacts/conformance/public-api-runtime-package-report.json"
+  ].forEach(checkFile);
+
+  const expectedPublicRootExports = [
+    "AdvancedFeatures",
+    "AgenticIDE",
+    "CoreTranspiler",
+    "PerformanceTools",
+    "RuntimeSystem",
+    "UnifiedLuaScript"
+  ];
+  const expectedUnifiedInstanceMethods = [
+    "benchmark",
+    "clearCaches",
+    "createProject",
+    "execute",
+    "getCodeCompletion",
+    "getPerformanceReport",
+    "getSystemStatus",
+    "initializeComponents",
+    "openFile",
+    "optimize",
+    "profile",
+    "shutdown",
+    "startDebugging",
+    "transformWithOOP",
+    "transformWithPatterns",
+    "transformWithTypes",
+    "transpile",
+    "transpileAndExecute",
+    "transpileSource",
+    "validateEvidence"
+  ];
+  const expectedUnifiedStaticMethods = [
+    "createDevelopment",
+    "createEnterprise",
+    "createProduction",
+    "validateEvidenceStatic"
+  ];
+  const expectedForbiddenIrRootNames = [
+    "FIELD_ALIAS_POLICIES",
+    "IR",
+    "KIND_ALIASES",
+    "KIND_ALIAS_POLICIES",
+    "RELEASE_IR_SURFACE_CONTRACT",
+    "fixtureToSchemaArtifact",
+    "ir",
+    "legacyProgramToSchemaArtifact",
+    "validateReleaseIrSurfaceMapping",
+    "validateSchemaArtifactCompatibility"
+  ];
+  const expectedPublicPackageReportMetadata = {
+    name: "luascript",
+    version: "0.1.0-beta.0",
+    releaseTrack: "pre-production beta",
+    main: "src/unified_luascript.js",
+    engines: {
+      node: ">=14.17.0"
+    },
+    files: expectedPublicPackageFiles,
+    runtimeDependencies: expectedRuntimeDependencies,
+    repository: expectedRepositoryMetadata,
+    bugs: {
+      url: "https://github.com/ssdajoker/LUASCRIPT/issues"
+    },
+    homepage: "https://github.com/ssdajoker/LUASCRIPT#readme"
+  };
+  const expectedPublicPackageCheckNames = [
+    "package-metadata-identity-and-status",
+    "package-version-status-contract-alignment",
+    "package-engine-and-repository-metadata",
+    "public-contract-node-floor-alignment",
+    "runtime-dependency-boundary",
+    "package-lock-runtime-boundary-alignment",
+    "package-files-boundary-unchanged",
+    "package-has-no-bin-or-exports-map",
+    "root-export-surface-exact",
+    "ir-internals-absent-from-root",
+    "unified-instance-method-surface-exact",
+    "unified-static-method-surface-exact",
+    "unified-enable-all-false-and-explicit-component-controls",
+    "root-npmignore-hygiene-rules",
+    "source-npmignore-hygiene-rules",
+    "public-root-source-does-not-reference-root-runtime",
+    "npm-pack-ignore-scripts-json",
+    "npm-pack-json-record",
+    "tarball-path-confined-to-temp-pack-directory",
+    "tarball-required-package-files",
+    "tarball-hygiene-exclusions",
+    "tarball-public-example-surface-exact",
+    "tarball-root-runtime-intentionally-absent",
+    "tarball-lockfiles-not-published",
+    "tarball-size-and-file-count-consistent",
+    "clean-consumer-npm-install-ignore-scripts",
+    "installed-consumer-root-import-and-smoke",
+    "installed-consumer-typescript-runtime-dependency",
+    "installed-consumer-root-runtime-boundary",
+    "installed-package-public-examples-execute",
+    "node-14-17-1-installed-consumer-floor-smoke",
+    "exact-temporary-root-cleaned"
+  ];
+  const publicPackageChecks = Array.isArray(publicApiRuntimePackageReport.checks)
+    ? publicApiRuntimePackageReport.checks
+    : [];
+
+  check(publicApiRuntimePackageReport.schemaVersion === 1 &&
+    publicApiRuntimePackageReport.kind === "luascript:public-api-runtime-package-contract" &&
+    publicApiRuntimePackageReport.command === "npm run test:package-contract",
+  "public package report keeps exact schema, kind, and command identity");
+  check(hasExactLiveInputEvidence(publicApiRuntimePackageReport.inputs, {
+    packageJson: "package.json",
+    packageLock: "package-lock.json",
+    rootNpmIgnore: ".npmignore",
+    sourceNpmIgnore: "src/.npmignore",
+    rootModule: "src/unified_luascript.js",
+    harness: "tests/package/public_api_runtime_package_contract.test.js",
+    contract: "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
+    packageExampleReadme: "examples/package/README.md",
+    packageExampleMinimalSystem: "examples/package/minimal-system.cjs",
+    packageExampleTranspile: "examples/package/transpile-js-to-lua.cjs"
+  }),
+  "public package report hashes every exact live package-contract input");
+  check(publicApiRuntimePackageReport.summary &&
+    publicApiRuntimePackageReport.summary.total === expectedPublicPackageCheckNames.length &&
+    publicApiRuntimePackageReport.summary.passed === expectedPublicPackageCheckNames.length &&
+    publicApiRuntimePackageReport.summary.failed === 0 &&
+    Array.isArray(publicApiRuntimePackageReport.failures) &&
+    publicApiRuntimePackageReport.failures.length === 0,
+  "public package report records exact zero-failure proof for every named package check");
+  check(publicPackageChecks.length === expectedPublicPackageCheckNames.length &&
+    new Set(publicPackageChecks.map(entry => entry.name)).size ===
+      expectedPublicPackageCheckNames.length &&
+    JSON.stringify(publicPackageChecks.map(entry => entry.name)) ===
+      JSON.stringify(expectedPublicPackageCheckNames) &&
+    publicPackageChecks.every(entry =>
+      entry &&
+      entry.passed === true &&
+      Object.prototype.hasOwnProperty.call(entry, "detail")),
+  "public package report retains exactly 32 unique named all-passing check details");
+  check(publicApiRuntimePackageReport.expected &&
+    JSON.stringify(publicApiRuntimePackageReport.expected.package) ===
+      JSON.stringify(expectedPublicPackageReportMetadata) &&
+    JSON.stringify(publicApiRuntimePackageReport.expected.rootExports) ===
+      JSON.stringify(expectedPublicRootExports) &&
+    JSON.stringify(publicApiRuntimePackageReport.expected.unifiedInstanceMethods) ===
+      JSON.stringify(expectedUnifiedInstanceMethods) &&
+    JSON.stringify(publicApiRuntimePackageReport.expected.unifiedStaticMethods) ===
+      JSON.stringify(expectedUnifiedStaticMethods) &&
+    JSON.stringify(publicApiRuntimePackageReport.expected.forbiddenIrRootNames) ===
+      JSON.stringify(expectedForbiddenIrRootNames) &&
+    JSON.stringify(publicApiRuntimePackageReport.expected.packageExamples) ===
+      JSON.stringify([
+        "examples/package/README.md",
+        "examples/package/minimal-system.cjs",
+        "examples/package/transpile-js-to-lua.cjs"
+      ]) &&
+    publicApiRuntimePackageReport.expected.nodeFloorExecutableProbe &&
+    publicApiRuntimePackageReport.expected.nodeFloorExecutableProbe.package === "node@14.17.1" &&
+    publicApiRuntimePackageReport.expected.nodeFloorExecutableProbe.expectedVersion === "v14.17.1",
+  "public package report pins exact metadata, six exports, facade methods, package examples, forbidden IR names, and Node probe");
+
+  const publicPackageTarball = publicApiRuntimePackageReport.tarball || {};
+  const publicPackageTarballFiles = Array.isArray(publicPackageTarball.files)
+    ? publicPackageTarball.files
+    : [];
+  const requiredPublicPackagePaths = [
+    "LICENSE",
+    "README.md",
+    "examples/package/README.md",
+    "examples/package/minimal-system.cjs",
+    "examples/package/transpile-js-to-lua.cjs",
+    "package.json",
+    "src/unified_luascript.js"
+  ];
+  const allowedPublicPackageTopLevelFiles = new Set([
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ]);
+  const publicPackageForbiddenDebris = publicPackageTarballFiles.filter(filePath =>
+    /(^|\/)__pycache__(\/|$)/i.test(filePath) ||
+    /\.(?:pyc|pyo|backup|bak)$/i.test(filePath) ||
+    /^src\/.*\.test\.ts$/i.test(filePath) ||
+    /^src\/(?:.*\/)?tests(?:\/|$)/i.test(filePath) ||
+    /^src\/.*\.prompt\.md$/i.test(filePath) ||
+    /(^|\/)(?:archive|archives)(\/|$)/i.test(filePath) ||
+    /^(?:artifacts|docs|runtime)(?:\/|$)/i.test(filePath) ||
+    /^(?:package-lock\.json|npm-shrinkwrap\.json)$/i.test(filePath)
+  );
+  check(publicPackageTarball.name === "luascript" &&
+    publicPackageTarball.version === "0.1.0-beta.0" &&
+    publicPackageTarball.filename === "luascript-0.1.0-beta.0.tgz" &&
+    /^[0-9a-f]{64}$/.test(publicPackageTarball.sha256 || "") &&
+    Number.isInteger(publicPackageTarball.sizeBytes) &&
+    publicPackageTarball.sizeBytes > 0 &&
+    publicPackageTarball.sizeBytes === publicPackageTarball.npmReportedSizeBytes &&
+    Number.isInteger(publicPackageTarball.npmReportedUnpackedSizeBytes) &&
+    publicPackageTarball.npmReportedUnpackedSizeBytes >= publicPackageTarball.sizeBytes &&
+    Number.isInteger(publicPackageTarball.fileCount) &&
+    publicPackageTarball.fileCount > requiredPublicPackagePaths.length &&
+    publicPackageTarball.fileCount === publicPackageTarball.npmReportedEntryCount &&
+    publicPackageTarballFiles.length === publicPackageTarball.fileCount &&
+    new Set(publicPackageTarballFiles).size === publicPackageTarballFiles.length &&
+    JSON.stringify(publicPackageTarballFiles) ===
+      JSON.stringify([...publicPackageTarballFiles].sort()) &&
+    publicPackageTarball.fileListSha256 ===
+      sha256Text(`${publicPackageTarballFiles.join("\n")}\n`),
+  "public package report binds exact tarball identity, matched sizes/counts, and embedded sorted file-list hash");
+  check(requiredPublicPackagePaths.every(filePath =>
+    publicPackageTarballFiles.includes(filePath)) &&
+    publicPackageTarballFiles.some(filePath => filePath.startsWith("src/")) &&
+    publicPackageTarballFiles.some(filePath => filePath.startsWith("test/")) &&
+    publicPackageTarballFiles.every(filePath =>
+      typeof filePath === "string" &&
+      filePath.length > 0 &&
+      !filePath.includes("\\") &&
+      !filePath.split("/").includes("..") &&
+      (allowedPublicPackageTopLevelFiles.has(filePath) ||
+        filePath.startsWith("examples/package/") ||
+        filePath.startsWith("src/") ||
+        filePath.startsWith("test/"))) &&
+    JSON.stringify(
+      publicPackageTarballFiles.filter(filePath => filePath.startsWith("examples/"))
+    ) === JSON.stringify([
+      "examples/package/README.md",
+      "examples/package/minimal-system.cjs",
+      "examples/package/transpile-js-to-lua.cjs"
+    ]) &&
+    publicPackageForbiddenDebris.length === 0 &&
+    !publicPackageTarballFiles.some(filePath =>
+      filePath === "runtime" || filePath.startsWith("runtime/")) &&
+    publicPackageTarballFiles.includes("src/runtime.js") &&
+    publicPackageTarballFiles.some(filePath => filePath.startsWith("src/runtime/")),
+  "public package tarball keeps required paths, exact allowed prefixes, no forbidden debris, and no root runtime");
+
+  const installedPublicPackage = publicApiRuntimePackageReport.installedConsumer || {};
+  check(installedPublicPackage.package &&
+    installedPublicPackage.package.name === "luascript" &&
+    installedPublicPackage.package.version === "0.1.0-beta.0" &&
+    installedPublicPackage.package.main === "src/unified_luascript.js" &&
+    JSON.stringify(installedPublicPackage.rootExports) ===
+      JSON.stringify(expectedPublicRootExports) &&
+    Array.isArray(installedPublicPackage.irRootNamesPresent) &&
+    installedPublicPackage.irRootNamesPresent.length === 0 &&
+    installedPublicPackage.typescript &&
+    installedPublicPackage.typescript.version === "5.9.3" &&
+    installedPublicPackage.typescript.engines &&
+    installedPublicPackage.typescript.engines.node === ">=14.17" &&
+    installedPublicPackage.smoke &&
+    installedPublicPackage.smoke.source === "const answer = 6 * 7;" &&
+    installedPublicPackage.smoke.lua === "local answer = (6 * 7)" &&
+    installedPublicPackage.smoke.passed === true &&
+    installedPublicPackage.rootRuntimePresent === false &&
+    installedPublicPackage.publicRootReferencesRootRuntime === false,
+  "clean installed consumer keeps exact version, root exports, TypeScript runtime, engine, Lua smoke, and runtime boundary");
+
+  const installedPackageExamples =
+    publicApiRuntimePackageReport.installedPackageExamples &&
+    Array.isArray(publicApiRuntimePackageReport.installedPackageExamples.examples)
+      ? publicApiRuntimePackageReport.installedPackageExamples.examples
+      : [];
+  check(installedPackageExamples.length === 2 &&
+    installedPackageExamples[0].path === "examples/package/minimal-system.cjs" &&
+    installedPackageExamples[1].path === "examples/package/transpile-js-to-lua.cjs" &&
+    installedPackageExamples.every(entry =>
+      entry.exists === true &&
+      entry.sha256 === sha256File(entry.path) &&
+      entry.status === 0 &&
+      entry.signal === null &&
+      entry.error === null &&
+      typeof entry.stdout === "string" &&
+      typeof entry.stderr === "string" &&
+      entry.stderr.length === 0) &&
+    installedPackageExamples[0].stdout.includes(
+      `LUASCRIPT_PACKAGE_EXAMPLE=minimal-system version=${pkg.version} components=0`) &&
+    installedPackageExamples[1].stdout.includes(
+      "LUASCRIPT_PACKAGE_EXAMPLE=transpile-js-to-lua") &&
+    installedPackageExamples[1].stdout.includes("local answer = (6 * 7)"),
+  "public package report proves both exact installed-package examples execute from the clean consumer");
+
+  const publicPackageNodeFloor = publicApiRuntimePackageReport.nodeFloor || {};
+  check(publicApiRuntimePackageReport.environment &&
+    publicApiRuntimePackageReport.environment.nodeFloorExecutableProbe === "v14.17.1" &&
+    publicPackageNodeFloor.declaredFloor === ">=14.17.0" &&
+    publicPackageNodeFloor.requestedExecutableProbe === "node@14.17.1" &&
+    publicPackageNodeFloor.status === 0 &&
+    publicPackageNodeFloor.signal === null &&
+    publicPackageNodeFloor.error === null &&
+    /^[0-9a-f]{64}$/.test(publicPackageNodeFloor.scriptSha256 || "") &&
+    publicPackageNodeFloor.observed &&
+    publicPackageNodeFloor.observed.nodeVersion === "v14.17.1" &&
+    JSON.stringify(publicPackageNodeFloor.observed.rootExports) ===
+      JSON.stringify(expectedPublicRootExports) &&
+    publicPackageNodeFloor.observed.lua === "local answer = (6 * 7)",
+  "public package report proves Node v14.17.1 with exact root exports and Lua smoke");
+  check(publicApiRuntimePackageReport.cleanup &&
+    publicApiRuntimePackageReport.cleanup.prefix === "luascript-public-package-contract-" &&
+    publicApiRuntimePackageReport.cleanup.removed === true &&
+    publicPackageChecks.some(entry =>
+      entry.name === "exact-temporary-root-cleaned" &&
+      entry.passed === true &&
+      entry.detail &&
+      entry.detail.prefix === "luascript-public-package-contract-" &&
+      entry.detail.removed === true),
+  "public package report proves its exact temporary path was removed");
+
   checkFile("tests/conformance/schema_artifact_mapping.test.js");
-  checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "dual-surface-transition",
-    "schema artifact mapping harness records dual-surface transition decision");
+  checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "RELEASE_IR_SURFACE_CONTRACT.decision",
+    "schema artifact mapping harness records chosen transition decision");
   checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "schema-artifact-mapping-report.json",
     "schema artifact mapping harness writes durable report");
-  checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "This report proves schema-valid derived artifacts for current positive conformance fixtures only.",
+  checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "This report proves derived artifacts for current positive conformance fixtures only.",
     "schema artifact mapping harness keeps scoped boundary");
-  checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "It does not choose the release IR surface, change compiler output, promote broad source identity, or close canonical 1.0.",
-    "schema artifact mapping harness no-release-surface boundary");
+  checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "It does not change compiler output or package API, provide reverse conversion, prove semantic equivalence or source preservation",
+    "schema artifact mapping harness one-way boundary");
+  checkFile("src/ir/release_ir_surface_contract.js");
+  check(RELEASE_IR_SURFACE_CONTRACT.contractVersion === "1.0.0-rc.1" &&
+    RELEASE_IR_SURFACE_CONTRACT.decision === "versioned-one-way-dual-surface-transition" &&
+    RELEASE_IR_SURFACE_CONTRACT.direction === "legacy-to-canonical",
+  "release IR contract fixes versioned one-way transition identity");
+  check(RELEASE_IR_SURFACE_CONTRACT.surfaces.operational.version === "v0" &&
+    RELEASE_IR_SURFACE_CONTRACT.surfaces.canonical.version === "1.0.0",
+  "release IR contract fixes operational and canonical surface versions");
+  check(RELEASE_IR_SURFACE_CONTRACT.bridge.reverseConversion === "NOT_PROVIDED_OR_CLAIMED" &&
+    RELEASE_IR_SURFACE_CONTRACT.bridge.semanticEquivalence === "NOT_CLAIMED" &&
+    RELEASE_IR_SURFACE_CONTRACT.bridge.sourcePreservation === "NOT_CLAIMED",
+  "release IR contract keeps reverse and broad semantic claims closed");
+  check(RELEASE_IR_SURFACE_CONTRACT.deprecation.legacySurface === "SUPPORTED_THROUGH_LUASCRIPT_1_X" &&
+    RELEASE_IR_SURFACE_CONTRACT.deprecation.removalEarliestPackageMajor === "2.0.0" &&
+    RELEASE_IR_SURFACE_CONTRACT.deprecation.prerequisites.length === 4,
+  "release IR contract keeps legacy Program IR through 1.x with guarded 2.0-or-later removal");
+  check(Object.keys(KIND_ALIAS_POLICIES).sort().join("|") === [
+    "Parameter->Identifier",
+    "SwitchCase->BlockStatement",
+    "UnaryExpression->BinaryExpression",
+    "VariableDeclarator->VariableDeclaration"
+  ].sort().join("|"),
+  "release IR contract keeps exact kind encoding registry");
+  check(Object.keys(FIELD_ALIAS_POLICIES).sort().join("|") === [
+    "args->arguments",
+    "condition->test",
+    "operand->argument",
+    "parameters->params",
+    "value->argument",
+    "varKind->declarationKind"
+  ].sort().join("|"),
+  "release IR contract keeps exact field encoding registry");
   checkFile("src/ir/schema_artifact_bridge.js");
   checkIncludes("src/ir/schema_artifact_bridge.js", "validateSchemaArtifactCompatibility",
     "schema artifact bridge exports compatibility validation");
+  checkIncludes("src/ir/schema_artifact_bridge.js", "validateReleaseIrSurfaceMapping",
+    "schema artifact bridge exports release contract validation");
+  checkIncludes("src/ir/schema_artifact_bridge.js", "collectReleaseNodeShapeFailures",
+    "schema artifact bridge enforces original-kind-aware shape policy");
+  checkIncludes("src/ir/schema_artifact_bridge.js", "Undeclared release IR field alias",
+    "schema artifact bridge fails closed on undeclared field aliases");
   checkIncludes("src/ir/schema_artifact_bridge.js", "sourceSurface: \"legacy-object-tree\"",
     "schema artifact bridge marks legacy surface");
   checkIncludes("src/ir/schema_artifact_bridge.js", "artifactSurface: \"canonical-ir-schema-v1-derived\"",
@@ -246,12 +829,237 @@ function checkPackageMetadata() {
   checkFile("tests/conformance/dual_surface_compatibility_bridge.test.js");
   checkIncludes("tests/conformance/dual_surface_compatibility_bridge.test.js", "dual-surface-compatibility-bridge-report.json",
     "dual-surface compatibility bridge harness writes durable report");
-  checkIncludes("tests/conformance/dual_surface_compatibility_bridge.test.js", "formal-dual-surface-compatibility-bridge-candidate",
-    "dual-surface compatibility bridge harness records bridge candidate decision");
+  checkIncludes("tests/conformance/dual_surface_compatibility_bridge.test.js", "versioned-one-way-dual-surface-transition",
+    "dual-surface compatibility harness records chosen contract decision");
   checkIncludes("tests/conformance/dual_surface_compatibility_bridge.test.js", "INTERNAL_ONLY",
     "dual-surface compatibility bridge harness keeps bridge internal only");
-  checkIncludes("tests/conformance/dual_surface_compatibility_bridge.test.js", "It does not make the bridge public API, choose the final release IR surface, change compiler output, or close canonical 1.0.",
-    "dual-surface compatibility bridge harness boundary");
+  checkIncludes("tests/conformance/dual_surface_compatibility_bridge.test.js", "It does not make the bridge public API, change compiler output, provide reverse conversion, prove semantic equivalence or source preservation",
+    "dual-surface compatibility harness one-way boundary");
+  checkIncludes("tests/conformance/dual_surface_compatibility_bridge.test.js", "negativeShapeCases",
+    "dual-surface compatibility harness includes malformed-shape negatives");
+  checkIncludes("tests/conformance/dual_surface_compatibility_bridge.test.js", "variable-declarator-missing-binding",
+    "dual-surface compatibility harness rejects missing declaration bindings");
+  checkIncludes("tests/conformance/dual_surface_compatibility_bridge.test.js", "duplicate-explicit-source-node-id",
+    "dual-surface compatibility harness rejects duplicate source ids");
+  checkIncludes("tests/conformance/dual_surface_compatibility_bridge.test.js", "do-while-current-bridge-projection",
+    "dual-surface compatibility harness proves DoWhile projection");
+  checkIncludes("tests/conformance/dual_surface_compatibility_bridge.test.js", "mapped-kind-metadata-drift",
+    "dual-surface compatibility harness rejects mapped-kind drift");
+
+  const expectedReleaseIrFixtureNames = releaseIrConformanceManifest.fixtures
+    .map(fixture => fixture.name);
+  const expectedReleaseIrPositiveNames = releaseIrConformanceManifest.fixtures
+    .filter(fixture => !fixture.expectedFailure)
+    .map(fixture => fixture.name);
+  const expectedReleaseIrDiagnosticNames = releaseIrConformanceManifest.fixtures
+    .filter(fixture => fixture.expectedFailure)
+    .map(fixture => fixture.name);
+  const expectedReleaseIrFixtureHashes = releaseIrConformanceManifest.fixtures
+    .map(fixture => ({
+      name: fixture.name,
+      sha256: sha256Text(JSON.stringify(fixture))
+    }));
+  const hasLiveReleaseIrManifestEvidence = report => Boolean(
+    report &&
+    report.manifest &&
+    report.manifest.path === "tests/conformance/manifest.json" &&
+    report.manifest.sha256 === sha256Text(readText("tests/conformance/manifest.json")) &&
+    report.manifest.status === releaseIrConformanceManifest.status &&
+    report.manifest.version === releaseIrConformanceManifest.version &&
+    report.manifest.fixtureCount === expectedReleaseIrFixtureNames.length &&
+    JSON.stringify(report.manifest.fixtureHashes) ===
+      JSON.stringify(expectedReleaseIrFixtureHashes)
+  );
+  const schemaArtifactResults = Array.isArray(schemaArtifactReport.results)
+    ? schemaArtifactReport.results
+    : [];
+  const dualSurfaceResults = Array.isArray(dualSurfaceReport.results)
+    ? dualSurfaceReport.results
+    : [];
+  const schemaArtifactPositiveResults = schemaArtifactResults
+    .filter(result => result.status === "schema-valid-derived-artifact");
+  const dualSurfacePositiveResults = dualSurfaceResults
+    .filter(result => result.status === "bridge-compatible-derived-artifact");
+  const schemaArtifactDiagnosticResults = schemaArtifactResults
+    .filter(result => result.status === "expected-diagnostic");
+  const dualSurfaceDiagnosticResults = dualSurfaceResults
+    .filter(result => result.status === "expected-diagnostic-preserved");
+  const schemaArtifactInvariantDetails = schemaArtifactPositiveResults
+    .flatMap(result => Array.isArray(result.compatibilityChecks) ? result.compatibilityChecks : []);
+  const schemaArtifactContractDetails = schemaArtifactPositiveResults
+    .flatMap(result => Array.isArray(result.releaseContractChecks) ? result.releaseContractChecks : []);
+  const dualSurfaceInvariantDetails = dualSurfacePositiveResults
+    .flatMap(result => Array.isArray(result.compatibilityChecks) ? result.compatibilityChecks : []);
+  const dualSurfaceContractDetails = dualSurfacePositiveResults
+    .flatMap(result => Array.isArray(result.releaseContractChecks) ? result.releaseContractChecks : []);
+
+  check(expectedReleaseIrFixtureNames.length === 32 &&
+    new Set(expectedReleaseIrFixtureNames).size === 32 &&
+    expectedReleaseIrPositiveNames.length === 21 &&
+    expectedReleaseIrDiagnosticNames.length === 11,
+  "live release IR conformance manifest has exact 32 unique fixture identities split 21/11");
+  check(hasLiveReleaseIrManifestEvidence(schemaArtifactReport) &&
+    hasLiveReleaseIrManifestEvidence(dualSurfaceReport) &&
+    schemaArtifactReport.manifest.sha256 === dualSurfaceReport.manifest.sha256,
+  "release IR reports bind the exact live conformance manifest bytes and fixture identities");
+  check(schemaArtifactResults.length === 32 &&
+    dualSurfaceResults.length === 32 &&
+    JSON.stringify(schemaArtifactResults.map(result => result.name)) ===
+      JSON.stringify(expectedReleaseIrFixtureNames) &&
+    JSON.stringify(dualSurfaceResults.map(result => result.name)) ===
+      JSON.stringify(expectedReleaseIrFixtureNames) &&
+    JSON.stringify(schemaArtifactDiagnosticResults.map(result => result.name)) ===
+      JSON.stringify(expectedReleaseIrDiagnosticNames) &&
+    JSON.stringify(dualSurfaceDiagnosticResults.map(result => result.name)) ===
+      JSON.stringify(expectedReleaseIrDiagnosticNames),
+  "release IR reports retain exact 32 result identities and exact 11 diagnostic identities");
+  check(schemaArtifactReport.transitionPolicy &&
+    schemaArtifactReport.transitionPolicy.contractVersion === "1.0.0-rc.1" &&
+    schemaArtifactReport.transitionPolicy.decision === RELEASE_IR_SURFACE_CONTRACT.decision &&
+    schemaArtifactReport.transitionPolicy.direction === RELEASE_IR_SURFACE_CONTRACT.direction &&
+    JSON.stringify(schemaArtifactReport.transitionPolicy.legacySurface) ===
+      JSON.stringify(RELEASE_IR_SURFACE_CONTRACT.surfaces.operational) &&
+    JSON.stringify(schemaArtifactReport.transitionPolicy.schemaSurface) ===
+      JSON.stringify(RELEASE_IR_SURFACE_CONTRACT.surfaces.canonical) &&
+    schemaArtifactReport.transitionPolicy.releaseSurfaceStatus === "CHOSEN_VERSIONED_ONE_WAY_DUAL_SURFACE" &&
+    schemaArtifactReport.summary &&
+    schemaArtifactReport.summary.total === 32 &&
+    schemaArtifactReport.summary.positiveFixtures === 21 &&
+    schemaArtifactReport.summary.schemaValidDerivedArtifacts === 21 &&
+    schemaArtifactReport.summary.expectedDiagnostics === 11 &&
+    isExactPassingSummary(schemaArtifactReport.summary.invariantChecks, 168) &&
+    isExactPassingSummary(schemaArtifactReport.summary.releaseContractChecks, 147) &&
+    schemaArtifactReport.summary.failed === 0 &&
+    Array.isArray(schemaArtifactReport.failures) &&
+    schemaArtifactReport.failures.length === 0,
+  "schema artifact report records chosen contract and exact 21/11/168/147 zero-failure proof");
+  check(schemaArtifactPositiveResults.every(result =>
+    Array.isArray(result.compatibilityChecks) &&
+    Array.isArray(result.releaseContractChecks)) &&
+    hasExactPassedDetails(schemaArtifactInvariantDetails, 168) &&
+    hasExactPassedDetails(schemaArtifactContractDetails, 147),
+  "schema artifact report retains every passing invariant and release-contract detail");
+  check(dualSurfaceReport.bridgePolicy &&
+    dualSurfaceReport.bridgePolicy.contractVersion === "1.0.0-rc.1" &&
+    dualSurfaceReport.bridgePolicy.releaseSurfaceStatus === "CHOSEN_VERSIONED_ONE_WAY_DUAL_SURFACE" &&
+    dualSurfaceReport.summary &&
+    dualSurfaceReport.summary.total === 32 &&
+    dualSurfaceReport.summary.positiveFixtures === 21 &&
+    dualSurfaceReport.summary.bridgeCompatibleDerivedArtifacts === 21 &&
+    dualSurfaceReport.summary.schemaValidDerivedArtifacts === 21 &&
+    dualSurfaceReport.summary.expectedDiagnostics === 11 &&
+    isExactPassingSummary(dualSurfaceReport.summary.invariantChecks, 168) &&
+    isExactPassingSummary(dualSurfaceReport.summary.contractStaticChecks, 10) &&
+    isExactPassingSummary(dualSurfaceReport.summary.contractMappingChecks, 147) &&
+    isExactPassingSummary(dualSurfaceReport.summary.determinismChecks, 21) &&
+    isExactPassingSummary(dualSurfaceReport.summary.supplementalPositiveShapeChecks, 1) &&
+    isExactPassingSummary(dualSurfaceReport.summary.negativeShapeChecks, 12) &&
+    isExactPassingSummary(dualSurfaceReport.summary.sourceShapeRejectionChecks, 5) &&
+    dualSurfaceReport.summary.failed === 0 &&
+    Array.isArray(dualSurfaceReport.failures) &&
+    dualSurfaceReport.failures.length === 0,
+  "dual-surface report records exact 21/11/168/10/147/21/1/12/5 zero-failure proof");
+  check(dualSurfacePositiveResults.every(result =>
+    Array.isArray(result.compatibilityChecks) &&
+    Array.isArray(result.releaseContractChecks) &&
+    result.latestSchemaValid === true &&
+    result.pinnedSchemaValid === true &&
+    result.majorAliasSchemaValid === true &&
+    result.deterministic === true) &&
+    hasExactPassedDetails(dualSurfaceInvariantDetails, 168) &&
+    hasExactPassedDetails(dualSurfaceContractDetails, 147),
+  "dual-surface report retains every passing invariant, mapping, schema, and determinism detail");
+  check(dualSurfaceReport.schema &&
+    dualSurfaceReport.schema.latest.sha256 === sha256Text(readText("docs/canonical_ir.schema.json")) &&
+    dualSurfaceReport.schema.pinnedRc.sha256 === sha256Text(readText("docs/schema/1.0.0/canonical_ir.schema.json")) &&
+    dualSurfaceReport.schema.majorAlias.sha256 === sha256Text(readText("docs/schema/1.x/canonical_ir.schema.json")) &&
+    schemaArtifactReport.schema.sha256 === sha256Text(readText("docs/canonical_ir.schema.json")) &&
+    dualSurfaceReport.schema.latestAndPinnedSemanticParityExceptId === true,
+  "release IR reports match live latest, RC, and 1.x schema bytes");
+  check(JSON.stringify(dualSurfaceReport.releaseIrSurfaceContract) ===
+    JSON.stringify(RELEASE_IR_SURFACE_CONTRACT),
+  "dual-surface report embeds the live release IR contract exactly");
+  check(schemaArtifactReport.governingContract &&
+    schemaArtifactReport.governingContract.path === "docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md" &&
+    schemaArtifactReport.governingContract.sha256 ===
+      sha256Text(readText("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md")) &&
+    hasExactLiveImplementationEvidence(schemaArtifactReport.implementationEvidence, [
+      "src/compilers/core-language-bridge.js",
+      "src/ir/release_ir_surface_contract.js",
+      "src/ir/schema_artifact_bridge.js",
+      "tests/conformance/schema_artifact_mapping.test.js"
+    ]),
+  "schema artifact report hashes the exact live governing contract and implementation sources");
+  check(dualSurfaceReport.governingContract &&
+    dualSurfaceReport.governingContract.path === "docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md" &&
+    dualSurfaceReport.governingContract.sha256 ===
+      sha256Text(readText("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md")) &&
+    hasExactLiveImplementationEvidence(dualSurfaceReport.implementationEvidence, [
+      "src/ir/release_ir_surface_contract.js",
+      "src/ir/schema_artifact_bridge.js",
+      "tests/conformance/dual_surface_compatibility_bridge.test.js",
+      "src/unified_luascript.js"
+    ]),
+  "dual-surface report hashes the exact live governing contract and implementation sources");
+  check(dualSurfaceReport.verificationDetails &&
+    hasExactPassedDetails(dualSurfaceReport.verificationDetails.contractStaticChecks, 10) &&
+    hasExactPassedDetails(dualSurfaceReport.verificationDetails.supplementalPositiveShapeChecks, 1) &&
+    dualSurfaceReport.verificationDetails.supplementalPositiveShapeChecks
+      .some(entry => entry.name === "do-while-current-bridge-projection" && entry.passed) &&
+    hasExactPassedDetails(dualSurfaceReport.verificationDetails.negativeShapeChecks, 12) &&
+    dualSurfaceReport.verificationDetails.negativeShapeChecks
+      .some(entry => entry.name === "variable-declarator-missing-binding" && entry.passed) &&
+    hasExactPassedDetails(dualSurfaceReport.verificationDetails.sourceShapeRejectionChecks, 5) &&
+    dualSurfaceReport.verificationDetails.sourceShapeRejectionChecks
+      .some(entry => entry.name === "duplicate-explicit-source-node-id" && entry.passed),
+  "dual-surface report retains named static, supplemental, malformed-shape, and malformed-source checks");
+  check(packageRootExports.join("|") === [
+    "AdvancedFeatures",
+    "AgenticIDE",
+    "CoreTranspiler",
+    "PerformanceTools",
+    "RuntimeSystem",
+    "UnifiedLuaScript"
+  ].join("|"),
+  "package root keeps the exact six-name export surface");
+  const schemaArtifactHashResults = schemaArtifactResults
+    .filter(result => Object.prototype.hasOwnProperty.call(result, "artifactSha256"));
+  const dualSurfaceHashResults = dualSurfaceResults
+    .filter(result => Object.prototype.hasOwnProperty.call(result, "artifactSha256"));
+  const schemaArtifactsByName = new Map(
+    schemaArtifactPositiveResults.map(result => [result.name, result.artifactSha256])
+  );
+  const dualSurfaceArtifactsByName = new Map(
+    dualSurfacePositiveResults.map(result => [result.name, result.artifactSha256])
+  );
+  check(schemaArtifactPositiveResults.length === 21 &&
+    dualSurfacePositiveResults.length === 21 &&
+    schemaArtifactHashResults.length === 21 &&
+    dualSurfaceHashResults.length === 21 &&
+    schemaArtifactHashResults.every(result =>
+      result.status === "schema-valid-derived-artifact" &&
+      /^[0-9a-f]{64}$/.test(result.artifactSha256)) &&
+    dualSurfaceHashResults.every(result =>
+      result.status === "bridge-compatible-derived-artifact" &&
+      /^[0-9a-f]{64}$/.test(result.artifactSha256)) &&
+    JSON.stringify(schemaArtifactPositiveResults.map(result => result.name)) ===
+      JSON.stringify(expectedReleaseIrPositiveNames) &&
+    JSON.stringify(dualSurfacePositiveResults.map(result => result.name)) ===
+      JSON.stringify(expectedReleaseIrPositiveNames) &&
+    schemaArtifactsByName.size === 21 &&
+    dualSurfaceArtifactsByName.size === 21 &&
+    schemaArtifactPositiveResults.every(result =>
+      dualSurfaceArtifactsByName.get(result.name) === result.artifactSha256) &&
+    dualSurfacePositiveResults.every(result =>
+      schemaArtifactsByName.get(result.name) === result.artifactSha256),
+  "schema and dual-surface reports retain exactly 21 positive artifact hashes with identical keys and bidirectional equality");
+  check(dualSurfaceReport.summary &&
+    dualSurfaceReport.summary.globalKindAliases["VariableDeclarator->VariableDeclaration"] === 52 &&
+    dualSurfaceReport.summary.globalKindAliases["Parameter->Identifier"] === 10 &&
+    dualSurfaceReport.summary.globalKindAliases["UnaryExpression->BinaryExpression"] === 5 &&
+    dualSurfaceReport.summary.globalKindAliases["SwitchCase->BlockStatement"] === 3 &&
+    dualSurfaceReport.summary.globalFieldAliases["condition->test"] === 23,
+  "dual-surface report pins exact current kind encodings and corrected condition field count");
 
   const edgeMatrixCases = new Set((edgeMatrixManifest.cases || []).map((entry) => entry.id));
   checkFile("tests/edge_matrix/manifest.json");
@@ -528,9 +1336,9 @@ function checkPackageMetadata() {
     "README bidirectionality contract link");
   checkIncludes("README.md", "Language depth accession rules live in [docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md)",
     "README language accession rules link");
-  checkIncludes("README.md", "Public API and runtime expectations for real `1.0` are defined by [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md)",
+  checkIncludes("README.md", "The active tested no-release public API/runtime contract is [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md)",
     "README public API runtime contract link");
-  checkIncludes("README.md", "It names package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, and release-action boundaries for real `1.0`.",
+  checkIncludes("README.md", "It names package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, migration/changelog policy, and release-action boundaries for real `1.0`.",
     "README public API runtime boundary");
   checkIncludes("README.md", "The 2026-07-16 no-release Denali freeze candidate records current truth only.",
     "README no-release freeze candidate");
@@ -544,8 +1352,8 @@ function checkPackageMetadata() {
     "README conformance evidence binder link");
   checkIncludes("README.md", "the remaining source-preserving/certification climb now lives in [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md)",
     "README Big Remaining Climb ledger link");
-  checkIncludes("README.md", "Current forward motion lives in [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md): new proof layers, schema-valid IR surface reconciliation, final API/runtime freeze, compatibility seal, and release-grade evidence generation.",
-    "README current route points to Big Remaining Climb");
+  checkIncludes("README.md", "[docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md) now seals the scoped local/current-host Denali release candidate",
+    "README scoped Denali RC seal");
   checkIncludes("README.md", "both passed on 2026-06-19 and were refreshed green on 2026-07-14",
     "README beta gate refresh date");
   checkIncludes("README.md", "Language broadening now follows [docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md): manifest, parser coverage, lowering, emitter, native runtime, target runtime, docs, support matrix, claims check, and Denali ledger entry must be `MET` or explicitly `EXCLUDED` before a slice can be promoted.",
@@ -554,7 +1362,9 @@ function checkPackageMetadata() {
     "README bidirectionality boundary");
   checkIncludes("README.md", "The first narrow round-trip probe is `npm run test:roundtrip-probe`.",
     "README round-trip probe boundary");
-  checkIncludes("README.md", "The source-preserving `.ls` suite is `npm run test:source-identity-probe`: it now covers 15 fixtures, with 12 positive normalized `.ls` source identity, normalized parser-owned AST identity, and normalized IR identity checks plus 3 separate expected unsupported diagnostics.",
+  checkIncludes("README.md", "It covers 7 tiny fixtures: 5 structural IR reparse checks across JavaScript, `.ls`, Python, and Lua plus 2 JavaScript/Python runtime-output equivalence checks.",
+    "README round-trip probe exact scope");
+  checkIncludes("README.md", "The source-preserving `.ls` suite is `npm run test:source-identity-probe`: it covers 15 fixtures, with 12 positive normalized `.ls` source identity, normalized parser-owned AST identity, and normalized IR identity checks plus 3 separate expected unsupported diagnostics.",
     "README source identity suite boundary");
   checkIncludes("README.md", "Canonical IR conformance, value-semantics matrix, control-flow matrix, function/scope matrix, and data-structure matrix: `npm run test:ir-conformance`",
     "README canonical IR conformance gate");
@@ -564,13 +1374,13 @@ function checkPackageMetadata() {
     "README unsupported diagnostics certification gate");
   checkIncludes("README.md", "Round-trip probe harness for tiny structural IR reparse and runtime-output equivalence cases: `npm run test:roundtrip-probe`",
     "README round-trip probe command");
-  checkIncludes("README.md", "Durable conformance reports are written under `artifacts/conformance/`: `canonical-ir-conformance-report.json`, `roundtrip-probe-report.json`, `source-identity-probe-report.json`, and `unsupported-diagnostics-report.json`.",
+  checkIncludes("README.md", "Durable conformance reports are written under `artifacts/conformance/`: `canonical-ir-conformance-report.json`, `schema-artifact-mapping-report.json`, `dual-surface-compatibility-bridge-report.json`, `public-api-runtime-package-report.json`, `denali-compatibility-matrix-report.json`, `actual-programs-report.json`, `parser-ownership-report.json`, `roundtrip-probe-report.json`, `source-identity-probe-report.json`, and `unsupported-diagnostics-report.json`.",
     "README durable conformance report paths");
   checkIncludes("README.md", "Target-runtime IR lanes are useful evidence for emitted behavior, but they do not replace native runtime qualification",
     "README native runtime qualification boundary");
   checkIncludes("PROJECT_STATUS.md", "The active-docs map is [docs/INDEX.md](docs/INDEX.md)",
     "PROJECT_STATUS active docs map");
-  checkIncludes("PROJECT_STATUS.md", "The current package/runtime expectation is also explicitly named",
+  checkIncludes("PROJECT_STATUS.md", "The current package/runtime expectation is explicitly tested for the first canonical `1.0` pass",
     "PROJECT_STATUS package/runtime route");
   checkIncludes("PROJECT_STATUS.md", "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md",
     "PROJECT_STATUS exit criteria charter link");
@@ -584,17 +1394,17 @@ function checkPackageMetadata() {
     "PROJECT_STATUS conformance evidence binder link");
   checkIncludes("PROJECT_STATUS.md", "the Big Remaining Climb master ledger is [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md)",
     "PROJECT_STATUS Big Remaining Climb ledger link");
-  checkIncludes("PROJECT_STATUS.md", "The current next route is [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md): new proof layers, schema-valid IR surface reconciliation, final API/runtime freeze, compatibility seal, and release-grade evidence generation.",
-    "PROJECT_STATUS current route points to Big Remaining Climb");
+  checkIncludes("PROJECT_STATUS.md", "[docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md) now seals the scoped local/current-host Denali release candidate",
+    "PROJECT_STATUS scoped Denali RC seal");
   checkIncludes("PROJECT_STATUS.md", "`npm run beta:preflight` and `npm run beta:full` both passed on 2026-06-19 and were refreshed green on 2026-07-14",
     "PROJECT_STATUS beta gate refresh date");
-  checkIncludes("PROJECT_STATUS.md", "is the active contract draft for root exports, CLI/API surface, runtime files, npm scripts, package files, semver policy, compatibility policy, and release-action boundaries.",
+  checkIncludes("PROJECT_STATUS.md", "is the active tested no-release contract for root exports, CLI/API surface, runtime files, npm scripts, package files, semver policy, compatibility policy, migration/changelog policy, and release-action boundaries",
     "PROJECT_STATUS public API runtime boundary");
-  checkIncludes("PROJECT_STATUS.md", "The 2026-07-16 no-release Denali freeze candidate keeps that package truth unchanged: no package `exports` map, no declared npm `bin`, no global CLI contract, no package version bump, no tag, and no publish action.",
+  checkIncludes("PROJECT_STATUS.md", "The no-release Denali freeze candidate keeps the protected API and release stance unchanged: no package `exports` map, no declared npm `bin`, no global CLI contract, no package version bump, no tag, and no publish action.",
     "PROJECT_STATUS no-release freeze candidate");
   checkIncludes("PROJECT_STATUS.md", "Root package import remains the only candidate public import surface; direct `node src/index.js` command handling is not public CLI.",
     "PROJECT_STATUS package import and CLI boundary");
-  checkIncludes("PROJECT_STATUS.md", "Root-level `runtime/` helpers are repo-local for current Lua examples/tests and are outside the package `files` promise",
+  checkIncludes("PROJECT_STATUS.md", "Root-level `runtime/` helpers are repository-local and remain outside the package `files` promise.",
     "PROJECT_STATUS root runtime package-files boundary");
   checkIncludes("PROJECT_STATUS.md", "The bidirectionality contract is now explicit.",
     "PROJECT_STATUS bidirectionality contract section");
@@ -602,13 +1412,15 @@ function checkPackageMetadata() {
     "PROJECT_STATUS bidirectionality layers");
   checkIncludes("PROJECT_STATUS.md", "The first round-trip probe harness is `npm run test:roundtrip-probe`",
     "PROJECT_STATUS round-trip probe harness");
-  checkIncludes("PROJECT_STATUS.md", "Structural IR reparse means source -> current bridge IR -> emitted target -> current bridge IR preserves normalized IR after generated IDs and metadata are removed.",
+  checkIncludes("PROJECT_STATUS.md", "Structural IR reparse means source -> current bridge IR -> emitted target -> current bridge IR preserves normalized Program-IR after source locations, raw literal fields, and generated IDs are removed. Same-language probes preserve and compare metadata; cross-language probes exclude source-specific metadata.",
     "PROJECT_STATUS structural reparse definition");
   checkIncludes("PROJECT_STATUS.md", "Runtime-output equivalence means source runtime and emitted target runtime agree on stdout for a fixture; it is not round-trip source identity or broad semantic equivalence.",
     "PROJECT_STATUS runtime equivalence boundary");
   checkIncludes("PROJECT_STATUS.md", "The round-trip manifest/report now records bidirectionality layer evidence for JavaScript, `.ls`, Python, and Lua.",
     "PROJECT_STATUS bidirectionality layer evidence map");
-  checkIncludes("PROJECT_STATUS.md", "structural IR reparse is seeded for JavaScript, `.ls`, and Python but not claimed for Lua",
+  checkIncludes("PROJECT_STATUS.md", "structural IR reparse is now seeded for JavaScript, `.ls`, Python, and Lua",
+    "PROJECT_STATUS Lua structural reparse seed");
+  checkIncludes("PROJECT_STATUS.md", "Lua has one tiny normalized Program-IR parity fixture only",
     "PROJECT_STATUS Lua structural reparse boundary");
   checkIncludes("PROJECT_STATUS.md", "The source-preserving `.ls` suite is `npm run test:source-identity-probe`, backed by `tests/roundtrip/source_identity_manifest.json` and `tests/roundtrip/source_identity_probe.test.js`.",
     "PROJECT_STATUS source identity suite");
@@ -636,11 +1448,13 @@ function checkPackageMetadata() {
     "PROJECT_STATUS actual-program unsupported diagnostics route");
   checkIncludes("PROJECT_STATUS.md", "It organizes gates, generated reports, conformance suites, support matrix traceability, known unsupported areas, compatibility policy, release checklist, and reproducibility steps.",
     "PROJECT_STATUS conformance evidence binder scope");
-  checkIncludes("PROJECT_STATUS.md", "Both are certification-style evidence structure only: not ISO certification, not third-party certification, and not a claim of true omni-language completion.",
+  checkIncludes("PROJECT_STATUS.md", "The structure is certification-style local evidence only: not ISO certification, not third-party certification, not universal platform certification, and not a claim of true omni-language completion.",
     "PROJECT_STATUS conformance evidence binder boundary");
-  checkIncludes("PROJECT_STATUS.md", "the JS/.ls/Python/Lua bidirectionality layer map is report-backed. The next executable slice is a real new proof layer",
-    "PROJECT_STATUS source identity suite sealed");
-  checkIncludes("PROJECT_STATUS.md", "Durable conformance reports are now written under `artifacts/conformance/`: `canonical-ir-conformance-report.json`, `roundtrip-probe-report.json`, `source-identity-probe-report.json`, and `unsupported-diagnostics-report.json`.",
+  checkIncludes("PROJECT_STATUS.md", "The edge-case matrix, IR semantics map, Lua structural seed, versioned release-IR transition, package boundary, compatibility matrix, deterministic evidence bundle, and authoritative preflight are sealed for the scoped local RC.",
+    "PROJECT_STATUS scoped RC evidence surfaces");
+  checkIncludes("PROJECT_STATUS.md", "contract `1.0.0-rc.1` keeps legacy object-tree Program IR `v0` as the operational compiler/emitter surface and uses canonical schema artifact `1.0.0` as a one-way evidence/serialization projection",
+    "PROJECT_STATUS release IR surface decision");
+  checkIncludes("PROJECT_STATUS.md", "Durable conformance reports are now written under `artifacts/conformance/`: `canonical-ir-conformance-report.json`, `schema-artifact-mapping-report.json`, `dual-surface-compatibility-bridge-report.json`, `public-api-runtime-package-report.json`, `denali-compatibility-matrix-report.json`, `actual-programs-report.json`, `parser-ownership-report.json`, `roundtrip-probe-report.json`, `source-identity-probe-report.json`, and `unsupported-diagnostics-report.json`.",
     "PROJECT_STATUS durable conformance report paths");
   checkIncludes("PROJECT_STATUS.md", "`npm run stubs:check` continues to classify explicit unsupported diagnostics as intentional runtime diagnostics while preserving `must-fix` findings for fake implementation bodies.",
     "PROJECT_STATUS diagnostics versus stubs boundary");
@@ -656,7 +1470,7 @@ function checkPackageMetadata() {
     "README JavaScript Ring 3 branch-depth boundary");
   checkIncludes("PROJECT_STATUS.md", "A separate JavaScript Ring 3 branch-depth foothold covers return-only `switch` statements plus conditional expressions through `ring3_switch_conditional`",
     "PROJECT_STATUS JavaScript Ring 3 branch-depth boundary");
-  checkIncludes("PROJECT_STATUS.md", "`npm run test:roundtrip-probe` passes the narrow round-trip probe harness",
+  checkIncludes("PROJECT_STATUS.md", "`npm run test:roundtrip-probe` passes the narrow 7-fixture round-trip probe harness",
     "PROJECT_STATUS round-trip probe health");
   checkIncludes("PROJECT_STATUS.md", "not a certification suite or `1.0` promotion",
     "PROJECT_STATUS conformance boundary");
@@ -672,7 +1486,7 @@ function checkPackageMetadata() {
     "documentation index language accession rules");
   checkIncludes("docs/INDEX.md", "LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
     "documentation index public API runtime contract");
-  checkIncludes("docs/INDEX.md", "Public API/runtime contract: [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md) defines package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, and release-action boundaries for real `1.0`; its 2026-07-16 no-release freeze candidate records no package `exports` map, no npm `bin`, no global CLI, root-level `runtime/` outside package `files`, and no version bump or publish action.",
+  checkIncludes("docs/INDEX.md", "Public API/runtime contract: [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md) defines package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, migration/changelog policy, and release-action boundaries for real `1.0`; its tested 2026-07-29 no-release candidate records no package `exports` map, no npm `bin`, no global CLI, exact runtime TypeScript, Node `>=14.17.0`, deliberate root-level `runtime/` exclusion, an actual-tarball consumer gate, and no version bump or publish action.",
     "documentation index public API runtime boundary");
   checkIncludes("docs/INDEX.md", "LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md",
     "documentation index conformance evidence binder");
@@ -707,10 +1521,14 @@ function checkPackageMetadata() {
     "archive audit whitelist includes conformance evidence bundle index");
   checkIncludes("scripts/archive_audit.js", "\"LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md\"",
     "archive audit whitelist includes Big Remaining Climb ledger");
+  checkIncludes("scripts/archive_audit.js", "\"LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md\"",
+    "archive audit whitelist includes release IR surface contract");
   checkIncludes("docs/INDEX.md", "LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md",
     "documentation index canonical IR semantics inventory");
   checkIncludes("docs/INDEX.md", "LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md",
     "documentation index canonical IR semantics spec v0");
+  checkIncludes("docs/INDEX.md", "LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md",
+    "documentation index release IR surface contract");
   checkIncludes("docs/INDEX.md", "Native language gates are listed in [Language Completion Rules](LANGUAGE_COMPLETION_RULES.md)",
     "documentation index gate boundary");
   checkIncludes("docs/INDEX.md", "Canonical IR conformance, value-semantics matrix, control-flow matrix, function/scope matrix, and data-structure matrix: `npm run test:ir-conformance`, using `tests/conformance/manifest.json`",
@@ -733,13 +1551,13 @@ function checkPackageMetadata() {
     "exit criteria bidirectionality criterion");
   checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`1.0-PUBLIC-API-RUNTIME`",
     "exit criteria public API runtime criterion");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "Package entrypoints, root exports, CLI/API surface, Node floor, runtime files, npm scripts, package files, semver policy, compatibility policy, and release-action boundaries are written and checked",
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "Entry, six root exports/facade, no CLI, Node floor, dependencies, package files, semver, compatibility, and release-action boundaries are written and packed-tarball tested",
     "exit criteria public API runtime measurable condition");
-  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Status: active contract draft; no-release freeze candidate prepared",
+  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Status: active tested no-release freeze candidate; final release authorization remains open",
     "public API runtime contract status");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "This document defines the public API and runtime expectations for real LUASCRIPT `1.0`.",
     "public API runtime contract purpose");
-  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "No package version, source API, compiler behavior, language syntax, or runtime behavior changes by this document alone.",
+  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "No package version, language syntax, package `bin`, package `exports`, or release state changes in this bearing.",
     "public API runtime no behavior change boundary");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Declared npm `bin`: none.",
     "public API runtime bin boundary");
@@ -753,9 +1571,9 @@ function checkPackageMetadata() {
     "public API runtime AgenticIDE export");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "`src/index.js` has a direct `node src/index.js` command interface, but it is not the package root entrypoint and is not declared as an npm `bin`; this candidate does not freeze it as the public CLI.",
     "public API runtime CLI boundary");
-  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "root-level `runtime/` remains outside the current publish file promise",
+  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "root-level `runtime/` is explicitly excluded",
     "public API runtime package file boundary");
-  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Release-script caveat: `version:bump` and `release:*` are release-action tools, not readiness checks.",
+  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Release-action scripts must not run as part of ordinary docs or readiness passes.",
     "public API runtime release-script caveat");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "## No-Release Freeze Candidate Audit",
     "public API runtime no-release audit section");
@@ -765,13 +1583,15 @@ function checkPackageMetadata() {
     "public API runtime compatibility boundary");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Release actions are deliberate operations, not documentation side effects.",
     "public API runtime release action boundary");
+  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "`legacyProgramToSchemaArtifact`, `RELEASE_IR_SURFACE_CONTRACT`, and `src/ir` deep imports are not added to the six-name root export candidate",
+    "public API runtime internal IR bridge boundary");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "confirm the evidence structure in [LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md)",
     "public API runtime release evidence binder link");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Root package import strategy is frozen or deliberately changed with migration notes.",
     "public API runtime exit checklist");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "no package `exports` map is currently declared, so no subpath import is frozen by the no-release candidate",
     "conformance evidence binder exports boundary");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "root-level `runtime/` helpers are repo-local under the current package `files` surface until release review includes or explicitly excludes them",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "root-level `runtime/` is deliberately excluded; deep legacy/Python tools that expect it are non-public",
     "conformance evidence binder root runtime boundary");
   checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "Layered bidirectionality without overclaim",
     "exit criteria layered bidirectionality boundary");
@@ -799,24 +1619,16 @@ function checkPackageMetadata() {
     "exit criteria conformance evidence binder measurement rule");
   checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "A doc claims ISO certification, third-party certification, or certification-grade completeness while the evidence binder still marks current conformance as scoped.",
     "exit criteria certification overclaim blocker");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`npm run test:ir-conformance`",
-    "exit criteria conformance gate");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`artifacts/conformance/canonical-ir-conformance-report.json`",
-    "exit criteria canonical IR durable report");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`npm run test:schema-artifact-map`",
-    "exit criteria schema artifact mapping gate");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`artifacts/conformance/schema-artifact-mapping-report.json`",
-    "exit criteria schema artifact durable report");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`npm run test:ir-compatibility-bridge`",
-    "exit criteria dual-surface compatibility bridge gate");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`artifacts/conformance/dual-surface-compatibility-bridge-report.json`",
-    "exit criteria dual-surface compatibility bridge durable report");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`artifacts/conformance/roundtrip-probe-report.json`",
-    "exit criteria roundtrip durable report");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`artifacts/conformance/source-identity-probe-report.json`",
-    "exit criteria source identity durable report");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "`artifacts/conformance/unsupported-diagnostics-report.json`",
-    "exit criteria unsupported diagnostics durable report");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "32-fixture IR conformance, 21-fixture schema mapping/compatibility reports",
+    "exit criteria release IR conformance evidence");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "26 schema-v2 language reports/424 fixtures, 7 round-trip probes, 15 source-identity fixtures",
+    "exit criteria current bidirectionality evidence totals");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "17 native schema-v2 reports/317 fixtures",
+    "exit criteria current native-runtime evidence totals");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "Required positive, negative, edge, runtime, ownership, package, and compatibility reports are hash-bound and release-block on drift",
+    "exit criteria release-blocking conformance contract");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "Two `examples/package/` programs through `test:package-contract`; 55/55 actual-program report",
+    "exit criteria installed and repository example evidence");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "Status: active evidence binder",
     "conformance evidence binder status");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "[LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md): release-shaped conformance evidence bundle index",
@@ -837,7 +1649,7 @@ function checkPackageMetadata() {
     "conformance evidence bundle index status");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "This is a release-shaped conformance evidence bundle index for LUASCRIPT. It is certification-style evidence, not certification",
     "conformance evidence bundle index non-certification boundary");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "beta gates, language gates, Clarity dogfood/canon/super-canon evidence, IR conformance, schema artifact mapping, dual-surface compatibility bridge, edge matrix, round-trip probe, source identity probe, unsupported diagnostics, actual programs, support matrix, compatibility policy",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "beta gates, language gates, Clarity dogfood/canon/super-canon evidence, IR conformance, schema artifact mapping, dual-surface compatibility bridge, public package contract, edge matrix, round-trip probe, source identity probe, unsupported diagnostics, actual programs, support matrix, compatibility policy",
     "conformance evidence bundle index lane coverage");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "Fixture/hash expectations mean report-level manifest hashes, fixture or case hashes, pass/fail summaries, environment metadata, and support-matrix traceability",
     "conformance evidence bundle index fixture hash expectations");
@@ -853,18 +1665,22 @@ function checkPackageMetadata() {
     "conformance evidence bundle schema artifact mapping report");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "| Schema artifact mapping | `npm run test:schema-artifact-map` |",
     "conformance evidence bundle schema artifact mapping lane");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "Dual-surface transition evidence; not release IR surface selection, not compiler-output change",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "Chosen one-way current-fixture projection; not compiler-output change, reverse conversion, or semantic equivalence",
     "conformance evidence bundle schema artifact boundary");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "`artifacts/conformance/dual-surface-compatibility-bridge-report.json`",
     "conformance evidence bundle dual-surface compatibility bridge report");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "| Dual-surface compatibility bridge | `npm run test:ir-compatibility-bridge` |",
     "conformance evidence bundle dual-surface compatibility bridge lane");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "Internal-only bridge candidate; not public API, not release IR surface selection, not compiler-output change",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "Chosen internal one-way release-IR transition; not public API, compiler-output change, reverse conversion, or broad semantics",
     "conformance evidence bundle dual-surface compatibility bridge boundary");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "`artifacts/edge_matrix/edge-case-matrix-report.json`",
     "conformance evidence bundle edge matrix report");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "`artifacts/conformance/roundtrip-probe-report.json`",
     "conformance evidence bundle roundtrip report");
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "manifest hash, 7 fixture hashes, pass/fail summaries, layer evidence, and support-matrix traceability",
+    "conformance evidence bundle roundtrip fixture count");
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "The Lua structural IR reparse seed and versioned one-way release-IR surface choice are sealed",
+    "conformance evidence bundle next-route cleanup");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "`artifacts/conformance/source-identity-probe-report.json`",
     "conformance evidence bundle source identity report");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "`artifacts/conformance/unsupported-diagnostics-report.json`",
@@ -885,13 +1701,13 @@ function checkPackageMetadata() {
     "conformance evidence binder schema artifact mapping report artifact");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "| Schema artifact mapping | `npm run test:schema-artifact-map` |",
     "conformance evidence binder schema artifact mapping gate family");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "21 positive conformance fixtures produce derived schema-valid canonical IR v1 artifacts; 11 expected diagnostics remain separate",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "21 positive fixtures produce canonical artifact `1.0.0` under the one-way contract; 147/147 contract checks pass; 11 expected diagnostics remain separate",
     "conformance evidence binder schema artifact mapping suite count");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "`artifacts/conformance/dual-surface-compatibility-bridge-report.json`",
     "conformance evidence binder dual-surface compatibility bridge report artifact");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "| Dual-surface compatibility bridge | `npm run test:ir-compatibility-bridge` |",
     "conformance evidence binder dual-surface compatibility bridge gate family");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "21 positive conformance fixtures pass the internal legacy object-tree to schema artifact bridge; 168/168 invariant checks pass; 11 expected diagnostics remain separate",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "Contract `1.0.0-rc.1`; 21 positive mappings; 168/168 base invariants; 10/10 static rules; 147/147 mapping rules; 21/21 deterministic artifacts; 1/1 supplemental DoWhile shape proof; 12/12 malformed-shape negatives; 5/5 malformed-source rejections; 11 expected diagnostics",
     "conformance evidence binder dual-surface compatibility bridge suite count");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "`artifacts/conformance/roundtrip-probe-report.json`",
     "conformance evidence binder roundtrip report artifact");
@@ -907,7 +1723,7 @@ function checkPackageMetadata() {
     "conformance evidence binder edge fixture count");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "21 named unsupported diagnostics for stable current JavaScript, `.ls`, Python, Lua, core fallback, and target-emitter failures",
     "conformance evidence binder unsupported diagnostics count");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "6 probes separating structural IR reparse and runtime-output equivalence",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "7 probes separating 5 structural IR reparse checks from 2 runtime-output equivalence checks",
     "conformance evidence binder roundtrip fixture count");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "JS/.ls/Python/Lua layer map recorded",
     "conformance evidence binder layer map scope");
@@ -917,7 +1733,7 @@ function checkPackageMetadata() {
     "conformance evidence binder token identity boundary");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "26 language/target manifests for named native and target-runtime slices",
     "conformance evidence binder language manifest count");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "Durable local report closure: `npm run test:ir-conformance`, `npm run test:schema-artifact-map`, `npm run test:ir-compatibility-bridge`, `npm run test:roundtrip-probe`, `npm run test:source-identity-probe`, and `npm run test:unsupported-diagnostics` now write standalone JSON reports under `artifacts/conformance/`",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "Durable local report closure: `npm run test:ir-conformance`, `npm run test:schema-artifact-map`, `npm run test:ir-compatibility-bridge`, `npm run test:package-contract`, `npm run test:roundtrip-probe`, `npm run test:source-identity-probe`, and `npm run test:unsupported-diagnostics` write standalone JSON reports under `artifacts/conformance/`",
     "conformance evidence binder durable report closure");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "not runtime-output equivalence, broad lossless recovery, or broad semantic equivalence",
     "conformance evidence binder source-preserving boundary");
@@ -947,20 +1763,10 @@ function checkPackageMetadata() {
     "conformance evidence binder reproducibility steps");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "A passing local run is evidence for the current named slices only; it is not ISO certification or true omni-language completion.",
     "conformance evidence binder reproducibility boundary");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "npm run test:edge-matrix",
-    "exit criteria edge-case matrix gate");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "npm run test:unsupported-diagnostics",
-    "exit criteria unsupported diagnostics gate");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "value-semantics matrix",
-    "exit criteria value semantics evidence");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "v1 evidence map for all 32 current conformance fixtures",
-    "exit criteria IR semantics v1 evidence map boundary");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "control-flow matrix",
-    "exit criteria control flow evidence");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "function/scope matrix",
-    "exit criteria function scope evidence");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "data-structure matrix",
-    "exit criteria data structure evidence");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "Every unsupported feature that appears in a `1.0` boundary must have an explicit diagnostic fixture or a documented exclusion.",
+    "exit criteria unsupported-diagnostic boundary");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "IR spec defines node semantics, value model, control flow, errors/diagnostics, determinism, serialization, and target obligations",
+    "exit criteria IR semantics evidence boundary");
   checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "Every `1.0` support claim must name a slice, profile, fixture set, gate, and doc location",
     "exit criteria measurement rule");
   checkIncludes("docs/BETA_RELEASE_HANDOFF_V0_1.md", "The first package/runtime expectation slice is now named",
@@ -1125,8 +1931,8 @@ function checkPackageMetadata() {
     "bidirectionality contract four-language layer map");
   checkIncludes("docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md", "| Lua | `PROVEN` named slice via `npm run language:lua:bidirectional`",
     "bidirectionality contract Lua layer row");
-  checkIncludes("docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md", "`NOT CLAIMED` by the current round-trip probe",
-    "bidirectionality contract Lua structural reparse boundary");
+  checkIncludes("docs/LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md", "`SEEDED` by one Lua -> Lua normalized Program-IR reparse probe",
+    "bidirectionality contract Lua structural reparse seed");
   checkIncludes("docs/LANGUAGE_COMPLETION_RULES.md", "## Package/Runtime Boundary",
     "language completion package/runtime boundary");
   checkIncludes("docs/LANGUAGE_COMPLETION_RULES.md", "## Bidirectionality Contract",
@@ -1165,14 +1971,14 @@ function checkPackageMetadata() {
     "support matrix round-trip no-promotion boundary");
   checkIncludes("docs/LANGUAGE_SUPPORT_MATRIX.md", "The round-trip manifest/report now records a JS/.ls/Python/Lua bidirectionality layer map.",
     "support matrix bidirectionality layer map");
-  checkIncludes("docs/LANGUAGE_SUPPORT_MATRIX.md", "Lua structural IR reparse remains not claimed; only `.ls` has normalized source identity evidence",
+  checkIncludes("docs/LANGUAGE_SUPPORT_MATRIX.md", "Lua's evidence is one tiny normalized current-bridge Program-IR parity fixture, not source-text or token identity; only `.ls` has normalized source identity evidence",
     "support matrix layer map boundaries");
-  checkIncludes("docs/canonical_ir_spec.md", "IR schema support reference, not a LUASCRIPT package/runtime `1.0` release claim",
+  checkIncludes("docs/canonical_ir_spec.md", "IR schema support reference under the chosen internal Denali RC transition, not a LUASCRIPT package/runtime `1.0` release claim",
     "canonical IR support-reference boundary");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md", "The current language-completion bridge uses the legacy object-tree IR surface, not only the consolidated schema artifact.",
     "canonical IR inventory bridge boundary");
-  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md", "Current 1.0 semantics blocker: the live parser/lowerer path can pass lightweight invariants while failing the published JSON Schema enum",
-    "canonical IR inventory schema mismatch boundary");
+  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md", "Current 1.0 semantics boundary: live compiler/lowerer Program IR still uses kinds such as `Parameter` and `VariableDeclarator`; contract `1.0.0-rc.1` now maps those through explicit versioned compatibility encodings",
+    "canonical IR inventory chosen transition boundary");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md", "The latest published schema enum in `docs/canonical_ir.schema.json` contains 40 node kinds",
     "canonical IR inventory schema enum count");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md", "No runtime, compiler, lowerer, emitter, schema, or package API behavior was changed by this inventory pass.",
@@ -1194,8 +2000,8 @@ function checkPackageMetadata() {
     "canonical IR semantics spec v0 identity");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "This is the first formal semantics draft for the LUASCRIPT canonical IR. It is not canonical `1.0`",
     "canonical IR semantics spec v0 not 1.0 boundary");
-  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "The release canonical IR surface is not yet chosen.",
-    "canonical IR semantics spec v0 surface boundary");
+  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "The 2026-07-29 release-IR bearing chooses [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md), contract `1.0.0-rc.1`",
+    "canonical IR semantics spec chosen surface contract");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "Bidirectional claims must identify the proven layer: native execution, source-to-IR, IR-to-target, target-runtime, emitted `.ls`, round-trip source identity, or semantic equivalence.",
     "canonical IR semantics spec v0 bidirectionality boundary");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "`npm run test:roundtrip-probe` adds tiny structural IR reparse and runtime-output equivalence probes",
@@ -1274,8 +2080,19 @@ function checkPackageMetadata() {
     "canonical IR semantics spec dual-surface compatibility bridge route");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "168/168 invariant checks",
     "canonical IR semantics spec dual-surface invariant count");
-  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "internal-only until release compatibility/versioning rules are chosen",
-    "canonical IR semantics spec dual-surface internal boundary");
+  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "Reverse conversion, semantic equivalence, source preservation, and public package IR API remain unclaimed.",
+    "canonical IR semantics spec one-way internal boundary");
+  checkFile("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md");
+  checkIncludes("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md", "Contract version: `1.0.0-rc.1`",
+    "release IR surface contract version");
+  checkIncludes("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md", "legacy Program IR remains the LUASCRIPT 1.x operational surface",
+    "release IR surface operational compatibility");
+  checkIncludes("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md", "conversion is `legacy-to-canonical` only",
+    "release IR surface one-way boundary");
+  checkIncludes("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md", "It cannot be removed before package `2.0.0`",
+    "release IR surface deprecation horizon");
+  checkIncludes("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md", "12/12 malformed-shape negatives",
+    "release IR surface negative proof");
   checkIncludes("src/compilers/js-to-ir.js", "Unsupported JavaScript value semantic",
     "JavaScript bridge special value diagnostic");
   checkIncludes("src/compilers/js-to-ir.js", "Unsupported JavaScript control flow: for-of loops",
@@ -1604,6 +2421,8 @@ function checkPackageMetadata() {
       fixture.expectedFailure.messageIncludes.includes("Unsupported JavaScript variable declarator pattern: ObjectPattern"),
     "fails closed for JavaScript destructuring patterns");
   const roundTripManifest = readJson("tests/roundtrip/manifest.json");
+  const roundTripReport = readJson("artifacts/conformance/roundtrip-probe-report.json");
+  const roundTripManifestText = readText("tests/roundtrip/manifest.json");
   check(roundTripManifest.status === "scoped-round-trip-probe",
     "round-trip manifest keeps scoped probe status");
   check(Array.isArray(roundTripManifest.modes) &&
@@ -1633,10 +2452,16 @@ function checkPackageMetadata() {
     check(entry && Array.isArray(entry.boundaries) && entry.boundaries.length >= 1,
       `round-trip manifest ${language} layer evidence lists boundaries`);
   }
-  check(roundTripManifest.languageLayerEvidence.languages.lua.layers.structuralIrReparse === "not-claimed",
-    "round-trip manifest keeps Lua structural IR reparse unclaimed");
+  check(roundTripManifest.languageLayerEvidence.languages.lua.layers.structuralIrReparse === "seeded-probe",
+    "round-trip manifest keeps Lua structural IR reparse scoped to a seeded probe");
   check(roundTripManifest.languageLayerEvidence.languages.luascript.layers.tokenIdentity === "measured-non-gating",
     "round-trip manifest keeps .ls token identity measured non-gating");
+  check(roundTripManifest.fixtures.length === 7,
+    "round-trip manifest keeps exact 7-fixture scope");
+  check(roundTripManifest.fixtures.filter((fixture) => fixture.mode === "structural-ir-reparse").length === 5,
+    "round-trip manifest keeps exact 5 structural IR reparse fixtures");
+  check(roundTripManifest.fixtures.filter((fixture) => fixture.mode === "runtime-output-equivalence").length === 2,
+    "round-trip manifest keeps exact 2 runtime-output equivalence fixtures");
   checkManifestEntry(roundTripManifest.fixtures, "javascript_to_javascript_structural_ir", "round-trip manifest",
     (fixture) => fixture.mode === "structural-ir-reparse" &&
       fixture.sourceLanguage === "javascript" &&
@@ -1658,6 +2483,12 @@ function checkPackageMetadata() {
       fixture.sourceLanguage === "python" &&
       fixture.targetLanguage === "python",
     "covers Python structural IR reparse");
+  checkManifestEntry(roundTripManifest.fixtures, "lua_to_lua_structural_ir", "round-trip manifest",
+    (fixture) => fixture.mode === "structural-ir-reparse" &&
+      fixture.sourceLanguage === "lua" &&
+      fixture.targetLanguage === "lua" &&
+      fixture.notes.includes("not source-text identity"),
+    "covers one narrow Lua structural IR reparse fixture");
   checkManifestEntry(roundTripManifest.fixtures, "javascript_to_python_runtime_output", "round-trip manifest",
     (fixture) => fixture.mode === "runtime-output-equivalence" &&
       fixture.expectedOutput === "rt_js_py 5" &&
@@ -1668,10 +2499,46 @@ function checkPackageMetadata() {
       fixture.expectedOutput === "rt_py_js 9" &&
       fixture.notes.includes("not IR identity"),
     "covers Python to JavaScript runtime-output equivalence");
+  check(roundTripReport.manifest &&
+    roundTripReport.manifest.sha256 === sha256Text(roundTripManifestText) &&
+    roundTripReport.manifest.fixtureCount === 7,
+  "round-trip report matches the live 7-fixture manifest hash");
+  check(roundTripReport.summary &&
+    roundTripReport.summary.total === 7 &&
+    roundTripReport.summary.passed === 7 &&
+    roundTripReport.summary.failed === 0 &&
+    roundTripReport.summary.structuralIrReparse === 5 &&
+    roundTripReport.summary.runtimeOutputEquivalence === 2 &&
+    roundTripReport.summary.sourcePreservingRoundTrip === 0,
+  "round-trip report keeps exact 7/7, 5 structural, 2 runtime, 0 source-preserving summary");
+  check(roundTripReport.languageLayerEvidence &&
+    roundTripReport.languageLayerEvidence.languages.lua.layers.structuralIrReparse === "seeded-probe",
+  "round-trip report records the narrow Lua seeded-probe layer");
+  check(Array.isArray(roundTripReport.results) &&
+    roundTripReport.results.some((result) =>
+      result.name === "lua_to_lua_structural_ir" &&
+      result.status === "passed" &&
+      result.mode === "structural-ir-reparse" &&
+      result.sourceLanguage === "lua" &&
+      result.targetLanguage === "lua" &&
+      result.claim === "structural IR reparse" &&
+      result.normalization &&
+      result.normalization.normalizationPolicy === "same-language-preserve-metadata" &&
+      JSON.stringify(result.normalization.ignoredFields) === JSON.stringify(["loc", "range", "raw", "id"])),
+  "round-trip report proves the passed Lua structural fixture with semantic metadata preserved");
+  check(roundTripReport.manifest &&
+    roundTripReport.manifest.fixtureHashes.some((fixture) =>
+      fixture.name === "lua_to_lua_structural_ir" &&
+      fixture.sha256 === "15ca8a23dc6c505b1d79f098a4bc727b71b74368e0b42a5d84d7dc09d5aa3649"),
+  "round-trip report records the expected Lua fixture hash");
   checkIncludes("tests/roundtrip/roundtrip_probe.test.js", "stableIr",
     "round-trip harness normalizes IR");
-  checkIncludes("tests/roundtrip/roundtrip_probe.test.js", "[\"metadata\", \"loc\", \"range\", \"raw\", \"id\"]",
-    "round-trip harness drops generated metadata and ids");
+  checkIncludes("tests/roundtrip/roundtrip_probe.test.js", "same-language-preserve-metadata",
+    "round-trip harness preserves metadata for same-language structural proofs");
+  checkIncludes("tests/roundtrip/roundtrip_probe.test.js", "cross-language-exclude-source-specific-metadata",
+    "round-trip harness explicitly scopes cross-language metadata exclusion");
+  checkIncludes("tests/roundtrip/roundtrip_probe.test.js", "[\"loc\", \"range\", \"raw\", \"id\"]",
+    "round-trip harness drops only volatile fields for same-language proofs");
   checkIncludes("tests/roundtrip/roundtrip_probe.test.js", "Round-trip probe harness passed:",
     "round-trip harness summary output");
   checkIncludes("tests/roundtrip/roundtrip_probe.test.js", "languageLayerEvidence",
@@ -1682,6 +2549,782 @@ function checkPackageMetadata() {
     "IR usage support-reference boundary");
   checkIncludes("docs/OLD LUASCRIPT DOCS/README.md", "Nothing here is a current guidance document",
     "archive root is archive-only");
+}
+
+function checkLanguageReportProvenance() {
+  const {
+    collectEmbeddedHashReferences,
+    validateHashReferences
+  } = require(relPath("scripts", "generate_release_evidence_bundle.js"));
+  const manifestDirectory = relPath("tests", "language_completion", "manifests");
+  const reportDirectory = relPath("artifacts", "language_completion");
+  const manifestNames = fs.readdirSync(manifestDirectory)
+    .filter(name => name.endsWith(".json"))
+    .sort();
+  const reportNames = fs.readdirSync(reportDirectory)
+    .filter(name => name.endsWith("-report.json"))
+    .sort();
+  const expectedReportNames = manifestNames
+    .map(name => `${name.slice(0, -5)}-report.json`)
+    .sort();
+  const expectedTraceability = {
+    supportMatrix: "docs/LANGUAGE_SUPPORT_MATRIX.md",
+    completionRules: "docs/LANGUAGE_COMPLETION_RULES.md",
+    publicPackageContract: "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
+    packageMigrationNotes: "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md"
+  };
+  let fixtureTotal = 0;
+  let metadataValid = true;
+  let manifestProvenanceValid = true;
+  let implementationProvenanceValid = true;
+  let runtimeProvenanceValid = true;
+  let traceabilityValid = true;
+  let resultsValid = true;
+  let liveBindingsValid = true;
+  let commonImplementationPaths = null;
+
+  check(manifestNames.length === 26 &&
+    reportNames.length === 26 &&
+    JSON.stringify(reportNames) === JSON.stringify(expectedReportNames),
+  "language evidence has exactly 26 manifest/report pairs");
+
+  for (const manifestName of manifestNames) {
+    const stem = manifestName.slice(0, -5);
+    const manifestPath =
+      `tests/language_completion/manifests/${manifestName}`;
+    const reportPath =
+      `artifacts/language_completion/${stem}-report.json`;
+    const manifest = readJson(manifestPath);
+    const report = readJson(reportPath);
+    const fixtures = Array.isArray(manifest.fixtures) ? manifest.fixtures : [];
+    const reportFixtures =
+      report.manifest && Array.isArray(report.manifest.fixtures)
+        ? report.manifest.fixtures
+        : [];
+    const reportResults = Array.isArray(report.results) ? report.results : [];
+    const implementationEvidence = Array.isArray(report.implementationEvidence)
+      ? report.implementationEvidence
+      : [];
+    const implementationPaths =
+      implementationEvidence.map(entry => entry.path);
+    fixtureTotal += fixtures.length;
+
+    metadataValid = metadataValid &&
+      report.schemaVersion === 2 &&
+      report.kind === "language:bidirectional" &&
+      report.language === manifest.language &&
+      report.supportSlice === manifest.supportSlice &&
+      report.summary &&
+      report.summary.total === fixtures.length &&
+      report.summary.passed === fixtures.length &&
+      report.summary.failed === 0;
+
+    manifestProvenanceValid = manifestProvenanceValid &&
+      report.manifest &&
+      report.manifest.path === manifestPath &&
+      report.manifest.sha256 === sha256File(manifestPath) &&
+      report.manifest.status === manifest.status &&
+      report.manifest.version === manifest.schemaVersion &&
+      report.manifest.supportSlice === manifest.supportSlice &&
+      report.manifest.fixtureCount === fixtures.length &&
+      reportFixtures.length === fixtures.length &&
+      reportFixtures.every((entry, index) => {
+        const fixture = fixtures[index];
+        const resolved = resolveEvidenceFile(entry && entry.source);
+        return entry &&
+          fixture &&
+          entry.name === fixture.name &&
+          entry.source === fixture.source &&
+          entry.manifestEntrySha256 ===
+            sha256Text(JSON.stringify(fixture)) &&
+          resolved &&
+          entry.sourceSha256 === sha256File(entry.source) &&
+          entry.sizeBytes === fs.statSync(resolved.absolute).size;
+      });
+
+    implementationProvenanceValid = implementationProvenanceValid &&
+      implementationEvidence.length > 0 &&
+      new Set(implementationPaths).size === implementationEvidence.length &&
+      implementationEvidence.every(entry => liveFileEvidenceMatches(entry));
+    if (commonImplementationPaths === null) {
+      commonImplementationPaths = JSON.stringify(implementationPaths);
+    } else {
+      implementationProvenanceValid = implementationProvenanceValid &&
+        commonImplementationPaths === JSON.stringify(implementationPaths);
+    }
+
+    runtimeProvenanceValid = runtimeProvenanceValid &&
+      Array.isArray(report.runtimeEvidence) &&
+      report.runtimeEvidence.length > 0 &&
+      new Set(report.runtimeEvidence.map(entry => entry.name)).size ===
+        report.runtimeEvidence.length &&
+      report.runtimeEvidence.every(successfulRuntimeProbe) &&
+      report.environment &&
+      typeof report.environment.node === "string" &&
+      typeof report.environment.platform === "string" &&
+      typeof report.environment.arch === "string" &&
+      Number.isInteger(report.environment.runtimeTimeoutMs) &&
+      report.environment.runtimeTimeoutMs > 0;
+
+    const traceability = report.supportMatrixTraceability || {};
+    traceabilityValid = traceabilityValid &&
+      JSON.stringify(Object.keys(traceability)) ===
+        JSON.stringify(Object.keys(expectedTraceability)) &&
+      Object.entries(expectedTraceability).every(([key, expectedPath]) =>
+        liveFileEvidenceMatches(traceability[key], expectedPath));
+
+    resultsValid = resultsValid &&
+      reportResults.length === fixtures.length &&
+      new Set(reportResults.map(entry => entry.name)).size === fixtures.length &&
+      reportResults.every((entry, index) => {
+        const fixture = fixtures[index];
+        return entry &&
+          fixture &&
+          entry.name === fixture.name &&
+          entry.source === fixture.source &&
+          entry.sourceSha256 === sha256File(fixture.source) &&
+          entry.status === "passed" &&
+          entry.failureReason === null;
+      });
+
+    const bindings = validateHashReferences(
+      repoRoot,
+      collectEmbeddedHashReferences(report)
+    );
+    liveBindingsValid = liveBindingsValid &&
+      bindings.length > fixtures.length &&
+      bindings.every(entry => entry.status === "verified");
+  }
+
+  check(metadataValid && fixtureTotal === 424,
+    "all 26 language reports use schema v2 and prove 424/424 fixtures");
+  check(manifestProvenanceValid,
+    "language reports bind exact live manifests, fixture entries, sources, hashes, and sizes");
+  check(implementationProvenanceValid,
+    "language reports bind one exact common live implementation evidence surface");
+  check(runtimeProvenanceValid,
+    "language reports retain successful runtime probes and execution environments");
+  check(traceabilityValid,
+    "language reports bind the four exact live governing documents");
+  check(resultsValid,
+    "language reports retain one exact passing result for every manifest fixture");
+  check(liveBindingsValid,
+    "every embedded language-report repository hash resolves to current live bytes");
+}
+
+function checkActualProgramEvidence() {
+  const {
+    collectEmbeddedHashReferences,
+    validateHashReferences
+  } = require(relPath("scripts", "generate_release_evidence_bundle.js"));
+  const report = readJson("artifacts/conformance/actual-programs-report.json");
+  const manifest = readJson("tests/actual_programs/manifest.json");
+  const programs = Array.isArray(manifest.programs) ? manifest.programs : [];
+  const results = Array.isArray(report.results) ? report.results : [];
+  const expectedImplementationPaths = [
+    "src/luascript_compiler.py",
+    "src/lexer/enhanced_lexer.py",
+    "src/parser/enhanced_parser.py",
+    "src/transpiler/enhanced_transpiler.py",
+    "runtime/runtime.lua",
+    "runtime/core/enhanced_runtime.lua"
+  ];
+  const classifications = exactCounts(results, "classification");
+
+  check(report.schemaVersion === 1 &&
+    report.kind === "luascript:actual-programs:repository-legacy" &&
+    report.command === "npm run test:actual-programs" &&
+    report.status === "passed" &&
+    report.boundary &&
+    report.boundary.packageCompatibilityClaimed === false,
+  "actual-program report keeps exact repository-legacy identity and denies package compatibility");
+  check(report.summary &&
+    report.summary.total === 55 &&
+    report.summary.passed === 55 &&
+    report.summary.failed === 0 &&
+    report.summary.notRun === 0 &&
+    report.summary.positiveRuntime === 37 &&
+    report.summary.expectedCompileDiagnostic === 6 &&
+    report.summary.expectedRuntimeDiagnostic === 12 &&
+    classifications["positive-runtime"] === 37 &&
+    classifications["expected-compile-diagnostic"] === 6 &&
+    classifications["expected-runtime-diagnostic"] === 12 &&
+    Object.keys(classifications).length === 3 &&
+    Array.isArray(report.failures) &&
+    report.failures.length === 0,
+  "actual-program report proves exact 55/55 split 37 positive, 6 compile diagnostic, and 12 runtime diagnostic");
+  check(report.inputs &&
+    liveFileEvidenceMatches(report.inputs.manifest,
+      "tests/actual_programs/manifest.json") &&
+    report.inputs.manifest.exists === true &&
+    liveFileEvidenceMatches(report.inputs.harness,
+      "tests/actual_programs.test.js") &&
+    report.inputs.harness.exists === true &&
+    report.inputs.sourceCount === 55 &&
+    exactLiveEvidenceList(
+      report.inputs.implementationEvidence,
+      expectedImplementationPaths
+    ) &&
+    report.inputs.implementationEvidence.every(entry => entry.exists === true),
+  "actual-program report binds its manifest, harness, and exact six live implementation sources");
+  check(Array.isArray(report.runtimeEvidence) &&
+    JSON.stringify(report.runtimeEvidence.map(entry => entry.name)) ===
+      JSON.stringify(["python", "lua"]) &&
+    report.runtimeEvidence.every(successfulRuntimeProbe),
+  "actual-program report records successful Python and Lua runtime probes");
+  check(programs.length === 55 &&
+    results.length === 55 &&
+    new Set(results.map(entry => entry.name)).size === 55 &&
+    results.every((entry, index) => {
+      const program = programs[index];
+      const resolved = resolveEvidenceFile(entry && entry.source);
+      const expectedClassification = program && program.expectedFailure
+        ? "expected-compile-diagnostic"
+        : program && program.expectedRuntimeFailure
+          ? "expected-runtime-diagnostic"
+          : "positive-runtime";
+      if (
+        !entry ||
+        !program ||
+        !resolved ||
+        entry.name !== program.name ||
+        entry.source !== program.source ||
+        entry.sourceSha256 !== sha256File(program.source) ||
+        entry.sourceSizeBytes !== fs.statSync(resolved.absolute).size ||
+        entry.classification !== expectedClassification ||
+        entry.status !== "passed" ||
+        !entry.checks ||
+        entry.checks.sourcePresent !== true ||
+        entry.checks.matchedExpectationCount < 1
+      ) {
+        return false;
+      }
+      if (expectedClassification === "positive-runtime") {
+        return entry.checks.compileStatus === 0 &&
+          entry.checks.executionStatus === 0 &&
+          entry.checks.expectedOutputAlternativeCount > 0;
+      }
+      if (expectedClassification === "expected-compile-diagnostic") {
+        return Number.isInteger(entry.checks.compileStatus) &&
+          entry.checks.compileStatus !== 0 &&
+          entry.checks.executionStatus === null &&
+          entry.checks.expectedCompileDiagnosticCount > 0;
+      }
+      return entry.checks.compileStatus === 0 &&
+        Number.isInteger(entry.checks.executionStatus) &&
+        entry.checks.executionStatus !== 0 &&
+        entry.checks.expectedRuntimeDiagnosticCount > 0;
+    }),
+  "actual-program report retains 55 exact live result identities and classification-specific execution outcomes");
+  const bindings = validateHashReferences(
+    repoRoot,
+    collectEmbeddedHashReferences(report)
+  );
+  check(bindings.length > 55 &&
+    bindings.every(entry => entry.status === "verified"),
+  "actual-program report resolves every embedded repository hash to current live bytes");
+}
+
+function checkParserOwnershipEvidence() {
+  const {
+    collectEmbeddedHashReferences,
+    validateHashReferences
+  } = require(relPath("scripts", "generate_release_evidence_bundle.js"));
+  const report =
+    readJson("artifacts/conformance/parser-ownership-report.json");
+  const results = Array.isArray(report.results) ? report.results : [];
+  const categories = exactCounts(results, "category");
+  const expectedImplementationPaths = [
+    "src/lexer/enhanced_lexer.py",
+    "src/parser/enhanced_parser.py",
+    "src/transpiler/enhanced_transpiler.py"
+  ];
+
+  check(report.schemaVersion === 1 &&
+    report.kind === "luascript:parser-ownership" &&
+    report.command === "npm run test:parser-ownership" &&
+    report.status === "passed" &&
+    report.boundary &&
+    report.boundary.packageCompatibilityClaimed === false,
+  "parser-ownership report keeps exact identity and denies package compatibility");
+  check(report.summary &&
+    report.summary.total === 35 &&
+    report.summary.passed === 35 &&
+    report.summary.failed === 0 &&
+    report.summary.notRun === 0 &&
+    report.summary.staticAssertions === 21 &&
+    report.summary.runtimeAssertions === 13 &&
+    report.summary.completionAssertions === 1 &&
+    categories["required-marker"] === 14 &&
+    categories["forbidden-marker"] === 7 &&
+    categories["runtime-assertion"] === 13 &&
+    categories["runtime-completion"] === 1 &&
+    Object.keys(categories).length === 4 &&
+    Array.isArray(report.failures) &&
+    report.failures.length === 0,
+  "parser-ownership report proves exact 35/35 split 21 static, 13 runtime, and 1 completion");
+  check(report.inputs &&
+    liveFileEvidenceMatches(report.inputs.harness,
+      "tests/parser_ownership.test.js") &&
+    report.inputs.harness.exists === true &&
+    liveFileEvidenceMatches(report.inputs.runnerUtilities,
+      "tests/clarity_canon/runner_utils.js") &&
+    report.inputs.runnerUtilities.exists === true &&
+    exactLiveEvidenceList(
+      report.inputs.implementationEvidence,
+      expectedImplementationPaths
+    ) &&
+    report.inputs.implementationEvidence.every(entry => entry.exists === true),
+  "parser-ownership report binds its harness, runner, and exact three implementation sources");
+  check(Array.isArray(report.runtimeEvidence) &&
+    report.runtimeEvidence.length === 1 &&
+    report.runtimeEvidence[0].name === "python" &&
+    successfulRuntimeProbe(report.runtimeEvidence[0]),
+  "parser-ownership report records one successful Python runtime probe");
+  check(results.length === 35 &&
+    new Set(results.map(entry => entry.name)).size === 35 &&
+    results.every(entry => {
+      const sourceMatches = entry &&
+        liveFileEvidenceMatches({
+          path: entry.source,
+          sha256: entry.sourceSha256
+        });
+      if (!sourceMatches || entry.status !== "passed") {
+        return false;
+      }
+      if (entry.category === "required-marker") {
+        return typeof entry.expected === "string" &&
+          readText(entry.source).includes(entry.expected);
+      }
+      if (entry.category === "forbidden-marker") {
+        return typeof entry.forbidden === "string" &&
+          !readText(entry.source).includes(entry.forbidden);
+      }
+      if (entry.category === "runtime-assertion") {
+        return typeof entry.marker === "string" && entry.marker.length > 0;
+      }
+      return entry.category === "runtime-completion" &&
+        typeof entry.expected === "string" &&
+        entry.expected.length > 0;
+    }),
+  "parser-ownership report retains exact live marker semantics and all-passing runtime identities");
+  const bindings = validateHashReferences(
+    repoRoot,
+    collectEmbeddedHashReferences(report)
+  );
+  check(bindings.length >= 5 &&
+    bindings.every(entry => entry.status === "verified"),
+  "parser-ownership report resolves every embedded repository hash to current live bytes");
+}
+
+function checkCompatibilityMatrixEvidence() {
+  const {
+    collectEmbeddedHashReferences,
+    validateHashReferences
+  } = require(relPath("scripts", "generate_release_evidence_bundle.js"));
+  const pkg = readJson("package.json");
+  const report =
+    readJson("artifacts/conformance/denali-compatibility-matrix-report.json");
+  const packageReport =
+    readJson("artifacts/conformance/public-api-runtime-package-report.json");
+  const lanes = Array.isArray(report.nativeLanes) ? report.nativeLanes : [];
+  const checks = Array.isArray(report.checks) ? report.checks : [];
+  const packageBinding =
+    report.packageBoundary && report.packageBoundary.publicPackageReport;
+
+  check(report.schemaVersion === 1 &&
+    report.kind === "luascript:denali-compatibility-matrix" &&
+    report.command ===
+      "node tests/compatibility/denali_compatibility_matrix.test.js" &&
+    report.status === "PASS" &&
+    Array.isArray(report.noReleaseActions) &&
+    report.noReleaseActions.length > 0 &&
+    report.noReleaseActions.every(entry =>
+      typeof entry === "string" && entry.startsWith("no ")),
+  "compatibility matrix keeps exact PASS identity and no-release boundary");
+  check(report.statusSummary &&
+    report.statusSummary.pass === checks.length &&
+    report.statusSummary.open === 0 &&
+    report.statusSummary.fail === 0 &&
+    report.summary &&
+    report.summary.total === checks.length &&
+    report.summary.passed === checks.length &&
+    report.summary.failed === 0 &&
+    checks.length > 0 &&
+    new Set(checks.map(entry => entry.name)).size === checks.length &&
+    checks.every(entry => entry.status === "PASS" && entry.passed === true) &&
+    Array.isArray(report.openItems) &&
+    report.openItems.length === 0 &&
+    Array.isArray(report.failures) &&
+    report.failures.length === 0,
+  "compatibility matrix has only PASS checks with zero OPEN and zero FAIL");
+  check(report.nativeAggregate &&
+    report.nativeAggregate.npmScript === "language:implemented:native" &&
+    report.nativeAggregate.command ===
+      pkg.scripts["language:implemented:native"] &&
+    report.nativeAggregate.expectedCommand ===
+      pkg.scripts["language:implemented:native"] &&
+    report.nativeAggregate.laneCount === 17 &&
+    report.nativeAggregate.fixtureCount === 317,
+  "compatibility matrix binds the live native aggregate command to exact 17 lanes and 317 fixtures");
+  check(lanes.length === 17 &&
+    lanes.reduce((total, lane) => total + lane.fixtureCount, 0) === 317 &&
+    lanes.every((lane, index) => {
+      const manifest = readJson(lane.manifest.path);
+      const languageReport = readJson(lane.report.path);
+      return lane.order === index + 1 &&
+        report.nativeAggregate.command.includes(
+          `npm run ${lane.npmScript}`) &&
+        typeof pkg.scripts[lane.npmScript] === "string" &&
+        pkg.scripts[lane.npmScript].includes(
+          `bidirectional_harness.js ${lane.harnessId}`) &&
+        liveFileEvidenceMatches(lane.manifest) &&
+        liveFileEvidenceMatches(lane.report) &&
+        lane.fixtureCount === manifest.fixtures.length &&
+        lane.reportSchemaVersion === 2 &&
+        languageReport.schemaVersion === 2 &&
+        languageReport.manifest.path === lane.manifest.path &&
+        languageReport.summary.total === lane.fixtureCount &&
+        languageReport.summary.passed === lane.fixtureCount &&
+        languageReport.summary.failed === 0 &&
+        lane.reportSummary.total === lane.fixtureCount &&
+        lane.reportSummary.passed === lane.fixtureCount &&
+        lane.reportSummary.failed === 0 &&
+        lane.reportBindingStatus === "PASS" &&
+        Array.isArray(lane.reportIssues) &&
+        lane.reportIssues.length === 0 &&
+        Array.isArray(lane.missingTools) &&
+        lane.missingTools.length === 0;
+    }),
+  "compatibility matrix binds all 17 ordered native lanes to current schema-v2 reports and 317 fixtures");
+  check(Array.isArray(report.sourceEvidence) &&
+    exactLiveEvidenceList(report.sourceEvidence, [
+      "tests/compatibility/denali_compatibility_matrix.test.js",
+      "tests/language_completion/bidirectional_harness.js",
+      "tests/clarity_canon/runner_utils.js",
+      "package.json",
+      "package-lock.json"
+    ]),
+  "compatibility matrix hashes its exact five live source inputs");
+  check(packageBinding &&
+    liveFileEvidenceMatches(
+      packageBinding.report,
+      "artifacts/conformance/public-api-runtime-package-report.json"
+    ) &&
+    JSON.stringify(packageBinding.summary) ===
+      JSON.stringify(packageReport.summary) &&
+    packageBinding.summary.total === 32 &&
+    packageBinding.summary.passed === 32 &&
+    packageBinding.summary.failed === 0 &&
+    Array.isArray(packageBinding.issues) &&
+    packageBinding.issues.length === 0,
+  "compatibility matrix binds the current 32/32 public package report without issues");
+  const bindings = validateHashReferences(
+    repoRoot,
+    collectEmbeddedHashReferences(report)
+  );
+  check(bindings.length > 400 &&
+    bindings.every(entry => entry.status === "verified"),
+  "compatibility matrix resolves every embedded current/live hash binding");
+}
+
+function checkDenaliReleaseContracts() {
+  const pkg = readJson("package.json");
+  const scripts = pkg.scripts || {};
+  const preflight =
+    require(relPath("scripts", "denali_rc_preflight.js"));
+  const {
+    buildReleaseEvidenceBundle,
+    collectEmbeddedHashReferences,
+    sha256Canonical,
+    validateHashReferences
+  } = require(relPath("scripts", "generate_release_evidence_bundle.js"));
+  const expectedPreflightScripts = [
+    "language:implemented:bidirectional",
+    "test:package-contract",
+    "clarity:dogfood",
+    "clarity:canon",
+    "clarity:canon:super",
+    "clarity:canon:languages",
+    "clarity:languages:reports",
+    "test:actual-programs",
+    "test:parser-ownership",
+    "test:ir-conformance",
+    "test:schema-artifact-map",
+    "test:ir-compatibility-bridge",
+    "test:edge-matrix",
+    "test:roundtrip-probe",
+    "test:source-identity-probe",
+    "test:unsupported-diagnostics",
+    "test:compatibility-matrix",
+    "status:check",
+    "stubs:check",
+    "archive:audit",
+    "claims:check",
+    "verify",
+    "test",
+    "test:performance",
+    "ci:gates",
+    "evidence:release"
+  ];
+  const preflightCommands = preflight.RELEASE_BLOCKING_COMMANDS;
+
+  check(scripts["evidence:release"] ===
+    "node scripts/generate_release_evidence_bundle.js --require-ready" &&
+    scripts["denali:rc:preflight"] ===
+      "node scripts/denali_rc_preflight.js" &&
+    scripts["denali:rc:preflight:list"] ===
+      "node scripts/denali_rc_preflight.js --list",
+  "package scripts expose exact fail-closed release evidence and Denali RC preflight commands");
+  check(Array.isArray(preflightCommands) &&
+    preflightCommands.length === 26 &&
+    JSON.stringify(preflightCommands.map(entry => entry.script)) ===
+      JSON.stringify(expectedPreflightScripts) &&
+    preflightCommands.every((entry, index) =>
+      JSON.stringify(entry.npmArgs) === JSON.stringify(
+        index === 22 ? ["test"] : ["run", expectedPreflightScripts[index]]
+      )) &&
+    new Set(preflightCommands.map(entry => entry.id)).size === 26 &&
+    preflight.validateCommandList(preflightCommands) === true &&
+    preflightCommands.slice(0, -1)
+      .every(entry => entry.script !== "evidence:release") &&
+    !preflightCommands.some(entry =>
+      preflight.FORBIDDEN_SCRIPTS.has(entry.script)),
+  "Denali RC preflight preserves the exact 26-step fail-closed order with evidence generation last");
+
+  const generatorSource =
+    readText("scripts/generate_release_evidence_bundle.js");
+  check(/if\s*\(\s*cli\.requireReady\s*&&\s*!report\.summary\.releaseReady\s*\)\s*\{\s*process\.exitCode\s*=\s*1\s*;/s
+    .test(generatorSource),
+  "release evidence generator exits nonzero when --require-ready finds blockers");
+
+  const expectedEvidenceCommand =
+    "node scripts/generate_release_evidence_bundle.js --require-ready";
+  const bundle = buildReleaseEvidenceBundle({
+    repoRoot,
+    command: expectedEvidenceCommand
+  });
+  const evidence = Array.isArray(bundle.evidence) ? bundle.evidence : [];
+  const blockers = Array.isArray(bundle.blockers) ? bundle.blockers : [];
+  const warnings = Array.isArray(bundle.warnings) ? bundle.warnings : [];
+  const requiredEvidence = evidence.filter(entry => entry.required);
+  const informationalEvidence = evidence.filter(entry => !entry.required);
+  const stateCounts = canonicalizeClaimValue(exactCounts(evidence, "state"));
+  const requiredStateCounts =
+    canonicalizeClaimValue(exactCounts(requiredEvidence, "state"));
+  const informationalStateCounts =
+    canonicalizeClaimValue(exactCounts(informationalEvidence, "state"));
+
+  check(bundle.schemaVersion === 1 &&
+    bundle.kind === "luascript:denali-release-evidence-bundle" &&
+    bundle.command === expectedEvidenceCommand &&
+    bundle.environment &&
+    bundle.environment.generatedBy ===
+      "scripts/generate_release_evidence_bundle.js" &&
+    bundle.environment.repositoryRoot === ".",
+  "prospective release evidence keeps exact schema, kind, command, and generator identity");
+  check(evidence.length > 0 &&
+    new Set(evidence.map(entry => entry.id)).size === evidence.length &&
+    JSON.stringify(evidence.map(entry => entry.id)) ===
+      JSON.stringify(evidence.map(entry => entry.id).sort()) &&
+    requiredEvidence.length > 0 &&
+    requiredEvidence.every(entry => entry.state === "passing") &&
+    blockers.length === 0 &&
+    bundle.summary &&
+    bundle.summary.releaseReady === true &&
+    bundle.summary.releaseBlockingIssues === 0,
+  "prospective release evidence is deterministically ordered, release-ready, and has no required blockers");
+  check(bundle.summary &&
+    bundle.summary.evidenceEntries === evidence.length &&
+    bundle.summary.requiredEvidenceEntries === requiredEvidence.length &&
+    bundle.summary.informationalEvidenceEntries ===
+      informationalEvidence.length &&
+    JSON.stringify(bundle.summary.states) === JSON.stringify(stateCounts) &&
+    JSON.stringify(bundle.summary.requiredStates) ===
+      JSON.stringify(requiredStateCounts) &&
+    JSON.stringify(bundle.summary.informationalStates) ===
+      JSON.stringify(informationalStateCounts) &&
+    bundle.summary.informationalWarnings === warnings.length,
+  "prospective release evidence summary is internally consistent with every evidence state and issue count");
+
+  const evidenceIdentityInput = {
+    policy: bundle.policy,
+    evidence,
+    blockers,
+    warnings,
+    summary: bundle.summary
+  };
+  const bundleIdentityInput = {
+    schemaVersion: bundle.schemaVersion,
+    kind: bundle.kind,
+    command: bundle.command,
+    environment: bundle.environment,
+    ...evidenceIdentityInput
+  };
+  check(bundle.contentIdentity &&
+    bundle.contentIdentity.algorithm === "sha256" &&
+    JSON.stringify(bundle.contentIdentity.excludes) ===
+      JSON.stringify(["generatedAt", "contentIdentity"]) &&
+    bundle.contentIdentity.evidenceSetSha256 ===
+      sha256Canonical(evidenceIdentityInput) &&
+    bundle.contentIdentity.bundlePayloadSha256 ===
+      sha256Canonical(bundleIdentityInput),
+  "prospective release evidence content identities recompute exactly from canonical payloads");
+
+  const directBindings = validateHashReferences(
+    repoRoot,
+    collectEmbeddedHashReferences(bundle)
+  );
+  const storedBindings = validateHashReferences(
+    repoRoot,
+    collectStoredExpectedHashReferences(bundle)
+  );
+  check(directBindings.length > evidence.length &&
+    directBindings.every(entry => entry.status === "verified") &&
+    storedBindings.length > 0 &&
+    storedBindings.every(entry => entry.status === "verified"),
+  "prospective release evidence resolves all report snapshots and stored report bindings to current live bytes");
+
+  const policyPath = "docs/LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md";
+  checkIncludes(policyPath,
+    "node scripts/generate_release_evidence_bundle.js --require-ready",
+    "exact fail-closed release evidence generator command");
+  checkIncludes(policyPath,
+    "Step 21 builds a read-only in-memory release-evidence candidate",
+    "prospective claims gate and final bundle writer separation");
+  checkIncludes("docs/INDEX.md",
+    "LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md",
+    "Denali compatibility matrix index link");
+  checkIncludes("docs/INDEX.md",
+    "LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md",
+    "Denali release-blocking policy index link");
+}
+
+function checkReleaseToolingContracts() {
+  const ReleaseCLI = require(relPath("scripts", "release-cli.js"));
+  const VersionBump = require(relPath("scripts", "version-bump.js"));
+  const pkg = readJson("package.json");
+  const ignoredOverride = new ReleaseCLI(repoRoot, {
+    runCommand: () => {
+      throw new Error("not executed by claims");
+    },
+    readinessChecks: []
+  });
+  let forceRejected = false;
+  try {
+    ignoredOverride.validateReleaseOptions({ force: true });
+  } catch (error) {
+    forceRejected = /force|preflight/i.test(String(error.message));
+  }
+
+  check(Array.isArray(ReleaseCLI.READINESS_CHECKS) &&
+    ReleaseCLI.READINESS_CHECKS.length === 1 &&
+    ReleaseCLI.READINESS_CHECKS[0].key === "denaliRcPreflightPass" &&
+    ReleaseCLI.READINESS_CHECKS[0].script === "denali:rc:preflight" &&
+    JSON.stringify(ReleaseCLI.READINESS_CHECKS[0].args) ===
+      JSON.stringify(["run", "denali:rc:preflight"]) &&
+    ignoredOverride.readinessChecks === ReleaseCLI.READINESS_CHECKS &&
+    ReleaseCLI.readinessExitCode(false) === 1 &&
+    ReleaseCLI.readinessExitCode(true) === 0 &&
+    forceRejected,
+  "release CLI hardwires the authoritative preflight, rejects force, and returns a failing not-ready exit code");
+
+  const bumper = new VersionBump(repoRoot, {
+    runCommand: () => {
+      throw new Error("not executed by version calculation claims");
+    }
+  });
+  check(pkg.version === "0.1.0-beta.0" &&
+    bumper.getNextVersion("patch") === "0.1.0" &&
+    bumper.getNextVersion("minor") === "0.1.0" &&
+    bumper.getNextVersion("major") === "1.0.0",
+  "version tooling promotes the current beta to exact patch/minor 0.1.0 and major 1.0.0 SemVer targets");
+
+  const gitCalls = [];
+  const guardedBumper = new VersionBump(repoRoot, {
+    runCommand: (command, commandArgs) => {
+      gitCalls.push({ command, args: [...commandArgs] });
+      if (
+        commandArgs[0] === "rev-parse" &&
+        commandArgs[1] === "--verify"
+      ) {
+        throw new Error("tag does not exist");
+      }
+      if (
+        commandArgs[0] === "rev-parse" &&
+        commandArgs[1] === "HEAD"
+      ) {
+        return "0123456789abcdef\n";
+      }
+      if (commandArgs[0] === "show") {
+        return `${JSON.stringify({ version: pkg.version })}\n`;
+      }
+      throw new Error(`unexpected fake git command: ${commandArgs.join(" ")}`);
+    }
+  });
+  let mismatchedHeadRejected = false;
+  try {
+    guardedBumper.createGitTag("0.1.0", "release test");
+  } catch (error) {
+    mismatchedHeadRejected =
+      /HEAD contains package version|Refusing to tag/i.test(error.message);
+  }
+  check(mismatchedHeadRejected &&
+    gitCalls.every(entry =>
+      entry.command === "git" && entry.args[0] !== "tag"),
+  "version tooling refuses a tag before HEAD contains the intended package version");
+  check(scriptsMatchExact(pkg.scripts, {
+    "test:release-tooling":
+      "node tests/release/release_tooling_contract.test.js && node tests/release/denali_rc_preflight_contract.test.js"
+  }),
+  "package exposes the exact combined release-tooling contract gate");
+}
+
+function scriptsMatchExact(scripts, expected) {
+  return Object.entries(expected).every(([name, command]) =>
+    scripts && scripts[name] === command);
+}
+
+function checkDenaliRcDocumentation() {
+  const ledgers = [
+    "docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md",
+    "docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md"
+  ];
+  const exitCriteria = "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md";
+  const handoff =
+    "Denali 1.0 release candidate ready; awaiting explicit operator authorization to version, tag, publish, or release.";
+
+  for (const ledger of ledgers) {
+    checkIncludes(ledger,
+      "### 2026-07-29 - Denali Local Release Candidate Evidence Seal",
+      "final Denali local release-candidate evidence seal heading");
+    checkIncludes(ledger, handoff,
+      "exact operator-authorization handoff sentence");
+  }
+  checkIncludes(exitCriteria,
+    "## 2026-07-29 Denali Local Release-Candidate Closure Audit",
+    "final Denali local release-candidate closure audit heading");
+  checkIncludes(exitCriteria, handoff,
+    "exact operator-authorization handoff sentence");
+  checkIncludes("PROJECT_STATUS.md",
+    "26 report pairs and 424 manifest fixtures",
+    "schema-v2 26-report/424-fixture status marker");
+  checkIncludes("PROJECT_STATUS.md",
+    "17 native lanes and their 317 fixtures",
+    "17-lane/317-fixture compatibility status marker");
+  checkIncludes("PROJECT_STATUS.md",
+    "`npm run denali:rc:preflight` is the authoritative fail-closed local RC command. Its 26 ordered steps",
+    "authoritative 26-step RC preflight status marker");
+}
+
+function checkDenaliRcContracts() {
+  checkLanguageReportProvenance();
+  checkActualProgramEvidence();
+  checkParserOwnershipEvidence();
+  checkCompatibilityMatrixEvidence();
+  checkDenaliReleaseContracts();
+  checkReleaseToolingContracts();
+  checkDenaliRcDocumentation();
 }
 
 function checkMathematicalClaims() {
@@ -2168,18 +3811,20 @@ function checkLuaScriptClaims() {
     "true omni-language release-candidate percentage boundary");
   checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "The current Denali ledger cannot close as a canonical `1.0` release ledger.",
     "Denali 1.0 handoff verdict");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "## 2026-07-16 Release-Candidate Audit",
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "## 2026-07-16 Release-Candidate Audit (Historical Verdict)",
     "exit criteria release-candidate audit section");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "## 2026-07-29 Denali Local Release-Candidate Closure Audit",
+    "exit criteria current closure audit");
   checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "Release-candidate audit verdict: Denali canonical `1.0` is **78% done / 22% remaining**.",
     "exit criteria Denali release-candidate percentage");
   checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "The user's true omni-language 100% summit is **7% done / 93% remaining**.",
     "exit criteria true omni-language release-candidate percentage");
   checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "The Denali ledger cannot close as a canonical `1.0` release ledger yet; it must hand off to the Big Remaining Climb route",
     "exit criteria Denali handoff verdict");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "| `1.0-DOCS` | `MET` for current active-doc integrity, `OPEN` for release docs |",
-    "exit criteria docs MET/open RC status");
-  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "| `1.0-LANGUAGE-ACCESSION` | `MET` for accession contract, `OPEN` for future promotions |",
-    "exit criteria accession MET/open RC status");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "| `1.0-DOCS` | `MET` |",
+    "exit criteria docs MET RC status");
+  checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "| `1.0-LANGUAGE-ACCESSION` | `MET` |",
+    "exit criteria accession MET RC status");
   checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "### 2026-07-14 - Durable Conformance Reports And Big Remaining Climb Handoff",
     "Denali 1.0 ledger durable reports handoff entry");
   checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Source-preserving round-trip proof remains 0; current round-trip evidence is structural IR reparse plus runtime-output equivalence only.",
@@ -2233,9 +3878,47 @@ function checkLuaScriptClaims() {
   checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "`npm run language:luascript:bidirectional` | PASS: 75/75 language fixtures; `test:luascript-meta` passed; `test:actual-programs` passed",
     "Denali 1.0 ledger .ls language gate verification seal");
   checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Lua structural IR reparse remains a next proof-layer candidate.",
-    "Denali 1.0 ledger Lua structural reparse boundary");
+    "historical Denali 1.0 ledger Lua structural reparse boundary");
   checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "c7f9b561e5e891773e4d32e2900204c568d4c764b399f6d6f4841d7184dbe096",
-    "Denali 1.0 ledger roundtrip layer manifest hash");
+    "historical Denali 1.0 ledger roundtrip layer manifest hash");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "### 2026-07-29 - Lua Structural IR Reparse Seed",
+    "Denali 1.0 ledger Lua structural reparse route entry");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Round-trip probe | PASS: 7/7 total, 5 structural IR reparse checks, 2 runtime-output equivalence checks, source-preserving round-trip count 0",
+    "Denali 1.0 ledger Lua structural reparse verification summary");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "1b4aca945d2b4fd7daccdc34aea4d6a7e53fe9bf5c7d24159c6253001531cff1",
+    "Denali 1.0 ledger current roundtrip manifest hash");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Lua normalized source identity and token identity remain `not-claimed`.",
+    "Denali 1.0 ledger Lua identity boundary");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Prefer a documented, versioned dual-surface transition preserving working legacy Program IR while validating the consolidated schema artifact",
+    "Denali 1.0 ledger next release IR route");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "### 2026-07-29 - Versioned One-Way Release IR Surface Contract",
+    "Denali 1.0 ledger release IR surface route entry");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Contract version | `1.0.0-rc.1`",
+    "Denali 1.0 ledger release IR contract version");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Legacy Program IR `v0` remains the operational compiler/emitter authority.",
+    "Denali 1.0 ledger operational IR authority");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Canonical artifact `1.0.0` is a derived evidence/serialization projection.",
+    "Denali 1.0 ledger canonical IR projection");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "55777393b5adb3902605f5f5f1fefc02a3553e5ae43c3dcd7688d177e925a740",
+    "Denali 1.0 ledger pinned schema hash");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "e9579c2b1cd4da6a8f3d35fa40b8c27c2df2b43cedf35b89abfc1d4cdb58b73c",
+    "Denali 1.0 ledger resolver schema hash");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "0f551a2076df5e6a6319dcab93600bff73213476351a3fd63ea732a5a597b780",
+    "Denali 1.0 ledger conformance manifest hash");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "21/21 deterministic artifacts; 1/1 supplemental DoWhile shape proof; 12/12 malformed-shape negatives; 5/5 malformed-source rejections; 11 expected diagnostics",
+    "Denali 1.0 ledger release IR dual-surface proof");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "`npm run claims:check` | PASS: 2902 checks",
+    "Denali 1.0 ledger release IR claim seal");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Next route: freeze and test the public API/runtime/package boundary while keeping the chosen internal IR bridge out of root exports.",
+    "Denali 1.0 ledger release IR next route");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "### 2026-07-29 - Tested Public API Runtime Package Boundary",
+    "Denali 1.0 ledger tested public package route entry");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "| Package report | PASS: 30/30 exact checks, 0 failures |",
+    "Denali 1.0 ledger public package proof");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "This seals the tested no-release package candidate, not the final `1.0` authorization.",
+    "Denali 1.0 ledger public package boundary");
+  checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Seal the compatibility matrix across package, Node, IR schema, named native runtimes, examples, and setup notes.",
+    "Denali 1.0 ledger public package next route");
   checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "### 2026-07-16 - Release-Shaped Conformance Evidence Bundle Index",
     "Denali 1.0 ledger evidence bundle index route entry");
   checkIncludes("docs/LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md", "Added [LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md) as the active release-shaped evidence bundle index.",
@@ -2250,57 +3933,83 @@ function checkLuaScriptClaims() {
     "Denali 1.0 ledger unsupported diagnostics test hash");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Status: active master ledger",
     "Big Remaining Climb ledger status");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Denali canonical `1.0` is estimated at 78% done, while the user's true omni-language 100% summit is estimated at 7% done.",
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "the 2026-07-16 release-candidate audit, whose historical estimates were 78% for Denali and 7% for the true omni-language horizon.",
     "Big Remaining Climb release-candidate percentage summary");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "| Denali canonical `1.0` | 78% done / 22% remaining |",
-    "Big Remaining Climb Denali release-candidate table estimate");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "| True omni-language 100% | 7% done / 93% remaining |",
-    "Big Remaining Climb true omni-language release-candidate table estimate");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Denali release-candidate audit: SEALED for verdict; OPEN for release closure.",
-    "Big Remaining Climb release-candidate audit sealed/open route");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "The 2026-07-16 78%/22% Denali and 7%/93% omni-language estimates remain historical audit evidence.",
+    "Big Remaining Climb historical percentage boundary");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "RC route seal: the 2026-07-16 Denali release-candidate audit is SEALED for verdict and OPEN for release closure.",
     "Big Remaining Climb release-candidate route seal");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "`npm run test:unsupported-diagnostics` passes 21 named diagnostics and writes `artifacts/conformance/unsupported-diagnostics-report.json`.",
     "Big Remaining Climb unsupported diagnostics current count");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "`npm run test:roundtrip-probe` passes 7 probes: 5 structural IR reparse checks and 2 runtime-output equivalence checks",
+    "Big Remaining Climb current roundtrip counts");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Current round-trip evidence now includes structural IR reparse, runtime-output equivalence, and a release-shaped 15-fixture `.ls` source identity suite",
     "Big Remaining Climb source-preserving boundary");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Source-preserving round-trip suite: SEALED",
     "Big Remaining Climb source identity sealed");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Edge-case matrix expansion: SEALED",
     "Big Remaining Climb edge matrix sealed");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Schema-valid conformance artifact mapping and internal compatibility bridge: SEALED for derived dual-surface evidence; OPEN for final release IR surface adoption.",
-    "Big Remaining Climb schema-valid route sealed/open");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Versioned one-way release-IR transition: SEALED for the internal Denali RC surface choice; OPEN for wider semantics.",
+    "Big Remaining Climb release IR route sealed/open");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "`npm run test:schema-artifact-map` passes 21/21 positive derived schema-artifact mappings",
     "Big Remaining Climb schema artifact current count");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "`npm run test:ir-compatibility-bridge` passes 21/21 internal dual-surface bridge mappings, 168/168 invariant checks",
-    "Big Remaining Climb dual-surface compatibility bridge current count");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Add the next real proof layer: Lua structural IR reparse or a second normalized source-identity lane, without broad language claims",
-    "Big Remaining Climb bidirectionality next route cleanup");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "`npm run test:ir-compatibility-bridge` enforces chosen contract `1.0.0-rc.1`: 21/21 internal mappings, 168/168 base invariants, 10/10 static contract rules, 147/147 mapping-contract rules, 21/21 deterministic artifacts, 1/1 supplemental DoWhile shape proof, 12/12 malformed-shape negatives, 5/5 malformed-source rejections, and 11 expected diagnostics.",
+    "Big Remaining Climb release IR compatibility proof");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Lua structural IR reparse seed: SEALED.",
+    "Big Remaining Climb Lua structural reparse route sealed");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "The IR semantics v1 evidence route is now sealed; broad lossless recovery remains a later climb.",
     "Big Remaining Climb source identity next route cleanup");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "IR semantics v1 evidence pass: SEALED",
     "Big Remaining Climb IR semantics v1 evidence sealed");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Conformance evidence bundle index: SEALED for document index; OPEN for one-command generated bundle.",
-    "Big Remaining Climb conformance evidence bundle index sealed");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Second route seal: [LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md) is now the release-shaped evidence navigation layer.",
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Second route seal (historical state at that point): [LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md) became the release-shaped navigation layer before the later generated bundle/report work closed those gaps.",
     "Big Remaining Climb second route seal");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "c7f9b561e5e891773e4d32e2900204c568d4c764b399f6d6f4841d7184dbe096",
-    "Big Remaining Climb roundtrip layer manifest hash");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "current manifest hash is `1b4aca945d2b4fd7daccdc34aea4d6a7e53fe9bf5c7d24159c6253001531cff1`",
+    "Big Remaining Climb current roundtrip layer manifest hash");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "0280f940b1004e9e2602217ddd6135e5dd3a28a27152c8eb547c1666498c9272",
     "Big Remaining Climb source identity layer manifest hash");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Next route after this ledger: add a real new proof layer, preferably a tiny Lua structural IR reparse probe or a second normalized source-identity lane, then choose the final release IR surface from the internal bridge candidate or add release compatibility/versioning rules for the bridge.",
-    "Big Remaining Climb next route seal");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "readiness requires `releaseReady: true` and zero release blockers.",
+    "Big Remaining Climb deterministic bundle readiness seal");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "## 2026-07-29 Lua Structural IR Reparse Route Seal",
+    "Big Remaining Climb Lua structural reparse audit entry");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "## 2026-07-29 Versioned One-Way Release IR Surface Route Seal",
+    "Big Remaining Climb release IR route seal entry");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Contract `1.0.0-rc.1` defines legacy Program IR `v0` as operational/emission authority and canonical artifact `1.0.0` as the derived evidence/serialization projection.",
+    "Big Remaining Climb release IR surface identities");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "The route is one-way legacy -> canonical; there is no canonical -> legacy conversion or lossless/semantic-equivalence claim.",
+    "Big Remaining Climb release IR direction boundary");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "The pinned `1.0.0` schema received a pre-release RC correction and is semantically equal to the current schema except for `$id`",
+    "Big Remaining Climb release IR schema correction");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Conformance manifest SHA-256: `0f551a2076df5e6a6319dcab93600bff73213476351a3fd63ea732a5a597b780`.",
+    "Big Remaining Climb release IR manifest hash");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Schema mapping proof: 21/21 positives, 11 expected diagnostics, 168/168 base invariants, and 147/147 release-contract checks.",
+    "Big Remaining Climb release IR schema proof");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Dual-surface proof: 21/21 positives, 11 expected diagnostics, 168/168 base invariants, 10/10 static contract checks, 147/147 mapping-contract checks, 21/21 deterministic artifacts, 1/1 supplemental DoWhile shape proof, 12/12 malformed-shape negatives, and 5/5 malformed-source rejections.",
+    "Big Remaining Climb release IR compatibility proof seal");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "The contract remains internal-only; package-root exports, compiler/emitter inputs, transpilation result shapes, package `bin`, and package `exports` are unchanged.",
+    "Big Remaining Climb release IR public boundary");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "`npm run claims:check` passes 2902 checks",
+    "Big Remaining Climb release IR claim seal");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Freeze and test the public API/runtime/package boundary while keeping the chosen internal IR bridge out of root exports.",
+    "Big Remaining Climb release IR next route");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "## 2026-07-29 Tested Public API Runtime Package Route Seal",
+    "Big Remaining Climb public package route entry");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Package report: PASS: 30/30 checks, 0 failures, actual tarball plus clean consumer.",
+    "Big Remaining Climb public package proof");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Tested no-release package candidate only; final `1.0` authorization remains open.",
+    "Big Remaining Climb public package boundary");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Seal the compatibility matrix and deterministic release evidence bundle.",
+    "Big Remaining Climb public package next route");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "## Loose-End Closure Pass",
     "Big Remaining Climb loose-end closure section");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "100% of started post-beta/Denali/Big Remaining Climb routes in this ledger are sealed at their scoped route level.",
     "Big Remaining Climb started routes sealed percentage");
   checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "The unsealed items below are explicitly future routes, not abandoned started work.",
     "Big Remaining Climb future-route boundary");
-  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "Future routes not yet started:",
-    "Big Remaining Climb future routes list");
+  checkIncludes("docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md", "the package release and the far larger omni-language climb remain separate.",
+    "Big Remaining Climb post-RC boundary");
   checkIncludes("docs/LUASCRIPT_MEGA_PLAN.md", "Current `.ls` identity is deliberately narrow",
     "mega plan .ls identity boundary");
-  checkIncludes("docs/LUASCRIPT_MEGA_PLAN.md", "First-pass example boundaries for canonical `1.0` should stay inside named evidence",
+  checkIncludes("docs/LUASCRIPT_MEGA_PLAN.md", "Installed-package examples are exactly `examples/package/transpile-js-to-lua.cjs` and `examples/package/minimal-system.cjs`, both exercised through the package root API by `npm run test:package-contract`.",
     "mega plan example boundary");
   checkPattern("docs/LANGUAGE_SUPPORT_MATRIX.md", /LUASCRIPT `\.ls` JS-like syntax plus V0\.16 meta layer/,
     "support matrix V0.16 row");
@@ -2310,6 +4019,7 @@ function checkLuaScriptClaims() {
 
 try {
   checkPackageMetadata();
+  checkDenaliRcContracts();
   if (runMath) checkMathematicalClaims();
   if (runLuaScript) checkLuaScriptClaims();
 } catch (error) {

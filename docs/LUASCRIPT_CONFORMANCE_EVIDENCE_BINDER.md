@@ -1,18 +1,97 @@
 # LUASCRIPT Conformance Evidence Binder
 
 Status: active evidence binder
-Last updated: 2026-07-27
-Track: Denali canonical `1.0` evidence structure
+Last updated: 2026-07-29
+Track: Denali canonical `1.0` release-candidate evidence
 
-This binder is a certification-style evidence structure for LUASCRIPT. It is not ISO certification, third-party certification, production certification, or a claim that LUASCRIPT has reached the user's true omni-language 100% summit. It organizes the gates, reports, conformance suites, support boundaries, compatibility policy, release checklist, and reproducibility steps that could grow toward certification-grade evidence.
+This binder is a certification-style evidence structure for LUASCRIPT.
+It is not ISO certification, third-party certification, production certification, or a claim that LUASCRIPT has reached the user's true omni-language 100% summit.
+It names the evidence that exists, the command that must refresh it, and the
+boundaries that a passing local result does not cross.
+
+The package remains `luascript@0.1.0-beta.0`. Nothing in this binder authorizes
+a version bump, commit, tag, push, publish, GitHub release, or package-surface
+change.
+
+## Authoritative Bearing
+
+From the repository root, the authoritative Denali RC reproduction command is:
+
+```bash
+npm run denali:rc:preflight
+```
+
+Inspect its ordered policy without running a gate:
+
+```bash
+npm run denali:rc:preflight:list
+```
+
+The 26-step orchestrator uses argument arrays with `shell: false`, runs every
+command from the repository root, stops on the first exception, signal,
+missing process status, or nonzero exit, and emits an in-memory receipt to
+stdout. It regenerates report producers before validators, runs the
+compatibility matrix after every report it hash-binds, and runs
+`npm run evidence:release` last. The durable output belongs to the evidence
+generator, not the preflight runner:
+
+`artifacts/release_evidence/denali-release-evidence-bundle.json`
+
+The detailed policy is
+[LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md](LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md).
 
 ## Scope
 
 - The binder indexes current evidence; it does not promote support by itself.
-- Scoped beta, Denali canonical `1.0`, and true omni-language 100% remain separate.
+- Scoped beta, a Denali `1.0` release candidate, an authorized `1.0` release,
+  and true omni-language 100% remain separate states.
 - Current conformance, edge-case, and round-trip suites are scoped skeletons.
-- A language, feature, profile, runtime, example, or package behavior is supported only when the support matrix, manifests, docs, runtime evidence, and current gates agree.
-- Archived docs are historical evidence only.
+  Their durable reports are real release inputs, but their named fixtures are
+  not exhaustive language or semantic certification.
+- A language, feature, profile, runtime, example, or package behavior is
+  supported only when the support matrix, manifests, reports, runtime
+  evidence, documentation, and current gates agree.
+- Passing counts describe named evidence sets. They do not override a stale
+  hash, missing runtime, failed freshness check, or explicit exclusion.
+- Archived documents are historical evidence only.
+
+## Current Denali Evidence Snapshot
+
+These counts are the results recorded by the current report-producing
+harnesses. A release-readiness decision still requires a fresh successful
+preflight and a zero-blocker final bundle.
+
+| Evidence surface | Current recorded result | Binding and boundary |
+| --- | ---: | --- |
+| Language completion, all implemented lanes | 26 schema-v2 report/manifest pairs; 424/424 fixtures passing | Every report binds manifest metadata and SHA-256, ordered fixture source hashes and byte sizes, per-result source identity, loaded implementation hashes, successful runtime probes, environment metadata, and governing-document hashes |
+| Implemented native language subset | 17 reports; 317/317 fixtures passing | These are the native support lanes bound by the current-host compatibility matrix; the other 9 reports and 107 fixtures are target-runtime lanes |
+| Public package contract | 32/32 checks passing | Actual `npm pack`, exact file inventory, clean install, root import/transpile, public examples, dependency closure, Node-floor smoke, and exact cleanup; still a no-release beta candidate |
+| Installed-package examples | 3/3 exact files present; both program files executable | `examples/package/README.md`, `examples/package/minimal-system.cjs`, and `examples/package/transpile-js-to-lua.cjs` are the only installed-package example surface |
+| Repository-local actual programs | 55/55 passing | 37 positive-runtime cases, 6 expected compile diagnostics, and 12 expected runtime diagnostics; report declares `packageCompatibilityClaimed: false` |
+| Parser ownership | 35/35 passing | 21 static assertions, 13 runtime assertions, and 1 completion assertion; repository parser-ownership evidence, not package compatibility |
+| Current-host compatibility | 88/88 checks passing when generated against its bound inputs | Current Windows x64 runtime/tool availability, native lanes, package/dependencies/Node floor, release IR, manifests, and docs; other hosts remain unclaimed |
+| Canonical IR conformance | 32 manifest fixtures | Positive and expected-diagnostic evidence mapped to named v1 semantic rules or documented gaps |
+| Schema artifact mapping | 21/21 positive mappings plus 11 expected diagnostics | 168/168 base invariants and 147/147 release-contract checks |
+| Dual-surface release IR | All current positive, static, mapping, determinism, supplemental, and negative checks passing | Contract `1.0.0-rc.1`; internal one-way Program IR v0 to canonical artifact `1.0.0` transition only |
+| Edge matrix | 25/25 scoped cases | Value, control, scope, data, errors, target-specific behavior, and unsupported diagnostics |
+| Round-trip probes | 7/7 | 5 structural IR reparse checks and 2 runtime-output equivalence checks; source-preserving count remains 0 |
+| Source identity | 15/15 | 12 positive normalized `.ls` source/parser-owned-AST/IR checks and 3 expected diagnostics; token identity is measured but non-gating |
+| Unsupported diagnostics | 21/21 | Named fail-closed JavaScript, `.ls`, Python, Lua, core-fallback, and target-emitter diagnostics |
+
+The current package tarball contract records:
+
+- filename `luascript-0.1.0-beta.0.tgz`;
+- SHA-256
+  `92947fab9eabdaf79efed47b114b787cc6d7a5195e0320d28d407f558b2c7461`;
+- 398 entries;
+- packed size 1,010,433 bytes;
+- unpacked size 5,189,594 bytes;
+- sorted file-list SHA-256
+  `cc16e4bce689b57ae8f6c5334ae43935fd2493f09dd98befa5395929f7028977`.
+
+The tarball identity is evidence for the source/package state that generated
+it. Any bound package or source change requires `npm run test:package-contract`
+again; an old green summary is not reusable as current evidence.
 
 ## Evidence Stack
 
@@ -20,41 +99,160 @@ Primary truth sources:
 
 - [../PROJECT_STATUS.md](../PROJECT_STATUS.md): root status entrypoint.
 - [INDEX.md](INDEX.md): active-docs map and archive boundary.
-- [LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md](LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md): route ledger and latest verification seals.
-- [LUASCRIPT_1_0_EXIT_CRITERIA.md](LUASCRIPT_1_0_EXIT_CRITERIA.md): measurable Denali `1.0` criteria.
-- [LANGUAGE_SUPPORT_MATRIX.md](LANGUAGE_SUPPORT_MATRIX.md): current support claims and promotion boundaries.
-- [LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md): release-shaped conformance evidence bundle index that cross-links beta gates, language gates, Clarity evidence, conformance reports, actual programs, support matrix, compatibility policy, fixture/hash expectations, known unsupported areas, and reproducibility steps.
+- [LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md](LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md):
+  route ledger and verification seals.
+- [LUASCRIPT_1_0_EXIT_CRITERIA.md](LUASCRIPT_1_0_EXIT_CRITERIA.md):
+  measurable Denali `1.0` criteria.
+- [LANGUAGE_SUPPORT_MATRIX.md](LANGUAGE_SUPPORT_MATRIX.md): current support
+  claims and promotion boundaries.
+- [LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md](LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md):
+  current-host compatibility scope, tool versions, lane bindings, and setup
+  notes.
+- [LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md](LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md):
+  authoritative preflight order and release-blocking policy.
+- [LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md): release-shaped conformance evidence bundle index.
 
-Active contracts and support references:
+Active contracts:
 
-- [LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md](LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md): current IR semantics inventory.
-- [LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md](LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md): first formal IR semantics draft plus the 2026-07-15 v1 evidence mapping draft for every current `npm run test:ir-conformance` fixture.
-- [LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md): bidirectional claim layers.
-- [LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](LUASCRIPT_LANGUAGE_ACCESSION_RULES.md): promotion rules for language-depth slices.
-- [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md): package entrypoints, CLI/API surface, Node/runtime expectations, package files, semver, compatibility, and release actions.
+- [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md):
+  versioned one-way operational-to-canonical transition.
+- [LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md):
+  bidirectional claim layers.
+- [LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](LUASCRIPT_LANGUAGE_ACCESSION_RULES.md):
+  promotion rules for language-depth slices.
+- [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md):
+  package entrypoint, API, runtime, files, semver, and release boundaries.
+- [LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md](LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md):
+  unreleased consumer changes.
 - [VERSIONING.md](VERSIONING.md): IR schema versioning policy.
 
 ## Gate Families
 
-| Gate family | Commands | Evidence role | Current boundary |
+| Gate family | Commands | Current evidence role | Boundary |
 | --- | --- | --- | --- |
-| Documentation and claim integrity | `npm run status:check`, `npm run claims:check`, `npm run stubs:check`, `npm run archive:audit` | Proves active docs are linked, claims are guarded, stubs are classified, and archive material does not re-enter as active truth | Text and inventory guardrails, not runtime semantics |
-| Beta evidence | `npm run beta:readiness`, `npm run beta:readiness:strict`, `npm run beta:preflight`, `npm run beta:full` | Proves the scoped beta readiness and local acceptance gates | Scoped beta evidence, not canonical `1.0` or full language support |
-| Clarity evidence | `npm run clarity:dogfood`, `npm run clarity:canon`, `npm run clarity:canon:super`, `npm run clarity:languages` | Proves dogfood fixtures, strict local canon shards, governed Super Canon shards, and language qualification reports | Report-driven and scoped to current manifests |
-| Language completion | `npm run language:implemented:bidirectional`, `npm run language:all:bidirectional`, per-language `language:<name>:bidirectional` and `language:<name>:ir-targets` | Proves named native/runtime/target slices through manifests and reports | Named slices only; no blanket bidirectionality or source identity |
-| Canonical IR conformance | `npm run test:ir-conformance` | Proves the scoped conformance skeleton for current stable bridge emitters and feeds the v1 evidence map in `LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md` | 32 manifest fixtures mapped to named IR semantic rules or documented gaps; not a certification suite, schema-valid release contract, or canonical `1.0` promotion |
-| Schema artifact mapping | `npm run test:schema-artifact-map` | Derives schema-valid canonical IR v1 artifacts from the current positive conformance fixtures, validates them with AJV, and records kind/field alias gaps | 21/21 positive fixture mappings plus 11 expected diagnostics; dual-surface transition evidence only, not release IR surface selection or compiler-output change |
-| Dual-surface compatibility bridge | `npm run test:ir-compatibility-bridge` | Validates the internal bridge from current legacy object-tree IR to derived schema-valid canonical IR v1 artifacts with invariant checks | 21/21 positive fixture mappings, 168/168 invariant checks, and 11 expected diagnostics; internal-only bridge candidate, not public API or release IR surface selection |
-| Edge-case matrix | `npm run test:edge-matrix` | Proves scoped edge cases by value, control, scope, data, errors, target-specific behavior, and unsupported diagnostics | 25 scoped cases with category counts and case hashes; not exhaustive edge coverage |
-| Unsupported diagnostics | `npm run test:unsupported-diagnostics` | Proves stable named unsupported diagnostics for JavaScript source, `.ls` source/meta repair, Python source, Lua source, core fallback, and target emitters | 21-case current diagnostic catalog only; not a full unsupported-feature catalog |
-| Round-trip probes | `npm run test:roundtrip-probe` | Separates structural IR reparse checks from runtime-output equivalence checks and records the JS/.ls/Python/Lua bidirectionality layer map | 6 tiny probes plus layer accounting; not source identity or broad semantic equivalence |
-| Source identity probes | `npm run test:source-identity-probe` | Proves normalized `.ls` source identity, normalized parser-owned AST identity, and normalized current bridge IR identity for positive named fixtures, while expected unsupported diagnostics stay separate | 15 fixtures: 12 normalized source/AST/IR identity checks plus 3 expected diagnostics; token identity is measured but non-gating; not runtime-output equivalence, broad lossless recovery, or broad semantic equivalence |
-| Actual examples | `npm run test:actual-programs`, `npm run test:luascript-meta`, `npm run test:lua-input`, `npm run test:parser-ownership` | Proves executable `.ls`, Lua input, parser ownership, and actual-program surfaces | Current fixture families only |
-| General verification | `npm run verify`, `npm test` | Proves broader local verification and core/runtime baseline | Depends on current local runtime/tool availability |
+| Authoritative RC preflight | `npm run denali:rc:preflight`; list with `npm run denali:rc:preflight:list` | Regenerates and validates the complete ordered local RC evidence chain and generates the bundle last | No release action; fail-closed local readiness only |
+| Language completion | `npm run language:implemented:bidirectional`; per-lane commands | Writes 26 schema-v2 reports covering 424 fixtures; native subset is 17 reports and 317 fixtures | Named support slices only; no blanket full-language claim |
+| Public package contract | `npm run test:package-contract` | Packs and clean-installs the real tarball, freezes six root exports, executes installed examples, checks exact dependencies and Node `14.17.1` | No version bump, `bin`, `exports`, registry, or cross-platform claim |
+| Clarity evidence | `npm run clarity:dogfood`, `npm run clarity:canon`, `npm run clarity:canon:super`, `npm run clarity:canon:languages`, `npm run clarity:languages:reports` | Refreshes four required Clarity reports, then validates schema-v2 language receipts | Hashless legacy reports are accepted only through fail-closed input-mtime freshness |
+| Actual programs | `npm run test:actual-programs` | Writes a first-class 55/55 report with manifest/source hashes and explicit legacy boundary | Repository-local legacy compiler/runtime evidence, not installed-package evidence |
+| Parser ownership | `npm run test:parser-ownership` | Writes a first-class 35/35 static/runtime/completion report | Repository parser delegation and ownership only |
+| Current-host compatibility | `npm run test:compatibility-matrix` | Hash-binds current tools, package, 17 native lanes, release IR, reports, manifests, and docs after all producers | One Windows x64 host plus separate Node-floor package smoke; not universal certification |
+| Canonical IR conformance | `npm run test:ir-conformance` | Writes a 32-fixture durable report | Scoped v1 semantic evidence map |
+| Schema artifact mapping | `npm run test:schema-artifact-map` | Writes canonical artifact `1.0.0` mappings and expected diagnostics | Chosen one-way internal projection |
+| Dual-surface compatibility bridge | `npm run test:ir-compatibility-bridge` | Enforces release contract `1.0.0-rc.1` across live/pinned/`1.x` schemas | Internal bridge only; no public API or reverse conversion |
+| Edge, round-trip, identity, diagnostics | `npm run test:edge-matrix`, `test:roundtrip-probe`, `test:source-identity-probe`, `test:unsupported-diagnostics` | Writes durable scoped reports with hashes and traceability | Named cases only |
+| Documentation and inventory integrity | `npm run status:check`, `claims:check`, `stubs:check`, `archive:audit` | Enforces active truth, protected claims, real implementations, and archive separation | Text/inventory governance, not semantic proof |
+| General readiness | `npm run verify`, `npm test`, `npm run test:performance`, `npm run ci:gates` | Runs broader verification, core/runtime, performance, and CI-completeness checks | Current local environment |
+| Deterministic bundle | `npm run evidence:release` | Inventories required and informational evidence, validates bindings, and writes the final deterministic bundle | Runs last; does not repair or rerun an owning gate |
+
+## Language Schema-v2 Binding
+
+`artifacts/language_completion/*-report.json` contains 26 current schema-v2
+language/target reports. The accepted report shape includes:
+
+- manifest path, schema/status/version/support slice, SHA-256, and fixture count;
+- ordered fixtures with name, source, manifest-entry SHA-256, source SHA-256,
+  and byte size;
+- per-result source SHA-256 and pass/fail status;
+- hashes for the loaded compiler/harness implementation files;
+- resolved runtime commands and bounded successful version probes;
+- Node, platform, architecture, OS, cwd, and runtime timeout metadata;
+- hashes for support-matrix and completion-policy documents.
+
+The implemented aggregate records 26 report pairs and 424/424 fixtures. The 17
+native lanes record 317/317 fixtures; nine target-runtime lanes account for the
+remaining 107. A report is release-acceptable only while all embedded live
+paths and hashes still match. Counts alone cannot convert a stale report into a
+pass.
+
+## Package, Examples, And Legacy Program Boundary
+
+The package report at
+`artifacts/conformance/public-api-runtime-package-report.json` proves the
+actual-tarball surface rather than a source-tree approximation:
+
+- package identity remains `luascript@0.1.0-beta.0`;
+- root entrypoint remains `src/unified_luascript.js`;
+- the exact root API remains `UnifiedLuaScript`, `CoreTranspiler`,
+  `RuntimeSystem`, `AdvancedFeatures`, `PerformanceTools`, and `AgenticIDE`;
+- runtime dependencies are `acorn`, `esprima`, `luaparse`, and exact
+  `typescript@5.9.3`;
+- the declared Node floor is `>=14.17.0`, with a clean installed-consumer
+  probe on Node `14.17.1`;
+- `examples/package/` is packed and both executable examples run from the
+  installed package;
+- root-level `runtime/` is deliberately excluded; deep legacy/Python tools that expect it are non-public;
+- no package `exports` map is currently declared, so no subpath import is frozen by the no-release candidate;
+- no npm `bin` or global CLI contract exists.
+
+The wider `examples/` tree and
+`artifacts/conformance/actual-programs-report.json` prove repository behavior,
+not package behavior. The actual-program report is first-class and complete:
+55 manifest entries, 55 source-hash-bound results, and 55 passes. Its boundary
+states that it exercises `src/luascript_compiler.py` plus the repository
+runtime and sets `packageCompatibilityClaimed: false`. No compatibility score
+may average that legacy route into the public JavaScript package route.
+
+`artifacts/conformance/parser-ownership-report.json` is likewise first-class:
+35/35 checks with governing source hashes and environment/runtime evidence.
+It proves parser ownership and delegated helper behavior; it does not promote
+package compatibility.
+
+## Current-Host Compatibility
+
+`artifacts/conformance/denali-compatibility-matrix-report.json` records 88
+current-host checks. A passing run establishes:
+
+- Windows x64 host identity, Node/npm identity, and bounded runtime/tool
+  version probes;
+- package metadata, lock/install agreement, exact production dependencies,
+  Node floor, and current package report identity;
+- 17 native lanes, 317 fixtures, schema-v2 language provenance, and runtime
+  availability;
+- release-IR contract/schema/report identity;
+- manifest, source, package-contract, migration-note, support-matrix, and
+  completion-rule hashes.
+
+It does not rerun language behavior and does not prove compile/link/cache/SDK
+behavior merely because a version probe succeeds. Compatibility runs after all
+report producers in the authoritative preflight because any later package,
+language, IR, manifest, or documentation change can stale its hashes.
+
+The current host is Windows x64 with Node `v24.14.0` and npm `11.9.0`; the
+separate installed-package floor probe uses Node `v14.17.1`. Linux, macOS,
+other architectures, alternative toolchains, and other runtime versions
+require their own equivalent receipts.
+
+## Clarity Required Versus Informational Freshness
+
+The Clarity JSON format predates the schema-v2 hash-bearing reports, so the
+bundle applies an explicit fail-closed freshness rule instead of treating a
+green summary as current.
+
+| Clarity report | Command | Policy |
+| --- | --- | --- |
+| `dogfood-report.json` | `npm run clarity:dogfood` | Required; stale, missing, failing, or unverifiable freshness blocks |
+| `canon-report.json` | `npm run clarity:canon` | Required; stale, missing, failing, or unverifiable freshness blocks |
+| `canon-super-report.json` | `npm run clarity:canon:super` | Required; stale, missing, failing, or unverifiable freshness blocks |
+| `canon-languages-report.json` | `npm run clarity:canon:languages` | Required; refreshed after language reports; stale, missing, failing, or unverifiable freshness blocks |
+| `canon-fast-report.json` | `npm run clarity:canon:fast` | Informational; problems are warnings, not release blockers |
+| `canon-heavy-report.json` | `npm run clarity:canon:heavy` | Informational; problems are warnings, not release blockers |
+| `canon-legacy-report.json` | `npm run clarity:canon:legacy` | Informational; problems are warnings, not release blockers |
+| `canon-setup-blocked-report.json` | `npm run clarity:canon:setup-blocked` | Informational; problems are warnings, not release blockers |
+
+For a hashless Clarity report, `generatedAt` must be at or after every declared
+input file modification time. The bundle inventories and hash-binds the
+current input content set, rejects an untrustworthy future timestamp, uses no
+arbitrary age threshold, and blocks required evidence when the fallback is
+stale or unverifiable.
+
+`npm run clarity:languages:reports` validates language JSON but writes no
+Clarity canon report. That is why the preflight separately runs
+`clarity:canon:languages` before the reports-only validator.
 
 ## Report And Artifact Index
 
-Current generated evidence artifacts:
+Current generated report paths:
 
 - `artifacts/beta_readiness.json`
 - `artifacts/beta_gates/preflight-report.json`
@@ -62,161 +260,142 @@ Current generated evidence artifacts:
 - `artifacts/language_completion/*-report.json`
 - `artifacts/clarity_canon/dogfood-report.json`
 - `artifacts/clarity_canon/canon-report.json`
-- `artifacts/clarity_canon/canon-languages-report.json`
 - `artifacts/clarity_canon/canon-super-report.json`
+- `artifacts/clarity_canon/canon-languages-report.json`
+- `artifacts/conformance/actual-programs-report.json`
+- `artifacts/conformance/parser-ownership-report.json`
 - `artifacts/conformance/canonical-ir-conformance-report.json`
 - `artifacts/conformance/schema-artifact-mapping-report.json`
 - `artifacts/conformance/dual-surface-compatibility-bridge-report.json`
+- `artifacts/conformance/public-api-runtime-package-report.json`
+- `artifacts/conformance/denali-compatibility-matrix-report.json`
 - `artifacts/conformance/roundtrip-probe-report.json`
 - `artifacts/conformance/source-identity-probe-report.json`
 - `artifacts/conformance/unsupported-diagnostics-report.json`
 - `artifacts/edge_matrix/edge-case-matrix-report.json`
+- `artifacts/release_evidence/denali-release-evidence-bundle.json`
 
-The release-shaped bundle map is [LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md). It is certification-style evidence, not certification, and it does not create a release artifact, version bump, tag, publish action, package `bin`, package `exports` map, canonical `1.0`, or true omni-language 100% claim.
+The release-shaped bundle map is [LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md). It is certification-style evidence, not certification, and it creates no version bump, tag, publish, package `bin`, package `exports`, or release.
 
-Current non-report manifest evidence:
-
-- `tests/conformance/manifest.json`
-- `tests/edge_matrix/manifest.json`
-- `tests/roundtrip/manifest.json`
-- `tests/roundtrip/source_identity_manifest.json`
-- `tests/language_completion/manifests/*.json`
-- `tests/actual_programs/manifest.json`
-- `tests/lua_input/manifest.json`
-- `tests/clarity_canon/manifest.json`
-- `tests/clarity_canon/language_qualification_manifest.json`
-
-Durable local report closure: `npm run test:ir-conformance`, `npm run test:schema-artifact-map`, `npm run test:ir-compatibility-bridge`, `npm run test:roundtrip-probe`, `npm run test:source-identity-probe`, and `npm run test:unsupported-diagnostics` now write standalone JSON reports under `artifacts/conformance/` with environment metadata, fixture or case hashes, pass/fail summaries, and support-matrix traceability. The schema-artifact mapping report proves schema-valid derived artifacts for 21/21 positive conformance fixtures, preserves 11 expected diagnostics, and records dual-surface alias gaps including `VariableDeclarator->VariableDeclaration`, `Parameter->Identifier`, `UnaryExpression->BinaryExpression`, and `SwitchCase->BlockStatement`. The dual-surface compatibility bridge report proves the internal bridge candidate in `src/ir/schema_artifact_bridge.js` for 21/21 positive conformance fixtures, 168/168 invariant checks, 11 expected diagnostics, and internal-only public API status. The round-trip report now also records a JS/.ls/Python/Lua layer map for native execution, source-to-IR, IR-to-target, target-runtime, emitted `.ls`, structural IR reparse, normalized source identity, token identity, and semantic equivalence. The source-identity report now records the release-shaped 15-fixture `.ls` suite, coverage counts, tier counts, manifest hash, fixture hashes, 12 normalized source identity checks, 12 normalized parser-owned AST identity checks, 12 normalized IR identity checks, 3 expected unsupported diagnostics, and its `.ls` source-identity layer contribution. `npm run test:edge-matrix` now writes a scoped 25-case edge report with environment metadata, manifest hash, per-case hashes, category counts, pass/fail summaries, runtime/error/diagnostic check counts, and support-matrix traceability. `npm run test:unsupported-diagnostics` now writes a 21-case report across JavaScript, `.ls`, Python, Lua, core fallback, and target-emitter diagnostics. Remaining evidence gap: these reports are scoped local artifacts, not cross-platform release conformance bundles, third-party certification evidence, token-level source preservation, broad parser-owned AST identity beyond the current 12 positive fixtures, broad lossless source recovery, exhaustive edge coverage, a full unsupported-feature catalog, final release IR surface selection, or broad semantic equivalence.
+Durable local report closure: `npm run test:ir-conformance`, `npm run test:schema-artifact-map`, `npm run test:ir-compatibility-bridge`, `npm run test:package-contract`, `npm run test:roundtrip-probe`, `npm run test:source-identity-probe`, and `npm run test:unsupported-diagnostics` write standalone JSON reports under `artifacts/conformance/` with environment, source/fixture/case hashes, pass/fail summaries, and scoped traceability. The same release inventory now also includes first-class actual-program, parser-ownership, current-host compatibility, and schema-v2 language reports.
 
 ## Conformance Suites
 
-| Suite | Manifest/test | Current scope | Certification gap |
+| Suite | Manifest/test/report | Current scope | Truthful exclusion |
 | --- | --- | --- | --- |
-| Canonical IR conformance | `tests/conformance/manifest.json`, `tests/conformance/canonical_ir_conformance.test.js`, `artifacts/conformance/canonical-ir-conformance-report.json` | 32 fixtures across value semantics, literals, bindings, scope, control flow, functions, calls, arrays/objects, errors, unsupported nodes, determinism, and target obligations, now mapped to named v1 evidence rules or documented gaps | Durable local report, v1 evidence map, and derived schema artifact mapping exist; still needs release IR surface selection, a larger matrix, cross-platform runs, and release-blocking policy |
-| Schema artifact mapping | `tests/conformance/manifest.json`, `tests/conformance/schema_artifact_mapping.test.js`, `artifacts/conformance/schema-artifact-mapping-report.json` | 21 positive conformance fixtures produce derived schema-valid canonical IR v1 artifacts; 11 expected diagnostics remain separate; report records `VariableDeclarator->VariableDeclaration`, `Parameter->Identifier`, `UnaryExpression->BinaryExpression`, and `SwitchCase->BlockStatement` aliases | Dual-surface transition evidence only; final release must choose the schema artifact as compiler output or define a formal compatibility bridge |
-| Dual-surface compatibility bridge | `src/ir/schema_artifact_bridge.js`, `tests/conformance/dual_surface_compatibility_bridge.test.js`, `artifacts/conformance/dual-surface-compatibility-bridge-report.json` | 21 positive conformance fixtures pass the internal legacy object-tree to schema artifact bridge; 168/168 invariant checks pass; 11 expected diagnostics remain separate | Internal bridge candidate only; final release still needs surface adoption, compatibility versioning, migration policy, and release-blocking policy |
-| Edge-case matrix | `tests/edge_matrix/manifest.json`, `tests/edge_matrix/edge_case_matrix.test.js`, `artifacts/edge_matrix/edge-case-matrix-report.json` | 25 scoped cases across value, control, scope, data, errors, target-specific behavior, and unsupported diagnostics; category counts are value 4, control 4, scope 3, data 4, errors 3, target-specific 3, unsupported diagnostics 4 | Needs massive edge expansion beyond 25 cases and feature-by-feature coverage accounting |
-| Round-trip probe | `tests/roundtrip/manifest.json`, `tests/roundtrip/roundtrip_probe.test.js`, `artifacts/conformance/roundtrip-probe-report.json` | 6 probes separating structural IR reparse and runtime-output equivalence; JS/.ls/Python/Lua layer map recorded; source-preserving round-trip count is 0 | Needs source-preserving identity probes beyond `.ls`, broader source-to-IR-to-target-to-IR proof, Lua structural IR reparse, and semantic-equivalence tiers |
-| Source identity probe | `tests/roundtrip/source_identity_manifest.json`, `tests/roundtrip/source_identity_probe.test.js`, `artifacts/conformance/source-identity-probe-report.json` | 15 `.ls` fixtures: 12 normalized source identity checks, 12 normalized parser-owned AST identity checks, 12 normalized IR identity checks, and 3 expected unsupported diagnostics across bindings, expressions, functions, conditionals, loops, arrays, objects, indexing, slicing, profile blocks, repair blocks, verify blocks, and diagnostics; token identity is measured but non-gating | Needs token-level identity promotion route, broader parser-owned AST fixture families, cross-target source identity where applicable, runtime-output/semantic-equivalence tiers, and broader fixture families |
-| Unsupported diagnostics | `tests/ir/unsupported_diagnostics.test.js`, `artifacts/conformance/unsupported-diagnostics-report.json` | 21 named unsupported diagnostics for stable current JavaScript, `.ls`, Python, Lua, core fallback, and target-emitter failures | Needs a full unsupported-feature catalog tied to support matrix rows |
-| Language completion | `tests/language_completion/manifests/*.json`, `tests/language_completion/bidirectional_harness.js` | 26 language/target manifests for named native and target-runtime slices | Needs per-language depth coverage, fixture hashing, external runtime matrix, and accession records |
-| Actual programs | `tests/actual_programs/manifest.json`, `tests/actual_programs.test.js` | Executable representative `.ls` and math/example programs | Needs release example classification and example-by-example support declarations |
+| Canonical IR conformance | `tests/conformance/manifest.json`; `tests/conformance/canonical_ir_conformance.test.js`; `artifacts/conformance/canonical-ir-conformance-report.json` | 32 fixtures across value semantics, literals, bindings, scope, control flow, functions, calls, arrays/objects, errors, unsupported nodes, determinism, and target obligations, now mapped to named v1 evidence rules or documented gaps; 32 manifest fixtures mapped to named IR semantic rules or documented gaps | Not exhaustive semantics or external certification |
+| Schema artifact mapping | `tests/conformance/manifest.json`; `tests/conformance/schema_artifact_mapping.test.js`; `artifacts/conformance/schema-artifact-mapping-report.json` | 21 positive fixtures produce canonical artifact `1.0.0` under the one-way contract; 147/147 contract checks pass; 11 expected diagnostics remain separate | No reverse conversion, arbitrary-artifact validation, or broad semantic equivalence |
+| Dual-surface compatibility bridge | `src/ir/release_ir_surface_contract.js`; `src/ir/schema_artifact_bridge.js`; report | Contract `1.0.0-rc.1`; 21 positive mappings; 168/168 base invariants; 10/10 static rules; 147/147 mapping rules; 21/21 deterministic artifacts; 1/1 supplemental DoWhile shape proof; 12/12 malformed-shape negatives; 5/5 malformed-source rejections; 11 expected diagnostics | Internal transition, not public API or compiler-output promotion |
+| Edge-case matrix | `tests/edge_matrix/manifest.json`; report | 25 scoped cases across value, control, scope, data, errors, target-specific behavior, and unsupported diagnostics | Not exhaustive edge coverage |
+| Round-trip probe | `tests/roundtrip/manifest.json`; report | 7 probes separating 5 structural IR reparse checks from 2 runtime-output equivalence checks; JS/.ls/Python/Lua layer map recorded | Source-preserving count 0 |
+| Source identity probe | `tests/roundtrip/source_identity_manifest.json`; report | 15 `.ls` fixtures: 12 normalized source identity checks, 12 normalized parser-owned AST identity checks, 12 normalized IR identity checks, and 3 expected unsupported diagnostics; token identity is measured but non-gating | Named identity evidence only; not runtime-output equivalence, broad lossless recovery, or broad semantic equivalence |
+| Unsupported diagnostics | `tests/ir/unsupported_diagnostics.test.js`; report | 21 named unsupported diagnostics for stable current JavaScript, `.ls`, Python, Lua, core fallback, and target-emitter failures | Not a complete unsupported-feature catalog |
+| Language completion | 26 language/target manifests for named native and target-runtime slices; schema-v2 reports | 26/424 aggregate and 17/317 native subset with live provenance | Named slices, not full language implementations |
+| Public package | Package harness and report | 32/32 actual-tarball checks plus 3-file installed example surface | No registry, release, or broad platform claim |
+| Actual programs | 55-entry manifest, harness, and report | 55/55 repository-local legacy behavior results | Explicitly not installed-package compatibility |
+| Parser ownership | Harness and report | 35/35 ownership/delegation assertions | Repository route only |
+
+## Deterministic Bundle And Release-Blocking Policy
+
+`npm run evidence:release` invokes the bundle generator with
+`--require-ready`. It writes exactly
+`artifacts/release_evidence/denali-release-evidence-bundle.json` and exits
+nonzero when any required blocker exists.
+
+Release-ready requires every required report to:
+
+1. exist and parse;
+2. declare a passing/zero-failure result;
+3. match every embedded repository path and SHA-256 reference;
+4. carry its required manifest, fixture/result, implementation, environment,
+   runtime, and traceability evidence;
+5. pass the special Clarity freshness fallback when it has no embedded hashes.
+
+The four required Clarity reports, all 26 language pairs, actual-program
+report, parser-ownership report, package/compatibility/IR/edge/round-trip/
+identity/diagnostic reports, and bundle implementation sources are
+release-blocking. The four diagnostic/shard-only Clarity variants are
+informational; their issues remain visible as warnings but cannot counterfeit
+a required failure or pass.
+
+Evidence entries and issues are sorted deterministically. Identity is SHA-256
+over recursively key-sorted UTF-8 JSON while preserving defined array order.
+Only the bundle's top-level `generatedAt` and `contentIdentity` fields are
+excluded from identity input; timestamps inside inventoried reports remain
+bound evidence.
 
 ## Support Matrix Traceability
 
-The support matrix is the active claim table. A support row may broaden only after the accession rules are satisfied:
+A support row may broaden only after:
 
-- manifest coverage exists;
-- parser coverage exists;
-- lowering exists;
-- emitter coverage exists;
-- native runtime evidence exists or is explicitly excluded for the claim;
-- target runtime evidence exists where claimed;
-- docs and support matrix are updated;
-- `claims:check` guards the wording;
-- the Denali ledger records the route and verification.
+- a named manifest and fixture set exist;
+- parser, lowering, and emitter coverage exist;
+- native and target runtime evidence exists where claimed;
+- docs, support matrix, and accession rules agree;
+- `npm run claims:check` protects the wording;
+- the Denali ledger records the evidence route.
 
-The binder should never be used to promote a row by implication. It records where proof lives.
+The binder never promotes a row by implication. A fixture count, visible
+runtime command, package example, or passing target lane cannot substitute for
+the missing part of an accession record.
 
 ## Known Unsupported Areas
 
-Current unsupported or not-yet-certification-grade areas include:
+Current explicit exclusions include:
 
 - broad full-language support beyond named manifest slices;
-- release canonical IR surface selection beyond the current internal dual-surface compatibility bridge candidate;
-- full Unicode mathematical DSL and full symbolic physics/EE algebra;
-- round-trip source identity beyond the 12 positive normalized `.ls` source/parser-owned-AST/IR identity fixtures;
-- broad semantic equivalence beyond named runtime-output equivalence fixtures;
-- exhaustive edge-case coverage across values, control flow, scope, data structures, errors, target-specific behavior, and diagnostics;
-- external conformance suite format and third-party audit process;
-- durable environment lock for every native runtime command;
-- package `bin` contract and final public API freeze;
-- package file surface freeze for `1.0`;
-- cross-platform release conformance bundles with fixture hashes, environment metadata, and release-blocking policy.
+- true omni-language universal IR coverage;
+- ISO, third-party, production, security, or standards certification;
+- general canonical-artifact authoring and semantic fidelity beyond the chosen
+  internal one-way current-fixture transition;
+- token/comment/format-preserving source identity;
+- broad lossless source recovery;
+- broad semantic equivalence beyond named runtime-output fixtures;
+- exhaustive edge and unsupported-feature coverage;
+- Linux, macOS, other architectures, and alternative runtime/toolchain
+  certification;
+- npm ownership, package-name availability, registry authentication, signing
+  keys, or external release access;
+- release authorization.
 
-Unsupported features should fail closed through named diagnostics or remain documented exclusions. They should not appear as fake implementation stubs or silent passes.
-
-## Compatibility Policy
-
-Compatibility evidence follows [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md):
-
-- package name and version track remain explicit;
-- root entrypoint and exported names must be frozen or changed with migration notes before `1.0`;
-- no package `exports` map is currently declared, so no subpath import is frozen by the no-release candidate;
-- no global CLI is currently declared through npm `bin`;
-- Node floor is currently `>=14.0.0`;
-- current package file list is beta-scoped, not a final `1.0` publish promise;
-- root-level `runtime/` helpers are repo-local under the current package `files` surface until release review includes or explicitly excludes them;
-- release actions require an explicit release request;
-- semver applies to documented public surfaces and named supported slices.
-
-IR schema compatibility follows [VERSIONING.md](VERSIONING.md), not package semver alone.
+Unsupported features should fail closed through named diagnostics or remain documented exclusions. They should not appear as fake implementation stubs, silent skips, inferred support, or averaged compatibility.
 
 ## Release Evidence Checklist
 
-Before any `1.0` release action:
+Before calling the local source state a Denali RC:
 
-1. Confirm [LUASCRIPT_1_0_EXIT_CRITERIA.md](LUASCRIPT_1_0_EXIT_CRITERIA.md) has no blocking open item for the release scope.
-2. Confirm this binder, the support matrix, public API/runtime contract, bidirectionality contract, and Denali ledger agree.
-3. Capture environment metadata: `node -v`, `npm -v`, operating system, and every native runtime command used by language gates.
-4. Run the minimum release gate set from the exit criteria.
-5. Confirm `npm run status:check`, `npm run claims:check`, `npm run stubs:check`, and `npm run archive:audit` pass after all docs are updated.
-6. Refresh generated reports under `artifacts/`.
-7. Record report paths, timestamps, fixture counts, and known exclusions in the Denali ledger.
-8. Confirm no package version bump, tag, publish, or GitHub release occurs unless explicitly requested.
-9. Prepare release notes/changelog only after the evidence binder and ledger are sealed.
-10. Preserve the exact source state used for any release artifact.
+1. Confirm package identity remains the intended beta candidate and no release
+   action was requested.
+2. Run `npm run denali:rc:preflight` from the repository root.
+3. Require the stdout receipt to report all 26 steps passed.
+4. Require
+   `artifacts/release_evidence/denali-release-evidence-bundle.json` to report
+   zero release blockers.
+5. Treat informational Clarity warnings as diagnostics without allowing them
+   to hide a required failure.
+6. Confirm the support matrix, compatibility policy, release-IR contract,
+   package migration notes, exit criteria, binder, and Denali ledger agree.
+7. Preserve the exact source state and environment associated with the bundle.
+8. Stop before versioning, committing, tagging, publishing, or releasing until
+   explicit operator authorization exists.
 
 ## Reproducibility Steps
 
-Baseline local reproduction:
+The complete local RC evidence chain is one command:
 
 ```bash
-npm install
-npm run status:check
-npm run claims:check
-npm run stubs:check
-npm run archive:audit
-npm run test:ir-conformance
-npm run test:schema-artifact-map
-npm run test:ir-compatibility-bridge
-npm run test:edge-matrix
-npm run test:unsupported-diagnostics
-npm run test:roundtrip-probe
-npm run language:implemented:bidirectional
-npm run beta:readiness
-npm run beta:preflight
-npm run beta:full
+npm run denali:rc:preflight
 ```
 
-For a release-candidate reproduction, add:
+The command covers language regeneration, the real package tarball, required
+Clarity reports, language-report validation, actual programs, parser
+ownership, IR/edge/round-trip/source-identity/diagnostic reports,
+current-host compatibility, status/stub/archive/claim checks, verification,
+core/runtime tests, performance readiness, CI completeness, and deterministic
+bundle generation.
 
-```bash
-npm run beta:readiness:strict
-npm run language:all:bidirectional
-npm run test:actual-programs
-npm run test:luascript-meta
-npm run test:lua-input
-npm run test:parser-ownership
-npm run clarity:dogfood
-npm run clarity:canon
-npm run clarity:languages
-npm run verify
-npm test
-```
+Use `npm run denali:rc:preflight:list` to audit the exact order. Do not replace
+the orchestrator with a hand-reordered command list: compatibility must follow
+its bound producers, and the evidence bundle must remain last.
 
-After running, inspect the artifact index above and compare the support matrix, claims checks, and Denali ledger. A passing local run is evidence for the current named slices only; it is not ISO certification or true omni-language completion.
-
-## Growth Path Toward Certification-Grade Evidence
-
-The binder becomes certification-grade only after these gaps close:
-
-- formal release conformance report format;
-- fixture hashing and manifest versioning for every evidence suite;
-- deterministic report generation for every conformance, round-trip, unsupported-diagnostic, language-depth, and compatibility gate;
-- cross-platform CI matrix with native runtime version capture;
-- full traceability from support matrix row to fixtures, reports, diagnostics, docs, and release notes;
-- broader language-depth coverage beyond narrow slices;
-- massive edge-case matrices;
-- external review process and certification criteria;
-- explicit pass/fail policy for every `1.0` criterion.
+A passing local run is evidence for the current named slices only; it is not ISO certification or true omni-language completion.

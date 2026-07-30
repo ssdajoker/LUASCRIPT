@@ -48,7 +48,7 @@ class UnifiedSystemTests {
             enableIDE: false
         });
         
-        await system.initializeComponents();
+        await system.initializationPromise;
         
         // Test 1: Variable declaration
         await this.runTest('Variable Declaration', async () => {
@@ -97,7 +97,7 @@ class UnifiedSystemTests {
             enableIDE: false
         });
         
-        await system.initializeComponents();
+        await system.initializationPromise;
         
         // Test 1: Basic execution
         await this.runTest('Basic Execution', async () => {
@@ -134,7 +134,7 @@ return ∏(i, 1, 10, foo(3, 4))
             enableIDE: false
         });
         
-        await system.initializeComponents();
+        await system.initializationPromise;
         
         // Test 1: OOP transformation
         await this.runTest('OOP Transformation', async () => {
@@ -161,7 +161,7 @@ return ∏(i, 1, 10, foo(3, 4))
             enableIDE: false
         });
         
-        await system.initializeComponents();
+        await system.initializationPromise;
         
         // Test 1: Code optimization
         await this.runTest('Code Optimization', async () => {
@@ -188,7 +188,7 @@ return ∏(i, 1, 10, foo(3, 4))
             enablePerformance: false
         });
         
-        await system.initializeComponents();
+        await system.initializationPromise;
         
         // Test 1: Project creation
         await this.runTest('Project Creation', async () => {
@@ -221,7 +221,7 @@ return ∏(i, 1, 10, foo(3, 4))
         console.log('\n🔄 Testing Full Pipeline...');
         
         const system = new UnifiedLuaScript();
-        await system.initializeComponents();
+        await system.initializationPromise;
         
         // Test 1: Transpile and execute
         await this.runTest('Full Pipeline', async () => {
@@ -255,7 +255,7 @@ return ∏(i, 1, 10, foo(3, 4))
         // Test 2: Performance report
         await this.runTest('Performance Report', async () => {
             const system = new UnifiedLuaScript();
-            await system.initializeComponents();
+            await system.initializationPromise;
             
             const report = system.getPerformanceReport();
             system.shutdown();

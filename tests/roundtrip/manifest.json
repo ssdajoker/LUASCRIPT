@@ -108,17 +108,18 @@
           "irToTarget": "proven-named-slice",
           "targetRuntime": "proven-named-slice",
           "emittedLs": "proven-named-slice",
-          "structuralIrReparse": "not-claimed",
+          "structuralIrReparse": "seeded-probe",
           "normalizedSourceIdentity": "not-claimed",
           "tokenIdentity": "not-claimed",
           "semanticEquivalence": "partial-runtime-output-only"
         },
         "evidence": [
           "language:lua:bidirectional covers the Lua named slice through native execution, lowering, target emission, and target runtime checks.",
-          "Lua source emits Lua, JavaScript, .ls, and Python for the named V2.1 slice."
+          "Lua source emits Lua, JavaScript, .ls, and Python for the named V2.1 slice.",
+          "lua_to_lua_structural_ir seeds structural IR reparse evidence for one tiny Lua fixture."
         ],
         "boundaries": [
-          "No Lua structural IR reparse fixture exists in test:roundtrip-probe yet.",
+          "Lua structural IR reparse is one seeded fixture, not source-text identity or broad Lua round-trip coverage.",
           "No Lua normalized source identity or token identity is claimed.",
           "Runtime-output equivalence is fixture stdout evidence, not broad semantic equivalence."
         ]
@@ -173,6 +174,18 @@
         "print(\"rt_py\", total)"
       ],
       "notes": "This is a true structural probe for the current Python bridge slice."
+    },
+    {
+      "name": "lua_to_lua_structural_ir",
+      "mode": "structural-ir-reparse",
+      "sourceLanguage": "lua",
+      "targetLanguage": "lua",
+      "source": "local total = 2 + 3\nprint(\"rt_lua\", total)\n",
+      "expectedTargetIncludes": [
+        "local total = (2 + 3)",
+        "print(\"rt_lua\", total)"
+      ],
+      "notes": "This seeds one tiny Lua structural IR reparse proof; it is not source-text identity, token preservation, or broad Lua semantic equivalence."
     },
     {
       "name": "javascript_to_python_runtime_output",

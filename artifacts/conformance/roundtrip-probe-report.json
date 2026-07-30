@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:roundtrip-probe",
   "command": "npm run test:roundtrip-probe",
-  "generatedAt": "2026-07-16T08:06:40.178Z",
-  "elapsedMs": 557,
+  "generatedAt": "2026-07-30T03:47:05.581Z",
+  "elapsedMs": 387,
   "environment": {
     "node": "v24.14.0",
     "npm": {
@@ -29,10 +29,10 @@
   },
   "manifest": {
     "path": "tests/roundtrip/manifest.json",
-    "sha256": "c7f9b561e5e891773e4d32e2900204c568d4c764b399f6d6f4841d7184dbe096",
+    "sha256": "1b4aca945d2b4fd7daccdc34aea4d6a7e53fe9bf5c7d24159c6253001531cff1",
     "status": "scoped-round-trip-probe",
     "version": 1,
-    "fixtureCount": 6,
+    "fixtureCount": 7,
     "fixtureHashes": [
       {
         "name": "javascript_to_javascript_structural_ir",
@@ -49,6 +49,10 @@
       {
         "name": "python_to_python_structural_ir",
         "sha256": "57fa143ebeee9a9c70916bf19ab0f01a55b0ae4d75a421914fc5151f2f751477"
+      },
+      {
+        "name": "lua_to_lua_structural_ir",
+        "sha256": "15ca8a23dc6c505b1d79f098a4bc727b71b74368e0b42a5d84d7dc09d5aa3649"
       },
       {
         "name": "javascript_to_python_runtime_output",
@@ -178,17 +182,18 @@
           "irToTarget": "proven-named-slice",
           "targetRuntime": "proven-named-slice",
           "emittedLs": "proven-named-slice",
-          "structuralIrReparse": "not-claimed",
+          "structuralIrReparse": "seeded-probe",
           "normalizedSourceIdentity": "not-claimed",
           "tokenIdentity": "not-claimed",
           "semanticEquivalence": "partial-runtime-output-only"
         },
         "evidence": [
           "language:lua:bidirectional covers the Lua named slice through native execution, lowering, target emission, and target runtime checks.",
-          "Lua source emits Lua, JavaScript, .ls, and Python for the named V2.1 slice."
+          "Lua source emits Lua, JavaScript, .ls, and Python for the named V2.1 slice.",
+          "lua_to_lua_structural_ir seeds structural IR reparse evidence for one tiny Lua fixture."
         ],
         "boundaries": [
-          "No Lua structural IR reparse fixture exists in test:roundtrip-probe yet.",
+          "Lua structural IR reparse is one seeded fixture, not source-text identity or broad Lua round-trip coverage.",
           "No Lua normalized source identity or token identity is claimed.",
           "Runtime-output equivalence is fixture stdout evidence, not broad semantic equivalence."
         ]
@@ -196,10 +201,10 @@
     }
   },
   "summary": {
-    "total": 6,
-    "passed": 6,
+    "total": 7,
+    "passed": 7,
     "failed": 0,
-    "structuralIrReparse": 4,
+    "structuralIrReparse": 5,
     "runtimeOutputEquivalence": 2,
     "sourcePreservingRoundTrip": 0
   },
@@ -237,6 +242,15 @@
       "sourceLanguage": "javascript",
       "targetLanguage": "javascript",
       "claim": "structural IR reparse",
+      "normalization": {
+        "normalizationPolicy": "same-language-preserve-metadata",
+        "ignoredFields": [
+          "loc",
+          "range",
+          "raw",
+          "id"
+        ]
+      },
       "sourcePreservingRoundTrip": false,
       "notes": "This is a true structural probe for the current bridge IR, not source formatting identity."
     },
@@ -247,6 +261,16 @@
       "sourceLanguage": "javascript",
       "targetLanguage": "luascript",
       "claim": "structural IR reparse",
+      "normalization": {
+        "normalizationPolicy": "cross-language-exclude-source-specific-metadata",
+        "ignoredFields": [
+          "metadata",
+          "loc",
+          "range",
+          "raw",
+          "id"
+        ]
+      },
       "sourcePreservingRoundTrip": false,
       "notes": "This proves emitted .ls can reparse to equivalent current bridge IR for a tiny JS-like slice."
     },
@@ -257,6 +281,16 @@
       "sourceLanguage": "luascript",
       "targetLanguage": "javascript",
       "claim": "structural IR reparse",
+      "normalization": {
+        "normalizationPolicy": "cross-language-exclude-source-specific-metadata",
+        "ignoredFields": [
+          "metadata",
+          "loc",
+          "range",
+          "raw",
+          "id"
+        ]
+      },
       "sourcePreservingRoundTrip": false,
       "notes": "This proves a tiny .ls executable slice can emit JavaScript that reparses to equivalent current bridge IR."
     },
@@ -267,8 +301,36 @@
       "sourceLanguage": "python",
       "targetLanguage": "python",
       "claim": "structural IR reparse",
+      "normalization": {
+        "normalizationPolicy": "same-language-preserve-metadata",
+        "ignoredFields": [
+          "loc",
+          "range",
+          "raw",
+          "id"
+        ]
+      },
       "sourcePreservingRoundTrip": false,
       "notes": "This is a true structural probe for the current Python bridge slice."
+    },
+    {
+      "name": "lua_to_lua_structural_ir",
+      "status": "passed",
+      "mode": "structural-ir-reparse",
+      "sourceLanguage": "lua",
+      "targetLanguage": "lua",
+      "claim": "structural IR reparse",
+      "normalization": {
+        "normalizationPolicy": "same-language-preserve-metadata",
+        "ignoredFields": [
+          "loc",
+          "range",
+          "raw",
+          "id"
+        ]
+      },
+      "sourcePreservingRoundTrip": false,
+      "notes": "This seeds one tiny Lua structural IR reparse proof; it is not source-text identity, token preservation, or broad Lua semantic equivalence."
     },
     {
       "name": "javascript_to_python_runtime_output",

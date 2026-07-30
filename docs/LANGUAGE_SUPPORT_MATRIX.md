@@ -1,20 +1,29 @@
 # LUASCRIPT Language Support Matrix
 
-Last updated: 2026-07-16
+Last updated: 2026-07-29
 
 This matrix is evidence-based. A language is not production-ready until it has parser, lowering/transpilation, emitter, runtime or executable behavior, and integration coverage in the current repo.
 
 Pre-production beta v0.1 readiness is tracked separately from full-language readiness. `npm run language:implemented:bidirectional` refreshes all implemented-lane reports, and `npm run beta:readiness` requires each implemented lane to have a fresh passing report above the 90% fixture threshold. `npm run beta:readiness:strict` additionally checks that the current strict-native blocker set remains closed. `npm run clarity:canon` includes that readiness audit, and `npm run beta:full` is the full local acceptance sweep. Java, Rust, Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam now have narrow native gates, but they are still limited slices rather than broad language support.
 
-Canonical `1.0` first-pass boundaries: [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md) defines package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, and release-action boundaries. Package identity remains `luascript` at `0.1.0-beta.0` until an explicit release action changes it, `src/unified_luascript.js` remains the current entrypoint, `npm run build` is a readiness smoke, native-runtime support requires a real runtime command plus a passing `language:<name>:bidirectional` gate, and target-runtime IR lanes do not substitute for native qualification. First-pass examples stay inside named evidence: small JavaScript programs, small `.ls` executable/meta programs, actual-program fixtures, `examples/supported_math_showcase.ls`, and mathematical notation core/rehab V1 through V18.
+Canonical `1.0` first-pass boundaries: [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md) defines package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, and release-action boundaries. Package identity remains `luascript` at `0.1.0-beta.0` until an explicit release action changes it, `src/unified_luascript.js` remains the current entrypoint, `npm run build` is a readiness smoke, native-runtime support requires a real runtime command plus a passing `language:<name>:bidirectional` gate, and target-runtime IR lanes do not substitute for native qualification. `examples/package/` contains the only installed-package examples; small JavaScript/`.ls` programs, actual-program fixtures, `examples/supported_math_showcase.ls`, and mathematical notation core/rehab V1 through V18 are repository-local evidence.
+
+Denali release-facing language reports use provenance schema v2: live manifest,
+fixture/source, implementation, runtime-probe, environment, and governing-doc
+hashes are mandatory. `npm run test:compatibility-matrix` verifies that exact
+binding for the 17 implemented-native lanes and records the current-host setup
+matrix. A current-host pass is not cross-platform certification and does not
+promote any row beyond its named slice.
 
 Bidirectionality terms follow [LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md): native execution, source-to-IR, IR-to-target, target-runtime, emitted `.ls`, round-trip source identity, and semantic equivalence are separate claim layers. A row that says `bidirectional` is a named-slice gate claim unless the row also names explicit round-trip identity or semantic-equivalence evidence.
 
-The first round-trip probe harness is `npm run test:roundtrip-probe`. It currently covers tiny JavaScript, `.ls`, and Python structural IR reparse probes plus JavaScript/Python runtime-output equivalence probes. It does not promote any row to full round-trip source identity or broad semantic equivalence.
+The first round-trip probe harness is `npm run test:roundtrip-probe`. It currently covers tiny JavaScript, `.ls`, Python, and Lua structural IR reparse probes plus JavaScript/Python runtime-output equivalence probes. It does not promote any row to full round-trip source identity or broad semantic equivalence.
 
-The round-trip manifest/report now records a JS/.ls/Python/Lua bidirectionality layer map. JavaScript, `.ls`, Python, and Lua have named-slice evidence for native execution, source-to-IR, IR-to-target, target-runtime, and emitted `.ls`; JavaScript, `.ls`, and Python have seeded structural IR reparse evidence; Lua structural IR reparse remains not claimed; only `.ls` has normalized source identity evidence, and its token identity is measured but non-gating. Semantic equivalence remains partial fixture stdout/diagnostic evidence only.
+The round-trip manifest/report now records a JS/.ls/Python/Lua bidirectionality layer map. JavaScript, `.ls`, Python, and Lua have named-slice evidence for native execution, source-to-IR, IR-to-target, target-runtime, and emitted `.ls`, and each now has seeded structural IR reparse evidence. Lua's evidence is one tiny normalized current-bridge Program-IR parity fixture, not source-text or token identity; only `.ls` has normalized source identity evidence, and its token identity is measured but non-gating. Semantic equivalence remains partial fixture stdout/diagnostic evidence only.
 
 The release-shaped `.ls` source identity suite is `npm run test:source-identity-probe`. It currently covers 15 fixtures: 12 positive normalized `.ls` source identity, normalized parser-owned AST identity, and normalized current bridge IR identity checks plus 3 expected unsupported diagnostics. This is evidence for named `.ls` fixtures only; token-level text identity, runtime-output equivalence, broad lossless source recovery, and broad semantic equivalence remain separate unpromoted layers.
+
+The Denali RC release-IR choice is [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md): language gates continue through legacy object-tree Program IR `v0`, while current conformance evidence also derives canonical schema artifact `1.0.0` through a versioned one-way internal bridge. This does not promote any language row to schema-wide semantics, reverse conversion, source preservation, or public package IR API.
 
 The first scoped 25-case edge-case matrix generator is `npm run test:edge-matrix`. It classifies manifest cases by value, control, scope, data, errors, target-specific behavior, and unsupported diagnostics, writes `artifacts/edge_matrix/edge-case-matrix-report.json` with category counts and case hashes, and stays scoped to current passing JavaScript/Python/Lua/`.ls` runtime evidence.
 

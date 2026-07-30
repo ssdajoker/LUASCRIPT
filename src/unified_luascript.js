@@ -12,6 +12,7 @@ const { PerformanceTools } = require("./performance_tools");
 const { AgenticIDE } = require("./agentic_ide");
 const { EventEmitter } = require("events");
 const metrics = require("./utils/metrics");
+const { version: packageVersion } = require("../package.json");
 
 /**
  * A unified system that integrates all LUASCRIPT components into a single, powerful interface.
@@ -22,7 +23,7 @@ class UnifiedLuaScript extends EventEmitter {
      * Creates an instance of the UnifiedLuaScript system.
      * @param {object} [options={}] - Configuration options for the system.
      * @param {string} [options.mode='production'] - The operating mode ('development', 'production', 'enterprise').
-     * @param {boolean} [options.enableAll=true] - Whether to enable all components.
+     * @param {boolean} [options.enableAll=true] - Master component switch; false disables every component.
      * @param {boolean} [options.enableTranspiler=true] - Whether to enable the transpiler.
      * @param {boolean} [options.enableRuntime=true] - Whether to enable the runtime system.
      * @param {boolean} [options.enableAdvanced=true] - Whether to enable advanced language features.
@@ -31,16 +32,17 @@ class UnifiedLuaScript extends EventEmitter {
      */
   constructor(options = {}) {
     super();
-        
+
+    const enableAll = options.enableAll !== false;
     this.options = {
       mode: options.mode || "production", // development, production, enterprise
-      enableAll: options.enableAll !== false,
-      enableTranspiler: options.enableTranspiler !== false,
-      enableRuntime: options.enableRuntime !== false,
-      enableAdvanced: options.enableAdvanced !== false,
-      enablePerformance: options.enablePerformance !== false,
-      enableIDE: options.enableIDE !== false,
-      ...options
+      ...options,
+      enableAll,
+      enableTranspiler: enableAll && options.enableTranspiler !== false,
+      enableRuntime: enableAll && options.enableRuntime !== false,
+      enableAdvanced: enableAll && options.enableAdvanced !== false,
+      enablePerformance: enableAll && options.enablePerformance !== false,
+      enableIDE: enableAll && options.enableIDE !== false
     };
         
     this.components = new Map();
@@ -49,7 +51,7 @@ class UnifiedLuaScript extends EventEmitter {
       componentsLoaded: 0,
       totalComponents: 5,
       startTime: Date.now(),
-      version: "1.0.0"
+      version: packageVersion
     };
         
     this.initializationPromise = this.initializeComponents();

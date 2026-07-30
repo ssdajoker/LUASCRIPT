@@ -12,7 +12,7 @@ The authoritative contract draft for package entrypoints, root exports, CLI/API 
 
 The current package identity is `luascript` at `0.1.0-beta.0`. `src/unified_luascript.js` is the package entrypoint. The current package file surface is `src/`, `test/`, `README.md`, and `LICENSE`; treat that as the beta package surface until a deliberate publish-surface review changes it.
 
-Local setup starts with `npm install`; `npm ci` is the lockfile-exact automation path. The package currently declares `node >=14.0.0`. `npm run build` is a readiness smoke, not a production bundle.
+Local setup starts with `npm install`; `npm ci` is the lockfile-exact automation path. The package declares consumer Node `>=14.17.0`, aligned with exact runtime TypeScript `5.9.3`. `npm run build` is a readiness smoke, not a production bundle; `npm run test:package-contract` is the actual-tarball consumer gate.
 
 Native-runtime support requires the real runtime command and a passing `language:<name>:bidirectional` gate. Target-runtime IR lanes prove emitted behavior for named slices, but they do not substitute for native qualification. No tag, publish, GitHub release, or package version bump is part of this route unless explicitly requested.
 

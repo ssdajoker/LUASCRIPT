@@ -1,6 +1,8 @@
 "use strict";
 
+const crypto = require("crypto");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 
 const {
@@ -37,6 +39,79 @@ const runtimeTimeoutMs = Number.isFinite(configuredRuntimeTimeoutMs) && configur
   ? configuredRuntimeTimeoutMs
   : 15000;
 const bridge = new CoreLanguageBridge();
+
+function normalizeRepoPath(filePath) {
+  return String(filePath).replace(/\\/g, "/");
+}
+
+function relativeRepoPath(filePath) {
+  return normalizeRepoPath(path.relative(repoRoot, filePath));
+}
+
+function hashBuffer(value) {
+  return crypto.createHash("sha256").update(value).digest("hex");
+}
+
+function hashFile(filePath) {
+  return hashBuffer(fs.readFileSync(filePath));
+}
+
+function fileEvidence(relativePath) {
+  const normalizedPath = normalizeRepoPath(relativePath);
+  return {
+    path: normalizedPath,
+    sha256: hashFile(path.join(repoRoot, normalizedPath))
+  };
+}
+
+function fixtureSourceEvidence(fixture) {
+  const source = fixture.source ? normalizeRepoPath(fixture.source) : null;
+  const sourcePath = source ? path.join(repoRoot, source) : null;
+  const sourceExists = Boolean(sourcePath && fs.existsSync(sourcePath));
+  return {
+    name: fixture.name,
+    source,
+    manifestEntrySha256: hashBuffer(JSON.stringify(fixture)),
+    sourceSha256: sourceExists ? hashFile(sourcePath) : null,
+    sizeBytes: sourceExists ? fs.statSync(sourcePath).size : null
+  };
+}
+
+function manifestEvidence() {
+  const fixtures = (manifest.fixtures || []).map(fixtureSourceEvidence);
+  return {
+    path: relativeRepoPath(manifestPath),
+    sha256: hashFile(manifestPath),
+    status: manifest.status || null,
+    version: manifest.version || manifest.schemaVersion || null,
+    supportSlice: manifest.supportSlice || null,
+    fixtureCount: fixtures.length,
+    fixtures
+  };
+}
+
+function environmentEvidence() {
+  return {
+    node: process.version,
+    platform: process.platform,
+    arch: process.arch,
+    os: {
+      type: os.type(),
+      release: os.release()
+    },
+    cwd: repoRoot,
+    runtimeTimeoutMs
+  };
+}
+
+function supportMatrixTraceability() {
+  return {
+    supportMatrix: fileEvidence("docs/LANGUAGE_SUPPORT_MATRIX.md"),
+    completionRules: fileEvidence("docs/LANGUAGE_COMPLETION_RULES.md"),
+    publicPackageContract: fileEvidence("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md"),
+    packageMigrationNotes: fileEvidence("docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md")
+  };
+}
 
 function compactOutput(value) {
   return (value || "")
@@ -198,6 +273,60 @@ function runtime(name) {
     runtimeCommands[name] = runtimes[name]();
   }
   return runtimeCommands[name];
+}
+
+function runtimeVersionProbeArgs(name) {
+  const probes = {
+    node: [["--version"]],
+    python: [["--version"], ["-V"]],
+    lua: [["-v"], ["--version"]],
+    c: [["--version"], ["-v"]],
+    cpp: [["--version"], ["-v"]],
+    csharp: [["--version"]],
+    java: [["-version"], ["--version"]],
+    javac: [["-version"], ["--version"]],
+    go: [["version"]],
+    kotlin: [["-version"], ["--version"]],
+    ruby: [["--version"], ["-v"]],
+    php: [["--version"], ["-v"]],
+    rust: [["--version"], ["-V"]],
+    dart: [["--version"], ["-v"]],
+    elm: [["--version"]],
+    gleam: [["--version"]]
+  };
+  return probes[name] || [["--version"], ["-v"]];
+}
+
+function runtimeProbeEvidence(name, command) {
+  const timeout = Math.min(runtimeTimeoutMs, 10000);
+  let finalProbe = null;
+
+  for (const args of runtimeVersionProbeArgs(name)) {
+    const result = runCommand(command, args, `${name} version evidence`, { timeout });
+    finalProbe = {
+      args,
+      status: result.status,
+      signal: result.signal,
+      stdout: result.stdout,
+      stderr: result.stderr,
+      error: result.error ? String(result.error.message || result.error) : null
+    };
+    if (result.status === 0 && !result.error) {
+      break;
+    }
+  }
+
+  return {
+    name,
+    command,
+    probe: finalProbe
+  };
+}
+
+function runtimeEvidence() {
+  return Object.keys(runtimeCommands)
+    .sort()
+    .map(name => runtimeProbeEvidence(name, runtimeCommands[name]));
 }
 
 function compileToIR(source, language) {
@@ -1129,11 +1258,73 @@ function checkUnqualifiedManifest() {
   }
 }
 
+function implementationEvidence() {
+  const compilersRoot = path.join(repoRoot, "src", "compilers");
+  const runnerUtilsPath = require.resolve("../clarity_canon/runner_utils");
+  const implementationPaths = new Set([
+    relativeRepoPath(__filename),
+    relativeRepoPath(runnerUtilsPath)
+  ]);
+
+  for (const loadedPath of Object.keys(require.cache)) {
+    const relativeToCompilers = path.relative(compilersRoot, loadedPath);
+    const isLoadedCompiler =
+      relativeToCompilers.length > 0 &&
+      !relativeToCompilers.startsWith("..") &&
+      !path.isAbsolute(relativeToCompilers);
+    if (isLoadedCompiler) {
+      implementationPaths.add(relativeRepoPath(loadedPath));
+    }
+  }
+
+  return [...implementationPaths]
+    .sort()
+    .map(fileEvidence);
+}
+
+function buildReport(startedAt, results, setupFailure = null) {
+  const failures = results.filter(result => result.status !== "passed");
+  const report = {
+    schemaVersion: 2,
+    kind: "language:bidirectional",
+    language: manifest.language,
+    supportSlice: manifest.supportSlice || null,
+    generatedAt: new Date().toISOString(),
+    manifest: manifestEvidence(),
+    implementationEvidence: implementationEvidence(),
+    runtimeEvidence: runtimeEvidence(),
+    environment: environmentEvidence(),
+    supportMatrixTraceability: supportMatrixTraceability(),
+    summary: setupFailure
+      ? {
+          total: 0,
+          passed: 0,
+          failed: 1,
+          elapsedMs: Date.now() - startedAt
+        }
+      : {
+          total: results.length,
+          passed: results.length - failures.length,
+          failed: failures.length,
+          elapsedMs: Date.now() - startedAt
+        },
+    results
+  };
+
+  if (setupFailure) {
+    report.setupFailure = setupFailure;
+  }
+
+  return report;
+}
+
 function runFixture(fixture) {
   const startedAt = Date.now();
+  const sourcePath = path.join(repoRoot, fixture.source);
   const record = {
     name: fixture.name,
-    source: fixture.source,
+    source: normalizeRepoPath(fixture.source),
+    sourceSha256: fs.existsSync(sourcePath) ? hashFile(sourcePath) : null,
     sourceLanguage: fixtureSourceLanguage(fixture),
     targets: fixtureTargets(fixture),
     status: "failed",
@@ -1142,7 +1333,6 @@ function runFixture(fixture) {
   };
 
   try {
-    const sourcePath = path.join(repoRoot, fixture.source);
     const source = fs.readFileSync(sourcePath, "utf8");
     if (fixture.expectedFailure) {
       verifyExpectedFailure(fixture, source);
@@ -1171,16 +1361,7 @@ function main() {
   }
 
   if (setupFailure) {
-    const report = {
-      schemaVersion: 1,
-      kind: "language:bidirectional",
-      language: manifest.language,
-      supportSlice: manifest.supportSlice || null,
-      generatedAt: new Date().toISOString(),
-      summary: { total: 0, passed: 0, failed: 1, elapsedMs: Date.now() - startedAt },
-      setupFailure,
-      results
-    };
+    const report = buildReport(startedAt, results, setupFailure);
     writeJsonReport(reportPath, report);
     console.error(`FAIL ${manifest.language}: ${setupFailure}`);
     process.exit(1);
@@ -1200,20 +1381,7 @@ function main() {
   }
 
   const failures = results.filter(result => result.status !== "passed");
-  const report = {
-    schemaVersion: 1,
-    kind: "language:bidirectional",
-    language: manifest.language,
-    supportSlice: manifest.supportSlice,
-    generatedAt: new Date().toISOString(),
-    summary: {
-      total: results.length,
-      passed: results.length - failures.length,
-      failed: failures.length,
-      elapsedMs: Date.now() - startedAt
-    },
-    results
-  };
+  const report = buildReport(startedAt, results);
   writeJsonReport(reportPath, report);
 
   console.log(`${manifest.language} bi-directional results: ${report.summary.passed}/${report.summary.total} passed`);
