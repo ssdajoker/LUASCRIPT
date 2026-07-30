@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:roundtrip-probe",
   "command": "npm run test:roundtrip-probe",
-  "generatedAt": "2026-07-30T06:16:26.520Z",
-  "elapsedMs": 499,
+  "generatedAt": "2026-07-30T06:31:53.924Z",
+  "elapsedMs": 450,
   "environment": {
     "node": "v24.14.0",
     "npm": {

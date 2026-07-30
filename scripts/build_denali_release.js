@@ -61,6 +61,44 @@ function run(command, args, options = {}) {
   return (result.stdout || "").trim();
 }
 
+function npmCliPath() {
+  const candidates = [
+    process.env.npm_execpath,
+    path.join(
+      path.dirname(process.execPath),
+      "node_modules",
+      "npm",
+      "bin",
+      "npm-cli.js"
+    )
+  ].filter(Boolean);
+  return candidates.find(candidate => fs.existsSync(candidate)) || null;
+}
+
+function runNpm(args, options = {}) {
+  const cliPath = npmCliPath();
+  if (cliPath) {
+    return run(process.execPath, [cliPath, ...args], options);
+  }
+  if (process.platform === "win32") {
+    fail("Unable to locate npm-cli.js for a shell-free Windows release build");
+  }
+  return run("npm", args, options);
+}
+
+function parsePackOutput(stdout) {
+  try {
+    return JSON.parse(stdout);
+  } catch (_error) {
+    const firstBracket = stdout.indexOf("[");
+    const lastBracket = stdout.lastIndexOf("]");
+    if (firstBracket >= 0 && lastBracket > firstBracket) {
+      return JSON.parse(stdout.slice(firstBracket, lastBracket + 1));
+    }
+    fail("npm pack did not return parseable JSON");
+  }
+}
+
 function hashFile(filePath) {
   const hash = crypto.createHash("sha256");
   hash.update(fs.readFileSync(filePath));
@@ -204,12 +242,11 @@ function buildRelease() {
   const temp = fs.mkdtempSync(path.join(releaseRoot, `.v${version}-`));
 
   try {
-    const packOutput = run(
-      process.platform === "win32" ? "npm.cmd" : "npm",
+    const packOutput = runNpm(
       ["pack", "--json", "--pack-destination", temp],
       { cwd: repoRoot }
     );
-    const packRecords = JSON.parse(packOutput);
+    const packRecords = parsePackOutput(packOutput);
     if (!Array.isArray(packRecords) || packRecords.length !== 1) {
       fail("npm pack did not return exactly one package record");
     }

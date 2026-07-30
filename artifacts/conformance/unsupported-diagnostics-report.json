@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "kind": "luascript:unsupported-diagnostics",
   "command": "npm run test:unsupported-diagnostics",
-  "generatedAt": "2026-07-30T06:17:00.540Z",
+  "generatedAt": "2026-07-30T06:32:26.820Z",
   "elapsedMs": 222,
   "environment": {
     "node": "v24.14.0",

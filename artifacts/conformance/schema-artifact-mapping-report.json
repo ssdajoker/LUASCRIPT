@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:schema-artifact-mapping",
   "command": "npm run test:schema-artifact-map",
-  "generatedAt": "2026-07-30T06:16:16.078Z",
-  "elapsedMs": 370,
+  "generatedAt": "2026-07-30T06:31:41.816Z",
+  "elapsedMs": 416,
   "environment": {
     "node": "v24.14.0",
     "npm": {

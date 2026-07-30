@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:public-api-runtime-package-contract",
   "command": "npm run test:package-contract",
-  "generatedAt": "2026-07-30T06:15:22.540Z",
-  "elapsedMs": 9040,
+  "generatedAt": "2026-07-30T06:30:47.845Z",
+  "elapsedMs": 8894,
   "environment": {
     "node": "v24.14.0",
     "npm": {
@@ -628,7 +628,7 @@
       "--package=node@14.17.1",
       "--",
       "node",
-      "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-bscx7j\\consumer\\node-floor-consumer-smoke.cjs"
+      "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-xqsKP3\\consumer\\node-floor-consumer-smoke.cjs"
     ],
     "status": 0,
     "signal": null,
@@ -3581,7 +3581,7 @@
           "C:\\Users\\ssdaj\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\node.exe",
           "C:\\Users\\ssdaj\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\node_modules\\npm\\bin\\npm-cli.js",
           "install",
-          "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-bscx7j\\pack\\luascript-1.0.1.tgz",
+          "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-xqsKP3\\pack\\luascript-1.0.1.tgz",
           "--ignore-scripts",
           "--omit=dev",
           "--no-audit",
@@ -3689,7 +3689,7 @@
           "--package=node@14.17.1",
           "--",
           "node",
-          "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-bscx7j\\consumer\\node-floor-consumer-smoke.cjs"
+          "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-xqsKP3\\consumer\\node-floor-consumer-smoke.cjs"
         ],
         "status": 0,
         "signal": null,

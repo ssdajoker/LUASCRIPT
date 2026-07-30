@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:denali-compatibility-matrix",
   "command": "node tests/compatibility/denali_compatibility_matrix.test.js",
-  "generatedAt": "2026-07-30T06:16:41.880Z",
-  "elapsedMs": 9635,
+  "generatedAt": "2026-07-30T06:32:09.002Z",
+  "elapsedMs": 9305,
   "status": "PASS",
   "scope": {
     "mode": "read-only-compatibility-evidence",
@@ -180,7 +180,7 @@
     "publicPackageReport": {
       "report": {
         "path": "artifacts/conformance/public-api-runtime-package-report.json",
-        "sha256": "ec70bbe52c5222e7192c691a0ed82f3d3467fc3a1669111ec39b6590fad0f097",
+        "sha256": "09244d56d284acb7d7c76f7cccd0de178b75efca2ebaa57b7172aed764b08f07",
         "sizeBytes": 168967
       },
       "summary": {
@@ -200,7 +200,7 @@
           "--package=node@14.17.1",
           "--",
           "node",
-          "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-bscx7j\\consumer\\node-floor-consumer-smoke.cjs"
+          "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-xqsKP3\\consumer\\node-floor-consumer-smoke.cjs"
         ],
         "status": 0,
         "signal": null,
@@ -1462,7 +1462,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/javascript-report.json",
-        "sha256": "1f03c2aa6b1dd351c53c8629bca52a3f5c828a4c3a290866b87dcc6a823b2f86",
+        "sha256": "c1350884da5f8738e696ec161838456bd63292416ccc18ef62bea0e0b6c685a7",
         "sizeBytes": 20827
       },
       "reportSchemaVersion": 2,
@@ -1470,7 +1470,7 @@
         "total": 18,
         "passed": 18,
         "failed": 0,
-        "elapsedMs": 4500
+        "elapsedMs": 4486
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -1586,7 +1586,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/typescript-report.json",
-        "sha256": "45e71db513cc77355413e68f9ea2d0a1ea552586f04788da5180cf71c8e986d7",
+        "sha256": "0f94b4d263c3de62640da10ef0f6aff7a1f515bc79a3c6a6e83d2a593ea1ff97",
         "sizeBytes": 15460
       },
       "reportSchemaVersion": 2,
@@ -1594,7 +1594,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 3209
+        "elapsedMs": 3152
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -2173,7 +2173,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/luascript-report.json",
-        "sha256": "4ffd3ff3c19f7ce5d99b970f0ca74ea95ae78477666c97d5a8c870bd26f87078",
+        "sha256": "4d0c998bc8045478ce8525b22b588b23127ce4053775b246b1c65ae827c1d804",
         "sizeBytes": 70199
       },
       "reportSchemaVersion": 2,
@@ -2181,7 +2181,7 @@
         "total": 77,
         "passed": 77,
         "failed": 0,
-        "elapsedMs": 22205
+        "elapsedMs": 21992
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -2297,7 +2297,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/lua-report.json",
-        "sha256": "2b663a03c53edff9796ebc28df7017fe04c6b2a6a1639dc9637be59155c1e43a",
+        "sha256": "dd6d27524c93f4d8bda70e3a9db41fcd44b5808c30afb453fafba0ef963d5935",
         "sizeBytes": 14720
       },
       "reportSchemaVersion": 2,
@@ -2305,7 +2305,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 3714
+        "elapsedMs": 3896
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -2694,7 +2694,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/python-report.json",
-        "sha256": "9bb0d888128be018c67410eb8a746ff4db7835664960b9b6ae0e8baa516b6ab4",
+        "sha256": "182b5d8ca035190f2e199703db18722942910a74f60a1198e2e8fea83629b812",
         "sizeBytes": 46375
       },
       "reportSchemaVersion": 2,
@@ -2702,7 +2702,7 @@
         "total": 50,
         "passed": 50,
         "failed": 0,
-        "elapsedMs": 9925
+        "elapsedMs": 9920
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -2882,7 +2882,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/csharp-report.json",
-        "sha256": "9d1cede93aac4edc0266dcab826bbde41bbe6a4149d4bf96417730825641c6ca",
+        "sha256": "081ca7095be503f968b4c866b3a046bf8e068ed1a1cf3cb42134a7782cc69e25",
         "sizeBytes": 22562
       },
       "reportSchemaVersion": 2,
@@ -2890,7 +2890,7 @@
         "total": 20,
         "passed": 20,
         "failed": 0,
-        "elapsedMs": 64986
+        "elapsedMs": 64414
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3072,7 +3072,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/c-report.json",
-        "sha256": "1f6bb29acb77d141e1fdc23c72f877dd57885d58f79745eeb21b6bbbcff9cb68",
+        "sha256": "d45b1917f8756a55c4b6f23f5325960f5addd6ab14eceaf02911af4285b20386",
         "sizeBytes": 22863
       },
       "reportSchemaVersion": 2,
@@ -3080,7 +3080,7 @@
         "total": 20,
         "passed": 20,
         "failed": 0,
-        "elapsedMs": 29003
+        "elapsedMs": 28901
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3276,7 +3276,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/cpp-report.json",
-        "sha256": "cf0f080701f4ee92ed36143485482b0b4a325e937e489677ee8e8d92bed83283",
+        "sha256": "cc4faa3ac53a26784fd84c2c7c7b5ddfbf88ce915ff66fcf213d4f0f965503bb",
         "sizeBytes": 24726
       },
       "reportSchemaVersion": 2,
@@ -3284,7 +3284,7 @@
         "total": 22,
         "passed": 22,
         "failed": 0,
-        "elapsedMs": 46029
+        "elapsedMs": 43970
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3349,7 +3349,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/java_native-report.json",
-        "sha256": "c7fa77837f13243bcf2a445869465fa204afc40330aa4ad956a666bfecb3678d",
+        "sha256": "ae14bbbb3eebca1231489ca11582728f314256bb2c07c56ed758afb913e065ca",
         "sizeBytes": 9804
       },
       "reportSchemaVersion": 2,
@@ -3357,7 +3357,7 @@
         "total": 3,
         "passed": 3,
         "failed": 0,
-        "elapsedMs": 13678
+        "elapsedMs": 12424
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3413,7 +3413,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/rust_native-report.json",
-        "sha256": "1c79330b0d2dea58ab4173598337ee03ff6f59c48f04cd66f7aa01ee7d37ffab",
+        "sha256": "d91aa23e6ba53773c7d2eb334d2dbdcda16634947f13ae740bdb3af8997939b0",
         "sizeBytes": 8630
       },
       "reportSchemaVersion": 2,
@@ -3421,7 +3421,7 @@
         "total": 2,
         "passed": 2,
         "failed": 0,
-        "elapsedMs": 7630
+        "elapsedMs": 7505
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3561,7 +3561,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/ruby-report.json",
-        "sha256": "d20b9f498cc060e628f8ef52d06f874f777a4576d1bc20d2deb2bf07cd2c9a09",
+        "sha256": "90eb8871d090a649d781c61c99d7f32a2b1b6a4c69cdc0ba9451d608f30377e1",
         "sizeBytes": 18181
       },
       "reportSchemaVersion": 2,
@@ -3569,7 +3569,7 @@
         "total": 14,
         "passed": 14,
         "failed": 0,
-        "elapsedMs": 28218
+        "elapsedMs": 28592
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3709,7 +3709,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/php-report.json",
-        "sha256": "cbb8387198cc918ba1abc679e0a57f597e09e457448c837483eadb655125bb41",
+        "sha256": "cdb72a06e21f1ebf03d0d1940170d85e6c15e681dfdf35d549e865ba09820de7",
         "sizeBytes": 18382
       },
       "reportSchemaVersion": 2,
@@ -3717,7 +3717,7 @@
         "total": 14,
         "passed": 14,
         "failed": 0,
-        "elapsedMs": 27621
+        "elapsedMs": 27169
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3836,7 +3836,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/dart-report.json",
-        "sha256": "5cfbc9e3144035db8a4f721f6559345ad46adc5363180a8ed68569f44fe0af92",
+        "sha256": "6a0451ca0c1b81bbc07f4cd0325367d3e09ae48e05f6ce3c0072b3184373263e",
         "sizeBytes": 15891
       },
       "reportSchemaVersion": 2,
@@ -3844,7 +3844,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 23729
+        "elapsedMs": 22974
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3963,7 +3963,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/go_native-report.json",
-        "sha256": "d2a73a5a03fd9486080b49e31b4e537dda8b3b897df45a43a19eaefffe3fd4c4",
+        "sha256": "a5e6b13f1171218c5fc95af7db1b85f294067dc710b677c47749ffa8a180e34e",
         "sizeBytes": 15770
       },
       "reportSchemaVersion": 2,
@@ -3971,7 +3971,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 24898
+        "elapsedMs": 24369
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -4092,7 +4092,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/kotlin_native-report.json",
-        "sha256": "637a59c89784dc83b7a8a2c903619d71f1f01ee51e9099ff01ea6c57bcd8475e",
+        "sha256": "a4148ff0dc710846c4119428446ae80e0133f7d600e822cf144b1c01fc66b2de",
         "sizeBytes": 16379
       },
       "reportSchemaVersion": 2,
@@ -4100,7 +4100,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 57640
+        "elapsedMs": 56277
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -4220,7 +4220,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/elm_native-report.json",
-        "sha256": "291b90a81215bc02191ce6cae8370e3ef34f96742e120504c962d6fe4d1cc99c",
+        "sha256": "754f75b52caa1543970b0ef8d3344238e3fea58ba1ff143f722c8d0657bc5f9a",
         "sizeBytes": 15852
       },
       "reportSchemaVersion": 2,
@@ -4228,7 +4228,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 23336
+        "elapsedMs": 22178
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -4347,7 +4347,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/gleam_native-report.json",
-        "sha256": "c212317e224cdb1c66a118f6cd500f5a472dbf711d5741830be412a5abdfecb2",
+        "sha256": "9834e7807959566c03273b66f3b0cb77bb7961312b0740c4bd861cf89820abee",
         "sizeBytes": 16006
       },
       "reportSchemaVersion": 2,
@@ -4355,7 +4355,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 35657
+        "elapsedMs": 34198
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -4539,7 +4539,7 @@
         "path": "artifacts/conformance/schema-artifact-mapping-report.json",
         "report": {
           "path": "artifacts/conformance/schema-artifact-mapping-report.json",
-          "sha256": "9b4fc0ee2b8f921d932d91f4cc40465401ca62ee3447f0338c76f430130ac5d1",
+          "sha256": "6fda781f0bd4baac63791a3ce5c442f2a6765b5d6f9538285f5b47b6d3be4dc1",
           "sizeBytes": 84161
         },
         "summary": {
@@ -4634,7 +4634,7 @@
         "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
         "report": {
           "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
-          "sha256": "8a193d2c4c2ed45f56cd85cb5987497948bd702286d163aaecefb4fef2adf86d",
+          "sha256": "9a9b3c9c537bfa0308d8ff159df6d438e7a46bf5f77ce2265f4e958fd1326635",
           "sizeBytes": 101286
         },
         "summary": {
@@ -11093,16 +11093,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/javascript-report.json",
-          "sha256": "1f03c2aa6b1dd351c53c8629bca52a3f5c828a4c3a290866b87dcc6a823b2f86",
+          "sha256": "c1350884da5f8738e696ec161838456bd63292416ccc18ef62bea0e0b6c685a7",
           "sizeBytes": 20827
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:04:12.965Z",
+        "generatedAt": "2026-07-30T06:19:49.733Z",
         "summary": {
           "total": 18,
           "passed": 18,
           "failed": 0,
-          "elapsedMs": 4500
+          "elapsedMs": 4486
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11157,16 +11157,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/typescript-report.json",
-          "sha256": "45e71db513cc77355413e68f9ea2d0a1ea552586f04788da5180cf71c8e986d7",
+          "sha256": "0f94b4d263c3de62640da10ef0f6aff7a1f515bc79a3c6a6e83d2a593ea1ff97",
           "sizeBytes": 15460
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:04:16.919Z",
+        "generatedAt": "2026-07-30T06:19:53.639Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 3209
+          "elapsedMs": 3152
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11222,16 +11222,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/luascript-report.json",
-          "sha256": "4ffd3ff3c19f7ce5d99b970f0ca74ea95ae78477666c97d5a8c870bd26f87078",
+          "sha256": "4d0c998bc8045478ce8525b22b588b23127ce4053775b246b1c65ae827c1d804",
           "sizeBytes": 70199
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:04:39.858Z",
+        "generatedAt": "2026-07-30T06:20:16.338Z",
         "summary": {
           "total": 77,
           "passed": 77,
           "failed": 0,
-          "elapsedMs": 22205
+          "elapsedMs": 21992
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11286,16 +11286,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/lua-report.json",
-          "sha256": "2b663a03c53edff9796ebc28df7017fe04c6b2a6a1639dc9637be59155c1e43a",
+          "sha256": "dd6d27524c93f4d8bda70e3a9db41fcd44b5808c30afb453fafba0ef963d5935",
           "sizeBytes": 14720
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:05:11.118Z",
+        "generatedAt": "2026-07-30T06:20:46.914Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 3714
+          "elapsedMs": 3896
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11350,16 +11350,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/python-report.json",
-          "sha256": "9bb0d888128be018c67410eb8a746ff4db7835664960b9b6ae0e8baa516b6ab4",
+          "sha256": "182b5d8ca035190f2e199703db18722942910a74f60a1198e2e8fea83629b812",
           "sizeBytes": 46375
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:05:27.180Z",
+        "generatedAt": "2026-07-30T06:21:03.098Z",
         "summary": {
           "total": 50,
           "passed": 50,
           "failed": 0,
-          "elapsedMs": 9925
+          "elapsedMs": 9920
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11415,16 +11415,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/csharp-report.json",
-          "sha256": "9d1cede93aac4edc0266dcab826bbde41bbe6a4149d4bf96417730825641c6ca",
+          "sha256": "081ca7095be503f968b4c866b3a046bf8e068ed1a1cf3cb42134a7782cc69e25",
           "sizeBytes": 22562
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:06:32.718Z",
+        "generatedAt": "2026-07-30T06:22:08.062Z",
         "summary": {
           "total": 20,
           "passed": 20,
           "failed": 0,
-          "elapsedMs": 64986
+          "elapsedMs": 64414
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11482,16 +11482,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/c-report.json",
-          "sha256": "1f6bb29acb77d141e1fdc23c72f877dd57885d58f79745eeb21b6bbbcff9cb68",
+          "sha256": "d45b1917f8756a55c4b6f23f5325960f5addd6ab14eceaf02911af4285b20386",
           "sizeBytes": 22863
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:07:02.522Z",
+        "generatedAt": "2026-07-30T06:22:37.736Z",
         "summary": {
           "total": 20,
           "passed": 20,
           "failed": 0,
-          "elapsedMs": 29003
+          "elapsedMs": 28901
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11549,16 +11549,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/cpp-report.json",
-          "sha256": "cf0f080701f4ee92ed36143485482b0b4a325e937e489677ee8e8d92bed83283",
+          "sha256": "cc4faa3ac53a26784fd84c2c7c7b5ddfbf88ce915ff66fcf213d4f0f965503bb",
           "sizeBytes": 24726
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:07:49.324Z",
+        "generatedAt": "2026-07-30T06:23:22.595Z",
         "summary": {
           "total": 22,
           "passed": 22,
           "failed": 0,
-          "elapsedMs": 46029
+          "elapsedMs": 43970
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11618,16 +11618,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/java_native-report.json",
-          "sha256": "c7fa77837f13243bcf2a445869465fa204afc40330aa4ad956a666bfecb3678d",
+          "sha256": "ae14bbbb3eebca1231489ca11582728f314256bb2c07c56ed758afb913e065ca",
           "sizeBytes": 9804
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:08:03.455Z",
+        "generatedAt": "2026-07-30T06:23:35.422Z",
         "summary": {
           "total": 3,
           "passed": 3,
           "failed": 0,
-          "elapsedMs": 13678
+          "elapsedMs": 12424
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11685,16 +11685,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/rust_native-report.json",
-          "sha256": "1c79330b0d2dea58ab4173598337ee03ff6f59c48f04cd66f7aa01ee7d37ffab",
+          "sha256": "d91aa23e6ba53773c7d2eb334d2dbdcda16634947f13ae740bdb3af8997939b0",
           "sizeBytes": 8630
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:08:12.077Z",
+        "generatedAt": "2026-07-30T06:23:43.889Z",
         "summary": {
           "total": 2,
           "passed": 2,
           "failed": 0,
-          "elapsedMs": 7630
+          "elapsedMs": 7505
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11752,16 +11752,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/ruby-report.json",
-          "sha256": "d20b9f498cc060e628f8ef52d06f874f777a4576d1bc20d2deb2bf07cd2c9a09",
+          "sha256": "90eb8871d090a649d781c61c99d7f32a2b1b6a4c69cdc0ba9451d608f30377e1",
           "sizeBytes": 18181
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:08:41.229Z",
+        "generatedAt": "2026-07-30T06:24:13.269Z",
         "summary": {
           "total": 14,
           "passed": 14,
           "failed": 0,
-          "elapsedMs": 28218
+          "elapsedMs": 28592
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11819,16 +11819,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/php-report.json",
-          "sha256": "cbb8387198cc918ba1abc679e0a57f597e09e457448c837483eadb655125bb41",
+          "sha256": "cdb72a06e21f1ebf03d0d1940170d85e6c15e681dfdf35d549e865ba09820de7",
           "sizeBytes": 18382
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:09:09.492Z",
+        "generatedAt": "2026-07-30T06:24:41.179Z",
         "summary": {
           "total": 14,
           "passed": 14,
           "failed": 0,
-          "elapsedMs": 27621
+          "elapsedMs": 27169
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11886,16 +11886,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/dart-report.json",
-          "sha256": "5cfbc9e3144035db8a4f721f6559345ad46adc5363180a8ed68569f44fe0af92",
+          "sha256": "6a0451ca0c1b81bbc07f4cd0325367d3e09ae48e05f6ce3c0072b3184373263e",
           "sizeBytes": 15891
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:09:34.037Z",
+        "generatedAt": "2026-07-30T06:25:04.879Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 23729
+          "elapsedMs": 22974
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11953,16 +11953,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/go_native-report.json",
-          "sha256": "d2a73a5a03fd9486080b49e31b4e537dda8b3b897df45a43a19eaefffe3fd4c4",
+          "sha256": "a5e6b13f1171218c5fc95af7db1b85f294067dc710b677c47749ffa8a180e34e",
           "sizeBytes": 15770
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:09:59.628Z",
+        "generatedAt": "2026-07-30T06:25:30.009Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 24898
+          "elapsedMs": 24369
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -12022,16 +12022,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/kotlin_native-report.json",
-          "sha256": "637a59c89784dc83b7a8a2c903619d71f1f01ee51e9099ff01ea6c57bcd8475e",
+          "sha256": "a4148ff0dc710846c4119428446ae80e0133f7d600e822cf144b1c01fc66b2de",
           "sizeBytes": 16379
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:10:55.372Z",
+        "generatedAt": "2026-07-30T06:26:24.441Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 57640
+          "elapsedMs": 56277
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -12090,16 +12090,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/elm_native-report.json",
-          "sha256": "291b90a81215bc02191ce6cae8370e3ef34f96742e120504c962d6fe4d1cc99c",
+          "sha256": "754f75b52caa1543970b0ef8d3344238e3fea58ba1ff143f722c8d0657bc5f9a",
           "sizeBytes": 15852
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:11:22.068Z",
+        "generatedAt": "2026-07-30T06:26:49.850Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 23336
+          "elapsedMs": 22178
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -12157,16 +12157,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/gleam_native-report.json",
-          "sha256": "c212317e224cdb1c66a118f6cd500f5a472dbf711d5741830be412a5abdfecb2",
+          "sha256": "9834e7807959566c03273b66f3b0cb77bb7961312b0740c4bd861cf89820abee",
           "sizeBytes": 16006
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T06:11:58.563Z",
+        "generatedAt": "2026-07-30T06:27:24.765Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 35657
+          "elapsedMs": 34198
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -12190,7 +12190,7 @@
       "detail": {
         "report": {
           "path": "artifacts/conformance/public-api-runtime-package-report.json",
-          "sha256": "ec70bbe52c5222e7192c691a0ed82f3d3467fc3a1669111ec39b6590fad0f097",
+          "sha256": "09244d56d284acb7d7c76f7cccd0de178b75efca2ebaa57b7172aed764b08f07",
           "sizeBytes": 168967
         },
         "summary": {
@@ -12210,7 +12210,7 @@
             "--package=node@14.17.1",
             "--",
             "node",
-            "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-bscx7j\\consumer\\node-floor-consumer-smoke.cjs"
+            "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-xqsKP3\\consumer\\node-floor-consumer-smoke.cjs"
           ],
           "status": 0,
           "signal": null,
@@ -17383,7 +17383,7 @@
         "path": "artifacts/conformance/schema-artifact-mapping-report.json",
         "report": {
           "path": "artifacts/conformance/schema-artifact-mapping-report.json",
-          "sha256": "9b4fc0ee2b8f921d932d91f4cc40465401ca62ee3447f0338c76f430130ac5d1",
+          "sha256": "6fda781f0bd4baac63791a3ce5c442f2a6765b5d6f9538285f5b47b6d3be4dc1",
           "sizeBytes": 84161
         },
         "summary": {
@@ -17483,7 +17483,7 @@
         "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
         "report": {
           "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
-          "sha256": "8a193d2c4c2ed45f56cd85cb5987497948bd702286d163aaecefb4fef2adf86d",
+          "sha256": "9a9b3c9c537bfa0308d8ff159df6d438e7a46bf5f77ce2265f4e958fd1326635",
           "sizeBytes": 101286
         },
         "summary": {

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:dual-surface-compatibility-bridge",
   "command": "npm run test:ir-compatibility-bridge",
-  "generatedAt": "2026-07-30T06:16:17.448Z",
-  "elapsedMs": 449,
+  "generatedAt": "2026-07-30T06:31:44.280Z",
+  "elapsedMs": 702,
   "environment": {
     "node": "v24.14.0",
     "npm": {

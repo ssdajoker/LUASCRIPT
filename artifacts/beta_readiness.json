@@ -3,7 +3,7 @@
   "kind": "luascript:beta-readiness",
   "betaTarget": "pre-production beta v0.1",
   "packageVersion": "1.0.1",
-  "generatedAt": "2026-07-30T06:15:52.200Z",
+  "generatedAt": "2026-07-30T06:31:17.489Z",
   "minimumPassPercent": 90,
   "summary": {
     "implementedLanes": 17,
@@ -13,7 +13,7 @@
     "strictNativeRequired": false,
     "overallStrictReady": true,
     "nativeSetupBlockedLanes": 0,
-    "elapsedMs": 3177
+    "elapsedMs": 3063
   },
   "lanes": [
     {

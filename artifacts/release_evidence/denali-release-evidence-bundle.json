@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "kind": "luascript:denali-release-evidence-bundle",
   "command": "node scripts/generate_release_evidence_bundle.js --require-ready",
-  "generatedAt": "2026-07-30T06:17:24.888Z",
+  "generatedAt": "2026-07-30T06:32:52.559Z",
   "environment": {
     "node": "v24.14.0",
     "npm": {
@@ -42,8 +42,8 @@
       "generatedAt",
       "contentIdentity"
     ],
-    "evidenceSetSha256": "17ea78a51c78bdd749192d15477af803c92115005cd735715570f56f1ccaa174",
-    "bundlePayloadSha256": "416bcaef95798c5d69c8db80fef328b56d23d44c259007352f9ab62038d95a72"
+    "evidenceSetSha256": "cabb6ea455070af1622cc02ed918b80b5e503af5628c7bde8ea80325b070b8d8",
+    "bundlePayloadSha256": "06382d2471923ae41bccf4946df7e63ccc6403aaaa18219ad0364e5576e54d04"
   },
   "evidence": [
     {
@@ -72,11 +72,11 @@
       "executionReport": {
         "path": "artifacts/conformance/actual-programs-report.json",
         "exists": true,
-        "sha256": "beb5dbb34f005f935f0e052b87b288bce0ccb0955322cc526a76539f5a36b542",
+        "sha256": "746fb6185c6eb8174b4a10509bb09af9df07695b47317d58163cff2a763c2521",
         "sizeBytes": 37294,
         "schemaVersion": 1,
         "kind": "luascript:actual-programs:repository-legacy",
-        "generatedAt": "2026-07-30T06:16:11.427Z",
+        "generatedAt": "2026-07-30T06:31:37.123Z",
         "declaredStatus": "passed",
         "summary": {
           "expectedCompileDiagnostic": 6,
@@ -749,14 +749,14 @@
         "report": {
           "path": "artifacts/clarity_canon/dogfood-report.json",
           "exists": true,
-          "sha256": "b8c4a4466d89ee8f4c62abf14a8953f66c0fc97042df5ca169b3cebd83bd72b9",
+          "sha256": "320621cd3319d95a842cb2b602c9811b3b090ed66cda982bf3dbc9f695294bfc",
           "sizeBytes": 203742,
           "schemaVersion": 1,
           "kind": "clarity:dogfood",
-          "generatedAt": "2026-07-30T06:15:46.664Z",
+          "generatedAt": "2026-07-30T06:31:12.166Z",
           "declaredStatus": null,
           "summary": {
-            "elapsedMs": 23704,
+            "elapsedMs": 23946,
             "failed": 0,
             "passed": 123,
             "total": 123
@@ -1663,14 +1663,14 @@
       "report": {
         "path": "artifacts/clarity_canon/canon-report.json",
         "exists": true,
-        "sha256": "83b6c9052021d5ef1c19dac58288ef45b311ae074929aa6c84166b6a5979ec6b",
-        "sizeBytes": 201506,
+        "sha256": "2c94498d4a90912185adea47e6e6392055a39437aa7167a8ee6984a8dc114117",
+        "sizeBytes": 201508,
         "schemaVersion": 1,
         "kind": "clarity:canon",
-        "generatedAt": "2026-07-30T06:15:53.343Z",
+        "generatedAt": "2026-07-30T06:31:18.825Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 6339,
+          "elapsedMs": 6329,
           "failed": 0,
           "passed": 22,
           "total": 22
@@ -1829,8 +1829,8 @@
         "freshnessFallback": {
           "status": "verified-by-input-mtime",
           "reason": "report generatedAt is at or after the newest required input modification",
-          "reportGeneratedAt": "2026-07-30T06:15:53.343Z",
-          "reportFileModifiedAt": "2026-07-30T06:15:53.346Z",
+          "reportGeneratedAt": "2026-07-30T06:31:18.825Z",
+          "reportFileModifiedAt": "2026-07-30T06:31:18.828Z",
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
             "path": "scripts/archive_audit.js",
@@ -2138,14 +2138,14 @@
       "report": {
         "path": "artifacts/clarity_canon/canon-languages-report.json",
         "exists": true,
-        "sha256": "49aec21bdb551d9502bf727fec50f9506664aa739fb2e650f45507a4d5f37bb1",
+        "sha256": "a9b75cfe93168696a8c2b63d8213843a2a1c72cd2b298984d27143d28a89c339",
         "sizeBytes": 2958,
         "schemaVersion": 1,
         "kind": "clarity:canon",
-        "generatedAt": "2026-07-30T06:15:54.598Z",
+        "generatedAt": "2026-07-30T06:31:20.028Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 158,
+          "elapsedMs": 164,
           "failed": 0,
           "passed": 2,
           "total": 2
@@ -2202,12 +2202,12 @@
         "freshnessFallback": {
           "status": "verified-by-input-mtime",
           "reason": "report generatedAt is at or after the newest required input modification",
-          "reportGeneratedAt": "2026-07-30T06:15:54.598Z",
-          "reportFileModifiedAt": "2026-07-30T06:15:54.600Z",
+          "reportGeneratedAt": "2026-07-30T06:31:20.028Z",
+          "reportFileModifiedAt": "2026-07-30T06:31:20.029Z",
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
             "path": "artifacts/language_completion/gleam_ir-report.json",
-            "modifiedAt": "2026-07-30T06:15:13.163Z",
+            "modifiedAt": "2026-07-30T06:30:38.590Z",
             "newerThanReportByMs": 0
           },
           "precisionToleranceMs": 1,
@@ -2224,8 +2224,8 @@
             "tests/language_completion"
           ],
           "inputFiles": 731,
-          "inputContentSetSha256": "b98b4a7c8feb00a441c84d07fdf726fec14d1c9b4a72f56ed730117fd15400f3",
-          "inputMetadataSetSha256": "a79d818a2a3e9ce56fcaa472c5cc4420a9e3aedd30b124ce437cffc751c5ab35",
+          "inputContentSetSha256": "a14d46c0822f672c51ea0c809ec2f7b5ff454c8987da71dd9067baebf7ecab8f",
+          "inputMetadataSetSha256": "fd7f20c2ba412c55473bb68dd8850e9322a03caaa969133575ef4f45e8c31126",
           "assurance": "The bundle hash-binds the current input content set, while freshness relies on local generatedAt/file-mtime ordering because the legacy report does not embed those hashes.",
           "missingInputs": []
         }
@@ -2450,8 +2450,8 @@
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
             "path": "artifacts/language_completion/gleam_ir-report.json",
-            "modifiedAt": "2026-07-30T06:15:13.163Z",
-            "newerThanReportByMs": 1367805078
+            "modifiedAt": "2026-07-30T06:30:38.590Z",
+            "newerThanReportByMs": 1368730505
           },
           "precisionToleranceMs": 1,
           "inputRoots": [
@@ -2467,8 +2467,8 @@
             "tests/language_completion"
           ],
           "inputFiles": 731,
-          "inputContentSetSha256": "b98b4a7c8feb00a441c84d07fdf726fec14d1c9b4a72f56ed730117fd15400f3",
-          "inputMetadataSetSha256": "a79d818a2a3e9ce56fcaa472c5cc4420a9e3aedd30b124ce437cffc751c5ab35",
+          "inputContentSetSha256": "a14d46c0822f672c51ea0c809ec2f7b5ff454c8987da71dd9067baebf7ecab8f",
+          "inputMetadataSetSha256": "fd7f20c2ba412c55473bb68dd8850e9322a03caaa969133575ef4f45e8c31126",
           "assurance": "The bundle hash-binds the current input content set, while freshness relies on local generatedAt/file-mtime ordering because the legacy report does not embed those hashes.",
           "missingInputs": []
         }
@@ -2482,14 +2482,14 @@
       "report": {
         "path": "artifacts/clarity_canon/canon-super-report.json",
         "exists": true,
-        "sha256": "fb62bfe0123f0c2d6d6da11c750896d93395b57bb89d6ba7eeec90fc7a160df0",
-        "sizeBytes": 19817,
+        "sha256": "6209fd623a558805874cffb26fc3e65bb2d7e11a71c84baa47792100b7851d9e",
+        "sizeBytes": 19816,
         "schemaVersion": 1,
         "kind": "clarity:canon",
-        "generatedAt": "2026-07-30T06:15:54.047Z",
+        "generatedAt": "2026-07-30T06:31:19.482Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 265,
+          "elapsedMs": 239,
           "failed": 0,
           "passed": 3,
           "total": 3
@@ -2552,8 +2552,8 @@
         "freshnessFallback": {
           "status": "verified-by-input-mtime",
           "reason": "report generatedAt is at or after the newest required input modification",
-          "reportGeneratedAt": "2026-07-30T06:15:54.047Z",
-          "reportFileModifiedAt": "2026-07-30T06:15:54.049Z",
+          "reportGeneratedAt": "2026-07-30T06:31:19.482Z",
+          "reportFileModifiedAt": "2026-07-30T06:31:19.484Z",
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
             "path": "src/ir/release_ir_surface_contract.js",
@@ -2589,14 +2589,14 @@
       "report": {
         "path": "artifacts/clarity_canon/dogfood-report.json",
         "exists": true,
-        "sha256": "b8c4a4466d89ee8f4c62abf14a8953f66c0fc97042df5ca169b3cebd83bd72b9",
+        "sha256": "320621cd3319d95a842cb2b602c9811b3b090ed66cda982bf3dbc9f695294bfc",
         "sizeBytes": 203742,
         "schemaVersion": 1,
         "kind": "clarity:dogfood",
-        "generatedAt": "2026-07-30T06:15:46.664Z",
+        "generatedAt": "2026-07-30T06:31:12.166Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 23704,
+          "elapsedMs": 23946,
           "failed": 0,
           "passed": 123,
           "total": 123
@@ -3379,8 +3379,8 @@
         "freshnessFallback": {
           "status": "verified-by-input-mtime",
           "reason": "report generatedAt is at or after the newest required input modification",
-          "reportGeneratedAt": "2026-07-30T06:15:46.664Z",
-          "reportFileModifiedAt": "2026-07-30T06:15:46.667Z",
+          "reportGeneratedAt": "2026-07-30T06:31:12.166Z",
+          "reportFileModifiedAt": "2026-07-30T06:31:12.170Z",
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
             "path": "src/ir/release_ir_surface_contract.js",
@@ -3537,11 +3537,11 @@
       "report": {
         "path": "artifacts/conformance/canonical-ir-conformance-report.json",
         "exists": true,
-        "sha256": "4766570e8512cb084aeacfddd7bec8515ca6b14a5664493acd867e02a2ab356d",
+        "sha256": "ac9d8f104f6614c76afceb924157ea2f7af322b7ab67b3e81b83d689f4644773",
         "sizeBytes": 29148,
         "schemaVersion": 1,
         "kind": "luascript:canonical-ir-conformance",
-        "generatedAt": "2026-07-30T06:16:14.707Z",
+        "generatedAt": "2026-07-30T06:31:40.498Z",
         "declaredStatus": null,
         "summary": {
           "expectedDiagnostics": 11,
@@ -3596,11 +3596,11 @@
       "report": {
         "path": "artifacts/conformance/denali-compatibility-matrix-report.json",
         "exists": true,
-        "sha256": "6734e39cc0e5c560446a1ec743a9a80bc3c8a0d777694d8ae1d54bb43220207b",
+        "sha256": "414353d182d5ce7a179093bd88723e9b216d36caa4b76a4bcc84e8fab3cba831",
         "sizeBytes": 733720,
         "schemaVersion": 1,
         "kind": "luascript:denali-compatibility-matrix",
-        "generatedAt": "2026-07-30T06:16:41.880Z",
+        "generatedAt": "2026-07-30T06:32:09.002Z",
         "declaredStatus": "PASS",
         "summary": {
           "failed": 0,
@@ -3643,222 +3643,222 @@
           },
           {
             "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
-            "expectedSha256": "8a193d2c4c2ed45f56cd85cb5987497948bd702286d163aaecefb4fef2adf86d",
+            "expectedSha256": "9a9b3c9c537bfa0308d8ff159df6d438e7a46bf5f77ce2265f4e958fd1326635",
             "locations": [
               "$.checks[86].detail.report",
               "$.releaseIr.reports[1].report"
             ],
             "status": "verified",
-            "actualSha256": "8a193d2c4c2ed45f56cd85cb5987497948bd702286d163aaecefb4fef2adf86d",
+            "actualSha256": "9a9b3c9c537bfa0308d8ff159df6d438e7a46bf5f77ce2265f4e958fd1326635",
             "sizeBytes": 101286
           },
           {
             "path": "artifacts/conformance/public-api-runtime-package-report.json",
-            "expectedSha256": "ec70bbe52c5222e7192c691a0ed82f3d3467fc3a1669111ec39b6590fad0f097",
+            "expectedSha256": "09244d56d284acb7d7c76f7cccd0de178b75efca2ebaa57b7172aed764b08f07",
             "locations": [
               "$.checks[72].detail.report",
               "$.packageBoundary.publicPackageReport.report"
             ],
             "status": "verified",
-            "actualSha256": "ec70bbe52c5222e7192c691a0ed82f3d3467fc3a1669111ec39b6590fad0f097",
+            "actualSha256": "09244d56d284acb7d7c76f7cccd0de178b75efca2ebaa57b7172aed764b08f07",
             "sizeBytes": 168967
           },
           {
             "path": "artifacts/conformance/schema-artifact-mapping-report.json",
-            "expectedSha256": "9b4fc0ee2b8f921d932d91f4cc40465401ca62ee3447f0338c76f430130ac5d1",
+            "expectedSha256": "6fda781f0bd4baac63791a3ce5c442f2a6765b5d6f9538285f5b47b6d3be4dc1",
             "locations": [
               "$.checks[85].detail.report",
               "$.releaseIr.reports[0].report"
             ],
             "status": "verified",
-            "actualSha256": "9b4fc0ee2b8f921d932d91f4cc40465401ca62ee3447f0338c76f430130ac5d1",
+            "actualSha256": "6fda781f0bd4baac63791a3ce5c442f2a6765b5d6f9538285f5b47b6d3be4dc1",
             "sizeBytes": 84161
           },
           {
             "path": "artifacts/language_completion/c-report.json",
-            "expectedSha256": "1f6bb29acb77d141e1fdc23c72f877dd57885d58f79745eeb21b6bbbcff9cb68",
+            "expectedSha256": "d45b1917f8756a55c4b6f23f5325960f5addd6ab14eceaf02911af4285b20386",
             "locations": [
               "$.checks[40].detail.report",
               "$.nativeLanes[6].report"
             ],
             "status": "verified",
-            "actualSha256": "1f6bb29acb77d141e1fdc23c72f877dd57885d58f79745eeb21b6bbbcff9cb68",
+            "actualSha256": "d45b1917f8756a55c4b6f23f5325960f5addd6ab14eceaf02911af4285b20386",
             "sizeBytes": 22863
           },
           {
             "path": "artifacts/language_completion/cpp-report.json",
-            "expectedSha256": "cf0f080701f4ee92ed36143485482b0b4a325e937e489677ee8e8d92bed83283",
+            "expectedSha256": "cc4faa3ac53a26784fd84c2c7c7b5ddfbf88ce915ff66fcf213d4f0f965503bb",
             "locations": [
               "$.checks[43].detail.report",
               "$.nativeLanes[7].report"
             ],
             "status": "verified",
-            "actualSha256": "cf0f080701f4ee92ed36143485482b0b4a325e937e489677ee8e8d92bed83283",
+            "actualSha256": "cc4faa3ac53a26784fd84c2c7c7b5ddfbf88ce915ff66fcf213d4f0f965503bb",
             "sizeBytes": 24726
           },
           {
             "path": "artifacts/language_completion/csharp-report.json",
-            "expectedSha256": "9d1cede93aac4edc0266dcab826bbde41bbe6a4149d4bf96417730825641c6ca",
+            "expectedSha256": "081ca7095be503f968b4c866b3a046bf8e068ed1a1cf3cb42134a7782cc69e25",
             "locations": [
               "$.checks[37].detail.report",
               "$.nativeLanes[5].report"
             ],
             "status": "verified",
-            "actualSha256": "9d1cede93aac4edc0266dcab826bbde41bbe6a4149d4bf96417730825641c6ca",
+            "actualSha256": "081ca7095be503f968b4c866b3a046bf8e068ed1a1cf3cb42134a7782cc69e25",
             "sizeBytes": 22562
           },
           {
             "path": "artifacts/language_completion/dart-report.json",
-            "expectedSha256": "5cfbc9e3144035db8a4f721f6559345ad46adc5363180a8ed68569f44fe0af92",
+            "expectedSha256": "6a0451ca0c1b81bbc07f4cd0325367d3e09ae48e05f6ce3c0072b3184373263e",
             "locations": [
               "$.checks[58].detail.report",
               "$.nativeLanes[12].report"
             ],
             "status": "verified",
-            "actualSha256": "5cfbc9e3144035db8a4f721f6559345ad46adc5363180a8ed68569f44fe0af92",
+            "actualSha256": "6a0451ca0c1b81bbc07f4cd0325367d3e09ae48e05f6ce3c0072b3184373263e",
             "sizeBytes": 15891
           },
           {
             "path": "artifacts/language_completion/elm_native-report.json",
-            "expectedSha256": "291b90a81215bc02191ce6cae8370e3ef34f96742e120504c962d6fe4d1cc99c",
+            "expectedSha256": "754f75b52caa1543970b0ef8d3344238e3fea58ba1ff143f722c8d0657bc5f9a",
             "locations": [
               "$.checks[67].detail.report",
               "$.nativeLanes[15].report"
             ],
             "status": "verified",
-            "actualSha256": "291b90a81215bc02191ce6cae8370e3ef34f96742e120504c962d6fe4d1cc99c",
+            "actualSha256": "754f75b52caa1543970b0ef8d3344238e3fea58ba1ff143f722c8d0657bc5f9a",
             "sizeBytes": 15852
           },
           {
             "path": "artifacts/language_completion/gleam_native-report.json",
-            "expectedSha256": "c212317e224cdb1c66a118f6cd500f5a472dbf711d5741830be412a5abdfecb2",
+            "expectedSha256": "9834e7807959566c03273b66f3b0cb77bb7961312b0740c4bd861cf89820abee",
             "locations": [
               "$.checks[70].detail.report",
               "$.nativeLanes[16].report"
             ],
             "status": "verified",
-            "actualSha256": "c212317e224cdb1c66a118f6cd500f5a472dbf711d5741830be412a5abdfecb2",
+            "actualSha256": "9834e7807959566c03273b66f3b0cb77bb7961312b0740c4bd861cf89820abee",
             "sizeBytes": 16006
           },
           {
             "path": "artifacts/language_completion/go_native-report.json",
-            "expectedSha256": "d2a73a5a03fd9486080b49e31b4e537dda8b3b897df45a43a19eaefffe3fd4c4",
+            "expectedSha256": "a5e6b13f1171218c5fc95af7db1b85f294067dc710b677c47749ffa8a180e34e",
             "locations": [
               "$.checks[61].detail.report",
               "$.nativeLanes[13].report"
             ],
             "status": "verified",
-            "actualSha256": "d2a73a5a03fd9486080b49e31b4e537dda8b3b897df45a43a19eaefffe3fd4c4",
+            "actualSha256": "a5e6b13f1171218c5fc95af7db1b85f294067dc710b677c47749ffa8a180e34e",
             "sizeBytes": 15770
           },
           {
             "path": "artifacts/language_completion/java_native-report.json",
-            "expectedSha256": "c7fa77837f13243bcf2a445869465fa204afc40330aa4ad956a666bfecb3678d",
+            "expectedSha256": "ae14bbbb3eebca1231489ca11582728f314256bb2c07c56ed758afb913e065ca",
             "locations": [
               "$.checks[46].detail.report",
               "$.nativeLanes[8].report"
             ],
             "status": "verified",
-            "actualSha256": "c7fa77837f13243bcf2a445869465fa204afc40330aa4ad956a666bfecb3678d",
+            "actualSha256": "ae14bbbb3eebca1231489ca11582728f314256bb2c07c56ed758afb913e065ca",
             "sizeBytes": 9804
           },
           {
             "path": "artifacts/language_completion/javascript-report.json",
-            "expectedSha256": "1f03c2aa6b1dd351c53c8629bca52a3f5c828a4c3a290866b87dcc6a823b2f86",
+            "expectedSha256": "c1350884da5f8738e696ec161838456bd63292416ccc18ef62bea0e0b6c685a7",
             "locations": [
               "$.checks[22].detail.report",
               "$.nativeLanes[0].report"
             ],
             "status": "verified",
-            "actualSha256": "1f03c2aa6b1dd351c53c8629bca52a3f5c828a4c3a290866b87dcc6a823b2f86",
+            "actualSha256": "c1350884da5f8738e696ec161838456bd63292416ccc18ef62bea0e0b6c685a7",
             "sizeBytes": 20827
           },
           {
             "path": "artifacts/language_completion/kotlin_native-report.json",
-            "expectedSha256": "637a59c89784dc83b7a8a2c903619d71f1f01ee51e9099ff01ea6c57bcd8475e",
+            "expectedSha256": "a4148ff0dc710846c4119428446ae80e0133f7d600e822cf144b1c01fc66b2de",
             "locations": [
               "$.checks[64].detail.report",
               "$.nativeLanes[14].report"
             ],
             "status": "verified",
-            "actualSha256": "637a59c89784dc83b7a8a2c903619d71f1f01ee51e9099ff01ea6c57bcd8475e",
+            "actualSha256": "a4148ff0dc710846c4119428446ae80e0133f7d600e822cf144b1c01fc66b2de",
             "sizeBytes": 16379
           },
           {
             "path": "artifacts/language_completion/lua-report.json",
-            "expectedSha256": "2b663a03c53edff9796ebc28df7017fe04c6b2a6a1639dc9637be59155c1e43a",
+            "expectedSha256": "dd6d27524c93f4d8bda70e3a9db41fcd44b5808c30afb453fafba0ef963d5935",
             "locations": [
               "$.checks[31].detail.report",
               "$.nativeLanes[3].report"
             ],
             "status": "verified",
-            "actualSha256": "2b663a03c53edff9796ebc28df7017fe04c6b2a6a1639dc9637be59155c1e43a",
+            "actualSha256": "dd6d27524c93f4d8bda70e3a9db41fcd44b5808c30afb453fafba0ef963d5935",
             "sizeBytes": 14720
           },
           {
             "path": "artifacts/language_completion/luascript-report.json",
-            "expectedSha256": "4ffd3ff3c19f7ce5d99b970f0ca74ea95ae78477666c97d5a8c870bd26f87078",
+            "expectedSha256": "4d0c998bc8045478ce8525b22b588b23127ce4053775b246b1c65ae827c1d804",
             "locations": [
               "$.checks[28].detail.report",
               "$.nativeLanes[2].report"
             ],
             "status": "verified",
-            "actualSha256": "4ffd3ff3c19f7ce5d99b970f0ca74ea95ae78477666c97d5a8c870bd26f87078",
+            "actualSha256": "4d0c998bc8045478ce8525b22b588b23127ce4053775b246b1c65ae827c1d804",
             "sizeBytes": 70199
           },
           {
             "path": "artifacts/language_completion/php-report.json",
-            "expectedSha256": "cbb8387198cc918ba1abc679e0a57f597e09e457448c837483eadb655125bb41",
+            "expectedSha256": "cdb72a06e21f1ebf03d0d1940170d85e6c15e681dfdf35d549e865ba09820de7",
             "locations": [
               "$.checks[55].detail.report",
               "$.nativeLanes[11].report"
             ],
             "status": "verified",
-            "actualSha256": "cbb8387198cc918ba1abc679e0a57f597e09e457448c837483eadb655125bb41",
+            "actualSha256": "cdb72a06e21f1ebf03d0d1940170d85e6c15e681dfdf35d549e865ba09820de7",
             "sizeBytes": 18382
           },
           {
             "path": "artifacts/language_completion/python-report.json",
-            "expectedSha256": "9bb0d888128be018c67410eb8a746ff4db7835664960b9b6ae0e8baa516b6ab4",
+            "expectedSha256": "182b5d8ca035190f2e199703db18722942910a74f60a1198e2e8fea83629b812",
             "locations": [
               "$.checks[34].detail.report",
               "$.nativeLanes[4].report"
             ],
             "status": "verified",
-            "actualSha256": "9bb0d888128be018c67410eb8a746ff4db7835664960b9b6ae0e8baa516b6ab4",
+            "actualSha256": "182b5d8ca035190f2e199703db18722942910a74f60a1198e2e8fea83629b812",
             "sizeBytes": 46375
           },
           {
             "path": "artifacts/language_completion/ruby-report.json",
-            "expectedSha256": "d20b9f498cc060e628f8ef52d06f874f777a4576d1bc20d2deb2bf07cd2c9a09",
+            "expectedSha256": "90eb8871d090a649d781c61c99d7f32a2b1b6a4c69cdc0ba9451d608f30377e1",
             "locations": [
               "$.checks[52].detail.report",
               "$.nativeLanes[10].report"
             ],
             "status": "verified",
-            "actualSha256": "d20b9f498cc060e628f8ef52d06f874f777a4576d1bc20d2deb2bf07cd2c9a09",
+            "actualSha256": "90eb8871d090a649d781c61c99d7f32a2b1b6a4c69cdc0ba9451d608f30377e1",
             "sizeBytes": 18181
           },
           {
             "path": "artifacts/language_completion/rust_native-report.json",
-            "expectedSha256": "1c79330b0d2dea58ab4173598337ee03ff6f59c48f04cd66f7aa01ee7d37ffab",
+            "expectedSha256": "d91aa23e6ba53773c7d2eb334d2dbdcda16634947f13ae740bdb3af8997939b0",
             "locations": [
               "$.checks[49].detail.report",
               "$.nativeLanes[9].report"
             ],
             "status": "verified",
-            "actualSha256": "1c79330b0d2dea58ab4173598337ee03ff6f59c48f04cd66f7aa01ee7d37ffab",
+            "actualSha256": "d91aa23e6ba53773c7d2eb334d2dbdcda16634947f13ae740bdb3af8997939b0",
             "sizeBytes": 8630
           },
           {
             "path": "artifacts/language_completion/typescript-report.json",
-            "expectedSha256": "45e71db513cc77355413e68f9ea2d0a1ea552586f04788da5180cf71c8e986d7",
+            "expectedSha256": "0f94b4d263c3de62640da10ef0f6aff7a1f515bc79a3c6a6e83d2a593ea1ff97",
             "locations": [
               "$.checks[25].detail.report",
               "$.nativeLanes[1].report"
             ],
             "status": "verified",
-            "actualSha256": "45e71db513cc77355413e68f9ea2d0a1ea552586f04788da5180cf71c8e986d7",
+            "actualSha256": "0f94b4d263c3de62640da10ef0f6aff7a1f515bc79a3c6a6e83d2a593ea1ff97",
             "sizeBytes": 15460
           },
           {
@@ -8768,11 +8768,11 @@
       "report": {
         "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
         "exists": true,
-        "sha256": "8a193d2c4c2ed45f56cd85cb5987497948bd702286d163aaecefb4fef2adf86d",
+        "sha256": "9a9b3c9c537bfa0308d8ff159df6d438e7a46bf5f77ce2265f4e958fd1326635",
         "sizeBytes": 101286,
         "schemaVersion": 1,
         "kind": "luascript:dual-surface-compatibility-bridge",
-        "generatedAt": "2026-07-30T06:16:17.448Z",
+        "generatedAt": "2026-07-30T06:31:44.280Z",
         "declaredStatus": null,
         "summary": {
           "bridgeCompatibleDerivedArtifacts": 21,
@@ -8979,11 +8979,11 @@
       "report": {
         "path": "artifacts/edge_matrix/edge-case-matrix-report.json",
         "exists": true,
-        "sha256": "d479822ed4102ef0b0dd5ac955678afd4a231572363ef12b63436f8abb4c8ed3",
+        "sha256": "c2822b3e28416f37e321c10592111869bf0e2242b5cfb7810d0d289199c74eed",
         "sizeBytes": 58144,
         "schemaVersion": 1,
         "kind": "luascript:edge-case-matrix",
-        "generatedAt": "2026-07-30T06:16:25.053Z",
+        "generatedAt": "2026-07-30T06:31:52.528Z",
         "declaredStatus": null,
         "summary": {
           "categoryCounts": {
@@ -9047,11 +9047,11 @@
       "report": {
         "path": "artifacts/conformance/public-api-runtime-package-report.json",
         "exists": true,
-        "sha256": "ec70bbe52c5222e7192c691a0ed82f3d3467fc3a1669111ec39b6590fad0f097",
+        "sha256": "09244d56d284acb7d7c76f7cccd0de178b75efca2ebaa57b7172aed764b08f07",
         "sizeBytes": 168967,
         "schemaVersion": 1,
         "kind": "luascript:public-api-runtime-package-contract",
-        "generatedAt": "2026-07-30T06:15:22.540Z",
+        "generatedAt": "2026-07-30T06:30:47.845Z",
         "declaredStatus": null,
         "summary": {
           "failed": 0,
@@ -9197,11 +9197,11 @@
       "report": {
         "path": "artifacts/conformance/roundtrip-probe-report.json",
         "exists": true,
-        "sha256": "24ffff2c483ec70c69c236996f1a90c6e02d587bfb73efd8cc61eaf715227ff6",
+        "sha256": "372749be57c72149735d161554bbbce36356016686757257aa3122f77e473140",
         "sizeBytes": 13983,
         "schemaVersion": 1,
         "kind": "luascript:roundtrip-probe",
-        "generatedAt": "2026-07-30T06:16:26.520Z",
+        "generatedAt": "2026-07-30T06:31:53.924Z",
         "declaredStatus": null,
         "summary": {
           "failed": 0,
@@ -9256,11 +9256,11 @@
       "report": {
         "path": "artifacts/conformance/schema-artifact-mapping-report.json",
         "exists": true,
-        "sha256": "9b4fc0ee2b8f921d932d91f4cc40465401ca62ee3447f0338c76f430130ac5d1",
+        "sha256": "6fda781f0bd4baac63791a3ce5c442f2a6765b5d6f9538285f5b47b6d3be4dc1",
         "sizeBytes": 84161,
         "schemaVersion": 1,
         "kind": "luascript:schema-artifact-mapping",
-        "generatedAt": "2026-07-30T06:16:16.078Z",
+        "generatedAt": "2026-07-30T06:31:41.816Z",
         "declaredStatus": null,
         "summary": {
           "expectedDiagnostics": 11,
@@ -9421,11 +9421,11 @@
       "report": {
         "path": "artifacts/conformance/source-identity-probe-report.json",
         "exists": true,
-        "sha256": "6a6aa50caca83708b43496d74df5d8eb6bcfa229c5748a7cc873837308d860b7",
+        "sha256": "61b38b1b1b181b5730561d54ca3cda76ba183f1b02f9d1e19a3572772c6bba2f",
         "sizeBytes": 34090,
         "schemaVersion": 1,
         "kind": "luascript:source-identity-probe",
-        "generatedAt": "2026-07-30T06:16:30.385Z",
+        "generatedAt": "2026-07-30T06:31:57.856Z",
         "declaredStatus": null,
         "summary": {
           "broadSemanticEquivalence": 0,
@@ -9636,11 +9636,11 @@
       "report": {
         "path": "artifacts/conformance/unsupported-diagnostics-report.json",
         "exists": true,
-        "sha256": "afb2c25d8bcfc546e0dae21b3de140c1752986f1669aac56153f3ba9eec6013a",
+        "sha256": "46913673726500172b1c9e6f25ba6d569d86870aa9fb97d9512ba213bc03e235",
         "sizeBytes": 12361,
         "schemaVersion": 1,
         "kind": "luascript:unsupported-diagnostics",
-        "generatedAt": "2026-07-30T06:17:00.540Z",
+        "generatedAt": "2026-07-30T06:32:26.820Z",
         "declaredStatus": null,
         "summary": {
           "categories": [
@@ -9701,14 +9701,14 @@
       "report": {
         "path": "artifacts/language_completion/c-report.json",
         "exists": true,
-        "sha256": "1f6bb29acb77d141e1fdc23c72f877dd57885d58f79745eeb21b6bbbcff9cb68",
+        "sha256": "d45b1917f8756a55c4b6f23f5325960f5addd6ab14eceaf02911af4285b20386",
         "sizeBytes": 22863,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:07:02.522Z",
+        "generatedAt": "2026-07-30T06:22:37.736Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 29003,
+          "elapsedMs": 28901,
           "failed": 0,
           "passed": 20,
           "total": 20
@@ -10320,14 +10320,14 @@
       "report": {
         "path": "artifacts/language_completion/cpp-report.json",
         "exists": true,
-        "sha256": "cf0f080701f4ee92ed36143485482b0b4a325e937e489677ee8e8d92bed83283",
+        "sha256": "cc4faa3ac53a26784fd84c2c7c7b5ddfbf88ce915ff66fcf213d4f0f965503bb",
         "sizeBytes": 24726,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:07:49.324Z",
+        "generatedAt": "2026-07-30T06:23:22.595Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 46029,
+          "elapsedMs": 43970,
           "failed": 0,
           "passed": 22,
           "total": 22
@@ -10961,14 +10961,14 @@
       "report": {
         "path": "artifacts/language_completion/csharp-report.json",
         "exists": true,
-        "sha256": "9d1cede93aac4edc0266dcab826bbde41bbe6a4149d4bf96417730825641c6ca",
+        "sha256": "081ca7095be503f968b4c866b3a046bf8e068ed1a1cf3cb42134a7782cc69e25",
         "sizeBytes": 22562,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:06:32.718Z",
+        "generatedAt": "2026-07-30T06:22:08.062Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 64986,
+          "elapsedMs": 64414,
           "failed": 0,
           "passed": 20,
           "total": 20
@@ -11580,14 +11580,14 @@
       "report": {
         "path": "artifacts/language_completion/dart-report.json",
         "exists": true,
-        "sha256": "5cfbc9e3144035db8a4f721f6559345ad46adc5363180a8ed68569f44fe0af92",
+        "sha256": "6a0451ca0c1b81bbc07f4cd0325367d3e09ae48e05f6ce3c0072b3184373263e",
         "sizeBytes": 15891,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:09:34.037Z",
+        "generatedAt": "2026-07-30T06:25:04.879Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 23729,
+          "elapsedMs": 22974,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -12100,14 +12100,14 @@
       "report": {
         "path": "artifacts/language_completion/dart_ir-report.json",
         "exists": true,
-        "sha256": "6cc1699a2e09754370e18d05b39c432988170cbf893a28991673d511a9825b2b",
+        "sha256": "ed15e6d8a7797f7e447219a128300eb0cfb78824d76643b21f92a57a212f10c1",
         "sizeBytes": 15569,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:14:13.691Z",
+        "generatedAt": "2026-07-30T06:29:39.199Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 20827,
+          "elapsedMs": 20755,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -12620,14 +12620,14 @@
       "report": {
         "path": "artifacts/language_completion/elm_ir-report.json",
         "exists": true,
-        "sha256": "52f0c233234b830205329c72a65b141027a5b0c0515a1bb852f2b7300ebb9af4",
+        "sha256": "0b7386a9cf041d03a460cf8405d956da270322ce8c79da9a4248f447adabe7f0",
         "sizeBytes": 15603,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:14:54.091Z",
+        "generatedAt": "2026-07-30T06:30:19.554Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 18091,
+          "elapsedMs": 17835,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -13140,14 +13140,14 @@
       "report": {
         "path": "artifacts/language_completion/elm_native-report.json",
         "exists": true,
-        "sha256": "291b90a81215bc02191ce6cae8370e3ef34f96742e120504c962d6fe4d1cc99c",
+        "sha256": "754f75b52caa1543970b0ef8d3344238e3fea58ba1ff143f722c8d0657bc5f9a",
         "sizeBytes": 15852,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:11:22.068Z",
+        "generatedAt": "2026-07-30T06:26:49.850Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 23336,
+          "elapsedMs": 22178,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -13660,14 +13660,14 @@
       "report": {
         "path": "artifacts/language_completion/gleam_ir-report.json",
         "exists": true,
-        "sha256": "94e69f5f19dfcf4af83e5947a5e925eb1564465d61ba31d85e8f373e2e1b4672",
+        "sha256": "55401d7f839ce2532c356f388ec999f25a8e2dcc983327e37a3f5bcf9e301e0e",
         "sizeBytes": 15747,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:15:12.929Z",
+        "generatedAt": "2026-07-30T06:30:38.358Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 18157,
+          "elapsedMs": 18016,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -14180,14 +14180,14 @@
       "report": {
         "path": "artifacts/language_completion/gleam_native-report.json",
         "exists": true,
-        "sha256": "c212317e224cdb1c66a118f6cd500f5a472dbf711d5741830be412a5abdfecb2",
+        "sha256": "9834e7807959566c03273b66f3b0cb77bb7961312b0740c4bd861cf89820abee",
         "sizeBytes": 16006,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:11:58.563Z",
+        "generatedAt": "2026-07-30T06:27:24.765Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 35657,
+          "elapsedMs": 34198,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -14700,14 +14700,14 @@
       "report": {
         "path": "artifacts/language_completion/go-report.json",
         "exists": true,
-        "sha256": "86aa610753d81f0d7b869214c5ec453910b75f992bd571748441d3c3d3309b30",
+        "sha256": "fdae1860b763bd4b1158e3ea978e6c890d7348c8cd901fd04124f4ff772eeec4",
         "sizeBytes": 15507,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:12:16.499Z",
+        "generatedAt": "2026-07-30T06:27:43.740Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 16839,
+          "elapsedMs": 17879,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -15220,14 +15220,14 @@
       "report": {
         "path": "artifacts/language_completion/go_native-report.json",
         "exists": true,
-        "sha256": "d2a73a5a03fd9486080b49e31b4e537dda8b3b897df45a43a19eaefffe3fd4c4",
+        "sha256": "a5e6b13f1171218c5fc95af7db1b85f294067dc710b677c47749ffa8a180e34e",
         "sizeBytes": 15770,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:09:59.628Z",
+        "generatedAt": "2026-07-30T06:25:30.009Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 24898,
+          "elapsedMs": 24369,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -15740,14 +15740,14 @@
       "report": {
         "path": "artifacts/language_completion/java-report.json",
         "exists": true,
-        "sha256": "f19635780dcc1d8914b6e2b68925a40087a8646562b11760899a6476c1984f49",
+        "sha256": "861a432671c76a72c27238692cc2399f3d46020681bd21bc03641c616dd528b0",
         "sizeBytes": 17272,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:14:35.229Z",
+        "generatedAt": "2026-07-30T06:30:01.017Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 20778,
+          "elapsedMs": 21062,
           "failed": 0,
           "passed": 13,
           "total": 13
@@ -16282,14 +16282,14 @@
       "report": {
         "path": "artifacts/language_completion/java_native-report.json",
         "exists": true,
-        "sha256": "c7fa77837f13243bcf2a445869465fa204afc40330aa4ad956a666bfecb3678d",
+        "sha256": "ae14bbbb3eebca1231489ca11582728f314256bb2c07c56ed758afb913e065ca",
         "sizeBytes": 9804,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:08:03.455Z",
+        "generatedAt": "2026-07-30T06:23:35.422Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 13678,
+          "elapsedMs": 12424,
           "failed": 0,
           "passed": 3,
           "total": 3
@@ -16714,14 +16714,14 @@
       "report": {
         "path": "artifacts/language_completion/javascript-report.json",
         "exists": true,
-        "sha256": "1f03c2aa6b1dd351c53c8629bca52a3f5c828a4c3a290866b87dcc6a823b2f86",
+        "sha256": "c1350884da5f8738e696ec161838456bd63292416ccc18ef62bea0e0b6c685a7",
         "sizeBytes": 20827,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:04:12.965Z",
+        "generatedAt": "2026-07-30T06:19:49.733Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 4500,
+          "elapsedMs": 4486,
           "failed": 0,
           "passed": 18,
           "total": 18
@@ -17311,14 +17311,14 @@
       "report": {
         "path": "artifacts/language_completion/kotlin-report.json",
         "exists": true,
-        "sha256": "3c9481618cda915016580b3511896ec33b629a71d71f90207584612bd663ba1c",
+        "sha256": "099ff1bcd06d32729eb5cc7ec6e3812134b712afa1f7f61f8755601623c37129",
         "sizeBytes": 15655,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:12:57.103Z",
+        "generatedAt": "2026-07-30T06:28:22.815Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 18515,
+          "elapsedMs": 18641,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -17831,14 +17831,14 @@
       "report": {
         "path": "artifacts/language_completion/kotlin_native-report.json",
         "exists": true,
-        "sha256": "637a59c89784dc83b7a8a2c903619d71f1f01ee51e9099ff01ea6c57bcd8475e",
+        "sha256": "a4148ff0dc710846c4119428446ae80e0133f7d600e822cf144b1c01fc66b2de",
         "sizeBytes": 16379,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:10:55.372Z",
+        "generatedAt": "2026-07-30T06:26:24.441Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 57640,
+          "elapsedMs": 56277,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -18351,14 +18351,14 @@
       "report": {
         "path": "artifacts/language_completion/lua-report.json",
         "exists": true,
-        "sha256": "2b663a03c53edff9796ebc28df7017fe04c6b2a6a1639dc9637be59155c1e43a",
+        "sha256": "dd6d27524c93f4d8bda70e3a9db41fcd44b5808c30afb453fafba0ef963d5935",
         "sizeBytes": 14720,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:05:11.118Z",
+        "generatedAt": "2026-07-30T06:20:46.914Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 3714,
+          "elapsedMs": 3896,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -18871,14 +18871,14 @@
       "report": {
         "path": "artifacts/language_completion/luascript-report.json",
         "exists": true,
-        "sha256": "4ffd3ff3c19f7ce5d99b970f0ca74ea95ae78477666c97d5a8c870bd26f87078",
+        "sha256": "4d0c998bc8045478ce8525b22b588b23127ce4053775b246b1c65ae827c1d804",
         "sizeBytes": 70199,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:04:39.858Z",
+        "generatedAt": "2026-07-30T06:20:16.338Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 22205,
+          "elapsedMs": 21992,
           "failed": 0,
           "passed": 77,
           "total": 77
@@ -20117,14 +20117,14 @@
       "report": {
         "path": "artifacts/language_completion/php-report.json",
         "exists": true,
-        "sha256": "cbb8387198cc918ba1abc679e0a57f597e09e457448c837483eadb655125bb41",
+        "sha256": "cdb72a06e21f1ebf03d0d1940170d85e6c15e681dfdf35d549e865ba09820de7",
         "sizeBytes": 18382,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:09:09.492Z",
+        "generatedAt": "2026-07-30T06:24:41.179Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 27621,
+          "elapsedMs": 27169,
           "failed": 0,
           "passed": 14,
           "total": 14
@@ -20670,14 +20670,14 @@
       "report": {
         "path": "artifacts/language_completion/php_ir-report.json",
         "exists": true,
-        "sha256": "0c29af1c8ba33fc00cae4732a2d74990fdc91800f8353e773a9cbca8e25a98e9",
+        "sha256": "99d075631f98cfa5ab44bd40ff7faa7ec980f02e95abda77a21727c215588ddd",
         "sizeBytes": 17902,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:13:52.098Z",
+        "generatedAt": "2026-07-30T06:29:17.761Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 26824,
+          "elapsedMs": 26713,
           "failed": 0,
           "passed": 14,
           "total": 14
@@ -21223,14 +21223,14 @@
       "report": {
         "path": "artifacts/language_completion/python-report.json",
         "exists": true,
-        "sha256": "9bb0d888128be018c67410eb8a746ff4db7835664960b9b6ae0e8baa516b6ab4",
+        "sha256": "182b5d8ca035190f2e199703db18722942910a74f60a1198e2e8fea83629b812",
         "sizeBytes": 46375,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:05:27.180Z",
+        "generatedAt": "2026-07-30T06:21:03.098Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 9925,
+          "elapsedMs": 9920,
           "failed": 0,
           "passed": 50,
           "total": 50
@@ -22172,14 +22172,14 @@
       "report": {
         "path": "artifacts/language_completion/ruby-report.json",
         "exists": true,
-        "sha256": "d20b9f498cc060e628f8ef52d06f874f777a4576d1bc20d2deb2bf07cd2c9a09",
+        "sha256": "90eb8871d090a649d781c61c99d7f32a2b1b6a4c69cdc0ba9451d608f30377e1",
         "sizeBytes": 18181,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:08:41.229Z",
+        "generatedAt": "2026-07-30T06:24:13.269Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 28218,
+          "elapsedMs": 28592,
           "failed": 0,
           "passed": 14,
           "total": 14
@@ -22725,14 +22725,14 @@
       "report": {
         "path": "artifacts/language_completion/ruby_ir-report.json",
         "exists": true,
-        "sha256": "2e0f84678d0d54060c70d1954b282e12517718b7bf5f61391cac3f3c95072e24",
+        "sha256": "c743f0020b5541435f9c8aee85c9a9f68434398d49c524b0a8c7539d0c391ee7",
         "sizeBytes": 17875,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:13:24.592Z",
+        "generatedAt": "2026-07-30T06:28:50.271Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 26811,
+          "elapsedMs": 26748,
           "failed": 0,
           "passed": 14,
           "total": 14
@@ -23278,14 +23278,14 @@
       "report": {
         "path": "artifacts/language_completion/rust-report.json",
         "exists": true,
-        "sha256": "b2e387409a4c53bb20326fe4eeca94ae901953c9362be7475d55fc438224c8f3",
+        "sha256": "058c966971dcfc068858de65bf99bf24efceb52b435e78f7da3a807ed238bc3c",
         "sizeBytes": 15553,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:12:37.851Z",
+        "generatedAt": "2026-07-30T06:28:03.468Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 20532,
+          "elapsedMs": 18955,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -23798,14 +23798,14 @@
       "report": {
         "path": "artifacts/language_completion/rust_native-report.json",
         "exists": true,
-        "sha256": "1c79330b0d2dea58ab4173598337ee03ff6f59c48f04cd66f7aa01ee7d37ffab",
+        "sha256": "d91aa23e6ba53773c7d2eb334d2dbdcda16634947f13ae740bdb3af8997939b0",
         "sizeBytes": 8630,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:08:12.077Z",
+        "generatedAt": "2026-07-30T06:23:43.889Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 7630,
+          "elapsedMs": 7505,
           "failed": 0,
           "passed": 2,
           "total": 2
@@ -24219,14 +24219,14 @@
       "report": {
         "path": "artifacts/language_completion/typescript-report.json",
         "exists": true,
-        "sha256": "45e71db513cc77355413e68f9ea2d0a1ea552586f04788da5180cf71c8e986d7",
+        "sha256": "0f94b4d263c3de62640da10ef0f6aff7a1f515bc79a3c6a6e83d2a593ea1ff97",
         "sizeBytes": 15460,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T06:04:16.919Z",
+        "generatedAt": "2026-07-30T06:19:53.639Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 3209,
+          "elapsedMs": 3152,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -24739,11 +24739,11 @@
       "report": {
         "path": "artifacts/conformance/parser-ownership-report.json",
         "exists": true,
-        "sha256": "29e8d8f605c3029d664487c553abc7fda4325545e0cf4b78ee444710072d7d3d",
+        "sha256": "fb96c4b0a4a3d748498a4f0e282186f94e59afed93dc7250c2c062f57f138518",
         "sizeBytes": 13630,
         "schemaVersion": 1,
         "kind": "luascript:parser-ownership",
-        "generatedAt": "2026-07-30T06:16:11.953Z",
+        "generatedAt": "2026-07-30T06:31:37.643Z",
         "declaredStatus": "passed",
         "summary": {
           "completionAssertions": 1,
@@ -24899,7 +24899,7 @@
         "report": {
           "path": "artifacts/conformance/source-identity-probe-report.json",
           "exists": true,
-          "sha256": "6a6aa50caca83708b43496d74df5d8eb6bcfa229c5748a7cc873837308d860b7",
+          "sha256": "61b38b1b1b181b5730561d54ca3cda76ba183f1b02f9d1e19a3572772c6bba2f",
           "sizeBytes": 34090
         },
         "boundary": "The source-identity report includes normalized parser-owned AST evidence, but it is not a durable execution report for tests/parser_ownership.test.js."
@@ -24952,7 +24952,7 @@
     {
       "code": "STALE_MTIME_FRESHNESS",
       "evidenceId": "clarity:canon-setup-blocked",
-      "message": "one or more required inputs were modified after report generatedAt; newest input artifacts/language_completion/gleam_ir-report.json is 1367805078 ms newer",
+      "message": "one or more required inputs were modified after report generatedAt; newest input artifacts/language_completion/gleam_ir-report.json is 1368730505 ms newer",
       "path": "artifacts/clarity_canon/canon-setup-blocked-report.json",
       "severity": "informational-warning"
     }
