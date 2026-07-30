@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "kind": "luascript:denali-release-evidence-bundle",
   "command": "node scripts/generate_release_evidence_bundle.js --require-ready",
-  "generatedAt": "2026-07-30T03:48:01.903Z",
+  "generatedAt": "2026-07-30T06:17:24.888Z",
   "environment": {
     "node": "v24.14.0",
     "npm": {
@@ -19,11 +19,11 @@
     "generatedBy": "scripts/generate_release_evidence_bundle.js",
     "package": {
       "name": "luascript",
-      "version": "0.1.0-beta.0",
+      "version": "1.0.1",
       "nodeEngine": ">=14.17.0",
-      "sha256": "c942dfb64ddf267968c3445f50cdd465787046649d0596bef2efe6a233c41079",
+      "sha256": "ce0ebdeae92443a2669a1d8bbb382a5cea5d56b15e3e328c5b0471915c129009",
       "lockfileVersion": 3,
-      "lockfileSha256": "1d93f7b91fe9901a3753c9ea44a77bb632619ebb073c475201d3e131736ab219"
+      "lockfileSha256": "8e77bb03c9b1e06c609035318ece6f91317e8d0dec9d2bb073cd48be45136e70"
     }
   },
   "policy": {
@@ -42,8 +42,8 @@
       "generatedAt",
       "contentIdentity"
     ],
-    "evidenceSetSha256": "781eccb70acd443b463c042f723fb0acab27af864cc629c2f01b9fc5fb5f8f2e",
-    "bundlePayloadSha256": "1d645f981127b69bf07a0faeaf926c26aee7a9c704093bb122ce6385a0ee02a4"
+    "evidenceSetSha256": "17ea78a51c78bdd749192d15477af803c92115005cd735715570f56f1ccaa174",
+    "bundlePayloadSha256": "416bcaef95798c5d69c8db80fef328b56d23d44c259007352f9ab62038d95a72"
   },
   "evidence": [
     {
@@ -72,11 +72,11 @@
       "executionReport": {
         "path": "artifacts/conformance/actual-programs-report.json",
         "exists": true,
-        "sha256": "e9a487cc534fc215d3b7ce2bec6b02854171c72f760c06e575e53ad6cb1d1875",
+        "sha256": "beb5dbb34f005f935f0e052b87b288bce0ccb0955322cc526a76539f5a36b542",
         "sizeBytes": 37294,
         "schemaVersion": 1,
         "kind": "luascript:actual-programs:repository-legacy",
-        "generatedAt": "2026-07-30T03:46:51.498Z",
+        "generatedAt": "2026-07-30T06:16:11.427Z",
         "declaredStatus": "passed",
         "summary": {
           "expectedCompileDiagnostic": 6,
@@ -749,14 +749,14 @@
         "report": {
           "path": "artifacts/clarity_canon/dogfood-report.json",
           "exists": true,
-          "sha256": "fbee46f44b13aaf123f655f9ebdad38d2e07be8b3a762a15d0f490c3f13c246b",
+          "sha256": "b8c4a4466d89ee8f4c62abf14a8953f66c0fc97042df5ca169b3cebd83bd72b9",
           "sizeBytes": 203742,
           "schemaVersion": 1,
           "kind": "clarity:dogfood",
-          "generatedAt": "2026-07-30T03:46:28.452Z",
+          "generatedAt": "2026-07-30T06:15:46.664Z",
           "declaredStatus": null,
           "summary": {
-            "elapsedMs": 22199,
+            "elapsedMs": 23704,
             "failed": 0,
             "passed": 123,
             "total": 123
@@ -1663,14 +1663,14 @@
       "report": {
         "path": "artifacts/clarity_canon/canon-report.json",
         "exists": true,
-        "sha256": "d242ff041ba0cfdb21866a1c58bc9d8274ecad59dafc0656654082b9f92c1231",
-        "sizeBytes": 201515,
+        "sha256": "83b6c9052021d5ef1c19dac58288ef45b311ae074929aa6c84166b6a5979ec6b",
+        "sizeBytes": 201506,
         "schemaVersion": 1,
         "kind": "clarity:canon",
-        "generatedAt": "2026-07-30T03:46:34.857Z",
+        "generatedAt": "2026-07-30T06:15:53.343Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 6124,
+          "elapsedMs": 6339,
           "failed": 0,
           "passed": 22,
           "total": 22
@@ -1695,8 +1695,8 @@
         {
           "path": "scripts/archive_audit.js",
           "exists": true,
-          "sha256": "16ef951bea22f5d0c4d176e9156aed5462983e04e081d01faa46202548fa19b6",
-          "sizeBytes": 8699
+          "sha256": "649d86106c8a0f9bddf20adef220e47a6876b70cdd72541c39ac7a375c37bf77",
+          "sizeBytes": 8713
         },
         {
           "path": "scripts/beta_readiness.js",
@@ -1829,12 +1829,12 @@
         "freshnessFallback": {
           "status": "verified-by-input-mtime",
           "reason": "report generatedAt is at or after the newest required input modification",
-          "reportGeneratedAt": "2026-07-30T03:46:34.857Z",
-          "reportFileModifiedAt": "2026-07-30T03:46:34.860Z",
+          "reportGeneratedAt": "2026-07-30T06:15:53.343Z",
+          "reportFileModifiedAt": "2026-07-30T06:15:53.346Z",
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
-            "path": "package.json",
-            "modifiedAt": "2026-07-30T02:32:57.169Z",
+            "path": "scripts/archive_audit.js",
+            "modifiedAt": "2026-07-30T05:36:22.975Z",
             "newerThanReportByMs": 0
           },
           "precisionToleranceMs": 1,
@@ -1867,8 +1867,8 @@
             "verify-javascript-optimization.js"
           ],
           "inputFiles": 382,
-          "inputContentSetSha256": "f40f42460513bbcc5388abb505df52f0d1b8a43ceb9feee1a9c7e47b79a36278",
-          "inputMetadataSetSha256": "20ccb6a0405f2deb7a7ccff49145fa7dfc7bdf83876e51277847c2be74edb8e8",
+          "inputContentSetSha256": "0017af5e8f8ad5651fcd0da7f1ea03a65cf17bc1d19639354e316c9d94a21585",
+          "inputMetadataSetSha256": "b4faab7d2b8450560f1ac62ce3725d7a32ce98fcf665e1d22ea7c18d28ec7ebe",
           "assurance": "The bundle hash-binds the current input content set, while freshness relies on local generatedAt/file-mtime ordering because the legacy report does not embed those hashes.",
           "missingInputs": []
         }
@@ -1914,8 +1914,8 @@
         {
           "path": "scripts/archive_audit.js",
           "exists": true,
-          "sha256": "16ef951bea22f5d0c4d176e9156aed5462983e04e081d01faa46202548fa19b6",
-          "sizeBytes": 8699
+          "sha256": "649d86106c8a0f9bddf20adef220e47a6876b70cdd72541c39ac7a375c37bf77",
+          "sizeBytes": 8713
         },
         {
           "path": "scripts/beta_readiness.js",
@@ -1998,9 +1998,9 @@
           "reportFileModifiedAt": "2026-07-14T10:17:59.167Z",
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
-            "path": "package.json",
-            "modifiedAt": "2026-07-30T02:32:57.169Z",
-            "newerThanReportByMs": 1354498006
+            "path": "scripts/archive_audit.js",
+            "modifiedAt": "2026-07-30T05:36:22.975Z",
+            "newerThanReportByMs": 1365503812
           },
           "precisionToleranceMs": 1,
           "inputRoots": [
@@ -2023,8 +2023,8 @@
             "tests/stub_operational_regression.test.js"
           ],
           "inputFiles": 374,
-          "inputContentSetSha256": "16c524dee4dde214fae961baf3ca62074d8fe2c2615ee144b10d51b47b442db9",
-          "inputMetadataSetSha256": "e31494a0bf33e6c91ccfe55b14db5254ede2d10d520c0c3fedb11bfb7355884d",
+          "inputContentSetSha256": "1eab75ce4d7760b65aa0b97e7cda4e654bbe737c3402e7e7bd60c803e3dbae93",
+          "inputMetadataSetSha256": "0c89e2852af45d913055c9dfbbfae770a3afb067a5fd0e73ee02b80c8a7a472b",
           "assurance": "The bundle hash-binds the current input content set, while freshness relies on local generatedAt/file-mtime ordering because the legacy report does not embed those hashes.",
           "missingInputs": []
         }
@@ -2106,9 +2106,9 @@
           "reportFileModifiedAt": "2026-07-14T10:18:29.322Z",
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
-            "path": "package.json",
-            "modifiedAt": "2026-07-30T02:32:57.169Z",
-            "newerThanReportByMs": 1354467849
+            "path": "src/ir/release_ir_surface_contract.js",
+            "modifiedAt": "2026-07-30T05:20:15.151Z",
+            "newerThanReportByMs": 1364505831
           },
           "precisionToleranceMs": 1,
           "inputRoots": [
@@ -2123,8 +2123,8 @@
             "tests/verify_phase_d_e.js"
           ],
           "inputFiles": 366,
-          "inputContentSetSha256": "5876907f7a42c42d2f7762da8e650fc290a93a81ecc259bff054a86ef1309f2a",
-          "inputMetadataSetSha256": "096e5701c586f60a377807dd0b5aef79fc8d210cfadb649c55320ffa7dc3ed3c",
+          "inputContentSetSha256": "50b479f41ef07058c2912360afb010fa02f2b41ea4ffee8d2b60e1e0609ef0f6",
+          "inputMetadataSetSha256": "0e486e5e8f7c9fee75be9cb0fd22c0b27e18d28008f2aac6d0609d3f93d491a3",
           "assurance": "The bundle hash-binds the current input content set, while freshness relies on local generatedAt/file-mtime ordering because the legacy report does not embed those hashes.",
           "missingInputs": []
         }
@@ -2138,14 +2138,14 @@
       "report": {
         "path": "artifacts/clarity_canon/canon-languages-report.json",
         "exists": true,
-        "sha256": "dc1bdac4f87debbdf840dbd1ce2ea5a7e6db8fe7f2cae2ba98e5afea92e6be98",
+        "sha256": "49aec21bdb551d9502bf727fec50f9506664aa739fb2e650f45507a4d5f37bb1",
         "sizeBytes": 2958,
         "schemaVersion": 1,
         "kind": "clarity:canon",
-        "generatedAt": "2026-07-30T03:46:36.129Z",
+        "generatedAt": "2026-07-30T06:15:54.598Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 174,
+          "elapsedMs": 158,
           "failed": 0,
           "passed": 2,
           "total": 2
@@ -2202,12 +2202,12 @@
         "freshnessFallback": {
           "status": "verified-by-input-mtime",
           "reason": "report generatedAt is at or after the newest required input modification",
-          "reportGeneratedAt": "2026-07-30T03:46:36.129Z",
-          "reportFileModifiedAt": "2026-07-30T03:46:36.130Z",
+          "reportGeneratedAt": "2026-07-30T06:15:54.598Z",
+          "reportFileModifiedAt": "2026-07-30T06:15:54.600Z",
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
             "path": "artifacts/language_completion/gleam_ir-report.json",
-            "modifiedAt": "2026-07-30T03:45:56.200Z",
+            "modifiedAt": "2026-07-30T06:15:13.163Z",
             "newerThanReportByMs": 0
           },
           "precisionToleranceMs": 1,
@@ -2224,8 +2224,8 @@
             "tests/language_completion"
           ],
           "inputFiles": 731,
-          "inputContentSetSha256": "a970a74f9da6ecae17d6df3285846b290b6ac3e0c5c9150cc37670071ec60e6a",
-          "inputMetadataSetSha256": "60a68e6636deeb46bca8a1f3e5f1b273d61f4641a401140739070b1f8dcdd590",
+          "inputContentSetSha256": "b98b4a7c8feb00a441c84d07fdf726fec14d1c9b4a72f56ed730117fd15400f3",
+          "inputMetadataSetSha256": "a79d818a2a3e9ce56fcaa472c5cc4420a9e3aedd30b124ce437cffc751c5ab35",
           "assurance": "The bundle hash-binds the current input content set, while freshness relies on local generatedAt/file-mtime ordering because the legacy report does not embed those hashes.",
           "missingInputs": []
         }
@@ -2343,9 +2343,9 @@
           "reportFileModifiedAt": "2026-07-14T10:17:54.017Z",
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
-            "path": "package.json",
-            "modifiedAt": "2026-07-30T02:32:57.169Z",
-            "newerThanReportByMs": 1354503154
+            "path": "src/ir/release_ir_surface_contract.js",
+            "modifiedAt": "2026-07-30T05:20:15.151Z",
+            "newerThanReportByMs": 1364541136
           },
           "precisionToleranceMs": 1,
           "inputRoots": [
@@ -2366,8 +2366,8 @@
             "verify-javascript-optimization.js"
           ],
           "inputFiles": 372,
-          "inputContentSetSha256": "d4d8cec5aa60d95d761acf99df614ac9b821698ecb316f70271b7411ab6b0251",
-          "inputMetadataSetSha256": "5c1c7753724aa17f5202a0e1ed0777628d312fa4b3d22f00b8c8000d5e0e1b39",
+          "inputContentSetSha256": "a0c54cf1c308415c9a387a3c6de74b23ea504fa281efddce57aca4bb59506bc5",
+          "inputMetadataSetSha256": "fb5c1ccd7a8cbf993cc18544a7140a91236c7901ad88e98dcce0ea75fbae6989",
           "assurance": "The bundle hash-binds the current input content set, while freshness relies on local generatedAt/file-mtime ordering because the legacy report does not embed those hashes.",
           "missingInputs": []
         }
@@ -2450,8 +2450,8 @@
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
             "path": "artifacts/language_completion/gleam_ir-report.json",
-            "modifiedAt": "2026-07-30T03:45:56.200Z",
-            "newerThanReportByMs": 1358848115
+            "modifiedAt": "2026-07-30T06:15:13.163Z",
+            "newerThanReportByMs": 1367805078
           },
           "precisionToleranceMs": 1,
           "inputRoots": [
@@ -2467,8 +2467,8 @@
             "tests/language_completion"
           ],
           "inputFiles": 731,
-          "inputContentSetSha256": "a970a74f9da6ecae17d6df3285846b290b6ac3e0c5c9150cc37670071ec60e6a",
-          "inputMetadataSetSha256": "60a68e6636deeb46bca8a1f3e5f1b273d61f4641a401140739070b1f8dcdd590",
+          "inputContentSetSha256": "b98b4a7c8feb00a441c84d07fdf726fec14d1c9b4a72f56ed730117fd15400f3",
+          "inputMetadataSetSha256": "a79d818a2a3e9ce56fcaa472c5cc4420a9e3aedd30b124ce437cffc751c5ab35",
           "assurance": "The bundle hash-binds the current input content set, while freshness relies on local generatedAt/file-mtime ordering because the legacy report does not embed those hashes.",
           "missingInputs": []
         }
@@ -2482,14 +2482,14 @@
       "report": {
         "path": "artifacts/clarity_canon/canon-super-report.json",
         "exists": true,
-        "sha256": "2033b9e41af4997992100dbdb326e2dc7a46a365ff74ea9390ed323c547708e3",
-        "sizeBytes": 19816,
+        "sha256": "fb62bfe0123f0c2d6d6da11c750896d93395b57bb89d6ba7eeec90fc7a160df0",
+        "sizeBytes": 19817,
         "schemaVersion": 1,
         "kind": "clarity:canon",
-        "generatedAt": "2026-07-30T03:46:35.548Z",
+        "generatedAt": "2026-07-30T06:15:54.047Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 269,
+          "elapsedMs": 265,
           "failed": 0,
           "passed": 3,
           "total": 3
@@ -2552,12 +2552,12 @@
         "freshnessFallback": {
           "status": "verified-by-input-mtime",
           "reason": "report generatedAt is at or after the newest required input modification",
-          "reportGeneratedAt": "2026-07-30T03:46:35.548Z",
-          "reportFileModifiedAt": "2026-07-30T03:46:35.550Z",
+          "reportGeneratedAt": "2026-07-30T06:15:54.047Z",
+          "reportFileModifiedAt": "2026-07-30T06:15:54.049Z",
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
-            "path": "package.json",
-            "modifiedAt": "2026-07-30T02:32:57.169Z",
+            "path": "src/ir/release_ir_surface_contract.js",
+            "modifiedAt": "2026-07-30T05:20:15.151Z",
             "newerThanReportByMs": 0
           },
           "precisionToleranceMs": 1,
@@ -2574,8 +2574,8 @@
             "tests/ruby_clarity_super_canon_verification.js"
           ],
           "inputFiles": 367,
-          "inputContentSetSha256": "812267d860e9377aa23ff141021570ff9ef8086019c20d4931b3f6edf24d479b",
-          "inputMetadataSetSha256": "73e3bd1b35e8da756c5fbfe609e155015331747817b86cecd1fce0addee42449",
+          "inputContentSetSha256": "73926ecad1a0a4886b6e3ee2ec3c83de490f51aba217ff7b4084f4183a0ad9bb",
+          "inputMetadataSetSha256": "8605122a7b07a53ce3c1c4c22173b5367505843e6dcefc93153b6766edf130d3",
           "assurance": "The bundle hash-binds the current input content set, while freshness relies on local generatedAt/file-mtime ordering because the legacy report does not embed those hashes.",
           "missingInputs": []
         }
@@ -2589,14 +2589,14 @@
       "report": {
         "path": "artifacts/clarity_canon/dogfood-report.json",
         "exists": true,
-        "sha256": "fbee46f44b13aaf123f655f9ebdad38d2e07be8b3a762a15d0f490c3f13c246b",
+        "sha256": "b8c4a4466d89ee8f4c62abf14a8953f66c0fc97042df5ca169b3cebd83bd72b9",
         "sizeBytes": 203742,
         "schemaVersion": 1,
         "kind": "clarity:dogfood",
-        "generatedAt": "2026-07-30T03:46:28.452Z",
+        "generatedAt": "2026-07-30T06:15:46.664Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 22199,
+          "elapsedMs": 23704,
           "failed": 0,
           "passed": 123,
           "total": 123
@@ -3379,12 +3379,12 @@
         "freshnessFallback": {
           "status": "verified-by-input-mtime",
           "reason": "report generatedAt is at or after the newest required input modification",
-          "reportGeneratedAt": "2026-07-30T03:46:28.452Z",
-          "reportFileModifiedAt": "2026-07-30T03:46:28.454Z",
+          "reportGeneratedAt": "2026-07-30T06:15:46.664Z",
+          "reportFileModifiedAt": "2026-07-30T06:15:46.667Z",
           "generatedAtAheadOfReportFileByMs": 0,
           "newestInput": {
-            "path": "package.json",
-            "modifiedAt": "2026-07-30T02:32:57.169Z",
+            "path": "src/ir/release_ir_surface_contract.js",
+            "modifiedAt": "2026-07-30T05:20:15.151Z",
             "newerThanReportByMs": 0
           },
           "precisionToleranceMs": 1,
@@ -3522,8 +3522,8 @@
             "tests/language_completion/fixtures/luascript/meta_verify_target_runtime_failure.ls"
           ],
           "inputFiles": 489,
-          "inputContentSetSha256": "fbbb53fe9ff3fcd089629bc41759df67f11271200b46b16cfda4b6845a980e47",
-          "inputMetadataSetSha256": "46bbd50af1381581894024ad3775234628829798367eee12a8f574c0ff76c535",
+          "inputContentSetSha256": "80caa49b838341d592c38e2e54289166f713127daef865ed54a982c6a7cd04f8",
+          "inputMetadataSetSha256": "5ead60396319e73c7ec4cb3459887fa1fa7405cc97e12557d9d2ce10cb825103",
           "assurance": "The bundle hash-binds the current input content set, while freshness relies on local generatedAt/file-mtime ordering because the legacy report does not embed those hashes.",
           "missingInputs": []
         }
@@ -3537,11 +3537,11 @@
       "report": {
         "path": "artifacts/conformance/canonical-ir-conformance-report.json",
         "exists": true,
-        "sha256": "b3ecdde42c62d8af4336a70ff0efb8e8bc415fc12dde3f7fcce93c0b516b2254",
+        "sha256": "4766570e8512cb084aeacfddd7bec8515ca6b14a5664493acd867e02a2ab356d",
         "sizeBytes": 29148,
         "schemaVersion": 1,
         "kind": "luascript:canonical-ir-conformance",
-        "generatedAt": "2026-07-30T03:46:54.572Z",
+        "generatedAt": "2026-07-30T06:16:14.707Z",
         "declaredStatus": null,
         "summary": {
           "expectedDiagnostics": 11,
@@ -3596,11 +3596,11 @@
       "report": {
         "path": "artifacts/conformance/denali-compatibility-matrix-report.json",
         "exists": true,
-        "sha256": "51533e90f5be1e9c824170379f340b3e66c82efed2a17dc41c3d029d156908ff",
-        "sizeBytes": 733730,
+        "sha256": "6734e39cc0e5c560446a1ec743a9a80bc3c8a0d777694d8ae1d54bb43220207b",
+        "sizeBytes": 733720,
         "schemaVersion": 1,
         "kind": "luascript:denali-compatibility-matrix",
-        "generatedAt": "2026-07-30T03:47:21.070Z",
+        "generatedAt": "2026-07-30T06:16:41.880Z",
         "declaredStatus": "PASS",
         "summary": {
           "failed": 0,
@@ -3643,234 +3643,234 @@
           },
           {
             "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
-            "expectedSha256": "6f0fef03eb3a54d0f68099381bdfcf9d43dc248d5d88b80623bbafedd66cfba5",
+            "expectedSha256": "8a193d2c4c2ed45f56cd85cb5987497948bd702286d163aaecefb4fef2adf86d",
             "locations": [
               "$.checks[86].detail.report",
               "$.releaseIr.reports[1].report"
             ],
             "status": "verified",
-            "actualSha256": "6f0fef03eb3a54d0f68099381bdfcf9d43dc248d5d88b80623bbafedd66cfba5",
-            "sizeBytes": 101406
+            "actualSha256": "8a193d2c4c2ed45f56cd85cb5987497948bd702286d163aaecefb4fef2adf86d",
+            "sizeBytes": 101286
           },
           {
             "path": "artifacts/conformance/public-api-runtime-package-report.json",
-            "expectedSha256": "100d90790fe70a13848caca844849aa3820f0d3850b96aca019ed487ad82581b",
+            "expectedSha256": "ec70bbe52c5222e7192c691a0ed82f3d3467fc3a1669111ec39b6590fad0f097",
             "locations": [
               "$.checks[72].detail.report",
               "$.packageBoundary.publicPackageReport.report"
             ],
             "status": "verified",
-            "actualSha256": "100d90790fe70a13848caca844849aa3820f0d3850b96aca019ed487ad82581b",
-            "sizeBytes": 169154
+            "actualSha256": "ec70bbe52c5222e7192c691a0ed82f3d3467fc3a1669111ec39b6590fad0f097",
+            "sizeBytes": 168967
           },
           {
             "path": "artifacts/conformance/schema-artifact-mapping-report.json",
-            "expectedSha256": "6976ee94381df0a0e1d0d002da3343f8060dc92d9cf94b5d225bf4d22fa5c7c3",
+            "expectedSha256": "9b4fc0ee2b8f921d932d91f4cc40465401ca62ee3447f0338c76f430130ac5d1",
             "locations": [
               "$.checks[85].detail.report",
               "$.releaseIr.reports[0].report"
             ],
             "status": "verified",
-            "actualSha256": "6976ee94381df0a0e1d0d002da3343f8060dc92d9cf94b5d225bf4d22fa5c7c3",
-            "sizeBytes": 84271
+            "actualSha256": "9b4fc0ee2b8f921d932d91f4cc40465401ca62ee3447f0338c76f430130ac5d1",
+            "sizeBytes": 84161
           },
           {
             "path": "artifacts/language_completion/c-report.json",
-            "expectedSha256": "d53a499de676015a7bb7ad4932773dbe154afc92803bd41dcd7c8b09fe95d7be",
+            "expectedSha256": "1f6bb29acb77d141e1fdc23c72f877dd57885d58f79745eeb21b6bbbcff9cb68",
             "locations": [
               "$.checks[40].detail.report",
               "$.nativeLanes[6].report"
             ],
             "status": "verified",
-            "actualSha256": "d53a499de676015a7bb7ad4932773dbe154afc92803bd41dcd7c8b09fe95d7be",
+            "actualSha256": "1f6bb29acb77d141e1fdc23c72f877dd57885d58f79745eeb21b6bbbcff9cb68",
             "sizeBytes": 22863
           },
           {
             "path": "artifacts/language_completion/cpp-report.json",
-            "expectedSha256": "5841cd996ac381bb76809e8fd34b2dd2a85c1d3f5af47317876d0776ddfab2ba",
+            "expectedSha256": "cf0f080701f4ee92ed36143485482b0b4a325e937e489677ee8e8d92bed83283",
             "locations": [
               "$.checks[43].detail.report",
               "$.nativeLanes[7].report"
             ],
             "status": "verified",
-            "actualSha256": "5841cd996ac381bb76809e8fd34b2dd2a85c1d3f5af47317876d0776ddfab2ba",
+            "actualSha256": "cf0f080701f4ee92ed36143485482b0b4a325e937e489677ee8e8d92bed83283",
             "sizeBytes": 24726
           },
           {
             "path": "artifacts/language_completion/csharp-report.json",
-            "expectedSha256": "f08e2b26696385e026ea16538217530f45101a94e26a52ae75df82f4097b6786",
+            "expectedSha256": "9d1cede93aac4edc0266dcab826bbde41bbe6a4149d4bf96417730825641c6ca",
             "locations": [
               "$.checks[37].detail.report",
               "$.nativeLanes[5].report"
             ],
             "status": "verified",
-            "actualSha256": "f08e2b26696385e026ea16538217530f45101a94e26a52ae75df82f4097b6786",
+            "actualSha256": "9d1cede93aac4edc0266dcab826bbde41bbe6a4149d4bf96417730825641c6ca",
             "sizeBytes": 22562
           },
           {
             "path": "artifacts/language_completion/dart-report.json",
-            "expectedSha256": "cadc125fec12ca5776b4fa2e8152c75a6a72a7e6177bd499b4e2990e13ad0e5c",
+            "expectedSha256": "5cfbc9e3144035db8a4f721f6559345ad46adc5363180a8ed68569f44fe0af92",
             "locations": [
               "$.checks[58].detail.report",
               "$.nativeLanes[12].report"
             ],
             "status": "verified",
-            "actualSha256": "cadc125fec12ca5776b4fa2e8152c75a6a72a7e6177bd499b4e2990e13ad0e5c",
+            "actualSha256": "5cfbc9e3144035db8a4f721f6559345ad46adc5363180a8ed68569f44fe0af92",
             "sizeBytes": 15891
           },
           {
             "path": "artifacts/language_completion/elm_native-report.json",
-            "expectedSha256": "22107e50768bdded0389fdb9f82779bf55852e6ce65f2aa6475a606c198735d6",
+            "expectedSha256": "291b90a81215bc02191ce6cae8370e3ef34f96742e120504c962d6fe4d1cc99c",
             "locations": [
               "$.checks[67].detail.report",
               "$.nativeLanes[15].report"
             ],
             "status": "verified",
-            "actualSha256": "22107e50768bdded0389fdb9f82779bf55852e6ce65f2aa6475a606c198735d6",
+            "actualSha256": "291b90a81215bc02191ce6cae8370e3ef34f96742e120504c962d6fe4d1cc99c",
             "sizeBytes": 15852
           },
           {
             "path": "artifacts/language_completion/gleam_native-report.json",
-            "expectedSha256": "e38e4f66b94b23144e01c171ba5625474e65a41c2e7d2895770f0740cf825f51",
+            "expectedSha256": "c212317e224cdb1c66a118f6cd500f5a472dbf711d5741830be412a5abdfecb2",
             "locations": [
               "$.checks[70].detail.report",
               "$.nativeLanes[16].report"
             ],
             "status": "verified",
-            "actualSha256": "e38e4f66b94b23144e01c171ba5625474e65a41c2e7d2895770f0740cf825f51",
+            "actualSha256": "c212317e224cdb1c66a118f6cd500f5a472dbf711d5741830be412a5abdfecb2",
             "sizeBytes": 16006
           },
           {
             "path": "artifacts/language_completion/go_native-report.json",
-            "expectedSha256": "b1b9445a90958e88aa52a9d3d5500b66b48f214611f827e7e7009a148fcc4d68",
+            "expectedSha256": "d2a73a5a03fd9486080b49e31b4e537dda8b3b897df45a43a19eaefffe3fd4c4",
             "locations": [
               "$.checks[61].detail.report",
               "$.nativeLanes[13].report"
             ],
             "status": "verified",
-            "actualSha256": "b1b9445a90958e88aa52a9d3d5500b66b48f214611f827e7e7009a148fcc4d68",
+            "actualSha256": "d2a73a5a03fd9486080b49e31b4e537dda8b3b897df45a43a19eaefffe3fd4c4",
             "sizeBytes": 15770
           },
           {
             "path": "artifacts/language_completion/java_native-report.json",
-            "expectedSha256": "6e7e19a82d3fcf09fd50979ef5d9d2bdfe7fce11c6e928a2d3004621593ef52b",
+            "expectedSha256": "c7fa77837f13243bcf2a445869465fa204afc40330aa4ad956a666bfecb3678d",
             "locations": [
               "$.checks[46].detail.report",
               "$.nativeLanes[8].report"
             ],
             "status": "verified",
-            "actualSha256": "6e7e19a82d3fcf09fd50979ef5d9d2bdfe7fce11c6e928a2d3004621593ef52b",
+            "actualSha256": "c7fa77837f13243bcf2a445869465fa204afc40330aa4ad956a666bfecb3678d",
             "sizeBytes": 9804
           },
           {
             "path": "artifacts/language_completion/javascript-report.json",
-            "expectedSha256": "f3a3bad69069c21f5889b8dd8e4cadd209ceb4bbf7054328049c3f8e77e9b334",
+            "expectedSha256": "1f03c2aa6b1dd351c53c8629bca52a3f5c828a4c3a290866b87dcc6a823b2f86",
             "locations": [
               "$.checks[22].detail.report",
               "$.nativeLanes[0].report"
             ],
             "status": "verified",
-            "actualSha256": "f3a3bad69069c21f5889b8dd8e4cadd209ceb4bbf7054328049c3f8e77e9b334",
+            "actualSha256": "1f03c2aa6b1dd351c53c8629bca52a3f5c828a4c3a290866b87dcc6a823b2f86",
             "sizeBytes": 20827
           },
           {
             "path": "artifacts/language_completion/kotlin_native-report.json",
-            "expectedSha256": "7759d7e07119fbea3d9fc834d9822f75a8c040112d146b1e89c2f9b0b105d5a6",
+            "expectedSha256": "637a59c89784dc83b7a8a2c903619d71f1f01ee51e9099ff01ea6c57bcd8475e",
             "locations": [
               "$.checks[64].detail.report",
               "$.nativeLanes[14].report"
             ],
             "status": "verified",
-            "actualSha256": "7759d7e07119fbea3d9fc834d9822f75a8c040112d146b1e89c2f9b0b105d5a6",
+            "actualSha256": "637a59c89784dc83b7a8a2c903619d71f1f01ee51e9099ff01ea6c57bcd8475e",
             "sizeBytes": 16379
           },
           {
             "path": "artifacts/language_completion/lua-report.json",
-            "expectedSha256": "851389014cd54442627b2c0489a18d54ec2354a17eb3d8dfe36d69244eb7340c",
+            "expectedSha256": "2b663a03c53edff9796ebc28df7017fe04c6b2a6a1639dc9637be59155c1e43a",
             "locations": [
               "$.checks[31].detail.report",
               "$.nativeLanes[3].report"
             ],
             "status": "verified",
-            "actualSha256": "851389014cd54442627b2c0489a18d54ec2354a17eb3d8dfe36d69244eb7340c",
+            "actualSha256": "2b663a03c53edff9796ebc28df7017fe04c6b2a6a1639dc9637be59155c1e43a",
             "sizeBytes": 14720
           },
           {
             "path": "artifacts/language_completion/luascript-report.json",
-            "expectedSha256": "46c767a85d5a13003d97cc1aa64b57624d5ebbbeb5af160459f74113b55c8b62",
+            "expectedSha256": "4ffd3ff3c19f7ce5d99b970f0ca74ea95ae78477666c97d5a8c870bd26f87078",
             "locations": [
               "$.checks[28].detail.report",
               "$.nativeLanes[2].report"
             ],
             "status": "verified",
-            "actualSha256": "46c767a85d5a13003d97cc1aa64b57624d5ebbbeb5af160459f74113b55c8b62",
+            "actualSha256": "4ffd3ff3c19f7ce5d99b970f0ca74ea95ae78477666c97d5a8c870bd26f87078",
             "sizeBytes": 70199
           },
           {
             "path": "artifacts/language_completion/php-report.json",
-            "expectedSha256": "797fea84784310030749a8b7f0ca792bb2958246db4d67e95d16c286c90d5011",
+            "expectedSha256": "cbb8387198cc918ba1abc679e0a57f597e09e457448c837483eadb655125bb41",
             "locations": [
               "$.checks[55].detail.report",
               "$.nativeLanes[11].report"
             ],
             "status": "verified",
-            "actualSha256": "797fea84784310030749a8b7f0ca792bb2958246db4d67e95d16c286c90d5011",
+            "actualSha256": "cbb8387198cc918ba1abc679e0a57f597e09e457448c837483eadb655125bb41",
             "sizeBytes": 18382
           },
           {
             "path": "artifacts/language_completion/python-report.json",
-            "expectedSha256": "f4b78d6477d6ccff93f43ab03ec8227e1e3c304460ce8bcd8cc1829404483098",
+            "expectedSha256": "9bb0d888128be018c67410eb8a746ff4db7835664960b9b6ae0e8baa516b6ab4",
             "locations": [
               "$.checks[34].detail.report",
               "$.nativeLanes[4].report"
             ],
             "status": "verified",
-            "actualSha256": "f4b78d6477d6ccff93f43ab03ec8227e1e3c304460ce8bcd8cc1829404483098",
-            "sizeBytes": 46374
+            "actualSha256": "9bb0d888128be018c67410eb8a746ff4db7835664960b9b6ae0e8baa516b6ab4",
+            "sizeBytes": 46375
           },
           {
             "path": "artifacts/language_completion/ruby-report.json",
-            "expectedSha256": "f4238512458709f5301def941cbe42d0443cc3659bf5cc979123940e7f324a5d",
+            "expectedSha256": "d20b9f498cc060e628f8ef52d06f874f777a4576d1bc20d2deb2bf07cd2c9a09",
             "locations": [
               "$.checks[52].detail.report",
               "$.nativeLanes[10].report"
             ],
             "status": "verified",
-            "actualSha256": "f4238512458709f5301def941cbe42d0443cc3659bf5cc979123940e7f324a5d",
+            "actualSha256": "d20b9f498cc060e628f8ef52d06f874f777a4576d1bc20d2deb2bf07cd2c9a09",
             "sizeBytes": 18181
           },
           {
             "path": "artifacts/language_completion/rust_native-report.json",
-            "expectedSha256": "2abf10f981d960ae7deb92a3371ad50b95cfbf83f02b17d95855a7b32fcdd2c4",
+            "expectedSha256": "1c79330b0d2dea58ab4173598337ee03ff6f59c48f04cd66f7aa01ee7d37ffab",
             "locations": [
               "$.checks[49].detail.report",
               "$.nativeLanes[9].report"
             ],
             "status": "verified",
-            "actualSha256": "2abf10f981d960ae7deb92a3371ad50b95cfbf83f02b17d95855a7b32fcdd2c4",
+            "actualSha256": "1c79330b0d2dea58ab4173598337ee03ff6f59c48f04cd66f7aa01ee7d37ffab",
             "sizeBytes": 8630
           },
           {
             "path": "artifacts/language_completion/typescript-report.json",
-            "expectedSha256": "239a46e223f4ad6927f0e7a45e99b39c1186b17450cde2a9d05e694158e3847e",
+            "expectedSha256": "45e71db513cc77355413e68f9ea2d0a1ea552586f04788da5180cf71c8e986d7",
             "locations": [
               "$.checks[25].detail.report",
               "$.nativeLanes[1].report"
             ],
             "status": "verified",
-            "actualSha256": "239a46e223f4ad6927f0e7a45e99b39c1186b17450cde2a9d05e694158e3847e",
+            "actualSha256": "45e71db513cc77355413e68f9ea2d0a1ea552586f04788da5180cf71c8e986d7",
             "sizeBytes": 15460
           },
           {
             "path": "CHANGELOG.md",
-            "expectedSha256": "4b61668c35c5a3a7ef1b6dfd4dfe0fb55cd13a1c51e859f17fe3faa70d4aba3f",
+            "expectedSha256": "bb85feae4dbbe222e5b259c4b88efcf1b8317543920f7a81bf6e2edac1fb9f77",
             "locations": [
               "$.boundManifests[8].collections[0].entries[9].sources[0]",
               "$.checks[82].detail.collections[0].entries[9].sources[0]"
             ],
             "status": "verified",
-            "actualSha256": "4b61668c35c5a3a7ef1b6dfd4dfe0fb55cd13a1c51e859f17fe3faa70d4aba3f",
-            "sizeBytes": 17787
+            "actualSha256": "bb85feae4dbbe222e5b259c4b88efcf1b8317543920f7a81bf6e2edac1fb9f77",
+            "sizeBytes": 18031
           },
           {
             "path": "docs/canonical_ir.schema.json",
@@ -3889,29 +3889,29 @@
           },
           {
             "path": "docs/INDEX.md",
-            "expectedSha256": "b71722213019c6f4d4f23627bf90dbde242b5b35ccc527bc38124d14feab59e9",
+            "expectedSha256": "06f55e1ba09a007d99c76b5f9404c26e054f96a87bdadd72934c4c545639fd57",
             "locations": [
               "$.boundManifests[8].collections[0].entries[10].sources[0]",
               "$.checks[82].detail.collections[0].entries[10].sources[0]"
             ],
             "status": "verified",
-            "actualSha256": "b71722213019c6f4d4f23627bf90dbde242b5b35ccc527bc38124d14feab59e9",
-            "sizeBytes": 9740
+            "actualSha256": "06f55e1ba09a007d99c76b5f9404c26e054f96a87bdadd72934c4c545639fd57",
+            "sizeBytes": 9724
           },
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.checks[73].detail.documents[1]",
               "$.documentation[1]"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.boundManifests[8].collections[0].entries[13].sources[0]",
               "$.checks[73].detail.documents[0]",
@@ -3919,30 +3919,30 @@
               "$.documentation[0]"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.checks[73].detail.documents[3]",
               "$.documentation[3]"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_MEGA_PLAN.md",
-            "expectedSha256": "9b7f490707e3a4ec4c04807a1c7698d5921dc4aaa325f3a5bfa9b688b3b3e84f",
+            "expectedSha256": "3680f215ae926134acd816c1f562e9b2bbc3ac3bae9115f3adb20b5fb65ed6e2",
             "locations": [
               "$.boundManifests[8].collections[0].entries[11].sources[0]",
               "$.checks[82].detail.collections[0].entries[11].sources[0]"
             ],
             "status": "verified",
-            "actualSha256": "9b7f490707e3a4ec4c04807a1c7698d5921dc4aaa325f3a5bfa9b688b3b3e84f",
-            "sizeBytes": 31102
+            "actualSha256": "3680f215ae926134acd816c1f562e9b2bbc3ac3bae9115f3adb20b5fb65ed6e2",
+            "sizeBytes": 31082
           },
           {
             "path": "docs/LUASCRIPT_META_LANGUAGE_V0.md",
@@ -3957,7 +3957,7 @@
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.checks[72].detail.inputEvidence[6]",
               "$.checks[73].detail.documents[2]",
@@ -3965,12 +3965,12 @@
               "$.packageBoundary.publicPackageReport.inputEvidence[6]"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md",
-            "expectedSha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7",
+            "expectedSha256": "558fcf74b4b0e7898bec93211c8275ea6b73a3baeeae5d5f367500a1c313db40",
             "locations": [
               "$.checks[85].detail.pathHashEvidence[2]",
               "$.checks[86].detail.pathHashEvidence[4]",
@@ -3978,8 +3978,8 @@
               "$.releaseIr.reports[1].pathHashEvidence[4]"
             ],
             "status": "verified",
-            "actualSha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7",
-            "sizeBytes": 7750
+            "actualSha256": "558fcf74b4b0e7898bec93211c8275ea6b73a3baeeae5d5f367500a1c313db40",
+            "sizeBytes": 7638
           },
           {
             "path": "docs/schema/1.0.0/canonical_ir.schema.json",
@@ -4357,7 +4357,7 @@
           },
           {
             "path": "package-lock.json",
-            "expectedSha256": "1d93f7b91fe9901a3753c9ea44a77bb632619ebb073c475201d3e131736ab219",
+            "expectedSha256": "8e77bb03c9b1e06c609035318ece6f91317e8d0dec9d2bb073cd48be45136e70",
             "locations": [
               "$.checks[72].detail.inputEvidence[1]",
               "$.checks[87].detail.sources[4]",
@@ -4365,12 +4365,12 @@
               "$.sourceEvidence[4]"
             ],
             "status": "verified",
-            "actualSha256": "1d93f7b91fe9901a3753c9ea44a77bb632619ebb073c475201d3e131736ab219",
-            "sizeBytes": 190571
+            "actualSha256": "8e77bb03c9b1e06c609035318ece6f91317e8d0dec9d2bb073cd48be45136e70",
+            "sizeBytes": 190557
           },
           {
             "path": "package.json",
-            "expectedSha256": "c942dfb64ddf267968c3445f50cdd465787046649d0596bef2efe6a233c41079",
+            "expectedSha256": "ce0ebdeae92443a2669a1d8bbb382a5cea5d56b15e3e328c5b0471915c129009",
             "locations": [
               "$.checks[72].detail.inputEvidence[0]",
               "$.checks[87].detail.sources[3]",
@@ -4378,41 +4378,41 @@
               "$.sourceEvidence[3]"
             ],
             "status": "verified",
-            "actualSha256": "c942dfb64ddf267968c3445f50cdd465787046649d0596bef2efe6a233c41079",
-            "sizeBytes": 28504
+            "actualSha256": "ce0ebdeae92443a2669a1d8bbb382a5cea5d56b15e3e328c5b0471915c129009",
+            "sizeBytes": 28633
           },
           {
             "path": "PROJECT_STATUS.md",
-            "expectedSha256": "d22f9b92a22fd651f61ef0c330a093fccf61cd1d148a3ce81acc401550d45680",
+            "expectedSha256": "8e2f5d70f1e80a1a200b6f55758a3515bfbee2343e08587dc6704b2557089b14",
             "locations": [
               "$.boundManifests[8].collections[0].entries[8].sources[0]",
               "$.checks[82].detail.collections[0].entries[8].sources[0]"
             ],
             "status": "verified",
-            "actualSha256": "d22f9b92a22fd651f61ef0c330a093fccf61cd1d148a3ce81acc401550d45680",
-            "sizeBytes": 47434
+            "actualSha256": "8e2f5d70f1e80a1a200b6f55758a3515bfbee2343e08587dc6704b2557089b14",
+            "sizeBytes": 46926
           },
           {
             "path": "README.md",
-            "expectedSha256": "b96ccd88f226e6209df48d22cbee841ffb058907639cad76b936a91250a32cb1",
+            "expectedSha256": "a2bf7361fa5866f83642f851d6d9debc181bb1612ddf6d3ff190fadd950a10d0",
             "locations": [
               "$.boundManifests[8].collections[0].entries[7].sources[0]",
               "$.checks[82].detail.collections[0].entries[7].sources[0]"
             ],
             "status": "verified",
-            "actualSha256": "b96ccd88f226e6209df48d22cbee841ffb058907639cad76b936a91250a32cb1",
-            "sizeBytes": 28886
+            "actualSha256": "a2bf7361fa5866f83642f851d6d9debc181bb1612ddf6d3ff190fadd950a10d0",
+            "sizeBytes": 28680
           },
           {
             "path": "scripts/archive_audit.js",
-            "expectedSha256": "16ef951bea22f5d0c4d176e9156aed5462983e04e081d01faa46202548fa19b6",
+            "expectedSha256": "649d86106c8a0f9bddf20adef220e47a6876b70cdd72541c39ac7a375c37bf77",
             "locations": [
               "$.boundManifests[6].collections[1].entries[21].sources[0]",
               "$.checks[80].detail.collections[1].entries[21].sources[0]"
             ],
             "status": "verified",
-            "actualSha256": "16ef951bea22f5d0c4d176e9156aed5462983e04e081d01faa46202548fa19b6",
-            "sizeBytes": 8699
+            "actualSha256": "649d86106c8a0f9bddf20adef220e47a6876b70cdd72541c39ac7a375c37bf77",
+            "sizeBytes": 8713
           },
           {
             "path": "scripts/beta_readiness.js",
@@ -4460,7 +4460,7 @@
           },
           {
             "path": "src/ir/release_ir_surface_contract.js",
-            "expectedSha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4",
+            "expectedSha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b",
             "locations": [
               "$.checks[84].detail.implementation",
               "$.checks[85].detail.pathHashEvidence[4]",
@@ -4470,8 +4470,8 @@
               "$.releaseIr.reports[1].pathHashEvidence[5]"
             ],
             "status": "verified",
-            "actualSha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4",
-            "sizeBytes": 5630
+            "actualSha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b",
+            "sizeBytes": 5625
           },
           {
             "path": "src/ir/schema_artifact_bridge.js",
@@ -5116,14 +5116,14 @@
           },
           {
             "path": "tests/compatibility/denali_compatibility_matrix.test.js",
-            "expectedSha256": "a9042c5c9531ac7555115945726549ed4029f63aa2e2b78a8786157b88c3040e",
+            "expectedSha256": "37bf23e06c1fb2361090eeaef58c8c22905a382eea3fd063d910d1fbe07e635e",
             "locations": [
               "$.checks[87].detail.sources[0]",
               "$.sourceEvidence[0]"
             ],
             "status": "verified",
-            "actualSha256": "a9042c5c9531ac7555115945726549ed4029f63aa2e2b78a8786157b88c3040e",
-            "sizeBytes": 60387
+            "actualSha256": "37bf23e06c1fb2361090eeaef58c8c22905a382eea3fd063d910d1fbe07e635e",
+            "sizeBytes": 60377
           },
           {
             "path": "tests/COMPREHENSIVE_VERIFICATION.js",
@@ -5138,14 +5138,14 @@
           },
           {
             "path": "tests/conformance/dual_surface_compatibility_bridge.test.js",
-            "expectedSha256": "1739f3aa135910d9b90d4cda59e3118e3e703181be164532db42b0ea957bb228",
+            "expectedSha256": "3999016a9461693c824ac2e478e4f390dd53889740dcb239f47960d391ce13af",
             "locations": [
               "$.checks[86].detail.pathHashEvidence[7]",
               "$.releaseIr.reports[1].pathHashEvidence[7]"
             ],
             "status": "verified",
-            "actualSha256": "1739f3aa135910d9b90d4cda59e3118e3e703181be164532db42b0ea957bb228",
-            "sizeBytes": 24600
+            "actualSha256": "3999016a9461693c824ac2e478e4f390dd53889740dcb239f47960d391ce13af",
+            "sizeBytes": 24595
           },
           {
             "path": "tests/conformance/manifest.json",
@@ -8637,14 +8637,14 @@
           },
           {
             "path": "tests/package/public_api_runtime_package_contract.test.js",
-            "expectedSha256": "7bfa392cb24fc44ffec8c186769e9b74fc1e7787f635af2f591cfbf3b61603f9",
+            "expectedSha256": "8d7735f1c62377dd3fd188bc1e889c6c798d0f251ba961368b87f549c560c555",
             "locations": [
               "$.checks[72].detail.inputEvidence[5]",
               "$.packageBoundary.publicPackageReport.inputEvidence[5]"
             ],
             "status": "verified",
-            "actualSha256": "7bfa392cb24fc44ffec8c186769e9b74fc1e7787f635af2f591cfbf3b61603f9",
-            "sizeBytes": 40370
+            "actualSha256": "8d7735f1c62377dd3fd188bc1e889c6c798d0f251ba961368b87f549c560c555",
+            "sizeBytes": 40444
           },
           {
             "path": "tests/parser_ownership.test.js",
@@ -8768,11 +8768,11 @@
       "report": {
         "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
         "exists": true,
-        "sha256": "6f0fef03eb3a54d0f68099381bdfcf9d43dc248d5d88b80623bbafedd66cfba5",
-        "sizeBytes": 101406,
+        "sha256": "8a193d2c4c2ed45f56cd85cb5987497948bd702286d163aaecefb4fef2adf86d",
+        "sizeBytes": 101286,
         "schemaVersion": 1,
         "kind": "luascript:dual-surface-compatibility-bridge",
-        "generatedAt": "2026-07-30T03:46:57.221Z",
+        "generatedAt": "2026-07-30T06:16:17.448Z",
         "declaredStatus": null,
         "summary": {
           "bridgeCompatibleDerivedArtifacts": 21,
@@ -8889,13 +8889,13 @@
           },
           {
             "path": "docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md",
-            "expectedSha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7",
+            "expectedSha256": "558fcf74b4b0e7898bec93211c8275ea6b73a3baeeae5d5f367500a1c313db40",
             "locations": [
               "$.governingContract"
             ],
             "status": "verified",
-            "actualSha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7",
-            "sizeBytes": 7750
+            "actualSha256": "558fcf74b4b0e7898bec93211c8275ea6b73a3baeeae5d5f367500a1c313db40",
+            "sizeBytes": 7638
           },
           {
             "path": "docs/schema/1.0.0/canonical_ir.schema.json",
@@ -8919,13 +8919,13 @@
           },
           {
             "path": "src/ir/release_ir_surface_contract.js",
-            "expectedSha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4",
+            "expectedSha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b",
             "locations": [
               "$.implementationEvidence[0]"
             ],
             "status": "verified",
-            "actualSha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4",
-            "sizeBytes": 5630
+            "actualSha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b",
+            "sizeBytes": 5625
           },
           {
             "path": "src/ir/schema_artifact_bridge.js",
@@ -8949,13 +8949,13 @@
           },
           {
             "path": "tests/conformance/dual_surface_compatibility_bridge.test.js",
-            "expectedSha256": "1739f3aa135910d9b90d4cda59e3118e3e703181be164532db42b0ea957bb228",
+            "expectedSha256": "3999016a9461693c824ac2e478e4f390dd53889740dcb239f47960d391ce13af",
             "locations": [
               "$.implementationEvidence[2]"
             ],
             "status": "verified",
-            "actualSha256": "1739f3aa135910d9b90d4cda59e3118e3e703181be164532db42b0ea957bb228",
-            "sizeBytes": 24600
+            "actualSha256": "3999016a9461693c824ac2e478e4f390dd53889740dcb239f47960d391ce13af",
+            "sizeBytes": 24595
           },
           {
             "path": "tests/conformance/manifest.json",
@@ -8979,11 +8979,11 @@
       "report": {
         "path": "artifacts/edge_matrix/edge-case-matrix-report.json",
         "exists": true,
-        "sha256": "b573a85885eef5021fc41b46180534e9aa7066119b2793845c652e6e7699d60e",
+        "sha256": "d479822ed4102ef0b0dd5ac955678afd4a231572363ef12b63436f8abb4c8ed3",
         "sizeBytes": 58144,
         "schemaVersion": 1,
         "kind": "luascript:edge-case-matrix",
-        "generatedAt": "2026-07-30T03:47:04.369Z",
+        "generatedAt": "2026-07-30T06:16:25.053Z",
         "declaredStatus": null,
         "summary": {
           "categoryCounts": {
@@ -9047,11 +9047,11 @@
       "report": {
         "path": "artifacts/conformance/public-api-runtime-package-report.json",
         "exists": true,
-        "sha256": "100d90790fe70a13848caca844849aa3820f0d3850b96aca019ed487ad82581b",
-        "sizeBytes": 169154,
+        "sha256": "ec70bbe52c5222e7192c691a0ed82f3d3467fc3a1669111ec39b6590fad0f097",
+        "sizeBytes": 168967,
         "schemaVersion": 1,
         "kind": "luascript:public-api-runtime-package-contract",
-        "generatedAt": "2026-07-30T03:46:05.928Z",
+        "generatedAt": "2026-07-30T06:15:22.540Z",
         "declaredStatus": null,
         "summary": {
           "failed": 0,
@@ -9093,13 +9093,13 @@
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.inputs.contract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "examples/package/minimal-system.cjs",
@@ -9137,23 +9137,23 @@
           },
           {
             "path": "package-lock.json",
-            "expectedSha256": "1d93f7b91fe9901a3753c9ea44a77bb632619ebb073c475201d3e131736ab219",
+            "expectedSha256": "8e77bb03c9b1e06c609035318ece6f91317e8d0dec9d2bb073cd48be45136e70",
             "locations": [
               "$.inputs.packageLock"
             ],
             "status": "verified",
-            "actualSha256": "1d93f7b91fe9901a3753c9ea44a77bb632619ebb073c475201d3e131736ab219",
-            "sizeBytes": 190571
+            "actualSha256": "8e77bb03c9b1e06c609035318ece6f91317e8d0dec9d2bb073cd48be45136e70",
+            "sizeBytes": 190557
           },
           {
             "path": "package.json",
-            "expectedSha256": "c942dfb64ddf267968c3445f50cdd465787046649d0596bef2efe6a233c41079",
+            "expectedSha256": "ce0ebdeae92443a2669a1d8bbb382a5cea5d56b15e3e328c5b0471915c129009",
             "locations": [
               "$.inputs.packageJson"
             ],
             "status": "verified",
-            "actualSha256": "c942dfb64ddf267968c3445f50cdd465787046649d0596bef2efe6a233c41079",
-            "sizeBytes": 28504
+            "actualSha256": "ce0ebdeae92443a2669a1d8bbb382a5cea5d56b15e3e328c5b0471915c129009",
+            "sizeBytes": 28633
           },
           {
             "path": "src/.npmignore",
@@ -9177,13 +9177,13 @@
           },
           {
             "path": "tests/package/public_api_runtime_package_contract.test.js",
-            "expectedSha256": "7bfa392cb24fc44ffec8c186769e9b74fc1e7787f635af2f591cfbf3b61603f9",
+            "expectedSha256": "8d7735f1c62377dd3fd188bc1e889c6c798d0f251ba961368b87f549c560c555",
             "locations": [
               "$.inputs.harness"
             ],
             "status": "verified",
-            "actualSha256": "7bfa392cb24fc44ffec8c186769e9b74fc1e7787f635af2f591cfbf3b61603f9",
-            "sizeBytes": 40370
+            "actualSha256": "8d7735f1c62377dd3fd188bc1e889c6c798d0f251ba961368b87f549c560c555",
+            "sizeBytes": 40444
           }
         ],
         "freshnessFallback": null
@@ -9197,11 +9197,11 @@
       "report": {
         "path": "artifacts/conformance/roundtrip-probe-report.json",
         "exists": true,
-        "sha256": "37922a32efd6b2185d286ae82c5e327abfa43b20a4aea1e2bb9b61e071efffd0",
+        "sha256": "24ffff2c483ec70c69c236996f1a90c6e02d587bfb73efd8cc61eaf715227ff6",
         "sizeBytes": 13983,
         "schemaVersion": 1,
         "kind": "luascript:roundtrip-probe",
-        "generatedAt": "2026-07-30T03:47:05.581Z",
+        "generatedAt": "2026-07-30T06:16:26.520Z",
         "declaredStatus": null,
         "summary": {
           "failed": 0,
@@ -9256,11 +9256,11 @@
       "report": {
         "path": "artifacts/conformance/schema-artifact-mapping-report.json",
         "exists": true,
-        "sha256": "6976ee94381df0a0e1d0d002da3343f8060dc92d9cf94b5d225bf4d22fa5c7c3",
-        "sizeBytes": 84271,
+        "sha256": "9b4fc0ee2b8f921d932d91f4cc40465401ca62ee3447f0338c76f430130ac5d1",
+        "sizeBytes": 84161,
         "schemaVersion": 1,
         "kind": "luascript:schema-artifact-mapping",
-        "generatedAt": "2026-07-30T03:46:55.770Z",
+        "generatedAt": "2026-07-30T06:16:16.078Z",
         "declaredStatus": null,
         "summary": {
           "expectedDiagnostics": 11,
@@ -9351,13 +9351,13 @@
           },
           {
             "path": "docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md",
-            "expectedSha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7",
+            "expectedSha256": "558fcf74b4b0e7898bec93211c8275ea6b73a3baeeae5d5f367500a1c313db40",
             "locations": [
               "$.governingContract"
             ],
             "status": "verified",
-            "actualSha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7",
-            "sizeBytes": 7750
+            "actualSha256": "558fcf74b4b0e7898bec93211c8275ea6b73a3baeeae5d5f367500a1c313db40",
+            "sizeBytes": 7638
           },
           {
             "path": "src/compilers/core-language-bridge.js",
@@ -9371,13 +9371,13 @@
           },
           {
             "path": "src/ir/release_ir_surface_contract.js",
-            "expectedSha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4",
+            "expectedSha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b",
             "locations": [
               "$.implementationEvidence[1]"
             ],
             "status": "verified",
-            "actualSha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4",
-            "sizeBytes": 5630
+            "actualSha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b",
+            "sizeBytes": 5625
           },
           {
             "path": "src/ir/schema_artifact_bridge.js",
@@ -9421,11 +9421,11 @@
       "report": {
         "path": "artifacts/conformance/source-identity-probe-report.json",
         "exists": true,
-        "sha256": "7bd8d604b07d419bdf5ee32e45616beb908d94c154b96cd1c55acd54d9f5f3eb",
+        "sha256": "6a6aa50caca83708b43496d74df5d8eb6bcfa229c5748a7cc873837308d860b7",
         "sizeBytes": 34090,
         "schemaVersion": 1,
         "kind": "luascript:source-identity-probe",
-        "generatedAt": "2026-07-30T03:47:09.841Z",
+        "generatedAt": "2026-07-30T06:16:30.385Z",
         "declaredStatus": null,
         "summary": {
           "broadSemanticEquivalence": 0,
@@ -9636,11 +9636,11 @@
       "report": {
         "path": "artifacts/conformance/unsupported-diagnostics-report.json",
         "exists": true,
-        "sha256": "2b23ac3fc181c6e77ca78080956014b16d1a72326271081f2a053de7fb45e30e",
+        "sha256": "afb2c25d8bcfc546e0dae21b3de140c1752986f1669aac56153f3ba9eec6013a",
         "sizeBytes": 12361,
         "schemaVersion": 1,
         "kind": "luascript:unsupported-diagnostics",
-        "generatedAt": "2026-07-30T03:47:38.959Z",
+        "generatedAt": "2026-07-30T06:17:00.540Z",
         "declaredStatus": null,
         "summary": {
           "categories": [
@@ -9701,14 +9701,14 @@
       "report": {
         "path": "artifacts/language_completion/c-report.json",
         "exists": true,
-        "sha256": "d53a499de676015a7bb7ad4932773dbe154afc92803bd41dcd7c8b09fe95d7be",
+        "sha256": "1f6bb29acb77d141e1fdc23c72f877dd57885d58f79745eeb21b6bbbcff9cb68",
         "sizeBytes": 22863,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:37:52.445Z",
+        "generatedAt": "2026-07-30T06:07:02.522Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 27321,
+          "elapsedMs": 29003,
           "failed": 0,
           "passed": 20,
           "total": 20
@@ -9745,43 +9745,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -10320,14 +10320,14 @@
       "report": {
         "path": "artifacts/language_completion/cpp-report.json",
         "exists": true,
-        "sha256": "5841cd996ac381bb76809e8fd34b2dd2a85c1d3f5af47317876d0776ddfab2ba",
+        "sha256": "cf0f080701f4ee92ed36143485482b0b4a325e937e489677ee8e8d92bed83283",
         "sizeBytes": 24726,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:38:33.517Z",
+        "generatedAt": "2026-07-30T06:07:49.324Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 40378,
+          "elapsedMs": 46029,
           "failed": 0,
           "passed": 22,
           "total": 22
@@ -10364,43 +10364,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -10961,14 +10961,14 @@
       "report": {
         "path": "artifacts/language_completion/csharp-report.json",
         "exists": true,
-        "sha256": "f08e2b26696385e026ea16538217530f45101a94e26a52ae75df82f4097b6786",
+        "sha256": "9d1cede93aac4edc0266dcab826bbde41bbe6a4149d4bf96417730825641c6ca",
         "sizeBytes": 22562,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:37:24.473Z",
+        "generatedAt": "2026-07-30T06:06:32.718Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 69194,
+          "elapsedMs": 64986,
           "failed": 0,
           "passed": 20,
           "total": 20
@@ -11005,43 +11005,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -11580,14 +11580,14 @@
       "report": {
         "path": "artifacts/language_completion/dart-report.json",
         "exists": true,
-        "sha256": "cadc125fec12ca5776b4fa2e8152c75a6a72a7e6177bd499b4e2990e13ad0e5c",
+        "sha256": "5cfbc9e3144035db8a4f721f6559345ad46adc5363180a8ed68569f44fe0af92",
         "sizeBytes": 15891,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:40:17.305Z",
+        "generatedAt": "2026-07-30T06:09:34.037Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 25945,
+          "elapsedMs": 23729,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -11624,43 +11624,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -12100,14 +12100,14 @@
       "report": {
         "path": "artifacts/language_completion/dart_ir-report.json",
         "exists": true,
-        "sha256": "45093be959627a002c2c515f7785122ce5ad1e0633ce165a5d3c62d0752d26fb",
+        "sha256": "6cc1699a2e09754370e18d05b39c432988170cbf893a28991673d511a9825b2b",
         "sizeBytes": 15569,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:44:55.925Z",
+        "generatedAt": "2026-07-30T06:14:13.691Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 23053,
+          "elapsedMs": 20827,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -12144,43 +12144,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -12620,14 +12620,14 @@
       "report": {
         "path": "artifacts/language_completion/elm_ir-report.json",
         "exists": true,
-        "sha256": "e2cbeca93d3c82c2ee6f699d94c624df992612d9c9170367946a24f488b6f190",
+        "sha256": "52f0c233234b830205329c72a65b141027a5b0c0515a1bb852f2b7300ebb9af4",
         "sizeBytes": 15603,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:45:37.807Z",
+        "generatedAt": "2026-07-30T06:14:54.091Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 18265,
+          "elapsedMs": 18091,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -12664,43 +12664,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -13140,14 +13140,14 @@
       "report": {
         "path": "artifacts/language_completion/elm_native-report.json",
         "exists": true,
-        "sha256": "22107e50768bdded0389fdb9f82779bf55852e6ce65f2aa6475a606c198735d6",
+        "sha256": "291b90a81215bc02191ce6cae8370e3ef34f96742e120504c962d6fe4d1cc99c",
         "sizeBytes": 15852,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:42:02.337Z",
+        "generatedAt": "2026-07-30T06:11:22.068Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 21326,
+          "elapsedMs": 23336,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -13184,43 +13184,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -13660,14 +13660,14 @@
       "report": {
         "path": "artifacts/language_completion/gleam_ir-report.json",
         "exists": true,
-        "sha256": "59d1bd1975d68e7da9ccf1dff9285be4636da40aa01c9d5c7f9f7bca76e0974b",
+        "sha256": "94e69f5f19dfcf4af83e5947a5e925eb1564465d61ba31d85e8f373e2e1b4672",
         "sizeBytes": 15747,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:45:56.000Z",
+        "generatedAt": "2026-07-30T06:15:12.929Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 17514,
+          "elapsedMs": 18157,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -13704,43 +13704,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -14180,14 +14180,14 @@
       "report": {
         "path": "artifacts/language_completion/gleam_native-report.json",
         "exists": true,
-        "sha256": "e38e4f66b94b23144e01c171ba5625474e65a41c2e7d2895770f0740cf825f51",
+        "sha256": "c212317e224cdb1c66a118f6cd500f5a472dbf711d5741830be412a5abdfecb2",
         "sizeBytes": 16006,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:42:36.179Z",
+        "generatedAt": "2026-07-30T06:11:58.563Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 33183,
+          "elapsedMs": 35657,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -14224,43 +14224,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -14700,14 +14700,14 @@
       "report": {
         "path": "artifacts/language_completion/go-report.json",
         "exists": true,
-        "sha256": "fe380820dca3eec52189ef155f7b8c8ba38d7f2cfd984b32ef5ceeffd3c05336",
+        "sha256": "86aa610753d81f0d7b869214c5ec453910b75f992bd571748441d3c3d3309b30",
         "sizeBytes": 15507,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:42:54.370Z",
+        "generatedAt": "2026-07-30T06:12:16.499Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 17177,
+          "elapsedMs": 16839,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -14744,43 +14744,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -15220,14 +15220,14 @@
       "report": {
         "path": "artifacts/language_completion/go_native-report.json",
         "exists": true,
-        "sha256": "b1b9445a90958e88aa52a9d3d5500b66b48f214611f827e7e7009a148fcc4d68",
+        "sha256": "d2a73a5a03fd9486080b49e31b4e537dda8b3b897df45a43a19eaefffe3fd4c4",
         "sizeBytes": 15770,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:40:45.041Z",
+        "generatedAt": "2026-07-30T06:09:59.628Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 27153,
+          "elapsedMs": 24898,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -15264,43 +15264,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -15740,14 +15740,14 @@
       "report": {
         "path": "artifacts/language_completion/java-report.json",
         "exists": true,
-        "sha256": "67092be29ffaae0b19116a4937172cdc27374bccfa58c371922b2fa3c02c2106",
+        "sha256": "f19635780dcc1d8914b6e2b68925a40087a8646562b11760899a6476c1984f49",
         "sizeBytes": 17272,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:45:18.852Z",
+        "generatedAt": "2026-07-30T06:14:35.229Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 22175,
+          "elapsedMs": 20778,
           "failed": 0,
           "passed": 13,
           "total": 13
@@ -15784,43 +15784,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -16282,14 +16282,14 @@
       "report": {
         "path": "artifacts/language_completion/java_native-report.json",
         "exists": true,
-        "sha256": "6e7e19a82d3fcf09fd50979ef5d9d2bdfe7fce11c6e928a2d3004621593ef52b",
+        "sha256": "c7fa77837f13243bcf2a445869465fa204afc40330aa4ad956a666bfecb3678d",
         "sizeBytes": 9804,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:38:45.236Z",
+        "generatedAt": "2026-07-30T06:08:03.455Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 11418,
+          "elapsedMs": 13678,
           "failed": 0,
           "passed": 3,
           "total": 3
@@ -16326,43 +16326,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -16714,14 +16714,14 @@
       "report": {
         "path": "artifacts/language_completion/javascript-report.json",
         "exists": true,
-        "sha256": "f3a3bad69069c21f5889b8dd8e4cadd209ceb4bbf7054328049c3f8e77e9b334",
+        "sha256": "1f03c2aa6b1dd351c53c8629bca52a3f5c828a4c3a290866b87dcc6a823b2f86",
         "sizeBytes": 20827,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:35:10.559Z",
+        "generatedAt": "2026-07-30T06:04:12.965Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 3933,
+          "elapsedMs": 4500,
           "failed": 0,
           "passed": 18,
           "total": 18
@@ -16758,43 +16758,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -17311,14 +17311,14 @@
       "report": {
         "path": "artifacts/language_completion/kotlin-report.json",
         "exists": true,
-        "sha256": "37d1dd2dd3b929eae10635dd53bc1cf50c2dc8cd266aec91d47f047b6ede013d",
+        "sha256": "3c9481618cda915016580b3511896ec33b629a71d71f90207584612bd663ba1c",
         "sizeBytes": 15655,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:43:36.452Z",
+        "generatedAt": "2026-07-30T06:12:57.103Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 19350,
+          "elapsedMs": 18515,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -17355,43 +17355,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -17831,14 +17831,14 @@
       "report": {
         "path": "artifacts/language_completion/kotlin_native-report.json",
         "exists": true,
-        "sha256": "7759d7e07119fbea3d9fc834d9822f75a8c040112d146b1e89c2f9b0b105d5a6",
+        "sha256": "637a59c89784dc83b7a8a2c903619d71f1f01ee51e9099ff01ea6c57bcd8475e",
         "sizeBytes": 16379,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:41:37.889Z",
+        "generatedAt": "2026-07-30T06:10:55.372Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 54591,
+          "elapsedMs": 57640,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -17875,43 +17875,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -18351,14 +18351,14 @@
       "report": {
         "path": "artifacts/language_completion/lua-report.json",
         "exists": true,
-        "sha256": "851389014cd54442627b2c0489a18d54ec2354a17eb3d8dfe36d69244eb7340c",
+        "sha256": "2b663a03c53edff9796ebc28df7017fe04c6b2a6a1639dc9637be59155c1e43a",
         "sizeBytes": 14720,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:36:00.573Z",
+        "generatedAt": "2026-07-30T06:05:11.118Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 3099,
+          "elapsedMs": 3714,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -18395,43 +18395,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -18871,14 +18871,14 @@
       "report": {
         "path": "artifacts/language_completion/luascript-report.json",
         "exists": true,
-        "sha256": "46c767a85d5a13003d97cc1aa64b57624d5ebbbeb5af160459f74113b55c8b62",
+        "sha256": "4ffd3ff3c19f7ce5d99b970f0ca74ea95ae78477666c97d5a8c870bd26f87078",
         "sizeBytes": 70199,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:35:34.300Z",
+        "generatedAt": "2026-07-30T06:04:39.858Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 19258,
+          "elapsedMs": 22205,
           "failed": 0,
           "passed": 77,
           "total": 77
@@ -18915,43 +18915,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -20117,14 +20117,14 @@
       "report": {
         "path": "artifacts/language_completion/php-report.json",
         "exists": true,
-        "sha256": "797fea84784310030749a8b7f0ca792bb2958246db4d67e95d16c286c90d5011",
+        "sha256": "cbb8387198cc918ba1abc679e0a57f597e09e457448c837483eadb655125bb41",
         "sizeBytes": 18382,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:39:50.649Z",
+        "generatedAt": "2026-07-30T06:09:09.492Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 28853,
+          "elapsedMs": 27621,
           "failed": 0,
           "passed": 14,
           "total": 14
@@ -20161,43 +20161,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -20670,14 +20670,14 @@
       "report": {
         "path": "artifacts/language_completion/php_ir-report.json",
         "exists": true,
-        "sha256": "450a0643921551a3c44764f0414ddb0dcc10a8a790693853df0cc26c99dc6d93",
+        "sha256": "0c29af1c8ba33fc00cae4732a2d74990fdc91800f8353e773a9cbca8e25a98e9",
         "sizeBytes": 17902,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:44:31.814Z",
+        "generatedAt": "2026-07-30T06:13:52.098Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 27596,
+          "elapsedMs": 26824,
           "failed": 0,
           "passed": 14,
           "total": 14
@@ -20714,43 +20714,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -21223,14 +21223,14 @@
       "report": {
         "path": "artifacts/language_completion/python-report.json",
         "exists": true,
-        "sha256": "f4b78d6477d6ccff93f43ab03ec8227e1e3c304460ce8bcd8cc1829404483098",
-        "sizeBytes": 46374,
+        "sha256": "9bb0d888128be018c67410eb8a746ff4db7835664960b9b6ae0e8baa516b6ab4",
+        "sizeBytes": 46375,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:36:14.735Z",
+        "generatedAt": "2026-07-30T06:05:27.180Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 8677,
+          "elapsedMs": 9925,
           "failed": 0,
           "passed": 50,
           "total": 50
@@ -21267,43 +21267,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -22172,14 +22172,14 @@
       "report": {
         "path": "artifacts/language_completion/ruby-report.json",
         "exists": true,
-        "sha256": "f4238512458709f5301def941cbe42d0443cc3659bf5cc979123940e7f324a5d",
+        "sha256": "d20b9f498cc060e628f8ef52d06f874f777a4576d1bc20d2deb2bf07cd2c9a09",
         "sizeBytes": 18181,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:39:21.096Z",
+        "generatedAt": "2026-07-30T06:08:41.229Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 26618,
+          "elapsedMs": 28218,
           "failed": 0,
           "passed": 14,
           "total": 14
@@ -22216,43 +22216,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -22725,14 +22725,14 @@
       "report": {
         "path": "artifacts/language_completion/ruby_ir-report.json",
         "exists": true,
-        "sha256": "a17e5b0274762b6ef3d1eb675f85cf8f12a0ce103a711c3ca7da4ee24a2e9d36",
+        "sha256": "2e0f84678d0d54060c70d1954b282e12517718b7bf5f61391cac3f3c95072e24",
         "sizeBytes": 17875,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:44:03.677Z",
+        "generatedAt": "2026-07-30T06:13:24.592Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 26576,
+          "elapsedMs": 26811,
           "failed": 0,
           "passed": 14,
           "total": 14
@@ -22769,43 +22769,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -23278,14 +23278,14 @@
       "report": {
         "path": "artifacts/language_completion/rust-report.json",
         "exists": true,
-        "sha256": "486d538611b64f21fc75ce0832de049b391c1e1643d868c90dbc149be7f08b97",
+        "sha256": "b2e387409a4c53bb20326fe4eeca94ae901953c9362be7475d55fc438224c8f3",
         "sizeBytes": 15553,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:43:16.409Z",
+        "generatedAt": "2026-07-30T06:12:37.851Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 21413,
+          "elapsedMs": 20532,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -23322,43 +23322,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -23798,14 +23798,14 @@
       "report": {
         "path": "artifacts/language_completion/rust_native-report.json",
         "exists": true,
-        "sha256": "2abf10f981d960ae7deb92a3371ad50b95cfbf83f02b17d95855a7b32fcdd2c4",
+        "sha256": "1c79330b0d2dea58ab4173598337ee03ff6f59c48f04cd66f7aa01ee7d37ffab",
         "sizeBytes": 8630,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:38:53.828Z",
+        "generatedAt": "2026-07-30T06:08:12.077Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 7700,
+          "elapsedMs": 7630,
           "failed": 0,
           "passed": 2,
           "total": 2
@@ -23842,43 +23842,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -24219,14 +24219,14 @@
       "report": {
         "path": "artifacts/language_completion/typescript-report.json",
         "exists": true,
-        "sha256": "239a46e223f4ad6927f0e7a45e99b39c1186b17450cde2a9d05e694158e3847e",
+        "sha256": "45e71db513cc77355413e68f9ea2d0a1ea552586f04788da5180cf71c8e986d7",
         "sizeBytes": 15460,
         "schemaVersion": 2,
         "kind": "language:bidirectional",
-        "generatedAt": "2026-07-30T03:35:14.235Z",
+        "generatedAt": "2026-07-30T06:04:16.919Z",
         "declaredStatus": null,
         "summary": {
-          "elapsedMs": 2853,
+          "elapsedMs": 3209,
           "failed": 0,
           "passed": 11,
           "total": 11
@@ -24263,43 +24263,43 @@
         "references": [
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "expectedSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
+            "expectedSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
             "locations": [
               "$.supportMatrixTraceability.completionRules"
             ],
             "status": "verified",
-            "actualSha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "actualSha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "expectedSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
+            "expectedSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
             "locations": [
               "$.supportMatrixTraceability.supportMatrix"
             ],
             "status": "verified",
-            "actualSha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "actualSha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "expectedSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
+            "expectedSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
             "locations": [
               "$.supportMatrixTraceability.packageMigrationNotes"
             ],
             "status": "verified",
-            "actualSha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "actualSha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "expectedSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
+            "expectedSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
             "locations": [
               "$.supportMatrixTraceability.publicPackageContract"
             ],
             "status": "verified",
-            "actualSha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "actualSha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "src/compilers/c-like-to-ir.js",
@@ -24739,11 +24739,11 @@
       "report": {
         "path": "artifacts/conformance/parser-ownership-report.json",
         "exists": true,
-        "sha256": "b3f462a607c68376a2b19410a3af3b2b2b963d5e7489294834a01921fd6bc467",
+        "sha256": "29e8d8f605c3029d664487c553abc7fda4325545e0cf4b78ee444710072d7d3d",
         "sizeBytes": 13630,
         "schemaVersion": 1,
         "kind": "luascript:parser-ownership",
-        "generatedAt": "2026-07-30T03:46:51.942Z",
+        "generatedAt": "2026-07-30T06:16:11.953Z",
         "declaredStatus": "passed",
         "summary": {
           "completionAssertions": 1,
@@ -24899,7 +24899,7 @@
         "report": {
           "path": "artifacts/conformance/source-identity-probe-report.json",
           "exists": true,
-          "sha256": "7bd8d604b07d419bdf5ee32e45616beb908d94c154b96cd1c55acd54d9f5f3eb",
+          "sha256": "6a6aa50caca83708b43496d74df5d8eb6bcfa229c5748a7cc873837308d860b7",
           "sizeBytes": 34090
         },
         "boundary": "The source-identity report includes normalized parser-owned AST evidence, but it is not a durable execution report for tests/parser_ownership.test.js."
@@ -24931,28 +24931,28 @@
     {
       "code": "STALE_MTIME_FRESHNESS",
       "evidenceId": "clarity:canon-fast",
-      "message": "one or more required inputs were modified after report generatedAt; newest input package.json is 1354498006 ms newer",
+      "message": "one or more required inputs were modified after report generatedAt; newest input scripts/archive_audit.js is 1365503812 ms newer",
       "path": "artifacts/clarity_canon/canon-fast-report.json",
       "severity": "informational-warning"
     },
     {
       "code": "STALE_MTIME_FRESHNESS",
       "evidenceId": "clarity:canon-heavy",
-      "message": "one or more required inputs were modified after report generatedAt; newest input package.json is 1354467849 ms newer",
+      "message": "one or more required inputs were modified after report generatedAt; newest input src/ir/release_ir_surface_contract.js is 1364505831 ms newer",
       "path": "artifacts/clarity_canon/canon-heavy-report.json",
       "severity": "informational-warning"
     },
     {
       "code": "STALE_MTIME_FRESHNESS",
       "evidenceId": "clarity:canon-legacy",
-      "message": "one or more required inputs were modified after report generatedAt; newest input package.json is 1354503154 ms newer",
+      "message": "one or more required inputs were modified after report generatedAt; newest input src/ir/release_ir_surface_contract.js is 1364541136 ms newer",
       "path": "artifacts/clarity_canon/canon-legacy-report.json",
       "severity": "informational-warning"
     },
     {
       "code": "STALE_MTIME_FRESHNESS",
       "evidenceId": "clarity:canon-setup-blocked",
-      "message": "one or more required inputs were modified after report generatedAt; newest input artifacts/language_completion/gleam_ir-report.json is 1358848115 ms newer",
+      "message": "one or more required inputs were modified after report generatedAt; newest input artifacts/language_completion/gleam_ir-report.json is 1367805078 ms newer",
       "path": "artifacts/clarity_canon/canon-setup-blocked-report.json",
       "severity": "informational-warning"
     }

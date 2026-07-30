@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:schema-artifact-mapping",
   "command": "npm run test:schema-artifact-map",
-  "generatedAt": "2026-07-30T03:46:55.770Z",
-  "elapsedMs": 312,
+  "generatedAt": "2026-07-30T06:16:16.078Z",
+  "elapsedMs": 370,
   "environment": {
     "node": "v24.14.0",
     "npm": {
@@ -171,7 +171,7 @@
   },
   "governingContract": {
     "path": "docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md",
-    "sha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7"
+    "sha256": "558fcf74b4b0e7898bec93211c8275ea6b73a3baeeae5d5f367500a1c313db40"
   },
   "implementationEvidence": [
     {
@@ -180,7 +180,7 @@
     },
     {
       "path": "src/ir/release_ir_surface_contract.js",
-      "sha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4"
+      "sha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b"
     },
     {
       "path": "src/ir/schema_artifact_bridge.js",
@@ -206,7 +206,7 @@
     "evidenceRole": "Maps current legacy object-tree conformance IR to the chosen versioned canonical artifact surface and records declared compatibility encodings."
   },
   "transitionPolicy": {
-    "contractVersion": "1.0.0-rc.1",
+    "contractVersion": "1.0.0",
     "decision": "versioned-one-way-dual-surface-transition",
     "direction": "legacy-to-canonical",
     "legacySurface": {
@@ -295,7 +295,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 3,
       "nodeCount": 38,
-      "artifactSha256": "7ce5e44a2506e897e197688aac768229ad575bc43a71a76175016507f87754bb",
+      "artifactSha256": "d05789f2f9deeb443323f54379b7f53ec3f616ff3b49961aa49b94d199068ca4",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -342,7 +342,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -421,7 +421,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 4,
       "nodeCount": 33,
-      "artifactSha256": "381cff32a3b2204dd7e53c80d587a42f43de5e1547db8e80685e63acbb62cecb",
+      "artifactSha256": "8f500a399f3ed0eea342f297df066b881ad0c6fd7a1a886bce9afebb823f5a36",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -468,7 +468,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -553,7 +553,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 5,
       "nodeCount": 17,
-      "artifactSha256": "6b44bcdd2f94d0190dc436cf4a0cbac256571934f38dac365b84fb5d6a19f7cc",
+      "artifactSha256": "3cfeec9b245d384d5839ee97f4af5e530bb35c2fe7a94aee31e3e957775abd5e",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -600,7 +600,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -672,7 +672,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 4,
       "nodeCount": 43,
-      "artifactSha256": "65cd4b8f973dc48572f743df1ed27036442a5b4b948d07b09a4718bc47fd7a72",
+      "artifactSha256": "d038736bf3b62ef77d99be0f3a06fc327e46e10d73d75a0a5f96a2f1ad802faa",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -719,7 +719,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -796,7 +796,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 54,
-      "artifactSha256": "8ae808fce548f0a7b8342b753b789773729448cf30bc63a676d1773c94006424",
+      "artifactSha256": "26614824fefbfd41af72c8ad1c8100151eaa951a5982ca26a4bdb3c34cd478c6",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -843,7 +843,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -919,7 +919,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 24,
-      "artifactSha256": "2200d2e56f820fea23b1946b16bbf749417c806b1b5fa0cc94603c98a37b8cb5",
+      "artifactSha256": "68dc82a93207098ecef9b178e7d6b625a14492ac811a6522c8c049e0bc7f8f04",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -966,7 +966,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -1039,7 +1039,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 60,
-      "artifactSha256": "8cb65ebe02a2e0944baf14ce82bba1007c89218d166574ba9fd21a4fc81ce6ea",
+      "artifactSha256": "88795cc47840f0ad8ca538ced63511908b21ebc4ae2f4b82d62d56310b7f0a95",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1086,7 +1086,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -1165,7 +1165,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 2,
       "nodeCount": 105,
-      "artifactSha256": "c48cf5d157f6a1b2d2965d4a0bf7494b7e1cf2436d638fa55c894d9f54ac4bb5",
+      "artifactSha256": "7325698602648fbead159b9d9cf0890562ff266c06cbf9e329c36cd586c9b678",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1212,7 +1212,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -1306,7 +1306,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 4,
       "nodeCount": 43,
-      "artifactSha256": "cc46ed333a41b59e6608c644fbc17a63bb9b8a2888fbfbd622a6c3f8f9cbdcd9",
+      "artifactSha256": "9b4e02e0f2f75a5df19a38187595586353f7995135d667e5539143fd945c7736",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1353,7 +1353,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -1437,7 +1437,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 2,
       "nodeCount": 36,
-      "artifactSha256": "21bc4bbf22ea8559bb4964ffe0b99f66be6c88ff4fdaf94787d497289c951920",
+      "artifactSha256": "76a79e0cc97e91e0a4215d741ed70aed7437f4768367c4ee3adb3a845bc423ee",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1484,7 +1484,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -1567,7 +1567,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 3,
       "nodeCount": 25,
-      "artifactSha256": "56cb6626dcf4e388d05be16e3557c9faac4f36a3893420c62d77a8362369033e",
+      "artifactSha256": "560dae6524ada850b2c6ca5f414b325071b3fb7c7af649b026baa5357c8f012a",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1614,7 +1614,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -1691,7 +1691,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 3,
       "nodeCount": 27,
-      "artifactSha256": "9996905b6407bb15495915bfbb3a3fa044f54eaba96dc74814c8c5569f4da479",
+      "artifactSha256": "f7b67d1f315775879e75a8caa352e5c19c2c2e3d38326e56825595a72d3bcd50",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1738,7 +1738,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -1819,7 +1819,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 57,
-      "artifactSha256": "aaf0067839b73bede195e4d1878b756075012c261cb039e80b2444b2f8961221",
+      "artifactSha256": "6dc0352ae1883684146b31e6a04db6520967132a12bacc488afa2284c0361bb8",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1866,7 +1866,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -1950,7 +1950,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 3,
       "nodeCount": 42,
-      "artifactSha256": "897274f5f764638478edbd59846909261e6ea1260d8bfbee229b6e6ce53d4c47",
+      "artifactSha256": "81bedb2dd148ae388ddb8ff1d55d3ebaa02dbc23cd3acc8851ddf68507875efe",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -1997,7 +1997,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -2077,7 +2077,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 2,
       "nodeCount": 15,
-      "artifactSha256": "0ef3cd46b1fcaae8993d863ad985bb2587166a4fedb5b03098c3985596a1aafd",
+      "artifactSha256": "4bc76b66165470b05a487367961f06f2e8544d1e69f7481ea9d001d39d8cc667",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -2124,7 +2124,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -2218,7 +2218,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 88,
-      "artifactSha256": "66b632b6e70745f9df4510d393c27fd4dca708c5b7f272db81efaf54cf14d498",
+      "artifactSha256": "ff2483fe647b97e3328f46cc7dc450d7ede3e0adde89d259eea8fc8f0b33f7de",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -2265,7 +2265,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -2342,7 +2342,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 5,
       "nodeCount": 60,
-      "artifactSha256": "070c311b5a02575d45cdb723c6d22fb445f8c51606e7aeee49d42fbab3976ac4",
+      "artifactSha256": "e851fadd0b5a87251f9ac4d36df66c2541c3ca2aff7812a8a44450e8293b8e05",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -2389,7 +2389,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -2466,7 +2466,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 12,
       "nodeCount": 129,
-      "artifactSha256": "2cb2fefc939804dcff2537556fe1372e757dea305b474574d4d1b44c4960376a",
+      "artifactSha256": "7ec82daba3809119099902e7cee6918fd6bd3672147bab7c2ce5637f3f34594a",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -2513,7 +2513,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -2598,7 +2598,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 6,
       "nodeCount": 43,
-      "artifactSha256": "1c484545d9d74e76885932e114c42aa27d23b8f0c1d263ffb97d39e8cb80ce4b",
+      "artifactSha256": "6374c754ef8c3e4d3f84cc9ddd8dbf4cbfe1e4ac57a288c4c1ba516078a65e8c",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -2645,7 +2645,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -2723,7 +2723,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 3,
       "nodeCount": 36,
-      "artifactSha256": "920601e2208cae086a3f58e852524b04a19b166ddcd346a5f582ed2507ea4c4c",
+      "artifactSha256": "986d92d8b9d9cc02366e1d6e8e675a61e7a980e75f13202c301f554d45d13937",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -2770,7 +2770,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",
@@ -2865,7 +2865,7 @@
       "schemaVersion": "1.0.0",
       "moduleBodyCount": 2,
       "nodeCount": 8,
-      "artifactSha256": "2e24586b79621a75988dd716852484a512c3009e44852e36ac41da6d5366896a",
+      "artifactSha256": "03ca52bd1fb8fcac8d5260d2e57d46d17d084e783464d2523edbe324fad45f1c",
       "compatibilityChecks": [
         {
           "name": "schema-version",
@@ -2912,7 +2912,7 @@
         {
           "name": "release-contract-version-marked",
           "passed": true,
-          "detail": "1.0.0-rc.1"
+          "detail": "1.0.0"
         },
         {
           "name": "release-transition-marked",

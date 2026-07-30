@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:parser-ownership",
   "command": "npm run test:parser-ownership",
-  "generatedAt": "2026-07-30T03:46:51.942Z",
-  "elapsedMs": 156,
+  "generatedAt": "2026-07-30T06:16:11.953Z",
+  "elapsedMs": 197,
   "status": "passed",
   "boundary": {
     "evidenceScope": "repository parser ownership and delegated helper behavior",

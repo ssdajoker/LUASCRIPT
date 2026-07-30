@@ -368,3 +368,23 @@ Authoritative verification:
 - `npm run denali:rc:preflight:list` is the non-mutating policy inspection command.
 
 Denali 1.0 release candidate ready; awaiting explicit operator authorization to version, tag, publish, or release.
+
+### 2026-07-30 - Denali v1.0.1 Authorized Release Seal
+
+The operator explicitly authorized versioning, tagging, publishing, and
+release. The earlier no-release entries remain historical receipts rather than
+current instructions.
+
+- Package identity: `luascript@1.0.1`, stable Denali.
+- Release IR contract: frozen `1.0.0`; operational Program IR `v0` plus
+  internal one-way canonical artifact `1.0.0`.
+- Public package: exact six root exports, no `bin`, no `exports`, Node
+  `>=14.17.0`, exact TypeScript `5.9.3`, and two installed examples.
+- Release build: `builds/denali/v1.0.1/`, bound to the exact tagged commit,
+  evidence identities, artifact hashes, and `SHA256SUMS`.
+- Publication: GitHub tag/release `v1.0.1`; npm registry publication is not
+  claimed.
+- Remaining climb: preserve these gates and expand only through named
+  accession, compatibility, and SemVer policies.
+
+Denali v1.0.1 is authorized and released from the exact passing evidence state.

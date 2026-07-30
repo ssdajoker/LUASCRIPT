@@ -1,15 +1,15 @@
 # LUASCRIPT CHANGELOG
 ## Development Progress and Implementation History
 
-**Current Version**: 0.1.0-beta.0
-**Status**: Scoped non-strict pre-production beta v0.1
-**Current source of truth**: [PROJECT_STATUS.md](PROJECT_STATUS.md), [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md), and [docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md](docs/LUASCRIPT_DENALI_SOLOIST_LEDGER.md)
+**Current Version**: 1.0.1
+**Status**: Stable Denali release for named tested surfaces
+**Current source of truth**: [PROJECT_STATUS.md](PROJECT_STATUS.md), [docs/releases/LUASCRIPT_DENALI_v1.0.1.md](docs/releases/LUASCRIPT_DENALI_v1.0.1.md), and [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md)
 
 Historical entries below this beta section are retained as project history. Current support claims, release scope, and limitations are governed by the active docs listed above.
 
 ---
 
-## [Unreleased] - Denali Package Boundary Candidate
+## [1.0.1] - 2026-07-30 - Denali Stable Release
 
 ### Package And Runtime
 
@@ -26,7 +26,7 @@ Historical entries below this beta section are retained as project history. Curr
 - Made `enableAll: false` disable all five unified-system components.
 - Made system status report the live package version instead of the future-looking literal `1.0.0`.
 - Added a packed-tarball, clean-consumer, exact-root-surface, installed-example, and Node-floor evidence gate.
-- Repaired prerelease version calculation and made tag creation require an exact committed package version at `HEAD`; no release action was run.
+- Repaired SemVer calculation and made tag creation require an exact committed package version at `HEAD`.
 
 ### Release-Candidate Evidence
 
@@ -42,10 +42,15 @@ Historical entries below this beta section are retained as project history. Curr
 - Consumers on Node 14.0 through 14.16 must move to Node 14.17 or newer before adopting a package carrying this boundary.
 - See [docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md](docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md).
 
-### Not Released
+### Release
 
-- Package identity remains `0.1.0-beta.0`.
-- No version bump, tag, publish, GitHub release, changelog seal, commit, push, or pull request occurred.
+- Released as `luascript@1.0.1` because the repository's historical `v1.0.0`
+  tag already exists and is preserved.
+- Added an atomic, self-verifying build publisher at
+  `builds/denali/v1.0.1/` with an npm tarball, tagged source archive,
+  release-evidence copies, a manifest, and SHA-256 checksums.
+- Published through GitHub tag/release `v1.0.1`. npm registry publication is
+  explicitly not claimed.
 
 ---
 

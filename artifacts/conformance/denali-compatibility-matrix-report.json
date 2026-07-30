@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:denali-compatibility-matrix",
   "command": "node tests/compatibility/denali_compatibility_matrix.test.js",
-  "generatedAt": "2026-07-30T03:47:21.070Z",
-  "elapsedMs": 9542,
+  "generatedAt": "2026-07-30T06:16:41.880Z",
+  "elapsedMs": 9635,
   "status": "PASS",
   "scope": {
     "mode": "read-only-compatibility-evidence",
@@ -61,8 +61,8 @@
   "sourceEvidence": [
     {
       "path": "tests/compatibility/denali_compatibility_matrix.test.js",
-      "sha256": "a9042c5c9531ac7555115945726549ed4029f63aa2e2b78a8786157b88c3040e",
-      "sizeBytes": 60387
+      "sha256": "37bf23e06c1fb2361090eeaef58c8c22905a382eea3fd063d910d1fbe07e635e",
+      "sizeBytes": 60377
     },
     {
       "path": "tests/language_completion/bidirectional_harness.js",
@@ -76,13 +76,13 @@
     },
     {
       "path": "package.json",
-      "sha256": "c942dfb64ddf267968c3445f50cdd465787046649d0596bef2efe6a233c41079",
-      "sizeBytes": 28504
+      "sha256": "ce0ebdeae92443a2669a1d8bbb382a5cea5d56b15e3e328c5b0471915c129009",
+      "sizeBytes": 28633
     },
     {
       "path": "package-lock.json",
-      "sha256": "1d93f7b91fe9901a3753c9ea44a77bb632619ebb073c475201d3e131736ab219",
-      "sizeBytes": 190571
+      "sha256": "8e77bb03c9b1e06c609035318ece6f91317e8d0dec9d2bb073cd48be45136e70",
+      "sizeBytes": 190557
     }
   ],
   "packageBoundary": {
@@ -180,8 +180,8 @@
     "publicPackageReport": {
       "report": {
         "path": "artifacts/conformance/public-api-runtime-package-report.json",
-        "sha256": "100d90790fe70a13848caca844849aa3820f0d3850b96aca019ed487ad82581b",
-        "sizeBytes": 169154
+        "sha256": "ec70bbe52c5222e7192c691a0ed82f3d3467fc3a1669111ec39b6590fad0f097",
+        "sizeBytes": 168967
       },
       "summary": {
         "total": 32,
@@ -200,7 +200,7 @@
           "--package=node@14.17.1",
           "--",
           "node",
-          "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-9Tn89u\\consumer\\node-floor-consumer-smoke.cjs"
+          "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-bscx7j\\consumer\\node-floor-consumer-smoke.cjs"
         ],
         "status": 0,
         "signal": null,
@@ -224,11 +224,11 @@
       "inputEvidence": [
         {
           "path": "package.json",
-          "sha256": "c942dfb64ddf267968c3445f50cdd465787046649d0596bef2efe6a233c41079"
+          "sha256": "ce0ebdeae92443a2669a1d8bbb382a5cea5d56b15e3e328c5b0471915c129009"
         },
         {
           "path": "package-lock.json",
-          "sha256": "1d93f7b91fe9901a3753c9ea44a77bb632619ebb073c475201d3e131736ab219"
+          "sha256": "8e77bb03c9b1e06c609035318ece6f91317e8d0dec9d2bb073cd48be45136e70"
         },
         {
           "path": ".npmignore",
@@ -244,11 +244,11 @@
         },
         {
           "path": "tests/package/public_api_runtime_package_contract.test.js",
-          "sha256": "7bfa392cb24fc44ffec8c186769e9b74fc1e7787f635af2f591cfbf3b61603f9"
+          "sha256": "8d7735f1c62377dd3fd188bc1e889c6c798d0f251ba961368b87f549c560c555"
         },
         {
           "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-          "sha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a"
+          "sha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d"
         },
         {
           "path": "examples/package/README.md",
@@ -1462,7 +1462,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/javascript-report.json",
-        "sha256": "f3a3bad69069c21f5889b8dd8e4cadd209ceb4bbf7054328049c3f8e77e9b334",
+        "sha256": "1f03c2aa6b1dd351c53c8629bca52a3f5c828a4c3a290866b87dcc6a823b2f86",
         "sizeBytes": 20827
       },
       "reportSchemaVersion": 2,
@@ -1470,7 +1470,7 @@
         "total": 18,
         "passed": 18,
         "failed": 0,
-        "elapsedMs": 3933
+        "elapsedMs": 4500
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -1586,7 +1586,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/typescript-report.json",
-        "sha256": "239a46e223f4ad6927f0e7a45e99b39c1186b17450cde2a9d05e694158e3847e",
+        "sha256": "45e71db513cc77355413e68f9ea2d0a1ea552586f04788da5180cf71c8e986d7",
         "sizeBytes": 15460
       },
       "reportSchemaVersion": 2,
@@ -1594,7 +1594,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 2853
+        "elapsedMs": 3209
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -2173,7 +2173,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/luascript-report.json",
-        "sha256": "46c767a85d5a13003d97cc1aa64b57624d5ebbbeb5af160459f74113b55c8b62",
+        "sha256": "4ffd3ff3c19f7ce5d99b970f0ca74ea95ae78477666c97d5a8c870bd26f87078",
         "sizeBytes": 70199
       },
       "reportSchemaVersion": 2,
@@ -2181,7 +2181,7 @@
         "total": 77,
         "passed": 77,
         "failed": 0,
-        "elapsedMs": 19258
+        "elapsedMs": 22205
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -2297,7 +2297,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/lua-report.json",
-        "sha256": "851389014cd54442627b2c0489a18d54ec2354a17eb3d8dfe36d69244eb7340c",
+        "sha256": "2b663a03c53edff9796ebc28df7017fe04c6b2a6a1639dc9637be59155c1e43a",
         "sizeBytes": 14720
       },
       "reportSchemaVersion": 2,
@@ -2305,7 +2305,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 3099
+        "elapsedMs": 3714
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -2694,15 +2694,15 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/python-report.json",
-        "sha256": "f4b78d6477d6ccff93f43ab03ec8227e1e3c304460ce8bcd8cc1829404483098",
-        "sizeBytes": 46374
+        "sha256": "9bb0d888128be018c67410eb8a746ff4db7835664960b9b6ae0e8baa516b6ab4",
+        "sizeBytes": 46375
       },
       "reportSchemaVersion": 2,
       "reportSummary": {
         "total": 50,
         "passed": 50,
         "failed": 0,
-        "elapsedMs": 8677
+        "elapsedMs": 9925
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -2882,7 +2882,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/csharp-report.json",
-        "sha256": "f08e2b26696385e026ea16538217530f45101a94e26a52ae75df82f4097b6786",
+        "sha256": "9d1cede93aac4edc0266dcab826bbde41bbe6a4149d4bf96417730825641c6ca",
         "sizeBytes": 22562
       },
       "reportSchemaVersion": 2,
@@ -2890,7 +2890,7 @@
         "total": 20,
         "passed": 20,
         "failed": 0,
-        "elapsedMs": 69194
+        "elapsedMs": 64986
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3072,7 +3072,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/c-report.json",
-        "sha256": "d53a499de676015a7bb7ad4932773dbe154afc92803bd41dcd7c8b09fe95d7be",
+        "sha256": "1f6bb29acb77d141e1fdc23c72f877dd57885d58f79745eeb21b6bbbcff9cb68",
         "sizeBytes": 22863
       },
       "reportSchemaVersion": 2,
@@ -3080,7 +3080,7 @@
         "total": 20,
         "passed": 20,
         "failed": 0,
-        "elapsedMs": 27321
+        "elapsedMs": 29003
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3276,7 +3276,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/cpp-report.json",
-        "sha256": "5841cd996ac381bb76809e8fd34b2dd2a85c1d3f5af47317876d0776ddfab2ba",
+        "sha256": "cf0f080701f4ee92ed36143485482b0b4a325e937e489677ee8e8d92bed83283",
         "sizeBytes": 24726
       },
       "reportSchemaVersion": 2,
@@ -3284,7 +3284,7 @@
         "total": 22,
         "passed": 22,
         "failed": 0,
-        "elapsedMs": 40378
+        "elapsedMs": 46029
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3349,7 +3349,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/java_native-report.json",
-        "sha256": "6e7e19a82d3fcf09fd50979ef5d9d2bdfe7fce11c6e928a2d3004621593ef52b",
+        "sha256": "c7fa77837f13243bcf2a445869465fa204afc40330aa4ad956a666bfecb3678d",
         "sizeBytes": 9804
       },
       "reportSchemaVersion": 2,
@@ -3357,7 +3357,7 @@
         "total": 3,
         "passed": 3,
         "failed": 0,
-        "elapsedMs": 11418
+        "elapsedMs": 13678
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3413,7 +3413,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/rust_native-report.json",
-        "sha256": "2abf10f981d960ae7deb92a3371ad50b95cfbf83f02b17d95855a7b32fcdd2c4",
+        "sha256": "1c79330b0d2dea58ab4173598337ee03ff6f59c48f04cd66f7aa01ee7d37ffab",
         "sizeBytes": 8630
       },
       "reportSchemaVersion": 2,
@@ -3421,7 +3421,7 @@
         "total": 2,
         "passed": 2,
         "failed": 0,
-        "elapsedMs": 7700
+        "elapsedMs": 7630
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3561,7 +3561,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/ruby-report.json",
-        "sha256": "f4238512458709f5301def941cbe42d0443cc3659bf5cc979123940e7f324a5d",
+        "sha256": "d20b9f498cc060e628f8ef52d06f874f777a4576d1bc20d2deb2bf07cd2c9a09",
         "sizeBytes": 18181
       },
       "reportSchemaVersion": 2,
@@ -3569,7 +3569,7 @@
         "total": 14,
         "passed": 14,
         "failed": 0,
-        "elapsedMs": 26618
+        "elapsedMs": 28218
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3709,7 +3709,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/php-report.json",
-        "sha256": "797fea84784310030749a8b7f0ca792bb2958246db4d67e95d16c286c90d5011",
+        "sha256": "cbb8387198cc918ba1abc679e0a57f597e09e457448c837483eadb655125bb41",
         "sizeBytes": 18382
       },
       "reportSchemaVersion": 2,
@@ -3717,7 +3717,7 @@
         "total": 14,
         "passed": 14,
         "failed": 0,
-        "elapsedMs": 28853
+        "elapsedMs": 27621
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3836,7 +3836,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/dart-report.json",
-        "sha256": "cadc125fec12ca5776b4fa2e8152c75a6a72a7e6177bd499b4e2990e13ad0e5c",
+        "sha256": "5cfbc9e3144035db8a4f721f6559345ad46adc5363180a8ed68569f44fe0af92",
         "sizeBytes": 15891
       },
       "reportSchemaVersion": 2,
@@ -3844,7 +3844,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 25945
+        "elapsedMs": 23729
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -3963,7 +3963,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/go_native-report.json",
-        "sha256": "b1b9445a90958e88aa52a9d3d5500b66b48f214611f827e7e7009a148fcc4d68",
+        "sha256": "d2a73a5a03fd9486080b49e31b4e537dda8b3b897df45a43a19eaefffe3fd4c4",
         "sizeBytes": 15770
       },
       "reportSchemaVersion": 2,
@@ -3971,7 +3971,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 27153
+        "elapsedMs": 24898
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -4092,7 +4092,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/kotlin_native-report.json",
-        "sha256": "7759d7e07119fbea3d9fc834d9822f75a8c040112d146b1e89c2f9b0b105d5a6",
+        "sha256": "637a59c89784dc83b7a8a2c903619d71f1f01ee51e9099ff01ea6c57bcd8475e",
         "sizeBytes": 16379
       },
       "reportSchemaVersion": 2,
@@ -4100,7 +4100,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 54591
+        "elapsedMs": 57640
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -4220,7 +4220,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/elm_native-report.json",
-        "sha256": "22107e50768bdded0389fdb9f82779bf55852e6ce65f2aa6475a606c198735d6",
+        "sha256": "291b90a81215bc02191ce6cae8370e3ef34f96742e120504c962d6fe4d1cc99c",
         "sizeBytes": 15852
       },
       "reportSchemaVersion": 2,
@@ -4228,7 +4228,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 21326
+        "elapsedMs": 23336
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -4347,7 +4347,7 @@
       "missingTools": [],
       "report": {
         "path": "artifacts/language_completion/gleam_native-report.json",
-        "sha256": "e38e4f66b94b23144e01c171ba5625474e65a41c2e7d2895770f0740cf825f51",
+        "sha256": "c212317e224cdb1c66a118f6cd500f5a472dbf711d5741830be412a5abdfecb2",
         "sizeBytes": 16006
       },
       "reportSchemaVersion": 2,
@@ -4355,7 +4355,7 @@
         "total": 11,
         "passed": 11,
         "failed": 0,
-        "elapsedMs": 33183
+        "elapsedMs": 35657
       },
       "reportBindingStatus": "PASS",
       "reportIssues": []
@@ -4365,11 +4365,11 @@
     "contract": {
       "implementation": {
         "path": "src/ir/release_ir_surface_contract.js",
-        "sha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4",
-        "sizeBytes": 5630
+        "sha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b",
+        "sizeBytes": 5625
       },
       "snapshot": {
-        "contractVersion": "1.0.0-rc.1",
+        "contractVersion": "1.0.0",
         "decision": "versioned-one-way-dual-surface-transition",
         "status": "DENALI_RC_INTERNAL",
         "direction": "legacy-to-canonical",
@@ -4539,8 +4539,8 @@
         "path": "artifacts/conformance/schema-artifact-mapping-report.json",
         "report": {
           "path": "artifacts/conformance/schema-artifact-mapping-report.json",
-          "sha256": "6976ee94381df0a0e1d0d002da3343f8060dc92d9cf94b5d225bf4d22fa5c7c3",
-          "sizeBytes": 84271
+          "sha256": "9b4fc0ee2b8f921d932d91f4cc40465401ca62ee3447f0338c76f430130ac5d1",
+          "sizeBytes": 84161
         },
         "summary": {
           "total": 32,
@@ -4607,7 +4607,7 @@
           },
           {
             "path": "docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md",
-            "sha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7"
+            "sha256": "558fcf74b4b0e7898bec93211c8275ea6b73a3baeeae5d5f367500a1c313db40"
           },
           {
             "path": "src/compilers/core-language-bridge.js",
@@ -4615,7 +4615,7 @@
           },
           {
             "path": "src/ir/release_ir_surface_contract.js",
-            "sha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4"
+            "sha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b"
           },
           {
             "path": "src/ir/schema_artifact_bridge.js",
@@ -4634,8 +4634,8 @@
         "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
         "report": {
           "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
-          "sha256": "6f0fef03eb3a54d0f68099381bdfcf9d43dc248d5d88b80623bbafedd66cfba5",
-          "sizeBytes": 101406
+          "sha256": "8a193d2c4c2ed45f56cd85cb5987497948bd702286d163aaecefb4fef2adf86d",
+          "sizeBytes": 101286
         },
         "summary": {
           "total": 32,
@@ -4736,11 +4736,11 @@
           },
           {
             "path": "docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md",
-            "sha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7"
+            "sha256": "558fcf74b4b0e7898bec93211c8275ea6b73a3baeeae5d5f367500a1c313db40"
           },
           {
             "path": "src/ir/release_ir_surface_contract.js",
-            "sha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4"
+            "sha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b"
           },
           {
             "path": "src/ir/schema_artifact_bridge.js",
@@ -4748,7 +4748,7 @@
           },
           {
             "path": "tests/conformance/dual_surface_compatibility_bridge.test.js",
-            "sha256": "1739f3aa135910d9b90d4cda59e3118e3e703181be164532db42b0ea957bb228"
+            "sha256": "3999016a9461693c824ac2e478e4f390dd53889740dcb239f47960d391ce13af"
           },
           {
             "path": "src/unified_luascript.js",
@@ -4763,23 +4763,23 @@
   "documentation": [
     {
       "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-      "sha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-      "sizeBytes": 24202
+      "sha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+      "sizeBytes": 24121
     },
     {
       "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-      "sha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-      "sizeBytes": 11433
+      "sha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+      "sizeBytes": 11304
     },
     {
       "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-      "sha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-      "sizeBytes": 17849
+      "sha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+      "sizeBytes": 17344
     },
     {
       "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-      "sha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-      "sizeBytes": 5415
+      "sha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+      "sizeBytes": 5327
     }
   ],
   "boundManifests": [
@@ -9282,8 +9282,8 @@
                   "field": "script",
                   "kind": "file",
                   "path": "scripts/archive_audit.js",
-                  "sha256": "16ef951bea22f5d0c4d176e9156aed5462983e04e081d01faa46202548fa19b6",
-                  "sizeBytes": 8699
+                  "sha256": "649d86106c8a0f9bddf20adef220e47a6876b70cdd72541c39ac7a375c37bf77",
+                  "sizeBytes": 8713
                 }
               ]
             }
@@ -9600,8 +9600,8 @@
                   "field": "activeRoots",
                   "kind": "file",
                   "path": "README.md",
-                  "sha256": "b96ccd88f226e6209df48d22cbee841ffb058907639cad76b936a91250a32cb1",
-                  "sizeBytes": 28886
+                  "sha256": "a2bf7361fa5866f83642f851d6d9debc181bb1612ddf6d3ff190fadd950a10d0",
+                  "sizeBytes": 28680
                 }
               ]
             },
@@ -9614,8 +9614,8 @@
                   "field": "activeRoots",
                   "kind": "file",
                   "path": "PROJECT_STATUS.md",
-                  "sha256": "d22f9b92a22fd651f61ef0c330a093fccf61cd1d148a3ce81acc401550d45680",
-                  "sizeBytes": 47434
+                  "sha256": "8e2f5d70f1e80a1a200b6f55758a3515bfbee2343e08587dc6704b2557089b14",
+                  "sizeBytes": 46926
                 }
               ]
             },
@@ -9628,8 +9628,8 @@
                   "field": "activeRoots",
                   "kind": "file",
                   "path": "CHANGELOG.md",
-                  "sha256": "4b61668c35c5a3a7ef1b6dfd4dfe0fb55cd13a1c51e859f17fe3faa70d4aba3f",
-                  "sizeBytes": 17787
+                  "sha256": "bb85feae4dbbe222e5b259c4b88efcf1b8317543920f7a81bf6e2edac1fb9f77",
+                  "sizeBytes": 18031
                 }
               ]
             },
@@ -9642,8 +9642,8 @@
                   "field": "activeRoots",
                   "kind": "file",
                   "path": "docs/INDEX.md",
-                  "sha256": "b71722213019c6f4d4f23627bf90dbde242b5b35ccc527bc38124d14feab59e9",
-                  "sizeBytes": 9740
+                  "sha256": "06f55e1ba09a007d99c76b5f9404c26e054f96a87bdadd72934c4c545639fd57",
+                  "sizeBytes": 9724
                 }
               ]
             },
@@ -9656,8 +9656,8 @@
                   "field": "activeRoots",
                   "kind": "file",
                   "path": "docs/LUASCRIPT_MEGA_PLAN.md",
-                  "sha256": "9b7f490707e3a4ec4c04807a1c7698d5921dc4aaa325f3a5bfa9b688b3b3e84f",
-                  "sizeBytes": 31102
+                  "sha256": "3680f215ae926134acd816c1f562e9b2bbc3ac3bae9115f3adb20b5fb65ed6e2",
+                  "sizeBytes": 31082
                 }
               ]
             },
@@ -9684,8 +9684,8 @@
                   "field": "activeRoots",
                   "kind": "file",
                   "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-                  "sha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-                  "sizeBytes": 24202
+                  "sha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+                  "sizeBytes": 24121
                 }
               ]
             }
@@ -11093,16 +11093,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/javascript-report.json",
-          "sha256": "f3a3bad69069c21f5889b8dd8e4cadd209ceb4bbf7054328049c3f8e77e9b334",
+          "sha256": "1f03c2aa6b1dd351c53c8629bca52a3f5c828a4c3a290866b87dcc6a823b2f86",
           "sizeBytes": 20827
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:35:10.559Z",
+        "generatedAt": "2026-07-30T06:04:12.965Z",
         "summary": {
           "total": 18,
           "passed": 18,
           "failed": 0,
-          "elapsedMs": 3933
+          "elapsedMs": 4500
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11157,16 +11157,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/typescript-report.json",
-          "sha256": "239a46e223f4ad6927f0e7a45e99b39c1186b17450cde2a9d05e694158e3847e",
+          "sha256": "45e71db513cc77355413e68f9ea2d0a1ea552586f04788da5180cf71c8e986d7",
           "sizeBytes": 15460
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:35:14.235Z",
+        "generatedAt": "2026-07-30T06:04:16.919Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 2853
+          "elapsedMs": 3209
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11222,16 +11222,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/luascript-report.json",
-          "sha256": "46c767a85d5a13003d97cc1aa64b57624d5ebbbeb5af160459f74113b55c8b62",
+          "sha256": "4ffd3ff3c19f7ce5d99b970f0ca74ea95ae78477666c97d5a8c870bd26f87078",
           "sizeBytes": 70199
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:35:34.300Z",
+        "generatedAt": "2026-07-30T06:04:39.858Z",
         "summary": {
           "total": 77,
           "passed": 77,
           "failed": 0,
-          "elapsedMs": 19258
+          "elapsedMs": 22205
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11286,16 +11286,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/lua-report.json",
-          "sha256": "851389014cd54442627b2c0489a18d54ec2354a17eb3d8dfe36d69244eb7340c",
+          "sha256": "2b663a03c53edff9796ebc28df7017fe04c6b2a6a1639dc9637be59155c1e43a",
           "sizeBytes": 14720
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:36:00.573Z",
+        "generatedAt": "2026-07-30T06:05:11.118Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 3099
+          "elapsedMs": 3714
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11350,16 +11350,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/python-report.json",
-          "sha256": "f4b78d6477d6ccff93f43ab03ec8227e1e3c304460ce8bcd8cc1829404483098",
-          "sizeBytes": 46374
+          "sha256": "9bb0d888128be018c67410eb8a746ff4db7835664960b9b6ae0e8baa516b6ab4",
+          "sizeBytes": 46375
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:36:14.735Z",
+        "generatedAt": "2026-07-30T06:05:27.180Z",
         "summary": {
           "total": 50,
           "passed": 50,
           "failed": 0,
-          "elapsedMs": 8677
+          "elapsedMs": 9925
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11415,16 +11415,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/csharp-report.json",
-          "sha256": "f08e2b26696385e026ea16538217530f45101a94e26a52ae75df82f4097b6786",
+          "sha256": "9d1cede93aac4edc0266dcab826bbde41bbe6a4149d4bf96417730825641c6ca",
           "sizeBytes": 22562
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:37:24.473Z",
+        "generatedAt": "2026-07-30T06:06:32.718Z",
         "summary": {
           "total": 20,
           "passed": 20,
           "failed": 0,
-          "elapsedMs": 69194
+          "elapsedMs": 64986
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11482,16 +11482,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/c-report.json",
-          "sha256": "d53a499de676015a7bb7ad4932773dbe154afc92803bd41dcd7c8b09fe95d7be",
+          "sha256": "1f6bb29acb77d141e1fdc23c72f877dd57885d58f79745eeb21b6bbbcff9cb68",
           "sizeBytes": 22863
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:37:52.445Z",
+        "generatedAt": "2026-07-30T06:07:02.522Z",
         "summary": {
           "total": 20,
           "passed": 20,
           "failed": 0,
-          "elapsedMs": 27321
+          "elapsedMs": 29003
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11549,16 +11549,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/cpp-report.json",
-          "sha256": "5841cd996ac381bb76809e8fd34b2dd2a85c1d3f5af47317876d0776ddfab2ba",
+          "sha256": "cf0f080701f4ee92ed36143485482b0b4a325e937e489677ee8e8d92bed83283",
           "sizeBytes": 24726
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:38:33.517Z",
+        "generatedAt": "2026-07-30T06:07:49.324Z",
         "summary": {
           "total": 22,
           "passed": 22,
           "failed": 0,
-          "elapsedMs": 40378
+          "elapsedMs": 46029
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11618,16 +11618,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/java_native-report.json",
-          "sha256": "6e7e19a82d3fcf09fd50979ef5d9d2bdfe7fce11c6e928a2d3004621593ef52b",
+          "sha256": "c7fa77837f13243bcf2a445869465fa204afc40330aa4ad956a666bfecb3678d",
           "sizeBytes": 9804
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:38:45.236Z",
+        "generatedAt": "2026-07-30T06:08:03.455Z",
         "summary": {
           "total": 3,
           "passed": 3,
           "failed": 0,
-          "elapsedMs": 11418
+          "elapsedMs": 13678
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11685,16 +11685,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/rust_native-report.json",
-          "sha256": "2abf10f981d960ae7deb92a3371ad50b95cfbf83f02b17d95855a7b32fcdd2c4",
+          "sha256": "1c79330b0d2dea58ab4173598337ee03ff6f59c48f04cd66f7aa01ee7d37ffab",
           "sizeBytes": 8630
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:38:53.828Z",
+        "generatedAt": "2026-07-30T06:08:12.077Z",
         "summary": {
           "total": 2,
           "passed": 2,
           "failed": 0,
-          "elapsedMs": 7700
+          "elapsedMs": 7630
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11752,16 +11752,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/ruby-report.json",
-          "sha256": "f4238512458709f5301def941cbe42d0443cc3659bf5cc979123940e7f324a5d",
+          "sha256": "d20b9f498cc060e628f8ef52d06f874f777a4576d1bc20d2deb2bf07cd2c9a09",
           "sizeBytes": 18181
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:39:21.096Z",
+        "generatedAt": "2026-07-30T06:08:41.229Z",
         "summary": {
           "total": 14,
           "passed": 14,
           "failed": 0,
-          "elapsedMs": 26618
+          "elapsedMs": 28218
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11819,16 +11819,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/php-report.json",
-          "sha256": "797fea84784310030749a8b7f0ca792bb2958246db4d67e95d16c286c90d5011",
+          "sha256": "cbb8387198cc918ba1abc679e0a57f597e09e457448c837483eadb655125bb41",
           "sizeBytes": 18382
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:39:50.649Z",
+        "generatedAt": "2026-07-30T06:09:09.492Z",
         "summary": {
           "total": 14,
           "passed": 14,
           "failed": 0,
-          "elapsedMs": 28853
+          "elapsedMs": 27621
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11886,16 +11886,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/dart-report.json",
-          "sha256": "cadc125fec12ca5776b4fa2e8152c75a6a72a7e6177bd499b4e2990e13ad0e5c",
+          "sha256": "5cfbc9e3144035db8a4f721f6559345ad46adc5363180a8ed68569f44fe0af92",
           "sizeBytes": 15891
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:40:17.305Z",
+        "generatedAt": "2026-07-30T06:09:34.037Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 25945
+          "elapsedMs": 23729
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -11953,16 +11953,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/go_native-report.json",
-          "sha256": "b1b9445a90958e88aa52a9d3d5500b66b48f214611f827e7e7009a148fcc4d68",
+          "sha256": "d2a73a5a03fd9486080b49e31b4e537dda8b3b897df45a43a19eaefffe3fd4c4",
           "sizeBytes": 15770
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:40:45.041Z",
+        "generatedAt": "2026-07-30T06:09:59.628Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 27153
+          "elapsedMs": 24898
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -12022,16 +12022,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/kotlin_native-report.json",
-          "sha256": "7759d7e07119fbea3d9fc834d9822f75a8c040112d146b1e89c2f9b0b105d5a6",
+          "sha256": "637a59c89784dc83b7a8a2c903619d71f1f01ee51e9099ff01ea6c57bcd8475e",
           "sizeBytes": 16379
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:41:37.889Z",
+        "generatedAt": "2026-07-30T06:10:55.372Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 54591
+          "elapsedMs": 57640
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -12090,16 +12090,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/elm_native-report.json",
-          "sha256": "22107e50768bdded0389fdb9f82779bf55852e6ce65f2aa6475a606c198735d6",
+          "sha256": "291b90a81215bc02191ce6cae8370e3ef34f96742e120504c962d6fe4d1cc99c",
           "sizeBytes": 15852
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:42:02.337Z",
+        "generatedAt": "2026-07-30T06:11:22.068Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 21326
+          "elapsedMs": 23336
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -12157,16 +12157,16 @@
       "detail": {
         "report": {
           "path": "artifacts/language_completion/gleam_native-report.json",
-          "sha256": "e38e4f66b94b23144e01c171ba5625474e65a41c2e7d2895770f0740cf825f51",
+          "sha256": "c212317e224cdb1c66a118f6cd500f5a472dbf711d5741830be412a5abdfecb2",
           "sizeBytes": 16006
         },
         "schemaVersion": 2,
-        "generatedAt": "2026-07-30T03:42:36.179Z",
+        "generatedAt": "2026-07-30T06:11:58.563Z",
         "summary": {
           "total": 11,
           "passed": 11,
           "failed": 0,
-          "elapsedMs": 33183
+          "elapsedMs": 35657
         },
         "issues": [],
         "boundary": "Stored report identity and live provenance only; this matrix did not rerun the language lane."
@@ -12190,8 +12190,8 @@
       "detail": {
         "report": {
           "path": "artifacts/conformance/public-api-runtime-package-report.json",
-          "sha256": "100d90790fe70a13848caca844849aa3820f0d3850b96aca019ed487ad82581b",
-          "sizeBytes": 169154
+          "sha256": "ec70bbe52c5222e7192c691a0ed82f3d3467fc3a1669111ec39b6590fad0f097",
+          "sizeBytes": 168967
         },
         "summary": {
           "total": 32,
@@ -12210,7 +12210,7 @@
             "--package=node@14.17.1",
             "--",
             "node",
-            "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-9Tn89u\\consumer\\node-floor-consumer-smoke.cjs"
+            "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-public-package-contract-bscx7j\\consumer\\node-floor-consumer-smoke.cjs"
           ],
           "status": 0,
           "signal": null,
@@ -12234,11 +12234,11 @@
         "inputEvidence": [
           {
             "path": "package.json",
-            "sha256": "c942dfb64ddf267968c3445f50cdd465787046649d0596bef2efe6a233c41079"
+            "sha256": "ce0ebdeae92443a2669a1d8bbb382a5cea5d56b15e3e328c5b0471915c129009"
           },
           {
             "path": "package-lock.json",
-            "sha256": "1d93f7b91fe9901a3753c9ea44a77bb632619ebb073c475201d3e131736ab219"
+            "sha256": "8e77bb03c9b1e06c609035318ece6f91317e8d0dec9d2bb073cd48be45136e70"
           },
           {
             "path": ".npmignore",
@@ -12254,11 +12254,11 @@
           },
           {
             "path": "tests/package/public_api_runtime_package_contract.test.js",
-            "sha256": "7bfa392cb24fc44ffec8c186769e9b74fc1e7787f635af2f591cfbf3b61603f9"
+            "sha256": "8d7735f1c62377dd3fd188bc1e889c6c798d0f251ba961368b87f549c560c555"
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "sha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a"
+            "sha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d"
           },
           {
             "path": "examples/package/README.md",
@@ -12284,23 +12284,23 @@
         "documents": [
           {
             "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-            "sha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-            "sizeBytes": 24202
+            "sha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+            "sizeBytes": 24121
           },
           {
             "path": "docs/LANGUAGE_COMPLETION_RULES.md",
-            "sha256": "b0d8cbce7d98db470ac0f2d71daba6efad675f61d199ef9a95aa783efd2ce4e6",
-            "sizeBytes": 11433
+            "sha256": "08d7853df6ae9c8c60575bb7d781ef9fdce29bee98e895a21f6c87828a9ebfce",
+            "sizeBytes": 11304
           },
           {
             "path": "docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
-            "sha256": "c45d69f9853883de7ce7d4f40b07aa35fbc30966f83b5d4c2b17ea6e34dafc6a",
-            "sizeBytes": 17849
+            "sha256": "226782a61ebe2331a28f7ff946fa0100f5afdbc4c393af85cfccca43f80ee38d",
+            "sizeBytes": 17344
           },
           {
             "path": "docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md",
-            "sha256": "bb7eb6f7e3deb704d13ce8969cb48b2098c4a5b145ab0c64be6208168eb956bd",
-            "sizeBytes": 5415
+            "sha256": "5418f3a6246a48c6d0e3cac9c04c392168af3ef020ebe73c30e2937b7bbc6dfe",
+            "sizeBytes": 5327
           }
         ],
         "issues": []
@@ -16839,8 +16839,8 @@
                     "field": "script",
                     "kind": "file",
                     "path": "scripts/archive_audit.js",
-                    "sha256": "16ef951bea22f5d0c4d176e9156aed5462983e04e081d01faa46202548fa19b6",
-                    "sizeBytes": 8699
+                    "sha256": "649d86106c8a0f9bddf20adef220e47a6876b70cdd72541c39ac7a375c37bf77",
+                    "sizeBytes": 8713
                   }
                 ]
               }
@@ -17167,8 +17167,8 @@
                     "field": "activeRoots",
                     "kind": "file",
                     "path": "README.md",
-                    "sha256": "b96ccd88f226e6209df48d22cbee841ffb058907639cad76b936a91250a32cb1",
-                    "sizeBytes": 28886
+                    "sha256": "a2bf7361fa5866f83642f851d6d9debc181bb1612ddf6d3ff190fadd950a10d0",
+                    "sizeBytes": 28680
                   }
                 ]
               },
@@ -17181,8 +17181,8 @@
                     "field": "activeRoots",
                     "kind": "file",
                     "path": "PROJECT_STATUS.md",
-                    "sha256": "d22f9b92a22fd651f61ef0c330a093fccf61cd1d148a3ce81acc401550d45680",
-                    "sizeBytes": 47434
+                    "sha256": "8e2f5d70f1e80a1a200b6f55758a3515bfbee2343e08587dc6704b2557089b14",
+                    "sizeBytes": 46926
                   }
                 ]
               },
@@ -17195,8 +17195,8 @@
                     "field": "activeRoots",
                     "kind": "file",
                     "path": "CHANGELOG.md",
-                    "sha256": "4b61668c35c5a3a7ef1b6dfd4dfe0fb55cd13a1c51e859f17fe3faa70d4aba3f",
-                    "sizeBytes": 17787
+                    "sha256": "bb85feae4dbbe222e5b259c4b88efcf1b8317543920f7a81bf6e2edac1fb9f77",
+                    "sizeBytes": 18031
                   }
                 ]
               },
@@ -17209,8 +17209,8 @@
                     "field": "activeRoots",
                     "kind": "file",
                     "path": "docs/INDEX.md",
-                    "sha256": "b71722213019c6f4d4f23627bf90dbde242b5b35ccc527bc38124d14feab59e9",
-                    "sizeBytes": 9740
+                    "sha256": "06f55e1ba09a007d99c76b5f9404c26e054f96a87bdadd72934c4c545639fd57",
+                    "sizeBytes": 9724
                   }
                 ]
               },
@@ -17223,8 +17223,8 @@
                     "field": "activeRoots",
                     "kind": "file",
                     "path": "docs/LUASCRIPT_MEGA_PLAN.md",
-                    "sha256": "9b7f490707e3a4ec4c04807a1c7698d5921dc4aaa325f3a5bfa9b688b3b3e84f",
-                    "sizeBytes": 31102
+                    "sha256": "3680f215ae926134acd816c1f562e9b2bbc3ac3bae9115f3adb20b5fb65ed6e2",
+                    "sizeBytes": 31082
                   }
                 ]
               },
@@ -17251,8 +17251,8 @@
                     "field": "activeRoots",
                     "kind": "file",
                     "path": "docs/LANGUAGE_SUPPORT_MATRIX.md",
-                    "sha256": "db093f9e00dffc9d09f01f2a1e70a1cec6a7e7290ffd6f53a0a7bf7856ce8126",
-                    "sizeBytes": 24202
+                    "sha256": "2fabdaf187c0807669e6b20fd7cde9a0fcdd3275c4a996c2bc5472682d93afa3",
+                    "sizeBytes": 24121
                   }
                 ]
               }
@@ -17367,10 +17367,10 @@
       "detail": {
         "implementation": {
           "path": "src/ir/release_ir_surface_contract.js",
-          "sha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4",
-          "sizeBytes": 5630
+          "sha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b",
+          "sizeBytes": 5625
         },
-        "contractVersion": "1.0.0-rc.1",
+        "contractVersion": "1.0.0",
         "issues": []
       }
     },
@@ -17383,8 +17383,8 @@
         "path": "artifacts/conformance/schema-artifact-mapping-report.json",
         "report": {
           "path": "artifacts/conformance/schema-artifact-mapping-report.json",
-          "sha256": "6976ee94381df0a0e1d0d002da3343f8060dc92d9cf94b5d225bf4d22fa5c7c3",
-          "sizeBytes": 84271
+          "sha256": "9b4fc0ee2b8f921d932d91f4cc40465401ca62ee3447f0338c76f430130ac5d1",
+          "sizeBytes": 84161
         },
         "summary": {
           "total": 32,
@@ -17451,7 +17451,7 @@
           },
           {
             "path": "docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md",
-            "sha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7"
+            "sha256": "558fcf74b4b0e7898bec93211c8275ea6b73a3baeeae5d5f367500a1c313db40"
           },
           {
             "path": "src/compilers/core-language-bridge.js",
@@ -17459,7 +17459,7 @@
           },
           {
             "path": "src/ir/release_ir_surface_contract.js",
-            "sha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4"
+            "sha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b"
           },
           {
             "path": "src/ir/schema_artifact_bridge.js",
@@ -17483,8 +17483,8 @@
         "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
         "report": {
           "path": "artifacts/conformance/dual-surface-compatibility-bridge-report.json",
-          "sha256": "6f0fef03eb3a54d0f68099381bdfcf9d43dc248d5d88b80623bbafedd66cfba5",
-          "sizeBytes": 101406
+          "sha256": "8a193d2c4c2ed45f56cd85cb5987497948bd702286d163aaecefb4fef2adf86d",
+          "sizeBytes": 101286
         },
         "summary": {
           "total": 32,
@@ -17585,11 +17585,11 @@
           },
           {
             "path": "docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md",
-            "sha256": "c07b2a7d3aaeef001997bbf7350065b07169cd0259ac18a23c35440d0e16a1e7"
+            "sha256": "558fcf74b4b0e7898bec93211c8275ea6b73a3baeeae5d5f367500a1c313db40"
           },
           {
             "path": "src/ir/release_ir_surface_contract.js",
-            "sha256": "aee70ab27cc625c68d631cd82c1cba8bae8dc2487f21622e6d7b16f6d92576d4"
+            "sha256": "97a0d364a0a4933c8c3964bebd7cfcae2d3b3b805584053feeb3cf104941af7b"
           },
           {
             "path": "src/ir/schema_artifact_bridge.js",
@@ -17597,7 +17597,7 @@
           },
           {
             "path": "tests/conformance/dual_surface_compatibility_bridge.test.js",
-            "sha256": "1739f3aa135910d9b90d4cda59e3118e3e703181be164532db42b0ea957bb228"
+            "sha256": "3999016a9461693c824ac2e478e4f390dd53889740dcb239f47960d391ce13af"
           },
           {
             "path": "src/unified_luascript.js",
@@ -17616,8 +17616,8 @@
         "sources": [
           {
             "path": "tests/compatibility/denali_compatibility_matrix.test.js",
-            "sha256": "a9042c5c9531ac7555115945726549ed4029f63aa2e2b78a8786157b88c3040e",
-            "sizeBytes": 60387
+            "sha256": "37bf23e06c1fb2361090eeaef58c8c22905a382eea3fd063d910d1fbe07e635e",
+            "sizeBytes": 60377
           },
           {
             "path": "tests/language_completion/bidirectional_harness.js",
@@ -17631,13 +17631,13 @@
           },
           {
             "path": "package.json",
-            "sha256": "c942dfb64ddf267968c3445f50cdd465787046649d0596bef2efe6a233c41079",
-            "sizeBytes": 28504
+            "sha256": "ce0ebdeae92443a2669a1d8bbb382a5cea5d56b15e3e328c5b0471915c129009",
+            "sizeBytes": 28633
           },
           {
             "path": "package-lock.json",
-            "sha256": "1d93f7b91fe9901a3753c9ea44a77bb632619ebb073c475201d3e131736ab219",
-            "sizeBytes": 190571
+            "sha256": "8e77bb03c9b1e06c609035318ece6f91317e8d0dec9d2bb073cd48be45136e70",
+            "sizeBytes": 190557
           }
         ],
         "issues": []

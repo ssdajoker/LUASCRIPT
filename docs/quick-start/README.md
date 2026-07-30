@@ -35,11 +35,14 @@ Use `npm ci` instead of `npm install` when you need lockfile-exact automation.
 
 The full public API/runtime contract draft is [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](../LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md). This quick-start only summarizes the beta validation path.
 
-The current package identity is `luascript` at `0.1.0-beta.0` on the pre-production beta track. `src/unified_luascript.js` is the current package entrypoint, and the current package file surface is `src/`, `test/`, `examples/package/`, `README.md`, and `LICENSE`. Treat that as the beta package surface, not a final canonical `1.0` publish promise.
+The current package identity is `luascript@1.0.1` on the stable Denali track.
+`src/unified_luascript.js` is the package entrypoint, and the package file
+surface is `src/`, `test/`, `examples/package/`, `README.md`, and `LICENSE`.
 
 The package declares consumer Node `>=14.17.0`, aligned with exact runtime TypeScript `5.9.3`. `npm run build` is a readiness smoke, not a production bundle; `npm run test:package-contract` packs, installs, imports, and smoke-tests the actual package on the current runtime and Node `14.17.1`. Native-runtime support is claimed only when the real runtime command is available and the matching `language:<name>:bidirectional` gate passes. Target-runtime IR lanes prove emitted behavior for named slices, but they do not substitute for native qualification.
 
-No tag, publish, GitHub release, or package version bump is part of the beta or `1.0` docs route unless a release action is explicitly requested.
+The verified release build is under `builds/denali/v1.0.1/`; run
+`npm run release:verify:denali` to validate its manifest and checksums.
 
 ## Good First Examples
 

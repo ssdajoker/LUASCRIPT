@@ -45,7 +45,7 @@ Known boundaries and blockers:
 First canonical `1.0` package/runtime expectations:
 
 - The active public API/runtime contract draft is `docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md`; it owns package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, and release-action boundaries for real `1.0`.
-- Current package identity is `luascript` at `0.1.0-beta.0` on the pre-production beta track; this is not a `1.0` package version.
+- Current package identity is `luascript@1.0.1` on the stable Denali track.
 - `src/unified_luascript.js` is the current package entrypoint. The tested package file list is `src/`, `test/`, the deliberately narrow `examples/package/`, `README.md`, and `LICENSE`; the wider examples tree remains repository-local evidence.
 - Setup starts with `npm install`; `npm ci` is the lockfile-exact automation path.
 - The package declares consumer Node `>=14.17.0`, aligned with exact runtime TypeScript `5.9.3`; `npm run test:package-contract` exercises an installed package on Node `14.17.1` and the current verification runtime. `npm run test:compatibility-matrix` owns the wider current-host compatibility seal; other operating systems remain explicitly unclaimed.
@@ -267,7 +267,7 @@ Exit criteria:
 
 The earlier nested steps remain useful provenance, but their scoped deliverables are now represented by live gates. The active closure route is:
 
-- Keep package identity at `0.1.0-beta.0` and preserve the no-`bin`, no-`exports`, six-name root API.
+- Preserve stable package identity and the no-`bin`, no-`exports`, six-name root API unless a governed SemVer change explicitly updates the contract.
 - Regenerate all 26 schema-v2 language reports and require exact live manifest, fixture, implementation, runtime, environment, and governing-document provenance.
 - Run the packed-package contract, required Clarity lanes, actual-program and parser-ownership reports, release-IR conformance, edge/round-trip/source-identity/diagnostic suites, then the current-host compatibility matrix.
 - Run status, stubs, archive, claims, verify, core, performance, and CI gates.
@@ -278,7 +278,7 @@ Exit criteria:
 
 - `npm run denali:rc:preflight` passes all 26 ordered steps.
 - The deterministic release evidence bundle reports `releaseReady: true` with zero blockers.
-- `package.json` still reports `luascript@0.1.0-beta.0`.
+- `package.json` reports `luascript@1.0.1`.
 - Current docs distinguish the scoped Denali RC from universal semantics, cross-platform certification, true omni-language completion, and an authorized release.
 
 ## 8. Acceptance Criteria

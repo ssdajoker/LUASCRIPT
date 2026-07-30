@@ -4,10 +4,12 @@ Status: active evidence bundle index
 Last updated: 2026-07-29
 Track: Denali canonical `1.0` release-candidate evidence
 
-This is a release-shaped conformance evidence bundle index for LUASCRIPT. It is certification-style evidence, not certification: it is not ISO certification, third-party certification, production certification, a release artifact, a package publish, canonical `1.0`, or the user's true omni-language 100% summit.
+This is the conformance evidence bundle index for LUASCRIPT Denali. It is
+certification-style evidence, not ISO certification, third-party certification,
+universal platform certification, or the user's true omni-language 100% summit.
 
-The package remains `luascript@0.1.0-beta.0`. This index describes the
-evidence bundle; it does not authorize an external release action.
+The released package is `luascript@1.0.1`. This index describes the evidence
+bundle copied into the versioned local and GitHub release.
 
 Coverage lanes include beta gates, language gates, Clarity dogfood/canon/super-canon evidence, IR conformance, schema artifact mapping, dual-surface compatibility bridge, public package contract, edge matrix, round-trip probe, source identity probe, unsupported diagnostics, actual programs, support matrix, compatibility policy, parser ownership, current-host compatibility, release-blocking policy, and deterministic bundle identity.
 
@@ -140,8 +142,8 @@ The current package report proves the real `npm pack` output:
 
 | Field | Current contract |
 | --- | --- |
-| Package | `luascript@0.1.0-beta.0` |
-| Tarball | `luascript-0.1.0-beta.0.tgz` |
+| Package | `luascript@1.0.1` |
+| Tarball | `luascript-1.0.1.tgz` |
 | Tarball SHA-256 | `92947fab9eabdaf79efed47b114b787cc6d7a5195e0320d28d407f558b2c7461` |
 | Packed / unpacked bytes | 1,010,433 / 5,189,594 |
 | Entry count | 398 |
@@ -276,7 +278,7 @@ A generated bundle may be read as release-ready only when:
 A passing report summary with a stale hash remains a blocker. An
 informational-warning count does not make required evidence fail, but warnings
 must remain visible. A release-ready bundle is necessary for a local Denali RC
-handoff and still does not authorize release.
+handoff. Future releases still require their own explicit authorization.
 
 ## Known Unsupported Areas
 
@@ -322,4 +324,10 @@ After a run, compare this index with
 [LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md](LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md),
 and the current Denali ledger. Any disagreement is evidence drift.
 
-The Lua structural IR reparse seed and versioned one-way release-IR surface choice are sealed foundations. The current route is no longer “add first-class language, actual-program, parser-ownership, compatibility, or bundle reports”: those reports and policies now exist. The remaining work is to keep their live bindings green, expand only named supported depth, collect equivalent cross-platform receipts before making cross-platform claims, and stop before release without explicit authorization.
+The Lua structural IR reparse seed and versioned one-way release-IR surface
+choice are sealed foundations. The current route is no longer “add first-class
+language, actual-program, parser-ownership, compatibility, or bundle reports”:
+those reports and policies now exist. The remaining work is to keep their live
+bindings green, expand only named supported depth, collect equivalent
+cross-platform receipts before making cross-platform claims, and require fresh
+authorization before any future release.

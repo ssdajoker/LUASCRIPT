@@ -11,7 +11,7 @@ This reference page records the current public-facing contract boundary. It is n
 The full public API/runtime contract draft is [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](../LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md). It is the active source for package entrypoints, root exports, CLI/API surface, runtime files, npm scripts, package files, semver policy, compatibility policy, and release-action boundaries.
 
 - Package name: `luascript`.
-- Current version: `0.1.0-beta.0`.
+- Current version: `1.0.1` (stable Denali).
 - Current entrypoint: `src/unified_luascript.js`.
 - Current package file surface: `src/`, `test/`, `examples/package/`, `README.md`, and `LICENSE`.
 - Default local setup: `npm install`.
@@ -26,7 +26,7 @@ Native-runtime support requires a real runtime command and a passing `language:<
 
 Bidirectionality follows [LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](../LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md). A `bidirectional` script name is not a lossless round-trip or full semantic-equivalence guarantee unless that layer has explicit current evidence.
 
-No tag, publish, GitHub release, or package version bump is part of the current docs route unless a release action is explicitly requested.
+Release notes: [Denali v1.0.1](../releases/LUASCRIPT_DENALI_v1.0.1.md).
 
 ## Current Reference Links
 

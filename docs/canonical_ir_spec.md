@@ -3,7 +3,7 @@
 **Status:** IR schema support reference under the chosen internal Denali RC transition, not a LUASCRIPT package/runtime `1.0` release claim
 **Last reviewed:** 2026-07-29
 Schema (latest v1): docs/canonical_ir.schema.json
-Schema (pinned 1.0.0 Denali RC snapshot): docs/schema/1.0.0/canonical_ir.schema.json
+Schema (pinned immutable Denali 1.0.0 snapshot): docs/schema/1.0.0/canonical_ir.schema.json
 Versioning policy: docs/VERSIONING.md
 Release IR surface contract: docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md
 

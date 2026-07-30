@@ -59,6 +59,7 @@ yarn-error.log*
 # Build artifacts
 dist/
 build/
+builds/
 *.min.js
 *.bundle.js
 

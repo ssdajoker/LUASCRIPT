@@ -1,8 +1,8 @@
 # LUASCRIPT Denali Compatibility Matrix
 
-Status: active current-host release-candidate compatibility contract  
-Last updated: 2026-07-29  
-Package state: `luascript@0.1.0-beta.0`; no release action has occurred
+Status: active current-host stable Denali compatibility contract
+Last updated: 2026-07-30
+Package state: `luascript@1.0.1`
 
 This document defines what LUASCRIPT compatibility evidence protects for the
 Denali `1.0` release candidate. The machine-readable authority is
@@ -29,7 +29,7 @@ identity, semantic equivalence, or permission to release.
 
 | Surface | Denali candidate | Evidence |
 | --- | --- | --- |
-| Package identity | `luascript@0.1.0-beta.0`, pre-production beta | `package.json`, package lock, package report |
+| Package identity | `luascript@1.0.1`, stable Denali | `package.json`, package lock, package report |
 | Root entrypoint | `src/unified_luascript.js` | clean installed root import |
 | Root exports | exactly `UnifiedLuaScript`, `CoreTranspiler`, `RuntimeSystem`, `AdvancedFeatures`, `PerformanceTools`, `AgenticIDE` | package report |
 | CLI | no npm `bin`; no global CLI contract | package metadata and public contract |
@@ -213,4 +213,5 @@ preflight for a release-candidate verdict.
 The compatibility matrix performs no dependency installation, version bump,
 commit, tag, publish, GitHub release, package API mutation, language promotion,
 or external-state change. A passing matrix is necessary evidence for the
-Denali RC; it is not release authorization.
+The matrix is release evidence for Denali v1.0.1; it does not broaden the named
+host, runtime, package, or language boundaries.

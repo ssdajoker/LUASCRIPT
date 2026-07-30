@@ -1745,10 +1745,10 @@ function main() {
       require(modulePath).RELEASE_IR_SURFACE_CONTRACT;
     if (
       !releaseSurfaceContract ||
-      releaseSurfaceContract.contractVersion !== "1.0.0-rc.1"
+      releaseSurfaceContract.contractVersion !== "1.0.0"
     ) {
       releaseContractIssues.push(
-        "RELEASE_IR_SURFACE_CONTRACT.contractVersion is not 1.0.0-rc.1"
+        "RELEASE_IR_SURFACE_CONTRACT.contractVersion is not 1.0.0"
       );
     }
   } catch (error) {

@@ -109,7 +109,7 @@ These node kinds appear in node classes, validators, lowerers, emitters, or test
 
 ## Ambiguous Or Duplicate Behavior
 
-- Current 1.0 semantics boundary: live compiler/lowerer Program IR still uses kinds such as `Parameter` and `VariableDeclarator`; contract `1.0.0-rc.1` now maps those through explicit versioned compatibility encodings for canonical evidence without changing operational output.
+- Current 1.0 semantics boundary: live compiler/lowerer Program IR still uses kinds such as `Parameter` and `VariableDeclarator`; contract `1.0.0` maps those through explicit versioned compatibility encodings for canonical evidence without changing operational output.
 - The pre-release `docs/schema/1.0.0/canonical_ir.schema.json` snapshot was corrected on 2026-07-29; it now compiles and is semantically identical to `docs/canonical_ir.schema.json` except for `$id`, while `docs/schema/1.x/` resolves to it.
 - The language-completion bridge uses a legacy object-tree IR surface, not only the consolidated schema artifact.
 - `src/ir/canonical_ir_schema.js` defines a separate conceptual vocabulary (`Module`, `Function`, `Class`, `Struct`, `Enum`, `Interface`, etc.) that is not the same as the current schema enum.
@@ -146,7 +146,7 @@ These node kinds appear in node classes, validators, lowerers, emitters, or test
 
 ## 1.0 Semantics Work Queue
 
-The release surface choice is now [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md): legacy object-tree Program IR `v0` remains operational, canonical schema artifact `1.0.0` is the one-way evidence/serialization projection, and transition contract `1.0.0-rc.1` governs aliases, deltas, validation, migration, and deprecation. This closes the choice, not the wider semantics program.
+The release surface choice is [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md): legacy object-tree Program IR `v0` remains operational, canonical schema artifact `1.0.0` is the one-way evidence/serialization projection, and frozen transition contract `1.0.0` governs aliases, deltas, validation, migration, and deprecation. This closes the choice, not the wider semantics program.
 
 1. Maintain the chosen one-way dual-surface contract while expanding original-kind-aware shape and semantic evidence.
 2. Keep `docs/canonical_ir.schema.json` and the pinned Denali RC snapshot semantically identical except for `$id`, then reconcile `src/ir/nodes.js` and `src/ir/validator.js` with the supported `1.0` node set.

@@ -2506,3 +2506,21 @@ Verification seal:
 - Readiness condition: `releaseReady: true` with zero release blockers.
 
 Denali 1.0 release candidate ready; awaiting explicit operator authorization to version, tag, publish, or release.
+
+### 2026-07-30 - Denali v1.0.1 Authorized Release Seal
+
+The operator explicitly authorized the release. Historical no-release bearings
+above remain intact as chronological evidence; they no longer describe current
+state.
+
+| Release surface | Seal |
+| --- | --- |
+| Package | `luascript@1.0.1`, stable Denali |
+| Tag | `v1.0.1`; historical `v1.0.0` preserved |
+| Release IR | Frozen contract `1.0.0`; operational Program IR `v0`; internal one-way canonical artifact `1.0.0` |
+| Public API | Exact six root exports; no npm `bin`; no package `exports`; Node `>=14.17.0` |
+| Evidence | Authoritative 26-step preflight; deterministic zero-blocker bundle |
+| Build | `builds/denali/v1.0.1/` with manifest and SHA-256 checksums |
+| Distribution | Versioned local build and GitHub release; npm registry publication not claimed |
+
+Denali v1.0.1 is authorized and released from the exact passing evidence state.

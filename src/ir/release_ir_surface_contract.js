@@ -77,7 +77,7 @@ const FIELD_ALIAS_POLICIES = {
 };
 
 const RELEASE_IR_SURFACE_CONTRACT = {
-  contractVersion: "1.0.0-rc.1",
+  contractVersion: "1.0.0",
   decision: "versioned-one-way-dual-surface-transition",
   status: "DENALI_RC_INTERNAL",
   direction: "legacy-to-canonical",

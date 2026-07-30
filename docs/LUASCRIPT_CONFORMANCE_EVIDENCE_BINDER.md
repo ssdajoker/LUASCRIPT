@@ -9,7 +9,7 @@ It is not ISO certification, third-party certification, production certification
 It names the evidence that exists, the command that must refresh it, and the
 boundaries that a passing local result does not cross.
 
-The package remains `luascript@0.1.0-beta.0`. Nothing in this binder authorizes
+The released package is `luascript@1.0.1`. Nothing in this binder by itself authorizes
 a version bump, commit, tag, push, publish, GitHub release, or package-surface
 change.
 
@@ -72,7 +72,7 @@ preflight and a zero-blocker final bundle.
 | Current-host compatibility | 88/88 checks passing when generated against its bound inputs | Current Windows x64 runtime/tool availability, native lanes, package/dependencies/Node floor, release IR, manifests, and docs; other hosts remain unclaimed |
 | Canonical IR conformance | 32 manifest fixtures | Positive and expected-diagnostic evidence mapped to named v1 semantic rules or documented gaps |
 | Schema artifact mapping | 21/21 positive mappings plus 11 expected diagnostics | 168/168 base invariants and 147/147 release-contract checks |
-| Dual-surface release IR | All current positive, static, mapping, determinism, supplemental, and negative checks passing | Contract `1.0.0-rc.1`; internal one-way Program IR v0 to canonical artifact `1.0.0` transition only |
+| Dual-surface release IR | All current positive, static, mapping, determinism, supplemental, and negative checks passing | Contract `1.0.0`; internal one-way Program IR v0 to canonical artifact `1.0.0` transition only |
 | Edge matrix | 25/25 scoped cases | Value, control, scope, data, errors, target-specific behavior, and unsupported diagnostics |
 | Round-trip probes | 7/7 | 5 structural IR reparse checks and 2 runtime-output equivalence checks; source-preserving count remains 0 |
 | Source identity | 15/15 | 12 positive normalized `.ls` source/parser-owned-AST/IR checks and 3 expected diagnostics; token identity is measured but non-gating |
@@ -80,7 +80,7 @@ preflight and a zero-blocker final bundle.
 
 The current package tarball contract records:
 
-- filename `luascript-0.1.0-beta.0.tgz`;
+- filename `luascript-1.0.1.tgz`;
 - SHA-256
   `92947fab9eabdaf79efed47b114b787cc6d7a5195e0320d28d407f558b2c7461`;
 - 398 entries;
@@ -139,7 +139,7 @@ Active contracts:
 | Current-host compatibility | `npm run test:compatibility-matrix` | Hash-binds current tools, package, 17 native lanes, release IR, reports, manifests, and docs after all producers | One Windows x64 host plus separate Node-floor package smoke; not universal certification |
 | Canonical IR conformance | `npm run test:ir-conformance` | Writes a 32-fixture durable report | Scoped v1 semantic evidence map |
 | Schema artifact mapping | `npm run test:schema-artifact-map` | Writes canonical artifact `1.0.0` mappings and expected diagnostics | Chosen one-way internal projection |
-| Dual-surface compatibility bridge | `npm run test:ir-compatibility-bridge` | Enforces release contract `1.0.0-rc.1` across live/pinned/`1.x` schemas | Internal bridge only; no public API or reverse conversion |
+| Dual-surface compatibility bridge | `npm run test:ir-compatibility-bridge` | Enforces release contract `1.0.0` across live/pinned/`1.x` schemas | Internal bridge only; no public API or reverse conversion |
 | Edge, round-trip, identity, diagnostics | `npm run test:edge-matrix`, `test:roundtrip-probe`, `test:source-identity-probe`, `test:unsupported-diagnostics` | Writes durable scoped reports with hashes and traceability | Named cases only |
 | Documentation and inventory integrity | `npm run status:check`, `claims:check`, `stubs:check`, `archive:audit` | Enforces active truth, protected claims, real implementations, and archive separation | Text/inventory governance, not semantic proof |
 | General readiness | `npm run verify`, `npm test`, `npm run test:performance`, `npm run ci:gates` | Runs broader verification, core/runtime, performance, and CI-completeness checks | Current local environment |
@@ -171,7 +171,7 @@ The package report at
 `artifacts/conformance/public-api-runtime-package-report.json` proves the
 actual-tarball surface rather than a source-tree approximation:
 
-- package identity remains `luascript@0.1.0-beta.0`;
+- package identity is `luascript@1.0.1`;
 - root entrypoint remains `src/unified_luascript.js`;
 - the exact root API remains `UnifiedLuaScript`, `CoreTranspiler`,
   `RuntimeSystem`, `AdvancedFeatures`, `PerformanceTools`, and `AgenticIDE`;
@@ -182,7 +182,7 @@ actual-tarball surface rather than a source-tree approximation:
 - `examples/package/` is packed and both executable examples run from the
   installed package;
 - root-level `runtime/` is deliberately excluded; deep legacy/Python tools that expect it are non-public;
-- no package `exports` map is currently declared, so no subpath import is frozen by the no-release candidate;
+- no package `exports` map is currently declared, so no subpath import is public in Denali;
 - no npm `bin` or global CLI contract exists.
 
 The wider `examples/` tree and
@@ -275,7 +275,7 @@ Current generated report paths:
 - `artifacts/edge_matrix/edge-case-matrix-report.json`
 - `artifacts/release_evidence/denali-release-evidence-bundle.json`
 
-The release-shaped bundle map is [LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md). It is certification-style evidence, not certification, and it creates no version bump, tag, publish, package `bin`, package `exports`, or release.
+The release-shaped bundle map is [LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md). It is certification-style evidence, not certification. The release builder copies the exact bundle into the versioned build without changing package `bin`, package `exports`, or support claims.
 
 Durable local report closure: `npm run test:ir-conformance`, `npm run test:schema-artifact-map`, `npm run test:ir-compatibility-bridge`, `npm run test:package-contract`, `npm run test:roundtrip-probe`, `npm run test:source-identity-probe`, and `npm run test:unsupported-diagnostics` write standalone JSON reports under `artifacts/conformance/` with environment, source/fixture/case hashes, pass/fail summaries, and scoped traceability. The same release inventory now also includes first-class actual-program, parser-ownership, current-host compatibility, and schema-v2 language reports.
 
@@ -285,7 +285,7 @@ Durable local report closure: `npm run test:ir-conformance`, `npm run test:schem
 | --- | --- | --- | --- |
 | Canonical IR conformance | `tests/conformance/manifest.json`; `tests/conformance/canonical_ir_conformance.test.js`; `artifacts/conformance/canonical-ir-conformance-report.json` | 32 fixtures across value semantics, literals, bindings, scope, control flow, functions, calls, arrays/objects, errors, unsupported nodes, determinism, and target obligations, now mapped to named v1 evidence rules or documented gaps; 32 manifest fixtures mapped to named IR semantic rules or documented gaps | Not exhaustive semantics or external certification |
 | Schema artifact mapping | `tests/conformance/manifest.json`; `tests/conformance/schema_artifact_mapping.test.js`; `artifacts/conformance/schema-artifact-mapping-report.json` | 21 positive fixtures produce canonical artifact `1.0.0` under the one-way contract; 147/147 contract checks pass; 11 expected diagnostics remain separate | No reverse conversion, arbitrary-artifact validation, or broad semantic equivalence |
-| Dual-surface compatibility bridge | `src/ir/release_ir_surface_contract.js`; `src/ir/schema_artifact_bridge.js`; report | Contract `1.0.0-rc.1`; 21 positive mappings; 168/168 base invariants; 10/10 static rules; 147/147 mapping rules; 21/21 deterministic artifacts; 1/1 supplemental DoWhile shape proof; 12/12 malformed-shape negatives; 5/5 malformed-source rejections; 11 expected diagnostics | Internal transition, not public API or compiler-output promotion |
+| Dual-surface compatibility bridge | `src/ir/release_ir_surface_contract.js`; `src/ir/schema_artifact_bridge.js`; report | Contract `1.0.0`; 21 positive mappings; 168/168 base invariants; 10/10 static rules; 147/147 mapping rules; 21/21 deterministic artifacts; 1/1 supplemental DoWhile shape proof; 12/12 malformed-shape negatives; 5/5 malformed-source rejections; 11 expected diagnostics | Internal transition, not public API or compiler-output promotion |
 | Edge-case matrix | `tests/edge_matrix/manifest.json`; report | 25 scoped cases across value, control, scope, data, errors, target-specific behavior, and unsupported diagnostics | Not exhaustive edge coverage |
 | Round-trip probe | `tests/roundtrip/manifest.json`; report | 7 probes separating 5 structural IR reparse checks from 2 runtime-output equivalence checks; JS/.ls/Python/Lua layer map recorded | Source-preserving count 0 |
 | Source identity probe | `tests/roundtrip/source_identity_manifest.json`; report | 15 `.ls` fixtures: 12 normalized source identity checks, 12 normalized parser-owned AST identity checks, 12 normalized IR identity checks, and 3 expected unsupported diagnostics; token identity is measured but non-gating | Named identity evidence only; not runtime-output equivalence, broad lossless recovery, or broad semantic equivalence |
@@ -356,16 +356,16 @@ Current explicit exclusions include:
   certification;
 - npm ownership, package-name availability, registry authentication, signing
   keys, or external release access;
-- release authorization.
+- explicit authorization for any future release.
 
 Unsupported features should fail closed through named diagnostics or remain documented exclusions. They should not appear as fake implementation stubs, silent skips, inferred support, or averaged compatibility.
 
 ## Release Evidence Checklist
 
-Before calling the local source state a Denali RC:
+Before calling a source state release-ready:
 
-1. Confirm package identity remains the intended beta candidate and no release
-   action was requested.
+1. Confirm package identity is the intended stable version and the release
+   action has explicit authorization.
 2. Run `npm run denali:rc:preflight` from the repository root.
 3. Require the stdout receipt to report all 26 steps passed.
 4. Require

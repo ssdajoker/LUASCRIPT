@@ -121,7 +121,7 @@ Representative fixtures:
    - Explicit profiles and implicit baseline profiles must stay distinguishable in parser artifacts and harness checks.
 
 4. Canonical `1.0` package/runtime and example boundaries:
-   - Package identity remains `luascript` at `0.1.0-beta.0` until a deliberate release action changes it; `src/unified_luascript.js` is the current entrypoint.
+   - Stable package identity is `luascript@1.0.1`; `src/unified_luascript.js` is the current entrypoint.
    - Runtime claims stay gate-bound: target-runtime IR lanes prove emitted behavior, while native support requires a real runtime command and a passing `language:<name>:bidirectional` gate.
    - First-pass examples should stay inside named evidence: small JavaScript programs, small `.ls` executable/meta programs, actual-program fixtures, `examples/supported_math_showcase.ls`, and mathematical notation core/rehab V1 through V18.
    - A new example family should not enter the supported set until it has manifest registration, runtime proof, docs boundary text, and a claims-check assertion.

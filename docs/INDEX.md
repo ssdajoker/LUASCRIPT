@@ -1,7 +1,7 @@
 # LUASCRIPT Documentation Index
 
 Status: active
-Last updated: 2026-07-29
+Last updated: 2026-07-30
 
 The root status source of truth is [PROJECT_STATUS.md](../PROJECT_STATUS.md). The beta release handoff artifact is [BETA_RELEASE_HANDOFF_V0_1.md](BETA_RELEASE_HANDOFF_V0_1.md). The original expedition guide is [LUASCRIPT_DENALI_SOLOIST_LEDGER.md](LUASCRIPT_DENALI_SOLOIST_LEDGER.md). The post-beta 1.0 route book is [LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md](LUASCRIPT_DENALI_1_0_SUMMIT_LEDGER.md). The Big Remaining Climb master ledger is [LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md). The bidirectionality contract is [LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md](LUASCRIPT_BIDIRECTIONALITY_CONTRACT.md). The release IR surface contract is [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md). Language depth accession rules are [LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](LUASCRIPT_LANGUAGE_ACCESSION_RULES.md). The public API/runtime contract is [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md), with consumer changes in [LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md](LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md) and current-host setup evidence in [LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md](LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md). The conformance evidence binder is [LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md), and the release-shaped evidence bundle index is [LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md). The detailed canonical roadmap and support-tier plan is [LUASCRIPT_MEGA_PLAN.md](LUASCRIPT_MEGA_PLAN.md).
 
@@ -22,6 +22,7 @@ This page is the canonical active-docs map. Everything else under `docs/` is dep
 - [Denali Package Migration Notes](LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md)
 - [Denali Compatibility Matrix](LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md)
 - [Denali Release-Blocking Policy](LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md)
+- [Denali v1.0.1 Release Notes](releases/LUASCRIPT_DENALI_v1.0.1.md)
 - [Conformance Evidence Binder](LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md)
 - [Conformance Evidence Bundle Index](LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md)
 - [Beta Release Handoff v0.1](BETA_RELEASE_HANDOFF_V0_1.md)
@@ -35,7 +36,7 @@ This page is the canonical active-docs map. Everything else under `docs/` is dep
 - [LuaScript Living Meta-Language](LUASCRIPT_LIVING_META_LANGUAGE.md)
 - [LuaScript Meta-Language V0.16](LUASCRIPT_META_LANGUAGE_V0.md)
 - [Mathematical Notation Core And Rehab V18](LUASCRIPT_MATHEMATICAL_NOTATION_CORE.md)
-- Public API/runtime contract: [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md) defines package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, migration/changelog policy, and release-action boundaries for real `1.0`; its tested 2026-07-29 no-release candidate records no package `exports` map, no npm `bin`, no global CLI, exact runtime TypeScript, Node `>=14.17.0`, deliberate root-level `runtime/` exclusion, an actual-tarball consumer gate, and no version bump or publish action.
+- Public API/runtime contract: [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md) defines the stable Denali package entrypoint, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, and migration boundaries. It freezes no package `exports` map, no npm `bin`, no global CLI, exact runtime TypeScript, Node `>=14.17.0`, deliberate root-level `runtime/` exclusion, and an actual-tarball consumer gate at `luascript@1.0.1`.
 - Denali compatibility matrix: [LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md](LUASCRIPT_DENALI_COMPATIBILITY_MATRIX.md) binds current-host runtime/tool versions, 17 native lanes and 317 fixtures, package/dependency/Node-floor evidence, release IR schemas/reports, setup notes, and explicit cross-platform/package-example boundaries without broadening support.
 - Denali release-blocking policy: [LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md](LUASCRIPT_DENALI_RELEASE_BLOCKING_POLICY.md) defines the fail-closed 26-step RC preflight, required versus informational evidence, deterministic bundle generation, and the absolute separation between readiness and release authorization.
 - Conformance evidence binder: [LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md) organizes gates, reports, conformance suites, support matrix traceability, known unsupported areas, compatibility policy, release checklist, and reproducibility steps without claiming ISO certification.

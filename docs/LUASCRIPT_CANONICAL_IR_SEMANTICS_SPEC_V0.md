@@ -12,7 +12,7 @@ The 2026-07-27 schema-artifact mapping pass adds `npm run test:schema-artifact-m
 
 The 2026-07-27 dual-surface compatibility bridge pass adds `src/ir/schema_artifact_bridge.js` and `npm run test:ir-compatibility-bridge`. That historical pass validated the internal bridge candidate for the same positive conformance fixtures, recorded 168/168 invariant checks, and wrote `artifacts/conformance/dual-surface-compatibility-bridge-report.json`.
 
-The 2026-07-29 release-IR bearing chooses [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md), contract `1.0.0-rc.1`: legacy object-tree Program IR `v0` remains the operational compiler/emitter surface, and canonical schema artifact `1.0.0` is a one-way evidence/serialization projection. The gate now checks latest/pinned/`1.x` schema routes, exact alias policies, original-kind-aware required shapes, deterministic artifacts, migration/deprecation rules, unchanged root exports, and malformed-shape negatives. Reverse conversion, semantic equivalence, source preservation, and public package IR API remain unclaimed.
+The Denali release freezes [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md), contract `1.0.0`: legacy object-tree Program IR `v0` remains the operational compiler/emitter surface, and canonical schema artifact `1.0.0` is a one-way evidence/serialization projection. The gate checks latest/pinned/`1.x` schema routes, exact alias policies, original-kind-aware required shapes, deterministic artifacts, migration/deprecation rules, unchanged root exports, and malformed-shape negatives. Reverse conversion, broad semantic equivalence, source preservation, and public package IR API remain unclaimed.
 
 Every semantics section below is tied to current evidence or marked `MISSING EVIDENCE`. No runtime, compiler, lowerer, emitter, schema, or package API behavior is changed by this spec draft.
 
@@ -241,7 +241,7 @@ Evidence:
 | Golden IR validation and selected parity | `EVIDENCED` | `npm run ir:golden:check` and `npm run ir:golden:parity`. |
 | Basic IR validation smoke | `EVIDENCED` | `npm run ir:validate` and `npm run ir:validate:schema`. |
 | Broader determinism stress | `PARTIAL` | Existing IR determinism tests are part of the broader verification surface, but release serialization rules are not yet a standalone conformance contract. |
-| Stable release artifact format, volatile metadata policy, migration compatibility matrix | `PARTIAL` | Contract `1.0.0-rc.1` fixes the internal surface versions, exact aliases, one-way direction, deterministic projection rule, migration path, and package-`2.0.0`-or-later deprecation horizon. Broader metadata semantics, consumer APIs, and cross-version artifact matrices remain open. |
+| Stable release artifact format, volatile metadata policy, migration compatibility matrix | `PARTIAL` | Contract `1.0.0` fixes the internal surface versions, exact aliases, one-way direction, deterministic projection rule, migration path, and package-`2.0.0`-or-later deprecation horizon. Broader metadata semantics, consumer APIs, and cross-version artifact matrices remain open. |
 
 ## Target Obligations
 
@@ -378,7 +378,7 @@ Shared evidence rules that apply across the table:
 - Lua and `.ls` runtime equivalence are outside this conformance matrix unless a separate gate proves a named slice.
 - Full value edge semantics remain open for `NaN`, infinities, `-0`, integer width, overflow, BigInt, decimal precision, object identity, aliasing, and deep equality.
 - Full error semantics remain open for throw values, catch scope, stack behavior, rethrow, finalizer order, and target exception interop.
-- Transition migration/deprecation rules are sealed by contract `1.0.0-rc.1`; helper versioning, per-target semantic delta tables, cross-version matrices, and wider release compatibility rules remain outside this v1 evidence map.
+- Transition migration/deprecation rules are sealed by contract `1.0.0`; helper versioning, per-target semantic delta tables, cross-version matrices, and wider release compatibility rules remain outside this v1 evidence map.
 
 ## Round-Trip Probe Harness
 

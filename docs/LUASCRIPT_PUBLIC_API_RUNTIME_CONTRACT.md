@@ -1,16 +1,18 @@
 # LUASCRIPT Public API And Runtime Contract
 
-Status: active tested no-release freeze candidate; final release authorization remains open
-Last updated: 2026-07-29
+Status: active tested stable Denali v1.0.1 contract
+Last updated: 2026-07-30
 Track: Denali canonical `1.0`
 
-This document defines the public API and runtime expectations for real LUASCRIPT `1.0`. It is a contract draft for the Denali `1.0` route, not a version bump, release tag, npm publish, GitHub release, or broad support promotion.
+This document defines the public API and runtime expectations for stable
+LUASCRIPT Denali v1.0.1. It freezes only the named package surfaces and tested
+support slices; it does not broaden language, platform, or certification claims.
 
 ## Scope
 
-- The current package remains `luascript` at `0.1.0-beta.0`.
-- The current release track remains pre-production beta.
-- No package version, language syntax, package `bin`, package `exports`, or release state changes in this bearing.
+- The current package is `luascript` at `1.0.1`.
+- The current release track is stable Denali.
+- The release changes package identity and release state only; it does not add language syntax, package `bin`, package `exports`, or a global CLI.
 - The 2026-07-29 package bearing repairs clean-consumer importability, package metadata, `enableAll` behavior, and status-version alignment without adding a root export or claiming `1.0`.
 - Canonical `1.0` can ship only after the exit criteria in [LUASCRIPT_1_0_EXIT_CRITERIA.md](LUASCRIPT_1_0_EXIT_CRITERIA.md) are met or explicitly excluded with rationale.
 
@@ -19,7 +21,7 @@ This document defines the public API and runtime expectations for real LUASCRIPT
 Current package metadata:
 
 - Package name: `luascript`.
-- Current package version: `0.1.0-beta.0`.
+- Current package version: `1.0.1`.
 - Root module entrypoint: `src/unified_luascript.js`.
 - Declared package `exports` map: none.
 - Declared npm `bin`: none.
@@ -28,7 +30,10 @@ Current package metadata:
 - Runtime dependencies: `acorn`, `esprima`, `luaparse`, and exact `typescript@5.9.3`.
 - Repository metadata: `https://github.com/ssdajoker/LUASCRIPT`.
 
-The no-release Denali freeze candidate preserves the current root-package import surface: `require("luascript")` resolves through `package.json#main` to `src/unified_luascript.js`. There is no package `exports` map, so no subpath import is frozen by this candidate. The current root module exports these names:
+The stable Denali release preserves the root-package import surface:
+`require("luascript")` resolves through `package.json#main` to
+`src/unified_luascript.js`. There is no package `exports` map, so no subpath
+import is public. The current root module exports these names:
 
 - `UnifiedLuaScript`
 - `CoreTranspiler`
@@ -49,7 +54,7 @@ LUASCRIPT does not currently declare a package `bin`. The current command surfac
 - `npm run beta:*`, `npm run clarity:*`, `npm run test:*`, and `npm run language:*` are verification surfaces for named slices and reports.
 - `src/index.js` has a direct `node src/index.js` command interface, but it is not the package root entrypoint and is not declared as an npm `bin`; this candidate does not freeze it as the public CLI.
 
-No-release freeze candidate CLI stance: no global CLI binary is part of the public contract, and npm scripts remain the supported local workflow. Adding a package `bin`, promoting `src/index.js`, or adding command semantics is a compatibility-impacting release decision requiring tests, docs, migration notes, and an explicit release action.
+Stable Denali CLI stance: no global CLI binary is part of the public contract, and npm scripts remain the supported local workflow. Adding a package `bin`, promoting `src/index.js`, or adding command semantics is a compatibility-impacting release decision requiring tests, docs, migration notes, and an appropriate SemVer release.
 
 ## Runtime Files And Native Tools
 
@@ -60,7 +65,7 @@ Runtime expectations:
 - The executable floor probe uses Node `14.17.1`, the first available npm-distributed patch in that line, and performs an installed-package root import plus JS-to-Lua smoke.
 - `src/runtime.js`, `src/runtime_system.js`, and `src/runtime/` helpers are included by the current `src/` package file entry.
 - Root-level `runtime/runtime.lua` and `runtime/core/enhanced_runtime.lua` remain outside the package. They are referenced by non-public `src/transpiler.js` and `src/luascript_compiler.py`, not by the candidate root JavaScript import graph.
-- No-release freeze candidate runtime stance: root-level `runtime/` is explicitly excluded. The two deep tools that expect it are repository-local/non-public until a future package contract deliberately promotes and packages them.
+- Stable Denali runtime stance: root-level `runtime/` is explicitly excluded. The two deep tools that expect it are repository-local/non-public until a future package contract deliberately promotes and packages them.
 
 `npm run test:package-contract` writes `artifacts/conformance/public-api-runtime-package-report.json`. It must pack the live source, inspect the actual tarball, install it in a clean temporary consumer, import `luascript`, check the exact six root exports and method inventory, run a CoreTranspiler smoke, execute every shipped public-root example, verify version and `enableAll` behavior, prove the root-runtime exclusion, and exercise the installed package at the declared Node line. The test cleans only its unique temporary directory.
 
@@ -74,7 +79,7 @@ The real `1.0` contract must classify npm scripts into three groups:
 - Evidence gates: beta, clarity, language, conformance, round-trip, edge-matrix, unsupported-diagnostic, status, claims, stubs, archive, and verify scripts.
 - Release-action scripts: version bump, release preparation, tag, publish, or release artifact commands.
 
-Script names and behavior that are advertised as public workflow must follow the compatibility policy below. Evidence-gate script names can evolve only with docs, claims checks, and migration notes when users would reasonably rely on them. Release-action scripts must not run as part of ordinary docs or readiness passes. The current release-action scripts include `release`, `release:patch`, `release:minor`, `release:major`, `release:preview`, `release:status`, `release:verify`, `version:bump`, `changelog:generate`, `artifacts:sign`, `artifacts:verify`, and `artifacts:list`; this freeze candidate does not execute them.
+Script names and behavior that are advertised as public workflow must follow the compatibility policy below. Evidence-gate script names can evolve only with docs, claims checks, and migration notes when users would reasonably rely on them. Release-action scripts must not run as part of ordinary docs or readiness passes. The current release-action scripts include `release`, `release:patch`, `release:minor`, `release:major`, `release:preview`, `release:status`, `release:verify`, `version:bump`, `release:build:denali`, `release:verify:denali`, `changelog:generate`, `artifacts:sign`, `artifacts:verify`, and `artifacts:list`.
 
 ## Package Files
 
@@ -86,7 +91,7 @@ The current package `files` surface is beta-scoped:
 - `README.md`
 - `LICENSE`
 
-This list is now a tested no-release candidate, not yet a canonical `1.0` publish promise. The package contract confirms:
+This list is the tested Denali publish promise. The package contract confirms:
 
 - `package.json`, `README.md`, `LICENSE`, the required `src/` root, and the exact `examples/package/` public-example set are present;
 - root-level `runtime/` is intentionally absent from the candidate package;
@@ -95,11 +100,11 @@ This list is now a tested no-release candidate, not yet a canonical `1.0` publis
 
 The additive `examples/package/` entry is deliberately narrow. `examples/package/transpile-js-to-lua.cjs` and `examples/package/minimal-system.cjs` use only the six-name root API. The wider `examples/` tree and all `tests/actual_programs/` fixtures remain repository-local compiler evidence; they are not shipped package examples and do not define consumer compatibility.
 
-Root `.npmignore` records repository-wide exclusions; `src/.npmignore` is the effective nested filter for the explicitly included `src/` tree. This remains a candidate boundary only, not a final `1.0` publish seal.
+Root `.npmignore` records repository-wide exclusions; `src/.npmignore` is the effective nested filter for the explicitly included `src/` tree.
 
 ## Migration And Changelog Policy
 
-The unreleased Denali package-bearing changes are documented in [LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md](LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md) and the top unreleased section of [CHANGELOG.md](../CHANGELOG.md):
+The Denali package-bearing changes are documented in [LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md](LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md) and the `1.0.1` section of [CHANGELOG.md](../CHANGELOG.md):
 
 - consumers must use Node `>=14.17.0` rather than the previously declared `>=14.0.0`;
 - TypeScript is now an exact runtime dependency, so a clean tarball import has every eager dependency it needs;
@@ -109,7 +114,7 @@ The unreleased Denali package-bearing changes are documented in [LUASCRIPT_DENAL
 - repository, bugs, and homepage metadata point to `ssdajoker/LUASCRIPT`.
 - two installed-package examples now exercise only the public root import, while repository-local `.ls` and actual-program suites remain explicitly outside the package contract.
 
-Before `1.0`, every protected-surface change must add an unreleased changelog entry. If a consumer must change code, configuration, runtime version, import path, or deployment packaging, the same bearing must add or update a migration note with old behavior, new behavior, required action, fallback, and verification command. Changelog generation or sealing remains a release action and is not run by readiness gates.
+For `1.0.1` and later, every protected-surface change must add a changelog entry. If a consumer must change code, configuration, runtime version, import path, or deployment packaging, the same bearing must add or update a migration note with old behavior, new behavior, required action, fallback, and verification command. Changelog generation or sealing remains a release action and is not run by readiness gates.
 
 ## Semver Policy
 
@@ -125,7 +130,7 @@ IR schema versioning remains separate and is governed by [VERSIONING.md](VERSION
 
 The chosen internal release-IR transition is [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md). It keeps operational Program IR and its one-way canonical artifact projection internal for this bearing. `legacyProgramToSchemaArtifact`, `RELEASE_IR_SURFACE_CONTRACT`, and `src/ir` deep imports are not added to the six-name root export candidate, and existing transpilation result `.ir` behavior is not redefined. Any future package-root `IR` namespace is a separate public API decision requiring API-specific tests, package review, migration notes, and an explicit contract update.
 
-Release-script caveat: `version:bump` and `release:*` are release-action tools, not readiness checks. The reviewed tooling accepts SemVer prereleases such as the live `0.1.0-beta.0`, computes stable promotion deliberately, invokes readiness commands without Unix-only pipelines, and refuses to create a tag unless the intended package version is already committed at `HEAD`. Those safeguards do not authorize a bump, commit, tag, publish, or release.
+Release-script caveat: `version:bump` and `release:*` are release-action tools, not readiness checks. The reviewed tooling accepts SemVer, computes increments deliberately, invokes readiness commands without Unix-only pipelines, and refuses to create a tag unless the intended package version is already committed at `HEAD`. `release:build:denali` additionally requires a clean worktree and a matching tag at `HEAD`.
 
 ## Compatibility Policy
 
@@ -152,13 +157,13 @@ The two executable programs under `examples/package/`, alongside their local REA
 
 Any compatibility-impacting change must update this contract, [PROJECT_STATUS.md](../PROJECT_STATUS.md), [README.md](../README.md), the support matrix or active docs as needed, and `claims:check`.
 
-## No-Release Freeze Candidate Audit
+## Stable Denali Release Audit
 
 Original audit date: 2026-07-16. Current package proof: 2026-07-29.
 
 | Surface | Current repo truth | Candidate boundary |
 | --- | --- | --- |
-| Package identity | `package.json` name is `luascript`; version is `0.1.0-beta.0`; `package.json#luascript.version` also says `0.1.0-beta.0` | No bump; no `1.0` package identity until explicit release action |
+| Package identity | `package.json` name is `luascript`; version is `1.0.1`; `package.json#luascript.version` also says `1.0.1` | Stable Denali identity is frozen |
 | Root entrypoint | `package.json#main` is `src/unified_luascript.js` | Candidate public import surface remains root package import only |
 | Exports map | No `exports` map is declared | No subpath imports are frozen; deep imports stay internal |
 | Root exports | `UnifiedLuaScript`, `CoreTranspiler`, `RuntimeSystem`, `AdvancedFeatures`, `PerformanceTools`, `AgenticIDE` | Exact six-name surface, method inventory, no-IR-internal boundary, version alignment, and `enableAll` behavior are package-tested |
@@ -166,11 +171,11 @@ Original audit date: 2026-07-16. Current package proof: 2026-07-29.
 | Node floor | `engines.node` is `>=14.17.0`; exact TypeScript declares `>=14.17` | Clean installed-package smoke is required on Node `14.17.1` and the current verification Node |
 | Runtime helpers | `src/runtime*` and `src/runtime/` are package-included through `src/`; root `runtime/` is absent | Exclusion is deliberate; deep Python/legacy helpers that expect root runtime remain non-public |
 | Npm scripts | Local workflow, evidence gates, language gates, and release-action scripts coexist in `package.json` | Only documented local workflow and evidence gates are readiness surfaces; release scripts require explicit release request |
-| Package files | `src/`, `test/`, `examples/package/`, `README.md`, `LICENSE`; nested package hygiene filters active | Actual tarball contents, clean install, and exact public-example execution are tested; final authorization remains open |
-| Semver policy | Pre-`1.0` mutability plus post-`1.0` MAJOR/MINOR/PATCH policy is documented here | Adopted as candidate policy; prerelease parsing and commit-before-tag invariants are tested, but every release action still needs authorization |
+| Package files | `src/`, `test/`, `examples/package/`, `README.md`, `LICENSE`; nested package hygiene filters active | Actual tarball contents, clean install, and exact public-example execution are release-blocking |
+| Semver policy | Stable MAJOR/MINOR/PATCH policy is documented here | Adopted for Denali; version parsing and commit-before-tag invariants are tested |
 | Compatibility policy | Applies only to documented public surfaces and named supported slices | Candidate protects root import, root exports, no-bin stance, Node floor, package files, named slices, and named diagnostics |
-| Changelog expectations | `CHANGELOG.md` has an unreleased Denali package-boundary section and a migration-note link | No changelog seal in this pass; compatibility-impacting changes must stay visible before release |
-| Release-action boundaries | Release, version bump, changelog generation, artifact signing, tags, publish, and GitHub release are scriptable but not run | No tag, publish, version bump, GitHub release, artifact signing, or changelog seal without explicit release request |
+| Changelog expectations | `CHANGELOG.md` has a sealed Denali `1.0.1` section and a migration-note link | Compatibility-impacting changes must stay visible in future releases |
+| Release-action boundaries | Release, version bump, changelog generation, artifact signing, tags, publish, and GitHub release are deliberate operations | Denali was explicitly authorized; future releases require their own exact authorization |
 
 ## Release Actions
 

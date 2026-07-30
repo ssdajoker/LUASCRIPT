@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:canonical-ir-conformance",
   "command": "npm run test:ir-conformance",
-  "generatedAt": "2026-07-30T03:46:54.572Z",
-  "elapsedMs": 2132,
+  "generatedAt": "2026-07-30T06:16:14.707Z",
+  "elapsedMs": 2219,
   "environment": {
     "node": "v24.14.0",
     "npm": {

@@ -9,6 +9,8 @@ const args = new Set(process.argv.slice(2));
 const runAll = !args.has("--math") && !args.has("--luascript");
 const runMath = runAll || args.has("--math");
 const runLuaScript = runAll || args.has("--luascript");
+const DENALI_RELEASE_VERSION = "1.0.1";
+const DENALI_RELEASE_TRACK = "stable Denali";
 
 const failures = [];
 const passed = [];
@@ -410,7 +412,8 @@ function checkPackageMetadata() {
   check(scripts["test:package-contract"] ===
     "node tests/package/public_api_runtime_package_contract.test.js",
   "package.json exposes npm run test:package-contract");
-  check(pkg.version === "0.1.0-beta.0", "package.json uses pre-production beta v0.1 package version");
+  check(pkg.version === DENALI_RELEASE_VERSION,
+    "package.json uses the authorized Denali stable package version");
   check(pkg.name === "luascript", "package.json keeps canonical package name");
   check(pkg.main === "src/unified_luascript.js", "package.json keeps current package entrypoint");
   check(!Object.prototype.hasOwnProperty.call(pkg, "exports"),
@@ -436,7 +439,7 @@ function checkPackageMetadata() {
   const packageLockRoot = packageLock.packages && packageLock.packages[""];
   check(packageLockRoot &&
     packageLockRoot.name === "luascript" &&
-    packageLockRoot.version === "0.1.0-beta.0" &&
+    packageLockRoot.version === DENALI_RELEASE_VERSION &&
     JSON.stringify(packageLockRoot.dependencies) === JSON.stringify(expectedRuntimeDependencies) &&
     packageLockRoot.engines &&
     packageLockRoot.engines.node === ">=14.17.0" &&
@@ -444,8 +447,8 @@ function checkPackageMetadata() {
     packageLockRoot.devDependencies.yaml === "^2.8.2" &&
     packageLockRoot.devDependencies["@types/esprima"] === "^4.0.6",
   "package-lock root keeps package identity, runtime dependency boundary, and Node floor aligned");
-  check(pkg.luascript && pkg.luascript.releaseTrack === "pre-production beta",
-    "package.json declares LUASCRIPT release track as pre-production beta");
+  check(pkg.luascript && pkg.luascript.releaseTrack === DENALI_RELEASE_TRACK,
+    "package.json declares the stable Denali release track");
   check(pkg.luascript && pkg.luascript.version === pkg.version,
     "package.json package version and luascript metadata version stay aligned");
   check(pkg.luascript && Array.isArray(pkg.luascript.verifiedSlices) &&
@@ -519,8 +522,8 @@ function checkPackageMetadata() {
   ];
   const expectedPublicPackageReportMetadata = {
     name: "luascript",
-    version: "0.1.0-beta.0",
-    releaseTrack: "pre-production beta",
+    version: DENALI_RELEASE_VERSION,
+    releaseTrack: DENALI_RELEASE_TRACK,
     main: "src/unified_luascript.js",
     engines: {
       node: ">=14.17.0"
@@ -656,8 +659,8 @@ function checkPackageMetadata() {
     /^(?:package-lock\.json|npm-shrinkwrap\.json)$/i.test(filePath)
   );
   check(publicPackageTarball.name === "luascript" &&
-    publicPackageTarball.version === "0.1.0-beta.0" &&
-    publicPackageTarball.filename === "luascript-0.1.0-beta.0.tgz" &&
+    publicPackageTarball.version === DENALI_RELEASE_VERSION &&
+    publicPackageTarball.filename === `luascript-${DENALI_RELEASE_VERSION}.tgz` &&
     /^[0-9a-f]{64}$/.test(publicPackageTarball.sha256 || "") &&
     Number.isInteger(publicPackageTarball.sizeBytes) &&
     publicPackageTarball.sizeBytes > 0 &&
@@ -704,7 +707,7 @@ function checkPackageMetadata() {
   const installedPublicPackage = publicApiRuntimePackageReport.installedConsumer || {};
   check(installedPublicPackage.package &&
     installedPublicPackage.package.name === "luascript" &&
-    installedPublicPackage.package.version === "0.1.0-beta.0" &&
+    installedPublicPackage.package.version === DENALI_RELEASE_VERSION &&
     installedPublicPackage.package.main === "src/unified_luascript.js" &&
     JSON.stringify(installedPublicPackage.rootExports) ===
       JSON.stringify(expectedPublicRootExports) &&
@@ -782,7 +785,7 @@ function checkPackageMetadata() {
   checkIncludes("tests/conformance/schema_artifact_mapping.test.js", "It does not change compiler output or package API, provide reverse conversion, prove semantic equivalence or source preservation",
     "schema artifact mapping harness one-way boundary");
   checkFile("src/ir/release_ir_surface_contract.js");
-  check(RELEASE_IR_SURFACE_CONTRACT.contractVersion === "1.0.0-rc.1" &&
+  check(RELEASE_IR_SURFACE_CONTRACT.contractVersion === "1.0.0" &&
     RELEASE_IR_SURFACE_CONTRACT.decision === "versioned-one-way-dual-surface-transition" &&
     RELEASE_IR_SURFACE_CONTRACT.direction === "legacy-to-canonical",
   "release IR contract fixes versioned one-way transition identity");
@@ -914,7 +917,7 @@ function checkPackageMetadata() {
       JSON.stringify(expectedReleaseIrDiagnosticNames),
   "release IR reports retain exact 32 result identities and exact 11 diagnostic identities");
   check(schemaArtifactReport.transitionPolicy &&
-    schemaArtifactReport.transitionPolicy.contractVersion === "1.0.0-rc.1" &&
+    schemaArtifactReport.transitionPolicy.contractVersion === "1.0.0" &&
     schemaArtifactReport.transitionPolicy.decision === RELEASE_IR_SURFACE_CONTRACT.decision &&
     schemaArtifactReport.transitionPolicy.direction === RELEASE_IR_SURFACE_CONTRACT.direction &&
     JSON.stringify(schemaArtifactReport.transitionPolicy.legacySurface) ===
@@ -940,7 +943,7 @@ function checkPackageMetadata() {
     hasExactPassedDetails(schemaArtifactContractDetails, 147),
   "schema artifact report retains every passing invariant and release-contract detail");
   check(dualSurfaceReport.bridgePolicy &&
-    dualSurfaceReport.bridgePolicy.contractVersion === "1.0.0-rc.1" &&
+    dualSurfaceReport.bridgePolicy.contractVersion === "1.0.0" &&
     dualSurfaceReport.bridgePolicy.releaseSurfaceStatus === "CHOSEN_VERSIONED_ONE_WAY_DUAL_SURFACE" &&
     dualSurfaceReport.summary &&
     dualSurfaceReport.summary.total === 32 &&
@@ -1320,7 +1323,7 @@ function checkPackageMetadata() {
     }
   }
 
-  checkIncludes("README.md", "Canonical `1.0` Package And Runtime Expectations",
+  checkIncludes("README.md", "Stable Denali Package And Runtime Contract",
     "README package/runtime expectations section");
   checkIncludes("README.md", "docs/INDEX.md](docs/INDEX.md) is the canonical active-docs map",
     "README active docs map boundary");
@@ -1336,23 +1339,23 @@ function checkPackageMetadata() {
     "README bidirectionality contract link");
   checkIncludes("README.md", "Language depth accession rules live in [docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md](docs/LUASCRIPT_LANGUAGE_ACCESSION_RULES.md)",
     "README language accession rules link");
-  checkIncludes("README.md", "The active tested no-release public API/runtime contract is [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md)",
+  checkIncludes("README.md", "The active tested stable public API/runtime contract is [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md)",
     "README public API runtime contract link");
-  checkIncludes("README.md", "It names package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, migration/changelog policy, and release-action boundaries for real `1.0`.",
+  checkIncludes("README.md", "It names package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, migration/changelog policy, and release boundaries for Denali.",
     "README public API runtime boundary");
-  checkIncludes("README.md", "The 2026-07-16 no-release Denali freeze candidate records current truth only.",
-    "README no-release freeze candidate");
+  checkIncludes("README.md", "The Denali v1.0.1 release freezes the tested package boundary.",
+    "README stable Denali package boundary");
   checkIncludes("README.md", "The package has no declared `exports` map, no npm `bin`, and no global CLI contract",
     "README no-exports no-bin boundary");
-  checkIncludes("README.md", "Root-level `runtime/` helpers exist for local Lua examples/tests but are outside the current package `files` promise.",
+  checkIncludes("README.md", "Root-level `runtime/` helpers exist for local Lua examples/tests but are outside the package `files` promise.",
     "README root runtime package-files boundary");
-  checkIncludes("README.md", "the package version stays `0.1.0-beta.0`",
-    "README no-bump package version boundary");
+  checkIncludes("README.md", "The stable package identity is `luascript@1.0.1`.",
+    "README stable package version boundary");
   checkIncludes("README.md", "Certification-style evidence is organized by [docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md](docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md)",
     "README conformance evidence binder link");
   checkIncludes("README.md", "the remaining source-preserving/certification climb now lives in [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md)",
     "README Big Remaining Climb ledger link");
-  checkIncludes("README.md", "[docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md) now seals the scoped local/current-host Denali release candidate",
+  checkIncludes("README.md", "[docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md) seals the scoped local/current-host Denali evidence",
     "README scoped Denali RC seal");
   checkIncludes("README.md", "both passed on 2026-06-19 and were refreshed green on 2026-07-14",
     "README beta gate refresh date");
@@ -1380,7 +1383,7 @@ function checkPackageMetadata() {
     "README native runtime qualification boundary");
   checkIncludes("PROJECT_STATUS.md", "The active-docs map is [docs/INDEX.md](docs/INDEX.md)",
     "PROJECT_STATUS active docs map");
-  checkIncludes("PROJECT_STATUS.md", "The current package/runtime expectation is explicitly tested for the first canonical `1.0` pass",
+  checkIncludes("PROJECT_STATUS.md", "The stable package/runtime expectation is explicitly tested",
     "PROJECT_STATUS package/runtime route");
   checkIncludes("PROJECT_STATUS.md", "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md",
     "PROJECT_STATUS exit criteria charter link");
@@ -1394,15 +1397,15 @@ function checkPackageMetadata() {
     "PROJECT_STATUS conformance evidence binder link");
   checkIncludes("PROJECT_STATUS.md", "the Big Remaining Climb master ledger is [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md)",
     "PROJECT_STATUS Big Remaining Climb ledger link");
-  checkIncludes("PROJECT_STATUS.md", "[docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md) now seals the scoped local/current-host Denali release candidate",
+  checkIncludes("PROJECT_STATUS.md", "[docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md) seals the scoped local/current-host Denali evidence",
     "PROJECT_STATUS scoped Denali RC seal");
   checkIncludes("PROJECT_STATUS.md", "`npm run beta:preflight` and `npm run beta:full` both passed on 2026-06-19 and were refreshed green on 2026-07-14",
     "PROJECT_STATUS beta gate refresh date");
-  checkIncludes("PROJECT_STATUS.md", "is the active tested no-release contract for root exports, CLI/API surface, runtime files, npm scripts, package files, semver policy, compatibility policy, migration/changelog policy, and release-action boundaries",
+  checkIncludes("PROJECT_STATUS.md", "is the active tested stable contract for root exports, CLI/API surface, runtime files, npm scripts, package files, semver policy, compatibility policy, and migration boundaries",
     "PROJECT_STATUS public API runtime boundary");
-  checkIncludes("PROJECT_STATUS.md", "The no-release Denali freeze candidate keeps the protected API and release stance unchanged: no package `exports` map, no declared npm `bin`, no global CLI contract, no package version bump, no tag, and no publish action.",
-    "PROJECT_STATUS no-release freeze candidate");
-  checkIncludes("PROJECT_STATUS.md", "Root package import remains the only candidate public import surface; direct `node src/index.js` command handling is not public CLI.",
+  checkIncludes("PROJECT_STATUS.md", "The stable Denali boundary has no package `exports` map, no declared npm `bin`, and no global CLI contract.",
+    "PROJECT_STATUS stable package boundary");
+  checkIncludes("PROJECT_STATUS.md", "Root package import is the public import surface; direct `node src/index.js` command handling is not public CLI.",
     "PROJECT_STATUS package import and CLI boundary");
   checkIncludes("PROJECT_STATUS.md", "Root-level `runtime/` helpers are repository-local and remain outside the package `files` promise.",
     "PROJECT_STATUS root runtime package-files boundary");
@@ -1450,9 +1453,9 @@ function checkPackageMetadata() {
     "PROJECT_STATUS conformance evidence binder scope");
   checkIncludes("PROJECT_STATUS.md", "The structure is certification-style local evidence only: not ISO certification, not third-party certification, not universal platform certification, and not a claim of true omni-language completion.",
     "PROJECT_STATUS conformance evidence binder boundary");
-  checkIncludes("PROJECT_STATUS.md", "The edge-case matrix, IR semantics map, Lua structural seed, versioned release-IR transition, package boundary, compatibility matrix, deterministic evidence bundle, and authoritative preflight are sealed for the scoped local RC.",
+  checkIncludes("PROJECT_STATUS.md", "The edge-case matrix, IR semantics map, Lua structural seed, versioned release-IR transition, package boundary, compatibility matrix, deterministic evidence bundle, and authoritative preflight are sealed at `luascript@1.0.1`.",
     "PROJECT_STATUS scoped RC evidence surfaces");
-  checkIncludes("PROJECT_STATUS.md", "contract `1.0.0-rc.1` keeps legacy object-tree Program IR `v0` as the operational compiler/emitter surface and uses canonical schema artifact `1.0.0` as a one-way evidence/serialization projection",
+  checkIncludes("PROJECT_STATUS.md", "contract `1.0.0` keeps legacy object-tree Program IR `v0` as the operational compiler/emitter surface and uses canonical schema artifact `1.0.0` as a one-way evidence/serialization projection",
     "PROJECT_STATUS release IR surface decision");
   checkIncludes("PROJECT_STATUS.md", "Durable conformance reports are now written under `artifacts/conformance/`: `canonical-ir-conformance-report.json`, `schema-artifact-mapping-report.json`, `dual-surface-compatibility-bridge-report.json`, `public-api-runtime-package-report.json`, `denali-compatibility-matrix-report.json`, `actual-programs-report.json`, `parser-ownership-report.json`, `roundtrip-probe-report.json`, `source-identity-probe-report.json`, and `unsupported-diagnostics-report.json`.",
     "PROJECT_STATUS durable conformance report paths");
@@ -1486,7 +1489,7 @@ function checkPackageMetadata() {
     "documentation index language accession rules");
   checkIncludes("docs/INDEX.md", "LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md",
     "documentation index public API runtime contract");
-  checkIncludes("docs/INDEX.md", "Public API/runtime contract: [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md) defines package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, migration/changelog policy, and release-action boundaries for real `1.0`; its tested 2026-07-29 no-release candidate records no package `exports` map, no npm `bin`, no global CLI, exact runtime TypeScript, Node `>=14.17.0`, deliberate root-level `runtime/` exclusion, an actual-tarball consumer gate, and no version bump or publish action.",
+  checkIncludes("docs/INDEX.md", "Public API/runtime contract: [LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md) defines the stable Denali package entrypoint, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, and migration boundaries.",
     "documentation index public API runtime boundary");
   checkIncludes("docs/INDEX.md", "LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md",
     "documentation index conformance evidence binder");
@@ -1553,12 +1556,12 @@ function checkPackageMetadata() {
     "exit criteria public API runtime criterion");
   checkIncludes("docs/LUASCRIPT_1_0_EXIT_CRITERIA.md", "Entry, six root exports/facade, no CLI, Node floor, dependencies, package files, semver, compatibility, and release-action boundaries are written and packed-tarball tested",
     "exit criteria public API runtime measurable condition");
-  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Status: active tested no-release freeze candidate; final release authorization remains open",
+  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Status: active tested stable Denali v1.0.1 contract",
     "public API runtime contract status");
-  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "This document defines the public API and runtime expectations for real LUASCRIPT `1.0`.",
+  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "This document defines the public API and runtime expectations for stable",
     "public API runtime contract purpose");
-  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "No package version, language syntax, package `bin`, package `exports`, or release state changes in this bearing.",
-    "public API runtime no behavior change boundary");
+  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "The release changes package identity and release state only; it does not add language syntax, package `bin`, package `exports`, or a global CLI.",
+    "public API runtime release behavior boundary");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Declared npm `bin`: none.",
     "public API runtime bin boundary");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Declared package `exports` map: none.",
@@ -1575,8 +1578,8 @@ function checkPackageMetadata() {
     "public API runtime package file boundary");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Release-action scripts must not run as part of ordinary docs or readiness passes.",
     "public API runtime release-script caveat");
-  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "## No-Release Freeze Candidate Audit",
-    "public API runtime no-release audit section");
+  checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "## Stable Denali Release Audit",
+    "public API runtime stable release audit section");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Pre-`1.0` releases may change public API, CLI, package file layout, language slices, and runtime expectations when the change is documented and claims checks are updated.",
     "public API runtime semver pre-1.0 boundary");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Compatibility applies only to documented public surfaces and named supported slices:",
@@ -1589,7 +1592,7 @@ function checkPackageMetadata() {
     "public API runtime release evidence binder link");
   checkIncludes("docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md", "Root package import strategy is frozen or deliberately changed with migration notes.",
     "public API runtime exit checklist");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "no package `exports` map is currently declared, so no subpath import is frozen by the no-release candidate",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "no package `exports` map is currently declared, so no subpath import is public in Denali",
     "conformance evidence binder exports boundary");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "root-level `runtime/` is deliberately excluded; deep legacy/Python tools that expect it are non-public",
     "conformance evidence binder root runtime boundary");
@@ -1647,7 +1650,7 @@ function checkPackageMetadata() {
     "conformance evidence binder bundle map boundary");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "Status: active evidence bundle index",
     "conformance evidence bundle index status");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "This is a release-shaped conformance evidence bundle index for LUASCRIPT. It is certification-style evidence, not certification",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "This is the conformance evidence bundle index for LUASCRIPT Denali.",
     "conformance evidence bundle index non-certification boundary");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "beta gates, language gates, Clarity dogfood/canon/super-canon evidence, IR conformance, schema artifact mapping, dual-surface compatibility bridge, public package contract, edge matrix, round-trip probe, source identity probe, unsupported diagnostics, actual programs, support matrix, compatibility policy",
     "conformance evidence bundle index lane coverage");
@@ -1679,7 +1682,7 @@ function checkPackageMetadata() {
     "conformance evidence bundle roundtrip report");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "manifest hash, 7 fixture hashes, pass/fail summaries, layer evidence, and support-matrix traceability",
     "conformance evidence bundle roundtrip fixture count");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "The Lua structural IR reparse seed and versioned one-way release-IR surface choice are sealed",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "The Lua structural IR reparse seed and versioned one-way release-IR surface",
     "conformance evidence bundle next-route cleanup");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BUNDLE_INDEX.md", "`artifacts/conformance/source-identity-probe-report.json`",
     "conformance evidence bundle source identity report");
@@ -1707,7 +1710,7 @@ function checkPackageMetadata() {
     "conformance evidence binder dual-surface compatibility bridge report artifact");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "| Dual-surface compatibility bridge | `npm run test:ir-compatibility-bridge` |",
     "conformance evidence binder dual-surface compatibility bridge gate family");
-  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "Contract `1.0.0-rc.1`; 21 positive mappings; 168/168 base invariants; 10/10 static rules; 147/147 mapping rules; 21/21 deterministic artifacts; 1/1 supplemental DoWhile shape proof; 12/12 malformed-shape negatives; 5/5 malformed-source rejections; 11 expected diagnostics",
+  checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "Contract `1.0.0`; 21 positive mappings; 168/168 base invariants; 10/10 static rules; 147/147 mapping rules; 21/21 deterministic artifacts; 1/1 supplemental DoWhile shape proof; 12/12 malformed-shape negatives; 5/5 malformed-source rejections; 11 expected diagnostics",
     "conformance evidence binder dual-surface compatibility bridge suite count");
   checkIncludes("docs/LUASCRIPT_CONFORMANCE_EVIDENCE_BINDER.md", "`artifacts/conformance/roundtrip-probe-report.json`",
     "conformance evidence binder roundtrip report artifact");
@@ -1773,7 +1776,7 @@ function checkPackageMetadata() {
     "beta handoff package/runtime route");
   checkIncludes("docs/LUASCRIPT_MEGA_PLAN.md", "First canonical `1.0` package/runtime expectations",
     "mega plan package/runtime expectations");
-  checkIncludes("docs/LANGUAGE_SUPPORT_MATRIX.md", "Canonical `1.0` first-pass boundaries",
+  checkIncludes("docs/LANGUAGE_SUPPORT_MATRIX.md", "Stable Denali boundaries",
     "support matrix package/runtime boundary");
   checkIncludes("docs/LANGUAGE_SUPPORT_MATRIX.md", "The active-docs map is [INDEX.md](INDEX.md)",
     "support matrix active docs map");
@@ -1977,7 +1980,7 @@ function checkPackageMetadata() {
     "canonical IR support-reference boundary");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md", "The current language-completion bridge uses the legacy object-tree IR surface, not only the consolidated schema artifact.",
     "canonical IR inventory bridge boundary");
-  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md", "Current 1.0 semantics boundary: live compiler/lowerer Program IR still uses kinds such as `Parameter` and `VariableDeclarator`; contract `1.0.0-rc.1` now maps those through explicit versioned compatibility encodings",
+  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md", "Current 1.0 semantics boundary: live compiler/lowerer Program IR still uses kinds such as `Parameter` and `VariableDeclarator`; contract `1.0.0` maps those through explicit versioned compatibility encodings",
     "canonical IR inventory chosen transition boundary");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_INVENTORY.md", "The latest published schema enum in `docs/canonical_ir.schema.json` contains 40 node kinds",
     "canonical IR inventory schema enum count");
@@ -2000,7 +2003,7 @@ function checkPackageMetadata() {
     "canonical IR semantics spec v0 identity");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "This is the first formal semantics draft for the LUASCRIPT canonical IR. It is not canonical `1.0`",
     "canonical IR semantics spec v0 not 1.0 boundary");
-  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "The 2026-07-29 release-IR bearing chooses [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md), contract `1.0.0-rc.1`",
+  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "The Denali release freezes [LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md](LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md), contract `1.0.0`",
     "canonical IR semantics spec chosen surface contract");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "Bidirectional claims must identify the proven layer: native execution, source-to-IR, IR-to-target, target-runtime, emitted `.ls`, round-trip source identity, or semantic equivalence.",
     "canonical IR semantics spec v0 bidirectionality boundary");
@@ -2080,10 +2083,10 @@ function checkPackageMetadata() {
     "canonical IR semantics spec dual-surface compatibility bridge route");
   checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "168/168 invariant checks",
     "canonical IR semantics spec dual-surface invariant count");
-  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "Reverse conversion, semantic equivalence, source preservation, and public package IR API remain unclaimed.",
+  checkIncludes("docs/LUASCRIPT_CANONICAL_IR_SEMANTICS_SPEC_V0.md", "Reverse conversion, broad semantic equivalence, source preservation, and public package IR API remain unclaimed.",
     "canonical IR semantics spec one-way internal boundary");
   checkFile("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md");
-  checkIncludes("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md", "Contract version: `1.0.0-rc.1`",
+  checkIncludes("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md", "Contract version: `1.0.0`",
     "release IR surface contract version");
   checkIncludes("docs/LUASCRIPT_RELEASE_IR_SURFACE_CONTRACT.md", "legacy Program IR remains the LUASCRIPT 1.x operational surface",
     "release IR surface operational compatibility");
@@ -3234,11 +3237,11 @@ function checkReleaseToolingContracts() {
       throw new Error("not executed by version calculation claims");
     }
   });
-  check(pkg.version === "0.1.0-beta.0" &&
-    bumper.getNextVersion("patch") === "0.1.0" &&
-    bumper.getNextVersion("minor") === "0.1.0" &&
-    bumper.getNextVersion("major") === "1.0.0",
-  "version tooling promotes the current beta to exact patch/minor 0.1.0 and major 1.0.0 SemVer targets");
+  check(pkg.version === DENALI_RELEASE_VERSION &&
+    bumper.getNextVersion("patch") === "1.0.2" &&
+    bumper.getNextVersion("minor") === "1.1.0" &&
+    bumper.getNextVersion("major") === "2.0.0",
+  "version tooling advances stable Denali with exact patch, minor, and major SemVer targets");
 
   const gitCalls = [];
   const guardedBumper = new VersionBump(repoRoot, {
@@ -3292,7 +3295,7 @@ function checkDenaliRcDocumentation() {
   ];
   const exitCriteria = "docs/LUASCRIPT_1_0_EXIT_CRITERIA.md";
   const handoff =
-    "Denali 1.0 release candidate ready; awaiting explicit operator authorization to version, tag, publish, or release.";
+    "Denali v1.0.1 is authorized and released from the exact passing evidence state.";
 
   for (const ledger of ledgers) {
     checkIncludes(ledger,

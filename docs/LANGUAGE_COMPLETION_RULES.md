@@ -6,7 +6,15 @@ Language completion is slice-based and evidence-driven. A language is complete o
 
 ## Package/Runtime Boundary
 
-Package identity and runtime claims follow the active package/runtime contract: `luascript` at `0.1.0-beta.0`, entrypoint `src/unified_luascript.js`, default `npm install`, lockfile-exact `npm ci`, consumer Node floor `node >=14.17.0`, exact runtime TypeScript `5.9.3`, and `npm run build` as a readiness smoke only. `npm run test:package-contract` is the installed-package boundary gate. Native-runtime claims require the real runtime command plus a passing `language:<name>:bidirectional` gate. Target-runtime IR lanes prove emitted behavior for named slices, but they do not substitute for native qualification. No tag, publish, GitHub release, or package version bump is part of this route unless explicitly requested.
+Package identity and runtime claims follow the active stable contract:
+`luascript@1.0.1`, entrypoint `src/unified_luascript.js`, default
+`npm install`, lockfile-exact `npm ci`, consumer Node floor
+`node >=14.17.0`, exact runtime TypeScript `5.9.3`, and `npm run build` as a
+readiness smoke only. `npm run test:package-contract` is the installed-package
+boundary gate. Native-runtime claims require the real runtime command plus a
+passing `language:<name>:bidirectional` gate. Target-runtime IR lanes prove
+emitted behavior for named slices, but they do not substitute for native
+qualification.
 
 The active-docs map is [INDEX.md](INDEX.md). Archived reports, phase documents, generated snapshots, and old completion summaries cannot promote a language claim unless the current support matrix, manifests, runtime gates, and claims checks agree.
 

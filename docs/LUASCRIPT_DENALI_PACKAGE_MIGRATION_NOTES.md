@@ -1,16 +1,16 @@
 # LUASCRIPT Denali Package Migration Notes
 
-Status: unreleased no-release candidate
-Last updated: 2026-07-29
-Applies to: the future package after `0.1.0-beta.0`; no version bump or publish has occurred
+Status: released stable Denali migration contract
+Last updated: 2026-07-30
+Applies to: `luascript@1.0.1`
 
-These notes describe the package-boundary changes proven during the Denali release-candidate climb. They are migration guidance, not a release announcement.
+These notes describe the package-boundary changes shipped by Denali v1.0.1.
 
 ## Consumer Runtime Floor
 
 Old declaration: Node `>=14.0.0`.
 
-Candidate declaration: Node `>=14.17.0`.
+Denali declaration: Node `>=14.17.0`.
 
 Why: the shipped TypeScript compiler eagerly loads exact `typescript@5.9.3`, whose own engine floor is Node `>=14.17`. Keeping the lower package declaration would promise an engine range the runtime dependency does not promise.
 
@@ -104,6 +104,10 @@ Repository, bugs, and homepage metadata now point to `ssdajoker/LUASCRIPT` rathe
 
 ## Release Boundary
 
-These changes are still carried by package `0.1.0-beta.0`. No version bump, Git tag, npm publish, GitHub release, changelog seal, commit, push, or pull request is part of this migration note.
+These changes ship in `luascript@1.0.1`, tag `v1.0.1`. The versioned local
+release and GitHub release are authoritative distribution surfaces. npm
+registry publication is not claimed because the package was previously
+unpublished and this release host was not authenticated to npm.
 
-Before release, rerun the package contract and the compatibility/evidence gates, review the exact tarball report, and obtain explicit operator authorization for every release action.
+Verify the installed-package boundary with `npm run test:package-contract` and
+the complete release state with `npm run denali:rc:preflight`.

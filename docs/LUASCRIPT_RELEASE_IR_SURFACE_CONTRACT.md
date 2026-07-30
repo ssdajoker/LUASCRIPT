@@ -1,8 +1,8 @@
 # LUASCRIPT Release IR Surface Contract
 
-Status: chosen internal Denali RC contract; not a package release or public API
-Contract version: `1.0.0-rc.1`
-Last updated: 2026-07-29
+Status: frozen internal Denali release contract; not a package-root public API
+Contract version: `1.0.0`
+Last updated: 2026-07-30
 Track: Denali canonical `1.0`, criterion `1.0-IR-SEMANTICS`
 
 ## Decision
@@ -13,7 +13,7 @@ Denali uses a versioned one-way dual-surface transition:
 | --- | --- | --- | --- |
 | Operational compiler/emitter authority | `legacy-object-tree-program` | `v0` | `CoreLanguageBridge.compileToIR` continues to return `{ kind: "Program", body: [...] }`; current emitters continue to consume this tree |
 | Canonical evidence/serialization projection | `canonical-ir-schema` | `1.0.0` | The internal bridge derives a schema-valid artifact for conformance, inspection, hashing, and release evidence |
-| Transition contract | `versioned-one-way-dual-surface-transition` | `1.0.0-rc.1` | Maps legacy Program IR to the canonical artifact with explicit aliases, deltas, versions, validation, migration, and deprecation rules |
+| Transition contract | `versioned-one-way-dual-surface-transition` | `1.0.0` | Maps legacy Program IR to the canonical artifact with explicit aliases, deltas, versions, validation, migration, and deprecation rules |
 
 This is a deliberate compatibility choice. Replacing the live Program tree before every current emitter and language gate has equivalent canonical-artifact coverage would create avoidable breakage. Treating the derived artifact as a lossless replacement would overclaim what the bridge proves. Therefore:
 
@@ -31,12 +31,19 @@ The machine-readable policy is `src/ir/release_ir_surface_contract.js`. The mapp
 The contract binds these paths:
 
 - latest candidate: `docs/canonical_ir.schema.json`;
-- pinned Denali `1.0.0` RC snapshot: `docs/schema/1.0.0/canonical_ir.schema.json`;
+- pinned Denali `1.0.0` immutable snapshot: `docs/schema/1.0.0/canonical_ir.schema.json`;
 - current major alias: `docs/schema/1.x/canonical_ir.schema.json`.
 
-Before this contract was chosen, the pinned file had an unresolvable `kind` reference and had drifted behind the latest schema. Because canonical package `1.0` has not shipped, the pinned file was corrected as a pre-release RC snapshot. The gate now requires latest and pinned schemas to be semantically identical except for `$id`, compiles both with AJV, resolves the `1.x` alias against the pinned schema, and validates every derived positive fixture against all three routes.
+Before release, the pinned file had an unresolvable `kind` reference and had
+drifted behind the latest schema. It was corrected while still an RC snapshot.
+Denali v1.0.1 now freezes that exact `docs/schema/1.0.0/` snapshot immutably.
+The gate requires latest and pinned schemas to be semantically identical except
+for `$id`, compiles both with AJV, resolves the `1.x` alias against the pinned
+schema, and validates every derived positive fixture against all three routes.
 
-After explicit release authorization, a versioned schema snapshot becomes immutable. Later compatible additions require a schema `MINOR`; incompatible shape or semantic changes require a schema `MAJOR`.
+The versioned schema snapshot is immutable after Denali release. Later
+compatible additions require a schema `MINOR`; incompatible shape or semantic
+changes require a schema `MAJOR`.
 
 ## Declared Kind Compatibility Encodings
 
@@ -115,6 +122,8 @@ This bearing does not:
 - expose a package-root IR API or repair unrelated `src/ir/index.js` deep-import issues;
 - provide reverse conversion;
 - prove arbitrary caller-authored artifacts, broad semantic equivalence, or source preservation;
-- bump `luascript@0.1.0-beta.0`, tag, publish, or release anything.
+- expose the internal IR bridge as package-root API.
 
-`1.0-IR-SEMANTICS` remains open for broader value/error semantics, target delta tables, and release-blocking policy. The release-IR surface choice itself is closed by this contract, subject to the current gate and explicit release authorization.
+Broader value/error semantics and target delta tables remain future accession
+work. The release-IR surface choice is frozen by this contract and its current
+release-blocking gate.

@@ -4,11 +4,16 @@ Status source of truth: see [PROJECT_STATUS.md](PROJECT_STATUS.md). The beta han
 
 The active docs surface is intentionally small. [docs/INDEX.md](docs/INDEX.md) is the canonical active-docs map; if a document is not in that map or the support-reference list below, treat it as deprecated historical material under [docs/OLD LUASCRIPT DOCS/README.md](<docs/OLD LUASCRIPT DOCS/README.md>).
 
-## Scoped Beta v0.1 Handoff
+## Stable Denali v1.0.1
 
-LUASCRIPT is in a **scoped, non-strict pre-production beta v0.1** state. On 2026-06-19, `npm run beta:readiness`, `npm run beta:preflight`, and `npm run beta:full` passed for the implemented lanes; the same beta preflight/full evidence was refreshed on 2026-07-14 during the penultimate Denali readiness audit. This is evidence for the named slices only; it is not canonical `1.0`, not full-language completion, and the beta handoff itself did not claim strict-native completion.
+LUASCRIPT Denali is released as **`luascript@1.0.1`**. The historical scoped,
+non-strict beta v0.1 handoff remains available for provenance, but the current
+release is governed by the 26-step `npm run denali:rc:preflight`, the stable
+package/runtime contract, and the hash-bound release evidence. Stable means the
+named tested surfaces are frozen under SemVer; it does not mean full-language,
+lossless universal translation, or cross-platform certification.
 
-The exact beta handoff artifact is [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md). Post-beta strict-native closure for the current named slices was completed on 2026-07-13: Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam now have narrow native gates alongside the earlier JavaScript, TypeScript, `.ls`, Lua, Python, C#, C, C++, Java, and Rust gates. These remain limited slices, not broad language support. [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md) now seals the scoped local/current-host Denali release candidate: versioned one-way release IR, tested package boundary, schema-v2 provenance, current-host compatibility, deterministic release evidence, and fail-closed tooling. The authoritative reproduction command is `npm run denali:rc:preflight`. Package identity remains `0.1.0-beta.0`, and no release action is authorized.
+The exact beta handoff artifact is [docs/BETA_RELEASE_HANDOFF_V0_1.md](docs/BETA_RELEASE_HANDOFF_V0_1.md). Post-beta strict-native closure for the current named slices was completed on 2026-07-13: Ruby, PHP, Dart, Go, Kotlin, Elm, and Gleam now have narrow native gates alongside the earlier JavaScript, TypeScript, `.ls`, Lua, Python, C#, C, C++, Java, and Rust gates. These remain limited slices, not broad language support. [docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md](docs/LUASCRIPT_BIG_REMAINING_CLIMB_MASTER_LEDGER.md) seals the scoped local/current-host Denali evidence: versioned one-way release IR, tested package boundary, schema-v2 provenance, current-host compatibility, deterministic release evidence, and fail-closed tooling. The authoritative reproduction command is `npm run denali:rc:preflight`. Release notes are in [docs/releases/LUASCRIPT_DENALI_v1.0.1.md](docs/releases/LUASCRIPT_DENALI_v1.0.1.md).
 
 ### Compact Beta Quick Start
 
@@ -41,13 +46,13 @@ No other profile names are supported in the current V0.16 contract. Explicit pro
 
 The identity-contract fixture `meta_identity_contract_portable_slice.ls` now combines existing `portable_v1` plus `portable_semantics_v1` profiles with top-level `meta`, `repair`, and `verify` blocks. It proves target stdout across Lua, JavaScript, Python, and emitted `.ls`, asserts supported parser feature slices, and explicitly excludes broad unsupported syntax such as classes, for-of, try/catch, and template literals.
 
-### Canonical `1.0` Package And Runtime Expectations
+### Stable Denali Package And Runtime Contract
 
-The active tested no-release public API/runtime contract is [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md). It names package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, migration/changelog policy, and release-action boundaries for real `1.0`. Unreleased consumer-impact details are in [docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md](docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md).
+The active tested stable public API/runtime contract is [docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md](docs/LUASCRIPT_PUBLIC_API_RUNTIME_CONTRACT.md). It names package entrypoints, root exports, CLI/API surface, Node/runtime expectations, package files, semver policy, compatibility policy, migration/changelog policy, and release boundaries for Denali. Consumer-impact details are in [docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md](docs/LUASCRIPT_DENALI_PACKAGE_MIGRATION_NOTES.md).
 
-The current package identity is `luascript` at `0.1.0-beta.0` on the pre-production beta track. `src/unified_luascript.js` remains the package entrypoint, and the current publish file list is limited to `src/`, `test/`, `examples/package/`, `README.md`, and `LICENSE`. Only the two scripts under `examples/package/` are installed-package examples; the wider example tree and actual-program suite remain repository-local. This is a beta package surface, not a canonical `1.0` publish promise.
+The current package identity is `luascript` at `1.0.1` on the stable Denali track. `src/unified_luascript.js` remains the package entrypoint, and the published file list is limited to `src/`, `test/`, `examples/package/`, `README.md`, and `LICENSE`. Only the two scripts under `examples/package/` are installed-package examples; the wider example tree and actual-program suite remain repository-local.
 
-The 2026-07-16 no-release Denali freeze candidate records current truth only. The package has no declared `exports` map, no npm `bin`, and no global CLI contract; root package import resolves through `package.json#main`, while direct `node src/index.js` command handling remains non-public unless a future release promotes it. Root-level `runtime/` helpers exist for local Lua examples/tests but are outside the current package `files` promise. Release, changelog, artifact-signing, tag, publish, and version-bump scripts remain explicit release actions, not readiness gates; the package version stays `0.1.0-beta.0`.
+The Denali v1.0.1 release freezes the tested package boundary. The package has no declared `exports` map, no npm `bin`, and no global CLI contract; root package import resolves through `package.json#main`, while direct `node src/index.js` command handling remains non-public unless a future release promotes it. Root-level `runtime/` helpers exist for local Lua examples/tests but are outside the package `files` promise. Release actions remain separate from readiness gates. The stable package identity is `luascript@1.0.1`.
 
 Local validation starts with `npm install`; `npm ci` is the lockfile-exact automation path. `npm run build` is a readiness smoke, not a production bundle. The package declares `node >=14.17.0`, aligned with exact runtime dependency `typescript@5.9.3`. `npm run test:package-contract` proves an actual tarball can be clean-installed, imported, transpile, and execute the two shipped public-root examples on the current Node runtime, plus repeat the root-import/transpile smoke on Node `14.17.1`; it does not imply the modern development suite supports Node 14.
 
@@ -59,7 +64,8 @@ Native-runtime support is claimed only when the corresponding `npm run language:
 
 The first narrow round-trip probe is `npm run test:roundtrip-probe`. It covers 7 tiny fixtures: 5 structural IR reparse checks across JavaScript, `.ls`, Python, and Lua plus 2 JavaScript/Python runtime-output equivalence checks. The Lua fixture proves only normalized current-bridge Program-IR parity while preserving semantic metadata and excluding source locations, raw literal fields, and generated IDs. Cross-language structural probes separately exclude source-specific metadata. Structural IR reparse is stronger evidence than stdout matching, but it is still not source text, token, comment, or formatting identity and not broad semantic equivalence. The source-preserving `.ls` suite is `npm run test:source-identity-probe`: it covers 15 fixtures, with 12 positive normalized `.ls` source identity, normalized parser-owned AST identity, and normalized IR identity checks plus 3 separate expected unsupported diagnostics. It writes `artifacts/conformance/source-identity-probe-report.json` and keeps token-level identity, runtime-output equivalence, broad lossless recovery, and semantic equivalence separate from the normalized identity count.
 
-No tag, publish, GitHub release, or package version bump is part of this route unless a release action is explicitly requested.
+The release is packaged under `builds/denali/v1.0.1/` and published through the
+`v1.0.1` GitHub release. npm registry publication is not claimed.
 
 ### Example Boundary Map
 

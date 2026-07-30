@@ -113,7 +113,7 @@ function main() {
   const contractStaticChecks = [
     {
       name: "contract-version",
-      passed: RELEASE_IR_SURFACE_CONTRACT.contractVersion === "1.0.0-rc.1",
+      passed: RELEASE_IR_SURFACE_CONTRACT.contractVersion === "1.0.0",
       detail: RELEASE_IR_SURFACE_CONTRACT.contractVersion
     },
     {

@@ -1,13 +1,13 @@
 # LUASCRIPT Denali Release-Blocking Policy
 
-Status: active no-release RC gate policy  
-Last updated: 2026-07-29  
+Status: active stable Denali and future-release gate policy
+Last updated: 2026-07-30
 Authority: `scripts/denali_rc_preflight.js`
 
-This policy defines the evidence that must be green before LUASCRIPT can be
-called a Denali `1.0` release candidate. It does not authorize a version bump,
-commit, tag, publish, push, pull request, GitHub release, changelog seal, or
-artifact upload.
+This policy defines the evidence that must be green for stable Denali and every
+future LUASCRIPT release. It supplies readiness evidence, while release
+authorization remains a separate operator decision. Denali v1.0.1 received
+that explicit authorization.
 
 ## One Authoritative Command
 
@@ -144,5 +144,5 @@ This local policy does not prove:
   authentication, or network release access.
 
 Those claims and external prerequisites remain separate. A zero-failure local
-preflight is necessary for the Denali RC handoff, not sufficient permission to
-release.
+preflight is necessary for a release but never supplies authorization for a
+future version.

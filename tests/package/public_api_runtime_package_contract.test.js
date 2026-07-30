@@ -15,6 +15,8 @@ const reportPath = path.join(
   "public-api-runtime-package-report.json"
 );
 const tempPrefix = "luascript-public-package-contract-";
+const expectedPackageVersion = "1.0.1";
+const expectedReleaseTrack = "stable Denali";
 
 const expectedRootExports = [
   "AdvancedFeatures",
@@ -437,11 +439,11 @@ async function main() {
   check(
     "package-metadata-identity-and-status",
     packageJson.name === "luascript" &&
-      packageJson.version === "0.1.0-beta.0" &&
+      packageJson.version === expectedPackageVersion &&
       packageJson.main === "src/unified_luascript.js" &&
       packageJson.luascript &&
       packageJson.luascript.version === packageJson.version &&
-      packageJson.luascript.releaseTrack === "pre-production beta",
+      packageJson.luascript.releaseTrack === expectedReleaseTrack,
     {
       name: packageJson.name,
       version: packageJson.version,
@@ -452,12 +454,12 @@ async function main() {
   );
   check(
     "package-version-status-contract-alignment",
-    contractText.includes("`luascript` at `0.1.0-beta.0`") &&
-      contractText.includes("pre-production beta") &&
+    contractText.includes("`luascript` at `1.0.1`") &&
+      contractText.includes("stable Denali") &&
       contractText.includes("`src/unified_luascript.js`"),
     {
-      packageIdentityPresent: contractText.includes("`luascript` at `0.1.0-beta.0`"),
-      releaseTrackPresent: contractText.includes("pre-production beta"),
+      packageIdentityPresent: contractText.includes("`luascript` at `1.0.1`"),
+      releaseTrackPresent: contractText.includes("stable Denali"),
       mainPresent: contractText.includes("`src/unified_luascript.js`")
     }
   );
@@ -1127,8 +1129,8 @@ async function main() {
     expected: {
       package: {
         name: "luascript",
-        version: "0.1.0-beta.0",
-        releaseTrack: "pre-production beta",
+        version: expectedPackageVersion,
+        releaseTrack: expectedReleaseTrack,
         main: "src/unified_luascript.js",
         engines: { node: ">=14.17.0" },
         files: expectedPackageFiles,

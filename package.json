@@ -1,6 +1,6 @@
 {
   "name": "luascript",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.1",
   "description": "Evidence-based LUASCRIPT compiler/toolchain for verified JavaScript, TypeScript, .ls, Lua, Python, C#, C, and C++ slices, plus experimental target-runtime lanes and mathematical-notation slices",
   "main": "src/unified_luascript.js",
   "scripts": {
@@ -224,6 +224,8 @@
     "release:preview": "node scripts/release-cli.js patch --dry-run",
     "release:status": "node scripts/release-cli.js --status",
     "release:verify": "node scripts/release-cli.js --verify",
+    "release:build:denali": "node scripts/build_denali_release.js",
+    "release:verify:denali": "node scripts/build_denali_release.js --verify",
     "version:bump": "node scripts/version-bump.js",
     "changelog:generate": "node scripts/changelog-generator.js",
     "artifacts:sign": "node scripts/sign-artifacts.js",
@@ -311,9 +313,9 @@
     "LICENSE"
   ],
   "luascript": {
-    "version": "0.1.0-beta.0",
-    "releaseTrack": "pre-production beta",
-    "betaTarget": "v0.1",
+    "version": "1.0.1",
+    "releaseTrack": "stable Denali",
+    "releaseName": "Denali",
     "sourceOfTruth": {
       "projectStatus": "PROJECT_STATUS.md",
       "languageSupport": "docs/LANGUAGE_SUPPORT_MATRIX.md",

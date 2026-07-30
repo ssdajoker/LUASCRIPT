@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "luascript:edge-case-matrix",
-  "generatedAt": "2026-07-30T03:47:04.369Z",
+  "generatedAt": "2026-07-30T06:16:25.053Z",
   "environment": {
     "node": "v24.14.0",
     "npm": {
@@ -1380,7 +1380,7 @@
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-7LGQ7A\\errors-undefined-call-runtime-diagnostic-javascript.js:1\nconsole.log(\"edge_error\", missing_call());\n        ^\n\nReferenceError: missing_call is not defined\n    at Object.<anonymous> (C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-7LGQ7A\\errors-undefined-call-runtime-diagnostic-javascript.js:1:9)\n    at Module._compile (node:internal/modules/cjs/loader:1812:14)\n    at Object..js (node:internal/modules/cjs/loader:1943:10)\n    at Module.load (node:internal/modules/cjs/loader:1533:32)\n    at Module._load (node:internal/modules/cjs/loader:1335:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47\n\nNode.js v24.14.0",
+            "stderr": "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-eRF45L\\errors-undefined-call-runtime-diagnostic-javascript.js:1\nconsole.log(\"edge_error\", missing_call());\n        ^\n\nReferenceError: missing_call is not defined\n    at Object.<anonymous> (C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-eRF45L\\errors-undefined-call-runtime-diagnostic-javascript.js:1:9)\n    at Module._compile (node:internal/modules/cjs/loader:1812:14)\n    at Object..js (node:internal/modules/cjs/loader:1943:10)\n    at Module.load (node:internal/modules/cjs/loader:1533:32)\n    at Module._load (node:internal/modules/cjs/loader:1335:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47\n\nNode.js v24.14.0",
             "error": null
           }
         },
@@ -1397,7 +1397,7 @@
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-GM43Uy\\errors-undefined-call-runtime-diagnostic-python.py\", line 10, in <module>\n    __ls_print(\"edge_error\", missing_call())\n                             ^^^^^^^^^^^^\nNameError: name 'missing_call' is not defined",
+            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-8KD0O5\\errors-undefined-call-runtime-diagnostic-python.py\", line 10, in <module>\n    __ls_print(\"edge_error\", missing_call())\n                             ^^^^^^^^^^^^\nNameError: name 'missing_call' is not defined",
             "error": null
           }
         },
@@ -1414,7 +1414,7 @@
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "luajit: ...-VIkGPP\\errors-undefined-call-runtime-diagnostic-lua.lua:4: attempt to call global 'missing_call' (a nil value)\nstack traceback:\n\t...-VIkGPP\\errors-undefined-call-runtime-diagnostic-lua.lua:4: in main chunk\n\t[C]: at 0x7ff76cbf4840",
+            "stderr": "luajit: ...-7rrhnX\\errors-undefined-call-runtime-diagnostic-lua.lua:4: attempt to call global 'missing_call' (a nil value)\nstack traceback:\n\t...-7rrhnX\\errors-undefined-call-runtime-diagnostic-lua.lua:4: in main chunk\n\t[C]: at 0x7ff76cbf4840",
             "error": null
           }
         }
@@ -1439,7 +1439,7 @@
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-8ZsTBz\\errors-python-undefined-call-runtime-diagnostic-python.py\", line 1, in <module>\n    print(\"edge_error_py\", missing_call())\n                           ^^^^^^^^^^^^\nNameError: name 'missing_call' is not defined",
+            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-XYKYW2\\errors-python-undefined-call-runtime-diagnostic-python.py\", line 1, in <module>\n    print(\"edge_error_py\", missing_call())\n                           ^^^^^^^^^^^^\nNameError: name 'missing_call' is not defined",
             "error": null
           }
         },
@@ -1456,7 +1456,7 @@
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-00zeUZ\\errors-python-undefined-call-runtime-diagnostic-javascript.js:1\nconsole.log(\"edge_error_py\", missing_call());\n        ^\n\nReferenceError: missing_call is not defined\n    at Object.<anonymous> (C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-00zeUZ\\errors-python-undefined-call-runtime-diagnostic-javascript.js:1:9)\n    at Module._compile (node:internal/modules/cjs/loader:1812:14)\n    at Object..js (node:internal/modules/cjs/loader:1943:10)\n    at Module.load (node:internal/modules/cjs/loader:1533:32)\n    at Module._load (node:internal/modules/cjs/loader:1335:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47\n\nNode.js v24.14.0",
+            "stderr": "C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-mjHJ8L\\errors-python-undefined-call-runtime-diagnostic-javascript.js:1\nconsole.log(\"edge_error_py\", missing_call());\n        ^\n\nReferenceError: missing_call is not defined\n    at Object.<anonymous> (C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-javascript-mjHJ8L\\errors-python-undefined-call-runtime-diagnostic-javascript.js:1:9)\n    at Module._compile (node:internal/modules/cjs/loader:1812:14)\n    at Object..js (node:internal/modules/cjs/loader:1943:10)\n    at Module.load (node:internal/modules/cjs/loader:1533:32)\n    at Module._load (node:internal/modules/cjs/loader:1335:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47\n\nNode.js v24.14.0",
             "error": null
           }
         }
@@ -1481,7 +1481,7 @@
             "status": 1,
             "signal": null,
             "stdout": "",
-            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-bPP5gJ\\errors-python-index-runtime-diagnostic-python.py\", line 2, in <module>\n    print(\"edge_error_index\", items[2])\n                              ~~~~~^^^\nIndexError: list index out of range",
+            "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\ssdaj\\AppData\\Local\\Temp\\luascript-edge-python-17dFeM\\errors-python-index-runtime-diagnostic-python.py\", line 2, in <module>\n    print(\"edge_error_index\", items[2])\n                              ~~~~~^^^\nIndexError: list index out of range",
             "error": null
           }
         }

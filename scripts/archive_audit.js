@@ -50,6 +50,7 @@ const allowedDocsTopLevel = new Set([
   "ir",
   "quick-start",
   "reference",
+  "releases",
   "schema"
 ]);
 const excludedParts = new Set([

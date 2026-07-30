@@ -127,3 +127,17 @@ preflight regenerates owning reports in dependency order and ends with
 unless the deterministic bundle has zero release blockers. Future support
 broadening must join the owning reports and this policy before it can enter a
 later release decision.
+
+## 2026-07-30 Denali v1.0.1 Release Seal
+
+The scoped Denali criteria are met by the exact release evidence and explicit
+operator authorization. The stable release preserves every boundary above:
+named slices only, current-host compatibility only, internal one-way release
+IR, exact six-name root package API, no npm `bin`, no package `exports`, and no
+universal or certification claim.
+
+The historical `v1.0.0` tag is preserved. Denali uses `v1.0.1`, with its
+versioned build under `builds/denali/v1.0.1/`. npm registry publication is not
+claimed.
+
+Denali v1.0.1 is authorized and released from the exact passing evidence state.

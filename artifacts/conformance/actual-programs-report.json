@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "kind": "luascript:actual-programs:repository-legacy",
   "command": "npm run test:actual-programs",
-  "generatedAt": "2026-07-30T03:46:51.498Z",
-  "elapsedMs": 14681,
+  "generatedAt": "2026-07-30T06:16:11.427Z",
+  "elapsedMs": 16187,
   "status": "passed",
   "boundary": {
     "evidenceScope": "repository-local legacy compiler and runtime behavior",
